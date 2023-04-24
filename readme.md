@@ -18,4 +18,4 @@ Email: [theskunkworks301@gmail.com](mailto:theskunkworks301@gmail.com)
 
 **Client:** [NextJS](https://nextjs.org/), [TailwindsCSS](https://tailwindcss.com/), [Emotion](https://emotion.sh/docs/introduction)
 
-**Server:** [NestJS](https://nestjs.com/)
+**Server:** [NestJS](https://nestjs.com/), [Snowflake Data Warehouse](https://www.snowflake.com/en/)
