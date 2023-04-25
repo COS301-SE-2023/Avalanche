@@ -1,3 +1,4 @@
+![https://dns.business](https://astonmartin.sloththe.dev/isawesome/logo.png)
 # Avalanche
 COS301 Capstone Project for [Domain Name Services (Pty) Ltd](https://dns.business/).
 
@@ -7,9 +8,9 @@ The project proposal can be viewed [here](https://astonmartin.sloththe.dev/isawe
 
 ## Team Members
 - Mark Botros (u21448109)
-- Sarah Leigh (u21804312)
+- Sarah Leigh Kilian (u21804312)
 - Inge Odendaal (u21689432)
-- Michael Tarr (u20537833)
+- Michael Ross Tarr (u20537833)
 - Gilles Teuwen (u21465772)
 
 ## Team Contact
