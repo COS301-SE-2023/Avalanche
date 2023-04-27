@@ -14,6 +14,6 @@ Avalanche is a data analytics tool with flavor as an information management syst
 Email: [theskunkworks301@gmail.com](mailto:theskunkworks301@gmail.com)
 ## Tech Stack
 
-**Client:** [NextJS](https://nextjs.org/), [TailwindsCSS](https://tailwindcss.com/), [Emotion](https://emotion.sh/docs/introduction)
+**Client:** [NextJS](https://nextjs.org/), [TailwindsCSS](https://tailwindcss.com/)
 
 **Server:** [NestJS](https://nestjs.com/)
