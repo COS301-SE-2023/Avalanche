@@ -39,12 +39,6 @@ const MenuOptions: IMenu = {
             page: "watch",
             role: ""
         },
-        {
-            text: "Documentation",
-            icon: <DocumentIcon className={holder} />,
-            page: "documentation",
-            role: ""
-        }
     ]
 }
 
