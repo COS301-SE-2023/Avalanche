@@ -55,7 +55,7 @@ Descrription goes here
 <details><summary>Michael Tarr - u20537833</summary><br>
 <img align="right" src="https://github.com/michaelrosstarr.png" width=150>
 <p>
-Hey 👋, I am Michael, a 3rd year BIS Multiemedia student. I have a passion for frontend development (and some backend as well), especially using NextJS, Typescript and TailwindCSS. On my off time, I enjoy playing video games and listening to music. If you ever find me by my laptop, most likely I have Spotify open listening to some tunes. Trying to come up with jokes about Star Wars is difficult. Sometimes they seem a bit too forced.
+Hey 👋, I am Michael, a 3rd year BIS Multiemedia student. I have a passion for frontend development (and some backend as well), especially using NextJS, Typescript and TailwindCSS. On my off time, I enjoy playing video games and listening to music. If you ever find me by my laptop, most likely I have Spotify open listening to some tunes. I've been trying to come up with jokes about Star Wars is difficult. Sometimes they seem a bit too forced.
 </p>
 <a href="https://github.com/michaelrosstarr" target="_blank">
   <img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white"/>
