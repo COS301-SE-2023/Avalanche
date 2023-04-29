@@ -1,0 +1,17 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# frontend
+frontend/node_modules
+frontend/.pnp
+frontend/.pnp.js
+frontend/coverage
+frontend/.next
+frontend/out/
+frontend/build
+frontend/*.tsbuildinfo
+frontend/next-env.d.ts
+
+# backend
+backend/node_modules
+backend/test
+backend/coverage
