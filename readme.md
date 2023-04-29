@@ -1,7 +1,13 @@
-# Avalanche
+<h1 align="center">Avalanche</h1>
+
 COS301 Capstone Project for [Domain Name Services (Pty) Ltd](https://dns.business/).
 
 Avalanche is a data analytics tool with flavor as an information management system that is built around the Snowflake® data warehouse. Avalanche will enhance customers of DNS products and services by providing business analytic information, such as projected growth, enhancing the view of investments and to domain registrars’ customers and non-DNS customers alike.
+
+## Documentation
+### Project Day
+### Software Requirements Specification
+### Architecture Document
 
 ## Team Members
 <details><summary>Mark Botros - u21448109</summary><br>
@@ -79,6 +85,27 @@ Descrription goes here
 Email: [theskunkworks301@gmail.com](mailto:theskunkworks301@gmail.com)
 ## Tech Stack
 
-**Client:** [NextJS](https://nextjs.org/), [TailwindsCSS](https://tailwindcss.com/)
+### Frontend
+<a href="https://www.typescriptlang.org/" title="Typescript"><img src="https://github.com/get-icon/geticon/raw/master/icons/typescript-icon.svg" alt="Typescript" width="21px" height="21px"></a>
+<a href="https://redux.js.org/" title="Redux"><img src="https://github.com/get-icon/geticon/raw/master/icons/redux.svg" alt="Redux" width="21px" height="21px"></a>
+<a href="https://tailwindcss.com/" title="Tailwind CSS"><img src="https://github.com/get-icon/geticon/raw/master/icons/tailwindcss-icon.svg" alt="Tailwind CSS" width="21px" height="21px"></a>
+<a href="https://nextjs.org/" title="Next.js"><img src="https://github.com/get-icon/geticon/raw/master/icons/nextjs-icon.svg" alt="Next.js" width="21px" height="21px"></a>
+<a href="https://www.cypress.io/" title="Cypress"><img src="https://github.com/get-icon/geticon/raw/master/icons/cypress.svg" alt="Cypress" width="21px" height="21px"></a>
 
-**Server:** [NestJS](https://nestjs.com/)
+### Backend
+<a href="https://www.typescriptlang.org/" title="Typescript"><img src="https://github.com/get-icon/geticon/raw/master/icons/typescript-icon.svg" alt="Typescript" width="21px" height="21px"></a>
+<a href="https://redis.io/" title="Redis"><img src="https://github.com/get-icon/geticon/raw/master/icons/redis.svg" alt="Redis" width="21px" height="21px"></a>
+<a href="https://nestjs.com/" title="NestJS"><img src="https://github.com/get-icon/geticon/raw/master/icons/nestjs.svg" alt="NestJS" width="21px" height="21px"></a>
+
+### Deployment
+<a href="https://www.docker.com/" title="docker"><img src="https://github.com/get-icon/geticon/raw/master/icons/docker-icon.svg" alt="docker" width="21px" height="21px"></a>
+<a href="https://www.nginx.com/" title="Nginx"><img src="https://github.com/get-icon/geticon/raw/master/icons/nginx-icon.svg" alt="Nginx" width="21px" height="21px"></a>
+<a href="https://github.com/" title="Github"><img src="https://github.com/get-icon/geticon/raw/master/icons/github-icon.svg" alt="Github" width="21px" height="21px"></a>
+
+### Project Management
+<a href="https://git-scm.com/" title="Git"><img src="https://github.com/get-icon/geticon/raw/master/icons/git-icon.svg" alt="Git" width="21px" height="21px"></a>
+<a href="https://github.com/" title="Github"><img src="https://github.com/get-icon/geticon/raw/master/icons/github-icon.svg" alt="Github" width="21px" height="21px"></a>
+<a href="https://yarnpkg.com/" title="Yarn"><img src="https://github.com/get-icon/geticon/raw/master/icons/yarn.svg" alt="Yarn" width="21px" height="21px"></a>
+<a href="https://code.visualstudio.com/" title="Visual Studio Code"><img src="https://github.com/get-icon/geticon/raw/master/icons/visual-studio-code.svg" alt="Visual Studio Code" width="21px" height="21px"></a>
+<a href="https://www.cloudflare.com/" title="Cloudflare"><img src="https://github.com/get-icon/geticon/raw/master/icons/cloudflare.svg" alt="Cloudflare" width="21px" height="21px"></a>
+<a href="https://www.atlassian.com/software/jira" title="JIRA"><img src="https://github.com/get-icon/geticon/raw/master/icons/jira.svg" alt="JIRA" width="21px" height="21px"></a>
