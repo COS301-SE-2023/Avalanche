@@ -4,7 +4,7 @@ COS301 Capstone Project for [Domain Name Services (Pty) Ltd](https://dns.busines
 
 Avalanche is a data analytics tool with flavor as an information management system that is built around the Snowflake® data warehouse. Avalanche will enhance customers of DNS products and services by providing business analytic information, such as projected growth, enhancing the view of investments and to domain registrars’ customers and non-DNS customers alike.
 
-## Project Breakdown
+## Repository Breakdown
 ```
 .
 ├── /backend - Contains the frontend application
@@ -48,7 +48,12 @@ Descrription goes here
 <details><summary>Inge Odendaal - u21689432</summary><br>
 <img align="right" src="https://github.com/michaelrosstarr.png" width=150>
 <p>
-Descrription goes here
+Hey there! I'm Inge, a bit of a data enthusiast, you could say. You see, I have this not-so-secret love affair with databases and data science. It's a bit like a romantic movie, only instead of chocolates and roses, I get excited about Computer Science, Statistics, and Mathematics. Wild, I know! These tools are my trusty sidekicks, always ready to take on a problem-solving adventure. I guess you could say we're like the Scooby-Doo gang, but instead of unmasking villains, we decode complex data mysteries.
+
+I'm also a bit of a people person. I once played the role of a project manager for the COS301 Mini-Project, where I was the ringleader for a group of 13 developers. Imagine that, 13 developers and 1 project manager walk into a bar... but, wait, don’t worry, we didn't break anything. We just wrote some code, solved a few problems, and maybe played a game of pool or two!
+
+So, that's me - Inge, your friendly neighbourhood data nerd. 
+
 </p>
 <a href="https://github.com/michaelrosstarr" target="_blank">
   <img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white"/>
