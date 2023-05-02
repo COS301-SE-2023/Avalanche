@@ -48,7 +48,7 @@ Descrription goes here
 <details><summary>Inge Odendaal - u21689432</summary><br>
 <img align="right" src="https://github.com/michaelrosstarr.png" width=150>
 <p>
-Hey there! I'm Inge, a bit of a data enthusiast, you could say. You see, I have this not-so-secret love affair with databases and data science. It's a bit like a romantic movie, only instead of chocolates and roses, I get excited about Computer Science, Statistics, and Mathematics. Wild, I know! These tools are my trusty sidekicks, always ready to take on a problem-solving adventure. I guess you could say we're like the Scooby-Doo gang, but instead of unmasking villains, we decode complex data mysteries.
+Hey there! I'm Inge, a bit of a data enthusiast, you could say. You see, I have this not-so-secret love affair with databases and data science. It's a bit like a romantic movie, only instead of chocolates and roses, I get excited about Computer Science, Statistics, and Mathematics. Wild, I know! 
 
 I'm also a bit of a people person. I once played the role of a project manager for the COS301 Mini-Project, where I was the ringleader for a group of 13 developers. Imagine that, 13 developers and 1 project manager walk into a bar... but, wait, don’t worry, we didn't break anything. We just wrote some code, solved a few problems, and maybe played a game of pool or two!
 
