@@ -67,7 +67,7 @@ So, that's me - Inge, your friendly neighbourhood data nerd. 
 <details><summary>Michael Tarr - u20537833</summary><br>
 <img align="right" src="https://github.com/michaelrosstarr.png" width=150>
 <p>
-Hey 👋, I am Michael, a 3rd year BIS Multiemedia student. I have a passion for frontend development (and some backend as well), especially using NextJS, Typescript and TailwindCSS. On my off time, I enjoy playing video games and listening to music. If you ever find me by my laptop, most likely I have Spotify open listening to some tunes. I've been trying to come up with jokes about Star Wars is difficult. Sometimes they seem a bit too forced.
+Hey 👋, I am Michael, a 3rd year BIS Multiemedia student. I have a passion for frontend development (and some backend as well), especially using NextJS, Typescript and TailwindCSS. On my off time, I enjoy playing video games and listening to music. If you ever find me by my laptop, most likely I have Spotify open listening to some tunes. I've been trying to come up with jokes about Star Wars but it's difficult. Sometimes they seem a bit too forced.
 </p>
 <a href="https://github.com/michaelrosstarr" target="_blank">
   <img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white"/>
@@ -81,7 +81,9 @@ Hey 👋, I am Michael, a 3rd year BIS Multiemedia student. I have a passion for
 <details><summary>Gilles Teuwen - u21465772</summary><br>
 <img align="right" src="https://github.com/michaelrosstarr.png" width=150>
 <p>
-Descrription goes here
+Howdy! Gilles here, I like cool stuff. Well, computer-cool not popular-cool. I'm into all those things that make all computer nerds say "wow! That's cool!" and sometimes even non-computer nerds think they're impressive. I love going beyond scope and adding the "wow factor". That involves making things like cutom data structure visualisers, adding abount 1000 times more rows to a table than the brief asked for and, the latest buzz around the block, adding AI and machine learning to get awesome resuluts. I've built a neural network that recognises hand written letters and I'm currently learning all about transformers - no not the robots in disguise.
+
+That's me, if you see me around, stop me and I'll tell you all about my latest project.
 </p>
 <a href="https://github.com/michaelrosstarr" target="_blank">
   <img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white"/>
