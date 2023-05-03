@@ -81,7 +81,7 @@ Hey 👋, I am Michael, a 3rd year BIS Multiemedia student. I have a passion for
 <details><summary>Gilles Teuwen - u21465772</summary><br>
 <img align="right" src="https://github.com/michaelrosstarr.png" width=150>
 <p>
-Howdy! Gilles here, I like cool stuff. Well, computer-cool not popular-cool. I'm into all those things that make all computer nerds say "wow! That's cool!" and sometimes even non-computer nerds think they're impressive. I love going beyond scope and adding the "wow factor". That involves making things like cutom data structure visualisers, adding abount 1000 times more rows to a table than the brief asked for and, the latest buzz around the block, adding AI and machine learning to get awesome resuluts. I've built a neural network that recognises hand written letters and I'm currently learning all about transformers - no not the robots in disguise.
+Howdy! Gilles here, I like cool stuff. Well, computer-cool not popular-cool. I'm into all those things that make all computer nerds say "wow! That's cool!" and sometimes even non-computer nerds think they're impressive. I love going beyond scope and adding the "wow factor". That involves making things like cutom data structure visualisers, adding abount 1000 times more rows to a table than the brief asked for and, the latest buzz around the block, adding AI and machine learning to get awesome results. I've built a neural network that recognises hand written letters and I'm currently learning all about transformers - no not the robots in disguise.
 
 That's me, if you see me around, stop me and I'll tell you all about my latest project.
 </p>
