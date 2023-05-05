@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link';
 import Head from 'next/head'
 import { useState } from 'react';
 import React from 'react';
@@ -79,7 +80,7 @@ export default function Home() {
                 </div>
                 <SubmitButton text="Sign in" onClick={() => null} loading={loading} />
                 <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                  Don't have an account yet? <a href="/register" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</a>
+                  Don&apos;t have an account yet? <Link href="/register" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</Link>
                 </p>
               </form>
             </div>

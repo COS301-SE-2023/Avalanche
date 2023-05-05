@@ -54,8 +54,8 @@ export default function Sidebar() {
                 <div className="overflow-y-auto py-5 px-3 h-full bg-white border-r border-gray-200 dark:bg-secondaryBackground dark:border-primaryBackground">
                     <ul className="space-y-2">
                         {
-                            MenuOptions.items.map(option => {
-                                return <SideBarItem text={option.text} icon={option.icon} page={option.page} />
+                            MenuOptions.items.map((option, index) => {
+                                return <SideBarItem text={option.text} icon={option.icon} page={option.page} key={index} />
                             })
                         }
                     </ul>

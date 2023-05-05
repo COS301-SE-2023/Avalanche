@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from 'next/router';
 import PageHeader from "@/components/Util/PageHeader";
 
-export default () => {
+export default function Settings() {
 
     const router = useRouter();
 
@@ -16,9 +16,8 @@ export default () => {
 
     const [tab, setTab] = useState<string>("general");
 
-    const paramsList: string[] = ["general", "security", "subusers", "integrations", "apikeys"];
-
     useEffect(() => {
+        const paramsList: string[] = ["general", "security", "subusers", "integrations", "apikeys"];
         const p = router.query.tab;
         if (paramsList.includes(p as string)) {
             setTab(p as string);
