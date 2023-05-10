@@ -7,8 +7,10 @@ Avalanche is a data analytics tool with flavor as an information management syst
 ## Repository Breakdown
 ```
 .
+├── /Docs - Contains all of our documentation for the project
 ├── /backend - Contains the frontend application
-└── /frontend - Contains the backend application
+├── /frontend - Contains the backend application
+└── /logs - Contains the changelogs for the project
 ```
 
 ## Documentation
