@@ -1,56 +1,21 @@
 import MenuOptions from "@/assets/MenuOptions"
 import SideBarItem from "./SidebarItem"
+import Link from "next/link"
+import { useEffect, useState, useRef } from "react";
 
 export default function Sidebar() {
+    const [menu, setMenu] = useState<boolean>(false);
+    const modalEl = useRef();
     return (
-        // <>
-
-        //     <button data-drawer-target="default-sidebar" data-drawer-toggle="default-sidebar" aria-controls="default-sidebar" type="button" className="inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
-        //         <span className="sr-only">Open sidebar</span>
-        //         <svg className="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-        //             <path clip-rule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
-        //         </svg>
-        //     </button>
-
-        //     <aside id="default-sidebar" className="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
-        //         <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
-        //             <ul className="space-y-2 font-medium">
-        //                 {
-        //                     MenuOptions.items.map(option => {
-        //                         return <SideBarItem text={option.text} icon={option.icon} page={option.page} />
-        //                     })
-        //                 }
-        //             </ul>
-        //         </div>
-        //         <ul className="pt-5 mt-5 space-y-2 border-t border-gray-200 dark:border-gray-700">
-        //             <li>
-        //                 <div className="flex items-center space-x-4">
-        //                     <img className="w-10 h-10 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="" />
-        //                     <div className="font-medium dark:text-white">
-        //                         <div>Jese Leos</div>
-        //                         <div className="text-sm text-gray-500 dark:text-gray-400">Joined in August 2014</div>
-        //                     </div>
-        //                 </div>
-        //             </li>
-        //         </ul>
-        //         <div className="flex items-center space-x-4">
-        //             <img className="w-10 h-10 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="" />
-        //             <div className="font-medium dark:text-white">
-        //                 <div>Jese Leos</div>
-        //                 <div className="text-sm text-gray-500 dark:text-gray-400">Joined in August 2014</div>
-        //             </div>
-        //         </div>
-        //     </aside>
-        // </>
         <>
-            <button data-drawer-target="default-sidebar" data-drawer-toggle="default-sidebar" aria-controls="default-sidebar" type="button" className="inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+            <button data-drawer-target="default-sidebar" data-drawer-toggle="default-sidebar" aria-controls="default-sidebar" type="button" className="inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" onClick={() => setMenu(true)}>
                 <span className="sr-only">Open sidebar</span>
                 <svg className="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                    <path clip-rule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
+                    <path clipRule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
                 </svg>
             </button>
 
-            <aside id="default-sidebar" className="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidenav">
+            <aside id="default-sidebar" className={`fixed top-0 left-0 z-40 w-64 h-screen transition-transform ${!menu && '-translate-x-full'} sm:translate-x-0`} aria-label="Sidenav">
                 <div className="overflow-y-auto py-5 px-3 h-full bg-white border-r border-gray-200 dark:bg-secondaryBackground dark:border-primaryBackground">
                     <ul className="space-y-2">
                         {
@@ -68,7 +33,7 @@ export default function Sidebar() {
                         </li>
                     </ul>
                 </div>
-                <div className="hidden absolute bottom-0 left-0 justify-center p-4 space-x-4 w-full lg:flex flex-row gap-2 bg-white dark:bg-secondaryBackground z-20 border-r border-gray-200 dark:border-primaryBackground">
+                <div className="absolute bottom-0 left-0 justify-center p-4 space-x-4 w-full lg:flex flex-row gap-2 bg-white dark:bg-secondaryBackground z-20 border-r border-gray-200 dark:border-primaryBackground">
                     <div>
                         <div className="flex items-center space-x-4">
                             <img className="w-10 h-10 rounded-full" src="https://github.com/michaelrosstarr.png" alt="" />
@@ -79,9 +44,9 @@ export default function Sidebar() {
                         </div>
                     </div>
                     <div className="flex justify-center items-center">
-                        <a href="#" data-tooltip-target="tooltip-settings" className="inline-flex justify-center p-2 text-gray-500 rounded cursor-pointer dark:text-gray-400 dark:hover:text-white hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-600">
+                        <Link href="/settings" data-tooltip-target="tooltip-settings" className="inline-flex justify-center p-2 text-gray-500 rounded cursor-pointer dark:text-gray-400 dark:hover:text-white hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-600">
                             <svg aria-hidden="true" className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"></path></svg>
-                        </a>
+                        </Link>
                         <div id="tooltip-settings" role="tooltip" className="inline-block absolute invisible z-10 py-2 px-3 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 transition-opacity duration-300 tooltip">
                             Settings page
                             <div className="tooltip-arrow" data-popper-arrow></div>
