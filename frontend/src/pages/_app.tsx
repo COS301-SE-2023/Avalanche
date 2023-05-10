@@ -11,7 +11,6 @@ const karla = Karla({
   variable: '--font-karla'
 });
 
-
 function App({ Component, ...rest }: AppProps) {
   const { store, props } = wrapper.useWrappedStore(rest);
   return <ThemeProvider attribute="class">
