@@ -1,0 +1,7 @@
+{
+    "name": "avalanche",
+    "verison": "0.0.1",
+    "scripts": {
+        "frontend": "cd ./frontend && yarn dev"
+    }
+}
