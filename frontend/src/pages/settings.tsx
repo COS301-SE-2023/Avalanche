@@ -4,15 +4,11 @@ import { Cog6ToothIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/router';
 import PageHeader from "@/components/Util/PageHeader";
-import Link from "next/link";
 import { IntegrationLoginModal, } from "@/components/Modals";
 import { IIntergrationLoginData as IData } from "@/interfaces"
 import { DangerAlert, WarningAlert } from "@/components/Util";
-import { useTheme } from "next-themes";
 
 export default function Settings() {
-    const { systemTheme, theme, setTheme } = useTheme();
-
     /**
      * This is just calling the NextJS router so we can reference it later on in the code
      */
@@ -86,7 +82,6 @@ export default function Settings() {
                     <img className="w-16 h-16 rounded-full" src="https://github.com/michaelrosstarr.png" alt="" />
                     <div className="font-medium dark:text-white text-black">
                         <div>Michael Tarr</div>
-                        {/* <div className="text-sm text-gray-500 dark:text-gray-400">Michael's Domains Pty Ltd</div> */}
                     </div>
                 </div>
             </div>
@@ -96,12 +91,6 @@ export default function Settings() {
                     <li className="mr-2" onClick={(e) => tabClick(e, "general")}>
                         <a href="?tab=general" className={tab === "general" ? tabOptions.active : tabOptions.inactive}>General Settings</a>
                     </li>
-                    {/* <li className="mr-2" onClick={(e) => tabClick(e, "security")}>
-                        <a href="?tab=security" className={tab === "security" ? tabOptions.active : tabOptions.inactive}>Security</a>
-                    </li> */}
-                    {/* <li className="mr-2" onClick={(e) => tabClick(e, "subusers")}>
-                        <a href="?tab=subusers" className={tab === "subusers" ? tabOptions.active : tabOptions.inactive}>Sub-Users</a>
-                    </li> */}
                     <li className="mr-2" onClick={(e) => tabClick(e, "organizations")}>
                         <a href="?tab=subusers" className={tab === "organizations" ? tabOptions.active : tabOptions.inactive}>Organizations</a>
                     </li>
@@ -138,8 +127,8 @@ export default function Settings() {
             </>}
         </div>
 
+        {/* Models go here */}
         {iMOpen && <IntegrationLoginModal data={integration} handleModal={handleModal} />}
-
 
     </>
 }
