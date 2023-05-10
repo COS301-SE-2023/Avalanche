@@ -5,13 +5,22 @@ import { wrapper } from '../store/store';
 // import { PersistGate } from 'redux-persist/integration/react';
 import { useStore } from 'react-redux';
 import { Provider } from 'react-redux';
+import { Karla } from 'next/font/google';
+
+const karla = Karla({
+  subsets: ['latin'],
+  variable: '--font-karla'
+});
+
 
 function App({ Component, ...rest }: AppProps) {
   const { store, props } = wrapper.useWrappedStore(rest);
   return <ThemeProvider attribute="class">
-    <Provider store={store}>
-      <Component {...props.pageProps} />
-    </Provider>
+    <main className={`${karla.variable} font-sans`}>
+      <Provider store={store}>
+        <Component {...props.pageProps} />
+      </Provider>
+    </main>
   </ThemeProvider>
 }
 
