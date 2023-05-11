@@ -24,6 +24,7 @@ ChartJS.register(
 
 export const options = {
     responsive: true,
+    // maintainAspectRatio: false,
     plugins: {
         legend: {
             position: 'top' as const,
@@ -37,5 +38,5 @@ export const options = {
 
 
 export function LineChart({ data }: IChart) {
-    return <Line options={options} data={data} />;
+    return <div className="h-full"><Line options={options} data={data} /></div>;
 }
