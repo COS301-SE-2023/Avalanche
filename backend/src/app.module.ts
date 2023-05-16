@@ -1,13 +1,18 @@
+// app.module.ts
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { SnowflakeController } from './snowflake/snowflake.controller';
-import { AppService } from './app.service';
-import { SnowflakeModule } from './snowflake/snowflake.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
+import { RedisModule } from './redis/redis.module';
 
 @Module({
-  imports: [SnowflakeModule, AuthModule],
-  controllers: [AppController, SnowflakeController],
-  providers: [AppService],
+  imports: [
+    TypeOrmModule.forRoot(), // import TypeOrmModule
+    AuthModule, // import AuthModule
+    UserModule, // import UserModule
+    RedisModule, // import RedisModule
+  ],
+  controllers: [], // No controller at root level
+  providers: [], // No provider at root level
 })
 export class AppModule {}
