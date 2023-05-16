@@ -3,7 +3,7 @@ import { AppController } from './app.controller';
 import { SnowflakeController } from './snowflake/snowflake.controller';
 import { AppService } from './app.service';
 import { SnowflakeModule } from './snowflake/snowflake.module';
-import { AuthModule } from './security/auth.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [SnowflakeModule, AuthModule],

@@ -1,8 +1,10 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Post, Body, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Body, HttpException, HttpStatus, UseGuards } from '@nestjs/common';
 import { SnowflakeService } from './snowflake.service';
+import { JWTAuthGuard as AuthGuard } from '../auth/jwt.guard';
 
 @Controller('snowflake')
+@UseGuards(AuthGuard)
 export class SnowflakeController {
   constructor(private readonly snowflakeService: SnowflakeService) {}
 
