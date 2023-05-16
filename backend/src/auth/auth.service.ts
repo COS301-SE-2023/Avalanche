@@ -1,35 +1,50 @@
 /* eslint-disable prettier/prettier */
+// auth.service.ts
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { User } from './user.schema';
+import { EmailService } from './email.service';
+import { UserService } from '../user/user.service';
+import { CacheUserService } from '../redisUser/cacheUser.service';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectModel(User.name) private userModel: Model<User>,
+    private jwtService: JwtService,
+    private emailService: EmailService,
+    private userService: UserService,
+    private cacheService: CacheUserService,
   ) {}
 
-  async validateUser(username: string, password: string): Promise<User | null> {
-    const user = await this.userModel.findOne({ username }).exec();
-    if (user && (await bcrypt.compare(password, user.password))) {
-      return user;
-    }
-    return null;
+  async login(user: any) {
+    // TODO: Implement your logic
+  }
+  async forgotPassword(user: any) {
+    // TODO: Implement your logic
   }
 
-  async registerUser(username: string, password: string): Promise<User> {
-    const saltRounds = 10;
-    const salt = await bcrypt.genSalt(saltRounds);
-    const hashedPassword = await bcrypt.hash(password, salt);
-    const doubleHashedPassword = await bcrypt.hash(hashedPassword, salt);
+  async verifyOtp(user: any, otp: string) {
+    // TODO: Implement your logic
+  }
+  async register(userDto: any) {
+    const hashedPassword = await bcrypt.hash(userDto.password, 10);
+    userDto.password = hashedPassword;
 
-    const newUser = new this.userModel({
-      username,
-      password: doubleHashedPassword,
-    });
+    const user = await this.userService.create(userDto);
 
-    return newUser.save();
+    // Generate OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // Save OTP to Redis with a TTL of 24 hours
+    await this.cacheService.set(user.email, {otp: otp, ttl: 60 * 60 * 24 });
+
+    // Send OTP to user's email
+    await this.emailService.sendEmail(
+      user.email,
+      'Verify your email',
+      `Your one-time pin is ${otp}. It will expire in 24 hours.`,
+    );
+
+    return user;
   }
 }

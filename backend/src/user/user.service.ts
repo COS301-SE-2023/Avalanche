@@ -10,17 +10,21 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-  ) {}
+  ) { }
 
   create(userDto: any): Promise<User> {
     const user = this.usersRepository.create(userDto) as unknown as User;
     return this.usersRepository.save(user) as Promise<User>;
-}
+  }
 
 
   findByEmail(email: string): Promise<User> {
     return this.usersRepository.findOne({ where: { email } });
-}
+  }
+
+  // findByJWT(jwt: string): Promise<User> {
+  //   return this.usersRepository.findOne({ where: { jwt } });
+  // }
 
 
 }

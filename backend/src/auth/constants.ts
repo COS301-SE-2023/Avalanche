@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
-// auth/constants.ts
+// constants.ts
 export const jwtConstants = {
-    secret: 'HFGiagyif$%#%#%^#^#thytj2432', // Replace 'your-secret-key' with your own secret key
+    secret: '348454895488788', // replace 'secretKey' with your actual secret key
   };
   
