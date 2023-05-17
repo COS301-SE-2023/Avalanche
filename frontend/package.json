@@ -1,6 +1,7 @@
 {
   "name": "avalanche-frontend",
   "version": "0.1.0",
+  "license": "MIT",
   "private": false,
   "scripts": {
     "dev": "next dev",
@@ -40,6 +41,7 @@
   },
   "devDependencies": {
     "@types/react": "^18.2.6",
-    "cypress": "^12.11.0"
+    "cypress": "^12.11.0",
+    "webpack": "^5.83.0"
   }
 }

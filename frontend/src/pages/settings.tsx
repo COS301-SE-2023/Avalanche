@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from 'next/router';
 import PageHeader from "@/components/Util/PageHeader";
 import { IntegrationLoginModal, APIKeyCreateModal, OrgnizationCreateModal } from "@/components/Modals";
-import { DangerAlert, SubmitButton, WarningAlert } from "@/components/Util";
+import { SubmitButton, WarningAlert } from "@/components/Util";
 import { Toaster } from 'react-hot-toast';
 
 export default function Settings() {
@@ -14,14 +14,33 @@ export default function Settings() {
      */
     const router = useRouter();
 
+    /**
+     * This variable holds the class name options for the two states of the tab navigation elements.
+     * active refers to the active tab while inactive refers to the inactive tabs (tabs that are not selected).
+     */
     const tabOptions = {
         active: "inline-block p-4 text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-avalancheBlue dark:border-avalancheBlue",
         inactive: "inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
     }
 
+    /**
+     * This state variable holds the current active tab.
+     */
     const [tab, setTab] = useState<string>("general");
+
+    /**
+     * This state variable holds whether the new integration modal should be open or not.
+     */
     const [iMOpen, setIMOpen] = useState<boolean>(false);
+
+    /**
+     * This state variable holds whether the new organization modal should be open or not.
+     */
     const [nOOpen, setNOOpen] = useState<boolean>(false);
+
+    /**
+     * This state variable holds whether the new api key modal should be open or not.
+     */
     const [apiOpen, setAPIOpen] = useState<boolean>(false);
 
     /**
@@ -126,9 +145,7 @@ export default function Settings() {
         }} />}
         {nOOpen && <OrgnizationCreateModal handleModal={(event: React.FormEvent<HTMLFormElement>, value: boolean) => {
             setNOOpen(value);
-        }} />
-        }
-
+        }} />}
 
     </>
 }
