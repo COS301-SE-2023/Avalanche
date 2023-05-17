@@ -4,9 +4,9 @@ import { Cog6ToothIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/router';
 import PageHeader from "@/components/Util/PageHeader";
-import { IntegrationLoginModal, } from "@/components/Modals";
-import { IIntergrationLoginData as IData } from "@/interfaces"
-import { DangerAlert, WarningAlert } from "@/components/Util";
+import { IntegrationLoginModal, APIKeyCreateModal, OrgnizationCreateModal } from "@/components/Modals";
+import { DangerAlert, SubmitButton, WarningAlert } from "@/components/Util";
+import { Toaster } from 'react-hot-toast';
 
 export default function Settings() {
     /**
@@ -21,7 +21,8 @@ export default function Settings() {
 
     const [tab, setTab] = useState<string>("general");
     const [iMOpen, setIMOpen] = useState<boolean>(false);
-    const [integration, setIntegration] = useState<IData>({ name: "", image: "" });
+    const [nOOpen, setNOOpen] = useState<boolean>(false);
+    const [apiOpen, setAPIOpen] = useState<boolean>(false);
 
     /**
      * This is triggered whenever the router.query changes in any way. This is used to handle the displaying of the correct content on the page underneath the tab navigation.
@@ -57,19 +58,10 @@ export default function Settings() {
     };
 
     /**
-     * This handles the opening and closing of the modal
-     * @param value is the value that iMOpen should be set to
-     * @param data is the data value that integration should be set to
-     */
-    const handleModal = (value: boolean, data: IData = { name: "", image: "" }): void => {
-        setIMOpen(value);
-        setIntegration(data);
-    }
-
-    /**
      * Renders out the HTML
      */
     return <>
+        <Toaster />
         <Head>
             <title>Settings</title>
         </Head>
@@ -106,29 +98,37 @@ export default function Settings() {
                 <WarningAlert title="Cannot Create!" text="Nothing to see here" />
             </>}
             {tab === "organizations" && <>
-                <WarningAlert title="Cannot Create!" text="Organizations are created automatically for you when you setup an integration." />
+                <div className="flex justify-between items-center gap-10 mb-4">
+                    <WarningAlert title="Cannot Create!" text="Organizations are created automatically for you when you setup an integration." />
+                    <SubmitButton text="Add a new organization" onClick={() => setNOOpen(true)} />
+                </div>
             </>}
             {tab === "integrations" && <>
-                <div className="m-10 flex flex-col gap-6">
-                    <div className="flex justify-between items-center border-b border-gray-200 dark:text-gray-400 dark:border-gray-700 flex-col gap-4 lg:gap-0 lg:flex-row">
-                        <div className="flex flex-row items-center gap-4">
-                            <img className="h-12" src="https://registry.net.za/favicon.ico" />
-                            <p className="text-3xl font-medium text-gray-900 dark:text-white">ZARC | Registry Operator for ZA</p>
-                        </div>
-                        <div className="mb-4 w-full lg:w-max">
-                            <button type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 w-full lg:w-max" onClick={() => handleModal(true, { name: "ZARC", image: "https://registry.net.za/favicon.ico" } as IData)}>Add Integration</button>
-                        </div>
-                    </div>
+                <div className="flex justify-between items-center gap-10 mb-4">
+                    <WarningAlert title="No Integrations." text="You don't have any integrations setup." />
+                    <SubmitButton text="Add a new integration" onClick={() => setIMOpen(true)} />
                 </div>
             </>}
             {tab === "apikeys" && <>
-                <WarningAlert title="No API Keys." text="You dont have any API keys." />
-                <button type="button" className="py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Create an API Key</button>
+                <div className="flex justify-between items-center gap-10 mb-4">
+                    <WarningAlert title="No API Keys." text="You dont have any API keys." />
+                    <SubmitButton text="Create an API Key" onClick={() => setAPIOpen(true)} />
+                </div>
             </>}
         </div>
 
         {/* Models go here */}
-        {iMOpen && <IntegrationLoginModal data={integration} handleModal={handleModal} />}
+        {iMOpen && <IntegrationLoginModal handleModal={(event: React.FormEvent<HTMLFormElement>, value: boolean) => {
+            setIMOpen(value);
+        }} />}
+        {apiOpen && <APIKeyCreateModal handleModal={(event: React.FormEvent<HTMLFormElement>, value: boolean) => {
+            setAPIOpen(value);
+        }} />}
+        {nOOpen && <OrgnizationCreateModal handleModal={(event: React.FormEvent<HTMLFormElement>, value: boolean) => {
+            setNOOpen(value);
+        }} />
+        }
+
 
     </>
 }

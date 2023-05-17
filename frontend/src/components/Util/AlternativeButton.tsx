@@ -1,6 +1,6 @@
 import { ReactNode } from "react"
 
-interface ISubmitButton {
+interface IAlternativeButton {
     text: string,
     onClick: any,
     loading?: boolean,
@@ -8,7 +8,7 @@ interface ISubmitButton {
     icon?: any
 }
 
-export default function SubmitButton({ text, onClick, loading = false, className = "", icon = null }: ISubmitButton) {
+export default function AlternativeButton({ text, onClick, loading = false, className = "", icon = null }: IAlternativeButton) {
 
     const loadingElement = (): ReactNode => {
         return <svg aria-hidden="true" role="status" className="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -17,5 +17,5 @@ export default function SubmitButton({ text, onClick, loading = false, className
         </svg>
     }
 
-    return <button type="submit" className={`text-white bg-primary-600 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:focus:ring-primary-800 inline-flex items-center justify-center ${loading ? "disabled cursor-not-allowed" : "hover:bg-primary-700 dark:hover:bg-primary-700"} ${className}`} disabled={loading} onClick={(event) => onClick(event)}>{loading && loadingElement()}{text} {icon && icon}</button>
+    return <button type="button" className={`py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 ${loading ? "disabled cursor-not-allowed" : "dark:hover:text-white dark:hover:bg-gray-700"} ${className}`} disabled={loading} onClick={(event) => onClick(event)}>{loading && loadingElement()}{text} {icon && icon}</button>
 }
