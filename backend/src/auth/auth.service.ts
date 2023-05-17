@@ -5,9 +5,10 @@ import * as nodemailer from 'nodemailer';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import * as bcrypt from 'bcrypt';
+import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class AuthService {
-  constructor(@Inject('REDIS') private readonly redis: Redis) { }
+  constructor(@Inject('REDIS') private readonly redis: Redis, private readonly configService: ConfigService,) { }
 
   async register(email: string, password: string) {
     const saltRounds = 10;
@@ -37,7 +38,7 @@ export class AuthService {
       service: 'gmail', 
       auth: {
         user: 'theskunkworks301@gmail.com', 
-        pass: process.env.GOOGLE_PASSWORD, 
+        pass: this.configService.get('GOOGLE_PASSWORD'),
       },
     });
 
