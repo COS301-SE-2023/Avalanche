@@ -16,3 +16,7 @@ For more information request formal documentation from ...
 ## Procedures
 | Procedure  | Description | Input | Output |
 | --   | -- | --   | -- |
+| Registrar Transactions| This procedure returns the aggregated transactions for a specific registrar, all registrars grouped by registrar or all overall | JSON object string containing the registrar, zone, dateFom, dateTo and granularity   | JSON in graphDataInterface format|
+
+##Changes
+17/05 20:11: Registrar Transactions: Added parameter cleaning and default settings
