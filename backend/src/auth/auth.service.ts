@@ -2,6 +2,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
 import * as nodemailer from 'nodemailer';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 @Injectable()
 export class AuthService {
   constructor(@Inject('REDIS') private readonly redis: Redis) { }
@@ -33,13 +35,16 @@ export class AuthService {
       },
     });
 
+    const otpHtmlTemplate = readFileSync(join(__dirname,'../../src/auth/otp-email-template.html'), 'utf-8');
+    const otpHtml = otpHtmlTemplate.replace('{OTP}', otp);
+
     // Send email
     const info = await transporter.sendMail({
-      from: '"Your App" <theskunkworks301@gmail.com>', // Replace with your email
+      from: '"Avalanche Analytics" <theskunkworks301@gmail.com>', // Replace with your email
       to: email,
-      subject: 'OTP for registration',
-      text: `Your OTP is ${otp}`,
-      html: `<b>Your OTP is ${otp}</b>`,
+      subject: 'OTP for Avalanche Analytics registration',
+      text: `Hi, \nThank you for choosing Avalanche. Your OTP is ${otp} and will be valid for 24 hours\nRegards,\nAvalanche team`,
+      html: otpHtml,
     });
 
     console.log('Message sent: %s', info.messageId);
