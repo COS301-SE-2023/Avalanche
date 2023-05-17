@@ -20,5 +20,6 @@ For more information request formal documentation from ...
 
 ## Changes
 
-17/05 20:11: Registrar Transactions: Added parameter cleaning and default settings
-      20:45: Registrar Transactions: Added initial query
+* 17/05 
+  * 20:11: Registrar Transactions: Added parameter cleaning and default settings
+  * 20:45: Registrar Transactions: Added initial query
