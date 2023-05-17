@@ -7,6 +7,7 @@ import PageHeader from "@/components/Util/PageHeader";
 import { IntegrationLoginModal, APIKeyCreateModal, OrgnizationCreateModal } from "@/components/Modals";
 import { AlternativeButton, DeleteButton, SubmitButton, WarningAlert } from "@/components/Util";
 import toast, { Toaster } from 'react-hot-toast';
+import OrganizationSettings from "@/components/Settings/Organizations";
 
 export default function Settings() {
     /**
@@ -133,10 +134,7 @@ export default function Settings() {
                 <WarningAlert title="Cannot Create!" text="Nothing to see here" />
             </>}
             {tab === "organizations" && <>
-                {demo ? <h2 className="text-2xl font-medium">Groups</h2> : <div className="flex justify-between items-center gap-10 mb-4">
-                    <WarningAlert title="Cannot Create!" text="Organizations are created automatically htmlFor you when you setup an integration." />
-                    <SubmitButton text="Add a new organization" onClick={() => setNOOpen(true)} />
-                </div>}
+                <OrganizationSettings demo={demo} openModal={(value: boolean) => setNOOpen(value)} />
             </>}
             {tab === "integrations" && <>
                 <div className="flex justify-between items-center gap-10 mb-4">

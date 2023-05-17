@@ -1,14 +1,7 @@
 import { ReactNode } from "react"
+import { IButton } from "@/interfaces"
 
-interface IDeleteButton {
-    text: string,
-    onClick: any,
-    loading?: boolean,
-    className?: string,
-    icon?: any
-}
-
-export default function DeleteButton({ text, onClick, loading = false, className = "", icon = null }: IDeleteButton) {
+export default function DeleteButton({ text, onClick, loading = false, className = "", icon = null, disabled }: IButton) {
 
     const loadingElement = (): ReactNode => {
         return <svg aria-hidden="true" role="status" className="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
