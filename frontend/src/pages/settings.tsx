@@ -23,6 +23,8 @@ export default function Settings() {
         inactive: "inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
     }
 
+    const [demo, setDemo] = useState<boolean>(false);
+
     /**
      * This state variable holds the current active tab.
      */
@@ -97,7 +99,7 @@ export default function Settings() {
                 </div>
             </div>
 
-            <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700 mb-5">
+            <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700 mb-5 flex justify-between">
                 <ul className="flex lg:flex-wrap sm:flex-nowrap whitespace-nowrap overflow-x-scroll lg:overflow-x-hidden -mb-px">
                     <li className="mr-2" onClick={(e) => tabClick(e, "general")}>
                         <a href="?tab=general" className={tab === "general" ? tabOptions.active : tabOptions.inactive}>General Settings</a>
@@ -112,15 +114,17 @@ export default function Settings() {
                         <a href="?tab=apikeys" className={tab === "apikeys" ? tabOptions.active : tabOptions.inactive}>API Keys</a>
                     </li>
                 </ul>
+                <button type="button" className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 m-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 float-right" onClick={() => setDemo(!demo)}>Demo Toggle</button>
             </div>
+
             {tab === "general" && <>
                 <WarningAlert title="Cannot Create!" text="Nothing to see here" />
             </>}
             {tab === "organizations" && <>
-                <div className="flex justify-between items-center gap-10 mb-4">
+                {demo ? <h2 className="text-2xl font-medium">Groups</h2> : <div className="flex justify-between items-center gap-10 mb-4">
                     <WarningAlert title="Cannot Create!" text="Organizations are created automatically for you when you setup an integration." />
                     <SubmitButton text="Add a new organization" onClick={() => setNOOpen(true)} />
-                </div>
+                </div>}
             </>}
             {tab === "integrations" && <>
                 <div className="flex justify-between items-center gap-10 mb-4">
