@@ -37,7 +37,7 @@ export class AuthService {
       service: 'gmail', 
       auth: {
         user: 'theskunkworks301@gmail.com', 
-        pass: 'snlfvyltleqsmmxg', 
+        pass: process.env.GOOGLE_PASSWORD, 
       },
     });
 
