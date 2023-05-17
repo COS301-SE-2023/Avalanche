@@ -2,9 +2,8 @@ import { IIntergrationLoginData as IData } from "@/interfaces";
 import { Input, InputLabel, SubmitButton, AlternativeButton, ErrorToast } from "../Util";
 import React, { useState } from "react";
 import { ChevronDownIcon, ChevronUpIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import toast from 'react-hot-toast';
 import 'animate.css';
-import { ModalHeader, ModalWrapper } from "./ModalOptions";
+import { ModalContent, ModalHeader, ModalWrapper } from "./ModalOptions";
 
 interface IIntegrationLoginModal {
     handleModal: any,
@@ -65,7 +64,7 @@ export default function IntegrationLoginModal({ handleModal }: IIntegrationLogin
             <ModalHeader title="Add a new Integration" handle={handleModal} />
 
             {/* Modal Content */}
-            <div className="mb-4">
+            <ModalContent>
                 <AlternativeButton text={valid ? integration.name : 'Select Provider'} onClick={() => {
                     setDropdown(!dropdown);
                 }} icon={dropdown ? <ChevronUpIcon className="h-5 w-5" /> : <ChevronDownIcon className="h-5 w-5" />} className="w-full gap-2 flex justify-center" />
@@ -82,7 +81,7 @@ export default function IntegrationLoginModal({ handleModal }: IIntegrationLogin
                     </ul>
                 </div>}
 
-            </div>
+            </ModalContent>
             {valid && <><p className="text-grey-900 dark:text-white text-center mb-4">Please use your {integration.name} credentials to add this integration.</p>
                 <form className="space-y-6" onSubmit={(e) => formSubmit(e)}>
                     <div>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Input, InputLabel, SubmitButton, ErrorToast } from '../Util';
 import { XMarkIcon } from '@heroicons/react/24/solid';
+import { ModalContent, ModalHeader, ModalWrapper } from './ModalOptions';
 
 interface IOrgnizationCreateModal {
     handleModal: any
@@ -49,32 +50,21 @@ export default function OrgnizationCreateModal({ handleModal }: IOrgnizationCrea
      * This return renders out the HTML for the modal.
      */
     return (
-        <div id="authentication-modal" tabIndex={-1} aria-hidden="true" className="fixed top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full h-screen flex justify-center items-center bg-slate-900/50" onClick={(event) => handleModal(event, false)}>
-            <div className="relative w-full max-w-md max-h-full" onClick={(event) => event.stopPropagation()}>
-                <div className="relative bg-white rounded-lg shadow dark:bg-primaryBackground px-6 py-6 lg:px-8">
-
-                    {/* Modal Header */}
-                    <div className="flex justify-between items-center mb-8">
-                        <h3 className="text-xl font-medium text-gray-900 dark:text-white">Create a new Organization</h3>
-                        <button type="button" className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white" data-modal-hide="authentication-modal" onClick={(event) => handleModal(event, false)}>
-                            <XMarkIcon className="h-5 w-5" />
-                        </button>
+        <ModalWrapper handle={handleModal}>
+            <ModalHeader handle={handleModal} title="Create a new Organization" />
+            <ModalContent>
+                <form className="space-y-6" onSubmit={(event) => formSubmit(event)}>
+                    <div>
+                        <InputLabel htmlFor="name" text="Orgnization Name" />
+                        <Input type="text" name="name" id="name" placeholder="Michael's Domains" required={true} disabled={loading} value={name} onChange={(event: React.FormEvent<HTMLInputElement>) => {
+                            setName(event.currentTarget.value);
+                        }} maxLength={nameLength} />
                     </div>
-
-                    {/* Modal Content */}
-                    <form className="space-y-6" onSubmit={(event) => formSubmit(event)}>
-                        <div>
-                            <InputLabel htmlFor="name" text="Orgnization Name" />
-                            <Input type="text" name="name" id="name" placeholder="Michael's Domains" required={true} disabled={loading} value={name} onChange={(event: React.FormEvent<HTMLInputElement>) => {
-                                setName(event.currentTarget.value);
-                            }} maxLength={nameLength} />
-                        </div>
-                        <SubmitButton text="Create orgnization" onClick={(event: React.FormEvent<HTMLFormElement>) => {
-                            formSubmit(event);
-                        }} className="w-full" loading={loading} />
-                    </form>
-                </div>
-            </div>
-        </div>
+                    <SubmitButton text="Create orgnization" onClick={(event: React.FormEvent<HTMLFormElement>) => {
+                        formSubmit(event);
+                    }} className="w-full" loading={loading} />
+                </form>
+            </ModalContent>
+        </ModalWrapper>
     )
 }
