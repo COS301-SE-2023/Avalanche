@@ -2,16 +2,22 @@
 import { Inject, Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
 import * as nodemailer from 'nodemailer';
+import * as bcrypt from 'bcrypt';
 @Injectable()
 export class AuthService {
   constructor(@Inject('REDIS') private readonly redis: Redis) { }
 
   async register(email: string, password: string) {
+    const saltRounds = 10;
+    const firstHash = await bcrypt.hash(password, saltRounds);
+    const doubleHashedPassword = await bcrypt.hash(firstHash, saltRounds);
+
     // Generate OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
     // Save user's email, password, and OTP to Redis
-    await this.redis.set(email, JSON.stringify({ password, otp }), 'EX', 24 * 60 * 60);
+    const userData = JSON.stringify({ password: doubleHashedPassword, otp });
+    await this.redis.set(email, userData, 'EX', 24 * 60 * 60);
 
     // Retrieve the data from Redis to verify it was saved correctly
     const savedData = await this.redis.get(email);
@@ -26,16 +32,16 @@ export class AuthService {
   async sendOTPEmail(email: string, otp: string) {
     // Create transporter
     const transporter = nodemailer.createTransport({
-      service: 'gmail', // Replace with your email service
+      service: 'gmail', 
       auth: {
-        user: 'theskunkworks301@gmail.com', // Replace with your email
-        pass: 'snlfvyltleqsmmxg', // Replace with your password
+        user: 'theskunkworks301@gmail.com', 
+        pass: 'snlfvyltleqsmmxg', 
       },
     });
 
     // Send email
     const info = await transporter.sendMail({
-      from: '"Your App" <theskunkworks301@gmail.com>', // Replace with your email
+      from: '"Avalanche" <theskunkworks301@gmail.com>',
       to: email,
       subject: 'OTP for registration',
       text: `Your OTP is ${otp}`,
