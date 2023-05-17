@@ -1,12 +1,12 @@
 /* eslint-disable prettier/prettier */
 import { Inject, Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
+import * as nodemailer from 'nodemailer';
 @Injectable()
 export class AuthService {
   constructor(@Inject('REDIS') private readonly redis: Redis) { }
 
   async register(email: string, password: string) {
-    console.log("here");
     // Generate OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
@@ -16,9 +16,33 @@ export class AuthService {
     // Retrieve the data from Redis to verify it was saved correctly
     const savedData = await this.redis.get(email);
     console.log(savedData);
-    return { status: 'success', message: 'Registration successful. Please check your email for the OTP.' };
+
     // Send email with OTP link
-    // Implement email sending functionality
+    await this.sendOTPEmail(email, otp);
+
+    return { status: 'success', message: 'Registration successful. Please check your email for the OTP.' };
+  }
+
+  async sendOTPEmail(email: string, otp: string) {
+    // Create transporter
+    const transporter = nodemailer.createTransport({
+      service: 'gmail', // Replace with your email service
+      auth: {
+        user: 'theskunkworks301@gmail.com', // Replace with your email
+        pass: 'snlfvyltleqsmmxg', // Replace with your password
+      },
+    });
+
+    // Send email
+    const info = await transporter.sendMail({
+      from: '"Your App" <theskunkworks301@gmail.com>', // Replace with your email
+      to: email,
+      subject: 'OTP for registration',
+      text: `Your OTP is ${otp}`,
+      html: `<b>Your OTP is ${otp}</b>`,
+    });
+
+    console.log('Message sent: %s', info.messageId);
   }
 
   // async verify(email: string, otp: string) {
