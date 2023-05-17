@@ -4,16 +4,22 @@ import Redis from 'ioredis';
 import * as nodemailer from 'nodemailer';
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import * as bcrypt from 'bcrypt';
 @Injectable()
 export class AuthService {
   constructor(@Inject('REDIS') private readonly redis: Redis) { }
 
   async register(email: string, password: string) {
+    const saltRounds = 10;
+    const firstHash = await bcrypt.hash(password, saltRounds);
+    const doubleHashedPassword = await bcrypt.hash(firstHash, saltRounds);
+
     // Generate OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
     // Save user's email, password, and OTP to Redis
-    await this.redis.set(email, JSON.stringify({ password, otp }), 'EX', 24 * 60 * 60);
+    const userData = JSON.stringify({ password: doubleHashedPassword, otp });
+    await this.redis.set(email, userData, 'EX', 24 * 60 * 60);
 
     // Retrieve the data from Redis to verify it was saved correctly
     const savedData = await this.redis.get(email);
@@ -28,10 +34,10 @@ export class AuthService {
   async sendOTPEmail(email: string, otp: string) {
     // Create transporter
     const transporter = nodemailer.createTransport({
-      service: 'gmail', // Replace with your email service
+      service: 'gmail', 
       auth: {
-        user: 'theskunkworks301@gmail.com', // Replace with your email
-        pass: 'snlfvyltleqsmmxg', // Replace with your password
+        user: 'theskunkworks301@gmail.com', 
+        pass: 'snlfvyltleqsmmxg', 
       },
     });
 
@@ -40,7 +46,7 @@ export class AuthService {
 
     // Send email
     const info = await transporter.sendMail({
-      from: '"Avalanche Analytics" <theskunkworks301@gmail.com>', // Replace with your email
+      from: '"Avalanche Analytics" <theskunkworks301@gmail.com>', 
       to: email,
       subject: 'OTP for Avalanche Analytics registration',
       text: `Hi, \nThank you for choosing Avalanche. Your OTP is ${otp} and will be valid for 24 hours\nRegards,\nAvalanche team`,
