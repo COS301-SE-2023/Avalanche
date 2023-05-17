@@ -1,6 +1,6 @@
 import { ReactNode } from "react"
 
-interface IAlternativeButton {
+interface IDeleteButton {
     text: string,
     onClick: any,
     loading?: boolean,
@@ -8,7 +8,7 @@ interface IAlternativeButton {
     icon?: any
 }
 
-export default function AlternativeButton({ text, onClick, loading = false, className = "", icon = null }: IAlternativeButton) {
+export default function DeleteButton({ text, onClick, loading = false, className = "", icon = null }: IDeleteButton) {
 
     const loadingElement = (): ReactNode => {
         return <svg aria-hidden="true" role="status" className="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -17,5 +17,7 @@ export default function AlternativeButton({ text, onClick, loading = false, clas
         </svg>
     }
 
-    return <button type="button" className={`py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 ${loading ? "disabled cursor-not-allowed" : "dark:hover:text-white dark:hover:bg-gray-700"} ${className}`} disabled={loading} onClick={(event) => onClick(event)}>{loading && loadingElement()}{text} {icon && icon}</button>
+    return <button type="button" className={`focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 ${loading ? "disabled cursor-not-allowed" : "dark:hover:text-white dark:hover:bg-gray-700"} ${className}`} disabled={loading} onClick={(event) => onClick(event)}>{loading && loadingElement()}{text} {icon && icon}</button>
+
+
 }

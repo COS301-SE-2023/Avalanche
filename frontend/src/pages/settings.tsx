@@ -1,12 +1,12 @@
 import Sidebar from "@/components/Navigation/SideBar"
 import Head from "next/head";
-import { Cog6ToothIcon } from "@heroicons/react/24/solid";
+import { ChevronDownIcon, Cog6ToothIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/router';
 import PageHeader from "@/components/Util/PageHeader";
 import { IntegrationLoginModal, APIKeyCreateModal, OrgnizationCreateModal } from "@/components/Modals";
-import { SubmitButton, WarningAlert } from "@/components/Util";
-import { Toaster } from 'react-hot-toast';
+import { AlternativeButton, DeleteButton, SubmitButton, WarningAlert } from "@/components/Util";
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function Settings() {
     /**
@@ -15,7 +15,7 @@ export default function Settings() {
     const router = useRouter();
 
     /**
-     * This variable holds the class name options for the two states of the tab navigation elements.
+     * This variable holds the className name options htmlFor the two states of the tab navigation elements.
      * active refers to the active tab while inactive refers to the inactive tabs (tabs that are not selected).
      */
     const tabOptions = {
@@ -114,7 +114,19 @@ export default function Settings() {
                         <a href="?tab=apikeys" className={tab === "apikeys" ? tabOptions.active : tabOptions.inactive}>API Keys</a>
                     </li>
                 </ul>
-                <button type="button" className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 m-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 float-right" onClick={() => setDemo(!demo)}>Demo Toggle</button>
+                <button type="button" className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 m-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 float-right" onClick={() => {
+                    setDemo(!demo);
+                    toast(`Demo mode: ${!demo ? 'on' : 'off'}`,
+                        {
+                            icon: '💀',
+                            style: {
+                                borderRadius: '10px',
+                                background: '#333',
+                                color: '#fff',
+                            },
+                        }
+                    );
+                }}>Demo Toggle</button>
             </div>
 
             {tab === "general" && <>
@@ -122,7 +134,7 @@ export default function Settings() {
             </>}
             {tab === "organizations" && <>
                 {demo ? <h2 className="text-2xl font-medium">Groups</h2> : <div className="flex justify-between items-center gap-10 mb-4">
-                    <WarningAlert title="Cannot Create!" text="Organizations are created automatically for you when you setup an integration." />
+                    <WarningAlert title="Cannot Create!" text="Organizations are created automatically htmlFor you when you setup an integration." />
                     <SubmitButton text="Add a new organization" onClick={() => setNOOpen(true)} />
                 </div>}
             </>}
@@ -133,10 +145,71 @@ export default function Settings() {
                 </div>
             </>}
             {tab === "apikeys" && <>
-                <div className="flex justify-between items-center gap-10 mb-4">
-                    <WarningAlert title="No API Keys." text="You dont have any API keys." />
-                    <SubmitButton text="Create an API Key" onClick={() => setAPIOpen(true)} />
-                </div>
+                {demo ?
+                    <>
+                        <AlternativeButton text="Actions" onClick={() => { }} icon={<ChevronDownIcon className="h-5 w-5" />} className="flex gap-2 mb-4" />
+                        <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+                            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                    <tr>
+                                        <th scope="col" className="p-4">
+                                            <div className="flex items-center">
+                                                <input id="checkbox-all" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
+                                                <label htmlFor="checkbox-all" className="sr-only">checkbox</label>
+                                            </div>
+                                        </th>
+                                        <th scope="col" className="px-6 py-3">
+                                            API Key Name
+                                        </th>
+                                        <th scope="col" className="px-6 py-3">
+                                            Description
+                                        </th>
+                                        <th scope="col" className="px-6 py-3">
+                                            Created
+                                        </th>
+                                        <th scope="col" className="px-6 py-3">
+                                            Actions
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {
+                                        [
+                                            { name: "Michael Domain Key", description: "Used to access the API for Michael's Domains", created: "Wednesday, 17 May 23, 21:33:25 SAST" },
+                                            { name: "Discord Bot", description: "Used for my discord bot so i can pull", created: "Wednesday, 17 May 23, 21:33:25 SAST" }
+                                        ].map((item, index) => {
+                                            return <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600" key={index}>
+                                                <td className="w-4 p-4">
+                                                    <div className="flex items-center">
+                                                        <input id="checkbox-table-1" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
+                                                        <label htmlFor="checkbox-table-1" className="sr-only">checkbox</label>
+                                                    </div>
+                                                </td>
+                                                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                    {item.name}
+                                                </th>
+                                                <td className="px-6 py-4">
+                                                    {item.description}
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    {item.created}
+                                                </td>
+                                                <td className="px-6 py-4 flex gap-3">
+                                                    <AlternativeButton text="Roll Key" onClick={() => { }} />
+                                                    <DeleteButton text="Delete Key" onClick={() => { }} />
+                                                </td>
+                                            </tr>
+                                        })
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </> : <div className="flex justify-between items-center gap-10 mb-4">
+                        <WarningAlert title="No API Keys." text="You dont have any API keys." />
+                        <SubmitButton text="Create an API Key" onClick={() => setAPIOpen(true)} />
+                    </div>}
+
             </>}
         </div>
 
