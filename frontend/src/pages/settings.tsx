@@ -1,14 +1,16 @@
 import Sidebar from "@/components/Navigation/SideBar"
 import Head from "next/head";
-import { ChevronDownIcon, Cog6ToothIcon } from "@heroicons/react/24/solid";
+import { Cog6ToothIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/router';
 import PageHeader from "@/components/Util/PageHeader";
 import { IntegrationLoginModal, APIKeyCreateModal, OrgnizationCreateModal } from "@/components/Modals";
-import { AlternativeButton, DeleteButton, SubmitButton, WarningAlert } from "@/components/Util";
+import { SubmitButton, WarningAlert } from "@/components/Util";
 import toast, { Toaster } from 'react-hot-toast';
 import OrganizationSettings from "@/components/Settings/Organizations";
 import API from "@/components/Settings/API";
+import { selectModalManagerState, setAnimateManagerState } from '@/store/modalManagerSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function Settings() {
     /**

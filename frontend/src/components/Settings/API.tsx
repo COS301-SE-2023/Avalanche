@@ -3,6 +3,10 @@ import { ChevronDownIcon, TrashIcon, ArrowPathIcon } from "@heroicons/react/24/s
 import { AlternativeButton, SubmitButton, TableIconButton, WarningAlert } from "../Util";
 import { ConfirmModal } from "../Modals";
 
+// Redux Stuff
+import { selectModalManagerState, setAnimateManagerState } from '@/store/modalManagerSlice';
+import { useDispatch, useSelector } from 'react-redux';
+
 interface IAPI {
     demo?: boolean,
     openModal?: any
@@ -10,17 +14,15 @@ interface IAPI {
 
 export default function API({ demo, openModal }: IAPI) {
 
+    const modalManager = useSelector(selectModalManagerState);
+    const dispatch = useDispatch();
+
     /**
      * This state variable is used whenever the delete modal is needed, to see if it is opened or closed
      */
     const [deleteConfirmModal, setDeleteConfirmModal] = useState<boolean>(false);
 
     const [rollConfirmModal, setRollConfirmModal] = useState<boolean>(false);
-
-    /**
-     * This state variable is used as a modal animation helper variable.
-     */
-    const [closeTrigger, setCloseTrigger] = useState<boolean>(false);
 
     return <>{
         demo ?
@@ -93,24 +95,22 @@ export default function API({ demo, openModal }: IAPI) {
             </div>
     }
 
-        {deleteConfirmModal && <div className={`animate__animated ${!closeTrigger ? "animate__fadeIn" : "animate__fadeOut"}`}><ConfirmModal handleModal={(event: React.FormEvent<HTMLFormElement>, value: boolean) => {
+        {deleteConfirmModal && <div className={`animate__animated ${!modalManager ? "animate__fadeIn" : "animate__fadeOut"}`}><ConfirmModal handleModal={(event: React.FormEvent<HTMLFormElement>, value: boolean) => {
             if (!value) {
-                setCloseTrigger(true);
                 setTimeout(() => {
                     setDeleteConfirmModal(value);
-                    setCloseTrigger(false);
+                    dispatch(setAnimateManagerState(false));
                 }, 150);
             } else {
                 setDeleteConfirmModal(value);
             }
         }} text="Are you sure you want to delete this API key?" title="Delete API Key Confirmation" buttonSuccess="Yes, delete" buttonCancel="No, cancel" /></div>}
 
-        {rollConfirmModal && <div className={`animate__animated ${!closeTrigger ? "animate__fadeIn" : "animate__fadeOut"}`}><ConfirmModal handleModal={(event: React.FormEvent<HTMLFormElement>, value: boolean) => {
+        {rollConfirmModal && <div className={`animate__animated ${!modalManager ? "animate__fadeIn" : "animate__fadeOut"}`}><ConfirmModal handleModal={(event: React.FormEvent<HTMLFormElement>, value: boolean) => {
             if (!value) {
-                setCloseTrigger(true);
                 setTimeout(() => {
                     setRollConfirmModal(value);
-                    setCloseTrigger(false);
+                    dispatch(setAnimateManagerState(false));
                 }, 150);
             } else {
                 setRollConfirmModal(value);
