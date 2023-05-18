@@ -10,22 +10,21 @@ interface IAPIKeyCreateModal {
 export default function APIKeyCreateModal({ }: IAPIKeyCreateModal) {
 
     /**
-     * This state variable holds the name of the API key
+     * these two variables are the fields from the form.
      */
     const [name, setName] = useState<string>("");
-
-    /**
-     * This state variable holds the description of the API key
-     */
     const [description, setDescription] = useState<string>("");
 
     /**
-     * This state variable holds if something is loading in the component or not
+     * These two variables are for error checking.
      */
-    const [loading, setLoading] = useState<boolean>(false);
-
     const [nameError, setNameError] = useState<boolean>(false);
     const [descriptionError, setDescriptionError] = useState<boolean>(false);
+
+    /**
+     * Boolean for if something is loading in the component.
+     */
+    const [loading, setLoading] = useState<boolean>(false);
 
     /**
      * This function handles the form submit.

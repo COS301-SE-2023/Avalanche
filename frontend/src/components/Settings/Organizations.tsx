@@ -4,7 +4,7 @@ import { TrashIcon } from '@heroicons/react/24/solid';
 import NoFind from '../CustomSVG/NoFind';
 import { ConfirmModal, CreateGroupModal, OrgnizationCreateModal } from '../Modals';
 import { ModalAnimationWrapper } from "../Modals/ModalOptions";
-import { selectModalManagerState, setCurrentOpenState, clearCurrentOpenState } from '@/store/modalManagerSlice';
+import { selectModalManagerState, setCurrentOpenState } from '@/store/modalManagerSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
 interface IOrganizationSettings {
@@ -105,7 +105,7 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
             <div className="flex gap-2">
                 <div className="flex gap-5 mb-1 pb-1 w-48 items-start">
                     <ul className="flex text-sm font-medium text-center pr-2 text-gray-500 dark:text-gray-400 flex-col gap-1 w-full">
-                        <AlternativeButton text="Create a Group" onClick={() => { }} className="mb-2" />
+                        <AlternativeButton text="Create a Group" onClick={() => dispatch(setCurrentOpenState("ORG.CreateGroup"))} className="mb-2" />
                         <li className="mr-2 cursor-pointer w-full" onClick={() => tabClick("billing")} >
                             <span className={groupTab === "billing" ? tabOptions.active : tabOptions.inactive}>Billing Group</span>
                         </li>

@@ -27,7 +27,7 @@ export default function Input({ type, placeholder, name, id, required, disabled,
      * Renders out the Input component to the DOM.
      */
     return <>
-        <input type={type} name={name} id={id} className={`bg-gray-50 border  text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-thirdBackground dark:border-thirdBackground dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${error ? "border-2 border-red-500 dark:border-red-600" : "border-gray-300"}`} placeholder={placeholder} required={required} disabled={disabled} onChange={(event) => onChangeTrigger(event)} value={value} maxLength={maxLength} />
+        <input type={type} name={name} id={id} className={`bg-gray-50 border-2 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-thirdBackground dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${error ? "border-red-500 dark:border-red-600" : "border-gray-300 dark:border-thirdBackground"}`} placeholder={placeholder} required={required} disabled={disabled} onChange={(event) => onChangeTrigger(event)} value={value} maxLength={maxLength} />
         {maxLength && <span className="float-right text-xs text-gray-500 dark:text-grey-200">{value.length}{maxLength && `/${maxLength}`} characters</span>}
     </>
 }
