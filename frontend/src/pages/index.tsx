@@ -78,7 +78,7 @@ export default function Home() {
                   {/* <a href="#" className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot password?</a> */}
                   <Anchor href="/forgot" text="Forgot password" customFont="text-sm" />
                 </div>
-                <SubmitButton text="Sign in" onClick={() => null} loading={loading} />
+                <SubmitButton text="Sign in" onClick={() => null} loading={loading} className="w-full" />
                 <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                   Don&apos;t have an account yet? <Link href="/register" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</Link>
                 </p>

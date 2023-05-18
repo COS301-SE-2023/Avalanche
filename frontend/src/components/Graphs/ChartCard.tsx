@@ -23,8 +23,8 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
     }
 
     return (
-        <div className="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-primaryBackground dark:border-primaryBackground w-full relative">
-            <div className="flex justify-between mb-5 text-black dark:text-white">
+        <div className="block p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-primaryBackground dark:border-primaryBackground w-full">
+            <div className="flex justify-between mb-5 text-black dark:text-white relative z-10">
                 <h1 className="p-1.5">{title}</h1>
                 <div className="flex flex-row gap-1">
                     <ChartCardButton onClick={(value: boolean) => setTypeDropdown(value)}>
@@ -39,11 +39,11 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
                         <MagnifyingGlassPlusIcon className="w-6 h-6" />
                     </ChartCardButton>
                 </div>
-                {typeDropdown && <div className="absolute right-0 top-16 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 z-40">
+                {typeDropdown && <div className="absolute right-0 top-16 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
                     <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
                         {
                             ChartTypeArray.map((item, index) => {
-                                return (<li>
+                                return (<li key={index}>
                                     <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer" key={index} onClick={() => {
                                         setTypeDropdown(false);
                                         setType(item.type);
@@ -62,8 +62,8 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
             {type === ChartType.Radar && <RadarChart data={data} />}
 
             {magnifyModal && <div id="defaultModal" tabIndex={-1} aria-hidden="true" className="fixed top-0 left-0 right-0 z-50 w-full overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] h-full flex justify-center items-center bg-slate-900/50" onClick={() => { handleMagnifyModal(false) }}>
-                <div className="relative w-full max-w-2xl max-h-full" onClick={(e) => e.stopPropagation()}>
-                    <div className="relative bg-white rounded-lg shadow dark:bg-primaryBackground">
+                <div className="relative w-full max-w-2xl max-h-screen" onClick={(e) => e.stopPropagation()}>
+                    <div className="relative bg-white lg:rounded-lg shadow dark:bg-primaryBackground h-screen lg:h-auto">
                         <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                             <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
                                 The Magnifier
