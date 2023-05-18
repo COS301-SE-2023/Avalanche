@@ -3,6 +3,7 @@ import { AlternativeButton, DeleteButton, SubmitButton, TableIconButton, Warning
 import { TrashIcon } from '@heroicons/react/24/solid';
 import NoFind from '../CustomSVG/NoFind';
 import { ConfirmModal } from '../Modals';
+import { ModalAnimationWrapper } from "../Modals/ModalOptions";
 
 interface IOrganizationSettings {
     demo?: boolean,
@@ -224,18 +225,10 @@ export default function OrganizationSettings({ demo, openModal }: IOrganizationS
             <SubmitButton text="Add a new organization" onClick={() => openModal(true)} />
         </div>
         }
-        {deleteConfirmModal && <div className={`animate__animated ${!closeTrigger ? "animate__fadeIn" : "animate__fadeOut"}`}>
+        {deleteConfirmModal && <ModalAnimationWrapper>
             <ConfirmModal handleModal={(event: React.FormEvent<HTMLFormElement>, value: boolean) => {
-                if (!value) {
-                    setCloseTrigger(true);
-                    setTimeout(() => {
-                        setDeleteConfirmModal(value);
-                        setCloseTrigger(false);
-                    }, 150);
-                } else {
-                    setDeleteConfirmModal(value);
-                }
+                setDeleteConfirmModal(value);
             }} text="Are you sure you want to remove this user from this group?" title="Remove User Confirmation" buttonSuccess="Yes, remove user" buttonCancel="No, cancel" />
-        </div>}
+        </ModalAnimationWrapper>}
     </>
 }

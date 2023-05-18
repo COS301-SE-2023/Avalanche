@@ -11,8 +11,13 @@ import OrganizationSettings from "@/components/Settings/Organizations";
 import API from "@/components/Settings/API";
 import { selectModalManagerState, setAnimateManagerState } from '@/store/modalManagerSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { ModalAnimationWrapper } from "@/components/Modals/ModalOptions";
 
 export default function Settings() {
+
+    const modalManager = useSelector(selectModalManagerState);
+    const dispatch = useDispatch();
+
     /**
      * This is just calling the NextJS router so we can reference it later on in the code
      */
@@ -149,15 +154,15 @@ export default function Settings() {
         </div>
 
         {/* Models go here */}
-        {iMOpen && <IntegrationLoginModal handleModal={(event: React.FormEvent<HTMLFormElement>, value: boolean) => {
+        {iMOpen && <ModalAnimationWrapper><IntegrationLoginModal handleModal={(event: React.FormEvent<HTMLFormElement>, value: boolean) => {
             setIMOpen(value);
-        }} />}
-        {apiOpen && <APIKeyCreateModal handleModal={(event: React.FormEvent<HTMLFormElement>, value: boolean) => {
+        }} /></ModalAnimationWrapper>}
+        {apiOpen && <ModalAnimationWrapper><APIKeyCreateModal handleModal={(event: React.FormEvent<HTMLFormElement>, value: boolean) => {
             setAPIOpen(value);
-        }} />}
-        {nOOpen && <OrgnizationCreateModal handleModal={(event: React.FormEvent<HTMLFormElement>, value: boolean) => {
+        }} /></ModalAnimationWrapper>}
+        {nOOpen && <ModalAnimationWrapper><OrgnizationCreateModal handleModal={(event: React.FormEvent<HTMLFormElement>, value: boolean) => {
             setNOOpen(value);
-        }} />}
+        }} /></ModalAnimationWrapper>}
 
     </>
 }

@@ -2,10 +2,9 @@ import { useState } from "react";
 import { ChevronDownIcon, TrashIcon, ArrowPathIcon } from "@heroicons/react/24/solid";
 import { AlternativeButton, SubmitButton, TableIconButton, WarningAlert } from "../Util";
 import { ConfirmModal } from "../Modals";
-
-// Redux Stuff
 import { selectModalManagerState, setAnimateManagerState } from '@/store/modalManagerSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { ModalAnimationWrapper } from "../Modals/ModalOptions";
 
 interface IAPI {
     demo?: boolean,
@@ -95,27 +94,13 @@ export default function API({ demo, openModal }: IAPI) {
             </div>
     }
 
-        {deleteConfirmModal && <div className={`animate__animated ${!modalManager ? "animate__fadeIn" : "animate__fadeOut"}`}><ConfirmModal handleModal={(event: React.FormEvent<HTMLFormElement>, value: boolean) => {
-            if (!value) {
-                setTimeout(() => {
-                    setDeleteConfirmModal(value);
-                    dispatch(setAnimateManagerState(false));
-                }, 150);
-            } else {
-                setDeleteConfirmModal(value);
-            }
-        }} text="Are you sure you want to delete this API key?" title="Delete API Key Confirmation" buttonSuccess="Yes, delete" buttonCancel="No, cancel" /></div>}
+        {deleteConfirmModal && <ModalAnimationWrapper><ConfirmModal handleModal={(event: React.FormEvent<HTMLFormElement>, value: boolean) => {
+            setDeleteConfirmModal(value);
+        }} text="Are you sure you want to delete this API key?" title="Delete API Key Confirmation" buttonSuccess="Yes, delete" buttonCancel="No, cancel" /></ModalAnimationWrapper>}
 
-        {rollConfirmModal && <div className={`animate__animated ${!modalManager ? "animate__fadeIn" : "animate__fadeOut"}`}><ConfirmModal handleModal={(event: React.FormEvent<HTMLFormElement>, value: boolean) => {
-            if (!value) {
-                setTimeout(() => {
-                    setRollConfirmModal(value);
-                    dispatch(setAnimateManagerState(false));
-                }, 150);
-            } else {
-                setRollConfirmModal(value);
-            }
-        }} text="Are you sure you want to roll this API key?" title="Roll API Key Confirmation" buttonSuccess="Yes, roll!" buttonCancel="No, cancel" /></div>}
+        {rollConfirmModal && <ModalAnimationWrapper><ConfirmModal handleModal={(event: React.FormEvent<HTMLFormElement>, value: boolean) => {
+            setRollConfirmModal(value);
+        }} text="Are you sure you want to roll this API key?" title="Roll API Key Confirmation" buttonSuccess="Yes, roll!" buttonCancel="No, cancel" /></ModalAnimationWrapper>}
 
     </>
 }
