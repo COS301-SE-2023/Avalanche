@@ -1,4 +1,4 @@
-import { setAnimateManagerState, clearCurrentOpenState } from '@/store/modalManagerSlice';
+import { setAnimateManagerState, clearCurrentOpenState } from '@/store/Slices/modalManagerSlice';
 import { useDispatch } from 'react-redux';
 import { XMarkIcon } from "@heroicons/react/24/solid";
 

@@ -9,7 +9,7 @@ import { SubmitButton, WarningAlert } from "@/components/Util";
 import toast, { Toaster } from 'react-hot-toast';
 import OrganizationSettings from "@/components/Settings/Organizations";
 import API from "@/components/Settings/API";
-import { selectModalManagerState, setCurrentOpenState } from '@/store/modalManagerSlice';
+import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { ModalAnimationWrapper } from "@/components/Modals/ModalOptions";
 

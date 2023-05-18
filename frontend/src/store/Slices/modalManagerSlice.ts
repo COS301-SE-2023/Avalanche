@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { AppState } from "./store";
+import { AppState } from "../store";
 import { HYDRATE } from "next-redux-wrapper";
 
 /**
@@ -7,7 +7,7 @@ import { HYDRATE } from "next-redux-wrapper";
  * @field {boolean} animateManager is a modal opening/closing animation helper
  * @field {string} currentOpen is what current modal is open
  */
-export interface ModalManagerState {
+export interface IModalManagerState {
     animateManager: boolean,
     currentOpen: string
 }
@@ -15,7 +15,7 @@ export interface ModalManagerState {
 /**
  * This is the initial state that ModalManagerState will be.
  */
-const initialState: ModalManagerState = {
+const initialState: IModalManagerState = {
     animateManager: false,
     currentOpen: ""
 }

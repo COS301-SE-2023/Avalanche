@@ -1,7 +1,7 @@
 import { ChevronDownIcon, TrashIcon, ArrowPathIcon } from "@heroicons/react/24/solid";
 import { AlternativeButton, SubmitButton, TableIconButton, WarningAlert } from "../Util";
 import { APIKeyCreateModal, ConfirmModal } from "../Modals";
-import { selectModalManagerState, setCurrentOpenState } from '@/store/modalManagerSlice';
+import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { ModalAnimationWrapper } from "../Modals/ModalOptions";
 

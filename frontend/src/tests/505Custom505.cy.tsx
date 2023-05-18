@@ -1,5 +1,5 @@
 import React from 'react'
-import Custom505 from './505'
+import Custom505 from '../pages/505'
 
 describe('<Custom505 />', () => {
   it('renders', () => {

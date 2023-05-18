@@ -4,7 +4,7 @@ import { TrashIcon } from '@heroicons/react/24/solid';
 import NoFind from '../CustomSVG/NoFind';
 import { ConfirmModal, CreateGroupModal, OrgnizationCreateModal } from '../Modals';
 import { ModalAnimationWrapper } from "../Modals/ModalOptions";
-import { selectModalManagerState, setCurrentOpenState } from '@/store/modalManagerSlice';
+import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
 interface IOrganizationSettings {

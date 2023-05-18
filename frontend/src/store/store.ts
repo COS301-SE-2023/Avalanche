@@ -1,10 +1,26 @@
 import { configureStore, ThunkAction, Action, applyMiddleware, MiddlewareArray, combineReducers } from "@reduxjs/toolkit";
 import logger from "redux-logger";
-import { modalManagerSlice } from "./modalManagerSlice";
+import { modalManagerSlice } from "./Slices/modalManagerSlice";
 import { createWrapper } from "next-redux-wrapper";
 
 import { persistReducer, persistStore } from "redux-persist";
-import storage from "redux-persist/lib/storage";
+import createWebStorage from "redux-persist/lib/storage/createWebStorage";
+
+const createNoopStorage = () => {
+    return {
+        getItem(_key: any) {
+            return Promise.resolve(null);
+        },
+        setItem(_key: any, value: any) {
+            return Promise.resolve(value);
+        },
+        removeItem(_key: any) {
+            return Promise.resolve();
+        },
+    };
+};
+
+const storage = typeof window !== "undefined" ? createWebStorage("local") : createNoopStorage();
 
 const rootReducer = combineReducers({
     [modalManagerSlice.name]: modalManagerSlice.reducer,

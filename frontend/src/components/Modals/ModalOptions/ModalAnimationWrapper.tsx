@@ -1,4 +1,4 @@
-import { selectModalManagerState } from '@/store/modalManagerSlice';
+import { selectModalManagerState } from '@/store/Slices/modalManagerSlice';
 import { useSelector } from 'react-redux';
 
 interface IModalAnimationWrapper {
