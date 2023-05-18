@@ -8,5 +8,18 @@ import Checkbox from './Checkbox';
 import AlternativeButton from './AlternativeButton';
 import ErrorToast from './ErrorToast';
 import DeleteButton from './DeleteButton';
+import TableIconButton from './TableIconButton';
 
-export { DangerAlert, Input, InputLabel, SubmitButton, WarningAlert, Anchor, Checkbox, AlternativeButton, ErrorToast, DeleteButton };
+export {
+    DangerAlert,
+    Input,
+    InputLabel,
+    SubmitButton,
+    WarningAlert,
+    Anchor,
+    Checkbox,
+    AlternativeButton,
+    ErrorToast,
+    DeleteButton,
+    TableIconButton
+};

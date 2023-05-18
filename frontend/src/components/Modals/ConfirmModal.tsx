@@ -7,9 +7,12 @@ import { XMarkIcon } from '@heroicons/react/24/solid';
 interface IConfirmModal {
     handleModal: any,
     text: string,
+    buttonSuccess: string,
+    buttonCancel: string,
+    title: string
 }
 
-export default function ConfirmModal({ handleModal, text }: IConfirmModal) {
+export default function ConfirmModal({ handleModal, text, buttonSuccess, buttonCancel, title }: IConfirmModal) {
 
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -43,7 +46,7 @@ export default function ConfirmModal({ handleModal, text }: IConfirmModal) {
 
                     {/* Modal Header */}
                     <div className="flex justify-between items-center mb-4">
-                        <h3 className="text-xl font-medium text-gray-900 dark:text-white">Delete Confirmation</h3>
+                        <h3 className="text-xl font-medium text-gray-900 dark:text-white">{title}</h3>
                         <button type="button" className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white" data-modal-hide="authentication-modal" onClick={(event) => handleModal(event, false)}>
                             <XMarkIcon className="h-5 w-5" />
                         </button>
@@ -52,11 +55,11 @@ export default function ConfirmModal({ handleModal, text }: IConfirmModal) {
                     {/* Modal Content */}
                     <p className="text-sm mb-4">{text}</p>
                     <form className="flex gap-5" onSubmit={(event) => formSubmit(event)}>
-                        <SubmitButton text="Yes, delete!" onClick={(event: React.FormEvent<HTMLFormElement>) => {
+                        <SubmitButton text={buttonSuccess} onClick={(event: React.FormEvent<HTMLFormElement>) => {
                             formSubmit(event);
                             setLoading(true);
                         }} className="w-full" loading={loading} />
-                        <DeleteButton text="No, cancel!" onClick={(event: React.FormEvent<HTMLFormElement>) => {
+                        <DeleteButton text={buttonCancel} onClick={(event: React.FormEvent<HTMLFormElement>) => {
                             event.preventDefault();
                             handleModal(event, false);
                         }} className="w-full" disabled={loading} />

@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { AlternativeButton, DeleteButton, SubmitButton, WarningAlert } from "../Util";
+import { useState } from "react";
+import { AlternativeButton, DeleteButton, SubmitButton, TableIconButton, WarningAlert } from "../Util";
 import { TrashIcon } from '@heroicons/react/24/solid';
 import NoFind from '../CustomSVG/NoFind';
 import { ConfirmModal } from '../Modals';
@@ -60,9 +60,14 @@ export default function OrganizationSettings({ demo, openModal }: IOrganizationS
     const [tempUsers, setTempUsers] = useState(users);
 
     /**
-     * This state variable is used whenever the delete modal is needed, to see if it is opened or closed
+     * This state variable is used whenever the delete modal is needed, to see if it is opened or closed.
      */
     const [deleteConfirmModal, setDeleteConfirmModal] = useState<boolean>(false);
+
+    /**
+     * This state variable is used as a modal animation helper variable.
+     */
+    const [closeTrigger, setCloseTrigger] = useState<boolean>(false);
 
     /**
      * This function handles the logic for searching for users.
@@ -152,65 +157,64 @@ export default function OrganizationSettings({ demo, openModal }: IOrganizationS
                                 <input type="text" id="table-search-users" className="block p-2 pl-10 text-sm text-gray-900 border-1.5 border-gray-300 rounded-lg w-80 bg-gray-50 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Search for users" onChange={(event: React.FormEvent<HTMLInputElement>) => handleSearch(event)} />
                             </div>
                         </div>
-                        {tempUsers.length > 0 ? <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                <tr>
-                                    <th scope="col" className="p-4">
-                                        <div className="flex items-center">
-                                            <input id="checkbox-all-search" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
-                                            <label htmlFor="checkbox-all-search" className="sr-only">checkbox</label>
-                                        </div>
-                                    </th>
-                                    <th scope="col" className="px-6 py-3">
-                                        Name
-                                    </th>
-                                    <th scope="col" className="px-6 py-3">
-                                        Added
-                                    </th>
-                                    <th scope="col" className="px-6 py-3">
+                        {tempUsers.length > 0 ?
+                            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 rounded-lg">
+                                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                    <tr>
+                                        <th scope="col" className="p-4">
+                                            <div className="flex items-center">
+                                                <input id="checkbox-all-search" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
+                                                <label htmlFor="checkbox-all-search" className="sr-only">checkbox</label>
+                                            </div>
+                                        </th>
+                                        <th scope="col" className="px-6 py-3">
+                                            Name
+                                        </th>
+                                        <th scope="col" className="px-6 py-3">
+                                            Added
+                                        </th>
+                                        <th scope="col" className="px-6 py-3">
 
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {
-                                    tempUsers.map((item, index) => {
-                                        return <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900" key={index}>
-                                            <td className="w-4 p-4">
-                                                <div className="flex items-center">
-                                                    <input id="checkbox-table-search-1" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
-                                                    <label htmlFor="checkbox-table-search-1" className="sr-only">checkbox</label>
-                                                </div>
-                                            </td>
-                                            <th scope="row" className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-                                                <img className="w-10 h-10 rounded-full" src="https://github.com/michaelrosstarr.png" alt="Jese image" />
-                                                <div className="pl-3">
-                                                    <div className="text-base font-semibold">{item.name}</div>
-                                                    <div className="font-normal text-gray-500">{item.email}</div>
-                                                </div>
-                                            </th>
-                                            <td className="px-6 py-4">
-                                                <div className="flex items-center">
-                                                    <div className="h-2.5 w-2.5 rounded-full bg-green-500 mr-2"></div> {item.added}
-                                                </div>
-                                            </td>
-                                            <td className="float-right mr-2">
-                                                <button type="button" className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-2 ml-auto inline-flex items-center dark:hover:bg-red-50 dark:hover:text-white dark:hover:border dark:hover:border-red-500" data-modal-hide="authentication-modal" onClick={(event) => {
-                                                    setDeleteConfirmModal(true);
-                                                }}>
-                                                    <TrashIcon className="h-5 w-5 text-red-500 cursor-pointer" />
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    })
-                                }
-                            </tbody>
-                        </table> : <div className="flex items-center flex-col gap-2">
-                            <NoFind className="h-48 w-48" />
-                            <h3 className="text-3xl font-medium text-gray-700 dark:text-white">No user found...</h3>
-                            <p className='text-xl text-gray-600 dark:text-gray-400'>No user matching the search criteria exists...</p>
-                            <p className='text-sm text-gray-600 dark:text-gray-400'>Data science is 80% preparing data, and 20% complaining about preparing data.</p>
-                        </div>}
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {
+                                        tempUsers.map((item, index) => {
+                                            return <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900" key={index}>
+                                                <td className="w-4 p-4">
+                                                    <div className="flex items-center">
+                                                        <input id="checkbox-table-search-1" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
+                                                        <label htmlFor="checkbox-table-search-1" className="sr-only">checkbox</label>
+                                                    </div>
+                                                </td>
+                                                <th scope="row" className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
+                                                    <img className="w-10 h-10 rounded-full" src="https://github.com/michaelrosstarr.png" alt="Jese image" />
+                                                    <div className="pl-3">
+                                                        <div className="text-base font-semibold">{item.name}</div>
+                                                        <div className="font-normal text-gray-500">{item.email}</div>
+                                                    </div>
+                                                </th>
+                                                <td className="px-6 py-4">
+                                                    <div className="flex items-center">
+                                                        <div className="h-2.5 w-2.5 rounded-full bg-green-500 mr-2"></div> {item.added}
+                                                    </div>
+                                                </td>
+                                                <td className="float-right mr-2">
+                                                    <TableIconButton icon={<TrashIcon className="h-5 w-5 text-red-500 cursor-pointer" />} colour="red" handleModal={(value) => {
+                                                        setDeleteConfirmModal(value);
+                                                    }} />
+                                                </td>
+                                            </tr>
+                                        })
+                                    }
+                                </tbody>
+                            </table> : <div className="flex items-center flex-col gap-2">
+                                <NoFind className="h-48 w-48" />
+                                <h3 className="text-3xl font-medium text-gray-700 dark:text-white">No user found...</h3>
+                                <p className='text-xl text-gray-600 dark:text-gray-400'>No user matching the search criteria exists...</p>
+                                <p className='text-sm text-gray-600 dark:text-gray-400'>Data science is 80% preparing data, and 20% complaining about preparing data.</p>
+                            </div>}
                     </div>
                 </div>
             </div>
@@ -220,8 +224,18 @@ export default function OrganizationSettings({ demo, openModal }: IOrganizationS
             <SubmitButton text="Add a new organization" onClick={() => openModal(true)} />
         </div>
         }
-        {deleteConfirmModal && <ConfirmModal handleModal={(event: React.FormEvent<HTMLFormElement>, value: boolean) => {
-            setDeleteConfirmModal(value);
-        }} text="Are you sure you want to remove this user from this group?" />}
+        {deleteConfirmModal && <div className={`animate__animated ${!closeTrigger ? "animate__fadeIn" : "animate__fadeOut"}`}>
+            <ConfirmModal handleModal={(event: React.FormEvent<HTMLFormElement>, value: boolean) => {
+                if (!value) {
+                    setCloseTrigger(true);
+                    setTimeout(() => {
+                        setDeleteConfirmModal(value);
+                        setCloseTrigger(false);
+                    }, 150);
+                } else {
+                    setDeleteConfirmModal(value);
+                }
+            }} text="Are you sure you want to remove this user from this group?" title="Remove User Confirmation" buttonSuccess="Yes, remove user" buttonCancel="No, cancel" />
+        </div>}
     </>
 }

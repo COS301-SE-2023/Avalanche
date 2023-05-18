@@ -5,6 +5,7 @@ import { wrapper } from '../store/store';
 import { useStore, Provider } from 'react-redux';
 import { Karla } from 'next/font/google';
 import 'animate.css';
+import '../assets/global.scss';
 
 const karla = Karla({
   subsets: ['latin'],

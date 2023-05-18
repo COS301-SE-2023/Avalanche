@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ChevronDownIcon, TrashIcon, ArrowPathIcon } from "@heroicons/react/24/solid";
-import { AlternativeButton, SubmitButton, WarningAlert } from "../Util";
+import { AlternativeButton, SubmitButton, TableIconButton, WarningAlert } from "../Util";
 import { ConfirmModal } from "../Modals";
 
 interface IAPI {
@@ -17,11 +17,16 @@ export default function API({ demo, openModal }: IAPI) {
 
     const [rollConfirmModal, setRollConfirmModal] = useState<boolean>(false);
 
+    /**
+     * This state variable is used as a modal animation helper variable.
+     */
+    const [closeTrigger, setCloseTrigger] = useState<boolean>(false);
+
     return <>{
         demo ?
             <>
                 <AlternativeButton text="Actions" onClick={() => { }} icon={<ChevronDownIcon className="h-5 w-5" />} className="flex gap-2 mb-4" />
-                <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+                <div className="relative overflow-x-auto shadow-md rounded-lg">
                     <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
@@ -68,16 +73,12 @@ export default function API({ demo, openModal }: IAPI) {
                                             {item.created}
                                         </td>
                                         <td className="px-6 py-4 flex gap-3 float-right">
-                                            <button type="button" className="text-gray-400 bg-transparent border border-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-2 ml-auto inline-flex items-center dark:hover:bg-green-50 dark:hover:text-white dark:hover:border-green-500" onClick={(event) => {
-                                                setRollConfirmModal(true);
-                                            }}>
-                                                <ArrowPathIcon className="h-5 w-5 text-green-500 cursor-pointer" />
-                                            </button>
-                                            <button type="button" className="text-gray-400 bg-transparent border border-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-2 ml-auto inline-flex items-center dark:hover:bg-red-50 dark:hover:text-white dark:hover:border-red-500" onClick={(event) => {
-                                                setDeleteConfirmModal(true);
-                                            }}>
-                                                <TrashIcon className="h-5 w-5 text-red-500 cursor-pointer" />
-                                            </button>
+                                            <TableIconButton icon={<ArrowPathIcon className="h-5 w-5 text-green-500 cursor-pointer" />} colour="green" handleModal={(value) => {
+                                                setRollConfirmModal(value);
+                                            }} />
+                                            <TableIconButton icon={<TrashIcon className="h-5 w-5 text-red-500 cursor-pointer" />} colour="red" handleModal={(value) => {
+                                                setDeleteConfirmModal(value);
+                                            }} />
                                         </td>
                                     </tr>
                                 })
@@ -92,9 +93,29 @@ export default function API({ demo, openModal }: IAPI) {
             </div>
     }
 
-        {deleteConfirmModal && <ConfirmModal handleModal={(event: React.FormEvent<HTMLFormElement>, value: boolean) => {
-            setRollConfirmModal(value);
-        }} text="Are you sure you want to roll this API key?" />}
+        {deleteConfirmModal && <div className={`animate__animated ${!closeTrigger ? "animate__fadeIn" : "animate__fadeOut"}`}><ConfirmModal handleModal={(event: React.FormEvent<HTMLFormElement>, value: boolean) => {
+            if (!value) {
+                setCloseTrigger(true);
+                setTimeout(() => {
+                    setDeleteConfirmModal(value);
+                    setCloseTrigger(false);
+                }, 150);
+            } else {
+                setDeleteConfirmModal(value);
+            }
+        }} text="Are you sure you want to delete this API key?" title="Delete API Key Confirmation" buttonSuccess="Yes, delete" buttonCancel="No, cancel" /></div>}
+
+        {rollConfirmModal && <div className={`animate__animated ${!closeTrigger ? "animate__fadeIn" : "animate__fadeOut"}`}><ConfirmModal handleModal={(event: React.FormEvent<HTMLFormElement>, value: boolean) => {
+            if (!value) {
+                setCloseTrigger(true);
+                setTimeout(() => {
+                    setRollConfirmModal(value);
+                    setCloseTrigger(false);
+                }, 150);
+            } else {
+                setRollConfirmModal(value);
+            }
+        }} text="Are you sure you want to roll this API key?" title="Roll API Key Confirmation" buttonSuccess="Yes, roll!" buttonCancel="No, cancel" /></div>}
 
     </>
 }
