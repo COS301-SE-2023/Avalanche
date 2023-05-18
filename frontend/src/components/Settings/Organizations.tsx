@@ -2,12 +2,13 @@ import { useState } from "react";
 import { AlternativeButton, DeleteButton, SubmitButton, TableIconButton, WarningAlert } from "../Util";
 import { TrashIcon } from '@heroicons/react/24/solid';
 import NoFind from '../CustomSVG/NoFind';
-import { ConfirmModal } from '../Modals';
+import { ConfirmModal, CreateGroupModal, OrgnizationCreateModal } from '../Modals';
 import { ModalAnimationWrapper } from "../Modals/ModalOptions";
+import { selectModalManagerState, setCurrentOpenState, clearCurrentOpenState } from '@/store/modalManagerSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 interface IOrganizationSettings {
     demo?: boolean,
-    openModal?: any
 }
 
 const usersArray = [
@@ -43,7 +44,10 @@ const usersArray = [
     }
 ];
 
-export default function OrganizationSettings({ demo, openModal }: IOrganizationSettings) {
+export default function OrganizationSettings({ demo }: IOrganizationSettings) {
+
+    const modalState = useSelector(selectModalManagerState);
+    const dispatch = useDispatch();
 
     /**
      * This state variable holds the current active user group tab.
@@ -59,16 +63,6 @@ export default function OrganizationSettings({ demo, openModal }: IOrganizationS
      * This state variable holds the temp users that are used in the search.
      */
     const [tempUsers, setTempUsers] = useState(users);
-
-    /**
-     * This state variable is used whenever the delete modal is needed, to see if it is opened or closed.
-     */
-    const [deleteConfirmModal, setDeleteConfirmModal] = useState<boolean>(false);
-
-    /**
-     * This state variable is used as a modal animation helper variable.
-     */
-    const [closeTrigger, setCloseTrigger] = useState<boolean>(false);
 
     /**
      * This function handles the logic for searching for users.
@@ -153,7 +147,7 @@ export default function OrganizationSettings({ demo, openModal }: IOrganizationS
                             <label htmlFor="table-search" className="sr-only">Search</label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                    <svg className="w-5 h-5 text-gray-500 dark:text-gray-400" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
+                                    <svg className="w-5 h-5 text-gray-500 dark:text-gray-400" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd"></path></svg>
                                 </div>
                                 <input type="text" id="table-search-users" className="block p-2 pl-10 text-sm text-gray-900 border-1.5 border-gray-300 rounded-lg w-80 bg-gray-50 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Search for users" onChange={(event: React.FormEvent<HTMLInputElement>) => handleSearch(event)} />
                             </div>
@@ -198,12 +192,12 @@ export default function OrganizationSettings({ demo, openModal }: IOrganizationS
                                                 </th>
                                                 <td className="px-6 py-4">
                                                     <div className="flex items-center">
-                                                        <div className="h-2.5 w-2.5 rounded-full bg-green-500 mr-2"></div> {item.added}
+                                                        <span className="h-2.5 w-2.5 rounded-full bg-green-500 mr-2"></span> {item.added}
                                                     </div>
                                                 </td>
                                                 <td className="float-right mr-2">
                                                     <TableIconButton icon={<TrashIcon className="h-5 w-5 text-red-500 cursor-pointer" />} colour="red" handleModal={(value) => {
-                                                        setDeleteConfirmModal(value);
+                                                        dispatch(setCurrentOpenState("ORG.RemoveUser"))
                                                     }} />
                                                 </td>
                                             </tr>
@@ -222,13 +216,17 @@ export default function OrganizationSettings({ demo, openModal }: IOrganizationS
 
         </> : <div className="flex justify-between items-center gap-10 mb-4">
             <WarningAlert title="Cannot Create!" text="Organizations are created automatically htmlFor you when you setup an integration." />
-            <SubmitButton text="Add a new organization" onClick={() => openModal(true)} />
+            <SubmitButton text="Add a new organization" onClick={() => dispatch(setCurrentOpenState("ORG.CreateOrg"))} />
         </div>
         }
-        {deleteConfirmModal && <ModalAnimationWrapper>
-            <ConfirmModal handleModal={(event: React.FormEvent<HTMLFormElement>, value: boolean) => {
-                setDeleteConfirmModal(value);
-            }} text="Are you sure you want to remove this user from this group?" title="Remove User Confirmation" buttonSuccess="Yes, remove user" buttonCancel="No, cancel" />
+        {modalState.currentOpen === "ORG.RemoveUser" && <ModalAnimationWrapper>
+            <ConfirmModal text="Are you sure you want to remove this user from this group?" title="Remove User Confirmation" buttonSuccess="Yes, remove user" buttonCancel="No, cancel" />
         </ModalAnimationWrapper>}
+
+        {modalState.currentOpen === "ORG.CreateGroup" && <ModalAnimationWrapper>
+            <CreateGroupModal />
+        </ModalAnimationWrapper>}
+
+        {modalState.currentOpen === "ORG.CreateOrg" && <ModalAnimationWrapper><OrgnizationCreateModal /></ModalAnimationWrapper>}
     </>
 }

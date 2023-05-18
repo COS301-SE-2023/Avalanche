@@ -4,18 +4,18 @@ import { Cog6ToothIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/router';
 import PageHeader from "@/components/Util/PageHeader";
-import { IntegrationLoginModal, APIKeyCreateModal, OrgnizationCreateModal } from "@/components/Modals";
+import { IntegrationLoginModal } from "@/components/Modals";
 import { SubmitButton, WarningAlert } from "@/components/Util";
 import toast, { Toaster } from 'react-hot-toast';
 import OrganizationSettings from "@/components/Settings/Organizations";
 import API from "@/components/Settings/API";
-import { selectModalManagerState, setAnimateManagerState } from '@/store/modalManagerSlice';
+import { selectModalManagerState, setCurrentOpenState } from '@/store/modalManagerSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { ModalAnimationWrapper } from "@/components/Modals/ModalOptions";
 
 export default function Settings() {
 
-    const modalManager = useSelector(selectModalManagerState);
+    const modalState = useSelector(selectModalManagerState);
     const dispatch = useDispatch();
 
     /**
@@ -39,20 +39,6 @@ export default function Settings() {
      */
     const [tab, setTab] = useState<string>("general");
 
-    /**
-     * This state variable holds whether the new integration modal should be open or not.
-     */
-    const [iMOpen, setIMOpen] = useState<boolean>(false);
-
-    /**
-     * This state variable holds whether the new organization modal should be open or not.
-     */
-    const [nOOpen, setNOOpen] = useState<boolean>(false);
-
-    /**
-     * This state variable holds whether the new api key modal should be open or not.
-     */
-    const [apiOpen, setAPIOpen] = useState<boolean>(false);
 
     /**
      * This is triggered whenever the router.query changes in any way. This is used to handle the displaying of the correct content on the page underneath the tab navigation.
@@ -142,27 +128,19 @@ export default function Settings() {
                 <WarningAlert title="Cannot Create!" text="Nothing to see here" />
             </>}
             {tab === "organizations" &&
-                <OrganizationSettings demo={demo} openModal={(value: boolean) => setNOOpen(value)} />
+                <OrganizationSettings demo={demo} />
             }
             {tab === "integrations" && <>
                 <div className="flex justify-between items-center gap-10 mb-4">
                     <WarningAlert title="No Integrations." text="You don't have any integrations setup." />
-                    <SubmitButton text="Add a new integration" onClick={() => setIMOpen(true)} />
+                    <SubmitButton text="Add a new integration" onClick={() => dispatch(setCurrentOpenState("INTE.CreateIntegration"))} />
                 </div>
             </>}
-            {tab === "apikeys" && <API demo={demo} openModal={(value: boolean) => setAPIOpen(value)} />}
+            {tab === "apikeys" && <API demo={demo} />}
         </div>
 
         {/* Models go here */}
-        {iMOpen && <ModalAnimationWrapper><IntegrationLoginModal handleModal={(event: React.FormEvent<HTMLFormElement>, value: boolean) => {
-            setIMOpen(value);
-        }} /></ModalAnimationWrapper>}
-        {apiOpen && <ModalAnimationWrapper><APIKeyCreateModal handleModal={(event: React.FormEvent<HTMLFormElement>, value: boolean) => {
-            setAPIOpen(value);
-        }} /></ModalAnimationWrapper>}
-        {nOOpen && <ModalAnimationWrapper><OrgnizationCreateModal handleModal={(event: React.FormEvent<HTMLFormElement>, value: boolean) => {
-            setNOOpen(value);
-        }} /></ModalAnimationWrapper>}
+        {modalState.currentOpen === "INTE.CreateIntegration" && <ModalAnimationWrapper><IntegrationLoginModal /></ModalAnimationWrapper>}
 
     </>
 }

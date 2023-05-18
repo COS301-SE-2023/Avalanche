@@ -6,10 +6,10 @@ import 'animate.css';
 import { ModalContent, ModalHeader, ModalWrapper } from "./ModalOptions";
 
 interface IIntegrationLoginModal {
-    handleModal: any,
+
 }
 
-export default function IntegrationLoginModal({ handleModal }: IIntegrationLoginModal) {
+export default function IntegrationLoginModal({ }: IIntegrationLoginModal) {
 
     /**
      * This state variable handles whether the dropdown for selecting the integration should be open for closed.
@@ -59,9 +59,9 @@ export default function IntegrationLoginModal({ handleModal }: IIntegrationLogin
      * This function renders the html to the DOM.
      */
     return (
-        <ModalWrapper handle={handleModal}>
+        <ModalWrapper>
 
-            <ModalHeader title="Add a new Integration" handle={handleModal} />
+            <ModalHeader title="Add a new Integration" />
 
             {/* Modal Content */}
             <ModalContent>

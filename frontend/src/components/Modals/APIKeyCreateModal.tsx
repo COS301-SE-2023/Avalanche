@@ -4,10 +4,10 @@ import 'animate.css';
 import { ModalContent, ModalHeader, ModalWrapper } from './ModalOptions';
 
 interface IAPIKeyCreateModal {
-    handleModal: any
+
 }
 
-export default function APIKeyCreateModal({ handleModal }: IAPIKeyCreateModal) {
+export default function APIKeyCreateModal({ }: IAPIKeyCreateModal) {
 
     /**
      * This state variable holds the name of the API key
@@ -57,15 +57,14 @@ export default function APIKeyCreateModal({ handleModal }: IAPIKeyCreateModal) {
             setLoading(false);
         }, 3000);
 
-
     }
 
     /**
      * This function renders the component to the DOM
      */
     return (
-        <ModalWrapper handle={handleModal}>
-            <ModalHeader title="Create a new API key" handle={handleModal} />
+        <ModalWrapper>
+            <ModalHeader title="Create a new API key" />
             <ModalContent>
                 <form className="space-y-6" onSubmit={(event) => formSubmit(event)}>
                     <div>

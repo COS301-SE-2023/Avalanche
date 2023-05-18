@@ -1,27 +1,18 @@
-import { useState } from "react";
 import { ChevronDownIcon, TrashIcon, ArrowPathIcon } from "@heroicons/react/24/solid";
 import { AlternativeButton, SubmitButton, TableIconButton, WarningAlert } from "../Util";
-import { ConfirmModal } from "../Modals";
-import { selectModalManagerState, setAnimateManagerState } from '@/store/modalManagerSlice';
+import { APIKeyCreateModal, ConfirmModal } from "../Modals";
+import { selectModalManagerState, setCurrentOpenState } from '@/store/modalManagerSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { ModalAnimationWrapper } from "../Modals/ModalOptions";
 
 interface IAPI {
     demo?: boolean,
-    openModal?: any
 }
 
-export default function API({ demo, openModal }: IAPI) {
+export default function API({ demo }: IAPI) {
 
-    const modalManager = useSelector(selectModalManagerState);
+    const modalState = useSelector(selectModalManagerState);
     const dispatch = useDispatch();
-
-    /**
-     * This state variable is used whenever the delete modal is needed, to see if it is opened or closed
-     */
-    const [deleteConfirmModal, setDeleteConfirmModal] = useState<boolean>(false);
-
-    const [rollConfirmModal, setRollConfirmModal] = useState<boolean>(false);
 
     return <>{
         demo ?
@@ -75,10 +66,10 @@ export default function API({ demo, openModal }: IAPI) {
                                         </td>
                                         <td className="px-6 py-4 flex gap-3 float-right">
                                             <TableIconButton icon={<ArrowPathIcon className="h-5 w-5 text-green-500 cursor-pointer" />} colour="green" handleModal={(value) => {
-                                                setRollConfirmModal(value);
+                                                dispatch(setCurrentOpenState("API.SetRollConfirm"));
                                             }} />
                                             <TableIconButton icon={<TrashIcon className="h-5 w-5 text-red-500 cursor-pointer" />} colour="red" handleModal={(value) => {
-                                                setDeleteConfirmModal(value);
+                                                dispatch(setCurrentOpenState("API.SetDeleteConfirm"));
                                             }} />
                                         </td>
                                     </tr>
@@ -90,17 +81,15 @@ export default function API({ demo, openModal }: IAPI) {
                 </div>
             </> : <div className="flex justify-between items-center gap-10 mb-4">
                 <WarningAlert title="No API Keys." text="You dont have any API keys." />
-                <SubmitButton text="Create an API Key" onClick={() => openModal(true)} />
+                <SubmitButton text="Create an API Key" onClick={() => dispatch(setCurrentOpenState("API.CreateAPIKey"))} />
             </div>
     }
 
-        {deleteConfirmModal && <ModalAnimationWrapper><ConfirmModal handleModal={(event: React.FormEvent<HTMLFormElement>, value: boolean) => {
-            setDeleteConfirmModal(value);
-        }} text="Are you sure you want to delete this API key?" title="Delete API Key Confirmation" buttonSuccess="Yes, delete" buttonCancel="No, cancel" /></ModalAnimationWrapper>}
+        {modalState.currentOpen === "API.SetDeleteConfirm" && <ModalAnimationWrapper><ConfirmModal text="Are you sure you want to delete this API key?" title="Delete API Key Confirmation" buttonSuccess="Yes, delete" buttonCancel="No, cancel" /></ModalAnimationWrapper>}
 
-        {rollConfirmModal && <ModalAnimationWrapper><ConfirmModal handleModal={(event: React.FormEvent<HTMLFormElement>, value: boolean) => {
-            setRollConfirmModal(value);
-        }} text="Are you sure you want to roll this API key?" title="Roll API Key Confirmation" buttonSuccess="Yes, roll!" buttonCancel="No, cancel" /></ModalAnimationWrapper>}
+        {modalState.currentOpen === "API.SetRollConfirm" && <ModalAnimationWrapper><ConfirmModal text="Are you sure you want to roll this API key?" title="Roll API Key Confirmation" buttonSuccess="Yes, roll!" buttonCancel="No, cancel" /></ModalAnimationWrapper>}
+
+        {modalState.currentOpen === "API.CreateAPIKey" && <ModalAnimationWrapper><APIKeyCreateModal /></ModalAnimationWrapper>}
 
     </>
 }

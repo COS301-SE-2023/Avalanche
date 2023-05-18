@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { Input, InputLabel, SubmitButton, ErrorToast } from '../Util';
-import { XMarkIcon } from '@heroicons/react/24/solid';
 import { ModalContent, ModalHeader, ModalWrapper } from './ModalOptions';
 
 interface IOrgnizationCreateModal {
-    handleModal: any
+
 }
 
-export default function OrgnizationCreateModal({ handleModal }: IOrgnizationCreateModal) {
+export default function OrgnizationCreateModal({ }: IOrgnizationCreateModal) {
 
     /**
      * this variable is for the length of the name of the organization. It defines the maximum length the name can be.
@@ -50,8 +49,8 @@ export default function OrgnizationCreateModal({ handleModal }: IOrgnizationCrea
      * This return renders out the HTML for the modal.
      */
     return (
-        <ModalWrapper handle={handleModal}>
-            <ModalHeader handle={handleModal} title="Create a new Organization" />
+        <ModalWrapper>
+            <ModalHeader title="Create a new Organization" />
             <ModalContent>
                 <form className="space-y-6" onSubmit={(event) => formSubmit(event)}>
                     <div>

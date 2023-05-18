@@ -3,18 +3,17 @@ import { DeleteButton, SubmitButton, ErrorToast } from '../Util';
 import { ModalContent, ModalHeader, ModalWrapper } from './ModalOptions';
 
 // Redux Stuff
-import { setAnimateManagerState } from '@/store/modalManagerSlice';
+import { setAnimateManagerState, clearCurrentOpenState } from '@/store/modalManagerSlice';
 import { useDispatch } from 'react-redux';
 
 interface IConfirmModal {
-    handleModal: any,
     text: string,
     buttonSuccess: string,
     buttonCancel: string,
     title: string
 }
 
-export default function ConfirmModal({ handleModal, text, buttonSuccess, buttonCancel, title }: IConfirmModal) {
+export default function ConfirmModal({ text, buttonSuccess, buttonCancel, title }: IConfirmModal) {
     const dispatch = useDispatch();
 
     const [loading, setLoading] = useState<boolean>(false);
@@ -28,8 +27,8 @@ export default function ConfirmModal({ handleModal, text, buttonSuccess, buttonC
     }
 
     return (
-        <ModalWrapper handle={handleModal}>
-            <ModalHeader title={title} handle={handleModal} />
+        <ModalWrapper>
+            <ModalHeader title={title} />
             <ModalContent>
                 <p className="text-sm mb-4">{text}</p>
                 <form className="flex gap-5" onSubmit={(event) => formSubmit(event)}>
@@ -39,7 +38,7 @@ export default function ConfirmModal({ handleModal, text, buttonSuccess, buttonC
                     }} className="w-full" loading={loading} />
                     <DeleteButton text={buttonCancel} onClick={(event: React.FormEvent<HTMLFormElement>) => {
                         event.preventDefault();
-                        handleModal(event, false);
+                        dispatch(clearCurrentOpenState());
                         dispatch(setAnimateManagerState(true));
                     }} className="w-full" disabled={loading} />
                 </form>
