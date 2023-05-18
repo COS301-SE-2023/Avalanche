@@ -8,6 +8,7 @@ import { IntegrationLoginModal, APIKeyCreateModal, OrgnizationCreateModal } from
 import { AlternativeButton, DeleteButton, SubmitButton, WarningAlert } from "@/components/Util";
 import toast, { Toaster } from 'react-hot-toast';
 import OrganizationSettings from "@/components/Settings/Organizations";
+import API from "@/components/Settings/API";
 
 export default function Settings() {
     /**
@@ -133,82 +134,16 @@ export default function Settings() {
             {tab === "general" && <>
                 <WarningAlert title="Cannot Create!" text="Nothing to see here" />
             </>}
-            {tab === "organizations" && <>
+            {tab === "organizations" &&
                 <OrganizationSettings demo={demo} openModal={(value: boolean) => setNOOpen(value)} />
-            </>}
+            }
             {tab === "integrations" && <>
                 <div className="flex justify-between items-center gap-10 mb-4">
                     <WarningAlert title="No Integrations." text="You don't have any integrations setup." />
                     <SubmitButton text="Add a new integration" onClick={() => setIMOpen(true)} />
                 </div>
             </>}
-            {tab === "apikeys" && <>
-                {demo ?
-                    <>
-                        <AlternativeButton text="Actions" onClick={() => { }} icon={<ChevronDownIcon className="h-5 w-5" />} className="flex gap-2 mb-4" />
-                        <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-                            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                    <tr>
-                                        <th scope="col" className="p-4">
-                                            <div className="flex items-center">
-                                                <input id="checkbox-all" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
-                                                <label htmlFor="checkbox-all" className="sr-only">checkbox</label>
-                                            </div>
-                                        </th>
-                                        <th scope="col" className="px-6 py-3">
-                                            API Key Name
-                                        </th>
-                                        <th scope="col" className="px-6 py-3">
-                                            Description
-                                        </th>
-                                        <th scope="col" className="px-6 py-3">
-                                            Created
-                                        </th>
-                                        <th scope="col" className="px-6 py-3">
-                                            Actions
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {
-                                        [
-                                            { name: "Michael Domain Key", description: "Used to access the API for Michael's Domains", created: "Wednesday, 17 May 23, 21:33:25 SAST" },
-                                            { name: "Discord Bot", description: "Used for my discord bot so i can pull", created: "Wednesday, 17 May 23, 21:33:25 SAST" }
-                                        ].map((item, index) => {
-                                            return <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600" key={index}>
-                                                <td className="w-4 p-4">
-                                                    <div className="flex items-center">
-                                                        <input id="checkbox-table-1" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
-                                                        <label htmlFor="checkbox-table-1" className="sr-only">checkbox</label>
-                                                    </div>
-                                                </td>
-                                                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                    {item.name}
-                                                </th>
-                                                <td className="px-6 py-4">
-                                                    {item.description}
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    {item.created}
-                                                </td>
-                                                <td className="px-6 py-4 flex gap-3">
-                                                    <AlternativeButton text="Roll Key" onClick={() => { }} />
-                                                    <DeleteButton text="Delete Key" onClick={() => { }} />
-                                                </td>
-                                            </tr>
-                                        })
-                                    }
-
-                                </tbody>
-                            </table>
-                        </div>
-                    </> : <div className="flex justify-between items-center gap-10 mb-4">
-                        <WarningAlert title="No API Keys." text="You dont have any API keys." />
-                        <SubmitButton text="Create an API Key" onClick={() => setAPIOpen(true)} />
-                    </div>}
-
-            </>}
+            {tab === "apikeys" && <API demo={demo} openModal={(value: boolean) => setAPIOpen(value)} />}
         </div>
 
         {/* Models go here */}

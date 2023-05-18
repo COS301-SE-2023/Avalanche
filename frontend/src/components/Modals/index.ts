@@ -1,6 +1,6 @@
 import IntegrationLoginModal from "./IntegrationLoginModal";
 import APIKeyCreateModal from "./APIKeyCreateModal";
 import OrgnizationCreateModal from "./OrgnizationCreateModal";
-import DeleteConfirmModal from "./DeleteConfirmModal";
+import ConfirmModal from "./ConfirmModal";
 
-export { IntegrationLoginModal, APIKeyCreateModal, OrgnizationCreateModal, DeleteConfirmModal };
+export { IntegrationLoginModal, APIKeyCreateModal, OrgnizationCreateModal, ConfirmModal };

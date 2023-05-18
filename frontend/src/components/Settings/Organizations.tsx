@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { AlternativeButton, DeleteButton, SubmitButton, WarningAlert } from "../Util";
 import { TrashIcon } from '@heroicons/react/24/solid';
 import NoFind from '../CustomSVG/NoFind';
-import { DeleteConfirmModal } from '../Modals';
+import { ConfirmModal } from '../Modals';
 
 interface IOrganizationSettings {
     demo?: boolean,
@@ -200,7 +200,6 @@ export default function OrganizationSettings({ demo, openModal }: IOrganizationS
                                                 }}>
                                                     <TrashIcon className="h-5 w-5 text-red-500 cursor-pointer" />
                                                 </button>
-
                                             </td>
                                         </tr>
                                     })
@@ -221,7 +220,7 @@ export default function OrganizationSettings({ demo, openModal }: IOrganizationS
             <SubmitButton text="Add a new organization" onClick={() => openModal(true)} />
         </div>
         }
-        {deleteConfirmModal && <DeleteConfirmModal handleModal={(event: React.FormEvent<HTMLFormElement>, value: boolean) => {
+        {deleteConfirmModal && <ConfirmModal handleModal={(event: React.FormEvent<HTMLFormElement>, value: boolean) => {
             setDeleteConfirmModal(value);
         }} text="Are you sure you want to remove this user from this group?" />}
     </>

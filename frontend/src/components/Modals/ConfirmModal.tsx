@@ -4,14 +4,13 @@ import toast from 'react-hot-toast';
 import 'animate.css';
 import { XMarkIcon } from '@heroicons/react/24/solid';
 
-interface IDeleteConfirmModal {
+interface IConfirmModal {
     handleModal: any,
     text: string,
 }
 
-export default function DeleteConfirmModal({ handleModal, text }: IDeleteConfirmModal) {
+export default function ConfirmModal({ handleModal, text }: IConfirmModal) {
 
-    const [name, setName] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
 
     const formSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
