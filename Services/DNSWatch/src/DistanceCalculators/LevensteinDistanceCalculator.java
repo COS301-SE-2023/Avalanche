@@ -3,8 +3,8 @@ package DistanceCalculators;
 import java.util.Arrays;
 
 public class LevensteinDistanceCalculator {
-    public int calculateBasicLevenshteinDistance(String x, String y) {
-        int[][] dp = new int[x.length() + 1][y.length() + 1];
+    public double calculateBasicLevenshteinDistance(String x, String y) {
+        double[][] dp = new double[x.length() + 1][y.length() + 1];
 
         for (int i = 0; i <= x.length(); i++) {
             for (int j = 0; j <= y.length(); j++) {
@@ -24,11 +24,22 @@ public class LevensteinDistanceCalculator {
         return dp[x.length()][y.length()];
     }
 
-    private int costOfSubstitution(char a, char b) {
-        return a == b ? 0 : 1;
+    private double costOfSubstitution(char a, char b) {
+        if (a == b) {
+            return 0;
+        }
+        if (checkBothWays(a, '0', b, 'O')) {
+            return 0.1;
+        }
+
+        return 1;
     }
 
-    private int min(int... numbers) {
+    private boolean checkBothWays(char a, char check1, char b, char check2) {
+        return ((a == check1 && b == check2) || (a == check2 && b == check1));
+    }
+
+    private double min(double... numbers) {
         return Arrays.stream(numbers)
                 .min().orElse(Integer.MAX_VALUE);
     }
