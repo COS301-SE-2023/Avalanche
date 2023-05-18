@@ -1,14 +1,24 @@
 /* eslint-disable prettier/prettier */
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('users') // Corresponds to table name
+@Entity()
 export class User {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column({ unique: true })
-    email: string;
+  @Column()
+  email: string;
 
-    @Column()
-    password: string;
+  @Column()
+  password: string;
+
+  @Column({ type: 'json', nullable: true })
+  integrations: string[];
+
+  @Column({ nullable: true })
+  organisations: string;
+
+  @Column({ type: 'json', nullable: true })
+  userGroups: string[];
 }
+

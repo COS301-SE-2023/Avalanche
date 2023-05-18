@@ -7,6 +7,7 @@ export const RedisProvider: Provider = {
     provide: 'REDIS',
     useFactory: (configService: ConfigService): Redis => {
       const redisPort = configService.get<number>('REDIS_PORT');
+      const test = configService.get('POSTGRES_PASSWORD');
       if (!redisPort) {
         throw new Error('Environment variable REDIS_PORT not found');
       }
