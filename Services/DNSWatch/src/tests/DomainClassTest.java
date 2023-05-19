@@ -8,20 +8,20 @@ import DataClasses.Domain;
 
 public class DomainClassTest {
     @Test
-    public void testZoneExtraction() {
-        Domain d = new Domain("a.b", "b");
+    public void testConstruction() {
+        Domain d = new Domain("a", "b");
         assertEquals("a", d.getName());
         assertEquals("b", d.getZone());
 
-        d = new Domain("meep.africa", "AFRICA");
+        d = new Domain("meep", "AFRICA");
         assertEquals("meep", d.getName());
         assertEquals("AFRICA", d.getZone());
 
-        d = new Domain("africa.africa", "AFRICA");
+        d = new Domain("africa", "AFRICA");
         assertEquals("africa", d.getName());
         assertEquals("AFRICA", d.getZone());
 
-        d = new Domain("AFRICA.AFRICA.africa", "AFRICA");
+        d = new Domain("AFRICA.AFRICA", "AFRICA");
         assertEquals("AFRICA.AFRICA", d.getName());
         assertEquals("AFRICA", d.getZone());
     }
