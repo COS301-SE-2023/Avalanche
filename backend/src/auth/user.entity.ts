@@ -1,5 +1,7 @@
 /* eslint-disable prettier/prettier */
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, ManyToOne, JoinColumn } from 'typeorm';
+import { UserGroup } from '../user-management/userGroup.entity';
+import { Organisation } from '../user-management/organisation.entity';
 
 @Entity()
 export class User {
@@ -24,10 +26,15 @@ export class User {
   @Column({ type: 'json', nullable: true })
   integrations: string[];
 
-  @Column({ nullable: true })
-  organisations: string;
+  @ManyToMany(() => UserGroup, (userGroup) => userGroup.users, { nullable: true })
+  @JoinTable()
+  userGroups: UserGroup[];
 
-  @Column({ type: 'json', nullable: true })
-  userGroups: string[];
+  @ManyToOne(() => Organisation, (organisation) => organisation.users, { nullable: true })
+  @JoinColumn({ name: 'organisationId' })
+  organisation: Organisation;
+
+  @Column({ nullable: true })
+  organisationId: number;
 }
 

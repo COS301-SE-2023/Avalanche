@@ -74,7 +74,7 @@ export class AuthService {
     if (otp !== savedOtp) throw new Error('Invalid OTP');
 
     // Save user's information to PostgreSQL
-    const user = this.userRepository.create({ email, password, salt, firstName, lastName, integrations: null, organisations: null, userGroups: null });
+    const user = this.userRepository.create({ email, password, salt, firstName, lastName, integrations: null, organisation: null, userGroups: null });
     console.log(user);
     const check = await this.userRepository.save(user);
     console.log(check);
