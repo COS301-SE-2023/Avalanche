@@ -12,6 +12,15 @@ export class User {
   @Column()
   password: string;
 
+  @Column({nullable: true})
+  salt: string;
+
+  @Column({nullable: true})
+  firstName: string;
+
+  @Column({nullable: true})
+  lastName: string;
+
   @Column({ type: 'json', nullable: true })
   integrations: string[];
 

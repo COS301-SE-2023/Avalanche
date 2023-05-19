@@ -9,22 +9,25 @@ import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
+import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class AuthService {
   constructor(@Inject('REDIS') private readonly redis: Redis, private readonly configService: ConfigService,
-    @InjectRepository(User) private userRepository: Repository<User>,) { }
+    @InjectRepository(User) private userRepository: Repository<User>,
+    private jwtService: JwtService,) { }
 
-  async register(email: string, password: string) {
+  async register(email: string, password: string, firstName: string, lastName: string) {
     const saltRounds = 10;
-    const firstHash = await bcrypt.hash(password, saltRounds);
-    const doubleHashedPassword = await bcrypt.hash(firstHash, saltRounds);
+    const salt = await bcrypt.genSalt(saltRounds);
+    const firstHash = await bcrypt.hash(password, salt);
+    const doubleHashedPassword = await bcrypt.hash(firstHash, salt);
 
     // Generate OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
     // Save user's email, password, and OTP to Redis
-    const userData = JSON.stringify({ password: doubleHashedPassword, email: email });
-    await this.redis.set(otp, userData, 'EX', 24 * 60 * 60);
+    const userData = JSON.stringify({ password: doubleHashedPassword, otp: otp, salt: salt, firstName : firstName, lastName: lastName });
+    await this.redis.set(email, userData, 'EX', 24 * 60 * 60);
 
     // Retrieve the data from Redis to verify it was saved correctly
     const savedData = await this.redis.get(email);
@@ -39,19 +42,19 @@ export class AuthService {
   async sendOTPEmail(email: string, otp: string) {
     // Create transporter
     const transporter = nodemailer.createTransport({
-      service: 'gmail', 
+      service: 'gmail',
       auth: {
-        user: 'theskunkworks301@gmail.com', 
+        user: 'theskunkworks301@gmail.com',
         pass: this.configService.get('GOOGLE_PASSWORD'),
       },
     });
 
-    const otpHtmlTemplate = readFileSync(join(__dirname,'../../src/auth/otp-email-template.html'), 'utf-8');
+    const otpHtmlTemplate = readFileSync(join(__dirname, '../../src/auth/otp-email-template.html'), 'utf-8');
     const otpHtml = otpHtmlTemplate.replace('{OTP}', otp);
 
     // Send email
     const info = await transporter.sendMail({
-      from: '"Avalanche Analytics" <theskunkworks301@gmail.com>', 
+      from: '"Avalanche Analytics" <theskunkworks301@gmail.com>',
       to: email,
       subject: 'OTP for Avalanche Analytics registration',
       text: `Hi, \nThank you for choosing Avalanche. Your OTP is ${otp} and will be valid for 24 hours\nRegards,\nAvalanche team`,
@@ -66,12 +69,15 @@ export class AuthService {
     const userInfo = await this.redis.get(email);
     if (!userInfo) throw new Error('Invalid OTP');
 
-    const { password, otp: savedOtp } = JSON.parse(userInfo);
+    const { password, salt, firstName, lastName, otp: savedOtp } = JSON.parse(userInfo);
+    console.log(password + " " + otp);
     if (otp !== savedOtp) throw new Error('Invalid OTP');
 
     // Save user's information to PostgreSQL
-    const user = this.userRepository.create({ email, password, integrations: null, organisations: null, userGroups: null });
-    await this.userRepository.save(user);
+    const user = this.userRepository.create({ email, password, salt, firstName, lastName, integrations: null, organisations: null, userGroups: null });
+    console.log(user);
+    const check = await this.userRepository.save(user);
+    console.log(check);
 
     // Remove user's information from Redis
     await this.redis.del(email);
@@ -79,20 +85,38 @@ export class AuthService {
     return { status: 'success', message: 'Verification successful.' };
   }
 
-  // async verify(email: string, otp: string) {
-  //   // Get user's info from Redis
-  //   const client = this.redisService.getClient();
-  //   const userInfo = await client.get(email);
-  //   if (!userInfo) throw new Error('Invalid OTP');
+  async login(email: string, passwordLogin: string) {
+    // Fetch user from the PostgreSQL database
+    const user = await this.userRepository.findOne({ where: { email } });
 
-  //   const { password, otp: savedOtp } = JSON.parse(userInfo);
-  //   if (otp !== savedOtp) throw new Error('Invalid OTP');
+    // If user not found, throw error
+    if (!user) {
+      throw new Error('User not found');
+    }
 
-  //   // Save user's information to PostgreSQL
-  //   const user = this.usersRepository.create({ email, password });
-  //   await this.usersRepository.save(user);
+    // Verify the provided password with the user's hashed password in the database
+    const saltFromDB = user.salt;
+    passwordLogin = await bcrypt.hash(passwordLogin, saltFromDB);
+    passwordLogin = await bcrypt.hash(passwordLogin, saltFromDB);
 
-  //   // Remove user's information from Redis
-  //   await client.del(email);
-  // }
+    const passwordIsValid = await bcrypt.compare(passwordLogin, user.password);
+
+    // If the password isn't valid, throw error
+    if (passwordIsValid) {
+      throw new Error('Invalid password');
+    }
+
+    // Create JWT token with user's email as payload
+    const jwtToken = this.jwtService.sign({ email: user.email });
+
+    // If the password is valid, store jwt token and user's information in Redis
+    // We exclude password and salt field here for security reasons
+    const { password, salt, ...userWithoutPassword } = user;
+    const userWithToken = { ...userWithoutPassword, token: jwtToken};
+    await this.redis.set(jwtToken, JSON.stringify(userWithToken), 'EX', 24 * 60 * 60);
+
+    // Send back user's information along with the token as a JSON object
+    return userWithToken;
+  }
+
 }
