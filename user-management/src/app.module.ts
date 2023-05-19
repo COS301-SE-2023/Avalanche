@@ -1,13 +1,16 @@
 /* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { AuthService } from './services/auth.service';
 import { RedisProvider } from './redis.provider';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './user.entity';
+import { User } from './entity/user.entity';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { UserGroup } from './entity/userGroup.entity';
+import { Organisation } from './entity/organisation.entity';
+import { UserService } from './services/user-management.service';
 
 @Module({
   imports: [
@@ -41,16 +44,16 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         username: configService.get('POSTGRES_USER'),
         password: configService.get('POSTGRES_PASSWORD'),
         database: configService.get('POSTGRES_DB'),
-        entities: [User], // We change entities to an array that includes the User entity. 
+        entities: [User, UserGroup, Organisation], // We change entities to an array that includes the User entity. 
         synchronize: true,
       }),
       inject: [ConfigService],
     }), 
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, UserGroup, Organisation]),
   ],
   controllers: [AppController],
-  providers: [AppService, RedisProvider],
-  exports: [AppService],
+  providers: [AuthService, RedisProvider, UserService],
+  exports: [AuthService, UserService],
 })
 export class AppModule {}
 

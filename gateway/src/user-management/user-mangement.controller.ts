@@ -14,7 +14,6 @@ export class UserManagementController {
     const result = await lastValueFrom(this.client.send(pattern, payload));
     return result;
   }
-
   @Post('verify')
   async verify(@Body() data: any) {
     const pattern = { cmd: 'verify' };
@@ -22,10 +21,16 @@ export class UserManagementController {
     const result = await lastValueFrom(this.client.send(pattern, payload));
     return result;
   }
-
   @Post('login')
   async login(@Body() data: any) {
     const pattern = { cmd: 'login' };
+    const payload = data;
+    const result = await lastValueFrom(this.client.send(pattern, payload));
+    return result;
+  }
+  @Post('createOrganisation')
+  async createOrganisation(@Body() data: any) {
+    const pattern = { cmd: 'createOrganisation' };
     const payload = data;
     const result = await lastValueFrom(this.client.send(pattern, payload));
     return result;

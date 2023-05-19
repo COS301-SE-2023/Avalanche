@@ -7,11 +7,11 @@ import { join } from 'path';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './user.entity';
+import { User } from '../entity/user.entity';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 @Injectable()
-export class AppService {
+export class AuthService {
   constructor(@Inject('REDIS') private readonly redis: Redis, private readonly configService: ConfigService,
     @InjectRepository(User) private userRepository: Repository<User>,
     private jwtService: JwtService,) { }
@@ -74,7 +74,7 @@ export class AppService {
     if (otp !== savedOtp) throw new Error('Invalid OTP');
 
     // Save user's information to PostgreSQL
-    const user = this.userRepository.create({ email, password, salt, firstName, lastName, integrations: null, organisation: null, userGroups: null });
+    const user = this.userRepository.create({ email, password, salt, firstName, lastName});
     console.log(user);
     const check = await this.userRepository.save(user);
     console.log(check);

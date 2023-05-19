@@ -10,6 +10,7 @@ export class JwtMiddleware implements NestMiddleware {
   async use(req: Request, res: Response, next: NextFunction) {
     try {
       // Get token from header
+      console.log(req.headers);
       const token = req.headers.authorization?.split(' ')[1];
 
       // Get user's information from Redis by token
