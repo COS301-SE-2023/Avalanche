@@ -57,4 +57,11 @@ export class UserManagementController {
     const result = await lastValueFrom(this.client.send(pattern, payload));
     return result;
   }
+  @Post('removeUserFromUserGroup')
+  async removeUserFromUserGroup(@Body() data: any) {
+    const pattern = { cmd: 'removeUserFromUserGroup' };
+    const payload = data;
+    const result = await lastValueFrom(this.client.send(pattern, payload));
+    return result;
+  }
 }

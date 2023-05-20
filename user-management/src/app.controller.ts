@@ -36,7 +36,7 @@ export class AppController {
   @MessagePattern({ cmd: 'addUserToUserGroup' })
   async addUserToUserGroup(data: any) {
     console.log("Adding a user to a user group: ", data);
-    return await this.userService.addUserToUserGroup(data.token, data.userEmail, data.userGroupName);
+    return await this.userService.addUserToUserGroup(data.token, data.userEmail, data.userGroupName, data.userAddedPermission);
   }
   @MessagePattern({ cmd: 'exitUserGroup' })
   async exitUserGroup(data: any) {

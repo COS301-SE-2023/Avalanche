@@ -33,4 +33,7 @@ export class UserManagementService {
   async exitUserGroup(data: any) {
     return this.client.send({ cmd: 'exitUserGroup' }, data).toPromise();
   }
+  async removeUserFromUserGroup(data: any){
+    return this.client.send({cmd: 'removeUserFromUserGroup'}, data).toPromise();
+  }
 }
