@@ -61,8 +61,7 @@ describe('AuthService', () => {
       const password = 'password';
       const firstName = 'test';
       const lastName = 'test';
-      const otpHtmlTemplate = readFileSync(join(__dirname, './otp-email-template.html'), 'utf-8'); // Changed the path
-      const otpHtml = otpHtmlTemplate.replace('{OTP}', otp);
+      const otpHtmlTemplate = readFileSync(join(__dirname, './otp-email-template.html'), 'utf-8');
       mockRedis.set.mockResolvedValue('OK');
 
       const result = await authService.register(email, password, firstName, lastName);

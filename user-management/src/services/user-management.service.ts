@@ -27,7 +27,6 @@ export class UserService {
         // Check if the user already belongs to an organisation
         if (user.organisationId) {
             throw new ConflictException('User already belongs to an organisation');
-            return
         }
 
         // Check if the organisation name is already taken
@@ -89,12 +88,14 @@ export class UserService {
         }
     }
 
-    async addUserToUserGroup(token: string, userEmail: string, userGroupName: string, userAddedPermission: number) {
+    async addUserToUserGroup(token: string, userEmail: string, userGroupName: string) {
         // Get organizationId from Redis using token
         const userPayload = await this.redis.get(token);
         const user = JSON.parse(userPayload);
         const organisationId = user.organisationId;
         const userPermission = user.userGroups[0].permission;
+
+        const userToFind = await this.userRepository.findOne({ where: { email: userEmail } });
 
         if (userPermission == 1 || userPermission == 2) {
             // Find user group by name and organizationId
@@ -102,22 +103,24 @@ export class UserService {
             if (!userGroup) {
                 throw new ConflictException("This user group does not exist, please create one");
             } else {
-                if (!user) {
+                if (!userToFind) {
                     const key = uuidv4();
                     // Send email to non-existing user with registration link
-                    const registerData = JSON.stringify({ userEmail: userEmail, userGroupName: userGroupName, userPermission: userAddedPermission });
-                    await this.redis.set(key, JSON.stringify(registerData), 'EX', 7 * 24 * 60 * 60);
+                    const registerData = JSON.stringify({ userEmail: userEmail, userGroupName: userGroupName });
+                    await this.redis.set(key, registerData, 'EX', 7 * 24 * 60 * 60);
                     await this.sendRegistrationEmail(userEmail, key);
+                    return { status: 'success', message: 'Invitation register email successful.' };
                 } else {
                     // Generate random key
                     const key = uuidv4();
 
                     // Store the key in Redis with 7 days expiry time
-                    const redisData = JSON.stringify({ userEmail: userEmail, userGroupName: userGroupName, userPermission: userAddedPermission });
+                    const redisData = JSON.stringify({ userEmail: userEmail, userGroupName: userGroupName });
                     await this.redis.set(key, redisData, 'EX', 7 * 24 * 60 * 60);
 
                     // Send email to existing user with invitation link
                     await this.sendInvitationEmail(userEmail, key, userGroupName);
+                    return { status: 'success', message: 'Invitation email successful.' };
                 }
             }
         }
@@ -128,14 +131,13 @@ export class UserService {
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: 'your-email@gmail.com',
-                pass: 'your-google-app-password'
+                user: 'theskunkworks301@gmail.com',
+                pass: this.configService.get('GOOGLE_PASSWORD')
             }
         });
-
         // Email options
         const mailOptions = {
-            from: 'your-email@gmail.com',
+            from: 'theskunkworks301@gmail.com',
             to: email,
             subject: 'Registration Confirmation',
             text: `Thank you for registering! Please confirm your email by clicking on the following link: 
@@ -157,14 +159,14 @@ export class UserService {
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: 'your-email@gmail.com',
-                pass: 'your-google-app-password'
+                user: 'theskunkworks301@gmail.com',
+                pass: this.configService.get('GOOGLE_PASSWORD')
             }
         });
 
         // Email options
         const mailOptions = {
-            from: 'your-email@gmail.com',
+            from: 'theskunkworks301@gmail.com',
             to: email,
             subject: 'Invitation to Join User Group',
             text: `You have been invited to join the user group ${userGroupName}. Please confirm your invitation by clicking on the following link: 
@@ -182,8 +184,44 @@ export class UserService {
     }
 
     async exitUserGroup(token: string, userGroupName: string) {
-        console.log(token + " " + userGroupName);
-        return null;
+        // Fetch user from the Redis store using the JWT token
+        const userData = await this.redis.get(token);
+        const userDetails = JSON.parse(userData);
+        
+        // Retrieve the user with their groups based on the token
+        const user = await this.userRepository.findOne({ where: { email: userDetails.email }, relations: ['userGroups'] });
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        // Retrieve the user group based on the name
+        const userGroup = await this.userGroupRepository.findOne({ where: { name: userGroupName }, relations: ['users'] });
+        if (!userGroup) {
+            throw new Error('User group not found');
+        }
+
+        // Check if the user is part of the user group
+        const isUserInGroup = user.userGroups.some(group => group.id === userGroup.id);
+        if (!isUserInGroup) {
+            throw new Error('User is not part of the specified user group');
+        }
+
+        // If it is an admin group and the user is the only one, throw error
+        if (userGroup.name.includes('admin') && userGroup.users.length === 1) {
+            throw new Error('Cannot remove the last admin from the admin group');
+        }
+
+        // Otherwise, remove the user from the group
+        user.userGroups = user.userGroups.filter(group => group.id !== userGroup.id);
+
+        // And remove the user from the group's users
+        userGroup.users = userGroup.users.filter(u => u.id !== user.id);
+
+        // Save the changes
+        await this.userRepository.save(user);
+        await this.userGroupRepository.save(userGroup);
+
+        return { status: 'success', message: 'User removed from the user group successfully.' };
     }
 
     async removeUserFromUserGroup(token: string, userGroupName: string, userEmail: string) {
