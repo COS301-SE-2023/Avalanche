@@ -29,6 +29,6 @@ export class AppController {
   @MessagePattern({ cmd: 'createOrganisation' })
   async createOrganisation(data: any) {
     console.log("Creating organisation: ", data);
-    return await this.userService.createOrganisation(data.request, data.name);
+    return await this.userService.createOrganisation(data.token, data.name);
   }
 }

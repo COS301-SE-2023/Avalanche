@@ -10,7 +10,7 @@ export class JwtMiddleware implements NestMiddleware {
   async use(req: Request, res: Response, next: NextFunction) {
     try {
       // Get token from header
-      console.log(req.headers);
+      console.log(req.body);
       const token = req.headers.authorization?.split(' ')[1];
 
       // Get user's information from Redis by token
@@ -18,8 +18,12 @@ export class JwtMiddleware implements NestMiddleware {
 
       if (!userInfo) {
         throw new Error('Invalid Token');
+      }else{
+        // Add token to the request body
+        req.body.token = token;
+        console.log(req.body);
+        next();
       }
-      next();
     } catch (error) {
       res.status(401).json({ message: error.message });
     }
