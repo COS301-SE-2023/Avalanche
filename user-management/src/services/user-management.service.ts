@@ -65,5 +65,17 @@ export class UserService {
         //Implement function
         return null;
     }
+
+    
+    async addUserToUserGroup(token: string, userEmail: string, userGroupName: string){
+        console.log(token + " " + userEmail + " " + userGroupName);
+        return null;
+    }
+
+    async exitUserGroup(token:string, userGroupName: string){
+        console.log(token + " " + userGroupName);
+        return null;
+    }
+
 }
 
