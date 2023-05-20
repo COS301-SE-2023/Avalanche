@@ -2,15 +2,9 @@ package tests;
 
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Scanner;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.junit.Test;
@@ -36,9 +30,9 @@ public class SimilarityCheckerTest {
     public void searchForSimilar() throws FileNotFoundException {
         SimilarityChecker similarityChecker = new SimilarityChecker();
         LinkedList<Domain> results = similarityChecker.findAllWithinSimliarityThreshold("firstnationalbank",
-                7);
+                4);
         assertNotNull(results);
-        System.out.println("INPUT: firstnationalbank\nThreshold: 7\n=======================");
+        System.out.println("INPUT: firstnationalbank\nThreshold: 4\n=======================");
         for (Domain domain : results) {
             System.out.println(domain.getName() + " " + domain.getZone() + "  (" + domain.getDistance() + ")");
         }
@@ -48,8 +42,8 @@ public class SimilarityCheckerTest {
     public void concurrentSearchForSimilar() throws FileNotFoundException {
         SimilarityChecker similarityChecker = new SimilarityChecker();
         ConcurrentLinkedQueue<Domain> results = similarityChecker.threadedFindAllWithinSimliarityThreshold(
-                "happypuppies",
-                1, 50);
+                "firstnationalbank",
+                4, 50);
         assertNotNull(results);
         System.out.println("INPUT: firstnationalbank\nThreshold: 4\n=======================");
         for (Domain domain : results) {

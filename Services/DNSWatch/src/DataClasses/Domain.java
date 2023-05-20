@@ -1,6 +1,6 @@
 package DataClasses;
 
-public class Domain {
+public class Domain implements Comparable {
     private String name;
     private String zone;
     private double distance;
@@ -24,6 +24,18 @@ public class Domain {
 
     public double getDistance() {
         return distance;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        Domain d = (Domain) o;
+        if (d.getDistance() > this.distance) {
+            return -1;
+        }
+        if (d.getDistance() < this.distance) {
+            return 1;
+        }
+        return 0;
     }
 
 }

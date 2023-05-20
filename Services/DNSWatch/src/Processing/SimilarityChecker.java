@@ -3,14 +3,12 @@ package Processing;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.LinkedBlockingDeque;
 
 import DataClasses.Domain;
 import DistanceCalculators.LevensteinDistanceCalculator;
@@ -25,7 +23,6 @@ public class SimilarityChecker {
         for (int i = 0; i < 50; i++) {
             splitDoms.add(new LinkedList<>());
         }
-        System.out.println("Working Directory = " + System.getProperty("user.dir"));
         int count = 0;
         try {
             Scanner file = new Scanner(new FileReader(".\\Services\\DNSWatch\\data\\Domain Retrieval.csv"));
@@ -67,6 +64,7 @@ public class SimilarityChecker {
     public void loopThroughAllDomains() {
         for (Domain domain : allDomains) {
             String name = domain.getName();
+            System.out.println(name);
         }
     }
 
@@ -80,6 +78,8 @@ public class SimilarityChecker {
                 hits.add(domain);
             }
         }
+
+        Collections.sort(hits);
         return hits;
     }
 
@@ -104,7 +104,6 @@ public class SimilarityChecker {
                 }
             }
         }
-
         return hits;
     }
 }

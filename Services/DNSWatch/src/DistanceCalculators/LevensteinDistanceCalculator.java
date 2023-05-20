@@ -81,6 +81,9 @@ public class LevensteinDistanceCalculator {
         if (checkBothWays(a, 'l', b, '1')) {
             return 0.1;
         }
+        if (checkBothWays(a, 'l', b, 'i')) {
+            return 0.1;
+        }
         if (checkBothWays(a, 'b', b, '8')) {
             return 0.1;
         }
