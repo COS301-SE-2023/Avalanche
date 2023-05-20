@@ -40,7 +40,12 @@ export class AppController {
   }
   @MessagePattern({ cmd: 'exitUserGroup' })
   async exitUserGroup(data: any) {
-    console.log("Removing a user from a user group: ", data);
+    console.log("Removing you from the user group: ", data);
     return await this.userService.exitUserGroup(data.token, data.userGroupName);
+  }
+  @MessagePattern({ cmd: 'removeUserFromUserGroup' })
+  async removeUserFromUserGroup(data: any) {
+    console.log("Removing a user from a user group: ", data);
+    return await this.userService.removeUserFromUserGroup(data.token, data.userGroupName, data.userEmail);
   }
 }
