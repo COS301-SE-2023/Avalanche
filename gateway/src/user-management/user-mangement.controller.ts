@@ -35,4 +35,12 @@ export class UserManagementController {
     const result = await lastValueFrom(this.client.send(pattern, payload));
     return result;
   }
+
+  @Post('createUserGroup')
+  async createUserGroup(@Body() data: any) {
+    const pattern = { cmd: 'createUserGroup' };
+    const payload = data;
+    const result = await lastValueFrom(this.client.send(pattern, payload));
+    return result;
+  }
 }

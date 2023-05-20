@@ -25,15 +25,6 @@ export class User {
   @Column({nullable: true})
   lastName: string;
 
-  // @Column({ type: 'json', nullable: true })
-  // integrations: string[];
-
-  // @Column({ type: 'json', nullable: true })
-  // organisation: string;
-
-  // @Column({ type: 'json', nullable: true })
-  // userGroups: string[];
-
   @ManyToMany(() => UserGroup, (userGroup) => userGroup.users, { nullable: true })
   @JoinTable()
   userGroups: UserGroup[];

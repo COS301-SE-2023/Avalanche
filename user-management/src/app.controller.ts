@@ -31,4 +31,10 @@ export class AppController {
     console.log("Creating organisation: ", data);
     return await this.userService.createOrganisation(data.token, data.name);
   }
+
+  @MessagePattern({ cmd: 'createUserGroup' })
+  async createUserGroup(data: any) {
+    console.log("Creating a user group: ", data);
+    return await this.userService.createUserGroup(data.token, data.name, data.permission);
+  }
 }

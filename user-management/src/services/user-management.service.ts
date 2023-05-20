@@ -60,5 +60,10 @@ export class UserService {
         return organisation;
     }
 
+    async createUserGroup(token: string, name: string, permission: number): Promise<UserGroup> {
+        console.log(token + " " + name + " " + permission);
+        //Implement function
+        return null;
+    }
 }
 
