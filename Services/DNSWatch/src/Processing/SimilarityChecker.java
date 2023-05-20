@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import DataClasses.Domain;
 import DistanceCalculators.LevensteinDistanceCalculator;
+import DistanceCalculators.SoundexCalculator;
 
 public class SimilarityChecker {
     private HashSet<Domain> allDomains;
@@ -80,6 +81,52 @@ public class SimilarityChecker {
         }
 
         Collections.sort(hits);
+        return hits;
+    }
+
+    public LinkedList<Domain> findAllSoundsAboveSimliarityThreshold(String search, double threshold) {
+        LinkedList<Domain> hits = new LinkedList<>();
+        SoundexCalculator calc = new SoundexCalculator();
+        int count = 0;
+        int pct = 0;
+        for (Domain domain : allDomains) {
+            double value = calc.calculateSoundexDifference(search, domain.getName());
+            if (value >= threshold) {
+                domain.setDistance(value);
+                hits.add(domain);
+            }
+            count++;
+            System.out.println(count);
+            if (count % (allDomains.size() / 1000) == 0) {
+                System.out.println(++pct + "%");
+            }
+        }
+
+        Collections.sort(hits);
+        return hits;
+    }
+
+    public ConcurrentLinkedQueue<Domain> threadedfindAllSoundsAboveSimliarityThreshold(String search, double threshold,
+            int threadNum) {
+        ConcurrentLinkedQueue<Domain> hits = new ConcurrentLinkedQueue<>();
+        SoundexThread[] threads = new SoundexThread[threadNum];
+        for (int i = 0; i < threads.length; i++) {
+            threads[i] = new SoundexThread(search, threshold, hits, splitDoms.get(i));
+        }
+        for (int i = 0; i < threads.length; i++) {
+            threads[i].start();
+        }
+
+        boolean busy = true;
+        while (busy) {
+            busy = false;
+            for (int i = 0; i < threads.length; i++) {
+                if (threads[i].isAlive()) {
+                    busy = true;
+                    break;
+                }
+            }
+        }
         return hits;
     }
 

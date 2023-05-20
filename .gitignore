@@ -1,2 +1,5 @@
 Services/DNSWatch/data/2023-05-19 5_49pm.csv
 Services/DNSWatch/data/Domain Retrieval.csv
+Services/DNSWatch/src/DistanceCalculators/SoundexCalculator.java
+Services/DNSWatch/src/Processing/SoundexThread.java
+Services/DNSWatch/src/tests/SoundexCalculatorTest.java
