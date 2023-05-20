@@ -187,7 +187,7 @@ export class UserService {
         // Fetch user from the Redis store using the JWT token
         const userData = await this.redis.get(token);
         const userDetails = JSON.parse(userData);
-        
+
         // Retrieve the user with their groups based on the token
         const user = await this.userRepository.findOne({ where: { email: userDetails.email }, relations: ['userGroups'] });
         if (!user) {
@@ -225,8 +225,50 @@ export class UserService {
     }
 
     async removeUserFromUserGroup(token: string, userGroupName: string, userEmail: string) {
-        console.log(token + " " + userGroupName);
-        return null;
+        // Retrieve the user with their groups based on the token
+        const userData = await this.redis.get(token);
+        const userDetails = JSON.parse(userData);
+        const permission = userDetails.userGroups[0].permission;
+
+        // Check if the invoking user has permission
+        if (permission !== 1) {
+            throw new Error('User does not have sufficient permissions');
+        }
+
+        // Retrieve the user group based on the name
+        const userGroup = await this.userGroupRepository.findOne({ where: {name: userGroupName}, relations: ['users'] });
+        if (!userGroup) {
+            throw new Error('User group not found');
+        }
+
+        // Retrieve the user to be removed based on the email
+        const userToBeRemoved = await this.userRepository.findOne({ where: { email: userEmail }, relations: ['userGroups'] });
+        if (!userToBeRemoved) {
+            throw new Error('User to be removed not found');
+        }
+
+        // Check if the user to be removed is part of the user group
+        const isUserInGroup = userToBeRemoved.userGroups.some(group => group.id === userGroup.id);
+        if (!isUserInGroup) {
+            throw new Error('User to be removed is not part of the specified user group');
+        }
+
+        // If it is an admin group and the user is the only one, throw error
+        if (userGroup.name.includes('admin')) {
+            throw new Error('Cannot remove the last admin from the admin group');
+        }
+
+        // Otherwise, remove the user from the group
+        userToBeRemoved.userGroups = userToBeRemoved.userGroups.filter(group => group.id !== userGroup.id);
+
+        // And remove the user from the group's users
+        userGroup.users = userGroup.users.filter(u => u.id !== userToBeRemoved.id);
+
+        // Save the changes
+        await this.userRepository.save(userToBeRemoved);
+        await this.userGroupRepository.save(userGroup);
+
+        return { status: 'success', message: 'User removed from the user group successfully.' };
     }
 
 }
