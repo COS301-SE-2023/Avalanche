@@ -111,6 +111,7 @@ export class AuthService {
 
     // If the password is valid, store jwt token and user's information in Redis
     // We exclude password and salt field here for security reasons
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, salt, ...userWithoutPassword } = user;
     const userWithToken = { ...userWithoutPassword, token: jwtToken};
     await this.redis.set(jwtToken, JSON.stringify(userWithToken), 'EX', 24 * 60 * 60);

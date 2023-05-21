@@ -51,6 +51,7 @@ export class UserService {
         // Assign the user to this organisation and user group
         user.organisation = organisation;
         user.userGroups = [userGroup];
+        user.userGroupId = userGroup.id;
         console.log(user);
         await this.userRepository.save(user);
 
@@ -213,7 +214,7 @@ export class UserService {
 
         // Otherwise, remove the user from the group
         user.userGroups = user.userGroups.filter(group => group.id !== userGroup.id);
-
+        user.userGroupId = null;
         // And remove the user from the group's users
         userGroup.users = userGroup.users.filter(u => u.id !== user.id);
 
@@ -260,7 +261,7 @@ export class UserService {
 
         // Otherwise, remove the user from the group
         userToBeRemoved.userGroups = userToBeRemoved.userGroups.filter(group => group.id !== userGroup.id);
-
+        userToBeRemoved.userGroupId = null;
         // And remove the user from the group's users
         userGroup.users = userGroup.users.filter(u => u.id !== userToBeRemoved.id);
 
@@ -307,6 +308,7 @@ export class UserService {
 
         // Add the user to the group
         user.organisationId = userGroup.organisationId;
+        user.userGroupId = userGroup.id;
         user.userGroups.push(userGroup);
 
         // And add the user to the group's users
@@ -317,7 +319,7 @@ export class UserService {
         await this.userGroupRepository.save(userGroup);
 
         // Remove the key from Redis
-        
+
         await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60);
         await this.redis.del(key);
         return { status: 'success', message: 'User added to the user group successfully.' };

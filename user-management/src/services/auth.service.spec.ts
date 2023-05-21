@@ -16,7 +16,7 @@ describe('AuthService', () => {
   let authService: AuthService;
   let mockRedis: jest.Mocked<Redis>;
   let mockUserRepository: jest.Mocked<Partial<Repository<User>>>;
-  let jwtService: JwtService;
+
 
   beforeEach(async () => {
     const redis = {
@@ -25,9 +25,6 @@ describe('AuthService', () => {
       del: jest.fn(),
     };
 
-    const bcrypt = {
-      hash: jest.fn(),
-    };
 
     const userRepository = {
       findOne: jest.fn(),
