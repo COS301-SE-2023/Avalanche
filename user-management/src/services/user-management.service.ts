@@ -9,6 +9,8 @@ import { UserGroup } from 'src/entity/userGroup.entity';
 import { Organisation } from 'src/entity/organisation.entity';
 import { v4 as uuidv4 } from 'uuid';
 import * as nodemailer from 'nodemailer';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 @Injectable()
 export class UserService {
     constructor(@Inject('REDIS') private readonly redis: Redis, private readonly configService: ConfigService,
@@ -109,7 +111,7 @@ export class UserService {
                     // Send email to non-existing user with registration link
                     const registerData = JSON.stringify({ userEmail: userEmail, userGroupName: userGroupName });
                     await this.redis.set(key, registerData, 'EX', 7 * 24 * 60 * 60);
-                    await this.sendRegistrationEmail(userEmail, key);
+                    await this.sendRegistrationEmail(userEmail, key, userGroupName);
                     return { status: 'success', message: 'Invitation register email successful.' };
                 } else {
                     // Generate random key
@@ -127,7 +129,7 @@ export class UserService {
         }
     }
 
-    async sendRegistrationEmail(email: string, token: string) {
+    async sendRegistrationEmail(email: string, token: string, userGroupName: string) {
         // Create a Nodemailer transporter using Google's SMTP
         const transporter = nodemailer.createTransport({
             service: 'gmail',
@@ -136,13 +138,19 @@ export class UserService {
                 pass: this.configService.get('GOOGLE_PASSWORD')
             }
         });
+
+        const registrationHtmlTemplate = readFileSync(join(__dirname, '../../src/services/registration-email-template.html'), 'utf-8');
+        let registrationHtml = registrationHtmlTemplate.replace('{UserGroup}', userGroupName);
+        registrationHtml = registrationHtmlTemplate.replace('{URL}', `http://fillInURL/${token}`);
         // Email options
         const mailOptions = {
             from: 'theskunkworks301@gmail.com',
             to: email,
-            subject: 'Registration Confirmation',
-            text: `Thank you for registering! Please confirm your email by clicking on the following link: 
-            \nhttp://your-app-url/confirm/${token}`
+            subject: `Invitation to "${userGroup}" on Avalanche Analytics`,
+            html: registrationHtml,
+            text: `You have been invited to join "{{UserGroup}}" on Avalanche Analytics.\n
+            To accept the invitation please follow the link to register on our platform: 
+            \nhttp://fillInURL/${token}`
         };
 
         // Sending the email
@@ -165,15 +173,21 @@ export class UserService {
             }
         });
 
+        const invitationHtmlTemplate = readFileSync(join(__dirname, '../../src/services/invitation-email-template.html'), 'utf-8');
+        let invitationHtml = invitationHtmlTemplate.replace('{UserGroup}', userGroupName);
+        invitationHtml = invitationHtmlTemplate.replace('{URL}', `http://fillInURL/${token}`);
         // Email options
         const mailOptions = {
             from: 'theskunkworks301@gmail.com',
             to: email,
-            subject: 'Invitation to Join User Group',
-            text: `You have been invited to join the user group ${userGroupName}. Please confirm your invitation by clicking on the following link: 
-            \nhttp://your-app-url/join/${token}`
+            subject: `Invitation to "${userGroupName}" on Avalanche Analytics`,
+            html: invitationHtml,
+            text: `You have been invited to join "{{UserGroup}}" on Avalanche Analytics.\n
+            To accept the invitation please follow the link: 
+            \nhttp://fillInURL/${token}`
         };
 
+       
         // Sending the email
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
