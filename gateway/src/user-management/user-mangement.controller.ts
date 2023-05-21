@@ -64,4 +64,11 @@ export class UserManagementController {
     const result = await lastValueFrom(this.client.send(pattern, payload));
     return result;
   }
+  @Post('addUserToUserGroupWithKey')
+  async addUserToUserGroupWithKey(@Body() data: any) {
+    const pattern = { cmd: 'addUserToUserGroupWithKey' };
+    const payload = data;
+    const result = await lastValueFrom(this.client.send(pattern, payload));
+    return result;
+  }
 }

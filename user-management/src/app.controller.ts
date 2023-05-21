@@ -48,4 +48,10 @@ export class AppController {
     console.log("Removing a user from a user group: ", data);
     return await this.userService.removeUserFromUserGroup(data.token, data.userGroupName, data.userEmail);
   }
+
+  @MessagePattern({ cmd: 'addUserToUserGroupWithKey' })
+  async addUserToUserGroupWithKey(data: any) {
+    console.log("Adding a user, with a key, to a user group: ", data);
+    return await this.userService.addUserToUserGroupWithKey(data.token, data.key);
+  }
 }

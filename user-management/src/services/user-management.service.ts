@@ -236,7 +236,7 @@ export class UserService {
         }
 
         // Retrieve the user group based on the name
-        const userGroup = await this.userGroupRepository.findOne({ where: {name: userGroupName}, relations: ['users'] });
+        const userGroup = await this.userGroupRepository.findOne({ where: { name: userGroupName }, relations: ['users'] });
         if (!userGroup) {
             throw new Error('User group not found');
         }
@@ -271,5 +271,55 @@ export class UserService {
         return { status: 'success', message: 'User removed from the user group successfully.' };
     }
 
-}
+    async addUserToUserGroupWithKey(token: string, key: string) {
 
+        // Retrieve the data from Redis using the key
+        const redisData = await this.redis.get(key);
+        if (!redisData) {
+            throw new Error('No data found for this key');
+        }
+
+        // Parse the data
+        const { userEmail, userGroupName } = JSON.parse(redisData);
+
+        // Retrieve the user with their groups based on the token
+        let user = await this.userRepository.findOne({ where: { email: userEmail }, relations: ['userGroups', 'organisation'] });
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        // Retrieve the user group based on the name
+        const userGroup = await this.userGroupRepository.findOne({ where: { name: userGroupName }, relations: ['users', 'organisation'] });
+        if (!userGroup) {
+            throw new Error('User group not found');
+        }
+
+        // Check if the user is already part of the user group
+        const isUserInGroup = user.userGroups.some(group => group.id === userGroup.id);
+        if (isUserInGroup) {
+            throw new Error('User is already part of this user group');
+        }
+
+        // If user's organisation is not the same as the group's organisation, throw an error
+        if (user.organisationId && user.organisation?.id !== userGroup.organisation?.id) {
+            throw new Error("User's organisation is different from the group's organisation");
+        }
+
+        // Add the user to the group
+        user.organisationId = userGroup.organisationId;
+        user.userGroups.push(userGroup);
+
+        // And add the user to the group's users
+        userGroup.users.push(user);
+
+        // Save the changes
+        user = await this.userRepository.save(user);
+        await this.userGroupRepository.save(userGroup);
+
+        // Remove the key from Redis
+        
+        await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60);
+        await this.redis.del(key);
+        return { status: 'success', message: 'User added to the user group successfully.' };
+    }
+}

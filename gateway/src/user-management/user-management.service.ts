@@ -16,11 +16,9 @@ export class UserManagementService {
   async verify(data: any) {
     return this.client.send({ cmd: 'verify' }, data).toPromise();
   }
-
   async login(data: any) {
     return this.client.send({ cmd: 'login' }, data).toPromise();
   }
-
   async createOrganisation(data: any) {
     return this.client.send({ cmd: 'createOrganisation' }, data).toPromise();
   }
@@ -35,5 +33,8 @@ export class UserManagementService {
   }
   async removeUserFromUserGroup(data: any){
     return this.client.send({cmd: 'removeUserFromUserGroup'}, data).toPromise();
+  }
+  async addUserToUserGroupWithKey(data: any) {
+    return this.client.send({ cmd: 'addUserToUserGroupWithKey' }, data).toPromise();
   }
 }
