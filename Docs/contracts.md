@@ -2,74 +2,106 @@
 ## 1. User
   - Authentication object
   - Basic user info:
-     - Profile picture
      - First Name
      - Last Name
   - Settings (under user)
   - Favourite graphs
 ```
-IAuth:
+IRegister:
 {
-  userId: string,
   email: string,
   hashedPassword: string,
-  createdAt: Timestamp,
-  lastLogin: Timestamp,
-  lastActivity: Timestamp,
-  verified: boolean
+  firstName: string,
+  lastName: string
+}
+```
+```
+ILogin:
+{
+  email: string,
+  hashedPassword: string
+}
+```
+```
+IVerify:
+{
+  email: string,
+  otp: string
 }
 ```
 ```
 IUser:
 {
-   userId: string,
+   email: string,
    firstName: string,
-   lastName: string,
-   profilePhoto: string | null,
+   lastName: strings
    settings: ISettings,
-   favourites: IGraphReq[] | null,
-   integration: IIntegration[] | null,
-   organisationId: string[] | null // should be returned upon integration? --> how do we verify that they are a registrar. 
-   // after MVP subuser: string[] (userIds) | subUser[]
+   favourites: IDashBoard[] | null,
+   dataProducts: IDataProducts[] | null,
+   organisationId: number | null,
+   organisation: IOrganisation | null,
+   userGroupId: number[] | null,
+   userGroups: IUserGroups[] | null
 }
 
 ```
 ```
-//After MVP
-ISubUserRelationship:
+IUserGroups:
 {
-   super: string
-   sub: string
+   name: string,
+   organisation: IOrganisation,
+   permission: number,
+   organisationId: number,
+   users: IUsers[],
+   id: number
 }
 ```
 ```
-IIntegration
+IOrganisation:
 {
-  registryName: string,
-  registryId: string
-}
-```
-## 2. Data for page requests 
-```
-PageRequest
-{
-   pageName: string, 
-   userId: string
+   name: string,
+   id: number
 }
 ```
 ```
-PageResponse
+IDataProduct
 {
-   pageName: string,
-   graphs: IGraph[]
+  dataProductName: string,
+  registryName?: string|null
+}
+```
+## 2. Data for dashboard requests 
+```
+IDashboardRequest:
+{
+   name: string, 
+   email: string
+}
+```
+```
+IDashBoardResponse:
+{
+   name: string,
+   id: number,
+   graphs: IGraphs[],
+   graphsFilter: [{graphs.name, filters}]
 }
 ```
 ## 3. Graph data format:
 ```
-IGraph
+IWarehouse:
 {
-   graphName: string,
-   graphDescription: string | null,
+   ZACR: ZACR,
+   AFRICA: AFRICA,
+   RyCE: RyCE
+}
+```
+```
+IGraphs:
+{
+   name: string,
+   id: number,
+   warehouse: IWarehouse,
    data: IGraphData
 }
 ```
