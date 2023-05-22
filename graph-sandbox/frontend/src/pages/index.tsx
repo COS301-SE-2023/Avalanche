@@ -35,6 +35,13 @@ const data = {
     backgroundColor: 'rgba(50, 168, 82)',
     borderWidth: 1,
     yAxisID: 'y',
+  },{
+    label: 'AFRICA_CLOSED_REDEEM',
+    data: [6,5,0,40,19,36,29,22,15,22,24,25],
+    borderColor: 'rgba(255, 99, 132)',
+    backgroundColor: 'rgba(255, 99, 132)',
+    borderWidth: 1,
+    yAxisID: 'y',
   }
 ]
 }
