@@ -20,3 +20,7 @@ interface BarChartData {
   }[];
 }
 
+const BarChart = ({ data }: { data: BarChartData }) => {
+}
+
+export default BarChart;
