@@ -38,4 +38,7 @@ export class UserManagementService {
   async integrateUserWithWExternalAPI(data: any) {
     return this.client.send({ cmd: 'integrateUserWithWExternalAPI' }, data).toPromise();
   }
+  async integrateWithDataProducts(data: any) {
+    return this.client.send({ cmd: 'integrateWithDataProducts' }, data).toPromise();
+  }
 }

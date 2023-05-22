@@ -61,4 +61,9 @@ export class AppController {
     console.log("Integrating with DNS: ", data);
     return await this.userDataProductManService.integrateUserWithWExternalAPI(data.token, data.type, data.allocateToName, data.username, data.password, data.personal);
   }
+  @MessagePattern({ cmd: 'integrateWithDataProducts' })
+  async integrateWithDataProducts(data: any) {
+    console.log("Integrating with Data product: ", data);
+    return await this.userDataProductManService.integrateWithDataProducts(data.token, data.type, data.allocateToName, data.personal);
+  }
 }

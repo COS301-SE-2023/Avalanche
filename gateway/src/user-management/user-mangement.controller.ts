@@ -78,4 +78,11 @@ export class UserManagementController {
     const result = await lastValueFrom(this.client.send(pattern, payload));
     return result;
   }
+  @Post('integrateWithDataProducsts')
+  async integrateWithDataProducts(@Body() data: any) {
+    const pattern = { cmd: 'integrateWithDataProducts' };
+    const payload = data;
+    const result = await lastValueFrom(this.client.send(pattern, payload));
+    return result;
+  }
 }
