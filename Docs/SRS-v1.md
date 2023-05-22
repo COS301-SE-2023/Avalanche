@@ -256,6 +256,47 @@ Our architecture achieves efficiency by using the cache-aside pattern which allo
 #### Conclusion
 Our system architecture successfully addresses the client's defined quality attributes of security, extensibility, usability and transparency, and interoperability. The thoughtful application of a microservices architecture, coupled with specific security measures, transparent data handling practices, and a user-centred frontend design, positions our system as a secure, adaptable, user-friendly, and integrable solution for domain name space analytics.
 
+### Service Contracts
+#### Technology Stack
+* Snowflake Data Warehouse: 
+    * Procedures using Javascript
+* Frontend: 
+    * NextJS
+    * Chart.js
+* Gateway: 
+    * NestJS
+    * JWT 
+    * Redis
+* User Management
+    * NestJS
+    * Redis
+    * PostgreSQL
+* Domain Watch: 
+    * Java
+
+
+To achieve the requirements, the project team will leverage **Snowflake®'s data warehousing** technology and develop microservices using **Java/NestJS**. The team will also use **NestJS** as the primary API framework to provide a robust and scalable interface for the microservices. The team will also utlise **Redis** as a caching service to enhance user experience through faster load times. The team will user a **postgreSQL** database to manage users.
+
+For the frontend, the team will use **NextJS** to create an intuitive and user-friendly interface that enables clients to access and visualise statistical data. Graphical information will be displayed using **chart.js**.
+1. Frontend: 
+    1. UI: Use NextJS for building the web-based user interface for the BIT. NextJS provides a component-based approach, which enables a modular and maintainable structure for the frontend.
+    2. Graphing Service: This service will use chart.js to generate graphs that can then be displayed by the Frontend UI. This allows for different graphing libraries to be plugged into the system with minimal effects
+    3. Reporting Service: Implement a reporting service that generates daily/weekly reports in PDF format containing graphical and tabular data, as well as analyses of the data. This will utlise the graphing service as well.
+2. API:  NestJS will be used as the main API gateway, while different microservices will be developed using Java, NestJS and other languages as needed. Each microservice will handle a specific set of functionalities, such as data analytics, authentication, and profile management.
+    1. API Gateway: The NestJS API gateway will handle the public-facing API, providing secure, token-based access to Avalanche data for clients. The API gateway will route API requests to the appropriate microservices for processing and data retrieval. This provides a single entry point for external clients to access the system's services. The API gateway handles request routing, composition, and protocol translation, simplifying the client's interaction with the system.
+    2. Authentication, Authorization and User Management: Implement an authentication and authorization system using JWT tokens to ensure secure access for different types of users (Third-Party Users, Registrar Users, Registry Users). This will also handle role-based access control for different functionalities within the system.
+    3. Data Processing and Analytics: Implement data wrangling and analytics microservices using suitable languages. These services will be responsible for transforming, cleaning, aggregating, and analysing the data stored in Snowflake®. They will provide insights and statistics for the frontend and API.
+
+3. Data Storage: Use Snowflake® data warehouse technology for storing the domain data and statistics. Snowflake® provides a scalable and performance-optimised solution for data storage and retrieval.
+
+
+### Project Management
+
+A biweekly summary report will be submitted to the industry mentor. This will include progress, obstacles and upcoming goals.
+The project will be managed using Githubs project board and any issues that need to be sent to the client will be done using Jira
+Weekly scrum meetings will take place.
+3 stand ups will take place each week
+We will have weekly meetings with our lecture mentor and with our industry mentor
 
 
 
