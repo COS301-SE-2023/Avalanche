@@ -6,5 +6,6 @@ const labels = ["January","February","March","April","May","June","July","August
 
 
 const data = {
-  
+  labels: labels,
+  datasets: []
 }
