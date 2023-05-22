@@ -132,3 +132,5 @@ Chart.register(...registerables);
   
     return <canvas ref={chartRef} />;
   };
+
+  export default LineChart;
