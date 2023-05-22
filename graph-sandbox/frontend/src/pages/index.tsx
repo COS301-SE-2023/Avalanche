@@ -21,6 +21,14 @@ const data = {
     backgroundColor: 'rgba(153, 102, 255)',
     borderWidth: 1,
     yAxisID: 'y',
+  },{
+    label: 'AFRICA_TRANSFER',
+    data: [1147,1244,1147,1326,1785,2019,2691,2106,1298,1370,1155,1218],
+    borderColor: 'rgba(255, 159, 64)', //orange
+    backgroundColor: 'rgba(255, 159, 64)',
+    borderWidth: 1,
+    yAxisID: 'y',
+
   }
 ]
 }
