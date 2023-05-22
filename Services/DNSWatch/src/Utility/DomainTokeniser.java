@@ -10,10 +10,14 @@ import java.util.Scanner;
 
 public class DomainTokeniser {
     private static HashMap<String, Double> dictionary;
-    private int maxword;
+    private static volatile HashMap<String, String> wordsDone;
+    private static int maxword;
 
     public DomainTokeniser() {
-        buildDictionary();
+        if (dictionary == null) {
+            buildDictionary();
+            wordsDone = new HashMap<>();
+        }
 
     }
 
@@ -21,7 +25,7 @@ public class DomainTokeniser {
         return dictionary;
     }
 
-    private void buildDictionary() {
+    private static void buildDictionary() {
         dictionary = new HashMap<>();
         int count = 0;
         maxword = 0;
@@ -101,6 +105,9 @@ public class DomainTokeniser {
     }
 
     public String inferSpaces(String s) {
+        if (wordsDone.containsKey(s)) {
+            return wordsDone.get(s);
+        }
         ArrayList<Double> cost = new ArrayList<>();
         cost.add(0.0);
 
@@ -120,6 +127,8 @@ public class DomainTokeniser {
         }
 
         Collections.reverse(out);
-        return String.join(" ", out);
+        String done = String.join(" ", out);
+        wordsDone.put(s, done);
+        return done;
     }
 }

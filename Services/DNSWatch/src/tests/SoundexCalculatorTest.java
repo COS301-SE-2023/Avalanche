@@ -42,4 +42,23 @@ public class SoundexCalculatorTest {
         assertEquals(3.667, calc.calculateSoundexDifference("mycooldomain", "mikecooldomain"), 0.001);
 
     }
+
+    @Test
+    public void nonExitstentWords() {
+        SoundexCalculator calc = new SoundexCalculator();
+
+        assertEquals(0.5, calc.calculateSoundexDifference("hi", "itsepic"), 0.001);
+        assertEquals(1.5, calc.calculateSoundexDifference("hi", "sowtv"), 0.001);
+
+    }
+
+    @Test
+    public void chatDomainTests() {
+        SoundexCalculator calc = new SoundexCalculator();
+        assertEquals(3, calc.calculateSoundexDifference("stackoverflow.com", "stackexchange.com"), 0);
+        assertEquals(0, calc.calculateSoundexDifference("opera.com", "mozilla.org"), 0);
+        assertEquals(0, calc.calculateSoundexDifference("linkedin.com", "facebook.com"), 0);
+        assertEquals(3, calc.calculateSoundexDifference("wikipedia.org", "wikimedia.org"), 0);
+        assertEquals(1, calc.calculateSoundexDifference("amazon.com", "alibaba.com"), 0);
+    }
 }

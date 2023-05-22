@@ -41,8 +41,21 @@ public class SimilarityCheckerTest {
     @Test
     public void searchForSimilarSounds() throws FileNotFoundException {
         SimilarityChecker similarityChecker = new SimilarityChecker();
-        LinkedList<Domain> results = similarityChecker.findAllSoundsAboveSimliarityThreshold("hi",
+        LinkedList<Domain> results = similarityChecker.findAllSoundsAboveSimliarityThreshold("absabank",
                 3);
+        assertNotNull(results);
+        System.out.println("INPUT: firstnationalbank\nThreshold: 4\n=======================");
+        for (Domain domain : results) {
+            System.out.println(domain.getName() + " " + domain.getZone() + "  (" + domain.getDistance() + ")");
+        }
+    }
+
+    @Test
+    public void concurrentSearchForSimilarSounds() throws FileNotFoundException {
+        SimilarityChecker similarityChecker = new SimilarityChecker();
+        ConcurrentLinkedQueue<Domain> results = similarityChecker.threadedfindAllSoundsAboveSimliarityThreshold(
+                "firstnationalbank",
+                3, 50);
         assertNotNull(results);
         System.out.println("INPUT: firstnationalbank\nThreshold: 4\n=======================");
         for (Domain domain : results) {

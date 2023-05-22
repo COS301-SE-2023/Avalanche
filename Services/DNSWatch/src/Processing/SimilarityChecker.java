@@ -65,7 +65,6 @@ public class SimilarityChecker {
     public void loopThroughAllDomains() {
         for (Domain domain : allDomains) {
             String name = domain.getName();
-            System.out.println(name);
         }
     }
 
@@ -88,7 +87,7 @@ public class SimilarityChecker {
         LinkedList<Domain> hits = new LinkedList<>();
         SoundexCalculator calc = new SoundexCalculator();
         int count = 0;
-        int pct = 0;
+        double pct = 0;
         for (Domain domain : allDomains) {
             double value = calc.calculateSoundexDifference(search, domain.getName());
             if (value >= threshold) {
@@ -96,9 +95,9 @@ public class SimilarityChecker {
                 hits.add(domain);
             }
             count++;
-            System.out.println(count);
-            if (count % (allDomains.size() / 1000) == 0) {
-                System.out.println(++pct + "%");
+            if (count % (allDomains.size() / 100) == 0) {
+                pct += 1;
+                System.out.println(pct + "%");
             }
         }
 

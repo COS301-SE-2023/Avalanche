@@ -31,18 +31,11 @@ public class SoundexCalculator {
     }
 
     public double getDifferenceBetweenTokens(String x, String y) {
-        Soundex s = new Soundex();
+        // Soundex s = new Soundex();
         String xEncoded = encode(x);
         String yEncoded = encode(y);
 
-        try {
-            return s.difference(x, y) * 1.0;
-        } catch (EncoderException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return 0.0;
-        // return difference(xEncoded, yEncoded) * 1.0;
+        return difference(xEncoded, yEncoded) * 1.0;
     }
 
     private double difference(String x, String y) {
