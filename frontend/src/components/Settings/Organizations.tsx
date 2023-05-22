@@ -99,7 +99,7 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
     return <>
         {demo ? <>
             <div className="flex justify-between pb-2 mb-4">
-                <h2 className="text-2xl font-medium dark:text-white text-gray-800">Michael's Domains</h2>
+                <h2 className="text-2xl font-medium dark:text-white text-gray-800">Michael&apos;s Domains</h2>
                 <DeleteButton text="Delete Organization" onClick={() => { }} />
             </div>
             <div className="flex gap-2">

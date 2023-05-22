@@ -61,7 +61,7 @@ export default function IntegrationLoginModal({ }: IIntegrationLoginModal) {
     return (
         <ModalWrapper>
 
-            <ModalHeader title="Add a new Integration" />
+            <ModalHeader title="Add a new Data Product" />
 
             {/* Modal Content */}
             <ModalContent>

@@ -58,12 +58,12 @@ export default function Home() {
               <form className="space-y-4 md:space-y-6" action="#" onSubmit={(event) => login(event)}>
                 <div>
                   <InputLabel htmlFor="email" text="Your email" />
-                  <Input type="email" name="email" id="email" placeholder="name@company.com" required={true} />
+                  <Input type="email" name="email" id="email" placeholder="name@company.com" required={true} value={email} />
                   {emailError && <DangerAlert title="Invalid Email!" text="This email is invalid." />}
                 </div>
                 <div>
                   <InputLabel htmlFor="password" text="Password" />
-                  <Input type="password" placeholder="••••••••" id="password" name="password" required={true} />
+                  <Input type="password" placeholder="••••••••" id="password" name="password" required={true} value={password} />
                   {passwordError && <DangerAlert title="Invalid Password!" text="This password is invalid." />}
                 </div>
                 <div className="flex items-center justify-between">
