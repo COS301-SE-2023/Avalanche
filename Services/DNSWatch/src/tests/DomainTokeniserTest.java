@@ -54,6 +54,7 @@ public class DomainTokeniserTest {
         assertEquals("hitheredude", domainTokeniser.inferSpaces("hi there dude"));
         assertEquals("helloyouguy", domainTokeniser.inferSpaces("hello you guy"));
         assertEquals("coolguycool", domainTokeniser.inferSpaces("cool guy cool"));
+        assertEquals("grapefruitgreat", domainTokeniser.inferSpaces("grape fruit great"));
     }
 
     @Test
