@@ -65,6 +65,9 @@ public class LevensteinDistanceCalculator {
         if (a == b) {
             return 0.1;
         }
+        if (a == '-' || b == '-') {
+            return 0.1;
+        }
         return 1;
     }
 
@@ -72,6 +75,7 @@ public class LevensteinDistanceCalculator {
         if (a == b) {
             return 0;
         }
+
         if (checkBothWays(a, '0', b, 'o')) {
             return 0.1;
         }
