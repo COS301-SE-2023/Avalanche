@@ -99,5 +99,35 @@ Chart.register(...registerables);
   }
 
   const LineChart = ({ data }: { data: LineChartData }) => {
-    
+    const chartRef = useRef<HTMLCanvasElement>(null);
+  
+    useEffect(() => {
+      if (chartRef.current) {
+        const ctx = chartRef.current.getContext('2d') as CanvasRenderingContext2D;
+        const chart = new Chart(ctx, {
+          type: 'line',
+          data: data,
+          options: {
+            plugins: {
+              title: {
+                display: true,
+                text: 'Total Transactions'
+              } 
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: {
+                display: true,
+              },
+              y: {
+                display: true,
+              },
+            },
+          },
+        });
+        return () => chart.destroy();
+      }
+    }, [data]);
+  
   };
