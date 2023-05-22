@@ -96,13 +96,13 @@ The users of the software system can be classified into the following groups:
     9. Admin Users must be able to add data products to user groups
 
 4. Provide a personalised experience for individual users:
-        1. Users must be able to manage their preferences:
-        2. Dark/Light mode
-        3. Default Warehouses
-        4. Allow users to select dashboards of interest as favourites
-        5. Allow users to unselect favourites
-        6. Allow users to watchlist trends
-        7. Suggest analytics based on preferences
+    1. Users must be able to manage their preferences:
+    2. Dark/Light mode
+    3. Default Warehouses
+    4. Allow users to select dashboards of interest as favourites
+    5. Allow users to unselect favourites
+    6. Allow users to watchlist trends
+    7. Suggest analytics based on preferences
 
 
 
