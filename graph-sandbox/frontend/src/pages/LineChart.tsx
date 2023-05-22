@@ -97,3 +97,7 @@ Chart.register(...registerables);
       yAxisID: string;
     }[];
   }
+
+  const LineChart = ({ data }: { data: LineChartData }) => {
+    
+  };
