@@ -34,7 +34,7 @@ I'm a third-year computer science student who's really into data science, and I'
 <details><summary>Sarah Leigh Kilian - u21804312</summary><br>
 <img align="right" src="https://github.com/michaelrosstarr.png" width=150>
 <p>
-Descrription goes here
+I am currently a third-year student (and a tutor) at the University of Pretoria. I have a passion for solving problems and the colour black (a nerdy goth if you must). I love mathematics (Originally started out with BSc Applied Mathematics with CS and then decided coding was way more fun), animals (cats are the favourite) and being outside. If I am not on campus, you'll find me listening to music while I study or going hard at the gym. I strive to become better as a CS student and as a person. 
 </p>
 <a href="https://github.com/michaelrosstarr" target="_blank">
   <img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white"/>
