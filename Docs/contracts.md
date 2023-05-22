@@ -16,21 +16,21 @@ Register Request:
 }
 ```
 ```
-LoginRequest:
+Login Request:
 {
   email: string,
   hashedPassword: string
 }
 ```
 ```
-LoginResponse:
+Login Response:
 {
   message: string,
   user?: IUser
 }
 ```
 ```
-IVerify:
+Verify Request:
 {
   email: string,
   otp: string
@@ -89,7 +89,7 @@ DataProductEnum
 ```
 ## 2. Data for dashboard requests 
 ```
-IDashboardRequest:
+Dashboard Request:
 {
    name: string, 
    email: string,
@@ -97,7 +97,7 @@ IDashboardRequest:
 }
 ```
 ```
-IDashBoardResponse:
+DashBoard Response:
 {
    name: string,
    id: number,
