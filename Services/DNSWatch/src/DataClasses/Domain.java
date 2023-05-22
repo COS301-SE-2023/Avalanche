@@ -40,7 +40,7 @@ public class Domain implements Comparable {
 
     @Override
     public String toString() {
-        return name + "." + zone;
+        return name + "." + zone.toLowerCase();
     }
 
 }
