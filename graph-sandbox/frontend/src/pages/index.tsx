@@ -14,5 +14,13 @@ const data = {
     backgroundColor: 'rgba(54, 162, 235)',
     borderWidth: 1,
     yAxisID: 'y',
-  }]
+  },{
+    label: 'AFRICA_PREMIUM',
+    data: [19,17,27,18,16,8,13,23,16,6,12,14],
+    borderColor: 'rgba(153, 102, 255)', //purple
+    backgroundColor: 'rgba(153, 102, 255)',
+    borderWidth: 1,
+    yAxisID: 'y',
+  }
+]
 }
