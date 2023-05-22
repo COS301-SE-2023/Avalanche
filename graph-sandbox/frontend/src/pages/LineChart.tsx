@@ -8,7 +8,7 @@ const labels = ["January","February","March","April","May","June","July","August
 
 Chart.register(...registerables);
 
-const data = {
+/*const data = {
 
   labels: labels,
 
@@ -51,6 +51,38 @@ const data = {
     yAxisID: 'y',
   }
 
-  ]
+  ]};*/
 
-};
+  const data = {
+    labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+    datasets: [{
+        label: '# of Votes',
+        data: [12, 19, 3, 5, 2, 3],
+        borderWidth: 1
+      },
+      {
+        label: '# of Points',
+        data: [7, 11, 5, 8, 3, 7],
+        borderWidth: 1
+      }
+    ]
+  }
+
+  const options = {
+    maintainAspectRatio: false,
+    elements: {
+      point: {
+        hoverRadius: 6,
+      },
+    },
+    hover: {
+      mode: 'index',
+      intersect: false,
+    },
+  }
+
+  const config = {
+    type: 'line',
+    data: data,
+    options: options,
+  };
