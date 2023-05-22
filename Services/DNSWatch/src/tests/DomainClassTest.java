@@ -25,4 +25,19 @@ public class DomainClassTest {
         assertEquals("AFRICA.AFRICA", d.getName());
         assertEquals("AFRICA", d.getZone());
     }
+
+    @Test
+    public void testToString() {
+        Domain d = new Domain("a", "b");
+        assertEquals("a.b", d.toString());
+
+        d = new Domain("meep", "AFRICA");
+        assertEquals("meep.africa", d.toString());
+
+        d = new Domain("africa", "AFRICA");
+        assertEquals("africa.africa", d.toString());
+
+        d = new Domain("AFRICA.AFRICA", "AFRICA");
+        assertEquals("AFRICA.AFRICA.africa", d.toString());
+    }
 }
