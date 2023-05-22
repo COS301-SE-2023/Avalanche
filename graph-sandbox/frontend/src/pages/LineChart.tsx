@@ -86,3 +86,14 @@ Chart.register(...registerables);
     data: data,
     options: options,
   };
+
+  interface LineChartData {
+    labels: string[];
+    datasets: {
+      label: string;
+      data: number[];
+      borderColor: string;
+      backgroundColor: string,
+      yAxisID: string;
+    }[];
+  }
