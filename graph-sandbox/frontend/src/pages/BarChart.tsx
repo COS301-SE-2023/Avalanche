@@ -22,6 +22,35 @@ interface BarChartData {
 
 const BarChart = ({ data }: { data: BarChartData }) => {
   const chartRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    if (chartRef.current) {
+      const ctx = chartRef.current.getContext('2d') as CanvasRenderingContext2D;
+      const chart = new Chart(ctx, {
+        type: 'bar',
+        data: data,
+        options: {
+          plugins: {
+            title: {
+              display: true,
+              text: 'Total Transactions'
+            } 
+          },
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: {
+              display: true,
+            },
+            y: {
+              display: true,
+            },
+          },
+        },
+      });
+      return () => chart.destroy();
+    }
+  }, [data]);
 }
 
 export default BarChart;
