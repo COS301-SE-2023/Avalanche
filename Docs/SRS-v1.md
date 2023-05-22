@@ -214,5 +214,50 @@ The project links domain registration trends to external factors where correlati
 5. Efficiency: 
 In the context of our system, efficiency refers to the ability of the system to provide timely and accurate data analytics results with optimal resource utilization. This is critical given the potential scale of data to be processed and the need to deliver insights in a timely manner to enable informed decision-making.
 
+> To view our architectural document [this link](https://drive.google.com/file/d/1JRlpboiUuRh25L7FumkTPYe_PVuExtGB/view?usp=share_link)
+### System Overview
+Our system is composed of various components including a frontend client, an API Gateway, microservices for separate registry databases and user management, a Domain Watch service, and separate Snowflake warehouses for each registry. These components are arranged in a microservices architecture, with a central gateway, user management micro-service, registry products services, and the Domain Watch service running in a separate container. Some of these microservices also employ their own architectural patterns to meet specific needs. An overarching Gatekeeper acts as a filter between clients and the API Gateway, ensuring all incoming requests are clean and valid. This Gatekeeper is the only publicly accessible endpoint and the single entry point to our system.
+#### Flux Architectural Pattern  
+At its core, Flux is a pattern that encourages a unidirectional data flow, which can significantly improve the usability of the application for both developers and end-users.
+#### Gatekeeper
+In order to address the security quality attribute a Gatekeeper architecture has been employed. The gatekeeper protects applications and services using a dedicated host instance that acts as a broker between clients and the services, validates and sanitizes requests, and passes requests and data between them.  It is the single point of entry for the system. The rest of the system runs on an internal network protected by a VPN. This ensures that all requests that are passed through to the system have been screened for malicious data. 
+
+One of the weaknesses of the Gatekeeper is that it may affect performance. Since Security is the primary Quality Requirement set out by the client, it is of higher priority in the system architecture design. However, to alleviate the potential bottleneck and single point of failure it is possible to replicate the Gatekeeper. This can then be scaled as necessary to improve performance and improve reliability by reducing the impact of the failure of a Gatekeeper
+
+#### Microservices
+Microservices are used to meet the extensibility requirement of the client. Extra data products can be added as additional microservices without affecting the deployed system, each with its own database if needed. The central Gateway is configured to route to all microservices as they are requested. An additional layer of security is also implemented at this stage by ensuring that the user is authenticated and that the user has the correct permissions to access the requested product/service.
+
+#### Various patterns are employed within the Microservice Architecture:
+##### Gateway
+A central Gateway Routing is used to expose all the microservices at a single endpoint. The Gateway handles the routing of the requests to the correct microservices. This allows the client to connect this endpoint regardless of the services available. It also can help to make services more scalable. If a single service becomes overloaded, multiple instances of the service may be spun up. Instead of changing the client the Gateway can manage the routing to these. 
+The Gateway also employs a layered approach. The entry-point is the first “layer” in order to analyse where the request should be routed. Thereafter, the request could be sent through a token based authorization middleware or bypass this middleware in the case of login, register and verify. 
+
+##### Cache Aside
+Cache Aside is used to decrease latency and improve performance. This in turn also addresses usability since data can be delivered to users at a higher pace. The microservices that handle the requests to the various data Warehouses each have a cache database to store recent retrievals. Thus when the same data is requested again, the service can access it from cache instead of making a call to the external warehouse. This also saves on the cost of Snowflake “tokens” addressing client constraints. 
+
+##### Pipes And Filters
+Pipes and Filters are used to process data in the Domain Watch microservice. The process contains various steps in order to identify strings that are a close match to he passed in parameter. In order to make this service scalable and to be able to edit/optimise parts of the processing in isolation a pipes and filters approach is used. Additional processing components can then be added, or existing ones replaced or removed without refactoring the code. 
+Practically there are multiple pipelines of pipes and filters running concurrently in order to improve processing efficiency. A key advantage of the pipeline structure is that all pipelines can run in parallel or only slow filters can run in parallel while faster filters have a single instance. 
+
+
+### Addressing Quality Attributes
+#### 1. Security
+The system addresses the crucial attribute of security with a layered approach. First, at the entry point, the Gatekeeper validates and cleans all incoming requests, offering a first line of defence against malformed or malicious data. Next, the API Gateway, acting as the entry point to the system, further screens the incoming requests before routing them to the appropriate services.
+The Gateway employs token based middleware to protect the system from unauthorised access. This token is session based, improving security once again.
+Within the system, individual services, such as user management, ensure that only authorised users with correct permissions can access sensitive information. The user management service, with its dedicated PostgreSQL database, maintains strict access controls. Moreover, our data storage system—individual Snowflake warehouses for each registry—complies with the POPI Act by masking sensitive information and providing read-only access, thus ensuring data integrity and confidentiality.
+#### 2. Extensibility
+The system is designed with extensibility in mind, allowing for easy addition of new products or services with minimal effect on existing functionality. The microservices architecture employed by our system inherently supports extensibility, as each service is isolated and independently deployable. This design makes it straightforward to add, modify, or remove services as necessary, allowing the system to adapt to evolving requirements and growth opportunities.
+#### 3. Usability and Transparency
+Our frontend client ensures high usability with server-side rendering, providing a smooth and responsive user interface. The design is intuitive, customizable, and accessible. Moreover, the system prioritises transparency, particularly in terms of data representation. Information displayed to the user is clearly marked as definitive or statistically analysed, providing clarity on data sources and processing methods. 
+#### 4. Interoperability
+Our architecture prioritises interoperability to seamlessly integrate with the registry operator's existing systems. The microservices design, with its service-specific databases, allows for easy and flexible integration with external systems. The user management service is a key example, as it is designed to authenticate registrars through the client's system.
+#### 5. Efficiency
+Our architecture achieves efficiency by using the cache-aside pattern which allows the system to respond to requests that have been made recently much faster. This will be employed both in the User Management subsystem as well as the Registry subsystems. This will decrease latency by avoiding unnecessary access to the remote warehouse. The microservice approach also ensures that multiple instances of the same microservice can be deployed to decrease load. 
+#### Conclusion
+Our system architecture successfully addresses the client's defined quality attributes of security, extensibility, usability and transparency, and interoperability. The thoughtful application of a microservices architecture, coupled with specific security measures, transparent data handling practices, and a user-centred frontend design, positions our system as a secure, adaptable, user-friendly, and integrable solution for domain name space analytics.
+
+
+
+
 
 
