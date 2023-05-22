@@ -5,6 +5,8 @@ COS301 Capstone Project for [Domain Name Services (Pty) Ltd](https://dns.busines
 Avalanche is a data analytics tool with flavor as an information management system that is built around the Snowflake® data warehouse. Avalanche will enhance customers of DNS products and services by providing business analytic information, such as projected growth, enhancing the view of investments and to domain registrars’ customers and non-DNS customers alike.
 
 ## Documentation
+### Demo 1
+[Presentation](https://www.canva.com/design/DAFjZPgvC5U/85tYwSR4TQRrY1IsCMRMnQ/edit?utm_content=DAFjZPgvC5U&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 ### Project Day
 ### Software Requirements Specification
 ### Architecture Document
