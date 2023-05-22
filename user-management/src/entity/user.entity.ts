@@ -16,14 +16,17 @@ export class User {
   @Column()
   password: string;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   salt: string;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   firstName: string;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   lastName: string;
+
+  @Column("simple-array", { nullable: true })
+  products: string[];
 
   @ManyToMany(() => UserGroup, (userGroup) => userGroup.users, { nullable: true })
   @JoinTable()

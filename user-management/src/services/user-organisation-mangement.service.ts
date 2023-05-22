@@ -12,7 +12,7 @@ import * as nodemailer from 'nodemailer';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 @Injectable()
-export class UserService {
+export class UserOrganisationMangementService {
     constructor(@Inject('REDIS') private readonly redis: Redis, private readonly configService: ConfigService,
         @InjectRepository(User) private userRepository: Repository<User>,
         @InjectRepository(UserGroup) private userGroupRepository: Repository<UserGroup>,
@@ -139,14 +139,14 @@ export class UserService {
             }
         });
 
-        const registrationHtmlTemplate = readFileSync(join(__dirname, '../../src/services/registration-email-template.html'), 'utf-8');
+        const registrationHtmlTemplate = readFileSync(join(__dirname, '../../src/html/registration-email-template.html'), 'utf-8');
         let registrationHtml = registrationHtmlTemplate.replace('{UserGroup}', userGroupName);
         registrationHtml = registrationHtmlTemplate.replace('{URL}', `http://fillInURL/${token}`);
         // Email options
         const mailOptions = {
             from: 'theskunkworks301@gmail.com',
             to: email,
-            subject: `Invitation to "${userGroup}" on Avalanche Analytics`,
+            subject: `Invitation to "${userGroupName}" on Avalanche Analytics`,
             html: registrationHtml,
             text: `You have been invited to join "{{UserGroup}}" on Avalanche Analytics.\n
             To accept the invitation please follow the link to register on our platform: 
@@ -173,7 +173,7 @@ export class UserService {
             }
         });
 
-        const invitationHtmlTemplate = readFileSync(join(__dirname, '../../src/services/invitation-email-template.html'), 'utf-8');
+        const invitationHtmlTemplate = readFileSync(join(__dirname, '../../src/html/invitation-email-template.html'), 'utf-8');
         let invitationHtml = invitationHtmlTemplate.replace('{UserGroup}', userGroupName);
         invitationHtml = invitationHtmlTemplate.replace('{URL}', `http://fillInURL/${token}`);
         // Email options
@@ -187,7 +187,7 @@ export class UserService {
             \nhttp://fillInURL/${token}`
         };
 
-       
+
         // Sending the email
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {

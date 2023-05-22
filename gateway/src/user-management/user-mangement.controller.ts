@@ -71,4 +71,11 @@ export class UserManagementController {
     const result = await lastValueFrom(this.client.send(pattern, payload));
     return result;
   }
+  @Post('integrateUserWithWExternalAPI')
+  async integrateUserWithWExternalAPI(@Body() data: any) {
+    const pattern = { cmd: 'integrateUserWithWExternalAPI' };
+    const payload = data;
+    const result = await lastValueFrom(this.client.send(pattern, payload));
+    return result;
+  }
 }

@@ -10,7 +10,8 @@ import { User } from './entity/user.entity';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { UserGroup } from './entity/userGroup.entity';
 import { Organisation } from './entity/organisation.entity';
-import { UserService } from './services/user-management.service';
+import { UserOrganisationMangementService } from './services/user-organisation-mangement.service';
+import { UserDataProductMangementService } from './services/user-data-products-management.service';
 
 @Module({
   imports: [
@@ -52,8 +53,8 @@ import { UserService } from './services/user-management.service';
     TypeOrmModule.forFeature([User, UserGroup, Organisation]),
   ],
   controllers: [AppController],
-  providers: [AuthService, RedisProvider, UserService],
-  exports: [AuthService, UserService],
+  providers: [AuthService, RedisProvider, UserOrganisationMangementService, UserDataProductMangementService],
+  exports: [AuthService, UserOrganisationMangementService, UserDataProductMangementService],
 })
 export class AppModule {}
 
