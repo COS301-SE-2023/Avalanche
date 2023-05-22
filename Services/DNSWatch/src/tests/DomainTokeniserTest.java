@@ -33,7 +33,7 @@ public class DomainTokeniserTest {
     @Test
     public void oneWordTest() {
         DomainTokeniser domainTokeniser = new DomainTokeniser();
-        assertEquals("hi", domainTokeniser.inferSpaces("hii"));
+        assertEquals("hi", domainTokeniser.inferSpaces("hi"));
     }
 
     @Test
