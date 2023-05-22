@@ -53,7 +53,7 @@ Chart.register(...registerables);
 
   ]};*/
 
-  const data = {
+  /*const data = {
     labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
     datasets: [{
         label: '# of Votes',
@@ -85,7 +85,7 @@ Chart.register(...registerables);
     type: 'line',
     data: data,
     options: options,
-  };
+  };*/
 
   interface LineChartData {
     labels: string[];
