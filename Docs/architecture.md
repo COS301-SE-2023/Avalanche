@@ -38,3 +38,24 @@ The CIA principle is used to quantify security measures.
 | **Artifact** |
 | Primarily any entry points into Snowflake like an API endpoints/SQL Builder queries |
 
+### 2. Extensibility
+The product should be designed in such a way that additional data products can be added with ease. The client has identified this project as one with the potential to grow and expand into different areas besides only data analytics in the domain name space. The system should allow for additional products/services to be added with a limited effect on current system functionality.
+| Extensibility  |
+| -----------  |
+| **Stimulus Source** |
+|  Client/Developer |
+| **Stimulus** |
+| Wishes to add new data products (services) in addition to the existing system products (incremental deployment) | 
+| **Response** |
+| Add integration (service)
+Test integration |
+| **Response Measure** |
+| None of the existing services needs to be modified other than the central Service Bus/Gateway API
+Minimal changes are needed to the user management database 
+Minimal the cost (financial and time) of adding additional features
+|
+| **Environment** |
+| An alrready deployed system|
+| **Artifact** |
+| Source Code |
+
