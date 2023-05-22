@@ -8,6 +8,15 @@ const labels = ["January","February","March","April","May","June","July","August
 
 Chart.register(...registerables);
 
-interface BarChartData {
+interface BarChartData {    
+  labels: string[];
+  datasets: {
+    label: string;
+    data: number[];
+    borderColor: string;
+    backgroundColor: string,
+    yAxisID: string;
+    borderWidth: number
+  }[];
 }
 
