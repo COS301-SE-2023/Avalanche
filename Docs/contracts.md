@@ -1,5 +1,5 @@
 # Contracts
-## 1. User
+## 1. User Register and Management
   - Authentication object
   - Basic user info:
      - First Name
@@ -7,7 +7,7 @@
   - Settings (under user)
   - Favourite graphs
 ```
-IRegister:
+Register Request:
 {
   email: string,
   hashedPassword: string,
@@ -16,10 +16,17 @@ IRegister:
 }
 ```
 ```
-ILogin:
+LoginRequest:
 {
   email: string,
   hashedPassword: string
+}
+```
+```
+LoginResponse:
+{
+  message: string,
+  user?: IUser
 }
 ```
 ```
@@ -66,8 +73,18 @@ IOrganisation:
 ```
 IDataProduct
 {
-  dataProductName: string,
-  registryName?: string|null
+  dataProductName: DataProductEnum
+
+}
+```
+```
+DataProductEnum
+{
+  ZARCRegistrar = 'ZARCRegistrar',
+  AFRICARegistrar = 'AFRICARegistrar',
+  RyCERegistrar = 'RYCERegistrar',
+  DomainWatch = 'DomainWatch'
+  
 }
 ```
 ## 2. Data for dashboard requests 
@@ -75,7 +92,8 @@ IDataProduct
 IDashboardRequest:
 {
    name: string, 
-   email: string
+   email: string,
+   dashboardName: string
 }
 ```
 ```
@@ -89,7 +107,7 @@ IDashBoardResponse:
 ```
 ## 3. Graph data format:
 ```
-IWarehouse:
+Enum Warehouse:
 {
    ZACR: ZACR,
    AFRICA: AFRICA,
@@ -101,7 +119,7 @@ IGraphs:
 {
    name: string,
    id: number,
-   warehouse: IWarehouse,
+   warehouse: EnumWarehouse,
    data: IGraphData
 }
 ```
