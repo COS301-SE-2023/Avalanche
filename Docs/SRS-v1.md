@@ -295,8 +295,8 @@ For the frontend, the team will use **NextJS** to create an intuitive and user-f
 
 ### Project Management
 
-A biweekly summary report will be submitted to the industry mentor. This will include progress, obstacles and upcoming goals.
-The project will be managed using Githubs project board and any issues that need to be sent to the client will be done using Jira
-Weekly scrum meetings will take place.
-3 stand ups will take place each week
-We will have weekly meetings with our lecture mentor and with our industry mentor
+* A biweekly summary report will be submitted to the industry mentor. This will include progress, obstacles and upcoming goals.
+* The project will be managed using Githubs project board and any issues that need to be sent to the client will be done using Jira.
+* Weekly scrum meetings will take place.
+* 3 stand ups will take place each week.
+* We will have weekly meetings with our lecture mentor and with our industry mentor.
