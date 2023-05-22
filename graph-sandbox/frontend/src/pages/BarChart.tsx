@@ -51,6 +51,8 @@ const BarChart = ({ data }: { data: BarChartData }) => {
       return () => chart.destroy();
     }
   }, [data]);
+
+  return <canvas ref={chartRef} />;
 }
 
 export default BarChart;
