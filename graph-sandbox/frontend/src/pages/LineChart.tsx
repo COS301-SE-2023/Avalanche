@@ -130,4 +130,5 @@ Chart.register(...registerables);
       }
     }, [data]);
   
+    return <canvas ref={chartRef} />;
   };
