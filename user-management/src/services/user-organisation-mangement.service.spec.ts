@@ -6,13 +6,15 @@ import { UserGroup } from '../entity/userGroup.entity';
 import { Organisation } from '../entity/organisation.entity';
 import { Repository } from 'typeorm';
 import { UserOrganisationMangementService } from './user-organisation-mangement.service';
-import { RedisService } from 'nestjs-redis';
+import Redis from 'ioredis';
+import { ConfigService } from '@nestjs/config';
 
 describe('UserOrganisationMangementService', () => {
   let userOrganisationMangementService: UserOrganisationMangementService;
   let mockUserRepository: jest.Mocked<Partial<Repository<User>>>;
   let mockUserGroupRepository: jest.Mocked<Partial<Repository<UserGroup>>>;
   let mockOrganisationRepository: jest.Mocked<Partial<Repository<Organisation>>>;
+  let mockRedis: jest.Mocked<Redis>;
 
   const mockUser = new User();
   const mockUserGroup = new UserGroup();
@@ -59,9 +61,10 @@ describe('UserOrganisationMangementService', () => {
           useValue: organisationRepository,
         },
         {
-          provide: RedisService, // Provide the mock redis service
-          useValue: RedisService,
+          provide: 'REDIS', // Provide the mock redis service
+          useValue: redis,
         },
+        ConfigService
       ],
     }).compile();
 
@@ -69,6 +72,7 @@ describe('UserOrganisationMangementService', () => {
     mockUserRepository = module.get(getRepositoryToken(User));
     mockUserGroupRepository = module.get(getRepositoryToken(UserGroup));
     mockOrganisationRepository = module.get(getRepositoryToken(Organisation));
+    mockRedis = module.get('REDIS');
   });
 
   it('should be defined', () => {
