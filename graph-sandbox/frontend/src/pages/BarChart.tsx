@@ -21,6 +21,7 @@ interface BarChartData {
 }
 
 const BarChart = ({ data }: { data: BarChartData }) => {
+  const chartRef = useRef<HTMLCanvasElement>(null);
 }
 
 export default BarChart;
