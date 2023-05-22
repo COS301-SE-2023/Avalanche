@@ -1,8 +1,10 @@
 # Avalanche
 ## DNS Business
+> A Capstone project by The Skunkworks 
+
 
 ### Overview
-The Avalanche project aims to implement a powerful Business Intelligence Tool (BIT) capable of analyzing and providing statistical insights on the domain spaces managed by DNS Business. By leveraging the latest data analytics technologies and techniques, the tool will enable DNS Business and other interested parties to gain a deeper understanding of the above-mentioned domain space, identify trends and patterns, and make informed decisions to improve their operations.
+> The Avalanche project aims to implement a powerful Business Intelligence Tool (BIT) capable of analyzing and providing statistical insights on the domain spaces managed by DNS Business. By leveraging the latest data analytics technologies and techniques, the tool will enable DNS Business and other interested parties to gain a deeper understanding of the above-mentioned domain space, identify trends and patterns, and make informed decisions to improve their operations.
 
 ### Objectives
 The high-level objectives for the Avalanche project are:
@@ -21,7 +23,7 @@ The scope of the Avalanche project is extensive and includes multiple aspects th
 
 The scope of the project includes, but is not limited to, data wrangling what is currently in the warehouse and to extract from that to provide statistics and information to the clients on the portal. The team will be using NestJS as the main API and languages such as Java and Python to implement microservices which will be plugged into the API. The frontend for the portal will be NextJS
 
-### Use Cases
+### User Stories:
 
 #### User Characteristics:
 The users of the software system can be classified into the following groups:
@@ -66,4 +68,33 @@ The users of the software system can be classified into the following groups:
 ##### As a Registry User:
 - I can do anything a Registrar User can do
 - I can view unanonymised Registrar Data (eg. Registrar Ranking)
+
+### Functional Requirements:
+
+#### Requirements
+
+1. Provide a secure authentication process
+    1.  Allow users to register onto the application after going through the onboarding of a one time pin, that expires after 24 hours
+    2.  Allow users to log into the system with their credentials
+    3.  Allow users to forget their password
+    4. Join via invite link
+
+2. Provide integration methods to our data products
+(For context “data products” are the packages provided by the business, thus for Avalanche it is registrar integration into ZACR, AFRICA and RyCE as well as domain watch, sqlCreater, natural language to sql)
+    1.  Users must be able to subscribe to a “data product” for a period of time
+    2. Users must be able to subscribe to multiple “data products”
+    3. Users must be able authenticate with existing accounts with DNS for registrar   - specific integrations
+
+3. Provide users the ability to create and manage organisations
+    1. Users must be able to create an organisation
+    2. Users in the organisation owner user group must be able to create user groups within an organisation
+    3. Users in the admin user group must be able to assign users to existing user groups
+    4. Inviting an existing Avalanche Analytics User
+    5. Inviting an unregistered Avalanche Analytics User 
+    6. Existing users must be able to accept invites to an organisation user group
+    7. Users must be able to exit user groups
+    8. Admin must be able to remove users from user groups but not other admins
+    9. Admin Users must be able to add data products to user groups
+
+
 
