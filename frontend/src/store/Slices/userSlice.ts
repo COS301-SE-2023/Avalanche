@@ -1,11 +1,19 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { AppState } from "../store";
 import { HYDRATE } from "next-redux-wrapper";
+
+import { apiConn } from "@/api/server";
+
+const registerMethod = createAsyncThunk("AUTH.Register", async (userId, thunkApi) => {
+
+});
 
 export interface IUserState {
     userID: string | null,
     userData: IUser,
-    userAuth: IAuth
+    userAuth: IAuth,
+    organization: object[] | null,
+    dataProducts: object | null
 }
 
 export interface IUser {
@@ -33,6 +41,8 @@ const initialState: IUserState = {
     userAuth: {
         token: null
     } as IAuth,
+    organization: null,
+    dataProducts: null
 }
 
 export const userSlice = createSlice({
@@ -53,8 +63,14 @@ export const userSlice = createSlice({
             const { email, password } = action.payload;
         },
         register(state, action) {
-            // handle register
             const { email, confirmEmail, password, confirmPassword, firstName, lastName, country } = action.payload;
+            if (email !== confirmEmail) {
+
+            }
+
+            if (password !== confirmPassword) {
+
+            }
         },
         verifyOTP(state, action) {
             const { email, token, otp } = action.payload;
@@ -73,3 +89,7 @@ export const userSlice = createSlice({
 export const { setAuth, getAuth, updateProfilePicture, login, register, verifyOTP } = userSlice.actions;
 export const userState = (state: AppState) => state.user;
 export default userSlice.reducer;
+
+// const fetchUsers = () => async(dispatch) => {
+//     dispatch
+// }

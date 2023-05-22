@@ -103,7 +103,7 @@ export default function Settings() {
                         <a href="?tab=subusers" className={tab === "organizations" ? tabOptions.active : tabOptions.inactive}>Organizations</a>
                     </li>
                     <li className="mr-2" onClick={(e) => tabClick(e, "integrations")}>
-                        <a href="?tab=integrations" className={tab === "integrations" ? tabOptions.active : tabOptions.inactive}>Integrations</a>
+                        <a href="?tab=integrations" className={tab === "integrations" ? tabOptions.active : tabOptions.inactive}>Data Products</a>
                     </li>
                     <li className="mr-2" onClick={(e) => tabClick(e, "apikeys")}>
                         <a href="?tab=apikeys" className={tab === "apikeys" ? tabOptions.active : tabOptions.inactive}>API Keys</a>
@@ -132,8 +132,8 @@ export default function Settings() {
             }
             {tab === "integrations" && <>
                 <div className="flex justify-between items-center gap-10 mb-4">
-                    <WarningAlert title="No Integrations." text="You don't have any integrations setup." />
-                    <SubmitButton text="Add a new integration" onClick={() => dispatch(setCurrentOpenState("INTE.CreateIntegration"))} />
+                    <WarningAlert title="No Data Products." text="You have not added any Data Products..." />
+                    <SubmitButton text="Add a new Data Product" onClick={() => dispatch(setCurrentOpenState("INTE.CreateIntegration"))} />
                 </div>
             </>}
             {tab === "apikeys" && <API demo={demo} />}
