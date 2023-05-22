@@ -52,3 +52,14 @@ const data = {
   }
 ]
 }
+
+function App() {
+  return (
+    <div style={{position: "relative", height:"80vh", width:"80vw"}}>
+
+      
+      <BarChart data = {data}/>
+    </div>
+  );
+}
+export default App;
