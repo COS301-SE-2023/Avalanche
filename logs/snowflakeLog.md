@@ -32,3 +32,5 @@ For more information request formal documentation from ...
   * Renewals per Registar
 * 20/05
   * Deletion for Registrars 
+* 21/05
+  * Transformation into ChartJS format 
