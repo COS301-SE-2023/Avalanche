@@ -12,6 +12,16 @@ Avalanche is a data analytics tool with flavor as an information management syst
 ### Architecture Document
 
 ## Team Members
+<details><summary>Mark Botros - u21448109</summary><br>
+<img align="right" src="https://astonmartin.sloththe.dev/isawesome/mark.png" width=150>
+<p>
+I'm a third-year computer science student who's really into data science, and I've got some hands-on experience with website development, databases, and a bit in AI. I've worked in the industry for a bit, and I believe that computer science can make the world a bit better, one function at a time. I'm a chill and friendly person, always down for connecting with others and sharing cool ideas. And hey, here's a computer science joke: Why do programmers always mix up Christmas and Halloween? Because Oct 31 == Dec 25!
+</p>
+<a href="https://github.com/markbr02" target="_blank">
+  <img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white"/>
+</a> 
+<br><br><br><br><br><br>
+
 </details>
 <details><summary>Sarah Leigh Kilian - u21804312</summary><br>
 <img align="right" src="https://astonmartin.sloththe.dev/isawesome/sarah-update.png" width=150>
