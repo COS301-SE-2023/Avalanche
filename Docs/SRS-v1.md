@@ -264,6 +264,7 @@ Our system architecture successfully addresses the client's defined quality attr
     * Procedures using Javascript
 * Frontend: 
     * NextJS
+    * TailwindCSS
     * Chart.js
 * Gateway: 
     * NestJS
@@ -299,8 +300,3 @@ The project will be managed using Githubs project board and any issues that need
 Weekly scrum meetings will take place.
 3 stand ups will take place each week
 We will have weekly meetings with our lecture mentor and with our industry mentor
-
-
-
-
-
