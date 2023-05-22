@@ -40,6 +40,12 @@ public class DomainTokeniserTest {
     }
 
     @Test
+    public void twoWordTest() {
+        DomainTokeniser domainTokeniser = new DomainTokeniser();
+        assertEquals("hithere", domainTokeniser.inferSpaces("hi there"));
+    }
+
+    @Test
     public void tokeniseTest() {
         DomainTokeniser domainTokeniser = new DomainTokeniser();
 
