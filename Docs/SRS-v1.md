@@ -158,8 +158,6 @@ The users of the software system can be classified into the following groups:
     1. Wishlist: all data products share function
     (Any additional data product’s sharing functionalities goes here)
 
-
-
 10. Provide users with an aggregated weekly report
     1. Report contains tabular data of interest
     2. Report contains graphical data of interest
@@ -173,6 +171,48 @@ The users of the software system can be classified into the following groups:
     4. Provide means to filter data in API calls
     5. Support JSON format response
 
+### Subsystems
+
+1. Onboarding and Authentication
+2. User/ Organisation Management
+3. Data Product Permission
+4. Dashboard Subsystem
+5. Intra-Organisation Communication
+6. Reporting subsystem
+7. Public facing API subsystem
+
+### Use Case Diagrams
+To see use case diagrams and traceability matrix please follow [this link](https://drive.google.com/file/d/1zrd5cTrA9RHIBrwi-0oQs0wnceg8_nHe/view?usp=share_link)
+
+### Non-Functional Requirements
+#### Quality Attributes
+1. **Security:**
+The security of the system is the most important quality requirement of the project.  The data in the Snowflake Warehouse contains the personal information of individuals that are protected by the POPI Act. Furthermore, it contains important record-keeping information of the client that is needed for annual auditing and thus cannot be corrupted or lost.  
+2. **Extensibility:**
+The product should be designed in such a way that additional data products can be added with ease. The client has identified this project as one with the potential to grow and expand into different areas besides only data analytics in the domain name space. The system should allow for additional products/services to be added with a limited effect on current system functionality
+The project provides an external API, enabling external developers to access and utilize the data for additional applications.
+    1. Scalability: 
+The project provides a scalable onboarding process for registrars and third parties, ensuring it can handle growing numbers of users.
+    2. Maintainability: 
+The system supports JSON format responses, which is a widely used standard for data interchange, making it easier to maintain and update. In order for other developers to extend the product the code base should be understandable and maintainable. 
+3. Interoperability: 
+The system can work with different data warehouses, as long as they conform to the schema, allowing for plug-and-play functionality.
+4. Usability: 
+The project offers personalized experiences for users, such as selecting favorite graphs and watchlisting trends, enabling a user-friendly interface.
+    1. Transparency:
+The information displayed should also be done so in a transparent manner. It should be clear to the user exactly what data is being displayed and how it has been gathered, ie. whether it is definitive or whether statistical analysis was applied. Details should be provided in the case of non-definitive data analytics.
+    2. Customizability: 
+Users can manage subusers, share reports or comments, and have access to personalized statistics, offering a tailored experience.
+    3. Flexibility: 
+The project allows users to drill down into various statistics and filter out irrelevant data points, providing more detailed and relevant information as needed.
+    4. Comprehensiveness: 
+The project provides a wide range of data, including registrar data, market share statistics, customer base analysis, and overall market statistics, ensuring users have access to thorough information.
+    5. Accuracy: 
+The system uses statistically significant sampling methods for various analyses, increasing the reliability of the results.
+    6. Relevance: 
+The project links domain registration trends to external factors where correlations may be significant, providing more meaningful insights for users.
+5. Efficiency: 
+In the context of our system, efficiency refers to the ability of the system to provide timely and accurate data analytics results with optimal resource utilization. This is critical given the potential scale of data to be processed and the need to deliver insights in a timely manner to enable informed decision-making.
 
 
 
