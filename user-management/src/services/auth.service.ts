@@ -87,7 +87,7 @@ export class AuthService {
 
   async login(email: string, passwordLogin: string) {
     // Fetch user from the PostgreSQL database
-    const user = await this.userRepository.findOne({ where: { email } });
+    const user = await this.userRepository.findOne({ where: { email } , relations: ['userGroups', 'organisation']});
 
     // If user not found, throw error
     if (!user) {
