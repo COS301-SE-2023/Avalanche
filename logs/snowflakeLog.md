@@ -34,3 +34,5 @@ For more information request formal documentation from ...
   * Deletion for Registrars 
 * 21/05
   * Transformation into ChartJS format 
+* 22/05 
+  * Dashboard
