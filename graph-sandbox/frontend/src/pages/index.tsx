@@ -42,6 +42,13 @@ const data = {
     backgroundColor: 'rgba(255, 99, 132)',
     borderWidth: 1,
     yAxisID: 'y',
+  },{
+    label: 'AFRICA_GRACE',
+    data: [5,10,5,5,4,5,3,4,5,12,6,3],
+    borderColor: 'rgba(75, 192, 192)', //green
+    backgroundColor: 'rgba(75, 192, 192)',
+    borderWidth: 1,
+    yAxisID: 'y',
   }
 ]
 }
