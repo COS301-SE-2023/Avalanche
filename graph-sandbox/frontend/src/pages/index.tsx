@@ -56,8 +56,7 @@ const data = {
 function App() {
   return (
     <div style={{position: "relative", height:"80vh", width:"80vw"}}>
-
-      
+      <LineChart data = {data}/>
       <BarChart data = {data}/>
     </div>
   );
