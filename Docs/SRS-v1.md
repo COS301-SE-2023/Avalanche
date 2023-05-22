@@ -104,5 +104,75 @@ The users of the software system can be classified into the following groups:
     6. Allow users to watchlist trends
     7. Suggest analytics based on preferences
 
+5. Provide Dashboard Functionality
+    1. Allow users to filter graphs on the dashboard
+    2. Allow users to select the warehouse on which the dashboard is based
+(Currently we are only provided with access to the ZARC warehouse, however, provision should be made to enable the client to “plug-and-play” other warehouses)
+    3. Allows users to choose the graph type
+    4. Allow users to view graphs individually
+    5. Allow users to download the data as CSV or JSON format
+    6. Allow users to view data in graphical or tabular format
+
+6. Custom Dashboards
+    1. Allow users/user groups to create their own dashboards where they place their own graphs
+    2. Allow users to select the warehouse on which the graph is based
+(Currently we are only provided with access to the ZARC warehouse, however, provision should be made to enable the client to “plug-and-play” other warehouses)
+    3. Allow users to undo actions on their dashboard
+    4. Allow users to save their dashboard
+
+1. Provide a default dashboards 
+    1. Registrar data to Registry
+        1. Trends per Registrar
+        2. Top-performing Registrar based on various metrics:
+            1. Retention
+            2. Creates
+            3. Net Income
+            4. Growth Rate
+    2. Market share statistics to Users integrated as Registrars
+        1. Provide market share of registrar
+        2. Predict projected market share based on current trends
+        3. Analyse retention rates of registrars
+        4. Analyse overall trajectory of market with predictions
+        5. Analyse market share within industry based on statistically significant sampling 
+    3. Customer base analysis to Users integrated as Registrars 
+        1. Differentiate between resellers and individual customers
+        2. Differentiate between e-commerce and informational customers
+        3. Classify customers base based on industry using statistically significant sampling methods
+        4. Predict future customer base based on current registrar and registry trends
+        5. Analyse customer loyalty scores
+    4. Overall market statistics to All Users
+        1. Overall trend of domain registration
+        2. Link domain registration to external factors where correlation may be significant
+        3. Trend prediction based on current trend and external variables
+        4. Analyse density of domain creations in geographical areas
+        5. Analyse density of domain creations by industry
+
+8. Viewing graphs individually
+    1. Users should be able to view an individual graph full screen 
+    2. Users must be able to filter the individual graph
+    3. Users must be able to see comments of other users in their organisation
+    4. User should be able to filter comments by user group for the graph
+    5. Users must be able to comment on the graph and it must be visible to the other users
+
+9. Communicate and share results within an Organisation
+    1. Wishlist: all data products share function
+    (Any additional data product’s sharing functionalities goes here)
+
+
+
+10. Provide users with an aggregated weekly report
+    1. Report contains tabular data of interest
+    2. Report contains graphical data of interest
+    3. Analyses of the data
+    4. Allow users to download the weekly report
+
+11. Provide an external API:
+    1. Users can generate keys on the website
+    2. Users can view documentation regarding API endpoints
+    3. User can make calls to the API using their API key
+    4. Provide means to filter data in API calls
+    5. Support JSON format response
+
+
 
 
