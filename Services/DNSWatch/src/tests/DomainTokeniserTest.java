@@ -43,6 +43,9 @@ public class DomainTokeniserTest {
     public void twoWordTest() {
         DomainTokeniser domainTokeniser = new DomainTokeniser();
         assertEquals("hithere", domainTokeniser.inferSpaces("hi there"));
+
+        assertEquals("helloyou", domainTokeniser.inferSpaces("hello you"));
+        assertEquals("coolguy", domainTokeniser.inferSpaces("cool guy"));
     }
 
     @Test
