@@ -1,0 +1,4 @@
+
+backend/.env
+gateway/.env
+user-management/.env
