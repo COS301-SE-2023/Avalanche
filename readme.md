@@ -1,3 +1,4 @@
+
 <h1 align="center">Avalanche</h1>
 
 COS301 Capstone Project for [Domain Name Services (Pty) Ltd](https://dns.business/).
@@ -81,6 +82,7 @@ That's me, if you see me around, stop me and I'll tell you all about my latest p
 
 </details>
 
+
 ## Team Contact
 Email: [theskunkworks301@gmail.com](mailto:theskunkworks301@gmail.com)
 ## Tech Stack
@@ -101,6 +103,7 @@ Email: [theskunkworks301@gmail.com](mailto:theskunkworks301@gmail.com)
 <a href="https://www.docker.com/" title="docker"><img src="https://github.com/get-icon/geticon/raw/master/icons/docker-icon.svg" alt="docker" width="21px" height="21px"></a>
 <a href="https://www.nginx.com/" title="Nginx"><img src="https://github.com/get-icon/geticon/raw/master/icons/nginx-icon.svg" alt="Nginx" width="21px" height="21px"></a>
 <a href="https://github.com/" title="Github"><img src="https://github.com/get-icon/geticon/raw/master/icons/github-icon.svg" alt="Github" width="21px" height="21px"></a>
+
 
 ### Project Management
 <a href="https://git-scm.com/" title="Git"><img src="https://github.com/get-icon/geticon/raw/master/icons/git-icon.svg" alt="Git" width="21px" height="21px"></a>
