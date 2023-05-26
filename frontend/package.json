@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "cypress": "cypress open",
+    "cypress": "cypress run --browser chrome --config video=false",
+    "cypress open": "cypress open",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
@@ -45,6 +46,7 @@
     "tailwindcss": "3.3.2"
   },
   "devDependencies": {
+    "@cypress/code-coverage": "^3.10.6",
     "@storybook/addon-essentials": "7.0.12",
     "@storybook/addon-interactions": "7.0.12",
     "@storybook/addon-links": "7.0.12",

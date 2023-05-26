@@ -1,0 +1,27 @@
+name: Testing
+
+on:
+  push:
+    branches: ["working", "stable"]
+  pull_request:
+    branches: ["working", "stable"]
+
+permissions:
+    pull-requests: read
+
+jobs:
+  Cypress:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Right Directory
+        run: cd frontend
+      - name: Cypress Run
+        uses: cypress-io/github-action@v5
+        with:
+          build: yarn build
+          start: yarn cypress
+          browser: chrome
+          parallel: true
+      - name: ✅ Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+
