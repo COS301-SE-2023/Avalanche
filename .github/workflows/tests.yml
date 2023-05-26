@@ -13,9 +13,11 @@ jobs:
   Cypress:
     runs-on: ubuntu-latest
     steps:
-      - name: Right Directory
+      - name: 🛫 Checkout
+        uses: actions/checkout@v2
+      - name: 📁 Right Directory
         run: cd frontend
-      - name: Cypress Run
+      - name: 🏃‍♂️ Cypress Run
         uses: cypress-io/github-action@v5
         with:
           build: yarn build
