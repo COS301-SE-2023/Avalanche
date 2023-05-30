@@ -3,9 +3,10 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import snowflake = require('snowflake-sdk');
 
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { TransactionService } from './transactions/transactions.service';
 
 @Module({
   imports: [
@@ -32,7 +33,35 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
     ConfigModule.forRoot({ isGlobal: true }), 
   ],
   controllers: [AppController],
-  providers: [],
-  exports: [],
+  providers: [
+    {
+      provide: 'SNOWFLAKE_CONNECTION',
+      useFactory: () => {
+        const connection = snowflake.createConnection({
+          account: process.env.SNOWFLAKE_ACCOUNT,
+          username: process.env.SNOWFLAKE_USERNAME,
+          password: process.env.SNOWFLAKE_PASSWORD,
+          role: process.env.SNOWFLAKE_ROLE,
+          warehouse: process.env.SNOWFLAKE_WAREHOUSE,
+          database: process.env.SNOWFLAKE_DATABASE,
+          schema: process.env.SNOWFLAKE_SCHEMA,
+        });
+
+        // Try to connect to Snowflake, and check whether the connection was successful.
+        connection.connect((err, conn) => {
+          if (err) {
+            console.error('Unable to connect: ' + err.message);
+            throw err;
+          } else {
+            console.log('Successfully connected to Snowflake.');
+          }
+        });
+
+        return connection;
+      },
+    },
+    TransactionService
+  ],
+  exports: [TransactionService],
 })
 export class AppModule {}

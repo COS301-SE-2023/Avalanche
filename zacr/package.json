@@ -25,7 +25,8 @@
     "@nestjs/microservices": "^9.4.2",
     "@nestjs/platform-express": "^9.0.0",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.2.0"
+    "rxjs": "^7.2.0",
+    "snowflake-sdk": "^1.6.22"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",

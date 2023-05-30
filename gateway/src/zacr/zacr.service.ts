@@ -8,7 +8,7 @@ export class ZacrService {
     @Inject('ZACR_SERVICE') private readonly client: ClientProxy,
   ) {}
 
-  async transactionsZACR(data: any) {
-    return this.client.send({ cmd: 'transactionsZACR' }, data).toPromise();
+  async transactions(data: any) {
+    return this.client.send({ cmd: 'transactions' }, data).toPromise();
   }
 }
