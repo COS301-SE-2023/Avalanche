@@ -2,3 +2,4 @@
 backend/.env
 gateway/.env
 user-management/.env
+zacr/.env

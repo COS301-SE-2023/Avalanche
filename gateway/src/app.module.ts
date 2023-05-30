@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { UserManagementService } from './user-management/user-management.service';
@@ -6,6 +7,8 @@ import { JwtMiddleware } from './jwt-middleware.middleware';
 import { MiddlewareConsumer, NestModule, RequestMethod } from '@nestjs/common';
 import { RedisProvider } from './redis.provider';
 import { ConfigModule } from '@nestjs/config';
+import { ZacrController } from './zacr/zacr.controller';
+import { ZacrService } from './zacr/zacr.service';
 
 @Module({
   imports: [
@@ -18,11 +21,19 @@ import { ConfigModule } from '@nestjs/config';
           port: 3001,
         },
       },
+      {
+        name: 'ZACR_SERVICE',
+        transport: Transport.TCP,
+        options: {
+          host: 'localhost',
+          port: 3002,
+        },
+      },
     ]),
     ConfigModule.forRoot({ isGlobal: true }),
   ],
-  controllers: [UserManagementController],
-  providers: [UserManagementService, RedisProvider],
+  controllers: [UserManagementController, ZacrController],
+  providers: [UserManagementService, ZacrService, RedisProvider],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
