@@ -39,3 +39,4 @@ For more information request formal documentation from ...
 * 30/05 
   * Debugging Transaction procedure - undefined object
   * Fixed registrar grouping
+  * Date From errors
