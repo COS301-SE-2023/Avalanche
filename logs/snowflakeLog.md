@@ -38,3 +38,4 @@ For more information request formal documentation from ...
   * Dashboard
 * 30/05 
   * Debugging Transaction procedure - undefined object
+  * Fixed registrar grouping
