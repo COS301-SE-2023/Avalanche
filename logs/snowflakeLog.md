@@ -40,3 +40,4 @@ For more information request formal documentation from ...
   * Debugging Transaction procedure - undefined object
   * Fixed registrar grouping
   * Date From errors
+  * Fixed timezone
