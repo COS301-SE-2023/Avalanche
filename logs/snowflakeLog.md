@@ -36,3 +36,5 @@ For more information request formal documentation from ...
   * Transformation into ChartJS format 
 * 22/05 
   * Dashboard
+* 30/05 
+  * Debugging Transaction procedure - undefined object
