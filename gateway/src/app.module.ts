@@ -9,6 +9,8 @@ import { RedisProvider } from './redis.provider';
 import { ConfigModule } from '@nestjs/config';
 import { ZacrController } from './zacr/zacr.controller';
 import { ZacrService } from './zacr/zacr.service';
+import { DomainWatchController } from './domain-watch/domain-watch.controller';
+import { DomainWatchService } from './domain-watch/domain-watch.service';
 
 @Module({
   imports: [
@@ -29,11 +31,19 @@ import { ZacrService } from './zacr/zacr.service';
           port: 3002,
         },
       },
+      {
+        name: 'DOMAIN_WATCH_SERVICE',
+        transport: Transport.TCP,
+        options: {
+          host: 'localhost',
+          port: 3003,
+        },
+      },
     ]),
     ConfigModule.forRoot({ isGlobal: true }),
   ],
-  controllers: [UserManagementController, ZacrController],
-  providers: [UserManagementService, ZacrService, RedisProvider],
+  controllers: [UserManagementController, ZacrController, DomainWatchController],
+  providers: [UserManagementService, ZacrService, RedisProvider, DomainWatchService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
