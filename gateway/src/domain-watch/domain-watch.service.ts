@@ -1,10 +1,16 @@
 /* eslint-disable prettier/prettier */
-import { Injectable, Inject } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
+import { HttpService } from '@nestjs/axios';
+import { Injectable } from '@nestjs/common';
+import { lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class DomainWatchService {
-  constructor(
-    @Inject('DOMAIN_WATCH_SERVICE') private readonly client: ClientProxy,
-  ) {}
+  constructor(private httpService: HttpService) {}
+
+  async sendData(data: any): Promise<any> {
+    const response = this.httpService.post('http://localhost:3004/domainWatch/list', data);
+    const responseData = await lastValueFrom(response);
+    return JSON.stringify(responseData.data);
+  }
 }
+

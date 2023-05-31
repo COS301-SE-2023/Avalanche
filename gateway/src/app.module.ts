@@ -11,9 +11,11 @@ import { ZacrController } from './zacr/zacr.controller';
 import { ZacrService } from './zacr/zacr.service';
 import { DomainWatchController } from './domain-watch/domain-watch.controller';
 import { DomainWatchService } from './domain-watch/domain-watch.service';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
+    HttpModule,
     ClientsModule.register([
       {
         name: 'USER_MANAGEMENT_SERVICE',
@@ -31,14 +33,6 @@ import { DomainWatchService } from './domain-watch/domain-watch.service';
           port: 3002,
         },
       },
-      {
-        name: 'DOMAIN_WATCH_SERVICE',
-        transport: Transport.TCP,
-        options: {
-          host: 'localhost',
-          port: 3003,
-        },
-      },
     ]),
     ConfigModule.forRoot({ isGlobal: true }),
   ],
@@ -53,6 +47,7 @@ export class AppModule implements NestModule {
         { path: 'user-management/register', method: RequestMethod.POST },
         { path: 'user-management/verify', method: RequestMethod.POST },
         { path: 'user-management/login', method: RequestMethod.POST },
+        { path: 'domainWatch/list', method: RequestMethod.POST },
       )
       .forRoutes('*');
   }

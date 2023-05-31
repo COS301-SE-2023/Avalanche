@@ -3,3 +3,7 @@ backend/.env
 gateway/.env
 user-management/.env
 zacr/.env
+.vscode/settings.json
+javatest/SimpleHttpServer$PostHandler.class
+javatest/SimpleHttpServer.class
+javatest/SimpleHttpServer.java

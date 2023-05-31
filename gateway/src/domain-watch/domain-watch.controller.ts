@@ -1,9 +1,14 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Inject, Post } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
-import { lastValueFrom } from 'rxjs';
+import { Body, Controller, Post } from '@nestjs/common';
+import { DomainWatchService } from './domain-watch.service';
 
-@Controller('domain-watch')
+@Controller('domainWatch')
 export class DomainWatchController {
-  constructor(@Inject('DOMAIN_WATCH_SERVICE') private client: ClientProxy) {}
+  constructor(private readonly domainWatchService: DomainWatchService) {}
+
+  @Post('list')
+  async sendData(@Body() data: any) {
+    const result = await this.domainWatchService.sendData(data);
+    return result;
+  }
 }
