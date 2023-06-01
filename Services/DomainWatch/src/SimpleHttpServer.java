@@ -21,8 +21,15 @@ public class SimpleHttpServer {
         // System.out.println("started");
         // server.start();
 
+        // String o = getResponse(
+        // "{\n\"domain\": \"firstnationalbank\",\n\"types\" : [{\"type\"
+        // :\"Levenshtein\", \"threshold\": 5},{\"type\" :
+        // \"Soundex\",\"threshold\":3}]\n}");
+        // System.out.println(o);
+
         String o = getResponse(
-                "{\n\"domain\": \"firstnationalbank\",\n\"types\" : [{\"type\" :\"Levenshtein\", \"threshold\": 5},{\"type\" : \"Soundex\",\"threshold\": 3}]\n}");
+        "{\n\"domain\": \"firstnationalbank\",\n\"types\" : [{\"type\"
+        :\"Levenshtein\", \"threshold\": 5}]\n}");
         System.out.println(o);
     }
 
