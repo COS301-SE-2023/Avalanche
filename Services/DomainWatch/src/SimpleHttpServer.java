@@ -28,8 +28,7 @@ public class SimpleHttpServer {
         // System.out.println(o);
 
         String o = getResponse(
-        "{\n\"domain\": \"firstnationalbank\",\n\"types\" : [{\"type\"
-        :\"Levenshtein\", \"threshold\": 5}]\n}");
+                "{\n\"domain\": \"firstnationalbank\",\n\"types\" : [{\"type\":\"Levenshtein\", \"threshold\": 5}]\n}");
         System.out.println(o);
     }
 
