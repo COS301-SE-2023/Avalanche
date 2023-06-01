@@ -22,7 +22,7 @@ public class SimpleHttpServer {
         // server.start();
 
         String o = getResponse(
-                "{\n\"domain\": \"firstnationalbank\",\n\"types\" : [{\"type\" :\"Levenshtein\", \"threshold\": 5},{\"type\" : \"another one\",\"threshold\": 3}]\n}");
+                "{\n\"domain\": \"firstnationalbank\",\n\"types\" : [{\"type\" :\"Levenshtein\", \"threshold\": 5},{\"type\" : \"Soundex\",\"threshold\": 3}]\n}");
         System.out.println(o);
     }
 
@@ -35,9 +35,9 @@ public class SimpleHttpServer {
                 java.util.Scanner scanner = new java.util.Scanner(inputStream).useDelimiter("\\A");
                 String body = scanner.hasNext() ? scanner.next() : "";
                 System.out.println(body); // Prints the request body
-                System.out.println(getResponse(body));
+
                 // Prepare response
-                String response = body;
+                String response = getResponse(body);
                 httpExchange.sendResponseHeaders(200, response.length());
                 OutputStream os = httpExchange.getResponseBody();
                 os.write(response.getBytes());
@@ -54,21 +54,38 @@ public class SimpleHttpServer {
         int i = body.indexOf("\"domain\"", 0);
         String resp = "{\n  \"status\":\"success\"\n  \"data\":[\n";
         System.out.println(i);
+        LinkedList<Domain> hits = new LinkedList<>();
         JSONObject obj = new JSONObject(body);
         String domain = (obj.getString("domain"));
         int numCalcs = (obj.getJSONArray("types").length());
-        for (int j = 0; j < 1; j++) {
+        for (int j = 0; j < numCalcs; j++) {
             String type = obj.getJSONArray("types").getJSONObject(j).getString("type");
             double threshold = (obj.getJSONArray("types").getJSONObject(j).getDouble("threshold"));
             if (type.equals("Levenshtein")) {
-                LinkedList<Domain> results = similarityChecker.findAllWithinSimliarityThreshold(domain,
-                        threshold);
-                for (int k = 0; k < results.size(); k++) {
-                    resp += "    " + results.get(k).toJSON();
-                    if (k != results.size() - 1) {
-                        resp += ",\n";
-                    }
+                if (j == 0) {
+                    hits = similarityChecker.findAllWithinSimliarityThreshold(domain,
+                            threshold);
+                } else {
+                    hits = similarityChecker.findAllWithinSimliarityThreshold(domain,
+                            threshold, hits);
                 }
+
+            } else if (type.equals("Soundex")) {
+                if (j == 0) {
+                    hits = similarityChecker.findAllSoundsAboveSimliarityThreshold(domain,
+                            threshold);
+                } else {
+                    hits = similarityChecker.findAllSoundsAboveSimliarityThreshold(domain,
+                            threshold, hits);
+                }
+
+            }
+        }
+
+        for (int k = 0; k < hits.size(); k++) {
+            resp += "    " + hits.get(k).toJSON();
+            if (k != hits.size() - 1) {
+                resp += ",\n";
             }
         }
         resp += "\n  ]\n}";

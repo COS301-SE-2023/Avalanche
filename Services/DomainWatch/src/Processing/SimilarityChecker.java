@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import DataClasses.Domain;
@@ -75,7 +76,23 @@ public class SimilarityChecker {
         for (Domain domain : allDomains) {
             double value = calc.calculateBasicLevenshteinDistance(search, domain.getName());
             if (value <= threshold) {
-                domain.setDistance(value);
+                domain.setDistance(value, "Levenshtein");
+                hits.add(domain);
+            }
+        }
+
+        Collections.sort(hits);
+        return hits;
+    }
+
+    public LinkedList<Domain> findAllWithinSimliarityThreshold(String search, double threshold,
+            LinkedList<Domain> searchSpace) {
+        LinkedList<Domain> hits = new LinkedList<>();
+        LevensteinDistanceCalculator calc = new LevensteinDistanceCalculator();
+        for (Domain domain : searchSpace) {
+            double value = calc.calculateBasicLevenshteinDistance(search, domain.getName());
+            if (value <= threshold) {
+                domain.setDistance(value, "Levenshtein");
                 hits.add(domain);
             }
         }
@@ -92,7 +109,30 @@ public class SimilarityChecker {
         for (Domain domain : allDomains) {
             double value = calc.calculateSoundexDifference(search, domain.getName());
             if (value >= threshold) {
-                domain.setDistance(value);
+                domain.setDistance(value, "Soundex");
+                hits.add(domain);
+            }
+            count++;
+            if (count % (allDomains.size() / 100) == 0) {
+                pct += 1;
+                System.out.println(pct + "%");
+            }
+        }
+
+        Collections.sort(hits);
+        return hits;
+    }
+
+    public LinkedList<Domain> findAllSoundsAboveSimliarityThreshold(String search, double threshold,
+            LinkedList<Domain> searchSpace) {
+        LinkedList<Domain> hits = new LinkedList<>();
+        SoundexCalculator calc = new SoundexCalculator();
+        int count = 0;
+        double pct = 0;
+        for (Domain domain : searchSpace) {
+            double value = calc.calculateSoundexDifference(search, domain.getName());
+            if (value >= threshold) {
+                domain.setDistance(value, "Soundex");
                 hits.add(domain);
             }
             count++;

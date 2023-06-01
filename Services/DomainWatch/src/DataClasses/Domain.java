@@ -4,10 +4,13 @@ public class Domain implements Comparable {
     private String name;
     private String zone;
     private double distance;
+    private int metrics;
 
     public Domain(String name, String zone) {
         this.name = name;// .substring(0, name.length() - zone.length() - 1);
         this.zone = zone;
+        this.metrics = 0;
+        this.distance = 0;
     }
 
     public String getName() {
@@ -18,12 +21,18 @@ public class Domain implements Comparable {
         return zone;
     }
 
-    public void setDistance(double distance) {
-        this.distance = distance;
+    public void setDistance(double distance, String metric) {
+        if (metric.equals("Levenshtein")) {
+            this.distance += (this.name.length() - distance) / this.name.length();
+        } else if (metric.equals("Soundex")) {
+            this.distance += distance * 0.25;
+        }
+        metrics++;
     }
 
     public double getDistance() {
-        return distance;
+        System.out.println(this.distance);
+        return distance / metrics;
     }
 
     @Override
@@ -44,7 +53,8 @@ public class Domain implements Comparable {
     }
 
     public String toJSON() {
-        return "{\"domainName\":" + name + ",\"zone\":" + zone + ",\"similarity\":" + distance + "}";
+        return "{\"domainName\":" + name + ",\"zone\":" + zone + ",\"similarity\":"
+                + Math.round(getDistance() * 100.0) + "}";
     }
 
 }

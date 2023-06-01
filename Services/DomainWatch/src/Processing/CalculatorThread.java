@@ -30,7 +30,7 @@ public class CalculatorThread extends Thread {
 
                 double value = calc.calculateBasicLevenshteinDistance(search, d.getName());
                 if (value <= threshold) {
-                    d.setDistance(value);
+                    d.setDistance(value, "Levenshtein");
                     hits.add(d);
                 }
             }

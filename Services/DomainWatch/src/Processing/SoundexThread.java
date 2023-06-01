@@ -31,7 +31,7 @@ public class SoundexThread extends Thread {
 
                 double value = calc.calculateSoundexDifference(search, d.getName());
                 if (value >= threshold) {
-                    d.setDistance(value);
+                    d.setDistance(value, "Soundex");
                     hits.add(d);
                 }
             }
