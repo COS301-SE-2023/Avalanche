@@ -26,7 +26,7 @@ public class SimilarityChecker {
         }
         int count = 0;
         try {
-            Scanner file = new Scanner(new FileReader(".\\Services\\DNSWatch\\data\\Domain Retrieval.csv"));
+            Scanner file = new Scanner(new FileReader("\\Services\\DomainWatch\\data\\Domain Retrieval mock.csv"));
             // skip headings
             String line = file.nextLine();
             while (file.hasNext()) {
@@ -40,7 +40,7 @@ public class SimilarityChecker {
         } catch (FileNotFoundException e) {
             try {
                 Scanner file = new Scanner(new FileReader(
-                        "C:\\Users\\User\\OneDrive\\Documents\\University of Pretoria\\Year 3\\Semester 1\\COS301\\Avalanche\\Avalanche\\Services\\DNSWatch\\data\\Domain Retrieval.csv"));
+                        "C:\\Users\\gteuw\\Desktop\\UNI\\Year3\\COS301\\Avalanche\\Avalanche\\Services\\DomainWatch\\data\\Domain Retrieval mock.csv"));
                 // skip headings
                 String line = file.nextLine();
                 while (file.hasNext()) {
@@ -49,6 +49,7 @@ public class SimilarityChecker {
                     allDomains.add(new Domain(split[0], split[1]));
                     splitDoms.get(count % 20).add(new Domain(split[0], split[1]));
                     count++;
+                    System.out.println(count);
                 }
                 file.close();
             } catch (FileNotFoundException ex) {

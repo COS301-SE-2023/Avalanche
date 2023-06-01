@@ -43,4 +43,8 @@ public class Domain implements Comparable {
         return name + "." + zone.toLowerCase();
     }
 
+    public String toJSON() {
+        return "{\"domainName\":" + name + ",\"zone\":" + zone + ",\"similarity\":" + distance + "}";
+    }
+
 }

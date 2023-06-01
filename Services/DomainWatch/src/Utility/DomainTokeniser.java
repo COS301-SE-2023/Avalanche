@@ -48,7 +48,7 @@ public class DomainTokeniser {
         } catch (FileNotFoundException e) {
             try {
                 file = new Scanner(new FileReader(
-                        "C:\\Users\\User\\OneDrive\\Documents\\University of Pretoria\\Year 3\\Semester 1\\COS301\\Avalanche\\Avalanche\\Services\\DNSWatch\\data\\wordsByFreq.txt"));
+                        "C:\\Users\\gteuw\\Desktop\\UNI\\Year3\\COS301\\Avalanche\\Avalanche\\Services\\DomainWatch\\data\\wordsByFreq.txt"));
                 // read total number of words for calculation in this loop
                 length = Integer.parseInt(file.nextLine());
 

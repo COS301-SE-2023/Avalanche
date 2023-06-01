@@ -1,8 +1,5 @@
 package DistanceCalculators;
 
-import org.apache.commons.codec.EncoderException;
-import org.apache.commons.codec.language.Soundex;
-
 import Utility.DomainTokeniser;
 
 public class SoundexCalculator {

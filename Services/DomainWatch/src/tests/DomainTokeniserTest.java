@@ -37,42 +37,44 @@ public class DomainTokeniserTest {
         assertEquals("hello", domainTokeniser.inferSpaces("hello"));
         assertEquals("What", domainTokeniser.inferSpaces("What"));
         assertEquals("Cool", domainTokeniser.inferSpaces("Cool"));
+        assertEquals("grapefruit", domainTokeniser.inferSpaces("grapefruit"));
     }
 
     @Test
     public void twoWordTest() {
         DomainTokeniser domainTokeniser = new DomainTokeniser();
-        assertEquals("hithere", domainTokeniser.inferSpaces("hi there"));
-        assertEquals("helloyou", domainTokeniser.inferSpaces("hello you"));
-        assertEquals("coolguy", domainTokeniser.inferSpaces("cool guy"));
-        assertEquals("grapefruit", domainTokeniser.inferSpaces("grape fruit"));
+        assertEquals("hi there", domainTokeniser.inferSpaces("hithere"));
+        assertEquals("hello you", domainTokeniser.inferSpaces("helloyou"));
+        assertEquals("cool guy", domainTokeniser.inferSpaces("coolguy"));
+        assertEquals("grape fruit great", domainTokeniser.inferSpaces("grapefruitgreat"));
     }
 
     @Test
     public void threeWordTest() {
         DomainTokeniser domainTokeniser = new DomainTokeniser();
-        assertEquals("hitheredude", domainTokeniser.inferSpaces("hi there dude"));
-        assertEquals("helloyouguy", domainTokeniser.inferSpaces("hello you guy"));
-        assertEquals("coolguycool", domainTokeniser.inferSpaces("cool guy cool"));
-        assertEquals("grapefruitgreat", domainTokeniser.inferSpaces("grape fruit great"));
+        assertEquals("hi there dude", domainTokeniser.inferSpaces("hitheredude"));
+        assertEquals("hello you guy", domainTokeniser.inferSpaces("helloyouguy"));
+        assertEquals("cool guy cool", domainTokeniser.inferSpaces("coolguycool"));
+        assertEquals("grapefruit great galaxy", domainTokeniser.inferSpaces("grapefruitgreatgalaxy"));
     }
 
     @Test
     public void fourWordTest() {
         DomainTokeniser domainTokeniser = new DomainTokeniser();
-        assertEquals("hitheredudeman", domainTokeniser.inferSpaces("hi there dude man"));
-        assertEquals("helloyouguyawesome", domainTokeniser.inferSpaces("hello you guy awesome"));
-        assertEquals("coolguycoolguy", domainTokeniser.inferSpaces("cool guy cool guy"));
-        assertEquals("grapefruitgreatgalaxy", domainTokeniser.inferSpaces("grape fruit great galaxy"));
+        assertEquals("hi there dude man", domainTokeniser.inferSpaces("hitheredudeman"));
+        assertEquals("hello you guy awesome", domainTokeniser.inferSpaces("helloyouguyawesome"));
+        assertEquals("cool guy cool guy", domainTokeniser.inferSpaces("coolguycoolguy"));
+
+        assertEquals("grapefruit great galaxy wow", domainTokeniser.inferSpaces("grapefruitgreatgalaxywow"));
+
     }
 
     @Test
     public void fiveWordTest() {
         DomainTokeniser domainTokeniser = new DomainTokeniser();
-        assertEquals("hitheredudemansir", domainTokeniser.inferSpaces("hi there dude man sir"));
-        assertEquals("helloyouguyawesomeblanket", domainTokeniser.inferSpaces("hello you guy awesome blanket"));
-        assertEquals("coolguycoolguycool", domainTokeniser.inferSpaces("cool guy cool guy cool"));
-        assertEquals("grapefruitgreatgalaxyfish", domainTokeniser.inferSpaces("grape fruit great galaxy fish"));
+        assertEquals("hi there dude man sir", domainTokeniser.inferSpaces("hitheredudemansir"));
+        assertEquals("hello you guy awesome blanket", domainTokeniser.inferSpaces("helloyouguyawesomeblanket"));
+        assertEquals("cool guy cool guy cool", domainTokeniser.inferSpaces("coolguycoolguycool"));
     }
 
     @Test
