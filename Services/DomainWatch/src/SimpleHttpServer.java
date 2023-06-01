@@ -15,17 +15,15 @@ import org.json.JSONObject;
 public class SimpleHttpServer {
 
     public static void main(String[] args) throws Exception {
-        HttpServer server = HttpServer.create(new InetSocketAddress(3004), 0);
-        server.createContext("/domainWatch/list", new PostHandler());
-        server.setExecutor(null); // creates a default executor
-        System.out.println("started");
-        server.start();
+        // HttpServer server = HttpServer.create(new InetSocketAddress(3004), 0);
+        // server.createContext("/domainWatch/list", new PostHandler());
+        // server.setExecutor(null); // creates a default executor
+        // System.out.println("started");
+        // server.start();
 
-        // String o = getResponse(
-        // "{\n\"domain\": \"firstnationalbank\",\n\"types\" : [{\"type\" :
-        // \"Levenshtein\", \"threshold\": 5},{\"type\" : \"another one\",
-        // \"threshold\": 3}]\n}");
-        // System.out.println(o);
+        String o = getResponse(
+                "{\n\"domain\": \"firstnationalbank\",\n\"types\" : [{\"type\" :\"Levenshtein\", \"threshold\": 5},{\"type\" : \"another one\",\"threshold\": 3}]\n}");
+        System.out.println(o);
     }
 
     static class PostHandler implements HttpHandler {

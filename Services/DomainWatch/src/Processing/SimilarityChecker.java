@@ -49,7 +49,7 @@ public class SimilarityChecker {
                     allDomains.add(new Domain(split[0], split[1]));
                     splitDoms.get(count % 20).add(new Domain(split[0], split[1]));
                     count++;
-                    System.out.println(count);
+                    // System.out.println(count);
                 }
                 file.close();
             } catch (FileNotFoundException ex) {
