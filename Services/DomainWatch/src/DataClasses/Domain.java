@@ -31,7 +31,7 @@ public class Domain implements Comparable {
     }
 
     public double getDistance() {
-        System.out.println(this.distance);
+        // System.out.println(this.distance);
         return distance / metrics;
     }
 

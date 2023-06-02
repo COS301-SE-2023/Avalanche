@@ -59,7 +59,6 @@ public class SimpleHttpServer {
         SimilarityChecker similarityChecker = new SimilarityChecker();
         int i = body.indexOf("\"domain\"", 0);
         String resp = "{\n  \"status\":\"success\"\n  \"data\":[\n";
-        System.out.println(i);
         LinkedList<Domain> hits = new LinkedList<>();
         JSONObject obj = new JSONObject(body);
         String domain = (obj.getString("domain"));
