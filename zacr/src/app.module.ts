@@ -7,6 +7,7 @@ import snowflake = require('snowflake-sdk');
 
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { TransactionService } from './transactions/transactions.service';
+import { RedisProvider } from './redis.provider';
 
 @Module({
   imports: [
@@ -33,7 +34,7 @@ import { TransactionService } from './transactions/transactions.service';
     ConfigModule.forRoot({ isGlobal: true }), 
   ],
   controllers: [AppController],
-  providers: [
+  providers: [RedisProvider,
     {
       provide: 'SNOWFLAKE_CONNECTION',
       useFactory: () => {
@@ -48,7 +49,7 @@ import { TransactionService } from './transactions/transactions.service';
         });
 
         // Try to connect to Snowflake, and check whether the connection was successful.
-        connection.connect((err, conn) => {
+        connection.connect((err) => {
           if (err) {
             console.error('Unable to connect: ' + err.message);
             throw err;
