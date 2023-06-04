@@ -13,11 +13,12 @@ public class DomainTokeniser {
     private static volatile HashMap<String, String> wordsDone;
     private static int maxword;
 
+    public static void init() {
+        buildDictionary();
+        wordsDone = new HashMap<>();
+    }
+
     public DomainTokeniser() {
-        if (dictionary == null) {
-            buildDictionary();
-            wordsDone = new HashMap<>();
-        }
 
     }
 
@@ -32,7 +33,7 @@ public class DomainTokeniser {
         int length = 0;
         Scanner file;
         try {
-            file = new Scanner(new FileReader(".\\Services\\DNSWatch\\data\\wordsByFreq.txt"));
+            file = new Scanner(new FileReader("Services\\DomainWatch\\data\\wordsByFreq.txt"));
             // read total number of words for calculation in this loop
             length = Integer.parseInt(file.nextLine());
 
@@ -48,7 +49,7 @@ public class DomainTokeniser {
         } catch (FileNotFoundException e) {
             try {
                 file = new Scanner(new FileReader(
-                        "C:\\Users\\gteuw\\Desktop\\UNI\\Year3\\COS301\\Avalanche\\Avalanche\\Services\\DomainWatch\\data\\wordsByFreq.txt"));
+                        "C:\\Users\\User\\OneDrive\\Documents\\University of Pretoria\\Year 3\\Semester 1\\COS301\\Avalanche\\Avalanche\\Services\\DomainWatch\\data\\wordsByFreq.txt"));
                 // read total number of words for calculation in this loop
                 length = Integer.parseInt(file.nextLine());
 

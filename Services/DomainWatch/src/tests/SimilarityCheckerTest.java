@@ -29,7 +29,7 @@ public class SimilarityCheckerTest {
     @Test
     public void searchForSimilar() throws FileNotFoundException {
         SimilarityChecker similarityChecker = new SimilarityChecker();
-        LinkedList<Domain> results = similarityChecker.findAllWithinSimliarityThreshold("firstnationalbank",
+        ConcurrentLinkedQueue<Domain> results = similarityChecker.findAllWithinSimliarityThreshold("firstnationalbank",
                 4);
         assertNotNull(results);
         System.out.println("INPUT: firstnationalbank\nThreshold: 4\n=======================");
@@ -41,7 +41,7 @@ public class SimilarityCheckerTest {
     @Test
     public void searchForSimilarSounds() throws FileNotFoundException {
         SimilarityChecker similarityChecker = new SimilarityChecker();
-        LinkedList<Domain> results = similarityChecker.findAllSoundsAboveSimliarityThreshold("absabank",
+        ConcurrentLinkedQueue<Domain> results = similarityChecker.findAllSoundsAboveSimliarityThreshold("absabank",
                 3);
         assertNotNull(results);
         System.out.println("INPUT: firstnationalbank\nThreshold: 4\n=======================");

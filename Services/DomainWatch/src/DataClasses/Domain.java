@@ -53,7 +53,7 @@ public class Domain implements Comparable {
     }
 
     public String toJSON() {
-        return "{\"domainName\":" + name + ",\"zone\":" + zone + ",\"similarity\":"
+        return "{\"domainName\":\"" + name + "\",\"zone\":\"" + zone + "\",\"similarity\":"
                 + Math.round(getDistance() * 100.0) + "}";
     }
 

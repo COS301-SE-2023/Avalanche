@@ -16,10 +16,10 @@ import DistanceCalculators.LevensteinDistanceCalculator;
 import DistanceCalculators.SoundexCalculator;
 
 public class SimilarityChecker {
-    private HashSet<Domain> allDomains;
-    ArrayList<Queue<Domain>> splitDoms;
+    private static HashSet<Domain> allDomains;
+    private static ArrayList<Queue<Domain>> splitDoms;
 
-    public SimilarityChecker() {
+    public static void init() {
         allDomains = new HashSet<>();
         splitDoms = new ArrayList<>();
         for (int i = 0; i < 50; i++) {
@@ -27,7 +27,7 @@ public class SimilarityChecker {
         }
         int count = 0;
         try {
-            Scanner file = new Scanner(new FileReader("\\Services\\DomainWatch\\data\\Domain Retrieval mock.csv"));
+            Scanner file = new Scanner(new FileReader("Services\\DomainWatch\\data\\Domain Retrieval mock.csv"));
             // skip headings
             String line = file.nextLine();
             while (file.hasNext()) {
@@ -60,6 +60,10 @@ public class SimilarityChecker {
         }
     }
 
+    public SimilarityChecker() {
+
+    }
+
     public HashSet<Domain> getAllDomains() {
         return allDomains;
     }
@@ -70,8 +74,8 @@ public class SimilarityChecker {
         }
     }
 
-    public LinkedList<Domain> findAllWithinSimliarityThreshold(String search, double threshold) {
-        LinkedList<Domain> hits = new LinkedList<>();
+    public ConcurrentLinkedQueue<Domain> findAllWithinSimliarityThreshold(String search, double threshold) {
+        ConcurrentLinkedQueue<Domain> hits = new ConcurrentLinkedQueue<>();
         LevensteinDistanceCalculator calc = new LevensteinDistanceCalculator();
         for (Domain domain : allDomains) {
             double value = calc.calculateBasicLevenshteinDistance(search, domain.getName());
@@ -81,13 +85,12 @@ public class SimilarityChecker {
             }
         }
 
-        Collections.sort(hits);
         return hits;
     }
 
-    public LinkedList<Domain> findAllWithinSimliarityThreshold(String search, double threshold,
-            LinkedList<Domain> searchSpace) {
-        LinkedList<Domain> hits = new LinkedList<>();
+    public ConcurrentLinkedQueue<Domain> findAllWithinSimliarityThreshold(String search, double threshold,
+            ConcurrentLinkedQueue<Domain> searchSpace) {
+        ConcurrentLinkedQueue<Domain> hits = new ConcurrentLinkedQueue<>();
         LevensteinDistanceCalculator calc = new LevensteinDistanceCalculator();
         for (Domain domain : searchSpace) {
             double value = calc.calculateBasicLevenshteinDistance(search, domain.getName());
@@ -97,12 +100,11 @@ public class SimilarityChecker {
             }
         }
 
-        Collections.sort(hits);
         return hits;
     }
 
-    public LinkedList<Domain> findAllSoundsAboveSimliarityThreshold(String search, double threshold) {
-        LinkedList<Domain> hits = new LinkedList<>();
+    public ConcurrentLinkedQueue<Domain> findAllSoundsAboveSimliarityThreshold(String search, double threshold) {
+        ConcurrentLinkedQueue<Domain> hits = new ConcurrentLinkedQueue<>();
         SoundexCalculator calc = new SoundexCalculator();
         int count = 0;
         double pct = 0;
@@ -119,13 +121,12 @@ public class SimilarityChecker {
             }
         }
 
-        Collections.sort(hits);
         return hits;
     }
 
-    public LinkedList<Domain> findAllSoundsAboveSimliarityThreshold(String search, double threshold,
-            LinkedList<Domain> searchSpace) {
-        LinkedList<Domain> hits = new LinkedList<>();
+    public ConcurrentLinkedQueue<Domain> findAllSoundsAboveSimliarityThreshold(String search, double threshold,
+            ConcurrentLinkedQueue<Domain> searchSpace) {
+        ConcurrentLinkedQueue<Domain> hits = new ConcurrentLinkedQueue<>();
         SoundexCalculator calc = new SoundexCalculator();
         int count = 0;
         double pct = 0;
@@ -142,7 +143,6 @@ public class SimilarityChecker {
             }
         }
 
-        Collections.sort(hits);
         return hits;
     }
 
