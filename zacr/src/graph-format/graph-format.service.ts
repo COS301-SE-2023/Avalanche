@@ -47,7 +47,7 @@ export class GraphFormatService {
           datasets: Object.values(datasets),
         });
       } else if (keys.length === 2) {
-        const dataArr = JSON.parse(data).TRANSACTIONSBYREGISTRAR;
+        const dataArr = JSON.parse(data).data;
         const outputData: any = { labels: [], datasets: [] };
 
         if (dataArr.length > 0) {
@@ -69,7 +69,7 @@ export class GraphFormatService {
           }
         }
 
-        return outputData;
+        return JSON.stringify(outputData);
       } else {
         throw new Error('Invalid data structure.');
       }

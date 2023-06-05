@@ -90,4 +90,45 @@ describe('GraphFormatService', () => {
     const result = await service.format(testData);
     expect(JSON.parse(result)).toEqual(expectedOutput);
   });
+
+  it('should correctly format data with two key-value pairs', async () => {
+    const inputData = JSON.stringify({
+      data: [
+        {
+          Date: '2023-01-02 00:00:00.000 -0800',
+          Quantity: 98,
+        },
+        {
+          Date: '2023-01-03 00:00:00.000 -0800',
+          Quantity: 85,
+        },
+        {
+          Date: '2023-01-04 00:00:00.000 -0800',
+          Quantity: 4077,
+        },
+        {
+          Date: '2023-01-05 00:00:00.000 -0800',
+          Quantity: 18068,
+        },
+      ],
+    });
+
+    const expectedOutput = {
+      labels: [
+        '2023-01-02 00:00:00.000 -0800',
+        '2023-01-03 00:00:00.000 -0800',
+        '2023-01-04 00:00:00.000 -0800',
+        '2023-01-05 00:00:00.000 -0800',
+      ],
+      datasets: [
+        {
+          label: 'Data',
+          data: [98, 85, 4077, 18068],
+        },
+      ],
+    };
+
+    const formattedData = await service.format(inputData);
+    expect(JSON.parse(formattedData)).toEqual(expectedOutput);
+  });
 });
