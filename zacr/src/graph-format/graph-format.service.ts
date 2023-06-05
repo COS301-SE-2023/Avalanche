@@ -47,7 +47,29 @@ export class GraphFormatService {
           datasets: Object.values(datasets),
         });
       } else if (keys.length === 2) {
-        // TODO
+        const dataArr = JSON.parse(data).TRANSACTIONSBYREGISTRAR;
+        const outputData: any = { labels: [], datasets: [] };
+
+        if (dataArr.length > 0) {
+          const keys = Object.keys(dataArr[0]);
+
+          if (keys.length === 3) {
+            // the existing code for the case of 3 keys...
+          } else if (keys.length === 2) {
+            const indepKey = keys[0];
+            const depKey = keys[1];
+            const depData = [];
+
+            for (let i = 0; i < dataArr.length; i++) {
+              outputData.labels.push(dataArr[i][indepKey]);
+              depData.push(dataArr[i][depKey]);
+            }
+
+            outputData.datasets.push({ label: 'Data', data: depData });
+          }
+        }
+
+        return outputData;
       } else {
         throw new Error('Invalid data structure.');
       }
