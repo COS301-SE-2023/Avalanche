@@ -8,7 +8,7 @@ export class DomainWatchService {
   constructor(private httpService: HttpService) {}
 
   async sendData(data: any): Promise<any> {
-    const response = this.httpService.post('http://localhost:3004/domainWatch/list', data);
+    const response = this.httpService.post('http://localhost:3004/domain-watch/list', data);
     const responseData = await lastValueFrom(response);
     return JSON.stringify(responseData.data);
   }

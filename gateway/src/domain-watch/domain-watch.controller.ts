@@ -2,7 +2,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { DomainWatchService } from './domain-watch.service';
 
-@Controller('domainWatch')
+@Controller('domain-watch')
 export class DomainWatchController {
   constructor(private readonly domainWatchService: DomainWatchService) {}
 
