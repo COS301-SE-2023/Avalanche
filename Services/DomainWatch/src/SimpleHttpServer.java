@@ -84,8 +84,8 @@ public class SimpleHttpServer {
             double threshold = (obj.getJSONArray("types").getJSONObject(j).getDouble("threshold"));
             if (type.equals("Levenshtein")) {
                 if (j == 0) {
-                    hits = similarityChecker.findAllWithinSimliarityThreshold(domain,
-                            threshold);
+                    hits = similarityChecker.threadedFindAllWithinSimliarityThreshold(domain,
+                            threshold, 50);
                 } else {
                     hits = similarityChecker.findAllWithinSimliarityThreshold(domain,
                             threshold, hits);
@@ -93,8 +93,8 @@ public class SimpleHttpServer {
 
             } else if (type.equals("Soundex")) {
                 if (j == 0) {
-                    hits = similarityChecker.findAllSoundsAboveSimliarityThreshold(domain,
-                            threshold);
+                    hits = similarityChecker.threadedfindAllSoundsAboveSimliarityThreshold(domain,
+                            threshold, 50);
                 } else {
                     hits = similarityChecker.findAllSoundsAboveSimliarityThreshold(domain,
                             threshold, hits);

@@ -1,5 +1,6 @@
 package Processing;
 
+import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -16,15 +17,18 @@ public class CalculatorThread extends Thread {
     public CalculatorThread(String search, double threshold, ConcurrentLinkedQueue<Domain> hits,
             Queue<Domain> allDomains) {
         calc = new LevensteinDistanceCalculator();
+        this.allDomains = new LinkedList<>();
+        for (Domain domain : allDomains) {
+            this.allDomains.add(domain);
+        }
         this.hits = hits;
-        this.allDomains = allDomains;
         this.search = search;
         this.threshold = threshold;
     }
 
     @Override
     public void run() {
-        while (!allDomains.isEmpty()) {
+        while (!this.allDomains.isEmpty()) {
             Domain d = allDomains.poll();
             if (d != null) {
 

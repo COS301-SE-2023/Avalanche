@@ -1,5 +1,6 @@
 package Processing;
 
+import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -18,7 +19,10 @@ public class SoundexThread extends Thread {
             Queue<Domain> allDomains) {
         calc = new SoundexCalculator();
         this.hits = hits;
-        this.allDomains = allDomains;
+        this.allDomains = new LinkedList<>();
+        for (Domain domain : allDomains) {
+            this.allDomains.add(domain);
+        }
         this.search = search;
         this.threshold = threshold;
     }

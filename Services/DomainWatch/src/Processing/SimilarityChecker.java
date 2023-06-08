@@ -27,7 +27,7 @@ public class SimilarityChecker {
         }
         int count = 0;
         try {
-            Scanner file = new Scanner(new FileReader("Services\\DomainWatch\\data\\Domain Retrieval.csv"));
+            Scanner file = new Scanner(new FileReader("..\\data\\Domain Retrieval.csv"));
             // skip headings
             String line = file.nextLine();
             while (file.hasNext()) {
