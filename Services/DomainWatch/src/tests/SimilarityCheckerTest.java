@@ -15,6 +15,7 @@ import Processing.SimilarityChecker;
 public class SimilarityCheckerTest {
     @Test
     public void construction() throws FileNotFoundException {
+        SimilarityChecker.init();
         SimilarityChecker similarityChecker = new SimilarityChecker();
         assertNotNull(similarityChecker.getAllDomains());
         assertNotEquals(0, similarityChecker.getAllDomains().size());
@@ -22,12 +23,14 @@ public class SimilarityCheckerTest {
 
     @Test
     public void simpleLoop() throws FileNotFoundException {
+        SimilarityChecker.init();
         SimilarityChecker similarityChecker = new SimilarityChecker();
         similarityChecker.loopThroughAllDomains();
     }
 
     @Test
     public void searchForSimilar() throws FileNotFoundException {
+        SimilarityChecker.init();
         SimilarityChecker similarityChecker = new SimilarityChecker();
         ConcurrentLinkedQueue<Domain> results = similarityChecker.findAllWithinSimliarityThreshold("firstnationalbank",
                 4);
@@ -40,6 +43,7 @@ public class SimilarityCheckerTest {
 
     @Test
     public void searchForSimilarSounds() throws FileNotFoundException {
+        SimilarityChecker.init();
         SimilarityChecker similarityChecker = new SimilarityChecker();
         ConcurrentLinkedQueue<Domain> results = similarityChecker.findAllSoundsAboveSimliarityThreshold("absabank",
                 3);
@@ -52,6 +56,7 @@ public class SimilarityCheckerTest {
 
     @Test
     public void concurrentSearchForSimilarSounds() throws FileNotFoundException {
+        SimilarityChecker.init();
         SimilarityChecker similarityChecker = new SimilarityChecker();
         ConcurrentLinkedQueue<Domain> results = similarityChecker.threadedfindAllSoundsAboveSimliarityThreshold(
                 "firstnationalbank",
@@ -65,6 +70,7 @@ public class SimilarityCheckerTest {
 
     @Test
     public void concurrentSearchForSimilar() throws FileNotFoundException {
+        SimilarityChecker.init();
         SimilarityChecker similarityChecker = new SimilarityChecker();
         ConcurrentLinkedQueue<Domain> results = similarityChecker.threadedFindAllWithinSimliarityThreshold(
                 "firstnationalbank",

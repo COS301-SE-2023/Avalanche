@@ -10,18 +10,23 @@ import Utility.DomainTokeniser;
 public class DomainTokeniserTest {
     @Test
     public void dictionaryMade() {
+        DomainTokeniser.init();
         DomainTokeniser domainTokeniser = new DomainTokeniser();
         assertNotNull(domainTokeniser.getDictionary());
     }
 
     @Test
     public void dictionaryLengthCorrect() {
+
+        DomainTokeniser.init();
         DomainTokeniser domainTokeniser = new DomainTokeniser();
         assertEquals(125549, domainTokeniser.getDictionary().size());
     }
 
     @Test
     public void correctWordcost() {
+
+        DomainTokeniser.init();
         DomainTokeniser domainTokeniser = new DomainTokeniser();
         assertEquals(0, domainTokeniser.getDictionary().get("the"), 0.00001);
         assertEquals(8.137860786, domainTokeniser.getDictionary().get("of"), 0.00001);
@@ -32,6 +37,8 @@ public class DomainTokeniserTest {
 
     @Test
     public void oneWordTest() {
+
+        DomainTokeniser.init();
         DomainTokeniser domainTokeniser = new DomainTokeniser();
         assertEquals("hi", domainTokeniser.inferSpaces("hi"));
         assertEquals("hello", domainTokeniser.inferSpaces("hello"));
@@ -42,6 +49,7 @@ public class DomainTokeniserTest {
 
     @Test
     public void twoWordTest() {
+        DomainTokeniser.init();
         DomainTokeniser domainTokeniser = new DomainTokeniser();
         assertEquals("hi there", domainTokeniser.inferSpaces("hithere"));
         assertEquals("hello you", domainTokeniser.inferSpaces("helloyou"));
@@ -51,6 +59,7 @@ public class DomainTokeniserTest {
 
     @Test
     public void threeWordTest() {
+        DomainTokeniser.init();
         DomainTokeniser domainTokeniser = new DomainTokeniser();
         assertEquals("hi there dude", domainTokeniser.inferSpaces("hitheredude"));
         assertEquals("hello you guy", domainTokeniser.inferSpaces("helloyouguy"));
@@ -60,6 +69,7 @@ public class DomainTokeniserTest {
 
     @Test
     public void fourWordTest() {
+        DomainTokeniser.init();
         DomainTokeniser domainTokeniser = new DomainTokeniser();
         assertEquals("hi there dude man", domainTokeniser.inferSpaces("hitheredudeman"));
         assertEquals("hello you guy awesome", domainTokeniser.inferSpaces("helloyouguyawesome"));
@@ -71,6 +81,7 @@ public class DomainTokeniserTest {
 
     @Test
     public void fiveWordTest() {
+        DomainTokeniser.init();
         DomainTokeniser domainTokeniser = new DomainTokeniser();
         assertEquals("hi there dude man sir", domainTokeniser.inferSpaces("hitheredudemansir"));
         assertEquals("hello you guy awesome blanket", domainTokeniser.inferSpaces("helloyouguyawesomeblanket"));
@@ -79,6 +90,7 @@ public class DomainTokeniserTest {
 
     @Test
     public void tokeniseTest() {
+        DomainTokeniser.init();
         DomainTokeniser domainTokeniser = new DomainTokeniser();
 
         assertEquals("thumb green apple active assignment weekly metaphor",

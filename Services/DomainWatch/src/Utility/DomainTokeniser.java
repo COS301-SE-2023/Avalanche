@@ -63,7 +63,24 @@ public class DomainTokeniser {
                 }
                 file.close();
             } catch (FileNotFoundException ex) {
-                ex.printStackTrace();
+                try {
+                    file = new Scanner(new FileReader(
+                            "C:\\Users\\gteuw\\Desktop\\UNI\\Year3\\COS301\\Avalanche\\Avalanche\\Services\\DomainWatch\\data\\wordsByFreq.txt"));
+                    // read total number of words for calculation in this loop
+                    length = Integer.parseInt(file.nextLine());
+
+                    while (file.hasNext()) {
+                        String line = file.nextLine();
+                        dictionary.put(line, Math.log(count + 1) * Math.log(length));
+                        if (line.length() > maxword) {
+                            maxword = line.length();
+                        }
+                        count++;
+                    }
+                    file.close();
+                } catch (FileNotFoundException exc) {
+                    exc.printStackTrace();
+                }
             }
 
         }

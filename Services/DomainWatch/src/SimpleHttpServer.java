@@ -32,16 +32,17 @@ public class SimpleHttpServer {
         System.out.println("Server started\n========================\n");
         server.start();
 
-        // String o = getResponse(
-        // "{\n\"domain\": \"firstnationalbank\",\n\"types\" :
-        // [{\"type\":\"Levenshtein\", \"threshold\":
-        // 5},{\"type\":\"Soundex\",\"threshold\":3}]\n}");
-        // System.out.println(o);
+        st = System.currentTimeMillis();
+        String o = getResponse(
+                "{\n\"domain\": \"firstnationalbank\",\n\"types\" :[{\"type\":\"Levenshtein\", \"threshold\":5},{\"type\":\"Soundex\",\"threshold\":3}]\n}");
+        System.out.println(o);
+        System.out.println("time in millis " + (System.currentTimeMillis() - st));
 
-        // String o = getResponse(
-        // "{\n\"domain\": \"firstnationalbank\",\n\"types\" :
-        // [{\"type\":\"Levenshtein\", \"threshold\": 5}]\n}");
-        // System.out.println(o);
+        st = System.currentTimeMillis();
+        o = getResponse(
+                "{\n\"domain\": \"firstnationalbank\",\n\"types\" :[{\"type\":\"Levenshtein\", \"threshold\": 5}]\n}");
+        System.out.println(o);
+        System.out.println("time in millis " + (System.currentTimeMillis() - st));
     }
 
     static class PostHandler implements HttpHandler {
@@ -70,6 +71,7 @@ public class SimpleHttpServer {
     }
 
     public static String getResponse(String body) {
+        System.out.println("Working in request");
         SimilarityChecker similarityChecker = new SimilarityChecker();
         int i = body.indexOf("\"domain\"", 0);
         String resp = "{  \"status\":\"success\",  \"data\":[";
