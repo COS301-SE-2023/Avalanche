@@ -43,6 +43,12 @@ public class SimpleHttpServer {
                 "{\n\"domain\": \"firstnationalbank\",\n\"types\" :[{\"type\":\"Levenshtein\", \"threshold\": 5}]\n}");
         System.out.println(o);
         System.out.println("time in millis " + (System.currentTimeMillis() - st));
+
+        st = System.currentTimeMillis();
+        o = getResponse(
+                "{\n\"domain\": \"firstnationalbank\",\n\"types\" :[{\"type\":\"Levenshtein\", \"threshold\": 5}]\n}");
+        System.out.println(o);
+        System.out.println("time in millis " + (System.currentTimeMillis() - st));
     }
 
     static class PostHandler implements HttpHandler {
@@ -63,6 +69,7 @@ public class SimpleHttpServer {
                 OutputStream os = httpExchange.getResponseBody();
                 os.write(response.getBytes());
                 os.close();
+                System.gc();
             } else {
                 httpExchange.sendResponseHeaders(405, -1);// 405 Method Not Allowed
             }
@@ -112,6 +119,7 @@ public class SimpleHttpServer {
         resp += "  ]}";
         // System.out.println(resp);
         System.out.println("Done");
+        System.gc();
         return resp;
     }
 

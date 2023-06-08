@@ -33,8 +33,9 @@ public class SimilarityChecker {
             while (file.hasNext()) {
                 line = file.nextLine();
                 String[] split = line.split(",");
-                allDomains.add(new Domain(split[0], split[1]));
-                splitDoms.get(count % 50).add(new Domain(split[0], split[1]));
+                Domain d = new Domain(split[0], split[1]);
+                allDomains.add(d);
+                splitDoms.get(count % 50).add(d);
                 count++;
             }
             file.close();
