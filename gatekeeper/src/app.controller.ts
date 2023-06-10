@@ -10,7 +10,8 @@ export class AppController {
   @All()
   async handleAll(@Req() req: Request, @Body() body: any, @Res() res: Response) {
     try {
-      const data = await this.forwardService.forwardRequest(req.method, req.url, body);
+      console.log('Incoming headers:', req.headers);
+      const data = await this.forwardService.forwardRequest(req.method, req.url, body, req.headers);
       return res.json(data);
     } catch (error) {
       return res.status(500).json({ message: 'An error occurred.' });

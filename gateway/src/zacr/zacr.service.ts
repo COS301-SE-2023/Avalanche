@@ -9,6 +9,7 @@ export class ZacrService {
   ) {}
 
   async transactions(data: any) {
+    console.log("boiii");
     return this.client.send({ cmd: 'transactions' }, data).toPromise();
   }
 }

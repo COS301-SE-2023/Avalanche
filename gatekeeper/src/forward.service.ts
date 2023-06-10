@@ -6,15 +6,14 @@ import { map } from 'rxjs/operators';
 
 @Injectable()
 export class ForwardService {
-  constructor(private httpService: HttpService) {}
+  constructor(private httpService: HttpService) { }
 
   async forwardRequest(method: string, url: string, body?: any, headers?: any, params?: any) {
-    console.log(url);
+    console.log('Forwarding headers:', headers);
     const response = await this.httpService.request({
       method: method as Method,
-      url: `http://localhost:3000${url}`, // Replace with your Gateway's URL
+      url: `http://localhost:3000${url}`,
       data: body,
-      headers,
       params,
     }).pipe(map((axiosResponse) => axiosResponse.data)).toPromise();
 

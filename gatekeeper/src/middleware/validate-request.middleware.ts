@@ -1,4 +1,5 @@
-/* eslint-disable prettier/prettier */import { Injectable, NestMiddleware } from '@nestjs/common';
+/* eslint-disable prettier/prettier */
+import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import * as Ajv from 'ajv';
 import * as fs from 'fs';
@@ -31,17 +32,15 @@ export class ValidateRequestMiddleware implements NestMiddleware {
   }
 
   use(req: Request, res: Response, next: NextFunction) {
+    console.log(req.originalUrl);
     const validate = this.schemas[req.originalUrl];
-    console.log(validate);
     if (!validate) {
       return res.status(400).send({ error: `No schema found for path ${req.path}` });
     }
-
     const valid = validate(req.body);
     if (!valid) {
       return res.status(400).send({ error: 'Invalid request body'});
     }
-
     next();
   }
 }

@@ -10,6 +10,7 @@ export class ZacrController {
   @Post('transactions')
   async transactions(@Body() data: any) {
     const pattern = { cmd: 'transactions' };
+    console.log("here")
     const payload = data;
     const result = await lastValueFrom(this.client.send(pattern, payload));
     return result;
