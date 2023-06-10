@@ -17,9 +17,27 @@ For more information request formal documentation from ...
 | Procedure  | Description | Input | Output |
 | --   | -- | --   | -- |
 | Registrar Transactions| This procedure returns the aggregated transactions for a specific registrar, all registrars grouped by registrar or all overall | JSON object string containing the registrar, zone, dateFom, dateTo and granularity   | JSON in graphDataInterface format|
+| Creates  | This procedure returns the aggregated create transactions for a specific registrar, all registrars grouped by registrar or all overall | JSON object string containing the registrar, zone, dateFom, dateTo and granularity   | JSON in graphDataInterface format|
+|Renewals  | This procedure returns the renewals for a specific registrar, all registrars grouped by registrar or all overall | JSON object string containing the registrar, zone, dateFom, dateTo and granularity   | JSON in graphDataInterface format|
+| Deletion  | This procedure returns the deletions for a specific registrar, all registrars grouped by registrar or all overall | JSON object string containing the registrar, zone, dateFom, dateTo and granularity   | JSON in graphDataInterface format|
 
 ## Changes
 
 * 17/05 
   * 20:11: Registrar Transactions: Added parameter cleaning and default settings
   * 20:45: Registrar Transactions: Added initial query
+  * 21:13: Registrar Transactions: Deployed
+* 18/05
+  * Creates per Registrar
+  * Renewals per Registar
+* 20/05
+  * Deletion for Registrars 
+* 21/05
+  * Transformation into ChartJS format 
+* 22/05 
+  * Dashboard
+* 30/05 
+  * Debugging Transaction procedure - undefined object
+  * Fixed registrar grouping
+  * Date From errors
+  * Fixed timezone
