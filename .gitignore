@@ -2,3 +2,6 @@
 backend/.env
 gateway/.env
 user-management/.env
+Services/DomainWatch/src/*.class
+Services/DomainWatch/src/*/*.class
+Services/DomainWatch/data/*
