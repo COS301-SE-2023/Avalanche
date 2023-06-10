@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { UserManagementService } from './user-management/user-management.service';
@@ -6,9 +7,15 @@ import { JwtMiddleware } from './jwt-middleware.middleware';
 import { MiddlewareConsumer, NestModule, RequestMethod } from '@nestjs/common';
 import { RedisProvider } from './redis.provider';
 import { ConfigModule } from '@nestjs/config';
+import { ZacrController } from './zacr/zacr.controller';
+import { ZacrService } from './zacr/zacr.service';
+import { DomainWatchController } from './domain-watch/domain-watch.controller';
+import { DomainWatchService } from './domain-watch/domain-watch.service';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
+    HttpModule,
     ClientsModule.register([
       {
         name: 'USER_MANAGEMENT_SERVICE',
@@ -18,11 +25,19 @@ import { ConfigModule } from '@nestjs/config';
           port: 3001,
         },
       },
+      {
+        name: 'ZACR_SERVICE',
+        transport: Transport.TCP,
+        options: {
+          host: 'localhost',
+          port: 3002,
+        },
+      },
     ]),
     ConfigModule.forRoot({ isGlobal: true }),
   ],
-  controllers: [UserManagementController],
-  providers: [UserManagementService, RedisProvider],
+  controllers: [UserManagementController, ZacrController, DomainWatchController],
+  providers: [UserManagementService, ZacrService, RedisProvider, DomainWatchService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
@@ -32,6 +47,7 @@ export class AppModule implements NestModule {
         { path: 'user-management/register', method: RequestMethod.POST },
         { path: 'user-management/verify', method: RequestMethod.POST },
         { path: 'user-management/login', method: RequestMethod.POST },
+        { path: 'domain-watch/list', method: RequestMethod.POST },
       )
       .forRoutes('*');
   }
