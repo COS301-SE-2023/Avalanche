@@ -1,3 +1,5 @@
+import Link from "next/link"
+
 interface ISidebarItem {
     text: string,
     icon: any,
@@ -7,9 +9,9 @@ interface ISidebarItem {
 
 export default function SideBarItem({ text, icon, page }: ISidebarItem) {
     return <li>
-        <a href="#" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
+        <Link href={`/${page}`} className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-300 dark:hover:bg-gray-700">
             {icon}
             <span className="ml-3">{text}</span>
-        </a>
+        </Link>
     </li>
 }

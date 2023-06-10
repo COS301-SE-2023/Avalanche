@@ -4,7 +4,7 @@ interface IPageHeader {
     icon: any
 }
 
-export default ({ title, subtitle, icon }: IPageHeader) => {
+export default function PageHeader({ title, subtitle, icon }: IPageHeader) {
     return <div className="flex flex-row gap-2 items-center">
         {icon}
         <div>
