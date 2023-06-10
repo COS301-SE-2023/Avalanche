@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LevensteinDistanceCalculator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">domain_watch</a> &gt; <a href="index.source.html" class="el_package">avalanche.DistanceCalculators</a> &gt; <span class="el_source">LevensteinDistanceCalculator.java</span></div><h1>LevensteinDistanceCalculator.java</h1><pre class="source lang-java linenums">package avalanche.DistanceCalculators;
+
+import java.util.Arrays;
+
+<span class="fc" id="L5">public class LevensteinDistanceCalculator {</span>
+    public double calculateBasicLevenshteinDistance(String x, String y) {
+<span class="fc" id="L7">        x = x.toLowerCase();</span>
+<span class="fc" id="L8">        y = y.toLowerCase();</span>
+<span class="fc" id="L9">        double[][] dp = new double[x.length() + 1][y.length() + 1];</span>
+
+<span class="fc bfc" id="L11" title="All 2 branches covered.">        for (int i = 0; i &lt;= x.length(); i++) {</span>
+<span class="fc bfc" id="L12" title="All 2 branches covered.">            for (int j = 0; j &lt;= y.length(); j++) {</span>
+<span class="fc bfc" id="L13" title="All 2 branches covered.">                if (i == 0) {</span>
+<span class="fc bfc" id="L14" title="All 2 branches covered.">                    if (j == 0) {</span>
+<span class="fc" id="L15">                        dp[i][j] = 0;</span>
+                    } else {
+<span class="pc bpc" id="L17" title="1 of 2 branches missed.">                        if (j &gt; 0) {</span>
+<span class="fc" id="L18">                            dp[i][j] = dp[i][j - 1] + 1;</span>
+                        } else {
+<span class="nc" id="L20">                            dp[i][j] = dp[i][j - 1] + insertionCost(y.charAt(j - 2), y.charAt(j - 1));</span>
+                        }
+                    }
+<span class="fc bfc" id="L23" title="All 2 branches covered.">                } else if (j == 0) {</span>
+<span class="pc bpc" id="L24" title="1 of 2 branches missed.">                    if (i == 0) {</span>
+<span class="nc" id="L25">                        dp[i][j] = 0;</span>
+                    } else {
+<span class="pc bpc" id="L27" title="1 of 2 branches missed.">                        if (i &gt; 0) {</span>
+<span class="fc" id="L28">                            dp[i][j] = dp[i - 1][j] + 1;</span>
+                        } else {
+<span class="nc" id="L30">                            dp[i][j] = dp[i - 1][j] + insertionCost(x.charAt(i - 2), x.charAt(i - 1));</span>
+                        }
+                    }
+                } else {
+<span class="fc bfc" id="L34" title="All 2 branches covered.">                    if (i == 1) {</span>
+<span class="fc bfc" id="L35" title="All 2 branches covered.">                        if (j == 1) {</span>
+<span class="fc" id="L36">                            dp[i][j] = min(dp[i - 1][j - 1]</span>
+<span class="fc" id="L37">                                    + costOfSubstitution(x.charAt(i - 1), y.charAt(j - 1)),</span>
+                                    dp[i - 1][j] + 1,
+                                    dp[i][j - 1] + 1);
+                        } else {
+<span class="fc" id="L41">                            dp[i][j] = min(dp[i - 1][j - 1]</span>
+<span class="fc" id="L42">                                    + costOfSubstitution(x.charAt(i - 1), y.charAt(j - 1)),</span>
+                                    dp[i - 1][j] + 1,
+<span class="fc" id="L44">                                    dp[i][j - 1] + insertionCost(y.charAt(j - 1), y.charAt(j - 2)));</span>
+                        }
+<span class="fc bfc" id="L46" title="All 2 branches covered.">                    } else if (j == 1) {</span>
+<span class="fc" id="L47">                        dp[i][j] = min(dp[i - 1][j - 1]</span>
+<span class="fc" id="L48">                                + costOfSubstitution(x.charAt(i - 1), y.charAt(j - 1)),</span>
+<span class="fc" id="L49">                                dp[i - 1][j] + insertionCost(x.charAt(i - 1), x.charAt(i - 2)),</span>
+                                dp[i][j - 1] + 1);
+                    } else {
+<span class="fc" id="L52">                        dp[i][j] = min(dp[i - 1][j - 1]</span>
+<span class="fc" id="L53">                                + costOfSubstitution(x.charAt(i - 1), y.charAt(j - 1)),</span>
+<span class="fc" id="L54">                                dp[i - 1][j] + insertionCost(x.charAt(i - 1), x.charAt(i - 2)),</span>
+<span class="fc" id="L55">                                dp[i][j - 1] + insertionCost(y.charAt(j - 1), y.charAt(j - 2)));</span>
+                    }
+
+                }
+            }
+        }
+<span class="fc" id="L61">        return dp[x.length()][y.length()];</span>
+    }
+
+    private double insertionCost(char a, char b) {
+<span class="fc bfc" id="L65" title="All 2 branches covered.">        if (a == b) {</span>
+<span class="fc" id="L66">            return 0.1;</span>
+        }
+<span class="fc bfc" id="L68" title="All 4 branches covered.">        if (a == '-' || b == '-') {</span>
+<span class="fc" id="L69">            return 0.1;</span>
+        }
+<span class="fc" id="L71">        return 1;</span>
+    }
+
+    private double costOfSubstitution(char a, char b) {
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        if (a == b) {</span>
+<span class="fc" id="L76">            return 0;</span>
+        }
+
+<span class="fc bfc" id="L79" title="All 2 branches covered.">        if (checkBothWays(a, '0', b, 'o')) {</span>
+<span class="fc" id="L80">            return 0.1;</span>
+        }
+<span class="fc bfc" id="L82" title="All 2 branches covered.">        if (checkBothWays(a, 'i', b, '1')) {</span>
+<span class="fc" id="L83">            return 0.1;</span>
+        }
+<span class="fc bfc" id="L85" title="All 2 branches covered.">        if (checkBothWays(a, 'l', b, '1')) {</span>
+<span class="fc" id="L86">            return 0.1;</span>
+        }
+<span class="fc bfc" id="L88" title="All 2 branches covered.">        if (checkBothWays(a, 'l', b, 'i')) {</span>
+<span class="fc" id="L89">            return 0.1;</span>
+        }
+<span class="fc bfc" id="L91" title="All 2 branches covered.">        if (checkBothWays(a, 'b', b, '8')) {</span>
+<span class="fc" id="L92">            return 0.1;</span>
+        }
+<span class="pc bpc" id="L94" title="1 of 2 branches missed.">        if (checkBothWays(a, 'e', b, '3')) {</span>
+<span class="nc" id="L95">            return 0.1;</span>
+        }
+<span class="pc bpc" id="L97" title="1 of 2 branches missed.">        if (checkBothWays(a, 'u', b, 'v')) {</span>
+<span class="nc" id="L98">            return 0.1;</span>
+        }
+<span class="pc bpc" id="L100" title="1 of 2 branches missed.">        if (checkBothWays(a, '2', b, 'z')) {</span>
+<span class="nc" id="L101">            return 0.1;</span>
+        }
+<span class="fc bfc" id="L103" title="All 2 branches covered.">        if (checkBothWays(a, 's', b, '5')) {</span>
+<span class="fc" id="L104">            return 0.1;</span>
+        }
+
+<span class="fc" id="L107">        return 1;</span>
+    }
+
+    private boolean checkBothWays(char a, char check1, char b, char check2) {
+<span class="fc bfc" id="L111" title="All 8 branches covered.">        return ((a == check1 &amp;&amp; b == check2) || (a == check2 &amp;&amp; b == check1));</span>
+    }
+
+    private double min(double... numbers) {
+<span class="fc" id="L115">        return Arrays.stream(numbers)</span>
+<span class="fc" id="L116">                .min().orElse(Integer.MAX_VALUE);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
