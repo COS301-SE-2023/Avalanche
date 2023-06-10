@@ -34,7 +34,7 @@ public class SimilarityChecker {
                 line = file.nextLine();
                 String[] split = line.split(",");
                 Domain d = new Domain(split[0], split[1]);
-                // allDomains.add(d);
+                allDomains.add(d);
                 splitDoms.get(count % 50).add(d);
                 count++;
             }
@@ -48,16 +48,44 @@ public class SimilarityChecker {
                 while (file.hasNext()) {
                     line = file.nextLine();
                     String[] split = line.split(",");
-                    allDomains.add(new Domain(split[0], split[1]));
-                    splitDoms.get(count % 20).add(new Domain(split[0], split[1]));
+                    Domain d = new Domain(split[0], split[1]);
+                    allDomains.add(d);
+                    splitDoms.get(count % 50).add(d);
                     count++;
-                    // System.out.println(count);
                 }
                 file.close();
             } catch (FileNotFoundException ex) {
-                ex.printStackTrace();
+                try {
+                    Scanner file = new Scanner(new FileReader(
+                            "C:\\Users\\User\\OneDrive\\Documents\\University of Pretoria\\Year 3\\Semester 1\\COS301\\Avalanche\\Avalanche\\Services\\DomainWatch\\data\\Domain Retrieval.csv"));
+                    // skip headings
+                    String line = file.nextLine();
+                    while (file.hasNext()) {
+                        line = file.nextLine();
+                        String[] split = line.split(",");
+                        Domain d = new Domain(split[0], split[1]);
+                        allDomains.add(d);
+                        splitDoms.get(count % 50).add(d);
+                        count++;
+                    }
+                    file.close();
+                } catch (FileNotFoundException exc) {
+                    e.printStackTrace();
+                }
             }
 
+        }
+    }
+
+    public static void resetDistances() {
+        for (Domain domain : allDomains) {
+            domain.resetDistance();
+        }
+
+        for (Queue<Domain> domainQueue : splitDoms) {
+            for (Domain domain : domainQueue) {
+                domain.resetDistance();
+            }
         }
     }
 

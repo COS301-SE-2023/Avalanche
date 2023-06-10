@@ -5,3 +5,4 @@ Services/DomainWatch/data/Domain Retrieval mock.csv
 Services/DomainWatch/data/2023-05-19 5_49pm.csv
 Services/DomainWatch/src/*.class
 Services/DomainWatch/src/*/*.class
+Services/DomainWatch/src/DataClasses/Domain.class

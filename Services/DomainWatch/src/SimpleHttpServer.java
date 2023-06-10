@@ -69,6 +69,7 @@ public class SimpleHttpServer {
                 OutputStream os = httpExchange.getResponseBody();
                 os.write(response.getBytes());
                 os.close();
+                SimilarityChecker.resetDistances();
                 System.gc();
             } else {
                 httpExchange.sendResponseHeaders(405, -1);// 405 Method Not Allowed

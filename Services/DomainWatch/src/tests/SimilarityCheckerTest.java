@@ -1,5 +1,6 @@
 package tests;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -11,6 +12,7 @@ import org.junit.Test;
 
 import DataClasses.Domain;
 import Processing.SimilarityChecker;
+import Utility.DomainTokeniser;
 
 public class SimilarityCheckerTest {
     @Test
@@ -42,8 +44,34 @@ public class SimilarityCheckerTest {
     }
 
     @Test
+    public void sameDomainTwiceShouldHaveSameSimilarity() throws FileNotFoundException {
+        SimilarityChecker.init();
+        SimilarityChecker similarityChecker = new SimilarityChecker();
+        ConcurrentLinkedQueue<Domain> results = similarityChecker.threadedFindAllWithinSimliarityThreshold(
+                "firstnationalbank",
+                5, 50);
+        SimilarityChecker.resetDistances();
+        ConcurrentLinkedQueue<Domain> results2 = similarityChecker.threadedFindAllWithinSimliarityThreshold(
+                "firstnationalbank",
+                5, 50);
+        assertNotNull(results);
+        assertNotNull(results2);
+        assertNotEquals(0, results.size());
+        assertNotEquals(0, results2.size());
+        for (Domain domain : results) {
+            for (Domain domain2 : results2) {
+                if (domain.equals(domain2)) {
+                    assertEquals(domain.getDistance(), domain2.getDistance(), 0);
+                    System.out.println(domain.toJSON() + "\t" + domain2.toJSON());
+                }
+            }
+        }
+    }
+
+    @Test
     public void searchForSimilarSounds() throws FileNotFoundException {
         SimilarityChecker.init();
+        DomainTokeniser.init();
         SimilarityChecker similarityChecker = new SimilarityChecker();
         ConcurrentLinkedQueue<Domain> results = similarityChecker.findAllSoundsAboveSimliarityThreshold("absabank",
                 3);
@@ -57,6 +85,7 @@ public class SimilarityCheckerTest {
     @Test
     public void concurrentSearchForSimilarSounds() throws FileNotFoundException {
         SimilarityChecker.init();
+        DomainTokeniser.init();
         SimilarityChecker similarityChecker = new SimilarityChecker();
         ConcurrentLinkedQueue<Domain> results = similarityChecker.threadedfindAllSoundsAboveSimliarityThreshold(
                 "firstnationalbank",

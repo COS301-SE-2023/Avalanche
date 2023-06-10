@@ -4,6 +4,7 @@ import Utility.DomainTokeniser;
 
 public class SoundexCalculator {
     public double calculateSoundexDifference(String x, String y) {
+        DomainTokeniser.init();
         DomainTokeniser domainTokeniser = new DomainTokeniser();
         String xSpaced = domainTokeniser.inferSpaces(x);
         String ySpaced = domainTokeniser.inferSpaces(y);

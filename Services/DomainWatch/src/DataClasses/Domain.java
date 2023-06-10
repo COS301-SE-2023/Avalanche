@@ -35,6 +35,11 @@ public class Domain implements Comparable {
         return distance / metrics;
     }
 
+    public void resetDistance() {
+        this.distance = 0;
+        this.metrics = 0;
+    }
+
     @Override
     public int compareTo(Object o) {
         Domain d = (Domain) o;
@@ -45,6 +50,10 @@ public class Domain implements Comparable {
             return 1;
         }
         return 0;
+    }
+
+    public boolean equals(Domain d) {
+        return d.name.equals(this.name) && d.zone.equals(this.zone);
     }
 
     @Override
