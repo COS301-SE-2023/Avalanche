@@ -58,12 +58,12 @@ export default function Home() {
               <form className="space-y-4 md:space-y-6" action="#" onSubmit={(event) => login(event)}>
                 <div>
                   <InputLabel htmlFor="email" text="Your email" />
-                  <Input type="email" name="email" id="email" placeholder="name@company.com" required={true} />
+                  <Input type="email" name="email" id="email" placeholder="name@company.com" required={true} value={email} />
                   {emailError && <DangerAlert title="Invalid Email!" text="This email is invalid." />}
                 </div>
                 <div>
                   <InputLabel htmlFor="password" text="Password" />
-                  <Input type="password" placeholder="••••••••" id="password" name="password" required={true} />
+                  <Input type="password" placeholder="••••••••" id="password" name="password" required={true} value={password} />
                   {passwordError && <DangerAlert title="Invalid Password!" text="This password is invalid." />}
                 </div>
                 <div className="flex items-center justify-between">
@@ -78,7 +78,7 @@ export default function Home() {
                   {/* <a href="#" className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot password?</a> */}
                   <Anchor href="/forgot" text="Forgot password" customFont="text-sm" />
                 </div>
-                <SubmitButton text="Sign in" onClick={() => null} loading={loading} />
+                <SubmitButton text="Sign in" onClick={() => null} loading={loading} className="w-full" />
                 <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                   Don&apos;t have an account yet? <Link href="/register" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</Link>
                 </p>

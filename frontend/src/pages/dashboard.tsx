@@ -18,14 +18,12 @@ export default function Dashboard() {
                 <PageHeader title="Home" subtitle="Insights at your fingertips" icon={<HomeIcon className="h-16 w-16 text-black dark:text-white" />} />
             </div>
             <div className="p-4">
-                <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
-                    <div className="grid lg:grid-cols-3 sm:grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <ChartCard title="A ChartJS Chart 1" data={chartData} defaultGraph={ChartType.Pie} />
-                        <ChartCard title="A ChartJS Chart 2" data={chartData} defaultGraph={ChartType.Bar} />
-                        <ChartCard title="A ChartJS Chart 3" data={chartData} defaultGraph={ChartType.Line} />
-                        <ChartCard title="A ChartJS Chart 4" data={chartData} defaultGraph={ChartType.Radar} />
-                        <ChartCard title="A ChartJS Chart 5" data={chartData} defaultGraph={ChartType.PolarArea} />
-                    </div>
+                <div className="grid lg:grid-cols-2 sm:grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <ChartCard title="A ChartJS Chart 1" data={chartData} defaultGraph={ChartType.Pie} />
+                    <ChartCard title="A ChartJS Chart 2" data={chartData} defaultGraph={ChartType.Bar} />
+                    <ChartCard title="A ChartJS Chart 3" data={chartData} defaultGraph={ChartType.Line} />
+                    <ChartCard title="A ChartJS Chart 4" data={chartData} defaultGraph={ChartType.Radar} />
+                    <ChartCard title="A ChartJS Chart 5" data={chartData} defaultGraph={ChartType.PolarArea} />
                 </div>
             </div>
         </div>

@@ -26,7 +26,7 @@ const stepperContent = {
 
 export default function Register() {
 
-    const initRegister: object = {
+    const initRegister = {
         email: "",
         confirmEmail: "",
         password: "",
@@ -40,7 +40,8 @@ export default function Register() {
         notReg: false,
     }
 
-    const [registerObject, setRegisterObject] = useState<object>(initRegister);
+    const [registerObject, setRegisterObject] = useState<any>(initRegister);
+    const [otp, setOtp] = useState<string>("");
     const [step, setStep] = useState<number>(1);
 
     return (
@@ -63,31 +64,31 @@ export default function Register() {
                                 <div className="flex flex-row mb-2 gap-2">
                                     <div className="w-full">
                                         <InputLabel htmlFor="name" text="Name" />
-                                        <Input type="text" placeholder="Michael" name="name" id="name" required={true} />
+                                        <Input type="text" placeholder="Michael" name="name" id="name" required={true} value={registerObject.name} />
                                     </div>
                                     <div className="w-full">
                                         <InputLabel htmlFor="surname" text="Surname" />
-                                        <Input type="text" placeholder="Scott" name="surname" id="surname" required={true} />
+                                        <Input type="text" placeholder="Scott" name="surname" id="surname" required={true} value={registerObject.surname} />
                                     </div>
                                 </div>
                                 <div className="flex flex-row mb-2 gap-2">
                                     <div className="w-full">
                                         <InputLabel htmlFor="email" text="Your email" />
-                                        <Input type="email" placeholder="michael@dundermifflin.com" name="email" id="email" required={true} />
+                                        <Input type="email" placeholder="michael@dundermifflin.com" name="email" id="email" required={true} value={registerObject.email} />
                                     </div>
                                     <div className="w-full">
                                         <InputLabel htmlFor="confirm-email" text="Confirm your email" />
-                                        <Input type="email" placeholder="michael@dundermifflin.com" name="confirm-email" id="confirm-email" required={true} />
+                                        <Input type="email" placeholder="michael@dundermifflin.com" name="confirm-email" id="confirm-email" required={true} value={registerObject.confirmEmail} />
                                     </div>
                                 </div>
                                 <div className="flex flex-row mb-2 gap-2">
                                     <div className="w-full">
                                         <InputLabel htmlFor="password" text="Your password" />
-                                        <Input type="password" placeholder="••••••••" name="password" id="password" required={true} />
+                                        <Input type="password" placeholder="••••••••" name="password" id="password" required={true} value={registerObject.password} />
                                     </div>
                                     <div className="w-full">
                                         <InputLabel htmlFor="confirm-password" text="Confirm your password" />
-                                        <Input type="password" placeholder="••••••••" name="confirm-password" id="confirm-password" required={true} />
+                                        <Input type="password" placeholder="••••••••" name="confirm-password" id="confirm-password" required={true} value={registerObject.confirmPassword} />
                                     </div>
                                 </div>
                                 <div className="flex items-start">
@@ -109,7 +110,7 @@ export default function Register() {
                                 </h1>
                                 <div className="w-full">
                                     <InputLabel htmlFor="verify-code" text="Enter the code your just recieved in your email..." />
-                                    <Input type="numeric" placeholder="000000" name="verify-code" id="verify-code" required={true} />
+                                    <Input type="numeric" placeholder="000000" name="verify-code" id="verify-code" required={true} value={otp} />
                                 </div>
                                 <button type="submit" className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Verify</button>
                                 <p className="text-sm font-light text-gray-500 dark:text-gray-400">
