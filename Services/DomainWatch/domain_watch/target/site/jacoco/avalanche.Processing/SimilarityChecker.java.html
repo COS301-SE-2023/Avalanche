@@ -86,17 +86,17 @@ public class SimilarityChecker {
 
     public ConcurrentLinkedQueue&lt;Domain&gt; findAllWithinSimliarityThreshold(String search, double threshold,
             ConcurrentLinkedQueue&lt;Domain&gt; searchSpace) {
-<span class="nc" id="L89">        ConcurrentLinkedQueue&lt;Domain&gt; hits = new ConcurrentLinkedQueue&lt;&gt;();</span>
-<span class="nc" id="L90">        LevensteinDistanceCalculator calc = new LevensteinDistanceCalculator();</span>
-<span class="nc bnc" id="L91" title="All 2 branches missed.">        for (Domain domain : searchSpace) {</span>
-<span class="nc" id="L92">            double value = calc.calculateBasicLevenshteinDistance(search, domain.getName());</span>
-<span class="nc bnc" id="L93" title="All 2 branches missed.">            if (value &lt;= threshold) {</span>
-<span class="nc" id="L94">                domain.setDistance(value, &quot;Levenshtein&quot;);</span>
-<span class="nc" id="L95">                hits.add(domain);</span>
+<span class="fc" id="L89">        ConcurrentLinkedQueue&lt;Domain&gt; hits = new ConcurrentLinkedQueue&lt;&gt;();</span>
+<span class="fc" id="L90">        LevensteinDistanceCalculator calc = new LevensteinDistanceCalculator();</span>
+<span class="fc bfc" id="L91" title="All 2 branches covered.">        for (Domain domain : searchSpace) {</span>
+<span class="fc" id="L92">            double value = calc.calculateBasicLevenshteinDistance(search, domain.getName());</span>
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">            if (value &lt;= threshold) {</span>
+<span class="fc" id="L94">                domain.setDistance(value, &quot;Levenshtein&quot;);</span>
+<span class="fc" id="L95">                hits.add(domain);</span>
             }
         }
 
-<span class="nc" id="L99">        return hits;</span>
+<span class="fc" id="L99">        return hits;</span>
     }
 
     public ConcurrentLinkedQueue&lt;Domain&gt; findAllSoundsAboveSimliarityThreshold(String search, double threshold) {
@@ -122,24 +122,24 @@ public class SimilarityChecker {
 
     public ConcurrentLinkedQueue&lt;Domain&gt; findAllSoundsAboveSimliarityThreshold(String search, double threshold,
             ConcurrentLinkedQueue&lt;Domain&gt; searchSpace) {
-<span class="nc" id="L125">        ConcurrentLinkedQueue&lt;Domain&gt; hits = new ConcurrentLinkedQueue&lt;&gt;();</span>
-<span class="nc" id="L126">        SoundexCalculator calc = new SoundexCalculator();</span>
-<span class="nc" id="L127">        int count = 0;</span>
-<span class="nc" id="L128">        double pct = 0;</span>
-<span class="nc bnc" id="L129" title="All 2 branches missed.">        for (Domain domain : searchSpace) {</span>
-<span class="nc" id="L130">            double value = calc.calculateSoundexDifference(search, domain.getName());</span>
-<span class="nc bnc" id="L131" title="All 2 branches missed.">            if (value &gt;= threshold) {</span>
-<span class="nc" id="L132">                domain.setDistance(value, &quot;Soundex&quot;);</span>
-<span class="nc" id="L133">                hits.add(domain);</span>
+<span class="fc" id="L125">        ConcurrentLinkedQueue&lt;Domain&gt; hits = new ConcurrentLinkedQueue&lt;&gt;();</span>
+<span class="fc" id="L126">        SoundexCalculator calc = new SoundexCalculator();</span>
+<span class="fc" id="L127">        int count = 0;</span>
+<span class="fc" id="L128">        double pct = 0;</span>
+<span class="fc bfc" id="L129" title="All 2 branches covered.">        for (Domain domain : searchSpace) {</span>
+<span class="fc" id="L130">            double value = calc.calculateSoundexDifference(search, domain.getName());</span>
+<span class="pc bpc" id="L131" title="1 of 2 branches missed.">            if (value &gt;= threshold) {</span>
+<span class="fc" id="L132">                domain.setDistance(value, &quot;Soundex&quot;);</span>
+<span class="fc" id="L133">                hits.add(domain);</span>
             }
-<span class="nc" id="L135">            count++;</span>
+<span class="fc" id="L135">            count++;</span>
             // if (count % (allDomains.size() / 100) == 0) {
             // pct += 1;
             // System.out.println(pct + &quot;%&quot;);
             // }
         }
 
-<span class="nc" id="L142">        return hits;</span>
+<span class="fc" id="L142">        return hits;</span>
     }
 
     public ConcurrentLinkedQueue&lt;Domain&gt; threadedfindAllSoundsAboveSimliarityThreshold(String search, double threshold,

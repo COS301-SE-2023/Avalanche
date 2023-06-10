@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="avalanche.Processing.SimilarityCheckerTest" time="400.905" tests="7" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="avalanche.Processing.SimilarityCheckerTest" time="318.723" tests="9" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="19"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -15,7 +15,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="ZA"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-19\bin"/>
-    <property name="sun.java.command" value="C:\Users\User\AppData\Local\Temp\surefire1730931034904299215\surefirebooter15542256306782922070.jar C:\Users\User\AppData\Local\Temp\surefire1730931034904299215 2023-06-10T18-54-45_456-jvmRun1 surefire117994579414801989tmp surefire_011363283133008869264tmp"/>
+    <property name="sun.java.command" value="C:\Users\User\AppData\Local\Temp\surefire10995400508543770572\surefirebooter12404707499436219897.jar C:\Users\User\AppData\Local\Temp\surefire10995400508543770572 2023-06-10T20-02-48_577-jvmRun1 surefire12982905813988087626tmp surefire_09524085074571789043tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="C:\Users\User\OneDrive\Documents\University of Pretoria\Year 3\Semester 1\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\target\test-classes;C:\Users\User\OneDrive\Documents\University of Pretoria\Year 3\Semester 1\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\target\classes;C:\Users\User\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.4.2\junit-jupiter-api-5.4.2.jar;C:\Users\User\.m2\repository\org\apiguardian\apiguardian-api\1.0.0\apiguardian-api-1.0.0.jar;C:\Users\User\.m2\repository\org\opentest4j\opentest4j\1.1.1\opentest4j-1.1.1.jar;C:\Users\User\.m2\repository\org\junit\platform\junit-platform-commons\1.4.2\junit-platform-commons-1.4.2.jar;C:\Users\User\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.4.2\junit-jupiter-engine-5.4.2.jar;C:\Users\User\.m2\repository\org\junit\platform\junit-platform-engine\1.4.2\junit-platform-engine-1.4.2.jar;C:\Users\User\.m2\repository\org\json\json\20230227\json-20230227.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -30,7 +30,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\User\AppData\Local\Temp\surefire1730931034904299215\surefirebooter15542256306782922070.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\User\AppData\Local\Temp\surefire10995400508543770572\surefirebooter12404707499436219897.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="19.0.1+10-21"/>
@@ -58,11 +58,13 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="63.0"/>
   </properties>
-  <testcase name="concurrentSearchForSimilarSounds" classname="avalanche.Processing.SimilarityCheckerTest" time="22.274"/>
-  <testcase name="construction" classname="avalanche.Processing.SimilarityCheckerTest" time="3.429"/>
-  <testcase name="simpleLoop" classname="avalanche.Processing.SimilarityCheckerTest" time="3.985"/>
-  <testcase name="sameDomainTwiceShouldHaveSameSimilarity" classname="avalanche.Processing.SimilarityCheckerTest" time="199.601"/>
-  <testcase name="searchForSimilarSounds" classname="avalanche.Processing.SimilarityCheckerTest" time="31.491"/>
-  <testcase name="searchForSimilar" classname="avalanche.Processing.SimilarityCheckerTest" time="79.124"/>
-  <testcase name="concurrentSearchForSimilar" classname="avalanche.Processing.SimilarityCheckerTest" time="60.998"/>
+  <testcase name="concurrentSearchForSimilarSounds" classname="avalanche.Processing.SimilarityCheckerTest" time="21.338"/>
+  <testcase name="construction" classname="avalanche.Processing.SimilarityCheckerTest" time="3.201"/>
+  <testcase name="searchForSimilarWithGivenList" classname="avalanche.Processing.SimilarityCheckerTest" time="3.633"/>
+  <testcase name="simpleLoop" classname="avalanche.Processing.SimilarityCheckerTest" time="4.027"/>
+  <testcase name="sameDomainTwiceShouldHaveSameSimilarity" classname="avalanche.Processing.SimilarityCheckerTest" time="118.248"/>
+  <testcase name="searchForSimilarSounds" classname="avalanche.Processing.SimilarityCheckerTest" time="32.298"/>
+  <testcase name="searchForSimilar" classname="avalanche.Processing.SimilarityCheckerTest" time="72.641"/>
+  <testcase name="searchForSimilarSoundsWithGivenList" classname="avalanche.Processing.SimilarityCheckerTest" time="3.525"/>
+  <testcase name="concurrentSearchForSimilar" classname="avalanche.Processing.SimilarityCheckerTest" time="59.809"/>
 </testsuite>

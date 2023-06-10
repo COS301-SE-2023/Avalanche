@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class DomainTokeniser {
+    private static boolean hasBeenInitialised = false;
     private static HashMap<String, Double> dictionary;
     private static volatile HashMap<String, String> wordsDone;
     private static int maxword;
@@ -18,10 +19,18 @@ public class DomainTokeniser {
     public static void init() throws FileNotFoundException {
         buildDictionary();
         wordsDone = new HashMap<>();
+        hasBeenInitialised = true;
     }
 
     public DomainTokeniser() {
-
+        if (!hasBeenInitialised) {
+            try {
+                init();
+            } catch (FileNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
     }
 
     public static HashMap<String, Double> getDictionary() {

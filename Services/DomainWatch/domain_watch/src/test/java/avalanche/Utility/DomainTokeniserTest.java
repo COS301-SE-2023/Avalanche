@@ -24,6 +24,7 @@ public class DomainTokeniserTest {
         assertThrows(FileNotFoundException.class, () -> {
             DomainTokeniser.init();
         });
+        pathField.set(null, "data\\wordsByFreq.txt");
 
     }
 

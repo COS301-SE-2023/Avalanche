@@ -42,14 +42,14 @@ public class Domain implements Comparable {
 
     @Override
     public int compareTo(Object o) {
-<span class="nc" id="L45">        Domain d = (Domain) o;</span>
-<span class="nc bnc" id="L46" title="All 2 branches missed.">        if (d.getDistance() &gt; this.distance) {</span>
-<span class="nc" id="L47">            return -1;</span>
+<span class="fc" id="L45">        Domain d = (Domain) o;</span>
+<span class="fc bfc" id="L46" title="All 2 branches covered.">        if (d.getDistance() &gt; this.getDistance()) {</span>
+<span class="fc" id="L47">            return -1;</span>
         }
-<span class="nc bnc" id="L49" title="All 2 branches missed.">        if (d.getDistance() &lt; this.distance) {</span>
-<span class="nc" id="L50">            return 1;</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">        if (d.getDistance() &lt; this.getDistance()) {</span>
+<span class="fc" id="L50">            return 1;</span>
         }
-<span class="nc" id="L52">        return 0;</span>
+<span class="fc" id="L52">        return 0;</span>
     }
 
     public boolean equals(Domain d) {

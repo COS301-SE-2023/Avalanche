@@ -37,10 +37,38 @@ public class SimilarityCheckerTest {
         ConcurrentLinkedQueue<Domain> results = similarityChecker.findAllWithinSimliarityThreshold("firstnationalbank",
                 4);
         assertNotNull(results);
-        System.out.println("INPUT: firstnationalbank\nThreshold: 4\n=======================");
-        for (Domain domain : results) {
-            System.out.println(domain.getName() + " " + domain.getZone() + "  (" + domain.getDistance() + ")");
-        }
+    }
+
+    @Test
+    public void searchForSimilarWithGivenList() throws FileNotFoundException {
+        DomainTokeniser.init();
+        SimilarityChecker.init();
+        ConcurrentLinkedQueue<Domain> hits = new ConcurrentLinkedQueue<>();
+        hits.add(new Domain("1stnationalbank", "AFRICA"));
+        hits.add(new Domain("2ndnationalbank", "AFRICA"));
+        hits.add(new Domain("3rdnationalbank", "AFRICA"));
+        SimilarityChecker similarityChecker = new SimilarityChecker();
+        ConcurrentLinkedQueue<Domain> results = similarityChecker.findAllWithinSimliarityThreshold("firstnationalbank",
+                6, hits);
+        assertNotNull(results);
+        assertEquals(3, results.size());
+
+    }
+
+    @Test
+    public void searchForSimilarSoundsWithGivenList() throws FileNotFoundException {
+        SimilarityChecker.init();
+        ConcurrentLinkedQueue<Domain> hits = new ConcurrentLinkedQueue<>();
+        hits.add(new Domain("thirstnationalbank", "AFRICA"));
+        hits.add(new Domain("2ndnationalbank", "AFRICA"));
+        hits.add(new Domain("3rdnationalbank", "AFRICA"));
+        SimilarityChecker similarityChecker = new SimilarityChecker();
+        ConcurrentLinkedQueue<Domain> results = similarityChecker.findAllSoundsAboveSimliarityThreshold(
+                "firstnationalbank",
+                0, hits);
+        assertNotNull(results);
+        assertEquals(3, results.size());
+
     }
 
     @Test
@@ -62,7 +90,7 @@ public class SimilarityCheckerTest {
             for (Domain domain2 : results2) {
                 if (domain.equals(domain2)) {
                     assertEquals(domain.getDistance(), domain2.getDistance(), 0);
-                    System.out.println(domain.toJSON() + "\t" + domain2.toJSON());
+                    assertEquals(domain.toJSON(), domain2.toJSON());
                 }
             }
         }

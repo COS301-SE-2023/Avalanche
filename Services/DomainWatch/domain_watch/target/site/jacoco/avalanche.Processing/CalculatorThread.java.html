@@ -14,13 +14,13 @@ public class CalculatorThread extends Thread {
     private String search;
     private double threshold;
 
-    public CalculatorThread(String search, double threshold, ConcurrentLinkedQueue&lt;Domain&gt; hits,
-<span class="fc" id="L18">            Queue&lt;Domain&gt; allDomains) {</span>
+<span class="fc" id="L17">    public CalculatorThread(String search, double threshold, ConcurrentLinkedQueue&lt;Domain&gt; hits,</span>
+            Queue&lt;Domain&gt; allDomains) {
 <span class="fc" id="L19">        calc = new LevensteinDistanceCalculator();</span>
 <span class="fc" id="L20">        this.allDomains = new LinkedList&lt;&gt;();</span>
 <span class="fc bfc" id="L21" title="All 2 branches covered.">        for (Domain domain : allDomains) {</span>
 <span class="fc" id="L22">            this.allDomains.add(domain);</span>
-<span class="fc" id="L23">        }</span>
+        }
 <span class="fc" id="L24">        this.hits = hits;</span>
 <span class="fc" id="L25">        this.search = search;</span>
 <span class="fc" id="L26">        this.threshold = threshold;</span>
@@ -38,7 +38,7 @@ public class CalculatorThread extends Thread {
 <span class="fc" id="L38">                    hits.add(d);</span>
                 }
             }
-<span class="fc" id="L41">        }</span>
+        }
 
 <span class="fc" id="L43">    }</span>
 

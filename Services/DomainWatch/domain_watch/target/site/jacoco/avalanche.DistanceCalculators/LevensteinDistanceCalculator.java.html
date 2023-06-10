@@ -13,42 +13,42 @@ import java.util.Arrays;
 <span class="fc bfc" id="L13" title="All 2 branches covered.">                if (i == 0) {</span>
 <span class="fc bfc" id="L14" title="All 2 branches covered.">                    if (j == 0) {</span>
 <span class="fc" id="L15">                        dp[i][j] = 0;</span>
-                    } else {
+<span class="fc" id="L16">                    } else {</span>
 <span class="pc bpc" id="L17" title="1 of 2 branches missed.">                        if (j &gt; 0) {</span>
 <span class="fc" id="L18">                            dp[i][j] = dp[i][j - 1] + 1;</span>
-                        } else {
+<span class="fc" id="L19">                        } else {</span>
 <span class="nc" id="L20">                            dp[i][j] = dp[i][j - 1] + insertionCost(y.charAt(j - 2), y.charAt(j - 1));</span>
                         }
                     }
-<span class="fc bfc" id="L23" title="All 2 branches covered.">                } else if (j == 0) {</span>
+<span class="pc bfc" id="L23" title="All 2 branches covered.">                } else if (j == 0) {</span>
 <span class="pc bpc" id="L24" title="1 of 2 branches missed.">                    if (i == 0) {</span>
 <span class="nc" id="L25">                        dp[i][j] = 0;</span>
-                    } else {
+<span class="nc" id="L26">                    } else {</span>
 <span class="pc bpc" id="L27" title="1 of 2 branches missed.">                        if (i &gt; 0) {</span>
 <span class="fc" id="L28">                            dp[i][j] = dp[i - 1][j] + 1;</span>
-                        } else {
+<span class="fc" id="L29">                        } else {</span>
 <span class="nc" id="L30">                            dp[i][j] = dp[i - 1][j] + insertionCost(x.charAt(i - 2), x.charAt(i - 1));</span>
                         }
                     }
-                } else {
+<span class="nc" id="L33">                } else {</span>
 <span class="fc bfc" id="L34" title="All 2 branches covered.">                    if (i == 1) {</span>
 <span class="fc bfc" id="L35" title="All 2 branches covered.">                        if (j == 1) {</span>
 <span class="fc" id="L36">                            dp[i][j] = min(dp[i - 1][j - 1]</span>
 <span class="fc" id="L37">                                    + costOfSubstitution(x.charAt(i - 1), y.charAt(j - 1)),</span>
-                                    dp[i - 1][j] + 1,
-                                    dp[i][j - 1] + 1);
-                        } else {
+<span class="fc" id="L38">                                    dp[i - 1][j] + 1,</span>
+<span class="fc" id="L39">                                    dp[i][j - 1] + 1);</span>
+<span class="fc" id="L40">                        } else {</span>
 <span class="fc" id="L41">                            dp[i][j] = min(dp[i - 1][j - 1]</span>
 <span class="fc" id="L42">                                    + costOfSubstitution(x.charAt(i - 1), y.charAt(j - 1)),</span>
-                                    dp[i - 1][j] + 1,
+<span class="fc" id="L43">                                    dp[i - 1][j] + 1,</span>
 <span class="fc" id="L44">                                    dp[i][j - 1] + insertionCost(y.charAt(j - 1), y.charAt(j - 2)));</span>
                         }
 <span class="fc bfc" id="L46" title="All 2 branches covered.">                    } else if (j == 1) {</span>
 <span class="fc" id="L47">                        dp[i][j] = min(dp[i - 1][j - 1]</span>
 <span class="fc" id="L48">                                + costOfSubstitution(x.charAt(i - 1), y.charAt(j - 1)),</span>
 <span class="fc" id="L49">                                dp[i - 1][j] + insertionCost(x.charAt(i - 1), x.charAt(i - 2)),</span>
-                                dp[i][j - 1] + 1);
-                    } else {
+<span class="fc" id="L50">                                dp[i][j - 1] + 1);</span>
+<span class="fc" id="L51">                    } else {</span>
 <span class="fc" id="L52">                        dp[i][j] = min(dp[i - 1][j - 1]</span>
 <span class="fc" id="L53">                                + costOfSubstitution(x.charAt(i - 1), y.charAt(j - 1)),</span>
 <span class="fc" id="L54">                                dp[i - 1][j] + insertionCost(x.charAt(i - 1), x.charAt(i - 2)),</span>
@@ -91,14 +91,14 @@ import java.util.Arrays;
 <span class="fc bfc" id="L91" title="All 2 branches covered.">        if (checkBothWays(a, 'b', b, '8')) {</span>
 <span class="fc" id="L92">            return 0.1;</span>
         }
-<span class="pc bpc" id="L94" title="1 of 2 branches missed.">        if (checkBothWays(a, 'e', b, '3')) {</span>
-<span class="nc" id="L95">            return 0.1;</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">        if (checkBothWays(a, 'e', b, '3')) {</span>
+<span class="fc" id="L95">            return 0.1;</span>
         }
-<span class="pc bpc" id="L97" title="1 of 2 branches missed.">        if (checkBothWays(a, 'u', b, 'v')) {</span>
-<span class="nc" id="L98">            return 0.1;</span>
+<span class="fc bfc" id="L97" title="All 2 branches covered.">        if (checkBothWays(a, 'u', b, 'v')) {</span>
+<span class="fc" id="L98">            return 0.1;</span>
         }
-<span class="pc bpc" id="L100" title="1 of 2 branches missed.">        if (checkBothWays(a, '2', b, 'z')) {</span>
-<span class="nc" id="L101">            return 0.1;</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">        if (checkBothWays(a, '2', b, 'z')) {</span>
+<span class="fc" id="L101">            return 0.1;</span>
         }
 <span class="fc bfc" id="L103" title="All 2 branches covered.">        if (checkBothWays(a, 's', b, '5')) {</span>
 <span class="fc" id="L104">            return 0.1;</span>

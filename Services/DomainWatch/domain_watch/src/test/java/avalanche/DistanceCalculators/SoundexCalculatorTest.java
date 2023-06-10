@@ -13,13 +13,6 @@ import avalanche.Utility.DomainTokeniser;
 public class SoundexCalculatorTest {
 
     @Test
-    public void fileNotPresentShouldThrow() {
-        assertThrows(null, () -> {
-            DomainTokeniser.init();
-        });
-    }
-
-    @Test
     public void sameWordShouldBe4() throws FileNotFoundException {
         DomainTokeniser.init();
         SoundexCalculator calc = new SoundexCalculator();
