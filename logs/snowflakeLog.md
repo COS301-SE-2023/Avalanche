@@ -43,3 +43,4 @@ For more information request formal documentation from ...
   * Fixed timezone
 * 11/06
   * Started Domain Name Analysis Procedure
+  * Query for domain retrieval
