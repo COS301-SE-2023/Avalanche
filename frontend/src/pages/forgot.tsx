@@ -26,22 +26,9 @@ const stepperContent = {
 
 export default function Forgot() {
 
-    const initRegister: object = {
-        email: "",
-        confirmEmail: "",
-        password: "",
-        confirmPassword: "",
-        countryCode: "",
-        contact: "",
-        name: "",
-        surname: "",
-        type: "",
-        terms: false,
-        notReg: false,
-    }
-
-    const [registerObject, setRegisterObject] = useState<object>(initRegister);
+    const [email, setEmail] = useState<string>("");
     const [step, setStep] = useState<number>(1);
+    const [otp, setOtp] = useState<string>("");
 
     return (
         <>
@@ -62,7 +49,7 @@ export default function Forgot() {
                                 </h1>
                                 <div className="w-full">
                                     <InputLabel htmlFor="email" text="Email" />
-                                    <Input type="email" placeholder="michael@dundermifflin.com" name="email" id="email" required={true} />
+                                    <Input type="email" placeholder="michael@dundermifflin.com" name="email" id="email" required={true} value={email} />
                                 </div>
                                 <SubmitButton text='Send email' onClick={() => null} />
                                 <p className="text-sm font-light text-gray-500 dark:text-gray-400">
@@ -75,7 +62,7 @@ export default function Forgot() {
                                 </h1>
                                 <div className="w-full">
                                     <InputLabel htmlFor="verify-code" text="Enter the code your just recieved in your email..." />
-                                    <Input type="numeric" placeholder="000000" name="verify-code" id="verify-code" required={true} />
+                                    <Input type="numeric" placeholder="000000" name="verify-code" id="verify-code" required={true} value={otp} />
                                 </div>
                                 <button type="submit" className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Verify</button>
                                 <p className="text-sm font-light text-gray-500 dark:text-gray-400">

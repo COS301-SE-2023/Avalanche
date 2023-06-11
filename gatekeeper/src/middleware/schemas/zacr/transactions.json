@@ -1,0 +1,30 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "registrars": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "zone": {
+            "type": "string"
+        },
+        "dateFrom": {
+            "type": "string",
+            "format": "date"
+        },
+        "dateTo": {
+            "type": "string",
+            "format": "date"
+        },
+        "granularity": {
+            "type": "string",
+            "enum": ["day", "month", "week", "year"]
+        },
+        "group": {
+            "type": "string"
+        }
+    }
+}

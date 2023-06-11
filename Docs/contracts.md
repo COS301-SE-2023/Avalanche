@@ -1,75 +1,152 @@
+[go back](readme.md)
+
 # Contracts
-## 1. User
+## 1. User Register and Management
   - Authentication object
   - Basic user info:
-     - Profile picture
      - First Name
      - Last Name
   - Settings (under user)
   - Favourite graphs
 ```
-IAuth:
+Register Request:
 {
-  userId: string,
   email: string,
-  hashedPassword: string,
-  createdAt: Timestamp,
-  lastLogin: Timestamp,
-  lastActivity: Timestamp,
-  verified: boolean
+  password: string,
+  firstName: string,
+  lastName: string,
+  country : countryEnum
+}
+```
+```
+Login Request:
+{
+  email: string,
+  password: string
+}
+```
+```
+Login Response:
+{
+  message: string,
+  success: boolean,
+  user?: IUser
+}
+```
+```
+Verify Request:
+{
+  email: string,
+  success: boolean,
+  otp: string
 }
 ```
 ```
 IUser:
 {
-   userId: string,
+   email: string,
    firstName: string,
-   lastName: string,
-   profilePhoto: string | null,
+   lastName: strings
    settings: ISettings,
-   favourites: IGraphReq[] | null,
-   integration: IIntegration[] | null,
-   organisationId: string[] | null // should be returned upon integration? --> how do we verify that they are a registrar. 
-   // after MVP subuser: string[] (userIds) | subUser[]
+   favourites: IDashBoard[] | null,
+   dataProducts: IDataProducts[] | null,
+   organisationId: number | null,
+   organisation: IOrganisation | null,
+   userGroupId: number[] | null,
+   userGroups: IUserGroups[] | null
 }
 
 ```
 ```
-//After MVP
-ISubUserRelationship:
+IUserGroups:
 {
-   super: string
-   sub: string
+   name: string,
+   organisation: IOrganisation,
+   permission: number,
+   organisationId: number,
+   users: IUsers[],
+   id: number
 }
 ```
 ```
-IIntegration
+IOrganisation:
 {
-  registryName: string,
-  registryId: string
-}
-```
-## 2. Data for page requests 
-```
-PageRequest
-{
-   pageName: string, 
-   userId: string
+   name: string,
+   id: number
 }
 ```
 ```
-PageResponse
+IDataProduct
 {
-   pageName: string,
-   graphs: IGraph[]
+  dataProductName: DataProductEnum
+
+}
+```
+```
+DataProductEnum
+{
+  ZARCRegistrar = 'ZARCRegistrar',
+  AFRICARegistrar = 'AFRICARegistrar',
+  RyCERegistrar = 'RYCERegistrar',
+  DomainWatch = 'DomainWatch'
+  
+}
+```
+```
+ISettings:
+  theme: ThemeEnum,
+  graph: GraphSettingsEnum
+```
+```
+IApi:
+  name: string,
+  id: string,
+  desc?: string,
+  createdAt: timestamp
+```
+```
+apiRequest:
+  name: string,
+  description: string
+```
+```
+apiResponse:
+  name: string,
+  id: string,
+  description: string,
+  key: string
+```
+## 2. Data for dashboard requests 
+```
+Dashboard Request:
+{
+   userId: number,
+   dashboardName: string
+}
+```
+```
+DashBoard Response:
+{
+   name: string,
+   id: number,
+   graphs: IGraphs[],
+   graphsFilter: [{graphs.name, filters}]
 }
 ```
 ## 3. Graph data format:
 ```
-IGraph
+Enum Warehouse:
 {
-   graphName: string,
-   graphDescription: string | null,
+   ZACR: "ZACR",
+   AFRICA: "AFRICA",
+   RyCE: "RyCE"
+}
+```
+```
+IGraphs:
+{
+   name: string,
+   warehouse: EnumWarehouse,
    data: IGraphData
 }
 ```
@@ -93,7 +170,70 @@ IDataSet
 IComment
 {
   userId: string,
+  userName: string,
   comment: string,
   createdAt: Timestamp
+}
+```
+```
+graphBackendRequest:
+{
+    registrar?: string,
+    zone?: string,
+    dateFrom?: string,
+    dateTo?: string,
+    granularity?: string,
+    groupBy?: string
+}
+```
+```
+graphFrontendRequest:
+{
+  zone : string,
+  warehouse : EnumWarehouse,
+  name: string,
+  filters : IFilter
+}
+```
+```
+IFilter:
+{
+  dateTo : string,
+  dateFrom : string,
+  granularity: string,
+  registrar : string
+}
+```
+## 4. Domain Watch:
+```
+IDomain
+{
+  domain: string,
+}
+```
+```
+enum AlgoType {
+  LEV = "Levenshtein"
+}
+```
+```
+IDomainWatchType
+{
+  type: AlgoType,
+  threshold: number
+}
+```
+```
+dnsWatchRequest
+{
+  domain: string,
+  types : IDomainWatchType[],
+}
+```
+```
+dnsWatchResponse
+{
+  domains: string[],
+  distance: string[],
 }
 ```

@@ -4,24 +4,41 @@ import { Cog6ToothIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/router';
 import PageHeader from "@/components/Util/PageHeader";
-import { IntegrationLoginModal, } from "@/components/Modals";
-import { IIntergrationLoginData as IData } from "@/interfaces"
-import { DangerAlert, WarningAlert } from "@/components/Util";
+import { IntegrationLoginModal } from "@/components/Modals";
+import { SubmitButton, WarningAlert } from "@/components/Util";
+import toast, { Toaster } from 'react-hot-toast';
+import OrganizationSettings from "@/components/Settings/Organizations";
+import API from "@/components/Settings/API";
+import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { ModalAnimationWrapper } from "@/components/Modals/ModalOptions";
 
 export default function Settings() {
+
+    const modalState = useSelector(selectModalManagerState);
+    const dispatch = useDispatch();
+
     /**
      * This is just calling the NextJS router so we can reference it later on in the code
      */
     const router = useRouter();
 
+    /**
+     * This variable holds the className name options htmlFor the two states of the tab navigation elements.
+     * active refers to the active tab while inactive refers to the inactive tabs (tabs that are not selected).
+     */
     const tabOptions = {
         active: "inline-block p-4 text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-avalancheBlue dark:border-avalancheBlue",
         inactive: "inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
     }
 
+    const [demo, setDemo] = useState<boolean>(false);
+
+    /**
+     * This state variable holds the current active tab.
+     */
     const [tab, setTab] = useState<string>("general");
-    const [iMOpen, setIMOpen] = useState<boolean>(false);
-    const [integration, setIntegration] = useState<IData>({ name: "", image: "" });
+
 
     /**
      * This is triggered whenever the router.query changes in any way. This is used to handle the displaying of the correct content on the page underneath the tab navigation.
@@ -57,19 +74,10 @@ export default function Settings() {
     };
 
     /**
-     * This handles the opening and closing of the modal
-     * @param value is the value that iMOpen should be set to
-     * @param data is the data value that integration should be set to
-     */
-    const handleModal = (value: boolean, data: IData = { name: "", image: "" }): void => {
-        setIMOpen(value);
-        setIntegration(data);
-    }
-
-    /**
      * Renders out the HTML
      */
     return <>
+        <Toaster />
         <Head>
             <title>Settings</title>
         </Head>
@@ -86,7 +94,7 @@ export default function Settings() {
                 </div>
             </div>
 
-            <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700 mb-5">
+            <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700 mb-5 flex justify-between">
                 <ul className="flex lg:flex-wrap sm:flex-nowrap whitespace-nowrap overflow-x-scroll lg:overflow-x-hidden -mb-px">
                     <li className="mr-2" onClick={(e) => tabClick(e, "general")}>
                         <a href="?tab=general" className={tab === "general" ? tabOptions.active : tabOptions.inactive}>General Settings</a>
@@ -95,40 +103,44 @@ export default function Settings() {
                         <a href="?tab=subusers" className={tab === "organizations" ? tabOptions.active : tabOptions.inactive}>Organizations</a>
                     </li>
                     <li className="mr-2" onClick={(e) => tabClick(e, "integrations")}>
-                        <a href="?tab=integrations" className={tab === "integrations" ? tabOptions.active : tabOptions.inactive}>Integrations</a>
+                        <a href="?tab=integrations" className={tab === "integrations" ? tabOptions.active : tabOptions.inactive}>Data Products</a>
                     </li>
                     <li className="mr-2" onClick={(e) => tabClick(e, "apikeys")}>
                         <a href="?tab=apikeys" className={tab === "apikeys" ? tabOptions.active : tabOptions.inactive}>API Keys</a>
                     </li>
                 </ul>
+                <button type="button" className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 m-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 float-right" onClick={() => {
+                    setDemo(!demo);
+                    toast(`Demo mode: ${!demo ? 'on' : 'off'}`,
+                        {
+                            icon: '💀',
+                            style: {
+                                borderRadius: '10px',
+                                background: '#333',
+                                color: '#fff',
+                            },
+                        }
+                    );
+                }}>Demo Toggle</button>
             </div>
+
             {tab === "general" && <>
                 <WarningAlert title="Cannot Create!" text="Nothing to see here" />
             </>}
-            {tab === "organizations" && <>
-                <WarningAlert title="Cannot Create!" text="Organizations are created automatically for you when you setup an integration." />
-            </>}
+            {tab === "organizations" &&
+                <OrganizationSettings demo={demo} />
+            }
             {tab === "integrations" && <>
-                <div className="m-10 flex flex-col gap-6">
-                    <div className="flex justify-between items-center border-b border-gray-200 dark:text-gray-400 dark:border-gray-700 flex-col gap-4 lg:gap-0 lg:flex-row">
-                        <div className="flex flex-row items-center gap-4">
-                            <img className="h-12" src="https://registry.net.za/favicon.ico" />
-                            <p className="text-3xl font-medium text-gray-900 dark:text-white">ZARC | Registry Operator for ZA</p>
-                        </div>
-                        <div className="mb-4 w-full lg:w-max">
-                            <button type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 w-full lg:w-max" onClick={() => handleModal(true, { name: "ZARC", image: "https://registry.net.za/favicon.ico" } as IData)}>Add Integration</button>
-                        </div>
-                    </div>
+                <div className="flex justify-between items-center gap-10 mb-4">
+                    <WarningAlert title="No Data Products." text="You have not added any Data Products..." />
+                    <SubmitButton text="Add a new Data Product" onClick={() => dispatch(setCurrentOpenState("INTE.CreateIntegration"))} />
                 </div>
             </>}
-            {tab === "apikeys" && <>
-                <WarningAlert title="No API Keys." text="You dont have any API keys." />
-                <button type="button" className="py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Create an API Key</button>
-            </>}
+            {tab === "apikeys" && <API demo={demo} />}
         </div>
 
         {/* Models go here */}
-        {iMOpen && <IntegrationLoginModal data={integration} handleModal={handleModal} />}
+        {modalState.currentOpen === "INTE.CreateIntegration" && <ModalAnimationWrapper><IntegrationLoginModal /></ModalAnimationWrapper>}
 
     </>
 }

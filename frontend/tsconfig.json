@@ -6,7 +6,10 @@
       "dom.iterable",
       "esnext"
     ],
-    "allowJs": true,
+    "types": [
+      "node"
+    ],
+    "allowJs": false,
     "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
@@ -30,6 +33,7 @@
     "**/*.tsx"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "build"
   ],
 }
