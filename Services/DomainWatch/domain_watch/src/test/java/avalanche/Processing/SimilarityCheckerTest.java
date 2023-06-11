@@ -102,10 +102,12 @@ public class SimilarityCheckerTest {
         ConcurrentLinkedQueue<Domain> results = similarityChecker.findAllSoundsAboveSimliarityThreshold("absabank",
                 3);
         assertNotNull(results);
-        System.out.println("INPUT: firstnationalbank\nThreshold: 4\n=======================");
-        for (Domain domain : results) {
-            System.out.println(domain.getName() + " " + domain.getZone() + "  (" + domain.getDistance() + ")");
-        }
+        // System.out.println("INPUT: firstnationalbank\nThreshold:
+        // 4\n=======================");
+        // for (Domain domain : results) {
+        // System.out.println(domain.getName() + " " + domain.getZone() + " (" +
+        // domain.getDistance() + ")");
+        // }
     }
 
     @Test
@@ -117,10 +119,12 @@ public class SimilarityCheckerTest {
                 "firstnationalbank",
                 3, 50);
         assertNotNull(results);
-        System.out.println("INPUT: firstnationalbank\nThreshold: 4\n=======================");
-        for (Domain domain : results) {
-            System.out.println(domain.getName() + " " + domain.getZone() + "  (" + domain.getDistance() + ")");
-        }
+        // System.out.println("INPUT: firstnationalbank\nThreshold:
+        // 4\n=======================");
+        // for (Domain domain : results) {
+        // System.out.println(domain.getName() + " " + domain.getZone() + " (" +
+        // domain.getDistance() + ")");
+        // }
     }
 
     @Test
@@ -131,9 +135,11 @@ public class SimilarityCheckerTest {
                 "firstnationalbank",
                 4, 50);
         assertNotNull(results);
-        System.out.println("INPUT: firstnationalbank\nThreshold: 4\n=======================");
-        for (Domain domain : results) {
-            System.out.println(domain.getName() + " " + domain.getZone() + "  (" + domain.getDistance() + ")");
-        }
+        // System.out.println("INPUT: firstnationalbank\nThreshold:
+        // 4\n=======================");
+        // for (Domain domain : results) {
+        // System.out.println(domain.getName() + " " + domain.getZone() + " (" +
+        // domain.getDistance() + ")");
+        // }
     }
 }

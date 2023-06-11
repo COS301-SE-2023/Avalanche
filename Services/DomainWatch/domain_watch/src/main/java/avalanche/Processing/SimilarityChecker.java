@@ -104,19 +104,19 @@ public class SimilarityChecker {
     public ConcurrentLinkedQueue<Domain> findAllSoundsAboveSimliarityThreshold(String search, double threshold) {
         ConcurrentLinkedQueue<Domain> hits = new ConcurrentLinkedQueue<>();
         SoundexCalculator calc = new SoundexCalculator();
-        int count = 0;
-        double pct = 0;
+        // int count = 0;
+        // double pct = 0;
         for (Domain domain : allDomains) {
             double value = calc.calculateSoundexDifference(search, domain.getName());
             if (value >= threshold) {
                 domain.setDistance(value, "Soundex");
                 hits.add(domain);
             }
-            count++;
-            if (count % (allDomains.size() / 100) == 0) {
-                pct += 1;
-                System.out.println(pct + "%");
-            }
+            // count++;
+            // if (count % (allDomains.size() / 100) == 0) {
+            // pct += 1;
+            // System.out.println(pct + "%");
+            // }
         }
 
         return hits;

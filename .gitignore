@@ -2,3 +2,4 @@
 Services/DomainWatch/domain_watch/data/*.csv
 Services/DomainWatch/domain_watch/target/classes/avalanche/*.class
 Services/DomainWatch/domain_watch/target/*/*/*.class
+Services/DomainWatch/domain_watch/target/test-classes/avalanche/Processing/SimilarityCheckerTest.class
