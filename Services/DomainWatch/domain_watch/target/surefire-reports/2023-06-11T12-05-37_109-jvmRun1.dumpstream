@@ -1,0 +1,119 @@
+# Created at 2023-06-11T12:05:42.663
+TestSet has not finished before stream error has appeared >> initializing exit by non-null configuration: null
+java.io.EOFException
+	at java.base/java.io.DataInputStream.readInt(DataInputStream.java:398)
+	at org.apache.maven.surefire.booter.MasterProcessCommand.decode(MasterProcessCommand.java:115)
+	at org.apache.maven.surefire.booter.CommandReader$CommandRunnable.run(CommandReader.java:391)
+	at java.base/java.lang.Thread.run(Thread.java:1589)
+
+
+# Created at 2023-06-11T12:05:52.207
+Unexpected IOException with stream: INPUT: firstnationalbank
+Threshold: 4
+=======================
+
+
+# Created at 2023-06-11T12:05:52.208
+Unexpected IOException with stream: firstnationalinvestments CO.ZA  (0.75)
+
+
+# Created at 2023-06-11T12:05:52.209
+Unexpected IOException with stream: firstnationalbanksa CO.ZA  (0.75)
+
+
+# Created at 2023-06-11T12:05:52.210
+Unexpected IOException with stream: firstnationalbanks CO.ZA  (1.0)
+
+
+# Created at 2023-06-11T12:05:52.211
+Unexpected IOException with stream: firstnationalbank CO.ZA  (1.0)
+
+
+# Created at 2023-06-11T12:05:52.211
+Unexpected IOException with stream: firstnationalb CO.ZA  (0.8333333333333334)
+
+
+# Created at 2023-06-11T12:05:52.212
+Unexpected IOException with stream: firstweddingdance CO.ZA  (0.75)
+
+
+# Created at 2023-06-11T12:05:52.213
+Unexpected IOException with stream: firstnationaldebt CO.ZA  (0.75)
+
+
+# Created at 2023-06-11T12:05:52.214
+Unexpected IOException with stream: firstnationalbankbitcoin CO.ZA  (0.75)
+
+
+# Created at 2023-06-11T12:05:52.215
+Unexpected IOException with stream: firstnationalshop CO.ZA  (0.75)
+
+
+# Created at 2023-06-11T12:05:52.215
+Unexpected IOException with stream: firstnationalinvestment CO.ZA  (0.75)
+
+
+# Created at 2023-06-11T12:05:52.216
+Unexpected IOException with stream: firstnationalsolar CO.ZA  (0.75)
+
+
+# Created at 2023-06-11T12:05:52.217
+Unexpected IOException with stream: firstnationbank CO.ZA  (0.9166666666666666)
+
+
+# Created at 2023-06-11T12:05:52.218
+Unexpected IOException with stream: morganstanleybank CO.ZA  (0.75)
+
+
+# Created at 2023-06-11T12:05:52.219
+Unexpected IOException with stream: firstcapitalbank CO.ZA  (0.75)
+
+
+# Created at 2023-06-11T12:05:52.220
+Unexpected IOException with stream: firstnationalbank AFRICA  (1.0)
+
+
+# Created at 2023-06-11T12:05:52.221
+Unexpected IOException with stream: firstnationalbattery CO.ZA  (0.8333333333333334)
+
+
+# Created at 2023-06-11T12:05:52.221
+Unexpected IOException with stream: firstnationalbikes CO.ZA  (0.9166666666666666)
+
+
+# Created at 2023-06-11T12:05:52.222
+Unexpected IOException with stream: firstnationalfinance CO.ZA  (0.75)
+
+
+# Created at 2023-06-11T12:05:52.223
+Unexpected IOException: 6,1,avalanche.Processing.SimilarityCheckerTest,concurrentSearchForSimilarSounds,null,null,null
+
+
+# Created at 2023-06-11T12:05:52.224
+Unexpected IOException: 5,1,avalanche.Processing.SimilarityCheckerTest,construction,null,null,null
+
+
+# Created at 2023-06-11T12:05:56.219
+Unexpected IOException: 6,1,avalanche.Processing.SimilarityCheckerTest,construction,null,null,null
+
+
+# Created at 2023-06-11T12:05:56.221
+Unexpected IOException: 5,1,avalanche.Processing.SimilarityCheckerTest,searchForSimilarWithGivenList,null,null,null
+
+
+# Created at 2023-06-11T12:06:00.036
+Unexpected IOException: 6,1,avalanche.Processing.SimilarityCheckerTest,searchForSimilarWithGivenList,null,null,null
+
+
+# Created at 2023-06-11T12:06:00.036
+Unexpected IOException: 5,1,avalanche.Processing.SimilarityCheckerTest,simpleLoop,null,null,null
+
+
+# Created at 2023-06-11T12:06:04.502
+Unexpected IOException: 6,1,avalanche.Processing.SimilarityCheckerTest,simpleLoop,null,null,null
+
+
+# Created at 2023-06-11T12:06:04.503
+Unexpected IOException: 5,1,avalanche.Processing.SimilarityCheckerTest,sameDomainTwiceShouldHaveSameSimilarity,null,null,null
+
+

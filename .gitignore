@@ -1,3 +1,7 @@
+
+Services/DomainWatch/domain_watch/target/classes/avalanche/*.class
+Services/DomainWatch/domain_watch/target/*/*/*.class
+Services/DomainWatch/domain_watch/target/test-classes/avalanche/Processing/SimilarityCheckerTest.class
 backend/.env
 gateway/.env
 user-management/.env
@@ -6,11 +10,3 @@ zacr/.env
 javatest/SimpleHttpServer$PostHandler.class
 javatest/SimpleHttpServer.class
 javatest/SimpleHttpServer.java
-Services/DNSWatch/data/2023-05-19 5_49pm.csv
-Services/DNSWatch/data/Domain Retrieval.csv
-Services/DomainWatch/data/Domain Retrieval.csv
-Services/DomainWatch/data/Domain Retrieval mock.csv
-Services/DomainWatch/data/2023-05-19 5_49pm.csv
-Services/DomainWatch/src/*.class
-Services/DomainWatch/src/*/*.class
-Services/DomainWatch/src/DataClasses/Domain.class

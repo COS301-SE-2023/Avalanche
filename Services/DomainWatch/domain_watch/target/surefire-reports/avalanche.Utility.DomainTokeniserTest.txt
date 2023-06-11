@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: avalanche.Utility.DomainTokeniserTest
+-------------------------------------------------------------------------------
+Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.645 s - in avalanche.Utility.DomainTokeniserTest
