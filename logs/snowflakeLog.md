@@ -41,3 +41,5 @@ For more information request formal documentation from ...
   * Fixed registrar grouping
   * Date From errors
   * Fixed timezone
+* 11/06
+  * Started Domain Name Analysis Procedure
