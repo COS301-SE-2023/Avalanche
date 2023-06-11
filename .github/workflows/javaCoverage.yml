@@ -8,9 +8,9 @@ on:
 jobs:
   
   test:
-    if: contains(github.event.head_commit.message, '_TEST_')
+    if: contains(github.event.head_commit.message, '_COV_')
     name: Test Domain Watch
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@v3
@@ -19,6 +19,6 @@ jobs:
         with:
           java-version: '19'
           distribution: 'temurin'
-      - name: Test with Maven
+      - name: Coverage with Maven
         working-directory: ./Services/DomainWatch/domain_watch
-        run: mvn test
+        run: mvn jacoco:prepare-agent test install jacoco:report

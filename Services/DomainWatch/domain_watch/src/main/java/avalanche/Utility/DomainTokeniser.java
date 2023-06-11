@@ -13,7 +13,7 @@ public class DomainTokeniser {
     private static HashMap<String, Double> dictionary;
     private static volatile HashMap<String, String> wordsDone;
     private static int maxword;
-    private static String DICTIONARY_PATH = "data\\wordsByFreq.txt";
+    private static String DICTIONARY_PATH = "data/wordsByFreq.txt";
 
     public static void init() throws FileNotFoundException {
         buildDictionary();

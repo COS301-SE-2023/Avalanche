@@ -17,11 +17,11 @@ public class DomainTokeniserTest {
         Field pathField = DomainTokeniser.class.getDeclaredField("DICTIONARY_PATH");
         pathField.setAccessible(true);
 
-        pathField.set(null, "This\\should\\fail");
+        pathField.set(null, "This/should/fail");
         assertThrows(FileNotFoundException.class, () -> {
             DomainTokeniser.init();
         });
-        pathField.set(null, "data\\wordsByFreq.txt");
+        pathField.set(null, "data/wordsByFreq.txt");
 
     }
 

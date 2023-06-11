@@ -18,9 +18,9 @@ public class SimilarityChecker {
     private static ArrayList<Queue<Domain>> splitDoms;
 
     public static void init(boolean useMock) {
-        String path = "data\\Domain Retrieval.csv";
+        String path = "data/Domain Retrieval.csv";
         if (useMock) {
-            path = "data\\Domain Retrieval mock.csv";
+            path = "data/Domain Retrieval mock.csv";
         }
         allDomains = new HashSet<>();
         splitDoms = new ArrayList<>();
