@@ -23,10 +23,6 @@ jobs:
       - name: Code Coverage with Maven
         working-directory: ./Services/DomainWatch/domain_watch
         run: mvn jacoco:prepare-agent test install jacoco:report
-        
-  coverage:
-    runs-on: ubuntu-latest
-    steps:
           
       # generates coverage-report.md and publishes as checkrun
       - name: JaCoCo Code Coverage Report
