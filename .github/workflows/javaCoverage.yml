@@ -19,6 +19,6 @@ jobs:
         with:
           java-version: '19'
           distribution: 'temurin'
-      - name: Coverage with Maven
+      - name: Code Coverage with Maven
         working-directory: ./Services/DomainWatch/domain_watch
         run: mvn jacoco:prepare-agent test install jacoco:report
