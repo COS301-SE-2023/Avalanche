@@ -31,7 +31,7 @@ jobs:
         with:
           coverage_results_path: Services/DomainWatch/domain_watch/target/site/jacoco/jacoco.xml
           coverage_report_name: Coverage
-          coverage_report_title: JaCoCo
+          coverage_report_title: Domain Watch
           github_token: ${{ secrets.GITHUB_TOKEN }}
           skip_check_run: false
           minimum_coverage: 75
