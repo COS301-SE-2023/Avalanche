@@ -6,11 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.FileNotFoundException;
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 
 import org.junit.jupiter.api.Test;
-
-import avalanche.Utility.DomainTokeniser;
 
 public class DomainTokeniserTest {
 
@@ -31,28 +28,25 @@ public class DomainTokeniserTest {
     @Test
     public void dictionaryMade() throws FileNotFoundException {
         DomainTokeniser.init();
-        DomainTokeniser domainTokeniser = new DomainTokeniser();
-        assertNotNull(domainTokeniser.getDictionary());
+        assertNotNull(DomainTokeniser.getDictionary());
     }
 
     @Test
     public void dictionaryLengthCorrect() throws FileNotFoundException {
 
         DomainTokeniser.init();
-        DomainTokeniser domainTokeniser = new DomainTokeniser();
-        assertEquals(125549, domainTokeniser.getDictionary().size());
+        assertEquals(125549, DomainTokeniser.getDictionary().size());
     }
 
     @Test
     public void correctWordcost() throws FileNotFoundException {
 
         DomainTokeniser.init();
-        DomainTokeniser domainTokeniser = new DomainTokeniser();
-        assertEquals(0, domainTokeniser.getDictionary().get("the"), 0.00001);
-        assertEquals(8.137860786, domainTokeniser.getDictionary().get("of"), 0.00001);
-        assertEquals(12.89820418, domainTokeniser.getDictionary().get("in"), 0.00001);
-        assertEquals(16.27572157, domainTokeniser.getDictionary().get("a"), 0.00001);
-        assertEquals(137.8381991, domainTokeniser.getDictionary().get("pebbliest"), 0.00001);
+        assertEquals(0, DomainTokeniser.getDictionary().get("the"), 0.00001);
+        assertEquals(8.137860786, DomainTokeniser.getDictionary().get("of"), 0.00001);
+        assertEquals(12.89820418, DomainTokeniser.getDictionary().get("in"), 0.00001);
+        assertEquals(16.27572157, DomainTokeniser.getDictionary().get("a"), 0.00001);
+        assertEquals(137.8381991, DomainTokeniser.getDictionary().get("pebbliest"), 0.00001);
     }
 
     @Test

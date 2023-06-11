@@ -7,17 +7,15 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.Test;
 
 import avalanche.DataClasses.Domain;
-import avalanche.Processing.SimilarityChecker;
 import avalanche.Utility.DomainTokeniser;
 
 import java.io.FileNotFoundException;
-import java.util.LinkedList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class SimilarityCheckerTest {
     @Test
     public void construction() throws FileNotFoundException {
-        SimilarityChecker.init();
+        SimilarityChecker.init(true);
         SimilarityChecker similarityChecker = new SimilarityChecker();
         assertNotNull(similarityChecker.getAllDomains());
         assertNotEquals(0, similarityChecker.getAllDomains().size());
@@ -25,14 +23,14 @@ public class SimilarityCheckerTest {
 
     @Test
     public void simpleLoop() throws FileNotFoundException {
-        SimilarityChecker.init();
+        SimilarityChecker.init(true);
         SimilarityChecker similarityChecker = new SimilarityChecker();
         similarityChecker.loopThroughAllDomains();
     }
 
     @Test
     public void searchForSimilar() throws FileNotFoundException {
-        SimilarityChecker.init();
+        SimilarityChecker.init(true);
         SimilarityChecker similarityChecker = new SimilarityChecker();
         ConcurrentLinkedQueue<Domain> results = similarityChecker.findAllWithinSimliarityThreshold("firstnationalbank",
                 4);
@@ -42,7 +40,7 @@ public class SimilarityCheckerTest {
     @Test
     public void searchForSimilarWithGivenList() throws FileNotFoundException {
         DomainTokeniser.init();
-        SimilarityChecker.init();
+        SimilarityChecker.init(true);
         ConcurrentLinkedQueue<Domain> hits = new ConcurrentLinkedQueue<>();
         hits.add(new Domain("1stnationalbank", "AFRICA"));
         hits.add(new Domain("2ndnationalbank", "AFRICA"));
@@ -57,7 +55,7 @@ public class SimilarityCheckerTest {
 
     @Test
     public void searchForSimilarSoundsWithGivenList() throws FileNotFoundException {
-        SimilarityChecker.init();
+        SimilarityChecker.init(true);
         ConcurrentLinkedQueue<Domain> hits = new ConcurrentLinkedQueue<>();
         hits.add(new Domain("thirstnationalbank", "AFRICA"));
         hits.add(new Domain("2ndnationalbank", "AFRICA"));
@@ -73,7 +71,7 @@ public class SimilarityCheckerTest {
 
     @Test
     public void sameDomainTwiceShouldHaveSameSimilarity() throws FileNotFoundException {
-        SimilarityChecker.init();
+        SimilarityChecker.init(true);
         SimilarityChecker similarityChecker = new SimilarityChecker();
         ConcurrentLinkedQueue<Domain> results = similarityChecker.threadedFindAllWithinSimliarityThreshold(
                 "firstnationalbank",
@@ -98,7 +96,7 @@ public class SimilarityCheckerTest {
 
     @Test
     public void searchForSimilarSounds() throws FileNotFoundException {
-        SimilarityChecker.init();
+        SimilarityChecker.init(true);
         DomainTokeniser.init();
         SimilarityChecker similarityChecker = new SimilarityChecker();
         ConcurrentLinkedQueue<Domain> results = similarityChecker.findAllSoundsAboveSimliarityThreshold("absabank",
@@ -112,7 +110,7 @@ public class SimilarityCheckerTest {
 
     @Test
     public void concurrentSearchForSimilarSounds() throws FileNotFoundException {
-        SimilarityChecker.init();
+        SimilarityChecker.init(true);
         DomainTokeniser.init();
         SimilarityChecker similarityChecker = new SimilarityChecker();
         ConcurrentLinkedQueue<Domain> results = similarityChecker.threadedfindAllSoundsAboveSimliarityThreshold(
@@ -127,7 +125,7 @@ public class SimilarityCheckerTest {
 
     @Test
     public void concurrentSearchForSimilar() throws FileNotFoundException {
-        SimilarityChecker.init();
+        SimilarityChecker.init(true);
         SimilarityChecker similarityChecker = new SimilarityChecker();
         ConcurrentLinkedQueue<Domain> results = similarityChecker.threadedFindAllWithinSimliarityThreshold(
                 "firstnationalbank",

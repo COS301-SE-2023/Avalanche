@@ -6,8 +6,6 @@ import java.lang.reflect.Field;
 
 import org.junit.jupiter.api.Test;
 
-import avalanche.DataClasses.Domain;
-
 public class DomainClassTest {
     @Test
     public void testConstruction() {

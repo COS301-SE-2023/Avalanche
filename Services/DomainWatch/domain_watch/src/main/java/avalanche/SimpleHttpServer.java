@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
-import java.util.LinkedList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.json.JSONObject;
@@ -20,7 +19,7 @@ public class SimpleHttpServer {
     public static void main(String[] args) throws Exception {
         long st = System.currentTimeMillis();
         System.out.println("initialising domain list");
-        SimilarityChecker.init();
+        SimilarityChecker.init(false);
         System.out.println("Done domain list\n");
 
         System.out.println("initialising word freq");
@@ -71,6 +70,7 @@ public class SimpleHttpServer {
                 OutputStream os = httpExchange.getResponseBody();
                 os.write(response.getBytes());
                 os.close();
+                scanner.close();
                 SimilarityChecker.resetDistances();
                 System.gc();
             } else {
@@ -83,7 +83,6 @@ public class SimpleHttpServer {
     public static String getResponse(String body) {
         System.out.println("Working in request");
         SimilarityChecker similarityChecker = new SimilarityChecker();
-        int i = body.indexOf("\"domain\"", 0);
         String resp = "{  \"status\":\"success\",  \"data\":[";
         ConcurrentLinkedQueue<Domain> hits = new ConcurrentLinkedQueue<>();
         JSONObject obj = new JSONObject(body);

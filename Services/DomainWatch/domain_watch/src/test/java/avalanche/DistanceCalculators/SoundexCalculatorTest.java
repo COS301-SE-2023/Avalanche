@@ -1,13 +1,10 @@
 package avalanche.DistanceCalculators;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import java.io.FileNotFoundException;
 
 import org.junit.jupiter.api.Test;
 
-import avalanche.DistanceCalculators.SoundexCalculator;
 import avalanche.Utility.DomainTokeniser;
 
 public class SoundexCalculatorTest {

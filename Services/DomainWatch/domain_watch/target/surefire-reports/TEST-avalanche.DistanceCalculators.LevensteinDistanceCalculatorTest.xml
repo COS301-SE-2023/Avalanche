@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="avalanche.DistanceCalculators.LevensteinDistanceCalculatorTest" time="0.003" tests="19" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="avalanche.DistanceCalculators.LevensteinDistanceCalculatorTest" time="0.009" tests="19" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="19"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -15,7 +15,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="ZA"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-19\bin"/>
-    <property name="sun.java.command" value="C:\Users\User\AppData\Local\Temp\surefire10995400508543770572\surefirebooter12404707499436219897.jar C:\Users\User\AppData\Local\Temp\surefire10995400508543770572 2023-06-10T20-02-48_577-jvmRun1 surefire12982905813988087626tmp surefire_09524085074571789043tmp"/>
+    <property name="sun.java.command" value="C:\Users\User\AppData\Local\Temp\surefire13137575227682903052\surefirebooter1943993325747689241.jar C:\Users\User\AppData\Local\Temp\surefire13137575227682903052 2023-06-11T12-05-37_109-jvmRun1 surefire6682119991129069278tmp surefire_017616954378006616672tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="C:\Users\User\OneDrive\Documents\University of Pretoria\Year 3\Semester 1\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\target\test-classes;C:\Users\User\OneDrive\Documents\University of Pretoria\Year 3\Semester 1\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\target\classes;C:\Users\User\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.4.2\junit-jupiter-api-5.4.2.jar;C:\Users\User\.m2\repository\org\apiguardian\apiguardian-api\1.0.0\apiguardian-api-1.0.0.jar;C:\Users\User\.m2\repository\org\opentest4j\opentest4j\1.1.1\opentest4j-1.1.1.jar;C:\Users\User\.m2\repository\org\junit\platform\junit-platform-commons\1.4.2\junit-platform-commons-1.4.2.jar;C:\Users\User\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.4.2\junit-jupiter-engine-5.4.2.jar;C:\Users\User\.m2\repository\org\junit\platform\junit-platform-engine\1.4.2\junit-platform-engine-1.4.2.jar;C:\Users\User\.m2\repository\org\json\json\20230227\json-20230227.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -30,7 +30,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\User\AppData\Local\Temp\surefire10995400508543770572\surefirebooter12404707499436219897.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\User\AppData\Local\Temp\surefire13137575227682903052\surefirebooter1943993325747689241.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="19.0.1+10-21"/>
@@ -69,12 +69,12 @@
   <testcase name="repeatedlettersShouldBeClose" classname="avalanche.DistanceCalculators.LevensteinDistanceCalculatorTest" time="0"/>
   <testcase name="Oto0changeShouldBesmall" classname="avalanche.DistanceCalculators.LevensteinDistanceCalculatorTest" time="0"/>
   <testcase name="stringsMissingLastLetterShouldBe1" classname="avalanche.DistanceCalculators.LevensteinDistanceCalculatorTest" time="0"/>
-  <testcase name="swappedShouldBeSame" classname="avalanche.DistanceCalculators.LevensteinDistanceCalculatorTest" time="0"/>
+  <testcase name="swappedShouldBeSame" classname="avalanche.DistanceCalculators.LevensteinDistanceCalculatorTest" time="0.001"/>
   <testcase name="stringsMissingFirstLetterShouldBe1" classname="avalanche.DistanceCalculators.LevensteinDistanceCalculatorTest" time="0"/>
   <testcase name="subEfor3ShouldBeSmall" classname="avalanche.DistanceCalculators.LevensteinDistanceCalculatorTest" time="0"/>
   <testcase name="lto1changeShouldBesmall" classname="avalanche.DistanceCalculators.LevensteinDistanceCalculatorTest" time="0"/>
   <testcase name="sameStringShouldBe0" classname="avalanche.DistanceCalculators.LevensteinDistanceCalculatorTest" time="0"/>
-  <testcase name="chatTests" classname="avalanche.DistanceCalculators.LevensteinDistanceCalculatorTest" time="0"/>
-  <testcase name="ito1changeShouldBesmall" classname="avalanche.DistanceCalculators.LevensteinDistanceCalculatorTest" time="0"/>
+  <testcase name="chatTests" classname="avalanche.DistanceCalculators.LevensteinDistanceCalculatorTest" time="0.001"/>
+  <testcase name="ito1changeShouldBesmall" classname="avalanche.DistanceCalculators.LevensteinDistanceCalculatorTest" time="0.001"/>
   <testcase name="subUforVShouldBeSmall" classname="avalanche.DistanceCalculators.LevensteinDistanceCalculatorTest" time="0"/>
 </testsuite>

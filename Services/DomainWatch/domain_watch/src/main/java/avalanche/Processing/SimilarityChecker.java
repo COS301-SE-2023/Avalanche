@@ -3,12 +3,10 @@ package avalanche.Processing;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
-import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import avalanche.DataClasses.Domain;
@@ -19,7 +17,11 @@ public class SimilarityChecker {
     private static HashSet<Domain> allDomains;
     private static ArrayList<Queue<Domain>> splitDoms;
 
-    public static void init() {
+    public static void init(boolean useMock) {
+        String path = "data\\Domain Retrieval.csv";
+        if (useMock) {
+            path = "data\\Domain Retrieval mock.csv";
+        }
         allDomains = new HashSet<>();
         splitDoms = new ArrayList<>();
         for (int i = 0; i < 50; i++) {
@@ -27,7 +29,7 @@ public class SimilarityChecker {
         }
         int count = 0;
         try {
-            Scanner file = new Scanner(new FileReader("data\\Domain Retrieval.csv"));
+            Scanner file = new Scanner(new FileReader(path));
             // skip headings
             String line = file.nextLine();
             while (file.hasNext()) {
@@ -66,7 +68,7 @@ public class SimilarityChecker {
 
     public void loopThroughAllDomains() {
         for (Domain domain : allDomains) {
-            String name = domain.getName();
+            domain.resetDistance();
         }
     }
 
@@ -124,19 +126,12 @@ public class SimilarityChecker {
             ConcurrentLinkedQueue<Domain> searchSpace) {
         ConcurrentLinkedQueue<Domain> hits = new ConcurrentLinkedQueue<>();
         SoundexCalculator calc = new SoundexCalculator();
-        int count = 0;
-        double pct = 0;
         for (Domain domain : searchSpace) {
             double value = calc.calculateSoundexDifference(search, domain.getName());
             if (value >= threshold) {
                 domain.setDistance(value, "Soundex");
                 hits.add(domain);
             }
-            count++;
-            // if (count % (allDomains.size() / 100) == 0) {
-            // pct += 1;
-            // System.out.println(pct + "%");
-            // }
         }
 
         return hits;
