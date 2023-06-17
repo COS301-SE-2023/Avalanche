@@ -45,4 +45,5 @@ For more information request formal documentation from ...
   * Started Domain Name Analysis Procedure
   * Query for domain retrieval
 * 17/06
-  * Added per transaction query  
+  * Added per transaction query
+  * Bug in transaction query- array of types only returns last
