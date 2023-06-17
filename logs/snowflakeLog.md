@@ -44,3 +44,5 @@ For more information request formal documentation from ...
 * 11/06
   * Started Domain Name Analysis Procedure
   * Query for domain retrieval
+* 17/06
+  * Added per transaction query  
