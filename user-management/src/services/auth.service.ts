@@ -10,6 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../entity/user.entity';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
+import { check } from 'prettier';
 @Injectable()
 export class AuthService {
   constructor(@Inject('REDIS') private readonly redis: Redis, private readonly configService: ConfigService,
@@ -17,26 +18,35 @@ export class AuthService {
     private jwtService: JwtService,) { }
 
   async register(email: string, password: string, firstName: string, lastName: string) {
-    const saltRounds = 10;
-    const salt = await bcrypt.genSalt(saltRounds);
-    const firstHash = await bcrypt.hash(password, salt);
-    const doubleHashedPassword = await bcrypt.hash(firstHash, salt);
+    const user = await this.userRepository.findOne({ where: { email }, relations: ['userGroups', 'organisation'] });
+    if (!user) {
+      const checkRedis = await this.redis.get(email);
+      if (!checkRedis) {
+        const saltRounds = 10;
+        const salt = await bcrypt.genSalt(saltRounds);
+        const firstHash = await bcrypt.hash(password, salt);
 
-    // Generate OTP
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        // Generate OTP
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-    // Save user's email, password, and OTP to Redis
-    const userData = JSON.stringify({ password: doubleHashedPassword, otp: otp, salt: salt, firstName : firstName, lastName: lastName });
-    await this.redis.set(email, userData, 'EX', 24 * 60 * 60);
+        // Save user's email, password, and OTP to Redis
+        const userData = JSON.stringify({ password: firstHash, otp: otp, salt: salt, firstName: firstName, lastName: lastName });
+        await this.redis.set(email, userData, 'EX', 24 * 60 * 60);
 
-    // Retrieve the data from Redis to verify it was saved correctly
-    const savedData = await this.redis.get(email);
-    console.log(savedData);
+        // Retrieve the data from Redis to verify it was saved correctly
+        const savedData = await this.redis.get(email);
+        console.log(savedData);
 
-    // Send email with OTP link
-    await this.sendOTPEmail(email, otp);
+        // Send email with OTP link
+        await this.sendOTPEmail(email, otp);
 
-    return { status: 'success', message: 'Registration successful. Please check your email for the OTP.' };
+        return { status: 'success', message: 'Registration successful. Please check your email for the OTP.' };
+      } else {
+        return { status: 'failure', message: 'Registration unsuccessful. Email is awaiting verification.' };
+      }
+    } else {
+      return { status: 'failure', message: 'Registration unsuccessful. This email is in use.' };
+    }
   }
 
   async sendOTPEmail(email: string, otp: string) {
@@ -67,14 +77,18 @@ export class AuthService {
   async verify(email: string, otp: string) {
     // Get user's info from Redis
     const userInfo = await this.redis.get(email);
-    if (!userInfo) throw new Error('Invalid OTP');
+    if (!userInfo) {
+      return { status: 'failure', message: 'Email has not been found.' };
+    };
 
     const { password, salt, firstName, lastName, otp: savedOtp } = JSON.parse(userInfo);
     console.log(password + " " + otp);
-    if (otp !== savedOtp) throw new Error('Invalid OTP');
+    if (otp !== savedOtp) {
+      return { status: 'failure', message: 'Incorrect OTP.' };
+    };
 
     // Save user's information to PostgreSQL
-    const user = this.userRepository.create({ email, password, salt, firstName, lastName});
+    const user = this.userRepository.create({ email, password, salt, firstName, lastName });
     console.log(user);
     const check = await this.userRepository.save(user);
     console.log(check);
@@ -87,23 +101,26 @@ export class AuthService {
 
   async login(email: string, passwordLogin: string) {
     // Fetch user from the PostgreSQL database
-    const user = await this.userRepository.findOne({ where: { email } , relations: ['userGroups', 'organisation']});
-
+    const user = await this.userRepository.findOne({ where: { email }, relations: ['userGroups', 'organisation'] });
+    console.log(user);
     // If user not found, throw error
     if (!user) {
-      throw new Error('User not found');
+      return { status: 'failure', message: 'This user does not exist, please enter the correct email/please register.' };
     }
 
     // Verify the provided password with the user's hashed password in the database
     const saltFromDB = user.salt;
-    passwordLogin = await bcrypt.hash(passwordLogin, saltFromDB);
-    passwordLogin = await bcrypt.hash(passwordLogin, saltFromDB);
-
-    const passwordIsValid = await bcrypt.compare(passwordLogin, user.password);
+    const passwordLogin1 = await bcrypt.hash(passwordLogin, saltFromDB);
+    let passwordIsValid = false;
+    if(passwordLogin1 === user.password){
+      passwordIsValid = true;
+    }
+    console.log(user.password);
+    console.log(passwordLogin1);
 
     // If the password isn't valid, throw error
-    if (passwordIsValid) {
-      throw new Error('Invalid password');
+    if (!passwordIsValid) {
+      return { status: 'failure', message: 'Incorrect password' };
     }
 
     // Create JWT token with user's email as payload
@@ -113,11 +130,11 @@ export class AuthService {
     // We exclude password and salt field here for security reasons
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, salt, ...userWithoutPassword } = user;
-    const userWithToken = { ...userWithoutPassword, token: jwtToken};
+    const userWithToken = { ...userWithoutPassword, token: jwtToken };
     await this.redis.set(jwtToken, JSON.stringify(userWithToken), 'EX', 24 * 60 * 60);
 
     // Send back user's information along with the token as a JSON object
-    return userWithToken;
+    return {status: "success", userWithToken};
   }
 
 }
