@@ -71,7 +71,7 @@ export class UserOrganisationMangementService {
         // Update the user's information in Redis
         await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60);
 
-        return { status: 'success', message : organisation, newToken : token, 
+        return { status: 'success', message : organisation, 
         timestamp: new Date().toISOString()};
     }
 
@@ -274,7 +274,7 @@ export class UserOrganisationMangementService {
         await this.userGroupRepository.save(userGroup);
         await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60);
 
-        return { status: 'success', message: 'User removed from the user group successfully.', newToken: token, 
+        return { status: 'success', message: 'User removed from the user group successfully.', 
         timestamp: new Date().toISOString() };
     }
 
@@ -332,7 +332,7 @@ export class UserOrganisationMangementService {
         await this.userGroupRepository.save(userGroup);
         await this.redis.set(token, JSON.stringify(userToBeRemoved), 'EX', 24 * 60 * 60);
 
-        return { status: 'success', message: 'User removed from the user group successfully.', newToken : token, 
+        return { status: 'success', message: 'User removed from the user group successfully.', 
         timestamp: new Date().toISOString() };
     }
 
@@ -391,7 +391,7 @@ export class UserOrganisationMangementService {
 
         await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60);
         await this.redis.del(key);
-        return { status: 'success', message: 'User added to the user group successfully.', newToken : token, 
+        return { status: 'success', message: 'User added to the user group successfully.',
         timestamp: new Date().toISOString() };
     }
 }
