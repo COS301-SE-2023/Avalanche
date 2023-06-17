@@ -30,6 +30,7 @@
     "eslint-config-next": "13.3.1",
     "flowbite": "^1.6.5",
     "flowbite-react": "^0.4.4",
+    "ky": "^0.33.3",
     "next": "13.3.1",
     "next-redux-wrapper": "^8.1.0",
     "next-themes": "^0.2.1",

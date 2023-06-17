@@ -1,8 +1,9 @@
 import { configureStore, ThunkAction, Action, applyMiddleware, MiddlewareArray, combineReducers } from "@reduxjs/toolkit";
 import logger from "redux-logger";
 import { modalManagerSlice } from "./Slices/modalManagerSlice";
+import { userSlice } from "./Slices/userSlice";
 import { createWrapper } from "next-redux-wrapper";
-
+import thunk from "redux-thunk";
 import { persistReducer, persistStore } from "redux-persist";
 import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 
@@ -24,12 +25,16 @@ const storage = typeof window !== "undefined" ? createWebStorage("local") : crea
 
 const rootReducer = combineReducers({
     [modalManagerSlice.name]: modalManagerSlice.reducer,
+    [userSlice.name]: userSlice.reducer
 });
 
 const makeConfiguredStore = () =>
     configureStore({
         reducer: rootReducer,
-        middleware: [logger] as const,
+        middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+            serializableCheck: false,
+            ignoreActions: true
+        }).concat(thunk),
         devTools: true
     });
 
@@ -47,7 +52,10 @@ export const makeStore = () => {
         let store: any = configureStore({
             reducer: persistedReducer,
             devTools: true,
-            middleware: [logger] as const,
+            middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+                serializableCheck: false,
+                ignoreActions: true
+            }).concat(thunk),
         });
         store.__persistor = persistStore(store);
         return store;
