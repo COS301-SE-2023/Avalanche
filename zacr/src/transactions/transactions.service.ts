@@ -1,16 +1,23 @@
-/* eslint-disable prettier/prettier */
 import { Inject, Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
 import { JwtService } from '@nestjs/jwt';
+import { SnowflakeService } from 'src/snowflake/snowflake.service';
+import { DataFormatService } from 'src/data-format/data-format.service';
+import { AnalysisService } from 'src/analysis/analysis.service';
+import { GraphFormatService } from 'src/graph-format/graph-format.service';
 
 @Injectable()
 export class TransactionService {
   
-  constructor(private jwtService: JwtService, 
-    @Inject('SNOWFLAKE_CONNECTION') private readonly snowflakeConnection, 
-    @Inject('REDIS') private readonly redis: Redis) { 
+  constructor(private jwtService: JwtService,  
+    @Inject('REDIS') private readonly redis: Redis,
+    private readonly snowflakeService: SnowflakeService,
+    private readonly dataFormatService: DataFormatService,
+    private readonly statisticalAnalysisService: AnalysisService,
+    private readonly graphFormattingService: GraphFormatService) { 
   }
 
+  /*
   async transactions(jsonInput: string): Promise<any> {
     jsonInput = JSON.stringify(jsonInput);
     console.log(jsonInput);
@@ -30,5 +37,14 @@ export class TransactionService {
         },
       });
     });
+  }
+  */
+
+  async transactions(jsonInput: string): Promise<any> {
+    const sqlQuery = `call transactionsByRegistrar('${JSON.stringify(jsonInput)}')`;
+    const queryData = await this.snowflakeService.execute(sqlQuery);
+    const analyzedData = await this.statisticalAnalysisService.analyze(queryData);
+    const formattedData = await this.graphFormattingService.format(analyzedData);
+    return formattedData;
   }
 }
