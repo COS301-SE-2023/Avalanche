@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { AppState } from "../store";
 import { HYDRATE } from "next-redux-wrapper";
 import ky from "ky";
-import { IOTPVerifyRequest, IRegisterRequest } from "@/interfaces/requests";
+import { ILoginRequest, IOTPVerifyRequest, IRegisterRequest } from "@/interfaces/requests";
 import { IOTPVerifyResponse, IRegisterResponse } from "@/interfaces/responses";
 
 const url = "http://localho.st:4000/user-management"
@@ -120,6 +120,9 @@ export const userSlice = createSlice({
     }
 });
 
+/**
+ * This action handles calling the register api call
+ */
 export const register = createAsyncThunk("AUTH.Register", async (object: IRegisterRequest, { rejectWithValue }) => {
     try {
         const response = await ky.post(`${url}/register`, {
@@ -132,12 +135,28 @@ export const register = createAsyncThunk("AUTH.Register", async (object: IRegist
 
 });
 
+/**
+ * This action handles calling the otp api call
+ */
 export const otpVerify = createAsyncThunk("AUTH.OTPVerify", async (object: IOTPVerifyRequest, { rejectWithValue }) => {
     try {
         const response = await ky.post(`${url}/verify`, {
             json: object
         }).json();
         return response as IOTPVerifyResponse;
+    } catch (e) {
+        if (e instanceof Error) return rejectWithValue(e.message);
+    }
+})
+
+/**
+ * This action handles calling the login api call
+ */
+export const login = createAsyncThunk("AUTH.Login", async (object: ILoginRequest, { rejectWithValue }) => {
+    try {
+        const response = await ky.post(`${url}/login`, {
+            json: object
+        }).json();
     } catch (e) {
         if (e instanceof Error) return rejectWithValue(e.message);
     }

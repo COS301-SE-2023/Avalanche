@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import { Anchor, Checkbox, Input, InputLabel, WarningAlert, ErrorToast, SubmitButton, SuccessToast } from '@/components/Util'
+import { Anchor, Checkbox, Input, InputLabel, ErrorToast, SubmitButton, SuccessToast } from '@/components/Util'
 import { useState, useEffect } from 'react';
 import tempLogo from '../assets/logo.png';
 import Image from 'next/image';
@@ -14,10 +14,16 @@ export default function Register() {
     const dispatch = useDispatch<any>();
     const stateUser = useSelector(userState);
 
+    /**
+     * When the page renders for the first time, the state should clear so it works as intended
+     */
     useEffect(() => {
         dispatch(resetRequest());
     }, [])
 
+    /**
+     * This listens to state changes
+     */
     useEffect(() => {
 
         if (stateUser.requests.awaitingOTP && stateUser.requests.register) {
@@ -27,21 +33,23 @@ export default function Register() {
 
     }, [stateUser.requests.awaitingOTP]);
 
+    /**
+     * This listen to state changes, specifically for the userstate.requests.otp, so see if and when the otp value changes
+     */
     useEffect(() => {
         if (stateUser.requests.otp) {
             if (stateUser.requests.error) {
-                // handle errorc
-                console.log("error");
                 ErrorToast({ text: "Something went wrong" });
             } else if (stateUser.requests.message) {
-                // handle success
-                console.log("success");
                 SuccessToast({ text: "You have successfully registered. You can login now." })
                 setStep(3);
             }
         }
     }, [stateUser.requests.otp]);
 
+    /**
+     * This is the initial register object that will be used throughout the register page
+     */
     const initRegister = {
         email: "",
         confirmEmail: "",
@@ -56,10 +64,16 @@ export default function Register() {
         notReg: false,
     }
 
+
     const [registerObject, setRegisterObject] = useState<any>(initRegister);
     const [otp, setOtp] = useState<string>("");
     const [step, setStep] = useState<number>(1);
 
+    /**
+     * Update function for the register object, is key value pair
+     * @param key 
+     * @param value 
+     */
     const update = (key: string, value: string) => {
         const obj = { ...registerObject };
         obj[key] = value;
@@ -67,11 +81,14 @@ export default function Register() {
         console.log(key, value);
     }
 
+    /**
+     * Handles the event for the register form submit
+     * @param event is linked to the form submit action
+     */
     const formSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
 
         event.preventDefault();
 
-        // Error Checking
         if (registerObject.email !== registerObject.confirmEmail) {
             return ErrorToast({ text: "The email addresses provided do not match." });
         } else if (registerObject.password !== registerObject.confirmPassword) {
@@ -82,26 +99,28 @@ export default function Register() {
             return ErrorToast({ text: "We do not know what to call you. Please provide us your surname." });
         }
 
-        const data: IRegisterRequest = {
+        dispatch(register({
             email: registerObject.email,
             password: registerObject.password,
             firstName: registerObject.name,
             lastName: registerObject.surname
-        }
-
-        dispatch(register(data));
+        } as IRegisterRequest));
 
     }
 
+    /**
+     * Handles the event for the otp form submit
+     * @param event is linked to the form submit action
+     */
     const otpSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+
         event.preventDefault();
 
-        const data: IOTPVerifyRequest = {
+        dispatch(otpVerify({
             email: registerObject.email,
             otp: otp
-        }
+        } as IOTPVerifyRequest));
 
-        dispatch(otpVerify(data));
     }
 
     return (
