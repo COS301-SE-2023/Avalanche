@@ -7,6 +7,7 @@ import { Toaster } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { userState, register, resetRequest, otpVerify } from '@/store/Slices/userSlice';
 import { IRegisterRequest, IOTPVerifyRequest } from '@/interfaces/requests';
+import { CheckCircleIcon, HashtagIcon, IdentificationIcon } from "@heroicons/react/24/solid"
 
 export default function Register() {
 
@@ -116,6 +117,35 @@ export default function Register() {
                         Avalanche Analytics
                     </a>
                     <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-lg xl:p-0 dark:bg-secondaryBackground dark:border-primaryBackground">
+                        <ol className="flex justify-center items-center w-full pr-6 pl-6 pt-6">
+                            <li className="flex w-full items-center text-blue-600 dark:text-blue-500 after:content-[''] after:w-full after:h-1 after:border-b after:border-blue-100 after:border-4 after:inline-block dark:after:border-blue-800">
+                                <span className="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-full lg:h-12 lg:w-12 dark:bg-blue-800 shrink-0">
+                                    <IdentificationIcon className="w-5 h-5 text-blue-600 lg:w-6 lg:h-6 dark:text-blue-300" />
+                                </span>
+                            </li>
+                            {step === 2 || step === 3 ?
+                                <li className="flex w-full items-center text-blue-600 dark:text-blue-500 after:content-[''] after:w-full after:h-1 after:border-b after:border-blue-100 after:border-4 after:inline-block dark:after:border-blue-800">
+                                    <span className="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-full lg:h-12 lg:w-12 dark:bg-blue-800 shrink-0">
+                                        <HashtagIcon className="w-5 h-5 text-blue-600 lg:w-6 lg:h-6 dark:text-blue-300" />
+                                    </span>
+                                </li>
+                                : <li className="flex w-full items-center after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-100 after:border-4 after:inline-block dark:after:border-gray-700">
+                                    <span className="flex items-center justify-center w-10 h-10 bg-gray-100 rounded-full lg:h-12 lg:w-12 dark:bg-gray-700 shrink-0">
+                                        <HashtagIcon className="w-5 h-5 text-gray-500 lg:w-6 lg:h-6 dark:text-gray-100" />
+                                    </span>
+                                </li>}
+                            {step === 3 ? <li className="flex items-center">
+                                <span className="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-full lg:h-12 lg:w-12 dark:bg-blue-800 shrink-0">
+                                    <CheckCircleIcon className="w-5 h-5 text-blue-600 lg:w-6 lg:h-6 dark:text-blue-300" />
+                                </span>
+                            </li> : <li className="flex items-center">
+                                <span className="flex items-center justify-center w-10 h-10 bg-gray-100 rounded-full lg:h-12 lg:w-12 dark:bg-gray-700 shrink-0">
+                                    <CheckCircleIcon className="w-5 h-5 text-gray-500 lg:w-6 lg:h-6 dark:text-gray-100" />
+                                </span>
+                            </li>}
+
+                        </ol>
+
                         <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                             {step === 1 &&
                                 <form className="space-y-4 md:space-y-6" onSubmit={(event) => formSubmit(event)}>
