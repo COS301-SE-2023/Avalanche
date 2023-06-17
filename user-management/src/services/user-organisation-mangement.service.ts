@@ -18,23 +18,33 @@ export class UserOrganisationMangementService {
         @InjectRepository(UserGroup) private userGroupRepository: Repository<UserGroup>,
         @InjectRepository(Organisation) private organisationRepository: Repository<Organisation>) { }
 
-    async createOrganisation(token: string, name: string): Promise<Organisation> {
+    async createOrganisation(token: string, name: string) {
         // Extract the JWT token
         // Retrieve the user's information from Redis using the token
         const userPayload = await this.redis.get(token);
+        if(!userPayload){
+            return { status: 'failure', message: 'Invalid token.', 
+            timestamp: new Date().toISOString() };
+        }
         const { email: userEmail } = JSON.parse(userPayload);
         console.log(userEmail);
         const user = await this.userRepository.findOne({ where: { email: userEmail } });
+        if(!user){
+            return { status: 'failure', message: 'User does not exist.', 
+            timestamp: new Date().toISOString() };
+        }
         console.log(user);
         // Check if the user already belongs to an organisation
         if (user.organisationId) {
-            throw new ConflictException('User already belongs to an organisation');
+            return { status: 'failure', message: 'User already belongs to an organisation', 
+            timestamp: new Date().toISOString()};
         }
 
         // Check if the organisation name is already taken
         const existingOrganisation = await this.organisationRepository.findOne({ where: { name: name } });
         if (existingOrganisation) {
-            throw new ConflictException('Organisation with this name already exists');
+            return { status: 'failure', message: 'Organisation with this name already exists', 
+            timestamp: new Date().toISOString()};
         }
 
         // Create the organisation
@@ -61,20 +71,30 @@ export class UserOrganisationMangementService {
         // Update the user's information in Redis
         await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60);
 
-        return organisation;
+        return { status: 'success', message : organisation, newToken : token, 
+        timestamp: new Date().toISOString()};
     }
 
-    async createUserGroup(token: string, name: string, permission: number): Promise<UserGroup> {
+    async createUserGroup(token: string, name: string, permission: number) {
         // Get organizationId and the userPermission from Redis using token
         const userPayload = await this.redis.get(token);
+        if(!userPayload){
+            return { status: 'failure', message: 'Invalid token', 
+            timestamp: new Date().toISOString()};
+        }
         const user = JSON.parse(userPayload);
+        if(!user){
+            return {status : "failure", message: 'User does not exist', 
+            timestamp: new Date().toISOString()};
+        }
         const organisationId = user.organisationId;
         const userPermission = user.userGroups[0].permission;
 
         if (userPermission == 1) {
             const existingOrganisation = await this.organisationRepository.findOne({ where: { id: organisationId } });
             if (!existingOrganisation) {
-                throw new ConflictException('Organisation does not exist please create one');
+                return { status: 'failure', message: 'Organisation does not exist please create one', 
+                timestamp: new Date().toISOString()};
             } else {
                 const userGroup = new UserGroup();
                 userGroup.name = name;
@@ -84,16 +104,22 @@ export class UserOrganisationMangementService {
                 // Save the user group
                 await this.userGroupRepository.save(userGroup);
 
-                return userGroup;
+                return { status : 'success', message: userGroup , 
+                timestamp: new Date().toISOString()};
             }
         } else {
-            throw new ConflictException('User does not have the permissions to do so');
+            return { status : 'failure', message: 'User does not have the permissions to do so', 
+            timestamp: new Date().toISOString()};
         }
     }
 
     async addUserToUserGroup(token: string, userEmail: string, userGroupName: string) {
         // Get organizationId from Redis using token
         const userPayload = await this.redis.get(token);
+        if(!userPayload){
+            return { status: 'failure', message: 'Invalid token', 
+            timestamp: new Date().toISOString()};
+        }
         const user = JSON.parse(userPayload);
         const organisationId = user.organisationId;
         const userPermission = user.userGroups[0].permission;
@@ -104,7 +130,8 @@ export class UserOrganisationMangementService {
             // Find user group by name and organizationId
             const userGroup = await this.userGroupRepository.findOne({ where: { organisationId: organisationId, name: userGroupName } });
             if (!userGroup) {
-                throw new ConflictException("This user group does not exist, please create one");
+                return { status: 'failure', message: "This user group does not exist, please create one", 
+                timestamp: new Date().toISOString()};
             } else {
                 if (!userToFind) {
                     const key = uuidv4();
@@ -112,7 +139,8 @@ export class UserOrganisationMangementService {
                     const registerData = JSON.stringify({ userEmail: userEmail, userGroupName: userGroupName });
                     await this.redis.set(key, registerData, 'EX', 7 * 24 * 60 * 60);
                     await this.sendRegistrationEmail(userEmail, key, userGroupName);
-                    return { status: 'success', message: 'Invitation register email successful.' };
+                    return { status: 'success', message: 'Invitation register email successful.', 
+                    timestamp: new Date().toISOString() };
                 } else {
                     // Generate random key
                     const key = uuidv4();
@@ -123,7 +151,8 @@ export class UserOrganisationMangementService {
 
                     // Send email to existing user with invitation link
                     await this.sendInvitationEmail(userEmail, key, userGroupName);
-                    return { status: 'success', message: 'Invitation email successful.' };
+                    return { status: 'success', message: 'Invitation email successful.', 
+                    timestamp: new Date().toISOString() };
                 }
             }
         }
@@ -201,29 +230,37 @@ export class UserOrganisationMangementService {
     async exitUserGroup(token: string, userGroupName: string) {
         // Fetch user from the Redis store using the JWT token
         const userData = await this.redis.get(token);
+        if(!userData){
+            return { status: 'failure', message: 'Invalid token', 
+            timestamp: new Date().toISOString()};
+        }
         const userDetails = JSON.parse(userData);
 
         // Retrieve the user with their groups based on the token
         const user = await this.userRepository.findOne({ where: { email: userDetails.email }, relations: ['userGroups'] });
         if (!user) {
-            throw new Error('User not found');
+            return { status: 'failure', message: 'User not found', 
+            timestamp: new Date().toISOString()};
         }
 
         // Retrieve the user group based on the name
         const userGroup = await this.userGroupRepository.findOne({ where: { name: userGroupName }, relations: ['users'] });
         if (!userGroup) {
-            throw new Error('User group not found');
+            return { status: 'failure', message: 'User group not found', 
+            timestamp: new Date().toISOString()};
         }
 
         // Check if the user is part of the user group
         const isUserInGroup = user.userGroups.some(group => group.id === userGroup.id);
         if (!isUserInGroup) {
-            throw new Error('User is not part of the specified user group');
+            return { status: 'failure', message: 'User is not part of the specified user group', 
+            timestamp: new Date().toISOString()};
         }
 
         // If it is an admin group and the user is the only one, throw error
         if (userGroup.name.includes('admin') && userGroup.users.length === 1) {
-            throw new Error('Cannot remove the last admin from the admin group');
+            return { status: 'failure', message: 'Cannot remove the last admin from the admin group', 
+            timestamp: new Date().toISOString()};
         }
 
         // Otherwise, remove the user from the group
@@ -235,42 +272,53 @@ export class UserOrganisationMangementService {
         // Save the changes
         await this.userRepository.save(user);
         await this.userGroupRepository.save(userGroup);
+        await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60);
 
-        return { status: 'success', message: 'User removed from the user group successfully.' };
+        return { status: 'success', message: 'User removed from the user group successfully.', newToken: token, 
+        timestamp: new Date().toISOString() };
     }
 
     async removeUserFromUserGroup(token: string, userGroupName: string, userEmail: string) {
         // Retrieve the user with their groups based on the token
         const userData = await this.redis.get(token);
+        if(!userData){
+            return { status: 'failure', message: 'Invalid token', 
+            timestamp: new Date().toISOString()};
+        }
         const userDetails = JSON.parse(userData);
         const permission = userDetails.userGroups[0].permission;
 
         // Check if the invoking user has permission
         if (permission !== 1) {
-            throw new Error('User does not have sufficient permissions');
+            return { status: 'failure', message: 'User does not have sufficient permissions', 
+            timestamp: new Date().toISOString()};
         }
 
         // Retrieve the user group based on the name
         const userGroup = await this.userGroupRepository.findOne({ where: { name: userGroupName }, relations: ['users'] });
         if (!userGroup) {
-            throw new Error('User group not found');
+            return { status: 'failure', message: 'User group not found', 
+            timestamp: new Date().toISOString()};
         }
 
         // Retrieve the user to be removed based on the email
         const userToBeRemoved = await this.userRepository.findOne({ where: { email: userEmail }, relations: ['userGroups'] });
         if (!userToBeRemoved) {
-            throw new Error('User to be removed not found');
+            return { status: 'failure', message: 'User to be removed not found', 
+            timestamp: new Date().toISOString()};
         }
 
         // Check if the user to be removed is part of the user group
         const isUserInGroup = userToBeRemoved.userGroups.some(group => group.id === userGroup.id);
         if (!isUserInGroup) {
-            throw new Error('User to be removed is not part of the specified user group');
+            return { status: 'failure', message: 'User to be removed is not part of the specified user group', 
+            timestamp: new Date().toISOString()};
         }
 
         // If it is an admin group and the user is the only one, throw error
         if (userGroup.name.includes('admin')) {
-            throw new Error('Cannot remove the last admin from the admin group');
+            return { status: 'failure', message: 'Cannot remove the last admin from the admin group', 
+            timestamp: new Date().toISOString()};
         }
 
         // Otherwise, remove the user from the group
@@ -282,8 +330,10 @@ export class UserOrganisationMangementService {
         // Save the changes
         await this.userRepository.save(userToBeRemoved);
         await this.userGroupRepository.save(userGroup);
+        await this.redis.set(token, JSON.stringify(userToBeRemoved), 'EX', 24 * 60 * 60);
 
-        return { status: 'success', message: 'User removed from the user group successfully.' };
+        return { status: 'success', message: 'User removed from the user group successfully.', newToken : token, 
+        timestamp: new Date().toISOString() };
     }
 
     async addUserToUserGroupWithKey(token: string, key: string) {
@@ -291,7 +341,8 @@ export class UserOrganisationMangementService {
         // Retrieve the data from Redis using the key
         const redisData = await this.redis.get(key);
         if (!redisData) {
-            throw new Error('No data found for this key');
+            return { status: 'failure', message: 'Invalid user group key', 
+            timestamp: new Date().toISOString()};
         }
 
         // Parse the data
@@ -300,24 +351,28 @@ export class UserOrganisationMangementService {
         // Retrieve the user with their groups based on the token
         let user = await this.userRepository.findOne({ where: { email: userEmail }, relations: ['userGroups', 'organisation'] });
         if (!user) {
-            throw new Error('User not found');
+            return { status: 'failure', message: 'User not found', 
+            timestamp: new Date().toISOString()};
         }
 
         // Retrieve the user group based on the name
         const userGroup = await this.userGroupRepository.findOne({ where: { name: userGroupName }, relations: ['users', 'organisation'] });
         if (!userGroup) {
-            throw new Error('User group not found');
+            return { status: 'failure', message: 'User group not found', 
+            timestamp: new Date().toISOString()};
         }
 
         // Check if the user is already part of the user group
         const isUserInGroup = user.userGroups.some(group => group.id === userGroup.id);
         if (isUserInGroup) {
-            throw new Error('User is already part of this user group');
+            return { status: 'failure', message: 'User is already part of this user group', 
+            timestamp: new Date().toISOString()};
         }
 
         // If user's organisation is not the same as the group's organisation, throw an error
         if (user.organisationId && user.organisation?.id !== userGroup.organisation?.id) {
-            throw new Error("User's organisation is different from the group's organisation");
+            return { status: 'failure', message: "User's organisation is different from the group's organisation", 
+            timestamp: new Date().toISOString()};
         }
 
         // Add the user to the group
@@ -336,6 +391,7 @@ export class UserOrganisationMangementService {
 
         await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60);
         await this.redis.del(key);
-        return { status: 'success', message: 'User added to the user group successfully.' };
+        return { status: 'success', message: 'User added to the user group successfully.', newToken : token, 
+        timestamp: new Date().toISOString() };
     }
 }
