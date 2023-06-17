@@ -58,7 +58,7 @@ export default function Register() {
 
     const [registerObject, setRegisterObject] = useState<any>(initRegister);
     const [otp, setOtp] = useState<string>("");
-    const [step, setStep] = useState<number>(3);
+    const [step, setStep] = useState<number>(1);
 
     const update = (key: string, value: string) => {
         const obj = { ...registerObject };
