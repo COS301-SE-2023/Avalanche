@@ -1,12 +1,12 @@
 import Head from 'next/head'
-import { Anchor, Checkbox, Input, InputLabel, WarningAlert, ErrorToast, SubmitButton } from '@/components/Util'
+import { Anchor, Checkbox, Input, InputLabel, WarningAlert, ErrorToast, SubmitButton, SuccessToast } from '@/components/Util'
 import { useState, useEffect } from 'react';
 import tempLogo from '../assets/logo.png';
 import Image from 'next/image';
 import { Toaster } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
-import { userState, register, setLoading } from '@/store/Slices/userSlice';
-import { IRegisterRequest } from '@/interfaces/requests';
+import { userState, register, resetRequest, otpVerify } from '@/store/Slices/userSlice';
+import { IRegisterRequest, IOTPVerifyRequest } from '@/interfaces/requests';
 
 export default function Register() {
 
@@ -14,13 +14,32 @@ export default function Register() {
     const stateUser = useSelector(userState);
 
     useEffect(() => {
-        console.log(stateUser);
+        dispatch(resetRequest());
+    }, [])
 
-        if (stateUser.requests.awaitingOTP) {
+    useEffect(() => {
+
+        if (stateUser.requests.awaitingOTP && stateUser.requests.register) {
             setStep(2);
+            SuccessToast({ text: `Please check the provided email address (${registerObject.email}) for an OTP.` })
         }
 
-    }, [stateUser])
+    }, [stateUser.requests.awaitingOTP]);
+
+    useEffect(() => {
+        if (stateUser.requests.otp) {
+            if (stateUser.requests.error) {
+                // handle errorc
+                console.log("error");
+                ErrorToast({ text: "Something went wrong" });
+            } else if (stateUser.requests.message) {
+                // handle success
+                console.log("success");
+                SuccessToast({ text: "You have successfully registered. You can login now." })
+                setStep(3);
+            }
+        }
+    }, [stateUser.requests.otp]);
 
     const initRegister = {
         email: "",
@@ -62,8 +81,6 @@ export default function Register() {
             return ErrorToast({ text: "We do not know what to call you. Please provide us your surname." });
         }
 
-        dispatch(setLoading(true));
-
         const data: IRegisterRequest = {
             email: registerObject.email,
             password: registerObject.password,
@@ -73,6 +90,17 @@ export default function Register() {
 
         dispatch(register(data));
 
+    }
+
+    const otpSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+        event.preventDefault();
+
+        const data: IOTPVerifyRequest = {
+            email: registerObject.email,
+            otp: otp
+        }
+
+        dispatch(otpVerify(data));
     }
 
     return (
@@ -149,19 +177,27 @@ export default function Register() {
                                         Already have an account? <Anchor href="/" text="Login here" />
                                     </p>
                                 </form>}
-                            {step === 2 && <form className="space-y-4 md:space-y-6" action="#">
+                            {step === 2 && <form className="space-y-4 md:space-y-6" onSubmit={(event) => otpSubmit(event)}>
                                 <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                                     Verification
                                 </h1>
                                 <div className="w-full">
                                     <InputLabel htmlFor="verify-code" text="Enter the code your just recieved in your email..." />
-                                    <Input type="numeric" placeholder="000000" name="verify-code" id="verify-code" required={true} value={otp} />
+                                    <Input type="numeric" placeholder="000000" name="verify-code" id="verify-code" required={true} value={otp} onChange={(event: React.FormEvent<HTMLInputElement>) => {
+                                        setOtp(event.currentTarget.value);
+                                    }} />
                                 </div>
-                                <button type="submit" className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Verify</button>
+                                <SubmitButton disabled={stateUser.requests.loading} loading={stateUser.requests.loading} text="Submit OTP" onClick={() => { }} className='w-full' />
                                 <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                                     Already have an account? <Anchor href="/" text="Login here" />
                                 </p>
                             </form>}
+                            {step === 3 && <div>
+                                <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white mb-2">
+                                    Successfully Registered
+                                </h1>
+                                <Anchor href="/" text="Go back to login" />
+                            </div>}
                         </div>
                     </div>
                 </div>

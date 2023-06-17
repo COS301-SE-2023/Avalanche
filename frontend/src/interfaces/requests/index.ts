@@ -1,4 +1,4 @@
 import IRegisterRequest from "./Register";
-import { IOTPVerify } from "./OTPVerify";
+import IOTPVerifyRequest from "./OTPVerify";
 
-export type { IRegisterRequest, IOTPVerify };
+export type { IRegisterRequest, IOTPVerifyRequest };
