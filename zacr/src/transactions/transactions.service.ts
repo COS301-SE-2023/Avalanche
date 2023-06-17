@@ -47,7 +47,7 @@ export class TransactionService {
       queryData,
     );
     const formattedData = await this.graphFormattingService.format(
-      analyzedData,
+      JSON.stringify(queryData),
     );
     return formattedData;
   }

@@ -55,7 +55,7 @@ describe('TransactionService', () => {
       `call transactionsByRegistrar('{"data": "someData"}')`,
     );
     expect(mockAnalysisService.analyze).toHaveBeenCalledWith('queryData');
-    expect(mockGraphFormatService.format).toHaveBeenCalledWith('analyzedData');
+    expect(mockGraphFormatService.format).toHaveBeenCalledWith('"queryData"');
 
     // Expect the result to be the final formatted data
     expect(result).toBe('formattedData');
