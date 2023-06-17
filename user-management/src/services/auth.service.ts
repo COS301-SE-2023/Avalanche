@@ -10,7 +10,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../entity/user.entity';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
-import { check } from 'prettier';
 @Injectable()
 export class AuthService {
   constructor(@Inject('REDIS') private readonly redis: Redis, private readonly configService: ConfigService,
@@ -18,6 +17,10 @@ export class AuthService {
     private jwtService: JwtService,) { }
 
   async register(email: string, password: string, firstName: string, lastName: string) {
+    if(!email || !password || !firstName || !lastName){
+      return {status: "failure" , message: "Missing info", 
+      timestamp: new Date().toISOString()}
+    }
     const user = await this.userRepository.findOne({ where: { email }, relations: ['userGroups', 'organisation'] });
     if (!user) {
       const checkRedis = await this.redis.get(email);
@@ -40,12 +43,15 @@ export class AuthService {
         // Send email with OTP link
         await this.sendOTPEmail(email, otp);
 
-        return { status: 'success', message: 'Registration successful. Please check your email for the OTP.' };
+        return { status: 'success', message: 'Registration successful. Please check your email for the OTP.', 
+        timestamp: new Date().toISOString() };
       } else {
-        return { status: 'failure', message: 'Registration unsuccessful. Email is awaiting verification.' };
+        return { status: 'failure', message: 'Registration unsuccessful. Email is awaiting verification.', 
+        timestamp: new Date().toISOString() };
       }
     } else {
-      return { status: 'failure', message: 'Registration unsuccessful. This email is in use.' };
+      return { status: 'failure', message: 'Registration unsuccessful. This email is in use.', 
+      timestamp: new Date().toISOString() };
     }
   }
 
@@ -78,13 +84,15 @@ export class AuthService {
     // Get user's info from Redis
     const userInfo = await this.redis.get(email);
     if (!userInfo) {
-      return { status: 'failure', message: 'Email has not been found.' };
+      return { status: 'failure', message: 'Email has not been found.', 
+      timestamp: new Date().toISOString() };
     };
 
     const { password, salt, firstName, lastName, otp: savedOtp } = JSON.parse(userInfo);
     console.log(password + " " + otp);
     if (otp !== savedOtp) {
-      return { status: 'failure', message: 'Incorrect OTP.' };
+      return { status: 'failure', message: 'Incorrect OTP.', 
+      timestamp: new Date().toISOString() };
     };
 
     // Save user's information to PostgreSQL
@@ -96,7 +104,8 @@ export class AuthService {
     // Remove user's information from Redis
     await this.redis.del(email);
 
-    return { status: 'success', message: 'Verification successful.' };
+    return { status: 'success', message: 'Verification successful.', 
+    timestamp: new Date().toISOString() };
   }
 
   async login(email: string, passwordLogin: string) {
@@ -105,7 +114,8 @@ export class AuthService {
     console.log(user);
     // If user not found, throw error
     if (!user) {
-      return { status: 'failure', message: 'This user does not exist, please enter the correct email/please register.' };
+      return { status: 'failure', message: 'This user does not exist, please enter the correct email/please register.', 
+      timestamp: new Date().toISOString() };
     }
 
     // Verify the provided password with the user's hashed password in the database
@@ -120,7 +130,8 @@ export class AuthService {
 
     // If the password isn't valid, throw error
     if (!passwordIsValid) {
-      return { status: 'failure', message: 'Incorrect password' };
+      return { status: 'failure', message: 'Incorrect password', 
+      timestamp: new Date().toISOString() };
     }
 
     // Create JWT token with user's email as payload
@@ -134,7 +145,8 @@ export class AuthService {
     await this.redis.set(jwtToken, JSON.stringify(userWithToken), 'EX', 24 * 60 * 60);
 
     // Send back user's information along with the token as a JSON object
-    return {status: "success", userWithToken};
+    return {status: "success", userWithToken, 
+    timestamp: new Date().toISOString()};
   }
 
 }
