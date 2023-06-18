@@ -14,8 +14,8 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>19</maven.compiler.source>
-    <maven.compiler.target>19</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
 
   <dependencies>
@@ -66,7 +66,6 @@
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
-              <classpathPrefix>lib/</classpathPrefix>
               <mainClass>avalanche.Core.SimpleHttpServer</mainClass>
             </manifest>
           </archive>
@@ -118,41 +117,15 @@
             <goals>
                 <goal>report</goal>
             </goals>
+             <configuration>
+                        <!-- this configuration affects all goals -->
+                        <includes>
+                            <include>avalanche/**/*.class</include>                                               
+                        </includes>
+                    </configuration>
         </execution>
     </executions>
 </plugin>
- <plugin>
-    <groupId>org.codehaus.mojo</groupId>
-    <artifactId>exec-maven-plugin</artifactId>
-    <version>1.6.0</version>
-    <executions>
-      <execution>
-        <goals>
-          <goal>java</goal>
-        </goals>
-      </execution>
-    </executions>
-    <configuration>
-      <mainClass>avalanche.SimpleHttpServer</mainClass>
-    </configuration>
-  </plugin>
-  <plugin>
-        <groupId>com.spotify</groupId>
-             <artifactId>dockerfile-maven-plugin</artifactId>
-             <version>1.4.3</version>
-             <executions>
-                 <execution>
-                     <id>default</id>
-                     <goals>
-                         <goal>build</goal>
-                     </goals>
-                 </execution>
-             </executions>
-             <configuration>
-             <repository>docker.io/kkapelon/docker-maven-comparison</repository>
-                 <tag>${project.version}</tag>
-             </configuration>
-         </plugin>
       </plugins>
     </pluginManagement>
   </build>

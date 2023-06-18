@@ -1,4 +1,4 @@
-FROM eclipse-temurin:19
+FROM eclipse-temurin:8
 
 WORKDIR /domain_watch
 
