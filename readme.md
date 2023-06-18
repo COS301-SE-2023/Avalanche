@@ -101,6 +101,7 @@ Email: [theskunkworks301@gmail.com](mailto:theskunkworks301@gmail.com)
 <a href="https://www.typescriptlang.org/" title="Typescript"><img src="https://github.com/get-icon/geticon/raw/master/icons/typescript-icon.svg" alt="Typescript" width="21px" height="21px"></a>
 <a href="https://redis.io/" title="Redis"><img src="https://github.com/get-icon/geticon/raw/master/icons/redis.svg" alt="Redis" width="21px" height="21px"></a>
 <a href="https://nestjs.com/" title="NestJS"><img src="https://github.com/get-icon/geticon/raw/master/icons/nestjs.svg" alt="NestJS" width="21px" height="21px"></a>
+<a href="https://www.java.com/" title="Java"><img src="https://github.com/get-icon/geticon/raw/master/icons/java.svg" alt="Java" width="21px" height="21px"></a>
 
 ### Deployment
 <a href="https://www.docker.com/" title="docker"><img src="https://github.com/get-icon/geticon/raw/master/icons/docker-icon.svg" alt="docker" width="21px" height="21px"></a>
