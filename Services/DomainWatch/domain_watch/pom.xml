@@ -14,8 +14,8 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>19</maven.compiler.source>
+    <maven.compiler.target>19</maven.compiler.target>
   </properties>
 
   <dependencies>
@@ -61,7 +61,16 @@
         </plugin>
         <plugin>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>3.0.2</version>
+          <version>3.1.0</version>
+          <configuration>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <classpathPrefix>lib/</classpathPrefix>
+              <mainClass>avalanche.Core.SimpleHttpServer</mainClass>
+            </manifest>
+          </archive>
+        </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-install-plugin</artifactId>
@@ -81,6 +90,19 @@
           <version>3.0.0</version>
         </plugin>
         <plugin>
+      <artifactId>maven-assembly-plugin</artifactId>
+      <configuration>
+        <archive>
+          <manifest>
+            <mainClass>avalanche.Core.SimpleHttpServer</mainClass>
+          </manifest>
+        </archive>
+        <descriptorRefs>
+          <descriptorRef>jar-with-dependencies</descriptorRef>
+        </descriptorRefs>
+      </configuration>
+    </plugin>
+        <plugin>
     <groupId>org.jacoco</groupId>
     <artifactId>jacoco-maven-plugin</artifactId>
     <version>0.8.4</version>
@@ -99,6 +121,38 @@
         </execution>
     </executions>
 </plugin>
+ <plugin>
+    <groupId>org.codehaus.mojo</groupId>
+    <artifactId>exec-maven-plugin</artifactId>
+    <version>1.6.0</version>
+    <executions>
+      <execution>
+        <goals>
+          <goal>java</goal>
+        </goals>
+      </execution>
+    </executions>
+    <configuration>
+      <mainClass>avalanche.SimpleHttpServer</mainClass>
+    </configuration>
+  </plugin>
+  <plugin>
+        <groupId>com.spotify</groupId>
+             <artifactId>dockerfile-maven-plugin</artifactId>
+             <version>1.4.3</version>
+             <executions>
+                 <execution>
+                     <id>default</id>
+                     <goals>
+                         <goal>build</goal>
+                     </goals>
+                 </execution>
+             </executions>
+             <configuration>
+             <repository>docker.io/kkapelon/docker-maven-comparison</repository>
+                 <tag>${project.version}</tag>
+             </configuration>
+         </plugin>
       </plugins>
     </pluginManagement>
   </build>
