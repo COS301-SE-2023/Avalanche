@@ -27,7 +27,7 @@ public class SimpleHttpServer {
         System.out.println("Done word freq\n");
         System.out.println("Init time in millis " + (System.currentTimeMillis() - st));
         System.out.println("Starting server");
-        HttpServer server = HttpServer.create(new InetSocketAddress(4001), 0);
+        HttpServer server = HttpServer.create(new InetSocketAddress(4004), 0);
         server.createContext("/domainWatch/list", new PostHandler());
         server.setExecutor(null); // creates a default executor
         System.out.println("Server started\n========================\n");

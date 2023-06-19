@@ -14,7 +14,6 @@ Services/DomainNameAnalysis/domain_name_analysis/target/classes/*/*.class
 Services/DomainNameAnalysis/domain_name_analysis/target/test-classes/*/*.class
 Services/DomainWatch/domain_watch/target/classes/avalanche/*/*.class
 Services/DomainWatch/domain_watch/target/test-classes/avalanche/*/*.class
-Services/DomainWatch/domain_watch/target/domain_watch-1.0-SNAPSHOT-jar-with-dependencies.jar
 Services/DomainWatch/domain_watch/mvnw
 Services/DomainWatch/domain_watch/mvnw.cmd
 Services/DomainWatch/domain_watch/.mvn/wrapper/maven-wrapper.jar
