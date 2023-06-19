@@ -2,17 +2,25 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { AppState } from "../store";
 import { HYDRATE } from "next-redux-wrapper";
 import ky from "ky";
-import { ILoginRequest, IOTPVerifyRequest, IRegisterRequest } from "@/interfaces/requests";
-import { IOTPVerifyResponse, IRegisterResponse } from "@/interfaces/responses";
+import { ILoginRequest, IOTPVerifyRequest, IRegisterRequest, ICreateOrganisationRequest } from "@/interfaces/requests";
+import { IOTPVerifyResponse, IRegisterResponse, ILoginResponse, ICreateOrgnisationResponse } from "@/interfaces/responses";
+import { setCookie, getCookie } from 'cookies-next';
+import { ISettings, IOrganisation, IDataProduct, IUserGroups } from "@/interfaces/interfaces";
 
 const url = "http://localho.st:4000/user-management"
 
 export interface IUserState {
-    userID: string | null,
-    userData: IUser,
-    userAuth: IAuth,
-    organization: object[] | null,
-    dataProducts: object | null,
+    id: string | null,
+    email: string | null,
+    firstName: string | null,
+    lastName: string | null
+    settings: ISettings | null,
+    profilePicture: string | null,
+    // favourites: IDashBoard[] | null,
+    dataProducts: IDataProduct[] | null,
+    organisation: IOrganisation | null,
+    userGroups: IUserGroups[] | null,
+    token?: string | null
 }
 
 export interface IUser {
@@ -28,25 +36,21 @@ export interface IAuth {
 }
 
 const initialState: IUserState = {
-    userID: null,
-    userData: {
-        username: null,
-        email: null,
-        firstName: null,
-        lastName: null,
-        profilePicture: null,
-        userID: null
-    } as IUser,
-    userAuth: {
-        token: null
-    } as IAuth,
-    organization: null,
+    id: null,
+    email: null,
+    firstName: null,
+    lastName: null,
+    settings: null,
+    profilePicture: null,
     dataProducts: null,
+    organisation: null,
+    userGroups: null
 }
 
 export const userSlice = createSlice({
     name: "user",
     initialState: {
+        authed: false,
         user: initialState,
         requests: {
             loading: false,
@@ -55,7 +59,13 @@ export const userSlice = createSlice({
             register: false,
             otp: false,
             error: ""
-        }
+        },
+        login: {
+            success: false,
+            error: false,
+            message: ""
+        },
+        loading: false
     },
     reducers: {
         setAuth(state) {
@@ -117,6 +127,32 @@ export const userSlice = createSlice({
             state.requests.otp = true;
             state.requests.error = payload.message;
         })
+        // Login
+        builder.addCase(login.fulfilled, (state, action) => {
+            const payload = action.payload as ILoginResponse;
+            let d = new Date();
+            d.setTime(d.getTime() + (1440 * 60 * 1000));
+            setCookie('jwt', payload.userWithToken.token, { expires: d });
+
+            const userObj: IUserState = { ...payload.userWithToken };
+            delete userObj.token;
+            state.user = userObj;
+            state.loading = false;
+            state.login.success = true;
+
+            state.authed = true;
+
+        })
+        builder.addCase(login.pending, (state) => {
+            state.loading = true;
+        })
+        builder.addCase(login.rejected, (state, action) => {
+
+        })
+        // Create Organisation
+        builder.addCase(createOrganisation.fulfilled, (state, action) => {
+
+        })
     }
 });
 
@@ -157,6 +193,23 @@ export const login = createAsyncThunk("AUTH.Login", async (object: ILoginRequest
         const response = await ky.post(`${url}/login`, {
             json: object
         }).json();
+        return response;
+    } catch (e) {
+        if (e instanceof Error) return rejectWithValue(e.message);
+    }
+})
+
+export const createOrganisation = createAsyncThunk("ORG.CreateOrganisation", async (object: ICreateOrganisationRequest, { rejectWithValue }) => {
+    try {
+        const jwt = getCookie("jwt");
+        const response = await ky.post(`${url}/createOrganisation`, {
+            json: object,
+            headers: {
+                "Authorization": `Bearer ${jwt}`
+            }
+        }).json();
+        console.log(response);
+        // return response;
     } catch (e) {
         if (e instanceof Error) return rejectWithValue(e.message);
     }

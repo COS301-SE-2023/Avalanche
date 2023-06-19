@@ -8,6 +8,14 @@ module.exports = {
   ],
   theme: {
     extend: {
+      keyframes: {
+        wiggle: {
+          '50%': { opacity: 0.5 },
+        }
+      },
+      animation: {
+        customPulse: 'wiggle 2s ease-in-out infinite',
+      },
       colors: {
         primaryBackground: '#121212',
         secondaryBackground: '#212121',

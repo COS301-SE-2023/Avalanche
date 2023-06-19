@@ -1,7 +1,7 @@
-import { configureStore, ThunkAction, Action, applyMiddleware, MiddlewareArray, combineReducers } from "@reduxjs/toolkit";
-import logger from "redux-logger";
+import { configureStore, ThunkAction, Action, combineReducers } from "@reduxjs/toolkit";
 import { modalManagerSlice } from "./Slices/modalManagerSlice";
 import { userSlice } from "./Slices/userSlice";
+import { settingsSlice } from "./Slices/settingsSlice";
 import { createWrapper } from "next-redux-wrapper";
 import thunk from "redux-thunk";
 import { persistReducer, persistStore } from "redux-persist";
@@ -25,7 +25,8 @@ const storage = typeof window !== "undefined" ? createWebStorage("local") : crea
 
 const rootReducer = combineReducers({
     [modalManagerSlice.name]: modalManagerSlice.reducer,
-    [userSlice.name]: userSlice.reducer
+    [userSlice.name]: userSlice.reducer,
+    [settingsSlice.name]: settingsSlice.reducer
 });
 
 const makeConfiguredStore = () =>
@@ -45,7 +46,7 @@ export const makeStore = () => {
     } else {
         const persistConfig = {
             key: "nextjs",
-            whitelist: ["modalManager"],
+            whitelist: ["modalManager", "user"],
             storage
         };
         const persistedReducer = persistReducer(persistConfig, rootReducer);

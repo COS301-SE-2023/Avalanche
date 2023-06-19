@@ -1,4 +1,6 @@
-import { IRegisterResponse } from "./Register";
-import { IOTPVerifyResponse } from "./OPTVerify";
+import IRegisterResponse from "./Register";
+import ILoginResponse from "./Login";
+import IOTPVerifyResponse from "./OPTVerify";
+import ICreateOrgnisationResponse from "./CreateOrganisation";
 
-export type { IRegisterResponse, IOTPVerifyResponse };
+export type { IRegisterResponse, IOTPVerifyResponse, ILoginResponse, ICreateOrgnisationResponse };
