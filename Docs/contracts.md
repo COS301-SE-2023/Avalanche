@@ -8,14 +8,22 @@
      - Last Name
   - Settings (under user)
   - Favourite graphs
-```
-Register Request:
-{
+
+### Register Request
+```ts
+interface IRegisterRequest {
   email: string,
   password: string,
   firstName: string,
   lastName: string,
   country : countryEnum
+}
+```
+### Register Response
+```ts
+interface IRegisterResponse {
+  status: string,
+  message: string
 }
 ```
 ```
