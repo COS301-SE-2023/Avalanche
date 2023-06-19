@@ -5,6 +5,7 @@
 ## 1. User Register and Management
 
 ### IUser
+Represents the user
 ```ts
 interface IUser {
   id: string,
@@ -70,6 +71,19 @@ enum DataProductEnum {
   AFRICARegistrar = "AFRICARegistrar",
   RyCERegistrar = "RYCERegistrar",
   DomainWatch = "DomainWatch"
+}
+```
+### ThemeEnum
+```ts
+enum ThemeEnum {
+  DARK = "dark",
+  LIGHT = "light"
+}
+```
+### Settings
+```ts
+interface ISettings {
+  theme: ThemeEnum
 }
 ```
 
