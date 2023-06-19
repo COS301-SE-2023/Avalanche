@@ -49,3 +49,4 @@ For more information request formal documentation from ...
   * Bug in transaction query- array of types only returns last
 * 19/06
   * Bug  fixed for Monthly granularity
+  * Overall dates fixed
