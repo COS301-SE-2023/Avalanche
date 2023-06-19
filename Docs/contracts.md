@@ -39,7 +39,7 @@ interface ILoginRequest {
 interface ILoginResponse {
   status: string,
   timestamp: number,
-  userWithToken: IUser
+  userWithToken: IUserResponse
 }
 ```
 ### Verify OTP Request
@@ -57,80 +57,55 @@ interface IOTPVerifyResponse {
   timestamp: number
 }
 ```
-```
-IUser:
-{
-   email: string,
-   firstName: string,
-   lastName: strings
-   settings: ISettings,
-   favourites: IDashBoard[] | null,
-   dataProducts: IDataProducts[] | null,
-   organisationId: number | null,
-   organisation: IOrganisation | null,
-   userGroupId: number[] | null,
-   userGroups: IUserGroups[] | null
-}
-
-```
-```
-IUserGroups:
-{
-   name: string,
-   organisation: IOrganisation,
-   permission: number,
-   organisationId: number,
-   users: IUsers[],
-   id: number
+### Create API Key Request
+```ts
+interface ICreateApiRequest {
+  name: string,
+  description: string
 }
 ```
-```
-IOrganisation:
-{
-   name: string,
-   id: number
+### Create API Key Response
+```ts
+interface ICreateApiResponse {
+  id: string,
+  name: string,
+  description: string,
+  createdAt: number,
+  key: string
 }
 ```
-```
-IDataProduct
-{
-  dataProductName: DataProductEnum
-
+### Delete API Key Request
+```ts
+interface IDeleteApiRequest {
+  id: string
 }
 ```
+### Delete API Key Response
+```ts
+interface IDeleteApiResponse {
+  status: string,
+  message: string,
+  timestamp: number
+}
 ```
-DataProductEnum
-{
-  ZARCRegistrar = 'ZARCRegistrar',
-  AFRICARegistrar = 'AFRICARegistrar',
-  RyCERegistrar = 'RYCERegistrar',
-  DomainWatch = 'DomainWatch'
-  
+### Roll API Key Request
+```ts
+interface IRollApiRequest {
+  id: string
+}
+```
+### Roll API Key Response
+```ts
+interface IRollApiResponse {
+  status: string,
+  message: string,
+  timestamp: number
 }
 ```
 ```
 ISettings:
   theme: ThemeEnum,
   graph: GraphSettingsEnum
-```
-```
-IApi:
-  name: string,
-  id: string,
-  desc?: string,
-  createdAt: timestamp
-```
-```
-apiRequest:
-  name: string,
-  description: string
-```
-```
-apiResponse:
-  name: string,
-  id: string,
-  description: string,
-  key: string
 ```
 ## 2. Data for dashboard requests 
 ```
