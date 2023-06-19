@@ -10,11 +10,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../entity/user.entity';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
+import { Response, response } from 'express';
 @Injectable()
 export class AuthService {
   constructor(@Inject('REDIS') private readonly redis: Redis, private readonly configService: ConfigService,
     @InjectRepository(User) private userRepository: Repository<User>,
-    private jwtService: JwtService,) { }
+    private jwtService: JwtService) { }
 
   async register(email: string, password: string, firstName: string, lastName: string) {
     if(!email || !password || !firstName || !lastName){
@@ -130,8 +131,12 @@ export class AuthService {
 
     // If the password isn't valid, throw error
     if (!passwordIsValid) {
-      return { status: 'failure', message: 'Incorrect password', 
-      timestamp: new Date().toISOString() };
+      return { 
+        status: 400,
+        error: true,
+        message: 'Incorrect password',
+        timestamp: new Date().toISOString()
+      };
     }
 
     // Create JWT token with user's email as payload

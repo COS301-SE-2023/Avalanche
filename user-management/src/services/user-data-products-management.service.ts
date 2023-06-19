@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -8,6 +8,9 @@ import { Repository } from 'typeorm';
 import { UserGroup } from 'src/entity/userGroup.entity';
 import { Organisation } from 'src/entity/organisation.entity';
 import axios from 'axios';
+import { Response } from 'express';
+import { Res} from '@nestjs/common';
+
 @Injectable()
 export class UserDataProductMangementService {
     constructor(@Inject('REDIS') private readonly redis: Redis, private readonly configService: ConfigService,
@@ -17,8 +20,11 @@ export class UserDataProductMangementService {
 
     async integrateUserWithWExternalAPI(token: string, type: string, allocateToName: string, username: string, password: string, personal: boolean) {
         if(!username || !password){
-            return {status : 'failure', message : 'Please enter account details', 
-            timestamp: new Date().toISOString()};
+            throw new HttpException({
+                status: HttpStatus.BAD_REQUEST,
+                error: 'Please enter account details',
+                timestamp: new Date().toISOString(),
+            }, HttpStatus.BAD_REQUEST);
         }
         if (personal == true) {
             let url = 'https://srs-epp.dns.net.za:8282/portal/auth-jwt/';
