@@ -23,30 +23,38 @@ interface IRegisterRequest {
 ```ts
 interface IRegisterResponse {
   status: string,
-  message: string
+  message: string,
+  timestamp: number
 }
 ```
-```
-Login Request:
-{
+### Login Request
+```ts
+interface ILoginRequest {
   email: string,
   password: string
 }
 ```
-```
-Login Response:
-{
-  message: string,
-  success: boolean,
-  user?: IUser
+### Login Response
+```ts
+interface ILoginResponse {
+  status: string,
+  timestamp: number,
+  userWithToken: IUser
 }
 ```
-```
-Verify Request:
-{
+### Verify OTP Request
+```ts
+interface IOTPVerifyRequest{
   email: string,
-  success: boolean,
   otp: string
+}
+```
+### Verify OTP Response
+```ts
+interface IOTPVerifyResponse {
+  status: string,
+  message: string,
+  timestamp: number
 }
 ```
 ```
