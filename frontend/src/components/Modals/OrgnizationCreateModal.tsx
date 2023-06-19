@@ -1,12 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Input, InputLabel, SubmitButton, ErrorToast } from '../Util';
 import { ModalContent, ModalHeader, ModalWrapper } from './ModalOptions';
+import { userState, createOrganisation } from '@/store/Slices/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { ICreateOrganisationRequest } from '@/interfaces/requests';
 
 interface IOrgnizationCreateModal {
 
 }
 
 export default function OrgnizationCreateModal({ }: IOrgnizationCreateModal) {
+
+    const dispatch = useDispatch<any>();
+    const stateUser = useSelector(userState);
 
     /**
      * this variable is for the length of the name of the organization. It defines the maximum length the name can be.
@@ -42,6 +48,8 @@ export default function OrgnizationCreateModal({ }: IOrgnizationCreateModal) {
                 setLoading(false);
             }, 3000);
         }
+
+        dispatch(createOrganisation({ name } as ICreateOrganisationRequest))
 
     }
 

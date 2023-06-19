@@ -2,9 +2,9 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { AppState } from "../store";
 import { HYDRATE } from "next-redux-wrapper";
 import ky from "ky";
-import { ILoginRequest, IOTPVerifyRequest, IRegisterRequest } from "@/interfaces/requests";
-import { IOTPVerifyResponse, IRegisterResponse, ILoginResponse } from "@/interfaces/responses";
-import { setCookie } from 'cookies-next';
+import { ILoginRequest, IOTPVerifyRequest, IRegisterRequest, ICreateOrganisationRequest } from "@/interfaces/requests";
+import { IOTPVerifyResponse, IRegisterResponse, ILoginResponse, ICreateOrgnisationResponse } from "@/interfaces/responses";
+import { setCookie, getCookie } from 'cookies-next';
 import { ISettings, IOrganisation, IDataProduct, IUserGroups } from "@/interfaces/interfaces";
 
 const url = "http://localho.st:4000/user-management"
@@ -149,6 +149,10 @@ export const userSlice = createSlice({
         builder.addCase(login.rejected, (state, action) => {
 
         })
+        // Create Organisation
+        builder.addCase(createOrganisation.fulfilled, (state, action) => {
+
+        })
     }
 });
 
@@ -190,6 +194,22 @@ export const login = createAsyncThunk("AUTH.Login", async (object: ILoginRequest
             json: object
         }).json();
         return response;
+    } catch (e) {
+        if (e instanceof Error) return rejectWithValue(e.message);
+    }
+})
+
+export const createOrganisation = createAsyncThunk("ORG.CreateOrganisation", async (object: ICreateOrganisationRequest, { rejectWithValue }) => {
+    try {
+        const jwt = getCookie("jwt");
+        const response = await ky.post(`${url}/createOrganisation`, {
+            json: object,
+            headers: {
+                "Authorization": `Bearer ${jwt}`
+            }
+        }).json();
+        console.log(response);
+        // return response;
     } catch (e) {
         if (e instanceof Error) return rejectWithValue(e.message);
     }
