@@ -16,6 +16,7 @@ import avalanche.DistanceCalculators.SoundexCalculator;
 public class SimilarityChecker {
     private static HashSet<Domain> allDomains;
     private static ArrayList<Queue<Domain>> splitDoms;
+    public static final int THREAD_COUNT = 12;
 
     public static void init(boolean useMock) {
         String path = "data/Domain Retrieval.csv";
@@ -24,7 +25,7 @@ public class SimilarityChecker {
         }
         allDomains = new HashSet<>();
         splitDoms = new ArrayList<>();
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < THREAD_COUNT; i++) {
             splitDoms.add(new LinkedList<Domain>());
         }
         int count = 0;
@@ -37,7 +38,7 @@ public class SimilarityChecker {
                 String[] split = line.split(",");
                 Domain d = new Domain(split[0], split[1]);
                 allDomains.add(d);
-                splitDoms.get(count % 50).add(d);
+                splitDoms.get(count % THREAD_COUNT).add(d);
                 count++;
             }
             file.close();
