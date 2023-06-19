@@ -7,6 +7,7 @@
 ### IUser
 ```ts
 interface IUser {
+  id: string,
   email: string,
   firstName: string,
   lastName: strings
@@ -23,6 +24,7 @@ interface IUser {
 ### IUserResponse
 ```ts
 interface IUser {
+  id: string,
   email: string,
   firstName: string,
   lastName: strings
