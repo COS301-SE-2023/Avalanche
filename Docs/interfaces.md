@@ -63,9 +63,9 @@ interface IDataProduct {
 ### DataProductEnum
 ```ts
 enum DataProductEnum {
-  ZARCRegistrar = "ZARCRegistrar",
-  AFRICARegistrar = "AFRICARegistrar",
-  RyCERegistrar = "RYCERegistrar",
+  ZARCRegistrar = "ZARC",
+  AFRICARegistrar = "AFRICA",
+  RyCERegistrar = "RYCE",
   DomainWatch = "DomainWatch"
 }
 ```
