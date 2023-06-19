@@ -27,7 +27,7 @@ public class SimpleHttpServer {
         System.out.println("Done word freq\n");
         System.out.println("Init time in millis " + (System.currentTimeMillis() - st));
         System.out.println("Starting server");
-        HttpServer server = HttpServer.create(new InetSocketAddress(4001), 0);
+        HttpServer server = HttpServer.create(new InetSocketAddress(4004), 0);
         server.createContext("/domainWatch/list", new PostHandler());
         server.setExecutor(null); // creates a default executor
         System.out.println("Server started\n========================\n");
@@ -35,7 +35,8 @@ public class SimpleHttpServer {
 
         st = System.currentTimeMillis();
         String o = getResponse(
-                "{\n\"domain\": \"firstnationalbank\",\n\"types\" :[{\"type\":\"Levenshtein\", \"threshold\":5},{\"type\":\"Soundex\",\"threshold\":3}]\n}");
+                "{\n\"domain\": \"firstnationalbank\",\n\"types\" :[{\"type\":\"Levenshtein\", \"threshold\":5},{\"type\":\"Soundex\",\"threshold\":3}]\n}",
+                st, null);
         System.out.println(o);
         System.out.println("time in millis " + (System.currentTimeMillis() - st));
         System.out.println("\n\nWaiting for next request...\n");
@@ -67,11 +68,13 @@ public class SimpleHttpServer {
 
                 // Prepare response
                 long st = System.currentTimeMillis();
-                String response = getResponse(body);
+                String response = getResponse(body, st, httpExchange);
                 System.out.println("time in millis " + (System.currentTimeMillis() - st));
                 httpExchange.sendResponseHeaders(200, response.length());
                 OutputStream os = httpExchange.getResponseBody();
-                os.write(response.getBytes());
+                if (response.length() > 0) {
+                    os.write(response.getBytes());
+                }
                 os.close();
                 scanner.close();
                 SimilarityChecker.resetDistances();
@@ -84,13 +87,20 @@ public class SimpleHttpServer {
 
     }
 
-    public static String getResponse(String body) {
+    public static String getResponse(String body, long st, HttpExchange httpExchange) throws IOException {
         System.out.println("Working in request");
         SimilarityChecker similarityChecker = new SimilarityChecker();
         String resp = "{  \"status\":\"success\",  \"data\":[";
         ConcurrentLinkedQueue<Domain> hits = new ConcurrentLinkedQueue<>();
         JSONObject obj = new JSONObject(body);
         String domain = (obj.getString("domain"));
+        if (domain.length() < 1) {
+            httpExchange.setAttribute("Error", "The domain name length must be greater than 0");
+            httpExchange.sendResponseHeaders(400, -1);
+            return "";
+            // return "{\"status\":\"bad request\",\"statusCode\":400,\"error\":\"The domain
+            // name must be longer than 0 characters\"}";
+        }
         int numCalcs = (obj.getJSONArray("types").length());
         for (int j = 0; j < numCalcs; j++) {
             String type = obj.getJSONArray("types").getJSONObject(j).getString("type");
@@ -122,7 +132,9 @@ public class SimpleHttpServer {
                 resp += ",";
             }
         }
-        resp += "  ]}";
+        long ttlTime = System.currentTimeMillis() - st;
+        resp += "  ],\"searchTime(ms)\":" + ttlTime + "}";
+
         // System.out.println(resp);
         System.out.println("Done");
         System.gc();
