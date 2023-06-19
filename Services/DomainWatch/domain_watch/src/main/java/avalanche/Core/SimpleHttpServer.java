@@ -1,4 +1,4 @@
-package avalanche;
+package avalanche.Core;
 
 import com.sun.net.httpserver.*;
 
@@ -38,18 +38,21 @@ public class SimpleHttpServer {
                 "{\n\"domain\": \"firstnationalbank\",\n\"types\" :[{\"type\":\"Levenshtein\", \"threshold\":5},{\"type\":\"Soundex\",\"threshold\":3}]\n}");
         System.out.println(o);
         System.out.println("time in millis " + (System.currentTimeMillis() - st));
+        System.out.println("\n\nWaiting for next request...\n");
 
-        st = System.currentTimeMillis();
-        o = getResponse(
-                "{\n\"domain\": \"firstnationalbank\",\n\"types\" :[{\"type\":\"Levenshtein\", \"threshold\": 5}]\n}");
-        System.out.println(o);
-        System.out.println("time in millis " + (System.currentTimeMillis() - st));
+        // st = System.currentTimeMillis();
+        // o = getResponse(
+        // "{\n\"domain\": \"firstnationalbank\",\n\"types\"
+        // :[{\"type\":\"Levenshtein\", \"threshold\": 5}]\n}");
+        // System.out.println(o);
+        // System.out.println("time in millis " + (System.currentTimeMillis() - st));
 
-        st = System.currentTimeMillis();
-        o = getResponse(
-                "{\n\"domain\": \"firstnationalbank\",\n\"types\" :[{\"type\":\"Levenshtein\", \"threshold\": 5}]\n}");
-        System.out.println(o);
-        System.out.println("time in millis " + (System.currentTimeMillis() - st));
+        // st = System.currentTimeMillis();
+        // o = getResponse(
+        // "{\n\"domain\": \"firstnationalbank\",\n\"types\"
+        // :[{\"type\":\"Levenshtein\", \"threshold\": 5}]\n}");
+        // System.out.println(o);
+        // System.out.println("time in millis " + (System.currentTimeMillis() - st));
     }
 
     static class PostHandler implements HttpHandler {
@@ -73,6 +76,7 @@ public class SimpleHttpServer {
                 scanner.close();
                 SimilarityChecker.resetDistances();
                 System.gc();
+                System.out.println("\n\nWaiting for next request...\n");
             } else {
                 httpExchange.sendResponseHeaders(405, -1);// 405 Method Not Allowed
             }

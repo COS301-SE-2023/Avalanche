@@ -1,1 +1,10 @@
+avalanche\Core\SimpleHttpServer$PostHandler.class
+avalanche\Processing\CalculatorThread.class
+avalanche\Processing\SimilarityChecker.class
+avalanche\DataClasses\Domain.class
+avalanche\Utility\DomainTokeniser.class
+avalanche\DistanceCalculators\SoundexCalculator.class
+avalanche\Processing\SoundexThread.class
+avalanche\Utility\DomainTokeniser$BestMatchResult.class
 avalanche\DistanceCalculators\LevensteinDistanceCalculator.class
+avalanche\Core\SimpleHttpServer.class
