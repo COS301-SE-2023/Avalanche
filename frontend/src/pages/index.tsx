@@ -1,13 +1,13 @@
 import Image from 'next/image'
 import Link from 'next/link';
 import Head from 'next/head'
-import { useState, useEffect } from 'react';
+import { useState, } from 'react';
 import React from 'react';
 import { SubmitButton, DangerAlert, Input, InputLabel, Anchor } from '@/components/Util';
 import tempLogo from '../assets/logo.png';
 import { Toaster } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
-import { userState, register, resetRequest, otpVerify, login } from '@/store/Slices/userSlice';
+import { userState, login } from '@/store/Slices/userSlice';
 import { ILoginRequest } from '@/interfaces/requests';
 import { useRouter } from 'next/router';
 import LoadingPage from '@/components/Util/Loading';
@@ -19,14 +19,6 @@ export default function Home() {
   const dispatch = useDispatch<any>();
   const stateUser = useSelector(userState);
   const router = useRouter();
-
-  // useEffect(() => {
-  //   console.log(stateUser.login);
-  //   if (stateUser.login.success && !stateUser.login.error) {
-  //     // router.push("/dashboard");
-  //   }
-  // }, [stateUser.login])
-
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);

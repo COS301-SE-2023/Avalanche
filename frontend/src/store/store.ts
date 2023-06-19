@@ -1,5 +1,4 @@
-import { configureStore, ThunkAction, Action, applyMiddleware, MiddlewareArray, combineReducers } from "@reduxjs/toolkit";
-import logger from "redux-logger";
+import { configureStore, ThunkAction, Action, combineReducers } from "@reduxjs/toolkit";
 import { modalManagerSlice } from "./Slices/modalManagerSlice";
 import { userSlice } from "./Slices/userSlice";
 import { createWrapper } from "next-redux-wrapper";
