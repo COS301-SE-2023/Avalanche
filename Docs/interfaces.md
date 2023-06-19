@@ -42,7 +42,7 @@ interface IUserGroups {
   organisation: IOrganisation,
   permission: number,
   organisationId: number,
-  users: IUsers[],
+  users: IUsers.id[],
   id: number
 }
 ```
@@ -57,6 +57,7 @@ interface IOrganisation {
 ```ts
 interface IDataProduct {
   dataProductName: DataProductEnum
+  registrarName : string | null
 }
 ```
 ### DataProductEnum
