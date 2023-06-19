@@ -47,3 +47,5 @@ For more information request formal documentation from ...
 * 17/06
   * Added per transaction query
   * Bug in transaction query- array of types only returns last
+* 19/06
+  * Bug  fixed for Monthly granularity
