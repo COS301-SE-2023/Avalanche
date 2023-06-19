@@ -5,7 +5,6 @@
 ## 1. User Register and Management
 
 ### IUser
-Represents the user
 ```ts
 interface IUser {
   id: string,
@@ -16,9 +15,7 @@ interface IUser {
   profilePicture: string | null,
   favourites: IDashBoard[] | null,
   dataProducts: IDataProducts[] | null,
-  organisationId: number | null,
   organisation: IOrganisation | null,
-  userGroupId: number[] | null,
   userGroups: IUserGroups[] | null,
 }
 ```
@@ -33,9 +30,7 @@ interface IUser {
   profilePicture: string | null,
   favourites: IDashBoard[] | null,
   dataProducts: IDataProducts[] | null,
-  organisationId: number | null,
   organisation: IOrganisation | null,
-  userGroupId: number[] | null,
   userGroups: IUserGroups[] | null,
   token: string
 }
