@@ -5,104 +5,123 @@
 ## 1. User Register and Management
 
 ### IUser
-
-```typescript
+```ts
 interface IUser {
-	email: string,
-  	firstName: string,
-	lastName: strings
-	settings: ISettings,
-	profilePicture: string | null,
-   	favourites: IDashBoard[] | null,
-   	dataProducts: IDataProducts[] | null,
-   	organisationId: number | null,
-   	organisation: IOrganisation | null,
-   	userGroupId: number[] | null,
-   	userGroups: IUserGroups[] | null,
+  email: string,
+  firstName: string,
+  lastName: strings
+  settings: ISettings,
+  profilePicture: string | null,
+  favourites: IDashBoard[] | null,
+  dataProducts: IDataProducts[] | null,
+  organisationId: number | null,
+  organisation: IOrganisation | null,
+  userGroupId: number[] | null,
+  userGroups: IUserGroups[] | null,
 }
 ```
-
+### IUserResponse
+```ts
+interface IUser {
+  email: string,
+  firstName: string,
+  lastName: strings
+  settings: ISettings,
+  profilePicture: string | null,
+  favourites: IDashBoard[] | null,
+  dataProducts: IDataProducts[] | null,
+  organisationId: number | null,
+  organisation: IOrganisation | null,
+  userGroupId: number[] | null,
+  userGroups: IUserGroups[] | null,
+  token: string
+}
+```
 ### IUserGroups
-
-```typescript
+```ts
 interface IUserGroups {
-   	name: string,
-   	organisation: IOrganisation,
-   	permission: number,
-   	organisationId: number,
-   	users: IUsers[],
-   	id: number
+  name: string,
+  organisation: IOrganisation,
+  permission: number,
+  organisationId: number,
+  users: IUsers[],
+  id: number
 }
 ```
-
 ### IOrganisation
-
-```typescript
+```ts
 interface IOrganisation {
-	name: string,
-	id: number,
+  name: string,
+  id: number,
 }
 ```
-
 ### IDataProduct
-
-```typescript
+```ts
 interface IDataProduct {
-	dataProductName: DataProductEnum
+  dataProductName: DataProductEnum
 }
 ```
-
 ### DataProductEnum
-
-```typescript
+```ts
 enum DataProductEnum {
-	ZARCRegistrar = "ZARCRegistrar",
-  	AFRICARegistrar = "AFRICARegistrar",
-  	RyCERegistrar = "RYCERegistrar",
-  	DomainWatch = "DomainWatch"
+  ZARCRegistrar = "ZARCRegistrar",
+  AFRICARegistrar = "AFRICARegistrar",
+  RyCERegistrar = "RYCERegistrar",
+  DomainWatch = "DomainWatch"
 }
 ```
 
 ## Dashboard
 
 ## Graph Data
-
-```typescript
+```ts
 enum Warehouse {
-   	ZACR = "ZACR",
-   	AFRICA = "AFRICA",
-   	RyCE: "RyCE"
+  ZACR = "ZACR",
+  AFRICA = "AFRICA",
+  RyCE: "RyCE"
 }
 ```
 
-```typescript
+```ts
 interface IGraphs {
-   	name: string,
-   	id: number,
-   	warehouse: EnumWarehouse,
-   	data: IGraphData
+  name: string,
+  id: number,
+  warehouse: EnumWarehouse,
+  data: IGraphData
 }
 ```
 
-```typescript
+```ts
 interface IGraphData {
-   	labels: string[],
-   	datasets: IDataSet[],
-   	comments: IComment[]
+  labels: string[],
+  datasets: IDataSet[],
+  comments: IComment[]
 }
 ```
 
-```typescript
+```ts
 interface IDataSet {
-  	label: string,
-  	data: number[] | otherDataType[]
+  label: string,
+  data: number[] | otherDataType[]
 }
 ```
 
-```typescript
+```ts
 interface IComment {
-  	userId: string,
-  	comment: string,
-  	createdAt: Timestamp
+  userId: string,
+  comment: string,
+  createdAt: Timestamp
+}
+```
+
+## Settings
+### API Object
+```ts
+interface IApi {
+  id: string,
+  name: string,
+  description: string,
+  createdAt: number,
+  key?: string, // this will only be stored in the database, and will not be shown to the user always, will only be shown when they create the api key
 }
 ```
