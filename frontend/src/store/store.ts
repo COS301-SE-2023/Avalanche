@@ -1,6 +1,7 @@
 import { configureStore, ThunkAction, Action, combineReducers } from "@reduxjs/toolkit";
 import { modalManagerSlice } from "./Slices/modalManagerSlice";
 import { userSlice } from "./Slices/userSlice";
+import { domainWatchSlice } from "./Slices/domainWatchSlice";
 import { settingsSlice } from "./Slices/settingsSlice";
 import { createWrapper } from "next-redux-wrapper";
 import thunk from "redux-thunk";
@@ -26,7 +27,8 @@ const storage = typeof window !== "undefined" ? createWebStorage("local") : crea
 const rootReducer = combineReducers({
     [modalManagerSlice.name]: modalManagerSlice.reducer,
     [userSlice.name]: userSlice.reducer,
-    [settingsSlice.name]: settingsSlice.reducer
+    [settingsSlice.name]: settingsSlice.reducer,
+    [domainWatchSlice.name]: domainWatchSlice.reducer
 });
 
 const makeConfiguredStore = () =>

@@ -14,6 +14,10 @@ export default function OrgnizationCreateModal({ }: IOrgnizationCreateModal) {
     const dispatch = useDispatch<any>();
     const stateUser = useSelector(userState);
 
+    useEffect(() => {
+
+    }, [stateUser.user.organization])
+
     /**
      * this variable is for the length of the name of the organization. It defines the maximum length the name can be.
      */

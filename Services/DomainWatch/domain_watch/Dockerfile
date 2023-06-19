@@ -4,9 +4,9 @@ WORKDIR /domain_watch
 
 EXPOSE 4004
 
-COPY .mvn/ .mvn
-COPY mvnw pom.xml ./
-RUN ./mvnw dependency:resolve
+# COPY .mvn/ .mvn
+# COPY mvnw pom.xml ./
+# RUN ./mvnw dependency:resolve
 
 COPY src ./src
 COPY target ./target

@@ -34,7 +34,7 @@ const MenuOptions: IMenu = {
             role: "",
         },
         {
-            text: "Watch",
+            text: "Domain Watch",
             icon: <DocumentMagnifyingGlassIcon className={holder} />,
             page: "watch",
             role: ""
