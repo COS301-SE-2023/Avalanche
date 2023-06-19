@@ -1,6 +1,7 @@
 import { APIStatus } from "@/Enums"
 
-export interface IOTPVerifyResponse {
+export default interface IOTPVerifyResponse {
     status: APIStatus,
-    message: string
+    message: string,
+    timestamp: number
 }

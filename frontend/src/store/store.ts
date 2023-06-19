@@ -45,7 +45,7 @@ export const makeStore = () => {
     } else {
         const persistConfig = {
             key: "nextjs",
-            whitelist: ["modalManager"],
+            whitelist: ["modalManager", "user"],
             storage
         };
         const persistedReducer = persistReducer(persistConfig, rootReducer);

@@ -4,7 +4,7 @@ import { HomeIcon } from "@heroicons/react/24/solid"
 import Head from "next/head"
 import { ChartCard } from "@/components/Graphs"
 import { chartData } from "@/components/Graphs/data";
-import { ChartType } from "@/Enums"
+import { ChartType } from "@/Enums";
 
 export default function Dashboard() {
     return <>
