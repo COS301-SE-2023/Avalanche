@@ -20,11 +20,12 @@ export class UserDataProductMangementService {
 
     async integrateUserWithWExternalAPI(token: string, type: string, allocateToName: string, username: string, password: string, personal: boolean) {
         if(!username || !password){
-            throw new HttpException({
-                status: HttpStatus.BAD_REQUEST,
-                error: 'Please enter account details',
-                timestamp: new Date().toISOString(),
-            }, HttpStatus.BAD_REQUEST);
+            return { 
+                status: 400,
+                error: true,
+                message: 'Please enter all account details',
+                timestamp: new Date().toISOString()
+              };
         }
         if (personal == true) {
             let url = 'https://srs-epp.dns.net.za:8282/portal/auth-jwt/';
@@ -67,12 +68,12 @@ export class UserDataProductMangementService {
                     timestamp: new Date().toISOString() };
                 } catch (error) {
                     console.error(error);
-                    return { status: 'failure', message: error, 
+                    return { status: 400,error: true, message: error, 
                     timestamp: new Date().toISOString() };
                 }
             } catch (error) {
                 console.error(error);
-                return { status: 'failure', message: error, 
+                return { status: 400,error: true, message: error, 
                 timestamp: new Date().toISOString() };
             }
         } else {
@@ -173,11 +174,11 @@ export class UserDataProductMangementService {
                 return { status: 'success', message: 'User group is integrated with ' + type , 
                 timestamp: new Date().toISOString()};
             } else {
-                return { status: 'failure', message: 'User does not have the right permissions', 
+                return { status: 400,error: true, message: 'User does not have the right permissions', 
                 timestamp: new Date().toISOString() };
             }
         } else {
-            return { status: 'failure', message: 'Error occured, please try later again' , 
+            return { status: 400,error: true, message: 'Error occured, please try later again' , 
             timestamp: new Date().toISOString()};
         }
     }
