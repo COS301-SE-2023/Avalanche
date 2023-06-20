@@ -10,11 +10,14 @@ export const domainWatchSlice = createSlice({
     initialState: {
         loading: false,
         data: [],
+        changingData: [],
         error: "",
         time: 0
     },
     reducers: {
-
+        updateChanging(state, action) {
+            state.changingData = action.payload;
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(HYDRATE, (state, action) => {
@@ -34,6 +37,7 @@ export const domainWatchSlice = createSlice({
             const payload = action.payload as any;
             state.loading = false;
             state.data = payload.data;
+            state.changingData = payload.data;
         })
     }
 });
@@ -53,6 +57,6 @@ export const getDomainWatch = createAsyncThunk("DOMAINWATCH.Get", async (object:
     }
 })
 
-export const { } = domainWatchSlice.actions;
+export const { updateChanging } = domainWatchSlice.actions;
 export const domainWatchState = (state: AppState) => state.domainWatch;
 export default domainWatchSlice.reducer;

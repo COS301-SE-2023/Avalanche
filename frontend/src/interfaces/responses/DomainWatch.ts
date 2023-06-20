@@ -1,7 +1,7 @@
-interface IDomainWatchReturn {
+export interface IDomainWatchReturn {
     domainName: string,
     zone: string,
-    similarity: 65
+    similarity: number
 }
 
 export default interface IDomainWatchResponse {
