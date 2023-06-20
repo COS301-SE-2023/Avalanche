@@ -8,7 +8,7 @@ export class AppController {
   constructor(private readonly transactionsService: TransactionService) {}
 
   @MessagePattern({ cmd: 'transactions' })
-  async register(data: any) {
+  async transactions(data: any) {
     console.log('Transactions: ', data);
     return await this.transactionsService.transactions(data.jsonInput);
   }
