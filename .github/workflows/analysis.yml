@@ -2,9 +2,13 @@ name: Code Analysis
 
 on:
   push:
-    branches: [ "working" ]
+    branches:
+      - working
+      - stable
   pull_request:
-    branches: [ "working" ]
+    branches:
+      - working
+      - stable
   workflow_dispatch:
 
 permissions:
@@ -22,8 +26,3 @@ jobs:
           args:
             -Dsonar.projectKey=COS301-SE-2023_Avalanche
             -Dsonar.organization=cos301-se-2023
-  CodeCov:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v3
