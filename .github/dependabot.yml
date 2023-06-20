@@ -6,6 +6,7 @@
 version: 2
 updates_frontend:
   - package-ecosystem: "yarn" # See documentation for possible values
-    directory: "/frontend" # Location of package manifests
+    directory: "/frontend/" # Location of package manifests
     schedule:
       interval: "weekly"
+    open-pull-requests-limit: 10
