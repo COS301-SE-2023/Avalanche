@@ -174,7 +174,27 @@ public class SimilarityChecker {
         }
 
         boolean busy = true;
+        for (int i = 0; i < threads.length; i++) {
+            System.out.println();
+        }
+        int loaderNum = 0;
+        final String[] loading = { "-", "\\", "|", "/" };
         while (busy) {
+            if (System.currentTimeMillis() % 500 == 0) {
+                if (loaderNum == loading.length) {
+                    loaderNum = 0;
+                }
+                for (int i = 0; i < threads.length; i++) {
+                    System.out.print("\u001b[1000D");
+                    System.out.print("\u001b[1A");
+                }
+                for (int i = 0; i < threads.length; i++) {
+                    System.out.println(
+                            "Thread " + i + "-\t" + threads[i].getState().toString() + "[" + loading[loaderNum] + "]");
+                }
+                loaderNum++;
+            }
+
             busy = false;
             for (int i = 0; i < threads.length; i++) {
                 if (threads[i].isAlive()) {
@@ -183,6 +203,18 @@ public class SimilarityChecker {
                 }
             }
         }
+        if (loaderNum == loading.length) {
+            loaderNum = 0;
+        }
+        for (int i = 0; i < threads.length; i++) {
+            System.out.print("\u001b[1000D");
+            System.out.print("\u001b[1A");
+        }
+        for (int i = 0; i < threads.length; i++) {
+            System.out.println(
+                    "Thread " + i + "-\t" + threads[i].getState().toString() + "[" + loading[loaderNum] + "]");
+        }
+        loaderNum++;
         return hits;
     }
 }

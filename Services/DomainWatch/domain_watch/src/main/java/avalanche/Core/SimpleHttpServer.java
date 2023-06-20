@@ -11,7 +11,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -38,12 +42,12 @@ public class SimpleHttpServer {
         System.out.println("Server started\n========================\n");
         server.start();
 
-        // st = System.currentTimeMillis();
-        // String o = getResponse(
-        // "{\n\"domain\":\"firstnationalbank\",\n\"types\":[{\"type\":\"Levenshtein\",\"threshold\":2}]\n}",
-        // st);
-        // System.out.println(o);
-        // System.out.println("time in millis " + (System.currentTimeMillis() - st));
+        st = System.currentTimeMillis();
+        String o = getResponse(
+                "{\n\"domain\":\"selborne\",\n\"types\":[{\"type\":\"Levenshtein\",\"threshold\":5}]\n}",
+                st);
+        System.out.println(o);
+        System.out.println("time in millis " + (System.currentTimeMillis() - st));
         System.out.println("\n\nWaiting for next request...\n");
 
         // st = System.currentTimeMillis();
@@ -141,7 +145,7 @@ public class SimpleHttpServer {
     }
 
     public static String getResponse(String body, long st) throws IOException {
-        System.out.println("Working in request");
+        System.out.println("Working on request");
         SimilarityChecker similarityChecker = new SimilarityChecker();
         String resp = "{  \"status\":\"success\",  \"data\":[";
         ConcurrentLinkedQueue<Domain> hits = new ConcurrentLinkedQueue<>();
@@ -177,12 +181,22 @@ public class SimpleHttpServer {
 
             }
         }
+        Domain[] hitsArr = new Domain[hits.size()];
+        hits.toArray(hitsArr);
+        Arrays.sort(hitsArr, Collections.reverseOrder());
         int initSize = hits.size();
-        for (int k = 0; k < initSize; k++) {
-            resp += "    " + hits.poll().toJSON();
-            if (k != initSize - 1) {
+        int totalTodo = Math.min(initSize, 500);
+        System.out.println("\nFound " + initSize + " matches\nBuilding response\n");
+        for (int k = 0; k < totalTodo; k++) {
+            resp += "    " + hitsArr[k].toJSON();
+            if (k != totalTodo - 1) {
                 resp += ",";
             }
+            if (((int) (k * 100) / totalTodo) == 0) {
+                System.out.print((k * 100) / totalTodo + "%");
+                System.out.print("\u001b[1000D");
+            }
+
         }
         long ttlTime = System.currentTimeMillis() - st;
         resp += "  ],\"searchTime(ms)\":" + ttlTime + "}";

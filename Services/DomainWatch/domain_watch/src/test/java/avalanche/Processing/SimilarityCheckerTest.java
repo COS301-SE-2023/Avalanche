@@ -75,11 +75,11 @@ public class SimilarityCheckerTest {
         SimilarityChecker similarityChecker = new SimilarityChecker();
         ConcurrentLinkedQueue<Domain> results = similarityChecker.threadedFindAllWithinSimliarityThreshold(
                 "firstnationalbank",
-                5, 50);
+                5, 12);
         SimilarityChecker.resetDistances();
         ConcurrentLinkedQueue<Domain> results2 = similarityChecker.threadedFindAllWithinSimliarityThreshold(
                 "firstnationalbank",
-                5, 50);
+                5, 12);
         assertNotNull(results);
         assertNotNull(results2);
         assertNotEquals(0, results.size());
@@ -117,7 +117,7 @@ public class SimilarityCheckerTest {
         SimilarityChecker similarityChecker = new SimilarityChecker();
         ConcurrentLinkedQueue<Domain> results = similarityChecker.threadedfindAllSoundsAboveSimliarityThreshold(
                 "firstnationalbank",
-                3, 50);
+                3, 12);
         assertNotNull(results);
         // System.out.println("INPUT: firstnationalbank\nThreshold:
         // 4\n=======================");
@@ -132,8 +132,8 @@ public class SimilarityCheckerTest {
         SimilarityChecker.init(true);
         SimilarityChecker similarityChecker = new SimilarityChecker();
         ConcurrentLinkedQueue<Domain> results = similarityChecker.threadedFindAllWithinSimliarityThreshold(
-                "firstnationalbank",
-                4, 50);
+                "selborne",
+                5, 12);
         assertNotNull(results);
         // System.out.println("INPUT: firstnationalbank\nThreshold:
         // 4\n=======================");
