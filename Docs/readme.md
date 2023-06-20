@@ -11,3 +11,5 @@ Our collection of documentation for our Avalanche Capstone project.
 > [Interface](interfaces.md)
 
 > [SRS v1](SRS-v1.md)
+
+> [GitHub Strategu](github-strategy.md)
