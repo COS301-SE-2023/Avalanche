@@ -1,8 +1,10 @@
 export default interface ITransactionGraphRequest {
+    registrar?: string,
     zone?: string,
-    granularity?: string,
+    dateFrom?: string //format yyyy-mm-dd
+    dateTo?: string //format yyyy-mm-dd
+    granularity?: string //year, month, week
     group?: string,
-    dateFrom?: string,
     transactions?: string[],
     graphName: string
 }

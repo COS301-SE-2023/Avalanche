@@ -11,18 +11,25 @@ const url = "http://localhost:4000/zacr";
 interface IGraphState {
     graphs: any[],
     loading: boolean
+    latestAdd: number
 }
 
 const initialState: IGraphState = {
     graphs: [],
-    loading: false
+    loading: false,
+    latestAdd: -1,
 }
 
 export const graphSlice = createSlice({
     name: "graph",
     initialState,
     reducers: {
-
+        addToGraphs(state, action) {
+            const payload = action.payload as any;
+            const temp = [...state.graphs];
+            temp.push(payload);
+            state.graphs = temp;
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(HYDRATE, (state, action) => {
@@ -33,18 +40,25 @@ export const graphSlice = createSlice({
         })
         builder.addCase(getGraphData.fulfilled, (state, action) => {
             const payload = action.payload as any;
-            const temp = [...state.graphs];
-            temp.push(payload.data);
-            temp.forEach((item: any) => {
-                item.datasets.forEach((set: any, index: number) => {
-                    set.backgroundColor = chartColours[index];
-                })
+            payload.data.datasets.forEach((set: any, index: number) => {
+                set.backgroundColor = chartColours[index];
             })
+            state.graphs.push(payload.data);
+            state.latestAdd = state.graphs.length - 1;
             state.loading = false;
-            state.graphs = temp;
         })
         builder.addCase(getGraphData.pending, (state) => {
             state.loading = true;
+            // state.graphs = [];
+        })
+        builder.addCase(getGraphDataArray.fulfilled, (state, action) => {
+            // const payload = action.payload as any;
+            // state.graphs = payload;
+            state.loading = false;
+        })
+        builder.addCase(getGraphDataArray.pending, (state, action) => {
+            state.loading = true;
+            state.graphs = [];
         })
     }
 })
@@ -64,6 +78,32 @@ export const getGraphData = createAsyncThunk("GRAPH.GetGraphData", async (object
     }
 })
 
-export const { } = graphSlice.actions;
+export const getGraphDataArray = createAsyncThunk("GRAPH.GetGraphDataArray", async (object: ITransactionGraphRequest[], { rejectWithValue }) => {
+    try {
+        const array: any[] = [];
+        const jwt = getCookie("jwt");
+        for (let i = 0; i < object.length; i++) {
+            const graph = object[i];
+            const res: any = await ky.post(`${url}/transactions`, {
+                json: graph,
+                headers: {
+                    "Authorization": `Bearer ${jwt}`
+                }
+            }).json();
+            res.data.datasets.forEach((set: any, index: number) => {
+                set.backgroundColor = chartColours[index];
+            })
+            array.push(res.data);
+            addToGraphs(res.data);
+        }
+
+        return array;
+
+    } catch (e) {
+        if (e instanceof Error) return rejectWithValue(e.message);
+    }
+})
+
+export const { addToGraphs } = graphSlice.actions;
 export const graphState = (state: AppState) => state.graph;
 export default graphSlice.reducer;

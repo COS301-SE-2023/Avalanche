@@ -22,28 +22,13 @@ ChartJS.register(
     Legend
 );
 
-// export const options = {
-//     responsive: true,
-//     // maintainAspectRatio: false,
-//     plugins: {
-//         legend: {
-//             display: false,
-//         },
-//         title: {
-//             display: false,
-//             text: 'Chart.js Line Chart',
-//         },
-//     },
-// };
-
-
 export function LineChart({ data, addClass }: IChart) {
     const options = {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
             legend: {
-                display: data.datasets.length === 1 ? false : true,
+                display: data.datasets?.length === 1 ? false : true,
             },
             title: {
                 display: false,
