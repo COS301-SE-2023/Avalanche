@@ -9,11 +9,13 @@ import { chartColours } from "@/components/Graphs/data";
 const url = "http://localhost:4000/zacr";
 
 interface IGraphState {
-    graphs: any[]
+    graphs: any[],
+    loading: boolean
 }
 
 const initialState: IGraphState = {
-    graphs: []
+    graphs: [],
+    loading: false
 }
 
 export const graphSlice = createSlice({
@@ -33,18 +35,16 @@ export const graphSlice = createSlice({
             const payload = action.payload as any;
             const temp = [...state.graphs];
             temp.push(payload.data);
-            temp.forEach(item => {
-                const length = item.datasets.length;
-                const colours = chartColours.splice(0, length);
-                console.log(colours);
-                item.datasets.forEach((set: any) => {
-                    set.backgroundColor = colours;
+            temp.forEach((item: any) => {
+                item.datasets.forEach((set: any, index: number) => {
+                    set.backgroundColor = chartColours[index];
                 })
             })
+            state.loading = false;
             state.graphs = temp;
         })
         builder.addCase(getGraphData.pending, (state) => {
-
+            state.loading = true;
         })
     }
 })

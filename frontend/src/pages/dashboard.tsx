@@ -16,7 +16,7 @@ export default function Dashboard() {
     const stateGraph = useSelector(graphState);
 
     useEffect(() => {
-        const data: ITransactionGraphRequest = { zone: "CO.ZA", granularity: "week", group: "registrar", dateFrom: "2023-01-02", graphName: "boi" };
+        const data: ITransactionGraphRequest = { zone: "CO.ZA", granularity: "week", group: "registrar", dateFrom: "2023-01-02", graphName: "Your mom" };
         dispatch(getGraphData(data));
     }, [])
 
@@ -31,11 +31,22 @@ export default function Dashboard() {
                 <PageHeader title="Home" subtitle="Insights at your fingertips" icon={<HomeIcon className="h-16 w-16 text-black dark:text-white" />} />
             </div>
             <div className="p-0 pt-4 md:p-4">
-                <div className="grid lg:grid-cols-2 sm:grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div className="grid lg:grid-cols-2 sm:grid-cols-1 md:grid-cols-2 gap-4 mb-4 grid-rows-2">
                     {
                         stateGraph?.graphs.map((data: any, index: number) => {
                             return <ChartCard title={data.graphName} data={data} defaultGraph={ChartType.Line} key={index} />
                         })
+                    }
+                    {
+                        stateGraph.loading && <>
+                            <div role="status" className="flex justify-between h-64 w-full bg-gray-300 rounded-lg animate-customPulse dark:bg-gray-700 p-6">
+                                <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-32"></div>
+                                <div className="flex gap-1">
+                                    <div className="h-6 w-6 bg-gray-200 rounded dark:bg-gray-700 w-32"></div>
+                                    <div className="h-6 w-6 bg-gray-200 rounded dark:bg-gray-700 w-32"></div>
+                                </div>
+                            </div>
+                        </>
                     }
                     {/* <ChartCard title="A ChartJS Chart 1" data={chartData} defaultGraph={ChartType.Pie} />
                     <ChartCard title="A ChartJS Chart 2" data={chartData} defaultGraph={ChartType.Bar} />

@@ -5,6 +5,7 @@ import { ChartType, ChartTypeArray } from "@/Enums";
 import { ChartCardButton } from "./ChartCardHeader";
 import { Fragment } from 'react'
 import { Menu, Transition } from '@headlessui/react'
+import "animate.css";
 
 interface IChartCard {
     title: string,
@@ -23,7 +24,7 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
     }
 
     return (
-        <div className="block p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-primaryBackground dark:border-primaryBackground w-full">
+        <div className="block p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-primaryBackground dark:border-primaryBackground w-full animate__animated animate__fadeIn">
             <div className="flex justify-between mb-5 text-black dark:text-white">
                 <h1 className="p-1.5">{title}</h1>
                 <div className="flex flex-row gap-1">
@@ -73,32 +74,30 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
             </div>
             {type === ChartType.Bar && <BarChart data={data} />}
             {type === ChartType.Pie && <PieChart data={data} />}
-            {type === ChartType.Line && <LineChart data={data} />}
+            {type === ChartType.Line && <LineChart data={data} addClass="h-96" />}
             {type === ChartType.Bubble && <BubbleChart data={data} />}
             {type === ChartType.PolarArea && <PolarAreaChart data={data} />}
             {type === ChartType.Radar && <RadarChart data={data} />}
 
             {
-                magnifyModal && <div id="defaultModal" tabIndex={-1} aria-hidden="true" className="fixed top-0 left-0 right-0 z-50 w-full overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] h-full flex justify-center items-center bg-slate-900/50" onClick={() => { handleMagnifyModal(false) }}>
-                    <div className="relative w-full max-w-2xl max-h-screen" onClick={(e) => e.stopPropagation()}>
-                        <div className="relative bg-white lg:rounded-lg shadow dark:bg-primaryBackground h-screen lg:h-auto">
-                            <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
-                                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                                    The Magnifier
-                                </h3>
-                                <button type="button" className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="defaultModal" onClick={() => handleMagnifyModal(false)}>
-                                    <svg aria-hidden="true" className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                                    <span className="sr-only">Close modal</span>
-                                </button>
-                            </div>
-                            <div className="p-6 space-y-6">
-                                {type === ChartType.Bar && <BarChart data={data} />}
-                                {type === ChartType.Pie && <PieChart data={data} />}
-                                {type === ChartType.Line && <LineChart data={data} />}
-                                {type === ChartType.Bubble && <BubbleChart data={data} />}
-                                {type === ChartType.PolarArea && <PolarAreaChart data={data} />}
-                                {type === ChartType.Radar && <RadarChart data={data} />}
-                            </div>
+                magnifyModal && <div className="p-0 md:p-4 absolute top-0 left-0 right-0 z-50 overflow-x-hidden overflow-y-auto md:inset-0 flex justify-center items-center bg-slate-900/50" onClick={() => { handleMagnifyModal(false) }}>
+                    <div className="relative bg-white lg:rounded-lg shadow dark:bg-primaryBackground md:w-4/5 md:h-full h-screen w-screen flex flex-col justify-stretch" onClick={(e) => e.stopPropagation()}>
+                        <div className="relative flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                            <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                                The Magnifier
+                            </h3>
+                            <button type="button" className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="defaultModal" onClick={() => handleMagnifyModal(false)}>
+                                <svg aria-hidden="true" className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
+                                <span className="sr-only">Close modal</span>
+                            </button>
+                        </div>
+                        <div className="relative p-6 space-y-6 h-full">
+                            {type === ChartType.Bar && <BarChart data={data} />}
+                            {type === ChartType.Pie && <PieChart data={data} />}
+                            {type === ChartType.Line && <LineChart data={data} addClass="h-full" />}
+                            {type === ChartType.Bubble && <BubbleChart data={data} />}
+                            {type === ChartType.PolarArea && <PolarAreaChart data={data} />}
+                            {type === ChartType.Radar && <RadarChart data={data} />}
                         </div>
                     </div>
                 </div>

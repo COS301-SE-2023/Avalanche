@@ -37,10 +37,10 @@ ChartJS.register(
 // };
 
 
-export function LineChart({ data }: IChart) {
+export function LineChart({ data, addClass }: IChart) {
     const options = {
         responsive: true,
-        // maintainAspectRatio: false,
+        maintainAspectRatio: false,
         plugins: {
             legend: {
                 display: data.datasets.length === 1 ? false : true,
@@ -50,5 +50,5 @@ export function LineChart({ data }: IChart) {
             },
         },
     };
-    return <div className="h-full"><Line options={options} data={data} /></div>;
+    return <div className={`${addClass}`}><Line options={options} data={data} /></div>;
 }
