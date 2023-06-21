@@ -5,9 +5,22 @@ import Head from "next/head"
 import { ChartCard } from "@/components/Graphs"
 import { chartData } from "@/components/Graphs/data";
 import { ChartType } from "@/Enums";
+import { useDispatch, useSelector } from "react-redux";
+import { graphState, getGraphData } from "@/store/Slices/graphSlice"
+import { useState, useEffect } from "react";
+import { ITransactionGraphRequest } from "@/interfaces/requests"
 
 export default function Dashboard() {
-    return <>
+
+    const dispatch = useDispatch<any>();
+    const stateGraph = useSelector(graphState);
+
+    useEffect(() => {
+        const data: ITransactionGraphRequest = { zone: "CO.ZA", granularity: "week", group: "registrar", dateFrom: "2023-01-02", graphName: "boi" };
+        dispatch(getGraphData(data));
+    }, [])
+
+    return (<>
         <Head>
             <title>Dashboard</title>
         </Head>
@@ -19,13 +32,18 @@ export default function Dashboard() {
             </div>
             <div className="p-0 pt-4 md:p-4">
                 <div className="grid lg:grid-cols-2 sm:grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <ChartCard title="A ChartJS Chart 1" data={chartData} defaultGraph={ChartType.Pie} />
+                    {
+                        stateGraph?.graphs.map((data: any, index: number) => {
+                            return <ChartCard title={data.graphName} data={data} defaultGraph={ChartType.Line} key={index} />
+                        })
+                    }
+                    {/* <ChartCard title="A ChartJS Chart 1" data={chartData} defaultGraph={ChartType.Pie} />
                     <ChartCard title="A ChartJS Chart 2" data={chartData} defaultGraph={ChartType.Bar} />
                     <ChartCard title="A ChartJS Chart 3" data={chartData} defaultGraph={ChartType.Line} />
                     <ChartCard title="A ChartJS Chart 4" data={chartData} defaultGraph={ChartType.Radar} />
-                    <ChartCard title="A ChartJS Chart 5" data={chartData} defaultGraph={ChartType.PolarArea} />
+                    <ChartCard title="A ChartJS Chart 5" data={chartData} defaultGraph={ChartType.PolarArea} /> */}
                 </div>
             </div>
         </div>
-    </>
+    </>)
 }

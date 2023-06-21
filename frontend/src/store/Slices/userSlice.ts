@@ -7,7 +7,7 @@ import { IOTPVerifyResponse, IRegisterResponse, ILoginResponse, ICreateOrgnisati
 import { setCookie, getCookie } from 'cookies-next';
 import { ISettings, IOrganisation, IDataProduct, IUserGroups } from "@/interfaces/interfaces";
 
-const url = "http://localho.st:4000/user-management"
+const url = "http://localho.st:4000/user-management";
 
 export interface IUserState {
     id: string | null,
@@ -205,7 +205,6 @@ export const createOrganisation = createAsyncThunk("ORG.CreateOrganisation", asy
                 "Authorization": `Bearer ${jwt}`
             }
         }).json();
-        console.log(response);
         // return response;
     } catch (e) {
         if (e instanceof Error) return rejectWithValue(e.message);
