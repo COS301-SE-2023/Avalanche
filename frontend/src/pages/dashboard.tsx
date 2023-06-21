@@ -3,30 +3,22 @@ import PageHeader from "@/components/Util/PageHeader"
 import { HomeIcon } from "@heroicons/react/24/solid"
 import Head from "next/head"
 import { ChartCard } from "@/components/Graphs"
-import { chartData } from "@/components/Graphs/data";
 import { ChartType } from "@/Enums";
 import { useDispatch, useSelector } from "react-redux";
-import { graphState, getGraphData, getGraphDataArray } from "@/store/Slices/graphSlice"
-import { useState, useEffect, useCallback, memo } from "react";
-import { ITransactionGraphRequest } from "@/interfaces/requests"
+import { graphState, getGraphData } from "@/store/Slices/graphSlice"
+import { useState, useEffect } from "react";
+import { ITransactionGraphRequest } from "@/interfaces/requests";
+import { selectModalManagerState } from "@/store/Slices/modalManagerSlice"
+import GraphZoomModal from "@/components/Modals/GraphZoomModal"
 
-function Dashboard() {
+export default function Dashboard() {
 
     const dispatch = useDispatch<any>();
     const stateGraph = useSelector(graphState);
-    const [graphs, setGraphs] = useState<ITransactionGraphRequest[]>([]);
+    const modalState = useSelector(selectModalManagerState);
 
     const pad = (d: number) => {
         return (d < 10) ? '0' + d.toString() : d.toString();
-    }
-
-    const convertToMonths = (month: number, goBack: number, year: number) => {
-        const result = month - goBack;
-        if (result <= 0) {
-            return { result: result + 12, year: year - 1 };
-        } else {
-            return { result, year };
-        }
     }
 
     useEffect(() => {
@@ -169,7 +161,8 @@ function Dashboard() {
                 </div>
             </div>
         </div>
+        {
+            modalState.currentOpen === "GRAPH.Modal" && <GraphZoomModal />
+        }
     </>)
 }
-
-export default memo(Dashboard);
