@@ -3,10 +3,10 @@ import SideBarItem from "./SidebarItem"
 import Link from "next/link"
 import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
-import { MoonIcon, SunIcon, Cog6ToothIcon, Bars4Icon } from "@heroicons/react/24/solid";
+import { MoonIcon, SunIcon, Cog6ToothIcon, Bars4Icon, ArrowLeftOnRectangleIcon } from "@heroicons/react/24/solid";
 import { selectModalManagerState } from "@/store/Slices/modalManagerSlice";
-import { useSelector } from "react-redux";
-import { userState } from "@/store/Slices/userSlice";
+import { useSelector, useDispatch } from "react-redux";
+import { userState, logout } from "@/store/Slices/userSlice";
 import { useRouter } from "next/router";
 import { getCookie } from "cookies-next";
 import LoadingPage from "../Util/Loading";
@@ -15,6 +15,7 @@ export default function Sidebar() {
     const { theme, setTheme } = useTheme();
     const [menu, setMenu] = useState<boolean>(false);
     const stateUser = useSelector(userState);
+    const dispatch = useDispatch();
     const modalState = useSelector(selectModalManagerState);
     const router = useRouter();
 
@@ -78,6 +79,10 @@ export default function Sidebar() {
                                 <button type="button" className="inline-flex justify-center p-2 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-600" onClick={() => toggleDarkMode()}>
                                     {theme === "dark" ? <SunIcon className="w-6 h-6" /> : <MoonIcon className="w-6 h-6" />}
                                     <span className="sr-only">Theme toggle</span>
+                                </button>
+                                <button type="button" className="inline-flex justify-center p-2 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-600" onClick={() => dispatch(logout())}>
+                                    <ArrowLeftOnRectangleIcon className="w-6 h-6" />
+                                    <span className="sr-only">Logout</span>
                                 </button>
                             </div>
                         </div>

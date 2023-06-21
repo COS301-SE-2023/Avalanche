@@ -4,7 +4,7 @@ import { HYDRATE } from "next-redux-wrapper";
 import ky from "ky";
 import { ILoginRequest, IOTPVerifyRequest, IRegisterRequest, ICreateOrganisationRequest } from "@/interfaces/requests";
 import { IOTPVerifyResponse, IRegisterResponse, ILoginResponse, ICreateOrgnisationResponse } from "@/interfaces/responses";
-import { setCookie, getCookie } from 'cookies-next';
+import { setCookie, getCookie, deleteCookie } from 'cookies-next';
 import { ISettings, IOrganisation, IDataProduct, IUserGroups } from "@/interfaces/interfaces";
 
 const url = "http://localho.st:4000/user-management";
@@ -82,6 +82,10 @@ export const userSlice = createSlice({
                 otp: false,
                 error: "",
             }
+        },
+        logout(state) {
+            deleteCookie("jwt");
+            state.user = initialState;
         }
     },
     extraReducers: (builder) => {
@@ -212,6 +216,6 @@ export const createOrganisation = createAsyncThunk("ORG.CreateOrganisation", asy
 })
 
 
-export const { setAuth, getAuth, resetRequest } = userSlice.actions;
+export const { setAuth, getAuth, resetRequest, logout } = userSlice.actions;
 export const userState = (state: AppState) => state.user;
 export default userSlice.reducer;
