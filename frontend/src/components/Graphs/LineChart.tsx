@@ -8,7 +8,7 @@ import {
     Title,
     Tooltip,
     Legend,
-} from 'chart.js';
+} from 'chart.js/auto';
 import { Line } from 'react-chartjs-2';
 import { IChart } from '@/interfaces';
 import { useTheme } from 'next-themes'
@@ -24,7 +24,7 @@ ChartJS.register(
 );
 
 export function LineChart({ data, addClass }: IChart) {
-    const { theme, setTheme } = useTheme()
+    const { theme } = useTheme()
     const options = {
         responsive: true,
         maintainAspectRatio: false,
@@ -62,6 +62,5 @@ export function LineChart({ data, addClass }: IChart) {
 
         }
     };
-    return <div className={`${addClass}`
-    }> <Line options={options} data={data} /></div >;
+    return <div className={`${addClass}`}><Line options={options} data={data} /></div >;
 }
