@@ -1,22 +1,10 @@
-import { useState } from 'react';
-import { DeleteButton, SubmitButton, ErrorToast } from '../Util';
 import { ModalContent, ModalHeader, ModalWrapper } from './ModalOptions';
 import { BarChart, BubbleChart, LineChart, PieChart, PolarAreaChart, RadarChart } from "@/components/Graphs";
-
-// Redux Stuff
-import { selectModalManagerState, setAnimateManagerState, clearCurrentOpenState } from '@/store/Slices/modalManagerSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import { selectModalManagerState, setData } from '@/store/Slices/modalManagerSlice';
+import { useSelector } from 'react-redux';
 import { ChartType } from '@/Enums';
 
-interface IConfirmModal {
-    text: string,
-    buttonSuccess: string,
-    buttonCancel: string,
-    title: string
-}
-
 export default function GraphZoomModal() {
-    const dispatch = useDispatch();
     const state = useSelector(selectModalManagerState);
 
     return (
