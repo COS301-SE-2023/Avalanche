@@ -271,7 +271,7 @@ header : JWToken
 ```ts
 interface ITransactionsResponse {
   status: string,
-  data: string,
+  message: string,
   timestamp: number
 }
 ```
