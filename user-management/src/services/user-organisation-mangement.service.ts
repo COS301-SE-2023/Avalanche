@@ -323,7 +323,7 @@ export class UserOrganisationMangementService {
         }
 
         // If it is an admin group and the user is the only one, throw error
-        if (userGroup.name.includes('admin')) {
+        if (userGroup.name.includes('admin') && userGroup.users.length === 1) {
             return { status: 400,error: true, message: 'Cannot remove the last admin from the admin group', 
             timestamp: new Date().toISOString()};
         }
@@ -400,5 +400,26 @@ export class UserOrganisationMangementService {
         await this.redis.del(key);
         return { status: 'success', message: 'User added to the user group successfully.',
         timestamp: new Date().toISOString() };
+    }
+
+    async exitOrganisation(token: string){
+        const userData = await this.redis.get(token);
+        if(!userData){
+            return { status: 400,error: true, message: 'Invalid token', 
+            timestamp: new Date().toISOString()};
+        }
+        const userDetails = JSON.parse(userData);
+
+        const userToBeRemoved = await this.userRepository.findOne({ where: { email: userDetails.email }, relations: ['userGroups', 'organisations'] });
+        if (!userToBeRemoved) {
+            return { status: 400,error: true, message: 'User to be removed not found', 
+            timestamp: new Date().toISOString()};
+        }
+
+        const organisation = await this.organisationRepository.findOne({ where: { name: userDetails.organisation.name }, relations: ['userGroups', 'organisations'] });
+        if (!organisation) {
+            return { status: 400,error: true, message: 'Organisation cannot be found',
+            timestamp: new Date().toISOString()};
+        }
     }
 }
