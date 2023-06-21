@@ -7,6 +7,7 @@ import { MoonIcon, SunIcon, Cog6ToothIcon } from "@heroicons/react/24/solid";
 import { useSelector } from "react-redux";
 import { userState } from "@/store/Slices/userSlice";
 import { useRouter } from "next/router";
+import { getCookie } from "cookies-next";
 import LoadingPage from "../Util/Loading";
 
 export default function Sidebar() {
@@ -25,8 +26,8 @@ export default function Sidebar() {
         theme === "dark" ? setTheme('light') : setTheme("dark")
     }
 
-    if (!stateUser.authed) {
-        router.push("/dashboard");
+    if (!getCookie("jwt")) {
+        router.push("/");
         return <LoadingPage />
     } else
         return (

@@ -11,6 +11,7 @@ import { userState, login } from '@/store/Slices/userSlice';
 import { ILoginRequest } from '@/interfaces/requests';
 import { useRouter } from 'next/router';
 import LoadingPage from '@/components/Util/Loading';
+import { getCookie } from 'cookies-next';
 
 export default function Home() {
   const emailRegex: RegExp = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
@@ -56,7 +57,7 @@ export default function Home() {
     }
     return true;
   }
-  if (stateUser.login.success && !stateUser.login.error) {
+  if (getCookie("jwt")) {
     router.push("/dashboard");
     return <LoadingPage />
   } else

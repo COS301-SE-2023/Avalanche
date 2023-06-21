@@ -50,7 +50,6 @@ const initialState: IUserState = {
 export const userSlice = createSlice({
     name: "user",
     initialState: {
-        authed: false,
         user: initialState,
         requests: {
             loading: false,
@@ -140,14 +139,12 @@ export const userSlice = createSlice({
             state.loading = false;
             state.login.success = true;
 
-            state.authed = true;
-
         })
         builder.addCase(login.pending, (state) => {
             state.loading = true;
         })
         builder.addCase(login.rejected, (state, action) => {
-
+            state.loading = false;
         })
         // Create Organisation
         builder.addCase(createOrganisation.fulfilled, (state, action) => {
