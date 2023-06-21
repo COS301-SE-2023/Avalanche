@@ -8,6 +8,9 @@ import snowflake = require('snowflake-sdk');
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { TransactionService } from './transactions/transactions.service';
 import { RedisProvider } from './redis.provider';
+import { AnalysisService } from './analysis/analysis.service';
+import { GraphFormatService } from './graph-format/graph-format.service';
+import { SnowflakeService } from './snowflake/snowflake.service';
 
 @Module({
   imports: [
@@ -17,7 +20,7 @@ import { RedisProvider } from './redis.provider';
         transport: Transport.TCP,
         options: {
           host: 'localhost',
-          port: 3002,
+          port: 4002,
         },
       },
     ]),
@@ -61,8 +64,11 @@ import { RedisProvider } from './redis.provider';
         return connection;
       },
     },
-    TransactionService
+    TransactionService,
+    AnalysisService,
+    GraphFormatService,
+    SnowflakeService
   ],
-  exports: [TransactionService],
+  exports: [TransactionService,AnalysisService,GraphFormatService,SnowflakeService],
 })
 export class AppModule {}

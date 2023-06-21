@@ -19,7 +19,7 @@ export class GraphFormatService {
       };
   */
   async format(data: string): Promise<string> {
-    const dataArr = JSON.parse(data)['data'];
+    const dataArr = JSON.parse(data)[0]['TRANSACTIONSBYREGISTRAR'];
     if (dataArr.length > 0) {
       const keys = Object.keys(dataArr[0]);
       if (keys.length === 3) {
