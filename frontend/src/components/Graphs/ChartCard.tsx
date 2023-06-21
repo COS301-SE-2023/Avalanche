@@ -5,8 +5,6 @@ import { ChartType, ChartTypeArray } from "@/Enums";
 import { ChartCardButton } from "./ChartCardHeader";
 import { Fragment } from 'react'
 import { Menu, Transition } from '@headlessui/react'
-import { ChevronDownIcon } from '@heroicons/react/20/solid'
-import Link from "next/link";
 
 interface IChartCard {
     title: string,
@@ -18,15 +16,10 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
 
     const [type, setType] = useState<ChartType>(defaultGraph);
     const [magnifyModal, setMagnifyModal] = useState<boolean>(false);
-    const [modalData, setModalData] = useState<any>({});
 
     const handleMagnifyModal = (value: boolean): void => {
         setMagnifyModal(value);
         document.body.style.overflow = value ? "hidden" : "visible";
-    }
-
-    function classNames(...classes: any[]) {
-        return classes.filter(Boolean).join(' ')
     }
 
     return (
@@ -36,9 +29,6 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
                 <div className="flex flex-row gap-1">
                     {/* <ChartCardButton onClick={(value: boolean) => setTypeDropdown(value)}>
                         <FunnelIcon className="w-6 h-6" />
-                    </ChartCardButton>
-                    <ChartCardButton onClick={(value: boolean) => setTypeDropdown(value)}>
-                        <ChartBarIcon className="w-6 h-6" />
                     </ChartCardButton>
                     */}
                     <ChartCardButton onClick={(value: boolean) => {
