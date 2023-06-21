@@ -23,7 +23,8 @@ module.exports = {
         thirdBackground: '#333533',
         avalancheBlue: '#007aff',
         lightHover: '#d1d5db',
-        primary: { "50": "#eff6ff", "100": "#dbeafe", "200": "#bfdbfe", "300": "#93c5fd", "400": "#60a5fa", "500": "#3b82f6", "600": "#2563eb", "700": "#1d4ed8", "800": "#1e40af", "900": "#1e3a8a" }
+        primary: { "50": "#eff6ff", "100": "#dbeafe", "200": "#bfdbfe", "300": "#93c5fd", "400": "#60a5fa", "500": "#3b82f6", "600": "#2563eb", "700": "#1d4ed8", "800": "#1e40af", "900": "#1e3a8a" },
+        indicator: { "1": "#008000", "2": "#00BF40", "3": "#00FF00", "4": "#40FF00", "5": "#80FF00", "6": "#BFFF00", "7": "#FFFF00", "8": "#FFBF00", "9": "#FF8000", "10": "#FF4000", "11": "#FF0000" }
       }
     },
     fontFamily: {
