@@ -50,6 +50,6 @@ export class TransactionService {
     const formattedData = await this.graphFormattingService.format(
       JSON.stringify(queryData),
     );
-    return {status: 'success', data: JSON.parse(formattedData), timestamp: new Date().toISOString()};
+    return {status: 'success', data: {graphName: graphName, ...JSON.parse(formattedData)} , timestamp: new Date().toISOString()};
   }
 }
