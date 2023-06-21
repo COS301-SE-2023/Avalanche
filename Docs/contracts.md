@@ -261,7 +261,9 @@ interface ITransactionsRequest {
   dateFrom : string //format yyyy-mm-dd
   dateTo : string //format yyyy-mm-dd
   granularity : string //year, month, week
-  group : string
+  group : string,
+  transactions : [strings],
+  graphName: string
 },
 header : JWToken
 ```
