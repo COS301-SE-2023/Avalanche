@@ -28,6 +28,12 @@ export default function Settings() {
     const [sorting, setSorting] = useState<string>("");
     const [sortingType, setSortingType] = useState<string>("asc");
 
+    useEffect(() => {
+        if (watchState.error) {
+            ErrorToast({ text: watchState.error });
+        }
+    }, [watchState.error])
+
     /**
      * This is only used to update the data state object, and more specifially the domain attribute in the object.
      * @param key the key in the data object
@@ -140,20 +146,34 @@ export default function Settings() {
      * @returns a class string
      */
     const getColour = (value: number): string => {
-        const data = "bg-white border-b dark:border-gray-700 ";
-        if (value < 20) {
-            return data + "bg-green-600";
-        } else if (value >= 20 && value < 40) {
-            return data + "bg-lime-500";
-        } else if (value >= 40 && value < 60) {
-            return data + "bg-yellow-500";
-        } else if (value >= 60 && value < 80) {
-            return data + "bg-amber-500";
-        } else if (value >= 80 && value < 90) {
-            return data + "bg-orange-500";
+        const data = "bg-white border-b-2 dark:border-gray-800 ";
+        if (value <= 10) {
+            return data + "dark:bg-gray-700 hover:border-b-2 hover:border-[#008000]"
+        } else if (value > 10 && value <= 20) {
+            return data + "dark:bg-gray-700 hover:border-b-2 hover:border-[#00BF40]"
+        } else if (value > 20 && value <= 30) {
+            return data + "dark:bg-gray-700 hover:border-b-2 hover:border-[#00FF00]"
+        } else if (value > 30 && value <= 40) {
+            return data + "dark:bg-gray-700 hover:border-b-2 hover:border-[#40FF00]"
+        } else if (value > 40 && value <= 50) {
+            return data + "dark:bg-gray-700 hover:border-b-2 hover:border-[#80FF00]"
+        } else if (value > 50 && value <= 60) {
+            return data + "dark:bg-gray-700 hover:border-b-2 hover:border-[#BFFF00]"
+        } else if (value > 60 && value <= 70) {
+            return data + "dark:bg-gray-700 hover:border-b-2 hover:border-[#FFFF00]"
+        } else if (value > 70 && value <= 80) {
+            return data + "dark:bg-gray-700 hover:border-b-2 hover:border-[#FFBF00]"
+        } else if (value > 80 && value <= 90) {
+            return data + "dark:bg-gray-700 hover:border-b-2 hover:border-[#FF8000]"
+        } else if (value > 90 && value < 100) {
+            return data + "dark:bg-gray-700 hover:border-b-2 hover:border-[#FF4000]"
         } else {
-            return data + "bg-red-600";
+            return data + "dark:bg-gray-700 hover:border-b-2 hover:border-[#FF0000]"
         }
+    }
+
+    const getIndicator = (value: number) => {
+        return `bg-indicator-${Math.floor((value / 10) + 1)}`;
     }
 
     useEffect(() => {
@@ -215,7 +235,7 @@ export default function Settings() {
                         <div className="w-full">
                             <InputLabel htmlFor="domain" text="Enter the domain name you want to check:" />
                             <p className="text-sm font-light text-gray-500 dark:text-gray-400 mb-2">
-                                Without the zone (.co.za, .africa)
+                                Without the tld (.co.za, .africa). <Anchor href="https://www.semrush.com/blog/top-level-domains/" text="What are TLD's?" target="_blank" />
                             </p>
                             <Input type="text" placeholder="standardbank" name="domain" id="domain" required={true} value={data.domain} onChange={(event: React.FormEvent<HTMLInputElement>) => {
                                 update("domain", event.currentTarget.value);
@@ -247,7 +267,7 @@ export default function Settings() {
                         <div className="w-full p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                             <div className="flex items-start gap-2 items-center">
                                 <div className="flex items-center h-5">
-                                    <input id="remember" aria-describedby="remember" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" onClick={() => checkType("Levenshtein")} disabled={watchState.loading} required={data.types.length} />
+                                    <input id="remember" aria-describedby="remember" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" onClick={() => checkType("Levenshtein")} disabled={watchState.loading} />
                                 </div>
                                 <h3 className="block text-sm font-medium text-gray-900 dark:text-white">Levenshtein</h3>
                                 <QuestionMarkCircleIcon className="h-5 w-5 hover:text-avalancheBlue cursor-pointer" onClick={() => onHelpClick("Levenshtein")} />
@@ -360,7 +380,7 @@ export default function Settings() {
                             <tbody>
                                 {
                                     !watchState.loading && watchState.changingData.map((item: any, index: number) => {
-                                        return <tr className={getColour(item.similarity)} key={index}>
+                                        return <tr className={getColour(item.similarity) + " duration-75 ease-in-out"} key={index}>
                                             <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                 {item.domainName}
                                             </th>
@@ -368,7 +388,13 @@ export default function Settings() {
                                                 {item.zone}
                                             </td>
                                             <td className="px-6 py-4 dark:text-white text-gray-900">
-                                                {item.similarity}
+                                                <span className="flex items-center gap-2">
+                                                    <span className="relative inline-flex h-3 w-3 z-5">
+                                                        <span className={"animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 " + getIndicator(item.similarity)}></span>
+                                                        <span className={"relative inline-flex rounded-full h-3 w-3 " + getIndicator(item.similarity)}></span>
+                                                    </span>
+                                                    {item.similarity}
+                                                </span>
                                             </td>
                                         </tr>
                                     })
@@ -379,7 +405,7 @@ export default function Settings() {
 
                 </div>}
             </div >
-        </div >
+        </div>
 
     </>
 }

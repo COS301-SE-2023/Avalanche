@@ -39,7 +39,7 @@ export default function Sidebar() {
                 </button>
                 <div onClick={() => {
                     setMenu(false)
-                }} className={`${menu && 'max-h-full w-full h-screen bg-slate-900/50 fixed'}`}>
+                }} className={`${menu && 'max-h-full w-full h-screen bg-slate-900/50 fixed z-50'}`}>
                     <aside id="default-sidebar" className={`fixed top-0 left-0 w-64 h-screen transition-transform ${!menu && '-translate-x-full'} sm:translate-x-0`}
                         onClick={e => {
                             e.stopPropagation()

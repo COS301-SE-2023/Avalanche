@@ -22,12 +22,6 @@ const MenuOptions: IMenu = {
             role: ""
         },
         {
-            text: "Favourites",
-            icon: <HeartIcon className={holder} />,
-            page: "favourites",
-            role: "",
-        },
-        {
             text: "Reports",
             icon: <ArchiveBoxIcon className={holder} />,
             page: "reports",

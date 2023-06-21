@@ -28,9 +28,16 @@ export const domainWatchSlice = createSlice({
         })
         builder.addCase(getDomainWatch.pending, (state) => {
             state.loading = true;
+            state.error = "";
+            state.data = [];
+            state.changingData = [];
+            state.time = 0;
         })
         builder.addCase(getDomainWatch.rejected, (state, action) => {
-
+            const payload = action.payload as any;
+            console.log(payload);
+            state.loading = false;
+            // state.error = payload.error;
         })
         // Create Organisation
         builder.addCase(getDomainWatch.fulfilled, (state, action) => {
