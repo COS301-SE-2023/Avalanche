@@ -17,12 +17,14 @@ export class JwtMiddleware implements NestMiddleware {
       const userInfo = await this.redis.get(token);
 
       if (!userInfo) {
-        return { status: 'failure', message: 'Invalid token', 
-            timestamp: new Date().toISOString()};
+        res.status(401).json({ status: 'failure',message: 'JWT invalid', timestamp: new Date().toISOString()});
       }else{
         // Add token to the request body
         if(req.baseUrl.startsWith("/zacr") || req.baseUrl.startsWith('/africa') || req.baseUrl.startsWith('/ryce')){
+          const graphName1 = req.body.graphName;
+          delete req.body.graphName;
           req.body = { jsonInput: req.body };
+          req.body.graphName = graphName1;
           console.log(req.body);
           next();
         }else{
