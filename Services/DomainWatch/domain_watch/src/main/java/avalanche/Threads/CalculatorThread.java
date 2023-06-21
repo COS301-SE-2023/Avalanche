@@ -1,4 +1,4 @@
-package avalanche.Processing;
+package avalanche.Threads;
 
 import java.util.LinkedList;
 import java.util.Queue;

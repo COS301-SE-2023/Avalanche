@@ -1,4 +1,4 @@
-package avalanche.Processing;
+package avalanche.Core;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -12,20 +12,23 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import avalanche.DataClasses.Domain;
 import avalanche.DistanceCalculators.LevensteinDistanceCalculator;
 import avalanche.DistanceCalculators.SoundexCalculator;
+import avalanche.Threads.CalculatorThread;
+import avalanche.Threads.SoundexThread;
 
 public class SimilarityChecker {
     private static HashSet<Domain> allDomains;
     private static ArrayList<Queue<Domain>> splitDoms;
-    public static final int THREAD_COUNT = 12;
+    private static int threadCount;
 
-    public static void init(boolean useMock) {
+    public static void init(boolean useMock, int threadCount) {
+        SimilarityChecker.threadCount = threadCount;
         String path = "data/Domain Retrieval.csv";
         if (useMock) {
             path = "data/Domain Retrieval mock.csv";
         }
         allDomains = new HashSet<>();
         splitDoms = new ArrayList<>();
-        for (int i = 0; i < THREAD_COUNT; i++) {
+        for (int i = 0; i < threadCount; i++) {
             splitDoms.add(new LinkedList<Domain>());
         }
         int count = 0;
@@ -38,7 +41,7 @@ public class SimilarityChecker {
                 String[] split = line.split(",");
                 Domain d = new Domain(split[0], split[1]);
                 allDomains.add(d);
-                splitDoms.get(count % THREAD_COUNT).add(d);
+                splitDoms.get(count % threadCount).add(d);
                 count++;
             }
             file.close();
@@ -138,10 +141,10 @@ public class SimilarityChecker {
         return hits;
     }
 
-    public ConcurrentLinkedQueue<Domain> threadedfindAllSoundsAboveSimliarityThreshold(String search, double threshold,
-            int threadNum) {
+    public ConcurrentLinkedQueue<Domain> threadedfindAllSoundsAboveSimliarityThreshold(String search,
+            double threshold) {
         ConcurrentLinkedQueue<Domain> hits = new ConcurrentLinkedQueue<>();
-        SoundexThread[] threads = new SoundexThread[threadNum];
+        SoundexThread[] threads = new SoundexThread[threadCount];
         for (int i = 0; i < threads.length; i++) {
             threads[i] = new SoundexThread(search, threshold, hits, splitDoms.get(i));
         }
@@ -149,8 +152,19 @@ public class SimilarityChecker {
             threads[i].start();
         }
 
+        for (int i = 0; i < threads.length; i++) {
+            System.out.println();
+        }
+
+        int loaderNum = 0;
+        final String[] loading = { "-", "\\", "|", "/" };
         boolean busy = true;
         while (busy) {
+            if (loaderNum == loading.length) {
+                loaderNum = 0;
+            }
+            spinThreadsTimed(500, loaderNum, threads);
+            loaderNum++;
             busy = false;
             for (int i = 0; i < threads.length; i++) {
                 if (threads[i].isAlive()) {
@@ -159,13 +173,13 @@ public class SimilarityChecker {
                 }
             }
         }
+        spinThreads(loaderNum, threads);
         return hits;
     }
 
-    public ConcurrentLinkedQueue<Domain> threadedFindAllWithinSimliarityThreshold(String search, double threshold,
-            int threadNum) {
+    public ConcurrentLinkedQueue<Domain> threadedFindAllWithinSimliarityThreshold(String search, double threshold) {
         ConcurrentLinkedQueue<Domain> hits = new ConcurrentLinkedQueue<>();
-        CalculatorThread[] threads = new CalculatorThread[threadNum];
+        CalculatorThread[] threads = new CalculatorThread[threadCount];
         for (int i = 0; i < threads.length; i++) {
             threads[i] = new CalculatorThread(search, threshold, hits, splitDoms.get(i));
         }
@@ -180,21 +194,11 @@ public class SimilarityChecker {
         int loaderNum = 0;
         final String[] loading = { "-", "\\", "|", "/" };
         while (busy) {
-            if (System.currentTimeMillis() % 500 == 0) {
-                if (loaderNum == loading.length) {
-                    loaderNum = 0;
-                }
-                for (int i = 0; i < threads.length; i++) {
-                    System.out.print("\u001b[1000D");
-                    System.out.print("\u001b[1A");
-                }
-                for (int i = 0; i < threads.length; i++) {
-                    System.out.println(
-                            "Thread " + i + "-\t" + threads[i].getState().toString() + "[" + loading[loaderNum] + "]");
-                }
-                loaderNum++;
+            if (loaderNum == loading.length) {
+                loaderNum = 0;
             }
-
+            spinThreadsTimed(500, loaderNum, threads);
+            loaderNum++;
             busy = false;
             for (int i = 0; i < threads.length; i++) {
                 if (threads[i].isAlive()) {
@@ -203,9 +207,13 @@ public class SimilarityChecker {
                 }
             }
         }
-        if (loaderNum == loading.length) {
-            loaderNum = 0;
-        }
+        spinThreads(loaderNum, threads);
+        return hits;
+    }
+
+    private void spinThreads(int position, Thread[] threads) {
+        final String[] loading = { "-", "\\", "|", "/" };
+        int loaderNum = position % loading.length;
         for (int i = 0; i < threads.length; i++) {
             System.out.print("\u001b[1000D");
             System.out.print("\u001b[1A");
@@ -214,7 +222,11 @@ public class SimilarityChecker {
             System.out.println(
                     "Thread " + i + "-\t" + threads[i].getState().toString() + "[" + loading[loaderNum] + "]");
         }
-        loaderNum++;
-        return hits;
+    }
+
+    private void spinThreadsTimed(int milliseconds, int position, Thread[] threads) {
+        if (System.currentTimeMillis() % 500 == 0) {
+            spinThreads(position, threads);
+        }
     }
 }
