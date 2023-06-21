@@ -10,6 +10,6 @@ export class AppController {
   @MessagePattern({ cmd: 'transactions' })
   async transactions(data: any) {
     console.log('Transactions: ', data);
-    return await this.transactionsService.transactions(data.jsonInput);
+    return await this.transactionsService.transactions(data.jsonInput,data.graphName);
   }
 }

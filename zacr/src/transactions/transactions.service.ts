@@ -39,8 +39,9 @@ export class TransactionService {
   //   });
   // }
 
-  async transactions(jsonInput: string): Promise<any>{
+  async transactions(jsonInput: string, graphName: string): Promise<any>{
     jsonInput = JSON.stringify(jsonInput);
+    console.log(jsonInput);
     const sqlQuery = `call transactionsByRegistrar('${jsonInput}')`;
     const queryData = await this.snowflakeService.execute(sqlQuery);
     // const analyzedData = await this.statisticalAnalysisService.analyze(
@@ -49,6 +50,6 @@ export class TransactionService {
     const formattedData = await this.graphFormattingService.format(
       JSON.stringify(queryData),
     );
-    return formattedData;
+    return {status: 'success', message: JSON.parse(formattedData), timestamp: new Date().toISOString()};
   }
 }
