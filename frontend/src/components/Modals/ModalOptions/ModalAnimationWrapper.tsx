@@ -1,5 +1,6 @@
 import { selectModalManagerState } from '@/store/Slices/modalManagerSlice';
 import { useSelector } from 'react-redux';
+import "animate.css";
 
 interface IModalAnimationWrapper {
     children: any

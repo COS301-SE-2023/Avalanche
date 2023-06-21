@@ -11,9 +11,9 @@ export default function GraphZoomModal() {
     console.log(state.data);
 
     return (
-        <ModalWrapper>
+        <ModalWrapper addClassAdd="h-full w-full" smallModal={false}>
             <ModalHeader title="Mr Zoom" />
-            <ModalContent>
+            <ModalContent addClass='h-5/6'>
                 <div className="relative p-6 space-y-6 w-full h-full">
                     {state.data.type === ChartType.Bar && <BarChart data={state.data.data} />}
                     {state.data.type === ChartType.Pie && <PieChart data={state.data.data} />}
