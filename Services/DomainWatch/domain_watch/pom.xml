@@ -6,7 +6,7 @@
 
   <groupId>avalanche</groupId>
   <artifactId>domain_watch</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
 
   <name>domain_watch</name>
   <!-- FIXME change it to the project's website -->

@@ -3,28 +3,16 @@ package avalanche.Network;
 import com.sun.net.httpserver.*;
 
 import avalanche.Core.SimilarityChecker;
-import avalanche.DataClasses.Domain;
 import avalanche.Network.ServerState.Closed;
 import avalanche.Network.ServerState.Initialising;
 import avalanche.Network.ServerState.Running;
 import avalanche.Network.ServerState.ServerState;
 import avalanche.Utility.DomainTokeniser;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class SimpleHttpServer {
 
