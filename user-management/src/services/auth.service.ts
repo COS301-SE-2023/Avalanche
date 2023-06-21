@@ -19,7 +19,7 @@ export class AuthService {
 
   async register(email: string, password: string, firstName: string, lastName: string) {
     if(!email || !password || !firstName || !lastName){
-      return {status: "failure" , message: "Missing info", 
+      return {status: 400,error: true, message: "Missing info", 
       timestamp: new Date().toISOString()}
     }
     const user = await this.userRepository.findOne({ where: { email }, relations: ['userGroups', 'organisation'] });
@@ -47,11 +47,11 @@ export class AuthService {
         return { status: 'success', message: 'Registration successful. Please check your email for the OTP.', 
         timestamp: new Date().toISOString() };
       } else {
-        return { status: 'failure', message: 'Registration unsuccessful. Email is awaiting verification.', 
+        return { status: 400,error: true, message: 'Registration unsuccessful. Email is awaiting verification.', 
         timestamp: new Date().toISOString() };
       }
     } else {
-      return { status: 'failure', message: 'Registration unsuccessful. This email is in use.', 
+      return { status: 400,error: true, message: 'Registration unsuccessful. This email is in use.', 
       timestamp: new Date().toISOString() };
     }
   }
@@ -85,14 +85,14 @@ export class AuthService {
     // Get user's info from Redis
     const userInfo = await this.redis.get(email);
     if (!userInfo) {
-      return { status: 'failure', message: 'Email has not been found.', 
+      return { status: 400,error: true, message: 'Email has not been found.', 
       timestamp: new Date().toISOString() };
     };
 
     const { password, salt, firstName, lastName, otp: savedOtp } = JSON.parse(userInfo);
     console.log(password + " " + otp);
     if (otp !== savedOtp) {
-      return { status: 'failure', message: 'Incorrect OTP.', 
+      return {status: 400,error: true, message: 'Incorrect OTP.', 
       timestamp: new Date().toISOString() };
     };
 
@@ -115,7 +115,7 @@ export class AuthService {
     console.log(user);
     // If user not found, throw error
     if (!user) {
-      return { status: 'failure', message: 'This user does not exist, please enter the correct email/please register.', 
+      return { status: 400,error: true, message: 'This user does not exist, please enter the correct email/please register.', 
       timestamp: new Date().toISOString() };
     }
 
