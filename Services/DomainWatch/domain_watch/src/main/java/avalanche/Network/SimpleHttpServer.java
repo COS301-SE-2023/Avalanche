@@ -36,7 +36,7 @@ public class SimpleHttpServer {
         this.port = port;
         this.httpServer = HttpServer.create(new InetSocketAddress(port), 0);
         httpServer.createContext("/domainWatch/list", new PostHandler(this));
-        httpServer.setExecutor(null); // creates a default executor
+        httpServer.setExecutor(java.util.concurrent.Executors.newCachedThreadPool()); // creates a default executor
         this.state = new Closed();
     }
 
@@ -44,11 +44,10 @@ public class SimpleHttpServer {
         System.out.println("Starting server");
         httpServer.start();
         this.state = new Initialising();
-        handleDummyRequest();
         System.out.println("Found " + Runtime.getRuntime().availableProcessors() + " processors");
         long st = System.currentTimeMillis();
         System.out.println("initialising domain list");
-        SimilarityChecker.init(false, Runtime.getRuntime().availableProcessors());
+        SimilarityChecker.init(false, Runtime.getRuntime().availableProcessors() - 1);
         System.out.println("Done domain list\n");
 
         System.out.println("initialising word freq");

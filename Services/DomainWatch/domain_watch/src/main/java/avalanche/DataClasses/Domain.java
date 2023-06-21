@@ -15,6 +15,14 @@ public class Domain implements Comparable {
         this.similarity = 0;
     }
 
+    public Domain(Domain domain) {
+        this.name = domain.name;
+        this.zone = domain.zone;
+        this.metrics = domain.metrics;
+        this.distance = domain.distance;
+        this.similarity = domain.similarity;
+    }
+
     public String getName() {
         return name;
     }
