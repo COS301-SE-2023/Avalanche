@@ -42,6 +42,9 @@ export const graphSlice = createSlice({
             const payload = action.payload as any;
             payload.data.datasets.forEach((set: any, index: number) => {
                 set.backgroundColor = chartColours[index];
+                set.borderColor = chartColours[index];
+                set.pointRadius = 4;
+                set.pointHoverRadius = 5;
             })
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
