@@ -1,6 +1,5 @@
 package avalanche.Network.ServerState;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.ConcurrentLinkedQueue;

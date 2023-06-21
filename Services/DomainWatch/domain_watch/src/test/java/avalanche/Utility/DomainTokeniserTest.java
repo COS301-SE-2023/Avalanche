@@ -6,8 +6,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.FileNotFoundException;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Queue;
 
 import org.junit.jupiter.api.Test;
+
+import avalanche.Core.SimilarityChecker;
+import avalanche.DataClasses.Domain;
 
 public class DomainTokeniserTest {
 

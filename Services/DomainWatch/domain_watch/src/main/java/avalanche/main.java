@@ -1,8 +1,13 @@
 package avalanche;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashSet;
 
+import avalanche.Core.SimilarityChecker;
+import avalanche.DataClasses.Domain;
 import avalanche.Network.SimpleHttpServer;
+import avalanche.Utility.DomainTokeniser;
 
 public class main {
     public static void main(String[] args) {
@@ -13,5 +18,6 @@ public class main {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+
     }
 }

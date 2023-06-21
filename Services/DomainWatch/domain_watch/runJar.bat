@@ -1,1 +1,1 @@
-START /B /wait java -jar target/domain_watch-1.0-SNAPSHOT-jar-with-dependencies.jar
+START /B /wait java -jar target/domain_watch-1.0-jar-with-dependencies.jar
