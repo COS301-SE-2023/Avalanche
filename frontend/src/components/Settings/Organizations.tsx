@@ -3,50 +3,18 @@ import { AlternativeButton, DeleteButton, SubmitButton, TableIconButton, Warning
 import { TrashIcon } from '@heroicons/react/24/solid';
 import NoFind from '../CustomSVG/NoFind';
 import { ConfirmModal, CreateGroupModal, OrgnizationCreateModal } from '../Modals';
-import { ModalAnimationWrapper } from "../Modals/ModalOptions";
 import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
+import { userState } from "@/store/Slices/userSlice";
 import { useDispatch, useSelector } from 'react-redux';
 
 interface IOrganizationSettings {
     demo?: boolean,
 }
 
-const usersArray = [
-    {
-        name: "Michael Tarr",
-        email: "michael@michael.domains",
-        image: "https://github.com/michaelrosstarr.png",
-        added: "2023-05-17 08:31:17 SAST"
-    },
-    {
-        name: "Mark Botros",
-        email: "mark@michael.domains",
-        image: "https://github.com/michaelrosstarr.png",
-        added: "2023-05-17 08:31:17 SAST"
-    },
-    {
-        name: "Inge Odendaal",
-        email: "inge@michael.domains",
-        image: "https://github.com/michaelrosstarr.png",
-        added: "2023-05-17 08:31:17 SAST"
-    },
-    {
-        name: "Gilles Teuwen",
-        email: "gilles@michael.domains",
-        image: "https://github.com/michaelrosstarr.png",
-        added: "2023-05-17 08:31:17 SAST"
-    },
-    {
-        name: "Sarah Killian",
-        email: "sarah@michael.domains",
-        image: "https://github.com/michaelrosstarr.png",
-        added: "2023-05-17 08:31:17 SAST"
-    }
-];
-
 export default function OrganizationSettings({ demo }: IOrganizationSettings) {
 
     const modalState = useSelector(selectModalManagerState);
+    const stateUser = useSelector(userState);
     const dispatch = useDispatch();
 
     /**
@@ -57,7 +25,7 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
     /**
      * This state variable holds all the users
      */
-    const [users, setUsers] = useState(usersArray);
+    const [users, setUsers] = useState<any>([]);
 
     /**
      * This state variable holds the temp users that are used in the search.
@@ -74,7 +42,7 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
             setTempUsers(users);
         } else {
             let t = users;
-            t = t.filter((user) => user.name.toLowerCase().includes(value.toLowerCase()));
+            t = t.filter((user: any) => user.name.toLowerCase().includes(value.toLowerCase()));
             setTempUsers(t);
         }
     }
@@ -97,9 +65,9 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
     }
 
     return <>
-        {demo ? <>
+        {stateUser.user.organisation ? <>
             <div className="flex justify-between pb-2 mb-4">
-                <h2 className="text-2xl font-medium dark:text-white text-gray-800">Michael&apos;s Domains</h2>
+                <h2 className="text-2xl font-medium dark:text-white text-gray-800">{stateUser.user.organisation.name}</h2>
                 <DeleteButton text="Delete Organization" onClick={() => { }} />
             </div>
             <div className="flex gap-2">
@@ -175,7 +143,7 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
                                 </thead>
                                 <tbody>
                                     {
-                                        tempUsers.map((item, index) => {
+                                        tempUsers.map((item: any, index: any) => {
                                             return <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900" key={index}>
                                                 <td className="w-4 p-4">
                                                     <div className="flex items-center">
