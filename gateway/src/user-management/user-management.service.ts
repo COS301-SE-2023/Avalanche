@@ -25,6 +25,12 @@ export class UserManagementService {
   async createOrganisation(data: any) {
     return this.client.send({ cmd: 'createOrganisation' }, data).toPromise();
   }
+  async getUserInfo(data: any) {
+    return this.client.send({ cmd: 'getUserInfo' }, data).toPromise();
+  }
+  async getMembers(data: any) {
+    return this.client.send({ cmd: 'getMembers' }, data).toPromise();
+  }
   async createUserGroup(data: any) {
     return this.client.send({ cmd: 'createUserGroup' }, data).toPromise();
   }
