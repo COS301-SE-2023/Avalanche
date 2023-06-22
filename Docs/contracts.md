@@ -401,3 +401,23 @@ dnsWatchResponse
   distance: string[],
 }
 ```
+## 5. Snowflake
+```
+ITransactionRequest
+{
+    registrars: string[], //registrarIDs
+    transactions: string[], // create, grace, redeem, transfer, renew
+    zone: string, // "ZoneName"
+    dateFrom: string //"yyyy-mm-dd",
+    dateTo: string, //"yyyy-mm-dd",
+    granularity :string // "day | month | week | year",
+    group : string //"registrar"/ "all"
+}
+```
+```
+IDomainWatchRequest
+{
+   granularity: string // day/week/month/year
+   num:number //number of days, weeks, months or years back you want
+}
+```
