@@ -1,7 +1,8 @@
+import { IUser } from "@/store/Slices/userSlice"
 import { IOrganisation } from "../interfaces"
 
 export default interface ICreateOrgnisationResponse {
     status: string,
-    message: IOrganisation,
+    message: IUser,
     timestamp: string
 }

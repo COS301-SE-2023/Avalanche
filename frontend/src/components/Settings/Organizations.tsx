@@ -3,50 +3,25 @@ import { AlternativeButton, DeleteButton, SubmitButton, TableIconButton, Warning
 import { TrashIcon } from '@heroicons/react/24/solid';
 import NoFind from '../CustomSVG/NoFind';
 import { ConfirmModal, CreateGroupModal, OrgnizationCreateModal } from '../Modals';
-import { ModalAnimationWrapper } from "../Modals/ModalOptions";
 import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
+import { userState } from "@/store/Slices/userSlice";
 import { useDispatch, useSelector } from 'react-redux';
+import { Fragment } from 'react'
+import { Menu, Transition } from '@headlessui/react'
+import { ChevronDownIcon } from '@heroicons/react/20/solid'
+
+function classNames(...classes: any[]) {
+    return classes.filter(Boolean).join(' ')
+}
 
 interface IOrganizationSettings {
     demo?: boolean,
 }
 
-const usersArray = [
-    {
-        name: "Michael Tarr",
-        email: "michael@michael.domains",
-        image: "https://github.com/michaelrosstarr.png",
-        added: "2023-05-17 08:31:17 SAST"
-    },
-    {
-        name: "Mark Botros",
-        email: "mark@michael.domains",
-        image: "https://github.com/michaelrosstarr.png",
-        added: "2023-05-17 08:31:17 SAST"
-    },
-    {
-        name: "Inge Odendaal",
-        email: "inge@michael.domains",
-        image: "https://github.com/michaelrosstarr.png",
-        added: "2023-05-17 08:31:17 SAST"
-    },
-    {
-        name: "Gilles Teuwen",
-        email: "gilles@michael.domains",
-        image: "https://github.com/michaelrosstarr.png",
-        added: "2023-05-17 08:31:17 SAST"
-    },
-    {
-        name: "Sarah Killian",
-        email: "sarah@michael.domains",
-        image: "https://github.com/michaelrosstarr.png",
-        added: "2023-05-17 08:31:17 SAST"
-    }
-];
-
 export default function OrganizationSettings({ demo }: IOrganizationSettings) {
 
     const modalState = useSelector(selectModalManagerState);
+    const stateUser = useSelector(userState);
     const dispatch = useDispatch();
 
     /**
@@ -57,7 +32,7 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
     /**
      * This state variable holds all the users
      */
-    const [users, setUsers] = useState(usersArray);
+    const [users, setUsers] = useState<any>([]);
 
     /**
      * This state variable holds the temp users that are used in the search.
@@ -74,7 +49,7 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
             setTempUsers(users);
         } else {
             let t = users;
-            t = t.filter((user) => user.name.toLowerCase().includes(value.toLowerCase()));
+            t = t.filter((user: any) => user.name.toLowerCase().includes(value.toLowerCase()));
             setTempUsers(t);
         }
     }
@@ -97,9 +72,9 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
     }
 
     return <>
-        {demo ? <>
+        {stateUser.user.organisation ? <>
             <div className="flex justify-between pb-2 mb-4">
-                <h2 className="text-2xl font-medium dark:text-white text-gray-800">Michael&apos;s Domains</h2>
+                <h2 className="text-2xl font-medium dark:text-white text-gray-800">{stateUser.user.organisation.name}</h2>
                 <DeleteButton text="Delete Organization" onClick={() => { }} />
             </div>
             <div className="flex gap-2">
@@ -121,28 +96,32 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
                     <div className="relative overflow-x-auto w-full p-1">
                         <div className="flex items-center justify-between pb-4 w-full">
                             <div>
-                                <button id="dropdownActionButton" data-dropdown-toggle="dropdownAction" className="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600" type="button">
-                                    <span className="sr-only">Action button</span>
-                                    Action
-                                    <svg className="w-3 h-3 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                                </button>
-                                {/* <!-- Dropdown menu --> */}
-                                <div id="dropdownAction" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-                                    <ul className="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownActionButton">
-                                        <li>
-                                            <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Reward</a>
-                                        </li>
-                                        <li>
-                                            <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Promote</a>
-                                        </li>
-                                        <li>
-                                            <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Activate account</a>
-                                        </li>
-                                    </ul>
-                                    <div className="py-1">
-                                        <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete User</a>
+                                {/* <Menu as="div" className="relative inline-block text-left">
+                                    <div>
+                                        <Menu.Button className="p-3 text-sm font-medium text-gray-900 focus:outline-none bg-gray-400 rounded-lg hover:bg-gray-100 hover:text-blue-700 dark:bg-primaryBackground dark:text-gray-200 dark:hover:text-white dark:hover:bg-gray-700 flex">
+                                            Actions
+                                            <ChevronDownIcon className="w-6 h-6" />
+                                        </Menu.Button>
                                     </div>
-                                </div>
+
+                                    <Transition
+                                        as={Fragment}
+                                        enter="transition ease-out duration-100"
+                                        enterFrom="transform opacity-0 scale-95"
+                                        enterTo="transform opacity-100 scale-100"
+                                        leave="transition ease-in duration-75"
+                                        leaveFrom="transform opacity-100 scale-100"
+                                        leaveTo="transform opacity-0 scale-95"
+                                    >
+                                        <Menu.Items className="absolute left-0 z-20 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-700">
+                                            <div className="py-1">
+                                                <Menu.Item>
+                                                    <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"></span>
+                                                </Menu.Item>
+                                            </div>
+                                        </Menu.Items>
+                                    </Transition>
+                                </Menu> */}
                             </div>
                             <label htmlFor="table-search" className="sr-only">Search</label>
                             <div className="relative">
@@ -175,7 +154,7 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
                                 </thead>
                                 <tbody>
                                     {
-                                        tempUsers.map((item, index) => {
+                                        tempUsers.map((item: any, index: any) => {
                                             return <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900" key={index}>
                                                 <td className="w-4 p-4">
                                                     <div className="flex items-center">
