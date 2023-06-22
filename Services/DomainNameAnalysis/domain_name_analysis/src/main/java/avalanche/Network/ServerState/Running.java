@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import avalanche.Core.FrequencyCounter;
@@ -21,7 +22,14 @@ public class Running extends ServerState {
         String resp = "{\"status\":\"success\",  \"data\":[";
 
         // Parse request to JSON
-        JSONObject obj = new JSONObject(body);
+        JSONObject obj = null;
+        try {
+
+            obj = new JSONObject(body);
+        } catch (JSONException jsonException) {
+            return "{\"status\":\"failure\",\"request-error\":\"" + jsonException.getMessage().toString()
+                    + "\"}";
+        }
 
         // Validate request
         String validation = validateRequest(obj);
