@@ -61,6 +61,16 @@ export class AppController {
     console.log("Removing a user from a user group: ", data);
     return await this.userOrgManService.removeUserFromUserGroup(data.token, data.userGroupName, data.userEmail);
   }
+  @MessagePattern({ cmd: 'exitOrganisation' })
+  async exitOrganisation(data: any) {
+    console.log("Removing you from the organisation: ", data);
+    return await this.userOrgManService.exitOrganisation(data.token, data.organisationName);
+  }
+  @MessagePattern({ cmd: 'removeUserFromOrganisation' })
+  async removeUserFromOrganisation(data: any) {
+    console.log("Removing a user from an organisation: ", data);
+    return await this.userOrgManService.removeUserFromOrganisation(data.token, data.organisationName, data.userEmail);
+  }
   @MessagePattern({ cmd: 'addUserToUserGroupWithKey' })
   async addUserToUserGroupWithKey(data: any) {
     console.log("Adding a user, with a key, to a user group: ", data);
