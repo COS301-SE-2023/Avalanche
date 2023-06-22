@@ -39,7 +39,7 @@ export class UserOrganisationMangementService {
         }
         console.log(user);
         // Check if the user already belongs to an organisation
-        if (user.organisation!==null && user.organisation.id !== null) {
+        if (user.organisation !== null && user.organisation.id !== null) {
             return {
                 status: 400, error: true, message: 'User already belongs to an organisation',
                 timestamp: new Date().toISOString()
@@ -467,7 +467,7 @@ export class UserOrganisationMangementService {
         };
     }
 
-    async exitOrganisation(token: string, organisationName : string) {
+    async exitOrganisation(token: string, organisationName: string) {
         const userData = await this.redis.get(token);
         if (!userData) {
             return {
@@ -498,9 +498,11 @@ export class UserOrganisationMangementService {
         await this.organisationRepository.save(organisation);
 
         // Remove the user from each of the user groups they are part of
-        for (const group of userToBeRemoved.userGroups) {
-            group.users = group.users.filter(user => user.id !== userToBeRemoved.id);
-            await this.userGroupRepository.save(group);
+        if (userToBeRemoved.userGroups !== null) {
+            for (const group of userToBeRemoved.userGroups) {
+                group.users = group.users.filter(user => user.id !== userToBeRemoved.id);
+                await this.userGroupRepository.save(group);
+            }
         }
 
         // At this point the user has been removed from all their user groups and their organisation.
@@ -508,7 +510,7 @@ export class UserOrganisationMangementService {
         userToBeRemoved.userGroups = null;
         await this.userRepository.save(userToBeRemoved);
         await this.redis.set(token, JSON.stringify(userToBeRemoved), 'EX', 24 * 60 * 60);
-        return { status: 'success', message: {text: 'User removed from organisation and user groups', user: userToBeRemoved}, timestamp: new Date().toISOString() };
+        return { status: 'success', message: { text: 'User removed from organisation and user groups', user: userToBeRemoved }, timestamp: new Date().toISOString() };
     }
 
     async removeUserFromOrganisation(token: string, organisationName: string, userEmail: string) {
@@ -553,9 +555,11 @@ export class UserOrganisationMangementService {
         await this.organisationRepository.save(organisation);
 
         // Remove the user from each of the user groups they are part of
-        for (const group of userToBeRemoved.userGroups) {
-            group.users = group.users.filter(user => user.id !== userToBeRemoved.id);
-            await this.userGroupRepository.save(group);
+        if (userToBeRemoved.userGroups !== null) {
+            for (const group of userToBeRemoved.userGroups) {
+                group.users = group.users.filter(user => user.id !== userToBeRemoved.id);
+                await this.userGroupRepository.save(group);
+            }
         }
 
         // At this point the user has been removed from all their user groups and their organisation.
