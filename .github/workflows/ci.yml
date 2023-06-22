@@ -2,10 +2,11 @@ name: Node.js CI
 
 on:
   push:
-    branches-ignore:
-      - '*'
-    tags-ignore:
-      - '*'
+    branches:
+      - 'gateway/**'
+      - 'zacr/**'
+      - 'user-management/**'
+      - 'domain-watch/**'
     paths:
       - '**_test'
       - '**_cov'
