@@ -219,14 +219,10 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
             <SubmitButton text="Add a new organization" onClick={() => dispatch(setCurrentOpenState("ORG.CreateOrg"))} />
         </div>
         }
-        {modalState.currentOpen === "ORG.RemoveUser" && <ModalAnimationWrapper>
-            <ConfirmModal text="Are you sure you want to remove this user from this group?" title="Remove User Confirmation" buttonSuccess="Yes, remove user" buttonCancel="No, cancel" />
-        </ModalAnimationWrapper>}
+        {modalState.currentOpen === "ORG.RemoveUser" && <ConfirmModal text="Are you sure you want to remove this user from this group?" title="Remove User Confirmation" buttonSuccess="Yes, remove user" buttonCancel="No, cancel" />}
 
-        {modalState.currentOpen === "ORG.CreateGroup" && <ModalAnimationWrapper>
-            <CreateGroupModal />
-        </ModalAnimationWrapper>}
+        {modalState.currentOpen === "ORG.CreateGroup" && <CreateGroupModal />}
 
-        {modalState.currentOpen === "ORG.CreateOrg" && <ModalAnimationWrapper><OrgnizationCreateModal /></ModalAnimationWrapper>}
+        {modalState.currentOpen === "ORG.CreateOrg" && <OrgnizationCreateModal />}
     </>
 }

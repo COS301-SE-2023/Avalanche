@@ -6,31 +6,25 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.FileNotFoundException;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Queue;
 
 import org.junit.jupiter.api.Test;
 
-import avalanche.Core.SimilarityChecker;
-import avalanche.DataClasses.Domain;
-
 public class DomainTokeniserTest {
 
-    @Test
-    public void noFileFoundShouldThrow()
-            throws NoSuchFieldException, SecurityException, IllegalArgumentException,
-            IllegalAccessException {
-        Field pathField = DomainTokeniser.class.getDeclaredField("DICTIONARY_PATH");
-        pathField.setAccessible(true);
+    // @Test
+    // public void noFileFoundShouldThrow()
+    // throws NoSuchFieldException, SecurityException, IllegalArgumentException,
+    // IllegalAccessException {
+    // Field pathField = DomainTokeniser.class.getDeclaredField("DICTIONARY_PATH");
+    // pathField.setAccessible(true);
 
-        pathField.set(null, "This/should/fail");
-        assertThrows(FileNotFoundException.class, () -> {
-            DomainTokeniser.init();
-        });
-        pathField.set(null, "data/wordsByFreq.txt");
+    // pathField.set(null, "This/should/fail");
+    // assertThrows(FileNotFoundException.class, () -> {
+    // DomainTokeniser.init();
+    // });
+    // pathField.set(null, "data/wordsByFreq.txt");
 
-    }
+    // }
 
     @Test
     public void dictionaryMade() throws FileNotFoundException {

@@ -1,1 +1,0 @@
-START /B /wait docker run -p 4004:4004 domain_watch
