@@ -8,7 +8,7 @@ export class DomainWatchService {
   constructor(private httpService: HttpService) { }
 
   async sendData(data: any): Promise<any> {
-    console.log(data);
+    console.log(data + " b");
     const response = this.httpService.post('http://zanet.cloud:4004/domainWatch/list', data);
     const responseData = await lastValueFrom(response);
     return JSON.stringify(responseData.data);
