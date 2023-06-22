@@ -4,6 +4,7 @@ import { HYDRATE } from "next-redux-wrapper";
 import ky from "ky";
 import { IDomainWatchRequest } from "@/interfaces/requests";
 import { IDomainWatchResponse } from "@/interfaces/responses";
+import { getCookie } from "cookies-next";
 
 export const domainWatchSlice = createSlice({
     name: "domainWatch",
@@ -51,11 +52,13 @@ export const domainWatchSlice = createSlice({
 
 export const getDomainWatch = createAsyncThunk("DOMAINWATCH.Get", async (object: IDomainWatchRequest, { rejectWithValue }) => {
     try {
-        const response = ky.post("http://skunkworks.dns.net.za:4004/domainWatch/list", {
+        const jwt = getCookie("jwt");
+        const response = ky.post("http://localhost:4000/domain-watch/list", {
             json: object, timeout: false, headers: {
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
-                "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token"
+                "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
+                "Authorization": `Bearer ${jwt}`
             }
         }).json();
         return response;
