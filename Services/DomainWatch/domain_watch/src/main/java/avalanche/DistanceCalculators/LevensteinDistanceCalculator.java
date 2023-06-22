@@ -1,6 +1,9 @@
 package avalanche.DistanceCalculators;
 
 import java.util.Arrays;
+import java.util.HashSet;
+
+import avalanche.Settings.DomainWatchSettings;
 
 public class LevensteinDistanceCalculator {
     public double calculateBasicLevenshteinDistance(String x, String y) {
@@ -75,36 +78,41 @@ public class LevensteinDistanceCalculator {
         if (a == b) {
             return 0;
         }
+        DomainWatchSettings dws = DomainWatchSettings.getInstace();
+        HashSet<String> set = new HashSet();
+        set.add(a + "");
+        set.add(b + "");
+        return dws.substitutionCosts.getOrDefault(set, (double) 1);
 
-        if (checkBothWays(a, '0', b, 'o')) {
-            return 0.1;
-        }
-        if (checkBothWays(a, 'i', b, '1')) {
-            return 0.1;
-        }
-        if (checkBothWays(a, 'l', b, '1')) {
-            return 0.1;
-        }
-        if (checkBothWays(a, 'l', b, 'i')) {
-            return 0.1;
-        }
-        if (checkBothWays(a, 'b', b, '8')) {
-            return 0.1;
-        }
-        if (checkBothWays(a, 'e', b, '3')) {
-            return 0.1;
-        }
-        if (checkBothWays(a, 'u', b, 'v')) {
-            return 0.1;
-        }
-        if (checkBothWays(a, '2', b, 'z')) {
-            return 0.1;
-        }
-        if (checkBothWays(a, 's', b, '5')) {
-            return 0.1;
-        }
+        // if (checkBothWays(a, '0', b, 'o')) {
+        // return 0.1;
+        // }
+        // if (checkBothWays(a, 'i', b, '1')) {
+        // return 0.1;
+        // }
+        // if (checkBothWays(a, 'l', b, '1')) {
+        // return 0.1;
+        // }
+        // if (checkBothWays(a, 'l', b, 'i')) {
+        // return 0.1;
+        // }
+        // if (checkBothWays(a, 'b', b, '8')) {
+        // return 0.1;
+        // }
+        // if (checkBothWays(a, 'e', b, '3')) {
+        // return 0.1;
+        // }
+        // if (checkBothWays(a, 'u', b, 'v')) {
+        // return 0.1;
+        // }
+        // if (checkBothWays(a, '2', b, 'z')) {
+        // return 0.1;
+        // }
+        // if (checkBothWays(a, 's', b, '5')) {
+        // return 0.1;
+        // }
 
-        return 1;
+        // return 1;
     }
 
     private boolean checkBothWays(char a, char check1, char b, char check2) {
