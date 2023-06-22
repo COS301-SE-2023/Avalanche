@@ -118,7 +118,7 @@ export class UserOrganisationMangementService {
                     timestamp: new Date().toISOString()
                 };
             } else {
-                if (name.startsWith('') || name.length === 0) {
+                if (name.length === 0) {
                     return {
                         status: 400, error: true, message: 'Please enter a user group name with characters and a length greater than zero',
                         timestamp: new Date().toISOString()

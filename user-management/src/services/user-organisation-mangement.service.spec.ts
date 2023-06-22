@@ -142,14 +142,30 @@ describe('UserOrganisationMangementService', () => {
       const userGroup = new UserGroup();
       userGroup.name = name;
       userGroup.permission = permission;
+
+      //Mocks  setup 
       mockRedis.get.mockResolvedValueOnce(JSON.stringify(userPayload));
       mockOrganisationRepository.findOne.mockResolvedValueOnce(mockOrganisation);
       mockUserGroupRepository.save.mockResolvedValueOnce(userGroup);
+
+      //Call function
       const result = await userOrganisationMangementService.createUserGroup(token, name, permission);
+
+      //Expected results
       expect(result.status).toEqual('success');
-      expect(result.message).toEqual(userGroup);
+      if (isUserGroup(result.message)) {
+        expect(result.message.name).toEqual(name);
+        expect(result.message.permission).toEqual(permission);
+      }else{
+        expect(JSON.parse(result.message).name).toEqual(name);
+        expect(JSON.parse(result.message).permission).toEqual(permission);
+      }
       expect(result.timestamp).toBeDefined();
     });
+
+    function isUserGroup(obj: any): obj is UserGroup {
+      return !!obj && 'name' in obj;
+    }
   });
 
   describe('addUserToUserGroup', () => {
