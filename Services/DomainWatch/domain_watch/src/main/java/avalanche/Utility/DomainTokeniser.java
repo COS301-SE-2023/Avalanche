@@ -116,6 +116,9 @@ public class DomainTokeniser {
 
         Collections.reverse(out);
         String done = String.join(" ", out);
+        if (done == null) {
+            return s;
+        }
         wordsDone.put(s, done);
         return done;
     }

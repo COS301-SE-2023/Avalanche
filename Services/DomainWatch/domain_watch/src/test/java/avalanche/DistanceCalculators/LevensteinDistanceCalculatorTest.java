@@ -223,4 +223,10 @@ public class LevensteinDistanceCalculatorTest {
         assertEquals(0.2, calc.calculateBasicLevenshteinDistance("herebobthere", "here8o8there"), 0);
     }
 
+    @Test
+    public void selborneToSlo() {
+        LevensteinDistanceCalculator calc = new LevensteinDistanceCalculator();
+        assertEquals(5, calc.calculateBasicLevenshteinDistance("selborne", "slo"), 0);
+    }
+
 }

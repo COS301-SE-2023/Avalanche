@@ -2,9 +2,6 @@
 <h1 align="center">Avalanche</h1>
 <div align="center">
   <img src="https://github.com/COS301-SE-2023/Avalanche/actions/workflows/analysis.yml/badge.svg">
-  <img src="https://github.com/COS301-SE-2023/Avalanche/actions/workflows/tests.yml/badge.svg">
-  <img src="https://github.com/COS301-SE-2023/Avalanche/actions/workflows/javaTest.yml/badge.svg">
-  <img src="https://github.com/COS301-SE-2023/Avalanche/actions/workflows/javaCoverage.yml/badge.svg">
 </div>
 
 COS301 Capstone Project for [Domain Name Services (Pty) Ltd](https://dns.business/).
@@ -104,7 +101,6 @@ Email: [theskunkworks301@gmail.com](mailto:theskunkworks301@gmail.com)
 <a href="https://www.typescriptlang.org/" title="Typescript"><img src="https://github.com/get-icon/geticon/raw/master/icons/typescript-icon.svg" alt="Typescript" width="21px" height="21px"></a>
 <a href="https://redis.io/" title="Redis"><img src="https://github.com/get-icon/geticon/raw/master/icons/redis.svg" alt="Redis" width="21px" height="21px"></a>
 <a href="https://nestjs.com/" title="NestJS"><img src="https://github.com/get-icon/geticon/raw/master/icons/nestjs.svg" alt="NestJS" width="21px" height="21px"></a>
-<a href="https://www.java.com/" title="Java"><img src="https://github.com/get-icon/geticon/raw/master/icons/java.svg" alt="Java" width="21px" height="21px"></a>
 
 ### Deployment
 <a href="https://www.docker.com/" title="docker"><img src="https://github.com/get-icon/geticon/raw/master/icons/docker-icon.svg" alt="docker" width="21px" height="21px"></a>

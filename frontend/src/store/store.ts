@@ -1,11 +1,8 @@
-import { configureStore, ThunkAction, Action, combineReducers } from "@reduxjs/toolkit";
+import { configureStore, ThunkAction, Action, applyMiddleware, MiddlewareArray, combineReducers } from "@reduxjs/toolkit";
+import logger from "redux-logger";
 import { modalManagerSlice } from "./Slices/modalManagerSlice";
-import { userSlice } from "./Slices/userSlice";
-import { domainWatchSlice } from "./Slices/domainWatchSlice";
-import { settingsSlice } from "./Slices/settingsSlice";
-import { graphSlice } from "./Slices/graphSlice";
 import { createWrapper } from "next-redux-wrapper";
-import thunk from "redux-thunk";
+
 import { persistReducer, persistStore } from "redux-persist";
 import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 
@@ -27,19 +24,12 @@ const storage = typeof window !== "undefined" ? createWebStorage("local") : crea
 
 const rootReducer = combineReducers({
     [modalManagerSlice.name]: modalManagerSlice.reducer,
-    [userSlice.name]: userSlice.reducer,
-    [settingsSlice.name]: settingsSlice.reducer,
-    [domainWatchSlice.name]: domainWatchSlice.reducer,
-    [graphSlice.name]: graphSlice.reducer,
 });
 
 const makeConfiguredStore = () =>
     configureStore({
         reducer: rootReducer,
-        middleware: (getDefaultMiddleware) => getDefaultMiddleware({
-            serializableCheck: false,
-            ignoreActions: true
-        }).concat(thunk),
+        middleware: [logger] as const,
         devTools: true
     });
 
@@ -50,17 +40,14 @@ export const makeStore = () => {
     } else {
         const persistConfig = {
             key: "nextjs",
-            whitelist: ["modalManager", "user"],
+            whitelist: ["modalManager"],
             storage
         };
         const persistedReducer = persistReducer(persistConfig, rootReducer);
         let store: any = configureStore({
             reducer: persistedReducer,
             devTools: true,
-            middleware: (getDefaultMiddleware) => getDefaultMiddleware({
-                serializableCheck: false,
-                ignoreActions: true
-            }).concat(thunk),
+            middleware: [logger] as const,
         });
         store.__persistor = persistStore(store);
         return store;

@@ -44,11 +44,3 @@ For more information request formal documentation from ...
 * 11/06
   * Started Domain Name Analysis Procedure
   * Query for domain retrieval
-* 17/06
-  * Added per transaction query
-  * Bug in transaction query- array of types only returns last
-* 19/06
-  * Bug  fixed for Monthly granularity
-  * Overall dates fixed
-* 21/06
-  * Date formatting

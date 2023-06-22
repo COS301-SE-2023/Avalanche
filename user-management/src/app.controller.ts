@@ -1,15 +1,15 @@
 /* eslint-disable prettier/prettier */
-import { Controller, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller} from '@nestjs/common';
 import { AuthService } from './services/auth.service';
-import { MessagePattern, RpcException } from '@nestjs/microservices';
+import { MessagePattern } from '@nestjs/microservices';
 import { UserOrganisationMangementService } from './services/user-organisation-mangement.service';
 import { UserDataProductMangementService } from './services/user-data-products-management.service';
 
 @Controller('user-management')
 export class AppController {
-  constructor(private readonly authService: AuthService,
+  constructor(private readonly authService: AuthService, 
     private readonly userOrgManService: UserOrganisationMangementService,
-    private readonly userDataProductManService: UserDataProductMangementService) { }
+    private readonly userDataProductManService : UserDataProductMangementService) {}
 
   @MessagePattern({ cmd: 'register' })
   async register(data: any) {
@@ -24,17 +24,7 @@ export class AppController {
   @MessagePattern({ cmd: 'login' })
   async login(data: any) {
     console.log("Logging in user: ", data);
-    const result = await this.authService.login(data.email, data.password);
-
-    if (result.error) {
-      throw new RpcException({
-        status: result.status,
-        message: result.message,
-        timestamp: result.timestamp,
-      });
-    }
-
-    return result;
+    return await this.authService.login(data.email, data.password);
   }
   @MessagePattern({ cmd: 'createOrganisation' })
   async createOrganisation(data: any) {
