@@ -20,6 +20,9 @@ export class JwtMiddleware implements NestMiddleware {
         res.status(401).json({ status: 'failure',message: 'JWT invalid', timestamp: new Date().toISOString()});
       }else{
         // Add token to the request body
+        if(req.baseUrl.startsWith("/domain-watch")){
+          next();
+        }
         if(req.baseUrl.startsWith("/zacr") || req.baseUrl.startsWith('/africa') || req.baseUrl.startsWith('/ryce')){
           const graphName1 = req.body.graphName;
           delete req.body.graphName;
