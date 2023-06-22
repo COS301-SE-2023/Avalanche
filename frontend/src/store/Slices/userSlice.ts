@@ -152,7 +152,13 @@ export const userSlice = createSlice({
         })
         // Create Organisation
         builder.addCase(createOrganisation.fulfilled, (state, action) => {
-
+            state.loading = false;
+        })
+        builder.addCase(createOrganisation.pending, (state) => {
+            state.loading = true;
+        })
+        builder.addCase(createOrganisation.rejected, (state, action) => {
+            state.loading = false;
         })
     }
 });
@@ -209,7 +215,7 @@ export const createOrganisation = createAsyncThunk("ORG.CreateOrganisation", asy
                 "Authorization": `Bearer ${jwt}`
             }
         }).json();
-        // return response;
+        return response;
     } catch (e) {
         if (e instanceof Error) return rejectWithValue(e.message);
     }
