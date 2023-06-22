@@ -8,7 +8,7 @@ export class AnalysisService {
       throw new Error('Invalid data');
     }
 
-    const keys = Object.keys(jsonData[0]['TRANSACTIONSBYREGISTRAR']);
+    const keys = Object.keys(jsonData[0]);
     if (keys.length < 2) {
       throw new Error('Data should have at least two columns');
     }
@@ -50,7 +50,6 @@ export class AnalysisService {
       };
     }
 
-    console.log('stats:' + JSON.stringify(statistics));
     return JSON.stringify(statistics);
   }
 

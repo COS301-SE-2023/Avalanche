@@ -1,8 +1,9 @@
 import { APIStatus as APIStatusEnum } from "@/Enums";
-import { IUser, IUserState } from "@/store/Slices/userSlice";
+import { IUserState } from "@/store/Slices/userSlice";
 
-export default interface ILoginResponse {
+export default interface LoginResponse {
     stuatus: APIStatusEnum,
-    userWithToken: IUserState,
-    timestamp: number
+    data?: IUserState,
+    message?: string,
+    timestamp: EpochTimeStamp
 }

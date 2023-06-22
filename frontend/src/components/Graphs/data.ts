@@ -1,16 +1,21 @@
-export const chartColours: string[] = [
-    "#FFC107",  // Amber
-    "#4CAF50",  // Green
-    "#3F51B5",   // Indigo
-    "#F44336",  // Red
-    "#9C27B0",  // Purple
-    "#673AB7",  // Deep Purple
-    "#009688",  // Teal
-    "#FF5722",  // Deep Orange
-    "#607D8B",  // Blue Grey
-    "#FFEB3B",  // Yellow
-    "#8BC34A",  // Light Green
-    "#2196F3"   // Blue
+export const chartColours = [
+    '#f72585',
+    '#B5179E',
+    '#7209B7',
+    '#560BAD',
+    '#480CA8',
+    '#3A0CA3',
+    '#3F37C9',
+    '#4361EE',
+    '#4895EF',
+    '#4CC9F0',
+    '#DC136C',
+    '#2CF6B3',
+    '#FFD447',
+    '#320D6D',
+    '#F72C25',
+    '#A30015',
+    '#072AC8'
 ];
 
 export const borderColours = [

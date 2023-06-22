@@ -2,13 +2,9 @@ name: Code Analysis
 
 on:
   push:
-    branches:
-      - working
-      - stable
+    branches: [ "working", "stable" ]
   pull_request:
-    branches:
-      - working
-      - stable
+    branches: [ "working", "stable" ]
   workflow_dispatch:
 
 permissions:
