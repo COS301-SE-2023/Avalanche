@@ -52,3 +52,6 @@ For more information request formal documentation from ...
   * Overall dates fixed
 * 21/06
   * Date formatting
+* 22/06
+  * Day granularity fixed
+  * Domain name analysis query update 
