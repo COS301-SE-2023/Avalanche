@@ -38,9 +38,9 @@ export class UserManagementController {
       throw error;
     }
   }
-  @Post('resendVerify')
-  async resendVerify(@Body() data: any) {
-    const pattern = { cmd: 'resendVerify' };
+  @Post('resendOTP')
+  async resendOTP(@Body() data: any) {
+    const pattern = { cmd: 'resendOTP' };
     const payload = data;
     try {
       const result = await lastValueFrom(this.client.send(pattern, payload));

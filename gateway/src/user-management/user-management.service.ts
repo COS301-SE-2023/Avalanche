@@ -16,8 +16,8 @@ export class UserManagementService {
   async verify(data: any) {
     return this.client.send({ cmd: 'verify' }, data).toPromise();
   }
-  async resendVerify(data: any) {
-    return this.client.send({ cmd: 'resendVerify' }, data).toPromise();
+  async resendOTP(data: any) {
+    return this.client.send({ cmd: 'resendOTP' }, data).toPromise();
   }
   async login(data: any) {
       return this.client.send({ cmd: 'login' }, data).toPromise();
