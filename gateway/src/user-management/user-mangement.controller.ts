@@ -38,6 +38,21 @@ export class UserManagementController {
       throw error;
     }
   }
+  @Post('resendOTP')
+  async resendOTP(@Body() data: any) {
+    const pattern = { cmd: 'resendOTP' };
+    const payload = data;
+    try {
+      const result = await lastValueFrom(this.client.send(pattern, payload));
+      return result;
+    } catch (error) {
+      const rpcError = error
+      if (typeof rpcError === 'object') {
+        throw new HttpException(rpcError.message || 'An unexpected error occurred', rpcError.status || 500);
+      }
+      throw error;
+    }
+  }
   @Post('login')
   async login(@Body() data: any) {
     const pattern = { cmd: 'login' };
@@ -53,7 +68,6 @@ export class UserManagementController {
       throw error;
     }
   }
-
 
   @Post('createOrganisation')
   async createOrganisation(@Body() data: any) {
@@ -119,6 +133,37 @@ export class UserManagementController {
   @Post('removeUserFromUserGroup')
   async removeUserFromUserGroup(@Body() data: any) {
     const pattern = { cmd: 'removeUserFromUserGroup' };
+    const payload = data;
+    try {
+      const result = await lastValueFrom(this.client.send(pattern, payload));
+      return result;
+    } catch (error) {
+      const rpcError = error
+      if (typeof rpcError === 'object') {
+        throw new HttpException(rpcError.message || 'An unexpected error occurred', rpcError.status || 500);
+      }
+      throw error;
+    }
+  }
+
+  @Post('exitOrganisation')
+  async exitOrganisation(@Body() data: any) {
+    const pattern = { cmd: 'exitOrganisation' };
+    const payload = data;
+    try {
+      const result = await lastValueFrom(this.client.send(pattern, payload));
+      return result;
+    } catch (error) {
+      const rpcError = error
+      if (typeof rpcError === 'object') {
+        throw new HttpException(rpcError.message || 'An unexpected error occurred', rpcError.status || 500);
+      }
+      throw error;
+    }
+  }
+  @Post('removeUserFromOrganisation')
+  async removeUserFromOrganisation(@Body() data: any) {
+    const pattern = { cmd: 'removeUserFromOrganisation' };
     const payload = data;
     try {
       const result = await lastValueFrom(this.client.send(pattern, payload));
