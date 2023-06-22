@@ -39,10 +39,10 @@ export default function CreateGroupModal({ }: ICreateGroupModal) {
             setNameError(true);
         }
 
-        if (!description) {
-            error += "The group is missing a description.";
-            setDescriptionError(true);
-        }
+        // if (!description) {
+        //     error += "The group is missing a description.";
+        //     setDescriptionError(true);
+        // }
 
         if (nameError || descriptionError) {
             ErrorToast({ text: error });
@@ -70,13 +70,13 @@ export default function CreateGroupModal({ }: ICreateGroupModal) {
                             setName(event.currentTarget.value);
                         }} maxLength={20} error={nameError} />
                     </div>
-                    <div>
+                    {/* <div>
                         <InputLabel htmlFor="description" text="Group Description" />
                         <Input type="text" name="description" id="description" placeholder="This is paper sales group." required={true} disabled={loading} value={description} onChange={(event: React.FormEvent<HTMLInputElement>) => {
                             descriptionError && setDescriptionError(false);
                             setDescription(event.currentTarget.value);
                         }} maxLength={75} error={descriptionError} />
-                    </div>
+                    </div> */}
                     <SubmitButton text="Create Group" onClick={(event: React.FormEvent<HTMLFormElement>) => {
                         formSubmit(event);
                     }} className="w-full" loading={loading} />

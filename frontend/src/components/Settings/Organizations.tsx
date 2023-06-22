@@ -6,6 +6,13 @@ import { ConfirmModal, CreateGroupModal, OrgnizationCreateModal } from '../Modal
 import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
 import { userState } from "@/store/Slices/userSlice";
 import { useDispatch, useSelector } from 'react-redux';
+import { Fragment } from 'react'
+import { Menu, Transition } from '@headlessui/react'
+import { ChevronDownIcon } from '@heroicons/react/20/solid'
+
+function classNames(...classes: any[]) {
+    return classes.filter(Boolean).join(' ')
+}
 
 interface IOrganizationSettings {
     demo?: boolean,
@@ -89,28 +96,32 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
                     <div className="relative overflow-x-auto w-full p-1">
                         <div className="flex items-center justify-between pb-4 w-full">
                             <div>
-                                <button id="dropdownActionButton" data-dropdown-toggle="dropdownAction" className="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600" type="button">
-                                    <span className="sr-only">Action button</span>
-                                    Action
-                                    <svg className="w-3 h-3 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                                </button>
-                                {/* <!-- Dropdown menu --> */}
-                                <div id="dropdownAction" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-                                    <ul className="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownActionButton">
-                                        <li>
-                                            <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Reward</a>
-                                        </li>
-                                        <li>
-                                            <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Promote</a>
-                                        </li>
-                                        <li>
-                                            <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Activate account</a>
-                                        </li>
-                                    </ul>
-                                    <div className="py-1">
-                                        <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete User</a>
+                                {/* <Menu as="div" className="relative inline-block text-left">
+                                    <div>
+                                        <Menu.Button className="p-3 text-sm font-medium text-gray-900 focus:outline-none bg-gray-400 rounded-lg hover:bg-gray-100 hover:text-blue-700 dark:bg-primaryBackground dark:text-gray-200 dark:hover:text-white dark:hover:bg-gray-700 flex">
+                                            Actions
+                                            <ChevronDownIcon className="w-6 h-6" />
+                                        </Menu.Button>
                                     </div>
-                                </div>
+
+                                    <Transition
+                                        as={Fragment}
+                                        enter="transition ease-out duration-100"
+                                        enterFrom="transform opacity-0 scale-95"
+                                        enterTo="transform opacity-100 scale-100"
+                                        leave="transition ease-in duration-75"
+                                        leaveFrom="transform opacity-100 scale-100"
+                                        leaveTo="transform opacity-0 scale-95"
+                                    >
+                                        <Menu.Items className="absolute left-0 z-20 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-700">
+                                            <div className="py-1">
+                                                <Menu.Item>
+                                                    <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"></span>
+                                                </Menu.Item>
+                                            </div>
+                                        </Menu.Items>
+                                    </Transition>
+                                </Menu> */}
                             </div>
                             <label htmlFor="table-search" className="sr-only">Search</label>
                             <div className="relative">
