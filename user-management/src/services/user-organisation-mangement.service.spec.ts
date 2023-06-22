@@ -88,6 +88,79 @@ describe('UserOrganisationMangementService', () => {
     expect(userOrganisationMangementService).toBeDefined();
   });
 
+  describe('createOrganisation', () => {
+    const token = 'validToken';
+    it('should return an error if the token is invalid', async () => {
+      mockRedis.get.mockResolvedValueOnce(null);
+      const result = await userOrganisationMangementService.createOrganisation('invalidToken', 'orgName');
+      expect(result.status).toEqual(400);
+      expect(result.message).toEqual('Invalid token.');
+      expect(result.timestamp).toBeDefined();
+    });
+  
+    it('should return an error if the user does not exist', async () => {
+      const userPayload = { email: 'userEmail' };
+      mockRedis.get.mockResolvedValueOnce(JSON.stringify(userPayload));
+      mockUserRepository.findOne.mockResolvedValueOnce(null);
+      const result = await userOrganisationMangementService.createOrganisation(token, 'orgName');
+      expect(result.status).toEqual(400);
+      expect(result.message).toEqual('User does not exist.');
+      expect(result.timestamp).toBeDefined();
+    });
+  
+    it('should return an error if the user already belongs to an organisation', async () => {
+      const userPayload = { email: 'userEmail' };
+      const user = new User();
+      user.organisation = new Organisation();
+      user.organisation.id = 1;
+      mockRedis.get.mockResolvedValueOnce(JSON.stringify(userPayload));
+      mockUserRepository.findOne.mockResolvedValueOnce(user);
+      const result = await userOrganisationMangementService.createOrganisation(token, 'orgName');
+      expect(result.status).toEqual(400);
+      expect(result.message).toEqual('User already belongs to an organisation');
+      expect(result.timestamp).toBeDefined();
+    });
+  
+    it('should return an error if the organisation name is already taken', async () => {
+      const userPayload = { email: 'userEmail' };
+      const user = new User();
+      user.organisation = null;
+      mockRedis.get.mockResolvedValueOnce(JSON.stringify(userPayload));
+      mockUserRepository.findOne.mockResolvedValueOnce(user);
+      mockOrganisationRepository.findOne.mockResolvedValueOnce(new Organisation());
+      const result = await userOrganisationMangementService.createOrganisation(token, 'orgName');
+      expect(result.status).toEqual(400);
+      expect(result.message).toEqual('Organisation with this name already exists');
+      expect(result.timestamp).toBeDefined();
+    });
+  
+    it('should return an error if the organisation name length is zero', async () => {
+      const userPayload = { email: 'userEmail' };
+      const user = new User();
+      user.organisation = null;
+      mockRedis.get.mockResolvedValueOnce(JSON.stringify(userPayload));
+      mockUserRepository.findOne.mockResolvedValueOnce(user);
+      mockOrganisationRepository.findOne.mockResolvedValueOnce(null);
+      const result = await userOrganisationMangementService.createOrganisation(token, '');
+      expect(result.status).toEqual(400);
+      expect(result.message).toEqual('Please enter an organisation with charceters and a length greater than 0');
+      expect(result.timestamp).toBeDefined();
+    });
+  
+    it('should return "success" and user object if organisation is created', async () => {
+      const userPayload = { email: 'userEmail' };
+      const user = new User();
+      user.organisation = null;  // user is not part of an organisation yet
+      mockRedis.get.mockResolvedValueOnce(JSON.stringify(userPayload));
+      mockUserRepository.findOne.mockResolvedValueOnce(user);
+      mockOrganisationRepository.findOne.mockResolvedValueOnce(null);
+      const result = await userOrganisationMangementService.createOrganisation(token, 'orgName');
+      expect(result.status).toEqual('success');
+      expect(result.message).toEqual(user);
+      expect(result.timestamp).toBeDefined();
+    });
+  });
+  
   describe('createUserGroup', () => {
     const token = 'validToken';
     const name = 'group_name';
@@ -210,7 +283,6 @@ describe('UserOrganisationMangementService', () => {
     });
   });
   
-
   describe('removeUserFromUserGroup', () => {
     it('should remove a user from a user group', async () => {
       const mockBearerToken = `Bearer mockToken`;
@@ -315,5 +387,6 @@ describe('UserOrganisationMangementService', () => {
       expect(result.timestamp).toBeDefined();
     });
   });
+
 
 });

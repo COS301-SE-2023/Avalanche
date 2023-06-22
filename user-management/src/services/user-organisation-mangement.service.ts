@@ -39,7 +39,7 @@ export class UserOrganisationMangementService {
         }
         console.log(user);
         // Check if the user already belongs to an organisation
-        if (user.organisation.id) {
+        if (user.organisation!==null && user.organisation.id !== null) {
             return {
                 status: 400, error: true, message: 'User already belongs to an organisation',
                 timestamp: new Date().toISOString()
