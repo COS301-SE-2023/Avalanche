@@ -2,11 +2,7 @@ name: Node.js CI
 
 on:
   push:
-    branches:
-      - 'gateway/**'
-      - 'zacr/**'
-      - 'user-management/**'
-      - 'domain-watch/**'
+    branches: [ "working", "stable", "backend_coverage_dev"]
     paths:
       - '**_test'
       - '**_cov'
@@ -19,6 +15,7 @@ jobs:
     strategy:
       matrix:
         node-version: [12.x, 14.x, 16.x]
+        service: ['gateway', 'zacr', 'user-management', 'domain-watch']
 
     steps:
     - uses: actions/checkout@v2
