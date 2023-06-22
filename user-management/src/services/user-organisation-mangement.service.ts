@@ -30,7 +30,7 @@ export class UserOrganisationMangementService {
         }
         const { email: userEmail } = JSON.parse(userPayload);
         console.log(userEmail);
-        const user = await this.userRepository.findOne({ where: { email: userEmail } });
+        const user = await this.userRepository.findOne({ where: { email: userEmail }, relations: ['userGroups', 'organisation'] });
         if (!user) {
             return {
                 status: 400, error: true, message: 'User does not exist.',

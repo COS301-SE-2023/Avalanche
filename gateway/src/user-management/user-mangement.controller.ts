@@ -69,7 +69,6 @@ export class UserManagementController {
     }
   }
 
-
   @Post('createOrganisation')
   async createOrganisation(@Body() data: any) {
     const pattern = { cmd: 'createOrganisation' };
