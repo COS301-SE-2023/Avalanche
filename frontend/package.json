@@ -24,6 +24,7 @@
     "@types/react-dom": "18.2.1",
     "@types/redux-logger": "^3.0.9",
     "animate.css": "^4.1.1",
+    "animate.css-react": "^1.1.0",
     "autoprefixer": "10.4.14",
     "axios": "^1.4.0",
     "chart.js": "^4.2.1",

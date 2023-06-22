@@ -4,10 +4,10 @@ import { HYDRATE } from "next-redux-wrapper";
 import ky from "ky";
 import { ILoginRequest, IOTPVerifyRequest, IRegisterRequest, ICreateOrganisationRequest } from "@/interfaces/requests";
 import { IOTPVerifyResponse, IRegisterResponse, ILoginResponse, ICreateOrgnisationResponse } from "@/interfaces/responses";
-import { setCookie, getCookie } from 'cookies-next';
+import { setCookie, getCookie, deleteCookie } from 'cookies-next';
 import { ISettings, IOrganisation, IDataProduct, IUserGroups } from "@/interfaces/interfaces";
 
-const url = "http://localho.st:4000/user-management"
+const url = "http://localho.st:4000/user-management";
 
 export interface IUserState {
     id: string | null,
@@ -50,7 +50,6 @@ const initialState: IUserState = {
 export const userSlice = createSlice({
     name: "user",
     initialState: {
-        authed: false,
         user: initialState,
         requests: {
             loading: false,
@@ -83,6 +82,10 @@ export const userSlice = createSlice({
                 otp: false,
                 error: "",
             }
+        },
+        logout(state) {
+            deleteCookie("jwt");
+            state.user = initialState;
         }
     },
     extraReducers: (builder) => {
@@ -140,14 +143,12 @@ export const userSlice = createSlice({
             state.loading = false;
             state.login.success = true;
 
-            state.authed = true;
-
         })
         builder.addCase(login.pending, (state) => {
             state.loading = true;
         })
         builder.addCase(login.rejected, (state, action) => {
-
+            state.loading = false;
         })
         // Create Organisation
         builder.addCase(createOrganisation.fulfilled, (state, action) => {
@@ -208,7 +209,6 @@ export const createOrganisation = createAsyncThunk("ORG.CreateOrganisation", asy
                 "Authorization": `Bearer ${jwt}`
             }
         }).json();
-        console.log(response);
         // return response;
     } catch (e) {
         if (e instanceof Error) return rejectWithValue(e.message);
@@ -216,6 +216,6 @@ export const createOrganisation = createAsyncThunk("ORG.CreateOrganisation", asy
 })
 
 
-export const { setAuth, getAuth, resetRequest } = userSlice.actions;
+export const { setAuth, getAuth, resetRequest, logout } = userSlice.actions;
 export const userState = (state: AppState) => state.user;
 export default userSlice.reducer;

@@ -20,3 +20,4 @@ Services/DomainWatch/domain_watch/.mvn/wrapper/maven-wrapper.jar
 Services/DomainWatch/domain_watch/.mvn/wrapper/maven-wrapper.properties
 Services/DomainWatch/domain_watch/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
 Services/DomainWatch/domain_watch/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
+frontend/.vscode/settings.json
