@@ -1,7 +1,8 @@
 interface IModalContent {
-    children: any
+    children: any,
+    addClass?: string
 }
 
-export default function ModalContent({ children }: IModalContent) {
-    return <div className="mb-4">{children}</div>
+export default function ModalContent({ children, addClass }: IModalContent) {
+    return <div className={`mb-4 ${addClass}`}>{children}</div>
 }

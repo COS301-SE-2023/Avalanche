@@ -140,7 +140,7 @@ export default function Settings() {
         </div>
 
         {/* Models go here */}
-        {modalState.currentOpen === "INTE.CreateIntegration" && <ModalAnimationWrapper><IntegrationLoginModal /></ModalAnimationWrapper>}
+        {modalState.currentOpen === "INTE.CreateIntegration" && <IntegrationLoginModal />}
 
     </>
 }
