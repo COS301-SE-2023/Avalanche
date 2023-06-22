@@ -18,6 +18,7 @@ public abstract class ServerState {
                 error = "{\"status\":\"failure\",\"request-error\":\"" + "Please supply at least 1 string in 'data' "
                         + "\"}";
             }
+            int minimunAppearances = jsonObject.getInt("minimumAppearances");
         } catch (JSONException jsonException) {
             error = "{\"status\":\"failure\",\"request-error\":\"" + jsonException.getMessage() + "\"}";
         }

@@ -17,5 +17,15 @@ public class RunningTest {
     public void invalidJSONShouldReturnRequestError() {
         ServerState state = new Running();
         assertTrue((state.getResponse("anything", 0)).contains("request-error"));
+        assertTrue((state.getResponse("{anything}", 0)).contains("request-error"));
+        assertTrue((state.getResponse("{anything:}", 0)).contains("request-error"));
+        assertTrue((state.getResponse("{\"anything\":}", 0)).contains("request-error"));
     }
+
+    @Test
+    public void validJSONWithoutValidFieldsShouldReturnRequestError() {
+        ServerState state = new Running();
+        assertTrue((state.getResponse("{\"hello\":\"there\"}", 0)).contains("request-error"));
+    }
+
 }

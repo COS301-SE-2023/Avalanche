@@ -54,6 +54,17 @@ public class Domain implements Comparable {
         this.metrics = 0;
     }
 
+    /**
+     * This function is used to compare domains based on their distance values
+     *
+     * @param Object o: This receives another object of type domain to be compared
+     *               against the current one
+     * @return -1 if the distance of the one parsed in is greater than the current
+     *         one
+     *         0 if the distaces are equal
+     *         1 if the distance of the one parsed in is less than the current one
+     *         as an integer
+     */
     @Override
     public int compareTo(Object o) {
         Domain d = (Domain) o;

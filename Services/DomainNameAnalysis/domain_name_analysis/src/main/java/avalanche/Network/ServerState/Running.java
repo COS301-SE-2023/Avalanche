@@ -1,6 +1,7 @@
 package avalanche.Network.ServerState;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -43,32 +44,35 @@ public class Running extends ServerState {
         for (int i = 0; i < strings.length; i++) {
             strings[i] = data.getString(i);
         }
+        int minimunAppearances = obj.getInt("minimumAppearances");
 
         // Do processing here
         FrequencyCounter frequencyCounter = new FrequencyCounter();
-        WordFrequency[] allWordFrequencies = new WordFrequency[0];
+        ArrayList<WordFrequency> allWordFrequencies = new ArrayList<>();
         try {
-            allWordFrequencies = frequencyCounter.getOrderedFrequency(strings);
+            allWordFrequencies = frequencyCounter.getOrderedFrequency(strings, minimunAppearances);
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
         // Build rest of response here
-        if (allWordFrequencies.length == 0) {
+        if (allWordFrequencies.size() == 0) {
             return "{\"status\":\"failure\",\"server-error\":\""
-                    + "0 words were found after processing, this may be due to an error with the tokeniser" + "\"}";
+                    + "0 words were found after processing. You may have set minimumAppearances too low. Otherwise this may be due to an error with the tokeniser"
+                    + "\"}";
         }
-        for (int i = 0; i < allWordFrequencies.length; i++) {
-            resp += "    " + allWordFrequencies[i].toJSON();
-            if (i != allWordFrequencies.length - 1) {
+        for (int i = 0; i < allWordFrequencies.size(); i++) {
+            resp += "    " + allWordFrequencies.get(i).toJSON();
+            if (i != allWordFrequencies.size() - 1) {
                 resp += ",";
             }
         }
 
         long ttlTime = System.currentTimeMillis() - st;
         resp += "  ],\"searchTime(ms)\":" + ttlTime + "}";
-
+        System.out.println("\n\n==================== RESPONSE ====================\n");
+        System.out.println(resp);
         System.out.println("Done");
         return resp;
     }

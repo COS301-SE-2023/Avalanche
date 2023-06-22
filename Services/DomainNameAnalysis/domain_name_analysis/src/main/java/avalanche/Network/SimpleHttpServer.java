@@ -45,7 +45,7 @@ public class SimpleHttpServer {
     public void handleDummyRequest() throws IOException {
         System.out.println("Dummy request sent");
         long st = System.currentTimeMillis();
-        String o = state.getResponse("{\"data\":[\"countingpenguins\"," + //
+        String o = state.getResponse("{\"minimumAppearances\":1,\"data\":[\"countingpenguins\"," + //
                 "\"tasteitalian\"," + //
                 "\"welmail\"," + //
                 "\"propertyswipe\"," + //

@@ -1,6 +1,7 @@
 package avalanche.Core;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -12,23 +13,17 @@ import avalanche.Utility.DomainTokeniser;
 
 public class FrequencyCounter {
 
-    public WordFrequency[] getOrderedFrequency(String[] allStrings) throws FileNotFoundException {
+    public ArrayList<WordFrequency> getOrderedFrequency(String[] allStrings, int minimunAppearances)
+            throws FileNotFoundException {
         HashSet<String> disallowedWords = new HashSet<>();
         disallowedWords.add("the");
-        disallowedWords.add("an");
         disallowedWords.add("and");
-        disallowedWords.add("in");
-        disallowedWords.add("as");
-        disallowedWords.add("cq");
-        disallowedWords.add("ed");
-        disallowedWords.add("to");
+        disallowedWords.add("all");
+        disallowedWords.add("are");
+        disallowedWords.add("for");
         disallowedWords.add("pre");
-        disallowedWords.add("le");
-        disallowedWords.add("qo");
-        disallowedWords.add("at");
         disallowedWords.add("cud");
-        disallowedWords.add("bc");
-        disallowedWords.add("by");
+        disallowedWords.add("gri");
         HashMap<String, Integer> wordFrequencies = new HashMap<>();
         DomainTokeniser.init();
         DomainTokeniser tokeniser = new DomainTokeniser();
@@ -36,7 +31,7 @@ public class FrequencyCounter {
             String withSpaces = tokeniser.inferSpaces(string);
             String[] words = withSpaces.split(" ");
             for (String word : words) {
-                if (word.length() > 1 && !disallowedWords.contains(word)) {
+                if ((word.length() > 2 || word.equals("dr")) && !disallowedWords.contains(word)) {
                     int frequency = wordFrequencies.getOrDefault(word, 0);
                     frequency++;
                     wordFrequencies.put(word, frequency);
@@ -45,13 +40,14 @@ public class FrequencyCounter {
             }
         }
 
-        WordFrequency[] allWordFrequencies = new WordFrequency[wordFrequencies.size()];
-        int i = 0;
+        ArrayList<WordFrequency> allWordFrequencies = new ArrayList<>();
         for (String word : wordFrequencies.keySet()) {
-            allWordFrequencies[i] = new WordFrequency(word, wordFrequencies.get(word));
-            i++;
+            if (wordFrequencies.get(word) >= minimunAppearances) {
+                allWordFrequencies.add(new WordFrequency(word, wordFrequencies.get(word)));
+            }
+
         }
-        Arrays.sort(allWordFrequencies, Collections.reverseOrder());
+        allWordFrequencies.sort(Collections.reverseOrder());
         return allWordFrequencies;
     }
 }

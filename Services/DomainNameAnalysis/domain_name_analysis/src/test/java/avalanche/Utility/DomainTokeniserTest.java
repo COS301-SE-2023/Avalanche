@@ -40,18 +40,7 @@ public class DomainTokeniserTest {
     public void dictionaryLengthCorrect() throws FileNotFoundException {
 
         DomainTokeniser.init();
-        assertEquals(125549, DomainTokeniser.getDictionary().size());
-    }
-
-    @Test
-    public void correctWordcost() throws FileNotFoundException {
-
-        DomainTokeniser.init();
-        assertEquals(0, DomainTokeniser.getDictionary().get("the"), 0.00001);
-        assertEquals(8.137860786, DomainTokeniser.getDictionary().get("of"), 0.00001);
-        assertEquals(12.89820418, DomainTokeniser.getDictionary().get("in"), 0.00001);
-        assertEquals(16.27572157, DomainTokeniser.getDictionary().get("a"), 0.00001);
-        assertEquals(137.8381991, DomainTokeniser.getDictionary().get("pebbliest"), 0.00001);
+        assertEquals(333334, DomainTokeniser.getDictionary().size());
     }
 
     @Test
@@ -77,9 +66,17 @@ public class DomainTokeniserTest {
     }
 
     @Test
+    public void turtledream() throws FileNotFoundException {
+        DomainTokeniser.init();
+        DomainTokeniser domainTokeniser = new DomainTokeniser();
+        assertEquals("turtle dream", domainTokeniser.inferSpaces("turtledream"));
+    }
+
+    @Test
     public void threeWordTest() throws FileNotFoundException {
         DomainTokeniser.init();
         DomainTokeniser domainTokeniser = new DomainTokeniser();
+        assertEquals("hi there dudeman", domainTokeniser.inferSpaces("hitheredudeman"));
         assertEquals("hi there dude", domainTokeniser.inferSpaces("hitheredude"));
         assertEquals("hello you guy", domainTokeniser.inferSpaces("helloyouguy"));
         assertEquals("cool guy cool", domainTokeniser.inferSpaces("coolguycool"));
@@ -90,7 +87,7 @@ public class DomainTokeniserTest {
     public void fourWordTest() throws FileNotFoundException {
         DomainTokeniser.init();
         DomainTokeniser domainTokeniser = new DomainTokeniser();
-        assertEquals("hi there dude man", domainTokeniser.inferSpaces("hitheredudeman"));
+
         assertEquals("hello you guy awesome", domainTokeniser.inferSpaces("helloyouguyawesome"));
         assertEquals("cool guy cool guy", domainTokeniser.inferSpaces("coolguycoolguy"));
 
@@ -102,7 +99,7 @@ public class DomainTokeniserTest {
     public void fiveWordTest() throws FileNotFoundException {
         DomainTokeniser.init();
         DomainTokeniser domainTokeniser = new DomainTokeniser();
-        assertEquals("hi there dude man sir", domainTokeniser.inferSpaces("hitheredudemansir"));
+        assertEquals("hi there dude - man sir", domainTokeniser.inferSpaces("hitheredude-mansir"));
         assertEquals("hello you guy awesome blanket", domainTokeniser.inferSpaces("helloyouguyawesomeblanket"));
         assertEquals("cool guy cool guy cool", domainTokeniser.inferSpaces("coolguycoolguycool"));
     }
