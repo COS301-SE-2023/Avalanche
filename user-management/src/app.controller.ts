@@ -19,18 +19,64 @@ export class AppController {
   @MessagePattern({ cmd: 'verify' })
   async verify(data: any) {
     console.log("Verifying user: ", data);
-    return await this.authService.verify(data.email, data.otp);
+    const result = await this.authService.verify(data.email, data.otp);
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
   }
   @MessagePattern({ cmd: 'resendOTP' })
   async resendOTP(data: any) {
     console.log("Resending OTP: ", data);
-    return await this.authService.resendOTP(data.email);
+    const result = await this.authService.resendOTP(data.email);
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
   }
   @MessagePattern({ cmd: 'login' })
   async login(data: any) {
     console.log("Logging in user: ", data);
     const result = await this.authService.login(data.email, data.password);
 
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
+  @MessagePattern({ cmd: 'getUserInfo' })
+  async getUserInfo(data: any) {
+    console.log("Get user info: ", data);
+    const result = await this.userOrgManService.getUserInfo(data.token);
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
+  @MessagePattern({ cmd: 'getMembers' })
+  async getMembers(data: any) {
+    console.log("Get user info: ", data);
+    const result = await this.userOrgManService.getMembers(data.token);
     if (result.error) {
       throw new RpcException({
         status: result.status,
