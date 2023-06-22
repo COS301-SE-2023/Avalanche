@@ -14,6 +14,7 @@ public class main {
         try {
             SimpleHttpServer server = new SimpleHttpServer(4004);
             server.start();
+            server.handleDummyRequest();
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

@@ -35,7 +35,7 @@ public class SimpleHttpServer {
         System.out.println("Found " + Runtime.getRuntime().availableProcessors() + " processors");
         long st = System.currentTimeMillis();
         System.out.println("initialising domain list");
-        SimilarityChecker.init(false, Runtime.getRuntime().availableProcessors() - 1);
+        SimilarityChecker.init(false, Runtime.getRuntime().availableProcessors() / 2);
         System.out.println("Done domain list\n");
 
         System.out.println("initialising word freq");
@@ -53,7 +53,7 @@ public class SimpleHttpServer {
         System.out.println("Dummy request sent");
         long st = System.currentTimeMillis();
         String o = state.getResponse(
-                "{\n\"domain\":\"selborne\",\n\"types\":[{\"type\":\"Levenshtein\",\"threshold\":5}]\n}",
+                "{domain: \"selborne\", types: [{type: \"Soundex\", threshold: 3}, {type: \"Levenshtein\", threshold: 2}]}",
                 st);
         System.out.println(o);
         System.out.println("time in millis " + (System.currentTimeMillis() - st));
