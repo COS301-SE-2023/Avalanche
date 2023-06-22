@@ -22,7 +22,7 @@ import { HttpModule } from '@nestjs/axios';
         transport: Transport.TCP,
         options: {
           host: 'localhost',
-          port: 4001,
+          port: 3001,
         },
       },
       {
@@ -30,7 +30,7 @@ import { HttpModule } from '@nestjs/axios';
         transport: Transport.TCP,
         options: {
           host: 'localhost',
-          port: 4002,
+          port: 3002,
         },
       },
     ]),

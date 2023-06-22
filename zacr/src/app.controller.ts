@@ -8,8 +8,8 @@ export class AppController {
   constructor(private readonly transactionsService: TransactionService) {}
 
   @MessagePattern({ cmd: 'transactions' })
-  async transactions(data: any) {
+  async register(data: any) {
     console.log('Transactions: ', data);
-    return await this.transactionsService.transactions(data.jsonInput,data.graphName);
+    return await this.transactionsService.transactions(data.jsonInput);
   }
 }

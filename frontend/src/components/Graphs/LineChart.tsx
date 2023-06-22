@@ -8,10 +8,9 @@ import {
     Title,
     Tooltip,
     Legend,
-} from 'chart.js/auto';
+} from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import { IChart } from '@/interfaces';
-import { useTheme } from 'next-themes'
 
 ChartJS.register(
     CategoryScale,
@@ -23,44 +22,21 @@ ChartJS.register(
     Legend
 );
 
-export function LineChart({ data, addClass }: IChart) {
-    const { theme } = useTheme()
-    const options = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                display: data.datasets?.length === 1 ? false : true,
-            },
-            title: {
-                display: false,
-            },
+export const options = {
+    responsive: true,
+    // maintainAspectRatio: false,
+    plugins: {
+        legend: {
+            position: 'top' as const,
         },
-        gridLines: {
-            zeroLineColor: "dark" ? "white" : "rgba(49, 54, 56, 0.5)"
+        title: {
+            display: true,
+            text: 'Chart.js Line Chart',
         },
-        scales: {
-            y: {
-                ticks: {
-                    padding: 10
-                },
-                grid: {
-                    color: theme === "dark" ? "rgba(49, 54, 56, 0.7)" : "rgba(49, 54, 56, 0.2)"
-                }
-            },
-            x: {
-                ticks: {
-                    padding: 10
-                },
-                label: {
-                    padding: 10
-                },
-                grid: {
-                    color: theme === "dark" ? "rgba(49, 54, 56, 0.7)" : "rgba(49, 54, 56, 0.2)"
-                }
-            },
+    },
+};
 
-        }
-    };
-    return <div className={`${addClass}`}><Line options={options} data={data} /></div >;
+
+export function LineChart({ data }: IChart) {
+    return <div className="h-full"><Line options={options} data={data} /></div>;
 }

@@ -1,4 +1,4 @@
 export const enum APIStatus {
-    SUCCESS = "success",
-    FAILURE = "failure"
+    SUCCESS = "Success",
+    FAILURE = "Failure"
 }
