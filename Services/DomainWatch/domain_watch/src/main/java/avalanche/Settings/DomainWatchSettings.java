@@ -16,9 +16,11 @@ public class DomainWatchSettings {
     private static DomainWatchSettings domainWatchSettings;
     public HashMap<HashSet<String>, Double> substitutionCosts;
     public int maximumThreadsPerSearch;
+    public boolean useInternalSubstitutionCosts;
 
     private DomainWatchSettings() {
-        this.substitutionCosts = new HashMap<>();
+        useInternalSubstitutionCosts = false;
+        substitutionCosts = new HashMap<>();
         maximumThreadsPerSearch = Runtime.getRuntime().availableProcessors() - 1;
         try {
             Scanner file = new Scanner(new FileReader("domainWatch.conf"));
@@ -39,6 +41,7 @@ public class DomainWatchSettings {
                         sub.getDouble("cost"));
 
             }
+            useInternalSubstitutionCosts = obj.getBoolean("useInternalSubstitutionCosts");
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
