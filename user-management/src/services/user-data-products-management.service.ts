@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -8,6 +8,9 @@ import { Repository } from 'typeorm';
 import { UserGroup } from 'src/entity/userGroup.entity';
 import { Organisation } from 'src/entity/organisation.entity';
 import axios from 'axios';
+import { Response } from 'express';
+import { Res} from '@nestjs/common';
+
 @Injectable()
 export class UserDataProductMangementService {
     constructor(@Inject('REDIS') private readonly redis: Redis, private readonly configService: ConfigService,
@@ -16,6 +19,14 @@ export class UserDataProductMangementService {
         @InjectRepository(Organisation) private organisationRepository: Repository<Organisation>) { }
 
     async integrateUserWithWExternalAPI(token: string, type: string, allocateToName: string, username: string, password: string, personal: boolean) {
+        if(!username || !password){
+            return { 
+                status: 400,
+                error: true,
+                message: 'Please enter all account details',
+                timestamp: new Date().toISOString()
+              };
+        }
         if (personal == true) {
             let url = 'https://srs-epp.dns.net.za:8282/portal/auth-jwt/';
             const payload = {
@@ -47,20 +58,31 @@ export class UserDataProductMangementService {
                         integrationString += "-" + type + ",";
                     }
                     const user = await this.userRepository.findOne({ where: { email: allocateToName } });
+                    if(!user){
+                        return {status : 'failure', message : 'User does not exist', 
+                        timestamp: new Date().toISOString()};
+                    }
                     user.products += integrationString;
                     await this.userRepository.save(user);
-                    return { status: 'success', message: 'User is integrated with DNS' };
+                    return { status: 'success', message: 'User is integrated with DNS', 
+                    timestamp: new Date().toISOString() };
                 } catch (error) {
                     console.error(error);
-                    return { status: 'error', message: error };
+                    return { status: 400,error: true, message: error, 
+                    timestamp: new Date().toISOString() };
                 }
             } catch (error) {
                 console.error(error);
-                return { status: 'error', message: error };
+                return { status: 400,error: true, message: error, 
+                timestamp: new Date().toISOString() };
             }
         } else {
             // Retrieve the user with their groups based on the token
             const userData = await this.redis.get(token);
+            if(!userData){
+                return {status : 'failure', message : 'Invalid token', 
+                timestamp: new Date().toISOString()};
+            }
             const userDetails = JSON.parse(userData);
             const permission = userDetails.userGroups[0].permission;
             if (permission == 1) {
@@ -94,16 +116,23 @@ export class UserDataProductMangementService {
                             integrationString += "-" + type + ",";
                         }
                         const userGroup = await this.userGroupRepository.findOne({ where: { name: allocateToName } });
+                        if(!userGroup){
+                            return {status : 'failure', message : 'Cannot find user group with the given name', 
+                            timestamp: new Date().toISOString()}
+                        }
                         userGroup.products += integrationString;
                         await this.userRepository.save(userGroup);
-                        return { status: 'success', message: 'User is integrated with DNS' };
+                        return { status: 'success', message: 'User is integrated with DNS', 
+                        timestamp: new Date().toISOString() };
                     } catch (error) {
                         console.error(error);
-                        return { status: 'error', message: error };
+                        return { status: 'error', message: error, 
+                        timestamp: new Date().toISOString() };
                     }
                 } catch (error) {
                     console.error(error);
-                    return { status: 'error', message: error };
+                    return { status: 'error', message: error, 
+                    timestamp: new Date().toISOString() };
                 }
             }
         }
@@ -117,9 +146,14 @@ export class UserDataProductMangementService {
                 typeW += type + ',';
             }
             const user = await this.userRepository.findOne({ where: { email: allocateToName } });
+            if(!user){
+                return {status : 'failure', message : 'User does not exist', 
+                timestamp: new Date().toISOString()};
+            }
             user.products += typeW;
             await this.userRepository.save(user);
-            return { status: 'success', message: 'User is integrated with ' + type };
+            return { status: 'success', message: 'User is integrated with ' + type , 
+            timestamp: new Date().toISOString()};
         } else if (personal == false) {
             // Retrieve the user with their groups based on the token
             const userData = await this.redis.get(token);
@@ -131,14 +165,21 @@ export class UserDataProductMangementService {
                     typeW += type + ',';
                 }
                 const userGroup = await this.userGroupRepository.findOne({ where: { name: allocateToName } });
+                if(!userGroup){
+                    return {status : 'failure', message : 'Cannot find user group with given name', 
+                    timestamp: new Date().toISOString()}
+                }
                 userGroup.products += typeW;
                 await this.userGroupRepository.save(userGroup);
-                return { status: 'success', message: 'User group is integrated with ' + type };
+                return { status: 'success', message: 'User group is integrated with ' + type , 
+                timestamp: new Date().toISOString()};
             } else {
-                return { status: 'failure', message: 'User does not have the right permissions' };
+                return { status: 400,error: true, message: 'User does not have the right permissions', 
+                timestamp: new Date().toISOString() };
             }
         } else {
-            return { status: 'failure', message: 'Error occured, please try later again' };
+            return { status: 400,error: true, message: 'Error occured, please try later again' , 
+            timestamp: new Date().toISOString()};
         }
     }
 }

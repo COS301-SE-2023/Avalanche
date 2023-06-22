@@ -4,7 +4,6 @@ public class Domain implements Comparable {
     private String name;
     private String zone;
     private double distance;
-    private double similarity;
     private int metrics;
 
     public Domain(String name, String zone) {
@@ -12,15 +11,6 @@ public class Domain implements Comparable {
         this.zone = zone;
         this.metrics = 0;
         this.distance = 0;
-        this.similarity = 0;
-    }
-
-    public Domain(Domain domain) {
-        this.name = domain.name;
-        this.zone = domain.zone;
-        this.metrics = domain.metrics;
-        this.distance = domain.distance;
-        this.similarity = domain.similarity;
     }
 
     public String getName() {
@@ -33,12 +23,7 @@ public class Domain implements Comparable {
 
     public void setDistance(double distance, String metric) {
         if (metric.equals("Levenshtein")) {
-            if (this.name.length() > distance) {
-                this.distance += (this.name.length() - distance) / this.name.length();
-            } else {
-                this.distance += (distance - this.name.length()) / distance;
-            }
-
+            this.distance += (this.name.length() - distance) / this.name.length();
         } else if (metric.equals("Soundex")) {
             this.distance += distance * 0.25;
         }

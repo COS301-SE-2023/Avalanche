@@ -2,9 +2,13 @@ name: Testing
 
 on:
   push:
-    branches: ["working", "stable"]
+    branches:
+      - working
+      - stable
   pull_request:
-    branches: ["working", "stable"]
+    branches:
+      - working
+      - stable
 
 permissions:
     pull-requests: read

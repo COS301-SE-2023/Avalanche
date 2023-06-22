@@ -85,11 +85,11 @@ export default function API({ demo }: IAPI) {
             </div>
     }
 
-        {modalState.currentOpen === "API.SetDeleteConfirm" && <ModalAnimationWrapper><ConfirmModal text="Are you sure you want to delete this API key?" title="Delete API Key Confirmation" buttonSuccess="Yes, delete" buttonCancel="No, cancel" /></ModalAnimationWrapper>}
+        {modalState.currentOpen === "API.SetDeleteConfirm" && <ConfirmModal text="Are you sure you want to delete this API key?" title="Delete API Key Confirmation" buttonSuccess="Yes, delete" buttonCancel="No, cancel" />}
 
-        {modalState.currentOpen === "API.SetRollConfirm" && <ModalAnimationWrapper><ConfirmModal text="Are you sure you want to roll this API key?" title="Roll API Key Confirmation" buttonSuccess="Yes, roll!" buttonCancel="No, cancel" /></ModalAnimationWrapper>}
+        {modalState.currentOpen === "API.SetRollConfirm" && <ConfirmModal text="Are you sure you want to roll this API key?" title="Roll API Key Confirmation" buttonSuccess="Yes, roll!" buttonCancel="No, cancel" />}
 
-        {modalState.currentOpen === "API.CreateAPIKey" && <ModalAnimationWrapper><APIKeyCreateModal /></ModalAnimationWrapper>}
+        {modalState.currentOpen === "API.CreateAPIKey" && <APIKeyCreateModal />}
 
     </>
 }

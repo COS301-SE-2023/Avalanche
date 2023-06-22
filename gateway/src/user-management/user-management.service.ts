@@ -1,4 +1,6 @@
 /* eslint-disable prettier/prettier */
+import { HttpException } from '@nestjs/common';
+import { HttpStatus } from '@nestjs/common';
 import { Injectable, Inject } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 
@@ -15,7 +17,7 @@ export class UserManagementService {
     return this.client.send({ cmd: 'verify' }, data).toPromise();
   }
   async login(data: any) {
-    return this.client.send({ cmd: 'login' }, data).toPromise();
+      return this.client.send({ cmd: 'login' }, data).toPromise();
   }
   async createOrganisation(data: any) {
     return this.client.send({ cmd: 'createOrganisation' }, data).toPromise();

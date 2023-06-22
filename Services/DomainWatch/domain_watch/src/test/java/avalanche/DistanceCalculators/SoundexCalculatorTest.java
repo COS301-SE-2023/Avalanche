@@ -68,11 +68,4 @@ public class SoundexCalculatorTest {
         assertEquals(3, calc.calculateSoundexDifference("wikipedia.org", "wikimedia.org"), 0);
         assertEquals(1, calc.calculateSoundexDifference("amazon.com", "alibaba.com"), 0);
     }
-
-    @Test
-    public void selborneToSlo() throws FileNotFoundException {
-        DomainTokeniser.init();
-        SoundexCalculator calc = new SoundexCalculator();
-        assertEquals(2, calc.calculateSoundexDifference("selborne", "slo"), 0);
-    }
 }

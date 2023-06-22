@@ -8,7 +8,7 @@ async function bootstrap() {
     transport: Transport.TCP,
     options: {
       host: 'localhost',
-      port: 3002,
+      port: 4002,
     },
   });
   app.listen();

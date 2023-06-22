@@ -1,7 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Inject, Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
-// eslint-disable-next-line prettier/prettier
 import { JwtService } from '@nestjs/jwt';
 @Injectable()
 /*
