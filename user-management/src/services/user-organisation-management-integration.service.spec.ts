@@ -794,8 +794,21 @@ describe('UserOrganisationMangementService Integration', () => {
       }
 
     }, 20000);
+    it('should return an error if token is invalid', async () => {
+      // Arrange
+      const jwtToken = Random.word(20);
+      const organisationName = Random.word(5);
 
-    
+      // Act
+      const result = await userOrganisationMangementService.exitOrganisation(
+        jwtToken,
+        organisationName,
+      );
+
+      // Assert
+      expect(result.status).toBe(400);
+      expect(result.message).toBe('Invalid token');
+    }, 10000);
 
     interface MessageUser {
       text: string;
