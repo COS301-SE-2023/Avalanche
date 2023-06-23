@@ -109,19 +109,6 @@ export default function Settings() {
                         <a href="?tab=apikeys" className={tab === "apikeys" ? tabOptions.active : tabOptions.inactive}>API Keys</a>
                     </li>
                 </ul>
-                <button type="button" className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 m-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 float-right" onClick={() => {
-                    setDemo(!demo);
-                    toast(`Demo mode: ${!demo ? 'on' : 'off'}`,
-                        {
-                            icon: '💀',
-                            style: {
-                                borderRadius: '10px',
-                                background: '#333',
-                                color: '#fff',
-                            },
-                        }
-                    );
-                }}>Demo Toggle</button>
             </div>
 
             {tab === "general" && <>
