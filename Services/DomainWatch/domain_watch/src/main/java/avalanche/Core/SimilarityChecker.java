@@ -80,7 +80,7 @@ public class SimilarityChecker {
         ConcurrentLinkedQueue<Domain> hits = new ConcurrentLinkedQueue<>();
         LevensteinDistanceCalculator calc = new LevensteinDistanceCalculator();
         for (Domain domain : allDomains) {
-            double value = calc.calculateBasicLevenshteinDistance(search, domain.getName());
+            double value = calc.calculateModifiedLevenshteinDistance(search, domain.getName());
             if (value <= threshold) {
                 domain.setDistance(value, "Levenshtein");
                 hits.add(domain);
@@ -95,7 +95,7 @@ public class SimilarityChecker {
         ConcurrentLinkedQueue<Domain> hits = new ConcurrentLinkedQueue<>();
         LevensteinDistanceCalculator calc = new LevensteinDistanceCalculator();
         for (Domain domain : searchSpace) {
-            double value = calc.calculateBasicLevenshteinDistance(search, domain.getName());
+            double value = calc.calculateModifiedLevenshteinDistance(search, domain.getName());
             if (value <= threshold) {
                 domain.setDistance(value, "Levenshtein");
                 hits.add(domain);
