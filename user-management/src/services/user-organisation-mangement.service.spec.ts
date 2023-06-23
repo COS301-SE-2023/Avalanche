@@ -8,7 +8,6 @@ import { Repository } from 'typeorm';
 import { UserOrganisationMangementService } from './user-organisation-mangement.service';
 import Redis from 'ioredis';
 import { ConfigService } from '@nestjs/config';
-import { v4 as uuidv4 } from 'uuid';
 
 describe('UserOrganisationMangementService', () => {
   let userOrganisationMangementService: UserOrganisationMangementService;
