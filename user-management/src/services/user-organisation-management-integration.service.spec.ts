@@ -617,61 +617,61 @@ describe('UserOrganisationMangementService Integration', () => {
       const org = new Organisation();
       org.name = Random.word(5);
       const savedOrg = await organisationRepository.save(org);
-  
+
       const invokerGroup = new UserGroup();
       invokerGroup.name = Random.word(5);
       invokerGroup.permission = 1;
       invokerGroup.organisation = savedOrg;
       const savedInvokerGroup = await userGroupRepository.save(invokerGroup);
-  
+
       const userToBeRemovedGroup = new UserGroup();
       userToBeRemovedGroup.name = Random.word(5);
       userToBeRemovedGroup.permission = 0;
       userToBeRemovedGroup.organisation = savedOrg;
       const savedUserToBeRemovedGroup = await userGroupRepository.save(userToBeRemovedGroup);
-  
+
       const invoker = new User();
       invoker.email = invokerEmail;
       invoker.password = invokerPassword;
       invoker.organisation = savedOrg;
       invoker.userGroups = [savedInvokerGroup];
       await userRepository.save(invoker);
-  
+
       const userToBeRemoved = new User();
       userToBeRemoved.email = userToBeRemovedEmail;
       userToBeRemoved.password = userToBeRemovedPassword;
       userToBeRemoved.organisation = savedOrg;
       userToBeRemoved.userGroups = [savedUserToBeRemovedGroup];
       await userRepository.save(userToBeRemoved);
-  
+
       const jwtSecret = Random.word(10);
       const jwtToken = jwt.sign({ email: invokerEmail }, jwtSecret);
       await redis.set(jwtToken, JSON.stringify(serializeUser(invoker)), 'EX', 24 * 60 * 60);
-  
+
       // Act
       const result = await userOrganisationMangementService.removeUserFromUserGroup(
         jwtToken,
         savedUserToBeRemovedGroup.name,
         userToBeRemovedEmail,
       );
-  
+
       // Assert
       expect(result.status).toBe('success');
     }, 20000);
-  
+
     it('should return an error if token is invalid', async () => {
       // Arrange
       const jwtToken = Random.word(20);
       const userGroupName = Random.word(10);
       const userEmail = Random.email();
-    
+
       // Act
       const result = await userOrganisationMangementService.removeUserFromUserGroup(
         jwtToken,
         userGroupName,
         userEmail,
       );
-    
+
       // Assert
       expect(result.status).toBe(400);
       expect(result.error).toBeTruthy();
@@ -687,53 +687,128 @@ describe('UserOrganisationMangementService Integration', () => {
       const org = new Organisation();
       org.name = Random.word(5);
       const savedOrg = await organisationRepository.save(org);
-    
+
       const invokerGroup = new UserGroup();
       invokerGroup.name = Random.word(5);
       invokerGroup.permission = 3; // Insufficient permission
       invokerGroup.organisation = savedOrg;
       const savedInvokerGroup = await userGroupRepository.save(invokerGroup);
-    
+
       const userToBeRemovedGroup = new UserGroup();
       userToBeRemovedGroup.name = Random.word(5);
       userToBeRemovedGroup.permission = 1;
       userToBeRemovedGroup.organisation = savedOrg;
       const savedUserToBeRemovedGroup = await userGroupRepository.save(userToBeRemovedGroup);
-    
+
       const invoker = new User();
       invoker.email = invokerEmail;
       invoker.password = invokerPassword;
       invoker.organisation = savedOrg;
       invoker.userGroups = [savedInvokerGroup];
       await userRepository.save(invoker);
-    
+
       const userToBeRemoved = new User();
       userToBeRemoved.email = userToBeRemovedEmail;
       userToBeRemoved.password = userToBeRemovedPassword;
       userToBeRemoved.organisation = savedOrg;
       userToBeRemoved.userGroups = [savedUserToBeRemovedGroup];
       await userRepository.save(userToBeRemoved);
-    
+
       const jwtSecret = Random.word(10);
       const jwtToken = jwt.sign({ email: invokerEmail }, jwtSecret);
       await redis.set(jwtToken, JSON.stringify(serializeUser(invoker)), 'EX', 24 * 60 * 60);
-    
+
       // Act
       const result = await userOrganisationMangementService.removeUserFromUserGroup(
         jwtToken,
         savedUserToBeRemovedGroup.name,
         userToBeRemovedEmail,
       );
-    
+
       // Assert
       expect(result.status).toBe(400);
       expect(result.error).toBe(true);
       expect(result.message).toBe("User does not have sufficient permissions");
     }, 20000);
-    
-    
+
+
   });
-  
+
+  describe('exitOrganisation', () => {
+
+    const serializeUser = (user) => {
+      return {
+        ...user,
+        userGroups: user.userGroups ? user.userGroups.map(userGroup => ({
+          ...userGroup,
+          users: undefined, // removing users to prevent circular structure
+        })) : [],
+        organisation: user.organisation ? {
+          ...user.organisation,
+          users: undefined, // removing users to prevent circular structure
+        } : null,
+      };
+    };
+
+    it('should remove a user from an organisation and associated user groups', async () => {
+      // Arrange
+      const email = Random.email();
+      const password = Random.word(8);
+      const organisationName = Random.word(5);
+
+      const org = new Organisation();
+      org.name = organisationName;
+      const savedOrg = await organisationRepository.save(org);
+
+      const userGroup = new UserGroup();
+      userGroup.name = Random.word(5);
+      userGroup.organisation = savedOrg;
+      userGroup.permission = 2;
+      const savedUserGroup = await userGroupRepository.save(userGroup);
+
+      const user = new User();
+      user.email = email;
+      user.password = password;
+      user.organisation = savedOrg;
+      user.userGroups = [savedUserGroup];
+      user.organisationId = savedOrg.id;
+      await userRepository.save(user);
+
+      const jwtSecret = Random.word(10);
+      const jwtToken = jwt.sign({ email }, jwtSecret);
+      await redis.set(jwtToken, JSON.stringify(serializeUser(user)), 'EX', 24 * 60 * 60);
+
+      // Act
+      const result = await userOrganisationMangementService.exitOrganisation(
+        jwtToken,
+        organisationName,
+      );
+
+      // Assert
+      expect(result.status).toBe('success');
+      if (isMessageUser(result.message)) {
+        expect(result.message.text).toBe('User removed from organisation and user groups');
+        const removedUser = result.message.user;
+        expect(removedUser.organisation).toBeNull();
+        expect(removedUser.userGroups).toBeNull();
+      }
+
+    }, 20000);
+
+    
+
+    interface MessageUser {
+      text: string;
+      user: User;
+    }
+    
+    function isMessageUser(obj: any): obj is MessageUser {
+      return !!obj && typeof obj === 'object' && 'text' in obj && 'user' in obj;
+    }
+  });
+
+
+
 
   // afterEach(async () => {
   //   // Delete everything from Redis
