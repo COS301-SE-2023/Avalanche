@@ -104,32 +104,37 @@ describe('UserOrganisationMangementService Integration', () => {
   }, 10000);
   
   it('should return an error if user already belongs to an organisation', async () => {
-      // Arrange
-      const email = Random.email();
-      const password = Random.word(8);
-      const user = new User();
-      user.email = email;
-      user.password = password;
-      user.organisation = new Organisation();
-      await userRepository.save(user);
+    // Arrange
+    const email = Random.email();
+    const password = Random.word(8);
+    const user = new User();
+    user.email = email;
+    user.password = password;
   
-      const jwtSecret = Random.word(10);
-      const jwtToken = jwt.sign({ email }, jwtSecret);
+    const org = new Organisation();
+    // add necessary fields to the org object, if required
+    const savedOrg = await organisationRepository.save(org);  // save organisation instance
   
-      await redis.set(jwtToken, JSON.stringify(user), 'EX', 24 * 60 * 60);
+    user.organisation = savedOrg;  // associate the saved organisation instance
+    await userRepository.save(user);  // save user
   
-      const name = Random.word(10);
+    const jwtSecret = Random.word(10);
+    const jwtToken = jwt.sign({ email }, jwtSecret);
   
-      // Act
-      const result = await userOrganisationMangementService.createOrganisation(
-        jwtToken,
-        name,
-      );
+    await redis.set(jwtToken, JSON.stringify(user), 'EX', 24 * 60 * 60);
   
-      // Assert
-      expect(result.status).toBe(400);
-      expect(result.message).toBe('User already belongs to an organisation');
-  }, 10000);                    
+    const name = Random.word(10);
+  
+    // Act
+    const result = await userOrganisationMangementService.createOrganisation(
+      jwtToken,
+      name,
+    );
+  
+    // Assert
+    expect(result.status).toBe(400);
+    expect(result.message).toBe('User already belongs to an organisation');
+  }, 10000);                     
   });
 
   // afterEach(async () => {

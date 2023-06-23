@@ -5,7 +5,7 @@ on:
     branches: [ "working", "stable", "backend_coverage_dev", "integration_dev"]
 
 jobs:
-  build:
+  test:
     if: contains(github.event.head_commit.message, '_TEST_')
     name: Code Cov
     runs-on: ubuntu-latest
