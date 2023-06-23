@@ -271,7 +271,7 @@ export class UserOrganisationMangementService {
                     // Store the key in Redis with 7 days expiry time
                     const redisData = JSON.stringify({ userEmail: userEmail, userGroupName: userGroupName });
                     await this.redis.set(key, redisData, 'EX', 7 * 24 * 60 * 60);
-
+                    console.log(userEmail);
                     // Send email to existing user with invitation link
                     await this.sendInvitationEmail(userEmail, key, userGroupName);
                     return {
