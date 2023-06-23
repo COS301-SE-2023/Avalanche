@@ -63,7 +63,7 @@ export default function Sidebar() {
                                 </li>
                             </ul>
                         </div>
-                        <div className="absolute bottom-0 left-0 justify-center p-4 space-x-4 w-full lg:flex flex-col gap-2 bg-gray-200 dark:bg-primaryBackground z-20 border-r border-gray-200 dark:border-secondaryBackground">
+                        <div className="absolute bottom-0 left-0 justify-center p-4 w-full lg:flex flex-col gap-2 bg-gray-200 dark:bg-primaryBackground z-20 border-r border-gray-200 dark:border-secondaryBackground">
                             <div>
                                 <div className="flex items-center space-x-4">
                                     <img className="w-10 h-10 rounded-full" src="https://github.com/michaelrosstarr.png" alt="" />

@@ -2,8 +2,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { AppState } from "../store";
 import { HYDRATE } from "next-redux-wrapper";
 import ky from "ky";
-import { ILoginRequest, IOTPVerifyRequest, IRegisterRequest, ICreateOrganisationRequest } from "@/interfaces/requests";
-import { IOTPVerifyResponse, IRegisterResponse, ILoginResponse, ICreateOrgnisationResponse } from "@/interfaces/responses";
+import { ILoginRequest, IOTPVerifyRequest, IRegisterRequest, ICreateOrganisationRequest, ICreateUserGroupRequest } from "@/interfaces/requests";
+import { IOTPVerifyResponse, IRegisterResponse, ILoginResponse, ICreateOrgnisationResponse, ICreateUserGroupResponse } from "@/interfaces/responses";
 import { setCookie, getCookie, deleteCookie } from 'cookies-next';
 import { ISettings, IOrganisation, IDataProduct, IUserGroups } from "@/interfaces/interfaces";
 
@@ -24,11 +24,17 @@ export interface IUserState {
 }
 
 export interface IUser {
-    username: string | null,
+    id: string | null,
     email: string | null,
     firstName: string | null,
-    lastName: string | null,
+    lastName: string | null
+    settings: ISettings | null,
     profilePicture: string | null,
+    // favourites: IDashBoard[] | null,
+    dataProducts: IDataProduct[] | null,
+    organisation: IOrganisation | null,
+    userGroups: IUserGroups[] | null,
+    token?: string | null
 }
 
 export interface IAuth {
@@ -64,7 +70,10 @@ export const userSlice = createSlice({
             error: false,
             message: ""
         },
-        loading: false
+        loading: false,
+        createGroupSuccess: false,
+        addUserGroupSuccess: false,
+        userGroups: [],
     },
     reducers: {
         setAuth(state) {
@@ -72,6 +81,12 @@ export const userSlice = createSlice({
         },
         getAuth(state) {
 
+        },
+        setCreateGroupSuccess(state, action) {
+            state.createGroupSuccess = action.payload;
+        },
+        setAddUserGroupSuccess(state, action) {
+            state.addUserGroupSuccess = action.payload;
         },
         resetRequest(state) {
             state.requests = {
@@ -152,7 +167,69 @@ export const userSlice = createSlice({
         })
         // Create Organisation
         builder.addCase(createOrganisation.fulfilled, (state, action) => {
+            const payload = action.payload as ICreateOrgnisationResponse;
+            state.user.organisation = payload.message.organisation;
+            state.user.userGroups = payload.message.userGroups;
+            state.loading = false;
+        })
+        builder.addCase(createOrganisation.pending, (state) => {
+            state.loading = true;
 
+        })
+        builder.addCase(createOrganisation.rejected, (state, action) => {
+            state.loading = false;
+        })
+        // Create User Group
+        builder.addCase(createOrganisationGroup.fulfilled, (state, action) => {
+            console.log("ful");
+            const payload = action.payload as ICreateUserGroupResponse;
+            state.user.userGroups?.push(payload.message);
+            state.createGroupSuccess = true;
+            // state.user.organisation = payload.message.organisation;
+        })
+        builder.addCase(createOrganisationGroup.pending, (state) => {
+            state.createGroupSuccess = false;
+        })
+        builder.addCase(createOrganisationGroup.rejected, (state, action) => {
+            console.log("rejected", action);
+            state.createGroupSuccess = false;
+        })
+        // Get User Group
+        builder.addCase(getUserGroups.fulfilled, (state, action) => {
+            const payload = action.payload as any;
+            console.log(payload.users);
+            state.userGroups = payload.users;
+            state.loading = false;
+        })
+        builder.addCase(getUserGroups.pending, (state) => {
+            state.loading = true;
+        })
+        builder.addCase(getUserGroups.rejected, (state, action) => {
+            state.loading = false;
+        })
+        // Add User
+        builder.addCase(addUserToGroup.fulfilled, (state, action) => {
+            state.addUserGroupSuccess = true;
+            state.loading = false;
+        })
+        builder.addCase(addUserToGroup.pending, (state) => {
+            state.loading = true;
+        })
+        builder.addCase(addUserToGroup.rejected, (state, action) => {
+            state.addUserGroupSuccess = false;
+            state.loading = false;
+        })
+        // Get Latest Org
+        builder.addCase(getLatestOrganisation.fulfilled, (state, action) => {
+            const payload = action.payload as any;
+            state.user.organisation = payload;
+            state.loading = false;
+        })
+        builder.addCase(getLatestOrganisation.rejected, (state, action) => {
+            state.loading = false;
+        })
+        builder.addCase(getLatestOrganisation.pending, (state) => {
+            state.loading = true;
         })
     }
 });
@@ -209,13 +286,72 @@ export const createOrganisation = createAsyncThunk("ORG.CreateOrganisation", asy
                 "Authorization": `Bearer ${jwt}`
             }
         }).json();
-        // return response;
+        return response as ICreateOrgnisationResponse;
     } catch (e) {
         if (e instanceof Error) return rejectWithValue(e.message);
     }
 })
 
+export const createOrganisationGroup = createAsyncThunk("ORG.CreateOrganisationGroup", async (object: ICreateUserGroupRequest, { rejectWithValue }) => {
+    try {
+        const jwt = getCookie("jwt");
+        const response = await ky.post(`${url}/createUserGroup`, {
+            json: object,
+            headers: {
+                "Authorization": `Bearer ${jwt}`
+            }
+        }).json();
+        return response as ICreateUserGroupResponse;
+    } catch (e) {
+        if (e instanceof Error) return rejectWithValue(e.message);
+    }
+})
 
-export const { setAuth, getAuth, resetRequest, logout } = userSlice.actions;
+export const getUserGroups = createAsyncThunk("ORG.GetUserGroups", async (object: any, { rejectWithValue }) => {
+    try {
+        const jwt = getCookie("jwt");
+        const response = await ky.post(`${url}/getMembers`, {
+            headers: {
+                "Authorization": `Bearer ${jwt}`
+            }
+        }).json();
+        return response as any;
+    } catch (e) {
+        if (e instanceof Error) return rejectWithValue(e.message);
+    }
+})
+
+export const addUserToGroup = createAsyncThunk("ORG.AddUserToGroup", async (object: any, { rejectWithValue }) => {
+    try {
+        const jwt = getCookie("jwt");
+        const response = await ky.post(`${url}/addUserToUserGroup`, {
+            json: object,
+            headers: {
+                "Authorization": `Bearer ${jwt}`
+            }
+        }).json();
+        return response as any;
+    } catch (e) {
+        if (e instanceof Error) return rejectWithValue(e.message);
+    }
+})
+
+export const getLatestOrganisation = createAsyncThunk("ORG.GetLatestOrganisation", async (object: any, { rejectWithValue }) => {
+    try {
+        const jwt = getCookie("jwt");
+        const response: any = await ky.post(`${url}/getUserInfo`, {
+            headers: {
+                "Authorization": `Bearer ${jwt}`
+            }
+        }).json();
+        console.log(response);
+        console.log(response.message.organisation);
+        return response.message.organisation as any;
+    } catch (e) {
+        if (e instanceof Error) return rejectWithValue(e.message);
+    }
+})
+
+export const { setAuth, getAuth, resetRequest, logout, setCreateGroupSuccess, setAddUserGroupSuccess } = userSlice.actions;
 export const userState = (state: AppState) => state.user;
 export default userSlice.reducer;

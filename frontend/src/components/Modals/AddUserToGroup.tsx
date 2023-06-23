@@ -1,26 +1,23 @@
 import { useState, useEffect } from 'react';
-import { SubmitButton, ErrorToast, InputLabel, Input } from '../Util';
+import { SubmitButton, ErrorToast, InputLabel, Input, SuccessToast } from '../Util';
 import { ModalContent, ModalHeader, ModalWrapper } from './ModalOptions';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearCurrentOpenState } from '@/store/Slices/modalManagerSlice';
 import { userState, getUserGroups } from '@/store/Slices/userSlice';
-import { createOrganisationGroup } from '@/store/Slices/userSlice';
+import { createOrganisationGroup, addUserToGroup } from '@/store/Slices/userSlice';
 import { ICreateUserGroupRequest } from '@/interfaces/requests';
 
-interface ICreateGroupModal {
-
-}
-
-export default function CreateGroupModal({ }: ICreateGroupModal) {
+export default function AddUserToGroup() {
 
     const dispatch = useDispatch<any>();
     const stateUser = useSelector(userState);
 
     useEffect(() => {
-        if (stateUser.createGroupSuccess) {
+        if (stateUser.addUserGroupSuccess) {
             dispatch(clearCurrentOpenState())
+            SuccessToast({ text: "Successfully sent invitation email." });
         }
-    }, [stateUser.user.userGroups])
+    }, [stateUser.addUserGroupSuccess])
 
     /**
      * Boolean for if something is loading in the component.
@@ -31,13 +28,14 @@ export default function CreateGroupModal({ }: ICreateGroupModal) {
      * these two variables are the fields from the form.
      */
     const [name, setName] = useState<string>("");
+    const [email, setEmail] = useState<string>("");
     const [description, setDescription] = useState<string>("");
 
     /**
      * These two variables are for error checking.
      */
     const [nameError, setNameError] = useState<boolean>(false);
-    const [descriptionError, setDescriptionError] = useState<boolean>(false);
+    const [emailError, setEmailError] = useState<boolean>(false);
 
     /**
      * This function handles the form submit.
@@ -53,12 +51,12 @@ export default function CreateGroupModal({ }: ICreateGroupModal) {
             setNameError(true);
         }
 
-        // if (!description) {
-        //     error += "The group is missing a description.";
-        //     setDescriptionError(true);
-        // }
+        if (!email) {
+            error += "The group is missing a description.";
+            setEmailError(true);
+        }
 
-        if (nameError || descriptionError) {
+        if (nameError || emailError) {
             ErrorToast({ text: error });
             return;
         };
@@ -68,15 +66,12 @@ export default function CreateGroupModal({ }: ICreateGroupModal) {
         //     setLoading(false);
         // }, 3000);
 
-        const data: ICreateUserGroupRequest = {
-            name,
-            permission: 2,
-            description: ""
+        const data = {
+            userGroupName: name,
+            userEmail: email
         }
 
-        console.log(data);
-
-        dispatch(createOrganisationGroup(data));
+        dispatch(addUserToGroup(data));
     }
 
     /**
@@ -84,7 +79,7 @@ export default function CreateGroupModal({ }: ICreateGroupModal) {
      */
     return (
         <ModalWrapper>
-            <ModalHeader title="Create a New Group" />
+            <ModalHeader title="Add a User to a Group" />
             <ModalContent>
                 <form className="space-y-6" onSubmit={(event) => formSubmit(event)}>
                     <div>
@@ -94,13 +89,13 @@ export default function CreateGroupModal({ }: ICreateGroupModal) {
                             setName(event.currentTarget.value);
                         }} maxLength={20} error={nameError} />
                     </div>
-                    {/* <div>
-                        <InputLabel htmlFor="description" text="Group Description" />
-                        <Input type="text" name="description" id="description" placeholder="This is paper sales group." required={true} disabled={loading} value={description} onChange={(event: React.FormEvent<HTMLInputElement>) => {
-                            descriptionError && setDescriptionError(false);
-                            setDescription(event.currentTarget.value);
-                        }} maxLength={75} error={descriptionError} />
-                    </div> */}
+                    <div>
+                        <InputLabel htmlFor="email" text="User Email" />
+                        <Input type="email" name="email" id="email" placeholder="john@example.com" required={true} disabled={loading} value={email} onChange={(event: React.FormEvent<HTMLInputElement>) => {
+                            emailError && setEmailError(false);
+                            setEmail(event.currentTarget.value);
+                        }} error={emailError} />
+                    </div>
                     <SubmitButton text="Create Group" onClick={(event: React.FormEvent<HTMLFormElement>) => {
                         formSubmit(event);
                     }} className="w-full" loading={loading} />

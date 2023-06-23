@@ -25,12 +25,20 @@ body {
 
 /* width */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 5px;
 }
 
 /* Track */
-::-webkit-scrollbar-track {
+.dark ::-webkit-scrollbar-track {
   background: #212121;
+}
+
+.light ::-webkit-scrollbar-track {
+  background: white;
+}
+
+::-webkit-scrollbar-track {
+  background: white;
 }
 
 /* Handle */
