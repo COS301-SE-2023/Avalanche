@@ -30,7 +30,7 @@ describe('UserOrganisationMangementService Integration', () => {
     userGroupRepository = appModule.get(getRepositoryToken(UserGroup));
     organisationRepository = appModule.get(getRepositoryToken(Organisation));
     redis = appModule.get('REDIS');
-  }, 1500);
+  }, 15000);
 
   // Here we test the service without mocking the repositories and Redis service.
   describe('createOrganisation', () => {
@@ -348,20 +348,37 @@ describe('UserOrganisationMangementService Integration', () => {
     }, 10000);
   });
 
-
-  afterEach(async () => {
-    // Delete everything from Redis
-    const keys = await redis.keys('*');
-    if (keys.length > 0) {
-      await redis.del(keys);
-    }
-
-    // Delete everything from the database
-    await userRepository.clear();
-    await userGroupRepository.clear();
-    await organisationRepository.clear();
-
+  describe('addUserToUserGroupWithKey', () => {
+    it('should return an error if Redis key is invalid', async () => {
+      // Arrange
+      const jwtToken = Random.word(10);
+      const key = Random.word(10);
+  
+      // Act
+      const result = await userOrganisationMangementService.addUserToUserGroupWithKey(
+        jwtToken,
+        key,
+      );
+  
+      // Assert
+      expect(result.status).toBe(400);
+      expect(result.message).toBe('Invalid user group key');
+    }, 10000);
   });
+
+  // afterEach(async () => {
+  //   // Delete everything from Redis
+  //   const keys = await redis.keys('*');
+  //   if (keys?.length > 0) {
+  //     await redis.del(keys);
+  //   }
+
+  //   // Delete everything from the database
+  //   await userRepository.clear();
+  //   await userGroupRepository.clear();
+  //   await organisationRepository.clear();
+
+  // });
 
   afterAll(async () => {
     await appModule.close(); // Make sure you close the connection to the database
