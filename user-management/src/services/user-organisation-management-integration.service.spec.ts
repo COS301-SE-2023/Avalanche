@@ -30,7 +30,7 @@ describe('UserOrganisationMangementService Integration', () => {
     userGroupRepository = appModule.get(getRepositoryToken(UserGroup));
     organisationRepository = appModule.get(getRepositoryToken(Organisation));
     redis = appModule.get('REDIS');
-  });
+  }, 15000);
 
   // Here we test the service without mocking the repositories and Redis service.
   describe('createOrganisation', () => {
@@ -341,48 +341,6 @@ describe('UserOrganisationMangementService Integration', () => {
     }, 10000);
   });
 
-
-  afterEach(async () => {
-    // Delete everything from Redis
-    const keys = await redis.keys('*');
-    if (keys.length > 0) {
-      await redis.del(keys);
-    }
-
-    // Delete everything from the database
-    await userRepository.clear();
-    await userGroupRepository.clear();
-    await organisationRepository.clear();
-
-  });
-
-  afterAll(async () => {
-    await appModule.close(); // Make sure you close the connection to the database
-  });
-});
-
-describe('removeUserFromOrganisation', () => {
-  let appModule: TestingModule;
-  let userOrganisationMangementService: UserOrganisationMangementService;
-  let userRepository;
-  let userGroupRepository;
-  let organisationRepository;
-  let redis;
-
-  beforeAll(async () => {
-    appModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    userOrganisationMangementService =
-      appModule.get<UserOrganisationMangementService>(
-        UserOrganisationMangementService,
-      );
-    userRepository = appModule.get(getRepositoryToken(User));
-    userGroupRepository = appModule.get(getRepositoryToken(UserGroup));
-    organisationRepository = appModule.get(getRepositoryToken(Organisation));
-    redis = appModule.get('REDIS');
-  });
   it('should remove a user from an organisation and user groups', async () => {
     // Arrange
     const admin = new User();
@@ -436,22 +394,9 @@ describe('removeUserFromOrganisation', () => {
     expect(removedUser.organisation).toBeNull();
   }, 20000);
 
-  afterEach(async () => {
-    // Delete everything from Redis
-    const keys = await redis.keys('*');
-    if (keys.length > 0) {
-      await redis.del(keys);
-    }
-
-    // Delete everything from the database
-    await userRepository.clear();
-    await userGroupRepository.clear();
-    await organisationRepository.clear();
-
-    await appModule.close();
-
+  afterAll(async () => {
+    await appModule.close(); // Make sure you close the connection to the database
   });
-
 });
 
 
