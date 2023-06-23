@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { TestingModule, Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { AppModule } from '../app.module';
