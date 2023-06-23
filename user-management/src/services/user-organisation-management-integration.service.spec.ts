@@ -10,6 +10,21 @@ import { UserOrganisationMangementService } from './user-organisation-mangement.
 import * as jwt from 'jsonwebtoken';
 
 describe('UserOrganisationMangementService Integration', () => {
+
+  const serializeUser = (user) => {
+    return {
+      ...user,
+      userGroups: user.userGroups ? user.userGroups.map(userGroup => ({
+        ...userGroup,
+        users: undefined, // removing users to prevent circular structure
+      })) : [],
+      organisation: user.organisation ? {
+        ...user.organisation,
+        users: undefined, // removing users to prevent circular structure
+      } : null,
+    };
+  };
+
   let appModule: TestingModule;
   let userOrganisationMangementService: UserOrganisationMangementService;
   let userRepository;
@@ -529,20 +544,42 @@ describe('UserOrganisationMangementService Integration', () => {
 
   });
 
+  describe('exitUserGroup', () => {
+    it('should allow user to exit a user group', async () => {
+      // Arrange
+      const email = Random.email();
+      const password = Random.word(8);
+
+      const org = new Organisation();
+      org.name = Random.word(5);
+      const savedOrg = await organisationRepository.save(org);
+
+      const userGroup = new UserGroup();
+      userGroup.name = Random.word(5);
+      userGroup.permission = 1;
+      userGroup.organisation = savedOrg;
+      const savedUserGroup = await userGroupRepository.save(userGroup);
+
+      const user = new User();
+      user.email = email;
+      user.password = password;
+      user.organisation = savedOrg;
+      user.userGroups = [savedUserGroup];
+      await userRepository.save(user);
+
+      const jwtSecret = Random.word(10);
+      const jwtToken = jwt.sign({ email }, jwtSecret);
+      await redis.set(jwtToken, JSON.stringify(serializeUser(user)), 'EX', 24 * 60 * 60);
+
+      // Act
+      const result = await userOrganisationMangementService.exitUserGroup(jwtToken, savedUserGroup.name);
+
+      // Assert
+      expect(result.status).toBe('success');
+    }, 20000);
+  });
+
   describe('removeUserFromOrganisation', () => {
-    const serializeUser = (user) => {
-      return {
-        ...user,
-        userGroups: user.userGroups ? user.userGroups.map(userGroup => ({
-          ...userGroup,
-          users: undefined, // removing users to prevent circular structure
-        })) : [],
-        organisation: user.organisation ? {
-          ...user.organisation,
-          users: undefined, // removing users to prevent circular structure
-        } : null,
-      };
-    };
     it('should remove a user from an organisation and user groups', async () => {
       // Arrange
       const admin = new User();
@@ -595,19 +632,7 @@ describe('UserOrganisationMangementService Integration', () => {
   });
 
   describe('removeUserFromUserGroup', () => {
-    const serializeUser = (user) => {
-      return {
-        ...user,
-        userGroups: user.userGroups ? user.userGroups.map(userGroup => ({
-          ...userGroup,
-          users: undefined, // removing users to prevent circular structure
-        })) : [],
-        organisation: user.organisation ? {
-          ...user.organisation,
-          users: undefined, // removing users to prevent circular structure
-        } : null,
-      };
-    };
+
     it('should remove a user from a user group if the invoker has permissions', async () => {
       // Arrange
       const invokerEmail = Random.email();
@@ -735,20 +760,6 @@ describe('UserOrganisationMangementService Integration', () => {
   });
 
   describe('exitOrganisation', () => {
-
-    const serializeUser = (user) => {
-      return {
-        ...user,
-        userGroups: user.userGroups ? user.userGroups.map(userGroup => ({
-          ...userGroup,
-          users: undefined, // removing users to prevent circular structure
-        })) : [],
-        organisation: user.organisation ? {
-          ...user.organisation,
-          users: undefined, // removing users to prevent circular structure
-        } : null,
-      };
-    };
 
     it('should remove a user from an organisation and associated user groups', async () => {
       // Arrange
