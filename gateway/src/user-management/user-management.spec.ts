@@ -1,10 +1,10 @@
 /* eslint-disable prettier/prettier */
 import { Test, TestingModule } from '@nestjs/testing';
-import { ClientProxy, ClientProxyFactory } from '@nestjs/microservices';
+import { ClientProxy, ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { UserManagementService } from './user-management.service';
 import { Observable, of } from 'rxjs';    
 
-describe('UserManagementService', () => {
+describe('UserManagementService function calls and defined', () => {
     let service: UserManagementService;
     let clientProxy: ClientProxy;
     
@@ -236,6 +236,43 @@ describe('UserManagementService', () => {
         expect(clientProxy.send).toHaveBeenCalledWith({ cmd: 'integrateWithDataProducts' }, data);
         expect(result).toBe(expectedResult)
     });
-      
 
 });
+
+describe('UserManagementService (Integration)', () => {
+    let service: UserManagementService;
+    let clientProxy: ClientProxy;
+  
+    beforeEach(async () => {
+      const module: TestingModule = await Test.createTestingModule({
+        providers: [
+          UserManagementService,
+          {
+            provide: 'USER_MANAGEMENT_SERVICE',
+            useValue: ClientProxyFactory.create({
+              transport: Transport.TCP,
+              options: {
+                host: 'localhost',
+                port: 4001,
+              },
+            }),
+          },
+        ],
+      }).compile();
+  
+      service = module.get<UserManagementService>(UserManagementService);
+      clientProxy = module.get<ClientProxy>('USER_MANAGEMENT_SERVICE');
+    });
+  
+    function oldTest(register: any) {
+      it('should send registration data to the user management service and return the response', async () => {
+        const data = { name: 'John Doe', email: 'john@example.com' };
+        const expectedResult = { success: true };
+  
+        const result = await service.register(data);
+  
+        expect(clientProxy.send).toHaveBeenCalledWith({ cmd: 'register' }, data);
+        expect(result).toEqual(expectedResult);
+      });
+    }
+  });
