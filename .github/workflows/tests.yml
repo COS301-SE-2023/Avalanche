@@ -20,7 +20,6 @@ jobs:
       - name: 🛫 Checkout
         uses: actions/checkout@v2
       - name: 📁 Right Directory
-        working-directory: ./frontend
         run: cd frontend
       - name: 🧶 Install packages 
         working-directory: ./frontend
