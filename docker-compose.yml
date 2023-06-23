@@ -1,0 +1,14 @@
+version: '3'
+name: avalanche-backend
+services:
+  gateway:
+    build: ./gateway
+    ports:
+      - 4000:4000
+    environment:
+      NODE_ENV: production
+      DOTENV_KEY: dotenv://:key_40ebce6744e4e6eb17b3fb6e9cbd11c883c1edb970b6bde391f1f8b61cc93e79@dotenv.org/vault/.env.vault?environment=production
+  # user-management:
+  #   build: ./user-management
+  #   ports:
+  #     - 4001:4001

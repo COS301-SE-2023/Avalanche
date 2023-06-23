@@ -1,14 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AlternativeButton, DeleteButton, SubmitButton, TableIconButton, WarningAlert } from "../Util";
 import { TrashIcon } from '@heroicons/react/24/solid';
 import NoFind from '../CustomSVG/NoFind';
 import { ConfirmModal, CreateGroupModal, OrgnizationCreateModal } from '../Modals';
 import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
-import { userState } from "@/store/Slices/userSlice";
+import { getLatestOrganisation, userState } from "@/store/Slices/userSlice";
 import { useDispatch, useSelector } from 'react-redux';
-import { Fragment } from 'react'
-import { Menu, Transition } from '@headlessui/react'
-import { ChevronDownIcon } from '@heroicons/react/20/solid'
+import { getUserGroups, setCreateGroupSuccess, setAddUserGroupSuccess } from "@/store/Slices/userSlice";
+import AddUserToGroup from "../Modals/AddUserToGroup";
 
 function classNames(...classes: any[]) {
     return classes.filter(Boolean).join(' ')
@@ -22,12 +21,21 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
 
     const modalState = useSelector(selectModalManagerState);
     const stateUser = useSelector(userState);
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<any>();
+
+    useEffect(() => {
+        dispatch(getLatestOrganisation({}));
+        dispatch(getUserGroups({}))
+    }, [])
+
+    useEffect(() => {
+        console.log("STATEEEEE", stateUser);
+    }, [stateUser]);
 
     /**
      * This state variable holds the current active user group tab.
      */
-    const [groupTab, setGroupTab] = useState<string>("billing");
+    const [groupTab, setGroupTab] = useState<string>("");
 
     /**
      * This state variable holds all the users
@@ -38,6 +46,8 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
      * This state variable holds the temp users that are used in the search.
      */
     const [tempUsers, setTempUsers] = useState(users);
+
+    const [activeGroupID, setActiveGroupID] = useState<number>(-1);
 
     /**
      * This function handles the logic for searching for users.
@@ -67,8 +77,9 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
      * This function handles the tab click.
      * @param value is the value that the group tab state variable will be updated to.
      */
-    const tabClick = (value: string): void => {
+    const tabClick = (value: string, index: number): void => {
         setGroupTab(value);
+        setActiveGroupID(index);
     }
 
     return <>
@@ -80,16 +91,19 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
             <div className="flex gap-2">
                 <div className="flex gap-5 mb-1 pb-1 w-48 items-start">
                     <ul className="flex text-sm font-medium text-center pr-2 text-gray-500 dark:text-gray-400 flex-col gap-1 w-full">
-                        <AlternativeButton text="Create a Group" onClick={() => dispatch(setCurrentOpenState("ORG.CreateGroup"))} className="mb-2" />
-                        <li className="mr-2 cursor-pointer w-full" onClick={() => tabClick("billing")} >
-                            <span className={groupTab === "billing" ? tabOptions.active : tabOptions.inactive}>Billing Group</span>
-                        </li>
-                        <li className="mr-2 cursor-pointer w-full" onClick={() => tabClick("sales")}>
-                            <span className={groupTab === "sales" ? tabOptions.active : tabOptions.inactive}>Sales Group</span>
-                        </li>
-                        <li className="mr-2 cursor-pointer w-full" onClick={() => tabClick("owner")}>
-                            <span className={groupTab === "owner" ? tabOptions.active : tabOptions.inactive}>Owner Group</span>
-                        </li>
+                        <AlternativeButton text="Create a Group" onClick={() => {
+                            dispatch(setCreateGroupSuccess(false));
+                            dispatch(setCurrentOpenState("ORG.CreateGroup"));
+                        }} className="mb-2" />
+                        <AlternativeButton text="Add User to Group" onClick={() => {
+                            dispatch(setAddUserGroupSuccess(false));
+                            dispatch(setCurrentOpenState("ORG.AddUserToGroup"));
+                        }} className="mb-2" />
+                        {stateUser.userGroups.map((data: any, index: number) => {
+                            return <li className="mr-2 cursor-pointer w-full" onClick={() => tabClick(`${data.userGroupName}-${data.userGroupID}`, index)} key={index}>
+                                <span className={groupTab === `${data.userGroupName}-${data.userGroupID}` ? tabOptions.active : tabOptions.inactive}>{data.userGroupName}</span>
+                            </li>
+                        })}
                     </ul>
                 </div>
                 <div className="w-full p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
@@ -131,7 +145,7 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
                                 <input type="text" id="table-search-users" className="block p-2 pl-10 text-sm text-gray-900 border-1.5 border-gray-300 rounded-lg w-80 bg-gray-50 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Search for users" onChange={(event: React.FormEvent<HTMLInputElement>) => handleSearch(event)} />
                             </div>
                         </div>
-                        {tempUsers.length > 0 ?
+                        {activeGroupID !== -1 && stateUser.userGroups[activeGroupID].groupMembers.length > 0 ?
                             <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 rounded-lg">
                                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
@@ -154,7 +168,7 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
                                 </thead>
                                 <tbody>
                                     {
-                                        tempUsers.map((item: any, index: any) => {
+                                        activeGroupID !== -1 && stateUser.userGroups[activeGroupID].groupMembers.map((item: any, index: any) => {
                                             return <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900" key={index}>
                                                 <td className="w-4 p-4">
                                                     <div className="flex items-center">
@@ -171,7 +185,8 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
                                                 </th>
                                                 <td className="px-6 py-4">
                                                     <div className="flex items-center">
-                                                        <span className="h-2.5 w-2.5 rounded-full bg-green-500 mr-2"></span> {item.added}
+                                                        {/* <span className="h-2.5 w-2.5 rounded-full bg-green-500 mr-2"></span> {item.added} */}
+                                                        Sometime in the past
                                                     </div>
                                                 </td>
                                                 <td className="float-right mr-2">
@@ -198,7 +213,9 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
             <SubmitButton text="Add a new organization" onClick={() => dispatch(setCurrentOpenState("ORG.CreateOrg"))} />
         </div>
         }
+
         {modalState.currentOpen === "ORG.RemoveUser" && <ConfirmModal text="Are you sure you want to remove this user from this group?" title="Remove User Confirmation" buttonSuccess="Yes, remove user" buttonCancel="No, cancel" />}
+        {modalState.currentOpen === "ORG.AddUserToGroup" && <AddUserToGroup />}
 
         {modalState.currentOpen === "ORG.CreateGroup" && <CreateGroupModal />}
 
