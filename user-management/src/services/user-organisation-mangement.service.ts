@@ -636,7 +636,7 @@ export class UserOrganisationMangementService {
         }
 
         // Retrieve the user to be removed based on the email
-        const userToBeRemoved = await this.userRepository.findOne({ where: { email: userEmail }, relations: ['userGroups'] });
+        const userToBeRemoved = await this.userRepository.findOne({ where: { email: userEmail }, relations: ['userGroups', 'userGroups.users'] });
         if (!userToBeRemoved) {
             return {
                 status: 400, error: true, message: 'User to be removed not found',
