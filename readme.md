@@ -5,6 +5,7 @@
   <img src="https://github.com/COS301-SE-2023/Avalanche/actions/workflows/tests.yml/badge.svg">
   <img src="https://github.com/COS301-SE-2023/Avalanche/actions/workflows/javaTest.yml/badge.svg">
   <img src="https://github.com/COS301-SE-2023/Avalanche/actions/workflows/javaCoverage.yml/badge.svg">
+  <img src="https://github.com/COS301-SE-2023/Avalanche/actions/workflows/tests.yml/badge.svg">
 </div>
 
 COS301 Capstone Project for [Domain Name Services (Pty) Ltd](https://dns.business/).
