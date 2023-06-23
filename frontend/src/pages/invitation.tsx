@@ -17,11 +17,11 @@ export default function Invitation() {
         return;
     }
 
-    // if (!jwt) {
-    //     sessionStorage.set('invite', JSON.stringify({ type, key }));
-    //     router.push("/");
-    //     return;
-    // }
+    if (!jwt) {
+        sessionStorage.set('invite', JSON.stringify({ type, key }));
+        router.push("/");
+        return;
+    }
 
     const check = async () => {
         try {
