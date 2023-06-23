@@ -152,6 +152,20 @@ describe('UserManagementService', () => {
         expect(clientProxy.send).toHaveBeenCalledWith({ cmd: 'addUserToUserGroup' }, data);
         expect(result).toBe(expectedResult)
     });
+
+    it('Usermanagement calls the correct proxy functions (exitUserGroup)', async () => {
+        const data = { some: 'data' };
+        const expectedResult = { success: true };
+        const responseObservable = of(expectedResult);
+      
+        jest
+        .spyOn(clientProxy, 'send').mockImplementationOnce(() => responseObservable);
+      
+        const result = await service.exitUserGroup(data);
+      
+        expect(clientProxy.send).toHaveBeenCalledWith({ cmd: 'exitUserGroup' }, data);
+        expect(result).toBe(expectedResult)
+    });
       
 
 });
