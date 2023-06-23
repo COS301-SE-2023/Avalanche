@@ -2,6 +2,7 @@
 1. [Signing Up](#signing-up)
 2. [Logging In](#logging-in)
 3. [Homepage](#homepage)
+4. [Domain Watch](#domain-watch)
 
 ## Signing Up
 ### Step 1
@@ -43,3 +44,24 @@ On a graph, there are 3 items that can be interacted with.
 4. You can change the type of graph you want the data to be shown as, in the image below, we are going to show the data as a bar chart instead of a line chart.
    ![](https://astonmartin.sloththe.dev/isawesome/e87b0316-f114-40a4-b421-322c7461d6a0.png)
    ![](https://astonmartin.sloththe.dev/isawesome/fa26343b-2cba-4392-bd20-c05791a2066c.png)
+
+## Domain Watch
+Domain watch is a feature that you can enter in a domain to see how similar other domains are to it.
+![](https://astonmartin.sloththe.dev/isawesome/fae78b2c-972c-44df-bdab-ad9b7586b31c.png)
+
+To get started, you would need to enter in a domain into the text field, without the tld at the end.
+![](https://astonmartin.sloththe.dev/isawesome/648cf14c-cd5e-4299-83ad-884d7b5951f9.png)
+
+Once you have entered in a domain name to check, you have option of using 2 types to check, Soundex and Levenshtein. Both of these are explained if you click on the help icon to the right of the name.
+![](https://astonmartin.sloththe.dev/isawesome/d2a1d670-d0d4-4b24-81c0-717cdea02f7d.png)
+
+Once you have selected the type and entered in the similarity, you can go ahead and click the "Get Domains" button.
+![](https://astonmartin.sloththe.dev/isawesome/28594c26-3f4a-49dc-a389-8b57aba0599c.png)
+
+Once the results have loaded in, you can view the results, and sort by clicking on the title that you want to sort. The arrow will indicate whether the results are being sorted in ascending or descending order.
+
+This is an example of data being sorted by Similarity in ascending order.
+![](https://astonmartin.sloththe.dev/isawesome/1dc29da3-1276-42c4-b27c-5b164a0d18f0.png)
+
+This is an example of data being sorted by Domain Name in descending order.
+![](https://astonmartin.sloththe.dev/isawesome/1c0dc8ef-5c9e-45d0-9997-f21ea431cdc1.png)
