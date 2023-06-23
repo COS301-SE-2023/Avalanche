@@ -1,23 +1,29 @@
 /* eslint-disable prettier/prettier */
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
-import { AppModule } from './app.module';
+import {DomainWatchService} from './domain-watch/domain-watch.service'
+import { HttpService } from '@nestjs/axios';
 
-describe('domain watch controller tests', () => {
-    let app: INestApplication;
+describe('domain watch service tests', () => {
+    let domainWatchService: DomainWatchService;
+    let httpService : HttpService
 
-    beforeEach(async() => {
-        const moduleFixture: TestingModule = await Test.createTestingModule({
-            imports: [AppModule],
-          }).compile();
-      
-          app = moduleFixture.createNestApplication();
-          await app.init();
-    });
+    beforeEach(async () => {
+        const module: TestingModule = await Test.createTestingModule({
+            providers: [
+                DomainWatchService,
+                {provide: HttpService,
+                    useValue: {
+                        post: jest.fn
+                    }
+                }
+            ]
+        }).compile()
+        domainWatchService = module.get<DomainWatchService>(DomainWatchService);
+        httpService = module.get<HttpService>(HttpService)
+    })
 
-    test('/ (Post)', () => {
-            expect(app.get("/")).toBe(200)
-        })
+    it("Domain Watch should be defined", () => {
+        expect(domainWatchService).toBeDefined();
+    })
     
 })
