@@ -24,7 +24,7 @@ If the OTP is correct, your account has been created successfully, and you will 
 ![](https://astonmartin.sloththe.dev/isawesome/a00f9dc5-67ca-4492-a984-809f3ad1c53e.png)
 1. Enter the email address you created during registration.
 2. Enter the password you created during registration.
-3. Click the sign-in button, if the details are correct, you will be forwarded to the dashboard.
+3. Click the sign-in button, if the details are correct, you will be directed to the dashboard.
 
 ## Homepage
 When you log in for the first time, you will be taken to the homepage. This is an example of what a dashboard would look like.
@@ -41,7 +41,7 @@ On a graph, there are 3 items that can be interacted with.
    ![](https://astonmartin.sloththe.dev/isawesome/513f6e8c-4ad8-466f-a8ef-7a55d2bea2da.png)
 3. You can magnify a graph to make the data easier to see.
    ![](https://astonmartin.sloththe.dev/isawesome/78fc303c-9ce0-451b-a1d7-3a03d0743dea.png)
-4. You can change the type of graph you want the data to be shown as, in the image below, we are going to show the data as a bar chart instead of a line chart.
+4. You can change the type of graph you want the data to be shown as. In the image below we are going to show the data as a bar chart instead of a line chart.
    ![](https://astonmartin.sloththe.dev/isawesome/e87b0316-f114-40a4-b421-322c7461d6a0.png)
    ![](https://astonmartin.sloththe.dev/isawesome/fa26343b-2cba-4392-bd20-c05791a2066c.png)
 
@@ -52,7 +52,7 @@ Domain watch is a feature that allows you to enter a domain and search for other
 To get started, you would need to enter a domain into the text field, without the TLD at the end.
 ![](https://astonmartin.sloththe.dev/isawesome/648cf14c-cd5e-4299-83ad-884d7b5951f9.png)
 
-Once you have entered a domain name to check, you have the option of using 2 metrics to check, Soundex and Levenshtein. Both of these are explained if you click on the help icon to the right of the name.
+Once you have entered a domain name to check, you have the option of using 2 metrics to check: Soundex and Levenshtein. Both of these are explained if you click on the help icon to the right of the name.
 ![](https://astonmartin.sloththe.dev/isawesome/d2a1d670-d0d4-4b24-81c0-717cdea02f7d.png)
 
 Once you have selected the type and entered the similarity, you can go ahead and click the "Get Domains" button.
