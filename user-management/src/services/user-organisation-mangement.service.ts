@@ -271,10 +271,6 @@ export class UserOrganisationMangementService {
                     // Store the key in Redis with 7 days expiry time
                     const redisData = JSON.stringify({ userEmail: userEmail, userGroupName: userGroupName });
                     await this.redis.set(key, redisData, 'EX', 7 * 24 * 60 * 60);
-
-                    console.log("booo", userEmail);
-
-                    console.log(userEmail);
                     // Send email to existing user with invitation link
                     await this.sendInvitationEmail(userEmail, key, userGroupName);
                     return {
@@ -334,7 +330,7 @@ export class UserOrganisationMangementService {
         let invitationHtml = invitationHtmlTemplate.replace('{UserGroup}', userGroupName);
         invitationHtml = invitationHtml.replace('{url}', `http://localhost:3000/invitation?key=${token}&type=group`);
         // Email options
-        console.log(email);
+
         const mailOptions = {
             from: 'theskunkworks301@gmail.com',
             to: email,
