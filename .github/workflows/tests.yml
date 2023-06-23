@@ -29,6 +29,7 @@ jobs:
       - name: 🏃‍♂️ Cypress Run 
         uses: cypress-io/github-action@v5
         with:
+          working-directory: ./frontend
           build: yarn build
           start: yarn cypress
           browser: chrome
