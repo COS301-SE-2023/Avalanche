@@ -51,7 +51,7 @@ export const domainWatchSlice = createSlice({
 
 export const getDomainWatch = createAsyncThunk("DOMAINWATCH.Get", async (object: IDomainWatchRequest, { rejectWithValue }) => {
     try {
-        const response = ky.post("http://skunkworks.dns.net.za:4004/domainWatch/list", {
+        const response = ky.post("http://localhost:4000/domain-watch/list", {
             json: object, timeout: false, headers: {
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",

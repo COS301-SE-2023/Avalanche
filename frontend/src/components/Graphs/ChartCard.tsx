@@ -28,8 +28,6 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
         }
         dispatch(setCurrentOpenState("GRAPH.Modal"))
         dispatch(setData(modal));
-        // setMagnifyModal(value);
-        // document.body.style.overflow = value ? "hidden" : "visible";
     }
 
     return (<>
