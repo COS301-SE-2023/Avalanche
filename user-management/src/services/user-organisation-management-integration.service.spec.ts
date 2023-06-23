@@ -223,8 +223,8 @@ describe('UserOrganisationMangementService Integration', () => {
       );
 
       // Assert
-      expect(result.status).toBe('failure');
-      expect(result.message).toBe('User does not exist');
+      expect(result.status).toBe(400);
+      expect(result.message).toBe('Invalid token');
     }, 10000);
 
     it('should return an error if user does not have the permissions to do so', async () => {

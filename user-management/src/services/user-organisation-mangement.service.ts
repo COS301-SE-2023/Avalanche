@@ -194,7 +194,7 @@ export class UserOrganisationMangementService {
                 timestamp: new Date().toISOString()
             };
         }
-        const organisationId = user.organisation.id;
+        const organisationId = user.organisation?.id;
         const userPermission = user.userGroups[0].permission;
 
         if (userPermission === 1) {
