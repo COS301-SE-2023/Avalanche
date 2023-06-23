@@ -382,20 +382,6 @@ describe('UserOrganisationMangementService Integration', () => {
       expect(result.status).toBe(400);
       expect(result.message).toBe('User not found');
     }, 10000);
-
-  // afterEach(async () => {
-  //   // Delete everything from Redis
-  //   const keys = await redis.keys('*');
-  //   if (keys.length > 0) {
-  //     await redis.del(keys);
-  //   }
-
-  //   // Delete everything from the database
-  //   await userRepository.clear();
-  //   await userGroupRepository.clear();
-  //   await organisationRepository.clear();
-
-  // });
     it('should return an error if user group does not exist', async () => {
       // Arrange
       const email = Random.email();
@@ -421,6 +407,44 @@ describe('UserOrganisationMangementService Integration', () => {
       expect(result.status).toBe(400);
       expect(result.message).toBe('User group not found');
     }, 10000);
+
+    it('should return an error if the user is already part of the user group', async () => {
+      // Arrange
+      const org = new Organisation();
+      org.name = Random.word(5);
+      const savedOrg = await organisationRepository.save(org);
+
+      const userGroup = new UserGroup();
+      userGroup.name = Random.word(5);
+      userGroup.organisation = savedOrg;
+      userGroup.permission = 2;
+      const savedUserGroup = await userGroupRepository.save(userGroup);
+
+      const user = new User();
+      user.email = Random.email();
+      user.password = Random.word(8);
+      user.organisation = savedOrg;
+      const savedUser = await userRepository.save(user);
+
+      await userGroupRepository.createQueryBuilder()
+          .relation(UserGroup, 'users')
+          .of(savedUserGroup)
+          .add(savedUser);
+
+      const jwtSecret = Random.word(10);
+      const jwtToken = jwt.sign({ email: user.email }, jwtSecret);
+
+      const key = Random.word(10);
+      const redisData = { userEmail: user.email, userGroupName: userGroup.name };
+      await redis.set(key, JSON.stringify(redisData), 'EX', 24 * 60 * 60);
+
+      // Act
+      const result = await userOrganisationMangementService.addUserToUserGroupWithKey(jwtToken, key);
+
+      // Assert
+      expect(result.status).toBe(400);
+      expect(result.message).toBe('User is already part of this user group');
+  }, 10000);
 
   });
 
