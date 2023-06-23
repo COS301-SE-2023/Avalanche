@@ -133,6 +133,7 @@
             <configuration>
                 <source>1.8</source>
                 <target>1.8</target>
+                <show>private</show>
             </configuration>
         </plugin>
       </plugins>
