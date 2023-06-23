@@ -104,37 +104,37 @@ describe('UserOrganisationMangementService Integration', () => {
     }, 10000);
 
     it('should return an error if user already belongs to an organisation', async () => {
-    // Arrange
-    const email = Random.email();
-    const password = Random.word(8);
-    const user = new User();
-    user.email = email;
-    user.password = password;
-  
-    const org = new Organisation();
-    // add necessary fields to the org object, if required
-    const savedOrg = await organisationRepository.save(org);  // save organisation instance
-  
-    user.organisation = savedOrg;  // associate the saved organisation instance
-    await userRepository.save(user);  // save user
+      // Arrange
+      const email = Random.email();
+      const password = Random.word(8);
+      const user = new User();
+      user.email = email;
+      user.password = password;
 
-    const jwtSecret = Random.word(10);
-    const jwtToken = jwt.sign({ email }, jwtSecret);
+      const org = new Organisation();
+      // add necessary fields to the org object, if required
+      const savedOrg = await organisationRepository.save(org);  // save organisation instance
 
-    await redis.set(jwtToken, JSON.stringify(user), 'EX', 24 * 60 * 60);
+      user.organisation = savedOrg;  // associate the saved organisation instance
+      await userRepository.save(user);  // save user
 
-    const name = Random.word(10);
+      const jwtSecret = Random.word(10);
+      const jwtToken = jwt.sign({ email }, jwtSecret);
 
-    // Act
-    const result = await userOrganisationMangementService.createOrganisation(
-      jwtToken,
-      name,
-    );
+      await redis.set(jwtToken, JSON.stringify(user), 'EX', 24 * 60 * 60);
 
-    // Assert
-    expect(result.status).toBe(400);
-    expect(result.message).toBe('User already belongs to an organisation');
-    }, 10000); 
+      const name = Random.word(10);
+
+      // Act
+      const result = await userOrganisationMangementService.createOrganisation(
+        jwtToken,
+        name,
+      );
+
+      // Assert
+      expect(result.status).toBe(400);
+      expect(result.message).toBe('User already belongs to an organisation');
+    }, 10000);
   });
 
 
@@ -182,15 +182,15 @@ describe('removeUserFromOrganisation', () => {
   });
   it('should remove a user from an organisation and user groups', async () => {
     // Arrange
-    const adminEmail = Random.email();
-    const userToRemoveEmail = Random.email();
-
     const admin = new User();
+    const adminEmail = Random.email();
     admin.email = adminEmail;
     const adminPassword = Random.word(8);
     admin.password = adminPassword;
 
+
     const userToRemove = new User();
+    const userToRemoveEmail = Random.email();
     userToRemove.email = userToRemoveEmail;
     const userToRemovePassword = Random.word(8);
     userToRemove.password = userToRemovePassword;
@@ -213,9 +213,15 @@ describe('removeUserFromOrganisation', () => {
     await userRepository.save(admin);
     await userRepository.save(userToRemove);
 
-    const userData = { userGroups: [userGroup] };
     const token = 'testToken';
-    await redis.set(token, JSON.stringify(userData), 'EX', 24 * 60 * 60);
+    const userToRemoveCopy = Object.assign({}, userToRemove);
+    userToRemoveCopy.userGroups = userToRemove.userGroups.map(group => {
+      const groupCopy = Object.assign({}, group);
+      delete groupCopy.users;
+      return groupCopy;
+    });
+    await redis.set(token, JSON.stringify(userToRemoveCopy), 'EX', 24 * 60 * 60);
+
 
     // Act
     const result = await userOrganisationMangementService.removeUserFromOrganisation(token, 'testOrganisation', userToRemoveEmail);
