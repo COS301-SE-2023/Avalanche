@@ -1,4 +1,6 @@
 # Avalanche User Manual
+1. [Signing Up](#signing-up)
+2. [Logging In](#logging-in)
 ## Signing Up
 ### Step 1
 ![](https://astonmartin.sloththe.dev/isawesome/2d55b0e8-2735-4bf2-8eb6-cc61e441f4d7.png)
