@@ -329,14 +329,14 @@ export class UserOrganisationMangementService {
 
         const invitationHtmlTemplate = readFileSync(join(__dirname, '../../src/html/invitation-email-template.html'), 'utf-8');
         let invitationHtml = invitationHtmlTemplate.replace('{UserGroup}', userGroupName);
-        invitationHtml = invitationHtmlTemplate.replace('{url}', `http://localhost:3000/invitation?key=${token}&type=group`);
+        invitationHtml = invitationHtml.replace('{url}', `http://localhost:3000/invitation?key=${token}&type=group`);
         // Email options
         const mailOptions = {
             from: 'theskunkworks301@gmail.com',
             to: email,
             subject: `Invitation to "${userGroupName}" on Avalanche Analytics`,
             html: invitationHtml,
-            text: `You have been invited to join "{{UserGroup}}" on Avalanche Analytics.\n
+            text: `You have been invited to join "${userGroupName}" on Avalanche Analytics.\n
             To accept the invitation please follow the link: 
             \nhttp://localhost:3000/invitation?key=${token}&type=group`
         };

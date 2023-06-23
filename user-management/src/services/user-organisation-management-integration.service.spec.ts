@@ -360,3 +360,102 @@ describe('UserOrganisationMangementService Integration', () => {
     await appModule.close(); // Make sure you close the connection to the database
   });
 });
+
+describe('removeUserFromOrganisation', () => {
+  let appModule: TestingModule;
+  let userOrganisationMangementService: UserOrganisationMangementService;
+  let userRepository;
+  let userGroupRepository;
+  let organisationRepository;
+  let redis;
+
+  beforeAll(async () => {
+    appModule = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
+
+    userOrganisationMangementService =
+      appModule.get<UserOrganisationMangementService>(
+        UserOrganisationMangementService,
+      );
+    userRepository = appModule.get(getRepositoryToken(User));
+    userGroupRepository = appModule.get(getRepositoryToken(UserGroup));
+    organisationRepository = appModule.get(getRepositoryToken(Organisation));
+    redis = appModule.get('REDIS');
+  });
+  it('should remove a user from an organisation and user groups', async () => {
+    // Arrange
+    const adminEmail = Random.email();
+    const userToRemoveEmail = Random.email();
+
+    const admin = new User();
+    admin.email = adminEmail;
+    const adminPassword = Random.word(8);
+    admin.password = adminPassword;
+
+    const userToRemove = new User();
+    userToRemove.email = userToRemoveEmail;
+    const userToRemovePassword = Random.word(8);
+    userToRemove.password = userToRemovePassword;
+
+    const userGroup = new UserGroup();
+    userGroup.name = 'testGroup';
+    userGroup.permission = 1;
+    userGroup.users = [admin, userToRemove];
+    await userGroupRepository.save(userGroup);
+
+    const organisation = new Organisation();
+    organisation.name = 'testOrganisation';
+    organisation.users = [admin, userToRemove];
+    await organisationRepository.save(organisation);
+
+    admin.userGroups = [userGroup];
+    userToRemove.userGroups = [userGroup];
+    admin.organisation = organisation;
+    userToRemove.organisation = organisation;
+    await userRepository.save(admin);
+    await userRepository.save(userToRemove);
+
+    const userData = { userGroups: [userGroup] };
+    const token = 'testToken';
+    await redis.set(token, JSON.stringify(userData), 'EX', 24 * 60 * 60);
+
+    // Act
+    const result = await userOrganisationMangementService.removeUserFromOrganisation(token, 'testOrganisation', userToRemoveEmail);
+
+    // Assert
+    expect(result.status).toBe('success');
+    const removedUser = await userRepository.findOne({ where: { email: userToRemoveEmail }, relations: ['userGroups', 'organisation'] });
+    expect(removedUser.userGroups).toBeNull();
+    expect(removedUser.organisation).toBeNull();
+  }, 20000);
+
+  afterEach(async () => {
+    // Delete everything from Redis
+    const keys = await redis.keys('*');
+    if (keys.length > 0) {
+      await redis.del(keys);
+    }
+
+    // Delete everything from the database
+    await userRepository.clear();
+    await userGroupRepository.clear();
+    await organisationRepository.clear();
+
+    await appModule.close();
+
+  });
+
+});
+
+
+function generateRandomString(length: number) {
+  let result = '';
+  const characters =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
