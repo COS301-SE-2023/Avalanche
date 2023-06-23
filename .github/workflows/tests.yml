@@ -26,7 +26,7 @@ jobs:
         run: yarn 
       - name: 🔨 Build Project
         working-directory: ./frontend
-        run: next build
+        run: yarn build
       - name: 🏃‍♂️ Cypress Run 
         uses: cypress-io/github-action@v5
         with:
