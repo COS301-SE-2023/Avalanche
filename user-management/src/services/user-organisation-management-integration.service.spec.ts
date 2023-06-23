@@ -382,6 +382,48 @@ describe('UserOrganisationMangementService Integration', () => {
       expect(result.status).toBe(400);
       expect(result.message).toBe('User not found');
     }, 10000);
+
+  // afterEach(async () => {
+  //   // Delete everything from Redis
+  //   const keys = await redis.keys('*');
+  //   if (keys.length > 0) {
+  //     await redis.del(keys);
+  //   }
+
+  //   // Delete everything from the database
+  //   await userRepository.clear();
+  //   await userGroupRepository.clear();
+  //   await organisationRepository.clear();
+
+  // });
+    it('should return an error if user group does not exist', async () => {
+      // Arrange
+      const email = Random.email();
+      const password = Random.email();
+      const user = new User();
+      user.email = email;
+      user.password = password;
+      await userRepository.save(user);
+  
+      const jwtToken = Random.word(10);
+      const key = Random.word(10);
+  
+      await redis.set(jwtToken, JSON.stringify(user), 'EX', 24 * 60 * 60);
+      await redis.set(key, JSON.stringify({ userEmail: email, userGroupName: Random.word(10) }), 'EX', 24 * 60 * 60);
+  
+      // Act
+      const result = await userOrganisationMangementService.addUserToUserGroupWithKey(
+        jwtToken,
+        key,
+      );
+  
+      // Assert
+      expect(result.status).toBe(400);
+      expect(result.message).toBe('User group not found');
+    }, 10000);
+
+  });
+
   describe('removeUserFromOrganisation', () => {
     const serializeUser = (user) => {
       return {
@@ -445,47 +487,6 @@ describe('UserOrganisationMangementService Integration', () => {
       // Assert
       expect(result.status).toBe('success');
     }, 20000);
-  });
-
-  // afterEach(async () => {
-  //   // Delete everything from Redis
-  //   const keys = await redis.keys('*');
-  //   if (keys.length > 0) {
-  //     await redis.del(keys);
-  //   }
-
-  //   // Delete everything from the database
-  //   await userRepository.clear();
-  //   await userGroupRepository.clear();
-  //   await organisationRepository.clear();
-
-  // });
-    it('should return an error if user group does not exist', async () => {
-      // Arrange
-      const email = Random.email();
-      const password = Random.email();
-      const user = new User();
-      user.email = email;
-      user.password = password;
-      await userRepository.save(user);
-  
-      const jwtToken = Random.word(10);
-      const key = Random.word(10);
-  
-      await redis.set(jwtToken, JSON.stringify(user), 'EX', 24 * 60 * 60);
-      await redis.set(key, JSON.stringify({ userEmail: email, userGroupName: Random.word(10) }), 'EX', 24 * 60 * 60);
-  
-      // Act
-      const result = await userOrganisationMangementService.addUserToUserGroupWithKey(
-        jwtToken,
-        key,
-      );
-  
-      // Assert
-      expect(result.status).toBe(400);
-      expect(result.message).toBe('User group not found');
-    }, 10000);
-
   });
 
   // afterEach(async () => {
