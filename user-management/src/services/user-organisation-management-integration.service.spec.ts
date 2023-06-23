@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { TestingModule, Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { AppModule } from '../app.module';
@@ -37,7 +36,7 @@ describe('UserOrganisationMangementService Integration', () => {
     it('should create a new organisation and assign the user to it', async () => {
       // Arrange
       const email = 'integrationEmail1@email.com';
-      const password = 'testPassword'
+      const password = 'testPassword';
       const user = new User();
       user.email = email;
       user.password = password;
@@ -68,69 +67,69 @@ describe('UserOrganisationMangementService Integration', () => {
       expect(updatedUser.userGroups[0].name).toBe(`admin-${name}`);
     }, 20000);
     it('should return an error if token is invalid', async () => {
-        // Arrange
-        const jwtToken = 'invalidToken';
-        const name = 'testOrg';
-      
-        // Act
-        const result = await userOrganisationMangementService.createOrganisation(
-          jwtToken,
-          name,
-        );
-      
-        // Assert
-        expect(result.status).toBe(400);
-        expect(result.message).toBe('Invalid token.');
-      }, 10000);
-      it('should return an error if user does not exist', async () => {
-        // Arrange
-        const email = 'nonExistentUser@email.com';
-        const jwtSecret = 'test-secret';
-        const jwtToken = jwt.sign({ email }, jwtSecret);
-        
-        // Save the token and user payload to redis
-        await redis.set(jwtToken, JSON.stringify({ email }), 'EX', 24 * 60 * 60);
-        
-        const name = 'testOrg';
-      
-        // Act
-        const result = await userOrganisationMangementService.createOrganisation(
-          jwtToken,
-          name,
-        );
-      
-        // Assert
-        expect(result.status).toBe(400);
-        expect(result.message).toBe('User does not exist.');
-      }, 10000);
-      it('should return an error if user already belongs to an organisation', async () => {
-        // Arrange
-        const email = 'existingUser@email.com';
-        const password = 'testPassword'
-        const user = new User();
-        user.email = email;
-        user.password = password;
-        user.organisation = new Organisation(); // Assign an organisation to user
-        await userRepository.save(user);
-      
-        const jwtSecret = 'test-secret';
-        const jwtToken = jwt.sign({ email }, jwtSecret);
-        
-        // Save the token and user payload to redis
-        await redis.set(jwtToken, JSON.stringify(user), 'EX', 24 * 60 * 60);
-        
-        const name = 'testOrg';
-      
-        // Act
-        const result = await userOrganisationMangementService.createOrganisation(
-          jwtToken,
-          name,
-        );
-      
-        // Assert
-        expect(result.status).toBe(400);
-        expect(result.message).toBe('User already belongs to an organisation');
-      }, 10000);                
+      // Arrange
+      const jwtToken = 'invalidToken';
+      const name = 'testOrg';
+
+      // Act
+      const result = await userOrganisationMangementService.createOrganisation(
+        jwtToken,
+        name,
+      );
+
+      // Assert
+      expect(result.status).toBe(400);
+      expect(result.message).toBe('Invalid token.');
+    }, 10000);
+    it('should return an error if user does not exist', async () => {
+      // Arrange
+      const email = 'nonExistentUser@email.com';
+      const jwtSecret = 'test-secret';
+      const jwtToken = jwt.sign({ email }, jwtSecret);
+
+      // Save the token and user payload to redis
+      await redis.set(jwtToken, JSON.stringify({ email }), 'EX', 24 * 60 * 60);
+
+      const name = 'testOrg';
+
+      // Act
+      const result = await userOrganisationMangementService.createOrganisation(
+        jwtToken,
+        name,
+      );
+
+      // Assert
+      expect(result.status).toBe(400);
+      expect(result.message).toBe('User does not exist.');
+    }, 10000);
+    it('should return an error if user already belongs to an organisation', async () => {
+      // Arrange
+      const email = 'existingUser@email.com';
+      const password = 'testPassword';
+      const user = new User();
+      user.email = email;
+      user.password = password;
+      user.organisation = new Organisation(); // Assign an organisation to user
+      await userRepository.save(user);
+
+      const jwtSecret = 'test-secret';
+      const jwtToken = jwt.sign({ email }, jwtSecret);
+
+      // Save the token and user payload to redis
+      await redis.set(jwtToken, JSON.stringify(user), 'EX', 24 * 60 * 60);
+
+      const name = 'testOrg';
+
+      // Act
+      const result = await userOrganisationMangementService.createOrganisation(
+        jwtToken,
+        name,
+      );
+
+      // Assert
+      expect(result.status).toBe(400);
+      expect(result.message).toBe('User already belongs to an organisation');
+    }, 10000);
   });
 
   afterEach(async () => {
@@ -139,7 +138,7 @@ describe('UserOrganisationMangementService Integration', () => {
     if (keys.length > 0) {
       await redis.del(keys);
     }
-  
+
     // Delete everything from the database
     await userRepository.clear();
     await organisationRepository.clear();
@@ -150,3 +149,14 @@ describe('UserOrganisationMangementService Integration', () => {
     await appModule.close(); // Make sure you close the connection to the database
   });
 });
+
+function generateRandomString(length: number) {
+  let result = '';
+  const characters =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
