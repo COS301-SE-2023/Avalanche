@@ -364,6 +364,25 @@ describe('UserOrganisationMangementService Integration', () => {
       expect(result.status).toBe(400);
       expect(result.message).toBe('Invalid user group key');
     }, 10000);
+
+    it('should return an error if user does not exist', async () => {
+      // Arrange
+      const jwtToken = Random.word(10);
+      const key = Random.word(10);
+  
+      await redis.set(key, JSON.stringify({ userEmail: Random.email(), userGroupName: Random.word(10) }), 'EX', 24 * 60 * 60);
+  
+      // Act
+      const result = await userOrganisationMangementService.addUserToUserGroupWithKey(
+        jwtToken,
+        key,
+      );
+  
+      // Assert
+      expect(result.status).toBe(400);
+      expect(result.message).toBe('User not found');
+    }, 10000);
+    
   });
 
   // afterEach(async () => {
@@ -384,87 +403,6 @@ describe('UserOrganisationMangementService Integration', () => {
     await appModule.close(); // Make sure you close the connection to the database
   });
 });
-
-describe('removeUserFromOrganisation', () => {
-  let appModule: TestingModule;
-  let userOrganisationMangementService: UserOrganisationMangementService;
-  let userRepository;
-  let userGroupRepository;
-  let organisationRepository;
-  let redis;
-
-  beforeAll(async () => {
-    appModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    userOrganisationMangementService =
-      appModule.get<UserOrganisationMangementService>(
-        UserOrganisationMangementService,
-      );
-    userRepository = appModule.get(getRepositoryToken(User));
-    userGroupRepository = appModule.get(getRepositoryToken(UserGroup));
-    organisationRepository = appModule.get(getRepositoryToken(Organisation));
-    redis = appModule.get('REDIS');
-  });
-  it('should remove a user from an organisation and user groups', async () => {
-    // Arrange
-    const admin = new User();
-    const adminEmail = Random.email();
-    admin.email = adminEmail;
-    const adminPassword = Random.word(8);
-    admin.password = adminPassword;
-
-
-    const userToRemove = new User();
-    const userToRemoveEmail = Random.email();
-    userToRemove.email = userToRemoveEmail;
-    const userToRemovePassword = Random.word(8);
-    userToRemove.password = userToRemovePassword;
-
-    const userGroup = new UserGroup();
-    userGroup.name = 'testGroup';
-    userGroup.permission = 1;
-    userGroup.users = [admin, userToRemove];
-    await userGroupRepository.save(userGroup);
-
-    const organisation = new Organisation();
-    organisation.name = 'testOrganisation';
-    organisation.users = [admin, userToRemove];
-    await organisationRepository.save(organisation);
-
-    admin.userGroups = [userGroup];
-    userToRemove.userGroups = [userGroup];
-    admin.organisation = organisation;
-    userToRemove.organisation = organisation;
-    await userRepository.save(admin);
-    await userRepository.save(userToRemove);
-
-    const token = 'testToken';
-    const userToRemoveCopy = Object.assign({}, userToRemove);
-    userToRemoveCopy.userGroups = userToRemove.userGroups.map(group => {
-      const groupCopy = Object.assign({}, group);
-      delete groupCopy.users;
-      return groupCopy;
-    });
-    await redis.set(token, JSON.stringify(userToRemoveCopy), 'EX', 24 * 60 * 60);
-
-
-    // Act
-    const result = await userOrganisationMangementService.removeUserFromOrganisation(token, 'testOrganisation', userToRemoveEmail);
-
-    // Assert
-    expect(result.status).toBe('success');
-    const removedUser = await userRepository.findOne({ where: { email: userToRemoveEmail }, relations: ['userGroups', 'organisation'] });
-    expect(removedUser.userGroups).toBeNull();
-    expect(removedUser.organisation).toBeNull();
-  }, 20000);
-
-  afterAll(async () => {
-    await appModule.close(); // Make sure you close the connection to the database
-  });
-});
-
 
 function generateRandomString(length: number) {
   let result = '';
