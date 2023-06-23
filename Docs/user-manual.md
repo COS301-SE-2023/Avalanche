@@ -37,9 +37,9 @@ Each graph can be interacted with in isolation, and this does not affect the oth
 On a graph, there are 3 items that can be interacted with.
 ![](https://astonmartin.sloththe.dev/isawesome/88cbbcec-3e2c-4ac5-a6a3-9d90217c5665.png)
 1. This is simply the graph title
-2. This is the legend for the data in the graph. You can hide and show certain items so you can refine your data visualization even more.
+2. This is the legend for the data in the graph. You can hide and show certain items by clicking on them. This allows you to refine your data visualization even more.
    ![](https://astonmartin.sloththe.dev/isawesome/513f6e8c-4ad8-466f-a8ef-7a55d2bea2da.png)
-3. You can magnify into a graph, to make the data easier to see.
+3. You can magnify a graph to make the data easier to see.
    ![](https://astonmartin.sloththe.dev/isawesome/78fc303c-9ce0-451b-a1d7-3a03d0743dea.png)
 4. You can change the type of graph you want the data to be shown as, in the image below, we are going to show the data as a bar chart instead of a line chart.
    ![](https://astonmartin.sloththe.dev/isawesome/e87b0316-f114-40a4-b421-322c7461d6a0.png)
