@@ -124,6 +124,20 @@ describe('UserManagementService', () => {
         expect(clientProxy.send).toHaveBeenCalledWith({ cmd: 'getMembers' }, data);
         expect(result).toBe(expectedResult)
     });
+
+    it('Usermanagement calls the correct proxy functions (createUserGroup)', async () => {
+        const data = { some: 'data' };
+        const expectedResult = { success: true };
+        const responseObservable = of(expectedResult);
+      
+        jest
+        .spyOn(clientProxy, 'send').mockImplementationOnce(() => responseObservable);
+      
+        const result = await service.createUserGroup(data);
+      
+        expect(clientProxy.send).toHaveBeenCalledWith({ cmd: 'createUserGroup' }, data);
+        expect(result).toBe(expectedResult)
+    });
       
 
 });
