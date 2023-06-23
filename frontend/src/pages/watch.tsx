@@ -177,7 +177,6 @@ export default function Settings() {
     }
 
     useEffect(() => {
-        console.log(sorting, sortingType);
         if (!sorting) {
             dispatch(updateChanging(watchState.data));
         } else {

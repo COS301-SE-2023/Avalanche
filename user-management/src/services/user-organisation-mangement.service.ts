@@ -75,7 +75,7 @@ export class UserOrganisationMangementService {
         const userGroupDetails = [];
         if (user.userGroups !== null) {
             for (const userGroup of user.userGroups) {
-                const userGroupUsers = await this.userGroupRepository.findOne({where : {name : userGroup.name}, relations : ['users']});
+                const userGroupUsers = await this.userGroupRepository.findOne({ where: { name: userGroup.name }, relations: ['users'] });
                 for (const groupUser of userGroupUsers.users) {
                     const userKey = `${groupUser.firstName}-${groupUser.lastName}-${groupUser.email}`;
                     if (!uniqueUsers.has(userKey)) {
@@ -91,14 +91,14 @@ export class UserOrganisationMangementService {
                     }
                 }
                 const userInfoCopy = [];
-                usersInfo.forEach(val => userInfoCopy.push(Object.assign({},val)));
-                userGroupDetails.push({userGroupName : userGroup.name, userGroupID: userGroup.id, groupMembers : userInfoCopy});
+                usersInfo.forEach(val => userInfoCopy.push(Object.assign({}, val)));
+                userGroupDetails.push({ userGroupName: userGroup.name, userGroupID: userGroup.id, groupMembers: userInfoCopy });
                 usersInfo.length = 0;
             }
         }
         return {
-            status: 'success', 
-            users: userGroupDetails, 
+            status: 'success',
+            users: userGroupDetails,
             timestamp: new Date().toISOString()
         };
     }
@@ -272,6 +272,8 @@ export class UserOrganisationMangementService {
                     const redisData = JSON.stringify({ userEmail: userEmail, userGroupName: userGroupName });
                     await this.redis.set(key, redisData, 'EX', 7 * 24 * 60 * 60);
 
+                    console.log("booo", userEmail);
+
                     // Send email to existing user with invitation link
                     await this.sendInvitationEmail(userEmail, key, userGroupName);
                     return {
@@ -331,6 +333,7 @@ export class UserOrganisationMangementService {
         let invitationHtml = invitationHtmlTemplate.replace('{UserGroup}', userGroupName);
         invitationHtml = invitationHtmlTemplate.replace('{url}', `http://localhost:3000/invitation?key=${token}&type=group`);
         // Email options
+        console.log(email);
         const mailOptions = {
             from: 'theskunkworks301@gmail.com',
             to: email,
@@ -500,6 +503,8 @@ export class UserOrganisationMangementService {
 
         // Parse the data
         const { userEmail, userGroupName } = JSON.parse(redisData);
+
+        console.log("EMAIL", userEmail, "GROUP NAME", userGroupName);
 
         // Retrieve the user with their groups based on the token
         const user = await this.userRepository.findOne({
