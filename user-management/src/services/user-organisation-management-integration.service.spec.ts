@@ -446,6 +446,43 @@ describe('UserOrganisationMangementService Integration', () => {
       expect(result.message).toBe('User is already part of this user group');
   }, 10000);
 
+  it('should return an error if the user\'s organisation is different from the group\'s organisation', async () => {
+    // Arrange
+    const org1 = new Organisation();
+    org1.name = Random.word(5);
+    const savedOrg1 = await organisationRepository.save(org1);
+
+    const org2 = new Organisation();
+    org2.name = Random.word(5);
+    const savedOrg2 = await organisationRepository.save(org2);
+
+    const userGroup = new UserGroup();
+    userGroup.name = Random.word(5);
+    userGroup.organisation = savedOrg1;
+    userGroup.permission = 2;
+    const savedUserGroup = await userGroupRepository.save(userGroup);
+
+    const user = new User();
+    user.email = Random.email();
+    user.password = Random.word(8);
+    user.organisation = savedOrg2;
+    const savedUser = await userRepository.save(user);
+
+    const jwtSecret = Random.word(10);
+    const jwtToken = jwt.sign({ email: user.email }, jwtSecret);
+
+    const key = Random.word(10);
+    const redisData = { userEmail: user.email, userGroupName: userGroup.name };
+    await redis.set(key, JSON.stringify(redisData), 'EX', 24 * 60 * 60);
+
+    // Act
+    const result = await userOrganisationMangementService.addUserToUserGroupWithKey(jwtToken, key);
+
+    // Assert
+    expect(result.status).toBe(400);
+    expect(result.message).toBe('User\'s organisation is different from the group\'s organisation');
+}, 10000);
+
   });
 
   describe('removeUserFromOrganisation', () => {
