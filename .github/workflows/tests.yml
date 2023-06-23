@@ -16,16 +16,15 @@ permissions:
 jobs:
   Cypress:
     runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: ./frontend
     steps:
       - name: 🛫 Checkout
         uses: actions/checkout@v2
-      - name: 📁 Right Directory
-        run: cd frontend
       - name: 🧶 Install packages 
-        working-directory: ./frontend
         run: yarn 
       - name: 🔨 Build Project
-        working-directory: ./frontend
         run: yarn build
       - name: 🏃‍♂️ Cypress Run 
         uses: cypress-io/github-action@v5
