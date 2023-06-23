@@ -659,7 +659,25 @@ describe('UserOrganisationMangementService Integration', () => {
       expect(result.status).toBe('success');
     }, 20000);
   
-    // Rest of the tests...
+    it('should return an error if token is invalid', async () => {
+      // Arrange
+      const jwtToken = Random.word(20);
+      const userGroupName = Random.word(10);
+      const userEmail = Random.email();
+    
+      // Act
+      const result = await userOrganisationMangementService.removeUserFromUserGroup(
+        jwtToken,
+        userGroupName,
+        userEmail,
+      );
+    
+      // Assert
+      expect(result.status).toBe(400);
+      expect(result.error).toBeTruthy();
+      expect(result.message).toBe('Invalid token');
+    }, 10000);
+    
   });
   
 
