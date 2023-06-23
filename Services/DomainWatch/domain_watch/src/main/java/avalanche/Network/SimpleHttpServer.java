@@ -7,6 +7,7 @@ import avalanche.Network.ServerState.Closed;
 import avalanche.Network.ServerState.Initialising;
 import avalanche.Network.ServerState.Running;
 import avalanche.Network.ServerState.ServerState;
+import avalanche.Settings.DomainWatchSettings;
 import avalanche.Utility.DomainTokeniser;
 
 import java.io.IOException;
@@ -35,7 +36,8 @@ public class SimpleHttpServer {
         System.out.println("Found " + Runtime.getRuntime().availableProcessors() + " processors");
         long st = System.currentTimeMillis();
         System.out.println("initialising domain list");
-        SimilarityChecker.init(false, Runtime.getRuntime().availableProcessors() / 2);
+        SimilarityChecker.init(false, Math.min(DomainWatchSettings.getInstace().maximumThreadsPerSearch,
+                Runtime.getRuntime().availableProcessors() - 1));
         System.out.println("Done domain list\n");
 
         System.out.println("initialising word freq");

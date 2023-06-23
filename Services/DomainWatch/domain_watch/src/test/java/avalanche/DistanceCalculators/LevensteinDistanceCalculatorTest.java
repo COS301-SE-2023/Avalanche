@@ -206,8 +206,8 @@ public class LevensteinDistanceCalculatorTest {
     @Test
     public void lto1changeShouldBesmall() {
         LevensteinDistanceCalculator calc = new LevensteinDistanceCalculator();
-        assertEquals(0.1, calc.calculateBasicLevenshteinDistance("i", "1"), 0);
-        assertEquals(0.1, calc.calculateBasicLevenshteinDistance("1", "i"), 0);
+        assertEquals(0.1, calc.calculateBasicLevenshteinDistance("l", "1"), 0);
+        assertEquals(0.1, calc.calculateBasicLevenshteinDistance("1", "l"), 0);
         assertEquals(0.2, calc.calculateBasicLevenshteinDistance("hello.biz", "he11o.biz"), 0);
         assertEquals(5.2, calc.calculateBasicLevenshteinDistance("hellothere.biz", "he11o.biz"), 0);
         assertEquals(5.2, calc.calculateBasicLevenshteinDistance("hello.biz", "therehe11o.biz"), 0.000001);
