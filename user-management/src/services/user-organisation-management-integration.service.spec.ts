@@ -42,20 +42,20 @@ describe('UserOrganisationMangementService Integration', () => {
       user.email = email;
       user.password = password;
       await userRepository.save(user);
-  
-      const jwtSecret = Random.word(10); 
+
+      const jwtSecret = Random.word(10);
       const jwtToken = jwt.sign({ email }, jwtSecret);
-  
+
       await redis.set(jwtToken, JSON.stringify(user), 'EX', 24 * 60 * 60);
-  
+
       const name = Random.word(10);
-  
+
       // Act
       const result = await userOrganisationMangementService.createOrganisation(
         jwtToken,
         name,
       );
-  
+
       // Assert
       expect(result.status).toBe('success');
       const updatedUser = await userRepository.findOne({
@@ -64,46 +64,46 @@ describe('UserOrganisationMangementService Integration', () => {
       });
       expect(updatedUser.organisation.name).toBe(name);
       expect(updatedUser.userGroups[0].name).toBe(`admin-${name}`);
-  }, 20000);
-  
-  it('should return an error if token is invalid', async () => {
+    }, 20000);
+
+    it('should return an error if token is invalid', async () => {
       // Arrange
       const jwtToken = Random.word(20);
       const name = Random.word(10);
-  
+
       // Act
       const result = await userOrganisationMangementService.createOrganisation(
         jwtToken,
         name,
       );
-  
+
       // Assert
       expect(result.status).toBe(400);
       expect(result.message).toBe('Invalid token.');
-  }, 10000);
-  
-  it('should return an error if user does not exist', async () => {
+    }, 10000);
+
+    it('should return an error if user does not exist', async () => {
       // Arrange
       const email = Random.email();
       const jwtSecret = Random.word(10);
       const jwtToken = jwt.sign({ email }, jwtSecret);
-  
+
       await redis.set(jwtToken, JSON.stringify({ email }), 'EX', 24 * 60 * 60);
-  
+
       const name = Random.word(10);
-  
+
       // Act
       const result = await userOrganisationMangementService.createOrganisation(
         jwtToken,
         name,
       );
-  
+
       // Assert
       expect(result.status).toBe(400);
       expect(result.message).toBe('User does not exist.');
-  }, 10000);
-  
-  it('should return an error if user already belongs to an organisation', async () => {
+    }, 10000);
+
+    it('should return an error if user already belongs to an organisation', async () => {
       // Arrange
       const email = Random.email();
       const password = Random.word(8);
@@ -112,25 +112,27 @@ describe('UserOrganisationMangementService Integration', () => {
       user.password = password;
       user.organisation = new Organisation();
       await userRepository.save(user);
-  
+
       const jwtSecret = Random.word(10);
       const jwtToken = jwt.sign({ email }, jwtSecret);
-  
+
       await redis.set(jwtToken, JSON.stringify(user), 'EX', 24 * 60 * 60);
-  
+
       const name = Random.word(10);
-  
+
       // Act
       const result = await userOrganisationMangementService.createOrganisation(
         jwtToken,
         name,
       );
-  
+
       // Assert
       expect(result.status).toBe(400);
       expect(result.message).toBe('User already belongs to an organisation');
-  }, 10000);                    
+    }, 10000);
   });
+
+
 
   // afterEach(async () => {
   //   // Delete everything from Redis
@@ -138,18 +140,106 @@ describe('UserOrganisationMangementService Integration', () => {
   //   if (keys.length > 0) {
   //     await redis.del(keys);
   //   }
-  
+
   //   // Delete everything from the database
   //   await userRepository.clear();
   // await userGroupRepository.clear();
   // await organisationRepository.clear();
-    
+
   // });
 
   afterAll(async () => {
     await appModule.close(); // Make sure you close the connection to the database
   });
 });
+
+describe('removeUserFromOrganisation', () => {
+  let appModule: TestingModule;
+  let userOrganisationMangementService: UserOrganisationMangementService;
+  let userRepository;
+  let userGroupRepository;
+  let organisationRepository;
+  let redis;
+
+  beforeAll(async () => {
+    appModule = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
+
+    userOrganisationMangementService =
+      appModule.get<UserOrganisationMangementService>(
+        UserOrganisationMangementService,
+      );
+    userRepository = appModule.get(getRepositoryToken(User));
+    userGroupRepository = appModule.get(getRepositoryToken(UserGroup));
+    organisationRepository = appModule.get(getRepositoryToken(Organisation));
+    redis = appModule.get('REDIS');
+  });
+  it('should remove a user from an organisation and user groups', async () => {
+    // Arrange
+    const adminEmail = Random.email();
+    const userToRemoveEmail = Random.email();
+
+    const admin = new User();
+    admin.email = adminEmail;
+    const adminPassword = Random.word(8);
+    admin.password = adminPassword;
+
+    const userToRemove = new User();
+    userToRemove.email = userToRemoveEmail;
+    const userToRemovePassword = Random.word(8);
+    userToRemove.password = userToRemovePassword;
+
+    const userGroup = new UserGroup();
+    userGroup.name = 'testGroup';
+    userGroup.permission = 1;
+    userGroup.users = [admin, userToRemove];
+    await userGroupRepository.save(userGroup);
+
+    const organisation = new Organisation();
+    organisation.name = 'testOrganisation';
+    organisation.users = [admin, userToRemove];
+    await organisationRepository.save(organisation);
+
+    admin.userGroups = [userGroup];
+    userToRemove.userGroups = [userGroup];
+    admin.organisation = organisation;
+    userToRemove.organisation = organisation;
+    await userRepository.save(admin);
+    await userRepository.save(userToRemove);
+
+    const userData = { userGroups: [userGroup] };
+    const token = 'testToken';
+    await redis.set(token, JSON.stringify(userData), 'EX', 24 * 60 * 60);
+
+    // Act
+    const result = await userOrganisationMangementService.removeUserFromOrganisation(token, 'testOrganisation', userToRemoveEmail);
+
+    // Assert
+    expect(result.status).toBe('success');
+    const removedUser = await userRepository.findOne({ where: { email: userToRemoveEmail }, relations: ['userGroups', 'organisation'] });
+    expect(removedUser.userGroups).toBeNull();
+    expect(removedUser.organisation).toBeNull();
+  }, 20000);
+
+  afterEach(async () => {
+    // Delete everything from Redis
+    const keys = await redis.keys('*');
+    if (keys.length > 0) {
+      await redis.del(keys);
+    }
+
+    // Delete everything from the database
+    await userRepository.clear();
+    await userGroupRepository.clear();
+    await organisationRepository.clear();
+
+    await appModule.close();
+
+  });
+
+});
+
 
 function generateRandomString(length: number) {
   let result = '';
