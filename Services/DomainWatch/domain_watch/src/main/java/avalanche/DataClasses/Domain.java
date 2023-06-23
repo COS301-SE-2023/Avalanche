@@ -1,16 +1,33 @@
 package avalanche.DataClasses;
 
 public class Domain implements Comparable {
+    /**
+     * The name of the domain
+     */
     private String name;
+
+    /**
+     * The zone the domain is in
+     */
     private String zone;
+
+    /**
+     * The total distance from the search string across all metrics
+     */
     private double distance;
-    private double similarity;
+
+    /**
+     * The total number of metrics applied
+     */
     private int metrics;
 
     /**
+     * Partially parameterised constructor.
+     * Sets name and zone to parameters.
+     * Sets distance and metrics to 0.
      * 
-     * @param name
-     * @param zone
+     * @param name String: The name of the domain
+     * @param zone String: The zone the domain is in
      * 
      */
     public Domain(String name, String zone) {
@@ -18,15 +35,19 @@ public class Domain implements Comparable {
         this.zone = zone;
         this.metrics = 0;
         this.distance = 0;
-        this.similarity = 0;
     }
 
+    /**
+     * Standard copy constructor. Replicates all member variables but linked to new
+     * memory
+     * 
+     * @param domain Domain: the domain to be copied
+     */
     public Domain(Domain domain) {
         this.name = domain.name;
         this.zone = domain.zone;
         this.metrics = domain.metrics;
         this.distance = domain.distance;
-        this.similarity = domain.similarity;
     }
 
     /**
@@ -90,11 +111,22 @@ public class Domain implements Comparable {
         return distance / metrics;
     }
 
+    /**
+     * Sets the distance and metric variables to 0
+     */
     public void resetDistance() {
         this.distance = 0;
         this.metrics = 0;
     }
 
+    /**
+     * Compares domains based on their distances from a certain string
+     * 
+     * @param o Object (should be a domain): the domain to be compared against
+     * @return int: -1 if the input has a bigger distance than this
+     *         1 if the input has a smaller distance than this
+     *         0 if both have the same distance
+     */
     @Override
     public int compareTo(Object o) {
         Domain d = (Domain) o;
@@ -107,18 +139,33 @@ public class Domain implements Comparable {
         return 0;
     }
 
+    /**
+     * Checks if two domains are equal
+     * Two domains are equal if they have the same name and the same zone
+     * 
+     * @param d Domain: the domain to check equality against
+     * @return true if the domains are equal
+     *         false if the domains are not equal
+     */
     public boolean equals(Domain d) {
         return d.name.equals(this.name) && d.zone.equals(this.zone);
     }
 
     /**
-     * @return String
+     * @return String: A string representation of the domain in the format
+     *         <name>.<zone>
+     *         <name> and <zone> should both be lowercase
      */
     @Override
     public String toString() {
         return name + "." + zone.toLowerCase();
     }
 
+    /**
+     * 
+     * @return String: A JSON version of all the data in this object in the format
+     *         {"domainName":"<name>","zone":"<zone>","similarity":floor(<(distance/metrics)*100>)}
+     */
     public String toJSON() {
         return "{\"domainName\":\"" + name + "\",\"zone\":\"" + zone + "\",\"similarity\":"
                 + Math.round(getDistance() * 100.0) + "}";
