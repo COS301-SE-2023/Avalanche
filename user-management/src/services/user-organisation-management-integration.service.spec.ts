@@ -30,7 +30,7 @@ describe('UserOrganisationMangementService Integration', () => {
     userGroupRepository = appModule.get(getRepositoryToken(UserGroup));
     organisationRepository = appModule.get(getRepositoryToken(Organisation));
     redis = appModule.get('REDIS');
-  });
+  }, 15000);
 
   // Here we test the service without mocking the repositories and Redis service.
   describe('createOrganisation', () => {
@@ -138,6 +138,17 @@ describe('UserOrganisationMangementService Integration', () => {
   });
 
   describe('createUserGroup', () => {
+    const serializeUser = (user) => {
+      return {
+        ...user,
+        organisation: user.organisation ? {
+          ...user.organisation,
+        } : null,
+        userGroups: user.userGroups ? user.userGroups.map(userGroup => ({
+          ...userGroup,
+        })) : [],
+      };
+    };
     it('should create a new user group if user has permission', async () => {
       // Arrange
       const email = Random.email();
@@ -159,11 +170,9 @@ describe('UserOrganisationMangementService Integration', () => {
       user.organisation = savedOrg;
       user.userGroups = [savedUserGroup];
       await userRepository.save(user);
-
       const jwtSecret = Random.word(10);
       const jwtToken = jwt.sign({ email }, jwtSecret);
-
-      await redis.set(jwtToken, JSON.stringify(user), 'EX', 24 * 60 * 60);
+      await redis.set(jwtToken, JSON.stringify(serializeUser(user)), 'EX', 24 * 60 * 60);
 
       const name = Random.word(5);
       const permission = 2;
@@ -202,8 +211,6 @@ describe('UserOrganisationMangementService Integration', () => {
       const email = Random.email();
       const jwtSecret = Random.word(10);
       const jwtToken = jwt.sign({ email }, jwtSecret);
-
-      await redis.set(jwtToken, JSON.stringify({ email }), 'EX', 24 * 60 * 60);
 
       const name = Random.word(10);
       const permission = 2;
@@ -245,7 +252,7 @@ describe('UserOrganisationMangementService Integration', () => {
       const jwtSecret = Random.word(10);
       const jwtToken = jwt.sign({ email }, jwtSecret);
 
-      await redis.set(jwtToken, JSON.stringify(user), 'EX', 24 * 60 * 60);
+      await redis.set(jwtToken, JSON.stringify(serializeUser(user)), 'EX', 24 * 60 * 60);
 
       const name = Random.word(5);
       const permission = 2;
@@ -281,7 +288,7 @@ describe('UserOrganisationMangementService Integration', () => {
       const jwtSecret = Random.word(10);
       const jwtToken = jwt.sign({ email }, jwtSecret);
 
-      await redis.set(jwtToken, JSON.stringify(user), 'EX', 24 * 60 * 60);
+      await redis.set(jwtToken, JSON.stringify(serializeUser(user)), 'EX', 24 * 60 * 60);
 
       const name = Random.word(5);
       const permission = 2;
@@ -323,7 +330,7 @@ describe('UserOrganisationMangementService Integration', () => {
       const jwtSecret = Random.word(10);
       const jwtToken = jwt.sign({ email }, jwtSecret);
 
-      await redis.set(jwtToken, JSON.stringify(user), 'EX', 24 * 60 * 60);
+      await redis.set(jwtToken, JSON.stringify(serializeUser(user)), 'EX', 24 * 60 * 60);
 
       const name = '';
       const permission = 2;
@@ -342,23 +349,23 @@ describe('UserOrganisationMangementService Integration', () => {
   });
 
 
-  afterEach(async () => {
-    // Delete everything from Redis
-    const keys = await redis.keys('*');
-    if (keys.length > 0) {
-      await redis.del(keys);
-    }
+  // afterEach(async () => {
+  //   // Delete everything from Redis
+  //   const keys = await redis.keys('*');
+  //   if (keys.length > 0) {
+  //     await redis.del(keys);
+  //   }
 
-    // Delete everything from the database
-    await userRepository.clear();
-    await userGroupRepository.clear();
-    await organisationRepository.clear();
+  //   // Delete everything from the database
+  //   await userRepository.clear();
+  //   await userGroupRepository.clear();
+  //   await organisationRepository.clear();
 
-  });
+  // }, 15000);
 
   afterAll(async () => {
     await appModule.close(); // Make sure you close the connection to the database
-  });
+  }, 15000);
 });
 
 describe('removeUserFromOrganisation', () => {
