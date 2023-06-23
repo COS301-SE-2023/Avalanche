@@ -27,7 +27,7 @@ describe('UserManagementService', () => {
         expect(service).toBeDefined()
     })
 
-    it('Usermanagement calls the correct proxy functions', async () => {
+    it('Usermanagement calls the correct proxy functions (register)', async () => {
         const data = { some: 'data' };
         const expectedResult = { success: true };
         const responseObservable = of(expectedResult);
@@ -38,6 +38,20 @@ describe('UserManagementService', () => {
         const result = await service.register(data);
       
         expect(clientProxy.send).toHaveBeenCalledWith({ cmd: 'register' }, data);
+        expect(result).toBe(expectedResult)
+    });
+
+    it('Usermanagement calls the correct proxy functions (verify)', async () => {
+        const data = { some: 'data' };
+        const expectedResult = { success: true };
+        const responseObservable = of(expectedResult);
+      
+        jest
+        .spyOn(clientProxy, 'send').mockImplementationOnce(() => responseObservable);
+      
+        const result = await service.verify(data);
+      
+        expect(clientProxy.send).toHaveBeenCalledWith({ cmd: 'verify' }, data);
         expect(result).toBe(expectedResult)
     });
       
