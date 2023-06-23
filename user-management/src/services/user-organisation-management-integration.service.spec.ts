@@ -3,7 +3,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { AppModule } from '../app.module';
 import { Organisation } from '../entity/organisation.entity';
 import { User } from '../entity/user.entity';
-import * as faker from 'faker';
+import Mock from 'mockjs';
 import { UserGroup } from '../entity/userGroup.entity';
 import { UserOrganisationMangementService } from './user-organisation-mangement.service';
 import * as jwt from 'jsonwebtoken';
