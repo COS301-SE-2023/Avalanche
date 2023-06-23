@@ -222,6 +222,20 @@ describe('UserManagementService', () => {
         expect(clientProxy.send).toHaveBeenCalledWith({ cmd: 'integrateUserWithWExternalAPI' }, data);
         expect(result).toBe(expectedResult)
     });
+
+    it('Usermanagement calls the correct proxy functions (integrateWithDataProducts)', async () => {
+        const data = { some: 'data' };
+        const expectedResult = { success: true };
+        const responseObservable = of(expectedResult);
+      
+        jest
+        .spyOn(clientProxy, 'send').mockImplementationOnce(() => responseObservable);
+      
+        const result = await service.integrateWithDataProducts(data);
+      
+        expect(clientProxy.send).toHaveBeenCalledWith({ cmd: 'integrateWithDataProducts' }, data);
+        expect(result).toBe(expectedResult)
+    });
       
 
 });
