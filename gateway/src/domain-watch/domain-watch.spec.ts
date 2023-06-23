@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Test, TestingModule } from '@nestjs/testing';
-import {DomainWatchService} from './domain-watch/domain-watch.service'
+import {DomainWatchService} from './domain-watch.service'
 import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from 'axios';
 import { of } from 'rxjs';
