@@ -594,6 +594,75 @@ describe('UserOrganisationMangementService Integration', () => {
     }, 20000);
   });
 
+  describe('removeUserFromUserGroup', () => {
+    const serializeUser = (user) => {
+      return {
+        ...user,
+        userGroups: user.userGroups ? user.userGroups.map(userGroup => ({
+          ...userGroup,
+          users: undefined, // removing users to prevent circular structure
+        })) : [],
+        organisation: user.organisation ? {
+          ...user.organisation,
+          users: undefined, // removing users to prevent circular structure
+        } : null,
+      };
+    };
+    it('should remove a user from a user group if the invoker has permissions', async () => {
+      // Arrange
+      const invokerEmail = Random.email();
+      const userToBeRemovedEmail = Random.email();
+      const invokerPassword = Random.word(8);
+      const userToBeRemovedPassword = Random.word(8);
+      const org = new Organisation();
+      org.name = Random.word(5);
+      const savedOrg = await organisationRepository.save(org);
+  
+      const invokerGroup = new UserGroup();
+      invokerGroup.name = Random.word(5);
+      invokerGroup.permission = 1;
+      invokerGroup.organisation = savedOrg;
+      const savedInvokerGroup = await userGroupRepository.save(invokerGroup);
+  
+      const userToBeRemovedGroup = new UserGroup();
+      userToBeRemovedGroup.name = Random.word(5);
+      userToBeRemovedGroup.permission = 0;
+      userToBeRemovedGroup.organisation = savedOrg;
+      const savedUserToBeRemovedGroup = await userGroupRepository.save(userToBeRemovedGroup);
+  
+      const invoker = new User();
+      invoker.email = invokerEmail;
+      invoker.password = invokerPassword;
+      invoker.organisation = savedOrg;
+      invoker.userGroups = [savedInvokerGroup];
+      await userRepository.save(invoker);
+  
+      const userToBeRemoved = new User();
+      userToBeRemoved.email = userToBeRemovedEmail;
+      userToBeRemoved.password = userToBeRemovedPassword;
+      userToBeRemoved.organisation = savedOrg;
+      userToBeRemoved.userGroups = [savedUserToBeRemovedGroup];
+      await userRepository.save(userToBeRemoved);
+  
+      const jwtSecret = Random.word(10);
+      const jwtToken = jwt.sign({ email: invokerEmail }, jwtSecret);
+      await redis.set(jwtToken, JSON.stringify(serializeUser(invoker)), 'EX', 24 * 60 * 60);
+  
+      // Act
+      const result = await userOrganisationMangementService.removeUserFromUserGroup(
+        jwtToken,
+        savedUserToBeRemovedGroup.name,
+        userToBeRemovedEmail,
+      );
+  
+      // Assert
+      expect(result.status).toBe('success');
+    }, 20000);
+  
+    // Rest of the tests...
+  });
+  
+
   // afterEach(async () => {
   //   // Delete everything from Redis
   //   const keys = await redis.keys('*');
