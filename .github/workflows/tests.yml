@@ -20,12 +20,15 @@ jobs:
       - name: 🛫 Checkout
         uses: actions/checkout@v2
       - name: 📁 Right Directory
+        working-directory: ./frontend
         run: cd frontend
-      - name: 🧶 Install packages
+      - name: 🧶 Install packages 
+        working-directory: ./frontend
         run: yarn 
       - name: 🔨 Build Project
+        working-directory: ./frontend
         run: next build
-      - name: 🏃‍♂️ Cypress Run
+      - name: 🏃‍♂️ Cypress Run 
         uses: cypress-io/github-action@v5
         with:
           build: yarn build
