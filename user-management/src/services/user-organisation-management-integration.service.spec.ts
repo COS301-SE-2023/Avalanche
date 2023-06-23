@@ -117,19 +117,6 @@ describe('UserOrganisationMangementService Integration', () => {
 
       user.organisation = savedOrg;  // associate the saved organisation instance
       await userRepository.save(user);  // save user
-      // Arrange
-      const email = Random.email();
-      const password = Random.word(8);
-      const user = new User();
-      user.email = email;
-      user.password = password;
-
-      const org = new Organisation();
-      // add necessary fields to the org object, if required
-      const savedOrg = await organisationRepository.save(org);  // save organisation instance
-
-      user.organisation = savedOrg;  // associate the saved organisation instance
-      await userRepository.save(user);  // save user
 
       const jwtSecret = Random.word(10);
       const jwtToken = jwt.sign({ email }, jwtSecret);
