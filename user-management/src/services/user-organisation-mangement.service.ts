@@ -274,6 +274,7 @@ export class UserOrganisationMangementService {
 
                     console.log("booo", userEmail);
 
+                    console.log(userEmail);
                     // Send email to existing user with invitation link
                     await this.sendInvitationEmail(userEmail, key, userGroupName);
                     return {
@@ -331,7 +332,7 @@ export class UserOrganisationMangementService {
 
         const invitationHtmlTemplate = readFileSync(join(__dirname, '../../src/html/invitation-email-template.html'), 'utf-8');
         let invitationHtml = invitationHtmlTemplate.replace('{UserGroup}', userGroupName);
-        invitationHtml = invitationHtmlTemplate.replace('{url}', `http://localhost:3000/invitation?key=${token}&type=group`);
+        invitationHtml = invitationHtml.replace('{url}', `http://localhost:3000/invitation?key=${token}&type=group`);
         // Email options
         console.log(email);
         const mailOptions = {
@@ -339,7 +340,7 @@ export class UserOrganisationMangementService {
             to: email,
             subject: `Invitation to "${userGroupName}" on Avalanche Analytics`,
             html: invitationHtml,
-            text: `You have been invited to join "{{UserGroup}}" on Avalanche Analytics.\n
+            text: `You have been invited to join "${userGroupName}" on Avalanche Analytics.\n
             To accept the invitation please follow the link: 
             \nhttp://localhost:3000/invitation?key=${token}&type=group`
         };
