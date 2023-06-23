@@ -828,6 +828,33 @@ describe('UserOrganisationMangementService Integration', () => {
       expect(result.message).toBe('Invalid token');
     }, 10000);
 
+    it('should return an error if organisation does not exist', async () => {
+      // Arrange
+      const email = Random.email();
+      const password = Random.word(8);
+
+      const user = new User();
+      user.email = email;
+      user.password = password;
+      await userRepository.save(user);
+
+      const jwtSecret = Random.word(10);
+      const jwtToken = jwt.sign({ email }, jwtSecret);
+      await redis.set(jwtToken, JSON.stringify(serializeUser(user)), 'EX', 24 * 60 * 60);
+
+      const organisationName = Random.word(5);
+
+      // Act
+      const result = await userOrganisationMangementService.exitOrganisation(
+        jwtToken,
+        organisationName,
+      );
+
+      // Assert
+      expect(result.status).toBe(400);
+      expect(result.message).toBe('Organisation cannot be found');
+    }, 10000);
+
     interface MessageUser {
       text: string;
       user: User;
