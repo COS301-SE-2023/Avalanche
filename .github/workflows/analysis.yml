@@ -4,7 +4,9 @@ on:
   push:
     branches: [ "working", "stable", "integration_dev" ]
   pull_request:
-    branches: [ "working", "stable" ]
+    branches:
+      - working
+      - stable
   workflow_dispatch:
 
 permissions:

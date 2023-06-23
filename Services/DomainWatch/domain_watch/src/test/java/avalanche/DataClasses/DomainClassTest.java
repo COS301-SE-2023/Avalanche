@@ -68,4 +68,11 @@ public class DomainClassTest {
         assertEquals(1, domain1.compareTo(domain2));
 
     }
+
+    @Test
+    public void testSimilarity() {
+        Domain d = new Domain("slo", "CO.ZA");
+        d.setDistance(5, "Levenshtein");
+        assertEquals(0.4, d.getDistance(), 0);
+    }
 }
