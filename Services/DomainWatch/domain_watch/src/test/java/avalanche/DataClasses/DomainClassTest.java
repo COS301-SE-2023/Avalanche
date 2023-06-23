@@ -27,6 +27,20 @@ public class DomainClassTest {
     }
 
     @Test
+    public void testCopyConstructor(){
+        //Given
+        Domain d = new Domain("a", "b");
+        
+        //When
+        Domain dCopy = new Domain(d);
+
+        //Then
+        assertEquals("a", dCopy.getName());
+        assertEquals("b", dCopy.getZone());
+        assertEquals(-1, dCopy.getDistance());
+    }
+
+    @Test
     public void testToString() {
         Domain d = new Domain("a", "b");
         assertEquals("a.b", d.toString());
