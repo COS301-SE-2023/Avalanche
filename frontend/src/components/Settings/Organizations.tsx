@@ -23,14 +23,14 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
     const stateUser = useSelector(userState);
     const dispatch = useDispatch<any>();
 
+    /**
+     * When the component loads, it must fetch the latest organisation object and the latest user groups
+     */
     useEffect(() => {
         dispatch(getLatestOrganisation({}));
         dispatch(getUserGroups({}))
     }, [])
 
-    useEffect(() => {
-        console.log("STATEEEEE", stateUser);
-    }, [stateUser]);
 
     /**
      * This state variable holds the current active user group tab.
@@ -47,7 +47,10 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
      */
     const [tempUsers, setTempUsers] = useState(users);
 
-    const [activeGroupID, setActiveGroupID] = useState<number>(-1);
+    /**
+     * Store the current active group index in the array
+     */
+    const [activeGroupIndex, setactiveGroupIndex] = useState<number>(-1);
 
     /**
      * This function handles the logic for searching for users.
@@ -79,7 +82,7 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
      */
     const tabClick = (value: string, index: number): void => {
         setGroupTab(value);
-        setActiveGroupID(index);
+        setactiveGroupIndex(index);
     }
 
     return <>
@@ -145,8 +148,9 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
                                 <input type="text" id="table-search-users" className="block p-2 pl-10 text-sm text-gray-900 border-1.5 border-gray-300 rounded-lg w-80 bg-gray-50 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Search for users" onChange={(event: React.FormEvent<HTMLInputElement>) => handleSearch(event)} />
                             </div>
                         </div>
-                        {activeGroupID !== -1 && stateUser.userGroups[activeGroupID].groupMembers.length > 0 ?
-                            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 rounded-lg">
+
+                        { /* Renders users */
+                            activeGroupIndex !== -1 && groupTab !== "" && stateUser.userGroups[activeGroupIndex].groupMembers.length > 0 && <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 rounded-lg">
                                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
                                         <th scope="col" className="p-4">
@@ -168,7 +172,7 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
                                 </thead>
                                 <tbody>
                                     {
-                                        activeGroupID !== -1 && stateUser.userGroups[activeGroupID].groupMembers.map((item: any, index: any) => {
+                                        activeGroupIndex !== -1 && stateUser.userGroups[activeGroupIndex].groupMembers.map((item: any, index: any) => {
                                             return <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900" key={index}>
                                                 <td className="w-4 p-4">
                                                     <div className="flex items-center">
@@ -198,12 +202,26 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
                                         })
                                     }
                                 </tbody>
-                            </table> : <div className="flex items-center flex-col gap-2">
+                            </table>
+                        }
+
+                        { /* Renders if there is an active tab but there are no users in the group */
+                            activeGroupIndex !== -1 && stateUser.userGroups[activeGroupIndex].groupMembers.length === 0 && <div className="flex items-center flex-col gap-2">
                                 <NoFind className="h-48 w-48" />
                                 <h3 className="text-3xl font-medium text-gray-700 dark:text-white">No user found...</h3>
                                 <p className='text-xl text-gray-600 dark:text-gray-400'>No user matching the search criteria exists...</p>
                                 <p className='text-sm text-gray-600 dark:text-gray-400'>Data science is 80% preparing data, and 20% complaining about preparing data.</p>
-                            </div>}
+                            </div>
+                        }
+
+                        { /* This renders the section if there is no active selected group */
+                            !groupTab && <div className="flex items-center flex-col gap-2">
+                                <NoFind className="h-48 w-48" />
+                                <h3 className="text-3xl font-medium text-gray-700 dark:text-white">No selected group.</h3>
+                                <p className='text-xl text-gray-600 dark:text-gray-400'>Be sure to select a group :)</p>
+                            </div>
+                        }
+
                     </div>
                 </div>
             </div>

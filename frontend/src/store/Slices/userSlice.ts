@@ -277,6 +277,9 @@ export const login = createAsyncThunk("AUTH.Login", async (object: ILoginRequest
     }
 })
 
+/**
+ * This action handles the calling of the create organisation 
+ */
 export const createOrganisation = createAsyncThunk("ORG.CreateOrganisation", async (object: ICreateOrganisationRequest, { rejectWithValue }) => {
     try {
         const jwt = getCookie("jwt");
@@ -292,6 +295,9 @@ export const createOrganisation = createAsyncThunk("ORG.CreateOrganisation", asy
     }
 })
 
+/**
+ * This action handles the creation of an organisation group
+ */
 export const createOrganisationGroup = createAsyncThunk("ORG.CreateOrganisationGroup", async (object: ICreateUserGroupRequest, { rejectWithValue }) => {
     try {
         const jwt = getCookie("jwt");
@@ -307,6 +313,9 @@ export const createOrganisationGroup = createAsyncThunk("ORG.CreateOrganisationG
     }
 })
 
+/**
+ * This actions gets the latest user groups
+ */
 export const getUserGroups = createAsyncThunk("ORG.GetUserGroups", async (object: any, { rejectWithValue }) => {
     try {
         const jwt = getCookie("jwt");
@@ -321,6 +330,9 @@ export const getUserGroups = createAsyncThunk("ORG.GetUserGroups", async (object
     }
 })
 
+/**
+ * This action handles adding a user to the group
+ */
 export const addUserToGroup = createAsyncThunk("ORG.AddUserToGroup", async (object: any, { rejectWithValue }) => {
     try {
         const jwt = getCookie("jwt");
@@ -336,6 +348,9 @@ export const addUserToGroup = createAsyncThunk("ORG.AddUserToGroup", async (obje
     }
 })
 
+/**
+ * This action gets the latest organistaion
+ */
 export const getLatestOrganisation = createAsyncThunk("ORG.GetLatestOrganisation", async (object: any, { rejectWithValue }) => {
     try {
         const jwt = getCookie("jwt");
