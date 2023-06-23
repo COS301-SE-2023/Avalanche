@@ -353,13 +353,13 @@ describe('UserOrganisationMangementService Integration', () => {
       // Arrange
       const jwtToken = Random.word(10);
       const key = Random.word(10);
-  
+
       // Act
       const result = await userOrganisationMangementService.addUserToUserGroupWithKey(
         jwtToken,
         key,
       );
-  
+
       // Assert
       expect(result.status).toBe(400);
       expect(result.message).toBe('Invalid user group key');
@@ -369,15 +369,15 @@ describe('UserOrganisationMangementService Integration', () => {
       // Arrange
       const jwtToken = Random.word(10);
       const key = Random.word(10);
-  
+
       await redis.set(key, JSON.stringify({ userEmail: Random.email(), userGroupName: Random.word(10) }), 'EX', 24 * 60 * 60);
-  
+
       // Act
       const result = await userOrganisationMangementService.addUserToUserGroupWithKey(
         jwtToken,
         key,
       );
-  
+
       // Assert
       expect(result.status).toBe(400);
       expect(result.message).toBe('User not found');
@@ -390,19 +390,19 @@ describe('UserOrganisationMangementService Integration', () => {
       user.email = email;
       user.password = password;
       await userRepository.save(user);
-  
+
       const jwtToken = Random.word(10);
       const key = Random.word(10);
-  
+
       await redis.set(jwtToken, JSON.stringify(user), 'EX', 24 * 60 * 60);
       await redis.set(key, JSON.stringify({ userEmail: email, userGroupName: Random.word(10) }), 'EX', 24 * 60 * 60);
-  
+
       // Act
       const result = await userOrganisationMangementService.addUserToUserGroupWithKey(
         jwtToken,
         key,
       );
-  
+
       // Assert
       expect(result.status).toBe(400);
       expect(result.message).toBe('User group not found');
@@ -427,9 +427,9 @@ describe('UserOrganisationMangementService Integration', () => {
       const savedUser = await userRepository.save(user);
 
       await userGroupRepository.createQueryBuilder()
-          .relation(UserGroup, 'users')
-          .of(savedUserGroup)
-          .add(savedUser);
+        .relation(UserGroup, 'users')
+        .of(savedUserGroup)
+        .add(savedUser);
 
       const jwtSecret = Random.word(10);
       const jwtToken = jwt.sign({ email: user.email }, jwtSecret);
@@ -444,44 +444,88 @@ describe('UserOrganisationMangementService Integration', () => {
       // Assert
       expect(result.status).toBe(400);
       expect(result.message).toBe('User is already part of this user group');
-  }, 10000);
+    }, 10000);
 
-  it('should return an error if the user\'s organisation is different from the group\'s organisation', async () => {
-    // Arrange
-    const org1 = new Organisation();
-    org1.name = Random.word(5);
-    const savedOrg1 = await organisationRepository.save(org1);
+    it('should return an error if the user\'s organisation is different from the group\'s organisation', async () => {
+      // Arrange
+      const org1 = new Organisation();
+      org1.name = Random.word(5);
+      const savedOrg1 = await organisationRepository.save(org1);
 
-    const org2 = new Organisation();
-    org2.name = Random.word(5);
-    const savedOrg2 = await organisationRepository.save(org2);
+      const org2 = new Organisation();
+      org2.name = Random.word(5);
+      const savedOrg2 = await organisationRepository.save(org2);
 
-    const userGroup = new UserGroup();
-    userGroup.name = Random.word(5);
-    userGroup.organisation = savedOrg1;
-    userGroup.permission = 2;
-    const savedUserGroup = await userGroupRepository.save(userGroup);
+      const userGroup = new UserGroup();
+      userGroup.name = Random.word(5);
+      userGroup.organisation = savedOrg1;
+      userGroup.permission = 2;
+      const savedUserGroup = await userGroupRepository.save(userGroup);
 
-    const user = new User();
-    user.email = Random.email();
-    user.password = Random.word(8);
-    user.organisation = savedOrg2;
-    const savedUser = await userRepository.save(user);
+      const user = new User();
+      user.email = Random.email();
+      user.password = Random.word(8);
+      user.organisation = savedOrg2;
+      const savedUser = await userRepository.save(user);
 
-    const jwtSecret = Random.word(10);
-    const jwtToken = jwt.sign({ email: user.email }, jwtSecret);
+      const jwtSecret = Random.word(10);
+      const jwtToken = jwt.sign({ email: user.email }, jwtSecret);
 
-    const key = Random.word(10);
-    const redisData = { userEmail: user.email, userGroupName: userGroup.name };
-    await redis.set(key, JSON.stringify(redisData), 'EX', 24 * 60 * 60);
+      const key = Random.word(10);
+      const redisData = { userEmail: user.email, userGroupName: userGroup.name };
+      await redis.set(key, JSON.stringify(redisData), 'EX', 24 * 60 * 60);
 
-    // Act
-    const result = await userOrganisationMangementService.addUserToUserGroupWithKey(jwtToken, key);
+      // Act
+      const result = await userOrganisationMangementService.addUserToUserGroupWithKey(jwtToken, key);
 
-    // Assert
-    expect(result.status).toBe(400);
-    expect(result.message).toBe('User\'s organisation is different from the group\'s organisation');
-}, 10000);
+      // Assert
+      expect(result.status).toBe(400);
+      expect(result.message).toBe('User\'s organisation is different from the group\'s organisation');
+    }, 10000);
+
+    it('should add the user to the group if everything is valid', async () => {
+      // Arrange
+      const org = new Organisation();
+      org.name = Random.word(5);
+      const savedOrg = await organisationRepository.save(org);
+
+      const userGroup = new UserGroup();
+      userGroup.name = Random.word(5);
+      userGroup.organisation = savedOrg;
+      userGroup.permission = 2;
+      const savedUserGroup = await userGroupRepository.save(userGroup);
+
+      const user = new User();
+      user.email = Random.email();
+      user.password = Random.word(8);
+      user.organisation = savedOrg;
+      const savedUser = await userRepository.save(user);
+
+      const jwtSecret = Random.word(10);
+      const jwtToken = jwt.sign({ email: user.email }, jwtSecret);
+
+      const key = Random.word(10);
+      const redisData = { userEmail: user.email, userGroupName: userGroup.name };
+      await redis.set(key, JSON.stringify(redisData), 'EX', 24 * 60 * 60);
+
+      // Act
+      const result = await userOrganisationMangementService.addUserToUserGroupWithKey(jwtToken, key);
+
+      // Assert
+      expect(result.status).toBe("success");
+      if (isUser(result.message)) {
+        expect(result.message.email).toBe(user.email);
+        expect(result.message.organisation.name).toBe(savedOrg.name);
+        expect(result.message.userGroups.length).toBeGreaterThan(0);
+      }
+
+    }, 10000);
+
+    function isUser(obj: any): obj is User {
+      return !!obj && 'email' in obj && 'id' in obj;
+    }
+
+
 
   });
 
