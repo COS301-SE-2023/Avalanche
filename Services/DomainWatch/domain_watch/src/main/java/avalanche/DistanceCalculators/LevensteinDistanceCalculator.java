@@ -1,6 +1,9 @@
 package avalanche.DistanceCalculators;
 
 import java.util.Arrays;
+import java.util.HashSet;
+
+import avalanche.Settings.DomainWatchSettings;
 
 public class LevensteinDistanceCalculator {
     public double calculateBasicLevenshteinDistance(String x, String y) {
@@ -74,6 +77,14 @@ public class LevensteinDistanceCalculator {
     private double costOfSubstitution(char a, char b) {
         if (a == b) {
             return 0;
+        }
+
+        DomainWatchSettings dws = DomainWatchSettings.getInstace();
+        if (!dws.useInternalSubstitutionCosts) {
+            HashSet<String> set = new HashSet();
+            set.add(a + "");
+            set.add(b + "");
+            return dws.substitutionCosts.getOrDefault(set, (double) 1);
         }
 
         if (checkBothWays(a, '0', b, 'o')) {

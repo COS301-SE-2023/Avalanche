@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 
+import avalanche.Core.SimilarityChecker;
 import avalanche.DataClasses.Domain;
 import avalanche.Utility.DomainTokeniser;
 
@@ -15,7 +16,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class SimilarityCheckerTest {
     @Test
     public void construction() throws FileNotFoundException {
-        SimilarityChecker.init(true);
+        SimilarityChecker.init(true, 12);
         SimilarityChecker similarityChecker = new SimilarityChecker();
         assertNotNull(similarityChecker.getAllDomains());
         assertNotEquals(0, similarityChecker.getAllDomains().size());
@@ -23,14 +24,14 @@ public class SimilarityCheckerTest {
 
     @Test
     public void simpleLoop() throws FileNotFoundException {
-        SimilarityChecker.init(true);
+        SimilarityChecker.init(true, 12);
         SimilarityChecker similarityChecker = new SimilarityChecker();
         similarityChecker.loopThroughAllDomains();
     }
 
     @Test
     public void searchForSimilar() throws FileNotFoundException {
-        SimilarityChecker.init(true);
+        SimilarityChecker.init(true, 12);
         SimilarityChecker similarityChecker = new SimilarityChecker();
         ConcurrentLinkedQueue<Domain> results = similarityChecker.findAllWithinSimliarityThreshold("firstnationalbank",
                 4);
@@ -40,7 +41,7 @@ public class SimilarityCheckerTest {
     @Test
     public void searchForSimilarWithGivenList() throws FileNotFoundException {
         DomainTokeniser.init();
-        SimilarityChecker.init(true);
+        SimilarityChecker.init(true, 12);
         ConcurrentLinkedQueue<Domain> hits = new ConcurrentLinkedQueue<>();
         hits.add(new Domain("1stnationalbank", "AFRICA"));
         hits.add(new Domain("2ndnationalbank", "AFRICA"));
@@ -55,7 +56,7 @@ public class SimilarityCheckerTest {
 
     @Test
     public void searchForSimilarSoundsWithGivenList() throws FileNotFoundException {
-        SimilarityChecker.init(true);
+        SimilarityChecker.init(true, 12);
         ConcurrentLinkedQueue<Domain> hits = new ConcurrentLinkedQueue<>();
         hits.add(new Domain("thirstnationalbank", "AFRICA"));
         hits.add(new Domain("2ndnationalbank", "AFRICA"));
@@ -71,15 +72,15 @@ public class SimilarityCheckerTest {
 
     @Test
     public void sameDomainTwiceShouldHaveSameSimilarity() throws FileNotFoundException {
-        SimilarityChecker.init(true);
+        SimilarityChecker.init(true, 12);
         SimilarityChecker similarityChecker = new SimilarityChecker();
         ConcurrentLinkedQueue<Domain> results = similarityChecker.threadedFindAllWithinSimliarityThreshold(
                 "firstnationalbank",
-                5, 50);
+                5);
         SimilarityChecker.resetDistances();
         ConcurrentLinkedQueue<Domain> results2 = similarityChecker.threadedFindAllWithinSimliarityThreshold(
                 "firstnationalbank",
-                5, 50);
+                5);
         assertNotNull(results);
         assertNotNull(results2);
         assertNotEquals(0, results.size());
@@ -96,7 +97,7 @@ public class SimilarityCheckerTest {
 
     @Test
     public void searchForSimilarSounds() throws FileNotFoundException {
-        SimilarityChecker.init(true);
+        SimilarityChecker.init(true, 12);
         DomainTokeniser.init();
         SimilarityChecker similarityChecker = new SimilarityChecker();
         ConcurrentLinkedQueue<Domain> results = similarityChecker.findAllSoundsAboveSimliarityThreshold("absabank",
@@ -112,12 +113,12 @@ public class SimilarityCheckerTest {
 
     @Test
     public void concurrentSearchForSimilarSounds() throws FileNotFoundException {
-        SimilarityChecker.init(true);
+        SimilarityChecker.init(true, 12);
         DomainTokeniser.init();
         SimilarityChecker similarityChecker = new SimilarityChecker();
         ConcurrentLinkedQueue<Domain> results = similarityChecker.threadedfindAllSoundsAboveSimliarityThreshold(
                 "firstnationalbank",
-                3, 50);
+                3);
         assertNotNull(results);
         // System.out.println("INPUT: firstnationalbank\nThreshold:
         // 4\n=======================");
@@ -129,17 +130,11 @@ public class SimilarityCheckerTest {
 
     @Test
     public void concurrentSearchForSimilar() throws FileNotFoundException {
-        SimilarityChecker.init(true);
+        SimilarityChecker.init(true, 12);
         SimilarityChecker similarityChecker = new SimilarityChecker();
         ConcurrentLinkedQueue<Domain> results = similarityChecker.threadedFindAllWithinSimliarityThreshold(
-                "firstnationalbank",
-                4, 50);
+                "selborne",
+                5);
         assertNotNull(results);
-        // System.out.println("INPUT: firstnationalbank\nThreshold:
-        // 4\n=======================");
-        // for (Domain domain : results) {
-        // System.out.println(domain.getName() + " " + domain.getZone() + " (" +
-        // domain.getDistance() + ")");
-        // }
     }
 }

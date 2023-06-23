@@ -7,6 +7,9 @@ public class SoundexCalculator {
         DomainTokeniser domainTokeniser = new DomainTokeniser();
         String xSpaced = domainTokeniser.inferSpaces(x);
         String ySpaced = domainTokeniser.inferSpaces(y);
+        if (xSpaced == null || ySpaced == null) {
+            return 0;
+        }
         String[] splitX = xSpaced.split(" ");
         String[] splitY = ySpaced.split(" ");
 

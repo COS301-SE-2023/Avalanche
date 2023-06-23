@@ -7,17 +7,18 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class DomainTokeniser {
     private static boolean hasBeenInitialised = false;
     private static HashMap<String, Double> dictionary;
-    private static volatile HashMap<String, String> wordsDone;
+    private static ConcurrentHashMap<String, String> wordsDone;
     private static int maxword;
     private static String DICTIONARY_PATH = "data/wordsByFreq.txt";
 
     public static void init() throws FileNotFoundException {
         buildDictionary();
-        wordsDone = new HashMap<>();
+        wordsDone = new ConcurrentHashMap<>();
         hasBeenInitialised = true;
     }
 
@@ -92,7 +93,7 @@ public class DomainTokeniser {
         return new BestMatchResult(minCost, matchLength);
     }
 
-    public String inferSpaces(String s) {
+    public synchronized String inferSpaces(String s) {
         if (wordsDone.containsKey(s)) {
             return wordsDone.get(s);
         }
@@ -116,6 +117,9 @@ public class DomainTokeniser {
 
         Collections.reverse(out);
         String done = String.join(" ", out);
+        if (done == null) {
+            return s;
+        }
         wordsDone.put(s, done);
         return done;
     }
