@@ -12,7 +12,7 @@ interface IModalWrapper {
 export default function ModalWrapper({ children, addClass, addClassAdd, smallModal = true }: IModalWrapper) {
     const dispatch = useDispatch();
     document.body.style.overflow = "hidden";
-    return <ModalAnimationWrapper><div tabIndex={-1} aria-hidden="true" className="fixed top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full h-screen flex justify-center items-center bg-slate-900/50" onClick={(event) => {
+    return <ModalAnimationWrapper><div tabIndex={-1} aria-hidden="true" className="fixed top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] h-screen flex justify-center items-center bg-slate-900/50" onClick={(event) => {
         dispatch(setAnimateManagerState(true));
         setTimeout(() => {
             dispatch(clearCurrentOpenState());
