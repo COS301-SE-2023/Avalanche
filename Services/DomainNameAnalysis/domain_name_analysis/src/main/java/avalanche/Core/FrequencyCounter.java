@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import avalanche.DataClasses.CountAndList;
 import avalanche.DataClasses.WordFrequency;
 import avalanche.Utility.DomainTokeniser;
 
@@ -24,7 +25,7 @@ public class FrequencyCounter {
         disallowedWords.add("pre");
         disallowedWords.add("cud");
         disallowedWords.add("gri");
-        HashMap<String, Integer> wordFrequencies = new HashMap<>();
+        HashMap<String, CountAndList> wordFrequencies = new HashMap<>();
         DomainTokeniser.init();
         DomainTokeniser tokeniser = new DomainTokeniser();
         for (String string : allStrings) {
@@ -32,9 +33,10 @@ public class FrequencyCounter {
             String[] words = withSpaces.split(" ");
             for (String word : words) {
                 if ((word.length() > 2 || word.equals("dr")) && !disallowedWords.contains(word)) {
-                    int frequency = wordFrequencies.getOrDefault(word, 0);
-                    frequency++;
-                    wordFrequencies.put(word, frequency);
+                    CountAndList countAndList = wordFrequencies.getOrDefault(word, new CountAndList());
+                    countAndList.incrementCount();
+                    countAndList.addDomain(string);
+                    wordFrequencies.put(word, countAndList);
                 }
 
             }
@@ -42,7 +44,7 @@ public class FrequencyCounter {
 
         ArrayList<WordFrequency> allWordFrequencies = new ArrayList<>();
         for (String word : wordFrequencies.keySet()) {
-            if (wordFrequencies.get(word) >= minimunAppearances) {
+            if (wordFrequencies.get(word).getFrequency() >= minimunAppearances) {
                 allWordFrequencies.add(new WordFrequency(word, wordFrequencies.get(word)));
             }
 

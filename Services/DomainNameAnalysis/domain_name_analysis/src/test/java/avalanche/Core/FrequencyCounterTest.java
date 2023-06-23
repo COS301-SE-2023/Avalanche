@@ -7001,7 +7001,7 @@ public class FrequencyCounterTest {
         };
         ArrayList<WordFrequency> ret = frequencyCounter.getOrderedFrequency(strings, 1);
         for (WordFrequency wordFrequency : ret) {
-            System.out.println(wordFrequency.getWord());
+            System.out.println(wordFrequency.toJSON());
             assertTrue(wordFrequency.getWord().length() > 2 || wordFrequency.getWord().equals("dr"));
         }
     }
