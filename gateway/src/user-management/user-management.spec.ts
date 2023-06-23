@@ -194,6 +194,20 @@ describe('UserManagementService', () => {
         expect(clientProxy.send).toHaveBeenCalledWith({ cmd: 'exitOrganisation' }, data);
         expect(result).toBe(expectedResult)
     });
+
+    it('Usermanagement calls the correct proxy functions (removeUserFromOrganisation)', async () => {
+        const data = { some: 'data' };
+        const expectedResult = { success: true };
+        const responseObservable = of(expectedResult);
+      
+        jest
+        .spyOn(clientProxy, 'send').mockImplementationOnce(() => responseObservable);
+      
+        const result = await service.removeUserFromOrganisation(data);
+      
+        expect(clientProxy.send).toHaveBeenCalledWith({ cmd: 'removeUserFromOrganisation' }, data);
+        expect(result).toBe(expectedResult)
+    });
       
 
 });
