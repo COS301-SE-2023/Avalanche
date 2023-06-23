@@ -39,3 +39,4 @@ jobs:
           start: yarn start
           working-directory: frontend
           record: false
+          video: false
