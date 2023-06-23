@@ -92,7 +92,7 @@ export class UserOrganisationMangementService {
                 }
                 const userInfoCopy = [];
                 usersInfo.forEach(val => userInfoCopy.push(Object.assign({},val)));
-                userGroupDetails.push({userGroupName : userGroup.name, groupMembers : userInfoCopy});
+                userGroupDetails.push({userGroupName : userGroup.name, userGroupID: userGroup.id, groupMembers : userInfoCopy});
                 usersInfo.length = 0;
             }
         }
