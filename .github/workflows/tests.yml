@@ -24,7 +24,7 @@ jobs:
       - name: 🧶 Install packages
         run: yarn 
       - name: 🔨 Build Project
-        run: yarn build
+        run: next build
       - name: 🏃‍♂️ Cypress Run
         uses: cypress-io/github-action@v5
         with:
