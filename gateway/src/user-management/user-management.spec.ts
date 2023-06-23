@@ -68,6 +68,20 @@ describe('UserManagementService', () => {
         expect(clientProxy.send).toHaveBeenCalledWith({ cmd: 'resendOTP' }, data);
         expect(result).toBe(expectedResult)
     });
+
+    it('Usermanagement calls the correct proxy functions (login)', async () => {
+        const data = { some: 'data' };
+        const expectedResult = { success: true };
+        const responseObservable = of(expectedResult);
+      
+        jest
+        .spyOn(clientProxy, 'send').mockImplementationOnce(() => responseObservable);
+      
+        const result = await service.login(data);
+      
+        expect(clientProxy.send).toHaveBeenCalledWith({ cmd: 'login' }, data);
+        expect(result).toBe(expectedResult)
+    });
       
 
 });
