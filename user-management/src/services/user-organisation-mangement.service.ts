@@ -310,8 +310,6 @@ export class UserOrganisationMangementService {
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
                 console.log(error);
-            } else {
-                console.log('Email sent: ' + info.response);
             }
         });
     }
@@ -346,8 +344,6 @@ export class UserOrganisationMangementService {
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
                 console.log(error);
-            } else {
-                console.log('Email sent: ' + info.response);
             }
         });
     }
@@ -601,6 +597,7 @@ export class UserOrganisationMangementService {
         }
 
         // At this point the user has been removed from all their user groups and their organisation.
+        userToBeRemoved.organisationId = null;
         userToBeRemoved.organisation = null;
         userToBeRemoved.userGroups = null;
         await this.userRepository.save(userToBeRemoved);
