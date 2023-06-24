@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SimilarityChecker.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">domain_watch</a> &gt; <a href="index.source.html" class="el_package">avalanche.Core</a> &gt; <span class="el_source">SimilarityChecker.java</span></div><h1>SimilarityChecker.java</h1><pre class="source lang-java linenums">package avalanche.Core;
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Scanner;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+import avalanche.DataClasses.Domain;
+import avalanche.DistanceCalculators.LevensteinDistanceCalculator;
+import avalanche.DistanceCalculators.SoundexCalculator;
+import avalanche.Threads.LevenshteinThread;
+import avalanche.Threads.SoundexThread;
+
+public class SimilarityChecker {
+    private static HashSet&lt;Domain&gt; allDomains;
+    private static ArrayList&lt;Queue&lt;Domain&gt;&gt; splitDoms;
+    private static int threadCount;
+
+    public static void init(boolean useMock, int threadCount) {
+<span class="fc" id="L24">        SimilarityChecker.threadCount = threadCount;</span>
+<span class="fc" id="L25">        String path = &quot;data/Domain Retrieval.csv&quot;;</span>
+<span class="pc bpc" id="L26" title="1 of 2 branches missed.">        if (useMock) {</span>
+<span class="fc" id="L27">            path = &quot;data/Domain Retrieval mock.csv&quot;;</span>
+        }
+<span class="fc" id="L29">        allDomains = new HashSet&lt;&gt;();</span>
+<span class="fc" id="L30">        splitDoms = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L31" title="All 2 branches covered.">        for (int i = 0; i &lt; threadCount; i++) {</span>
+<span class="fc" id="L32">            splitDoms.add(new LinkedList&lt;Domain&gt;());</span>
+        }
+<span class="fc" id="L34">        int count = 0;</span>
+        try {
+<span class="fc" id="L36">            Scanner file = new Scanner(new FileReader(path));</span>
+            // skip headings
+<span class="fc" id="L38">            String line = file.nextLine();</span>
+<span class="fc bfc" id="L39" title="All 2 branches covered.">            while (file.hasNext()) {</span>
+<span class="fc" id="L40">                line = file.nextLine();</span>
+<span class="fc" id="L41">                String[] split = line.split(&quot;,&quot;);</span>
+<span class="fc" id="L42">                Domain d = new Domain(split[0], split[1]);</span>
+<span class="fc" id="L43">                allDomains.add(d);</span>
+<span class="fc" id="L44">                splitDoms.get(count % threadCount).add(d);</span>
+<span class="fc" id="L45">                count++;</span>
+            }
+<span class="fc" id="L47">            file.close();</span>
+<span class="pc" id="L48">        } catch (FileNotFoundException e) {</span>
+<span class="nc" id="L49">            e.printStackTrace();</span>
+        }
+<span class="fc" id="L51">    }</span>
+
+    public static void resetDistances() {
+<span class="fc bfc" id="L54" title="All 2 branches covered.">        for (Domain domain : allDomains) {</span>
+<span class="fc" id="L55">            domain.resetDistance();</span>
+        }
+
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        for (Queue&lt;Domain&gt; domainQueue : splitDoms) {</span>
+<span class="fc bfc" id="L59" title="All 2 branches covered.">            for (Domain domain : domainQueue) {</span>
+<span class="fc" id="L60">                domain.resetDistance();</span>
+            }
+        }
+<span class="fc" id="L63">    }</span>
+
+<span class="fc" id="L65">    public SimilarityChecker() {</span>
+
+<span class="fc" id="L67">    }</span>
+
+    public HashSet&lt;Domain&gt; getAllDomains() {
+<span class="fc" id="L70">        return allDomains;</span>
+    }
+
+    public void loopThroughAllDomains() {
+<span class="fc bfc" id="L74" title="All 2 branches covered.">        for (Domain domain : allDomains) {</span>
+<span class="fc" id="L75">            domain.resetDistance();</span>
+        }
+<span class="fc" id="L77">    }</span>
+
+    public ConcurrentLinkedQueue&lt;Domain&gt; findAllWithinSimliarityThreshold(String search, double threshold) {
+<span class="fc" id="L80">        ConcurrentLinkedQueue&lt;Domain&gt; hits = new ConcurrentLinkedQueue&lt;&gt;();</span>
+<span class="fc" id="L81">        LevensteinDistanceCalculator calc = new LevensteinDistanceCalculator();</span>
+<span class="fc bfc" id="L82" title="All 2 branches covered.">        for (Domain domain : allDomains) {</span>
+<span class="fc" id="L83">            double value = calc.calculateModifiedLevenshteinDistance(search, domain.getName());</span>
+<span class="fc bfc" id="L84" title="All 2 branches covered.">            if (value &lt;= threshold) {</span>
+<span class="fc" id="L85">                domain.setDistance(value, &quot;Levenshtein&quot;);</span>
+<span class="fc" id="L86">                hits.add(domain);</span>
+            }
+        }
+
+<span class="fc" id="L90">        return hits;</span>
+    }
+
+    public ConcurrentLinkedQueue&lt;Domain&gt; findAllWithinSimliarityThreshold(String search, double threshold,
+            ConcurrentLinkedQueue&lt;Domain&gt; searchSpace) {
+<span class="fc" id="L95">        ConcurrentLinkedQueue&lt;Domain&gt; hits = new ConcurrentLinkedQueue&lt;&gt;();</span>
+<span class="fc" id="L96">        LevensteinDistanceCalculator calc = new LevensteinDistanceCalculator();</span>
+<span class="fc bfc" id="L97" title="All 2 branches covered.">        for (Domain domain : searchSpace) {</span>
+<span class="fc" id="L98">            double value = calc.calculateModifiedLevenshteinDistance(search, domain.getName());</span>
+<span class="pc bpc" id="L99" title="1 of 2 branches missed.">            if (value &lt;= threshold) {</span>
+<span class="fc" id="L100">                domain.setDistance(value, &quot;Levenshtein&quot;);</span>
+<span class="fc" id="L101">                hits.add(domain);</span>
+            }
+        }
+
+<span class="fc" id="L105">        return hits;</span>
+    }
+
+    public ConcurrentLinkedQueue&lt;Domain&gt; findAllSoundsAboveSimliarityThreshold(String search, double threshold)
+            throws FileNotFoundException {
+<span class="fc" id="L110">        ConcurrentLinkedQueue&lt;Domain&gt; hits = new ConcurrentLinkedQueue&lt;&gt;();</span>
+<span class="fc" id="L111">        SoundexCalculator calc = new SoundexCalculator();</span>
+        // int count = 0;
+        // double pct = 0;
+<span class="fc bfc" id="L114" title="All 2 branches covered.">        for (Domain domain : allDomains) {</span>
+<span class="fc" id="L115">            double value = calc.calculateSoundexDifference(search, domain.getName());</span>
+<span class="fc bfc" id="L116" title="All 2 branches covered.">            if (value &gt;= threshold) {</span>
+<span class="fc" id="L117">                domain.setDistance(value, &quot;Soundex&quot;);</span>
+<span class="fc" id="L118">                hits.add(domain);</span>
+            }
+            // count++;
+            // if (count % (allDomains.size() / 100) == 0) {
+            // pct += 1;
+            // System.out.println(pct + &quot;%&quot;);
+            // }
+        }
+
+<span class="fc" id="L127">        return hits;</span>
+    }
+
+    public ConcurrentLinkedQueue&lt;Domain&gt; findAllSoundsAboveSimliarityThreshold(String search, double threshold,
+            ConcurrentLinkedQueue&lt;Domain&gt; searchSpace) {
+<span class="fc" id="L132">        ConcurrentLinkedQueue&lt;Domain&gt; hits = new ConcurrentLinkedQueue&lt;&gt;();</span>
+<span class="fc" id="L133">        SoundexCalculator calc = new SoundexCalculator();</span>
+<span class="fc bfc" id="L134" title="All 2 branches covered.">        for (Domain domain : searchSpace) {</span>
+<span class="fc" id="L135">            double value = calc.calculateSoundexDifference(search, domain.getName());</span>
+<span class="pc bpc" id="L136" title="1 of 2 branches missed.">            if (value &gt;= threshold) {</span>
+<span class="fc" id="L137">                domain.setDistance(value, &quot;Soundex&quot;);</span>
+<span class="fc" id="L138">                hits.add(domain);</span>
+            }
+        }
+
+<span class="fc" id="L142">        return hits;</span>
+    }
+
+    public ConcurrentLinkedQueue&lt;Domain&gt; threadedfindAllSoundsAboveSimliarityThreshold(String search,
+            double threshold) {
+<span class="fc" id="L147">        ConcurrentLinkedQueue&lt;Domain&gt; hits = new ConcurrentLinkedQueue&lt;&gt;();</span>
+<span class="fc" id="L148">        SoundexThread[] threads = new SoundexThread[threadCount];</span>
+<span class="fc bfc" id="L149" title="All 2 branches covered.">        for (int i = 0; i &lt; threads.length; i++) {</span>
+<span class="fc" id="L150">            threads[i] = new SoundexThread(search, threshold, hits, splitDoms.get(i));</span>
+        }
+<span class="fc bfc" id="L152" title="All 2 branches covered.">        for (int i = 0; i &lt; threads.length; i++) {</span>
+<span class="fc" id="L153">            threads[i].start();</span>
+        }
+
+<span class="fc bfc" id="L156" title="All 2 branches covered.">        for (int i = 0; i &lt; threads.length; i++) {</span>
+<span class="fc" id="L157">            System.out.println();</span>
+        }
+
+<span class="fc" id="L160">        int loaderNum = 0;</span>
+<span class="fc" id="L161">        final String[] loading = { &quot;-&quot;, &quot;\\&quot;, &quot;|&quot;, &quot;/&quot; };</span>
+<span class="fc" id="L162">        boolean busy = true;</span>
+<span class="fc bfc" id="L163" title="All 2 branches covered.">        while (busy) {</span>
+<span class="fc bfc" id="L164" title="All 2 branches covered.">            if (loaderNum == loading.length) {</span>
+<span class="fc" id="L165">                loaderNum = 0;</span>
+            }
+<span class="fc" id="L167">            spinThreadsTimed(500, loaderNum, threads);</span>
+<span class="fc" id="L168">            loaderNum++;</span>
+<span class="fc" id="L169">            busy = false;</span>
+<span class="fc bfc" id="L170" title="All 2 branches covered.">            for (int i = 0; i &lt; threads.length; i++) {</span>
+<span class="fc bfc" id="L171" title="All 2 branches covered.">                if (threads[i].isAlive()) {</span>
+<span class="fc" id="L172">                    busy = true;</span>
+<span class="fc" id="L173">                    break;</span>
+                }
+            }
+        }
+<span class="fc" id="L177">        spinThreads(loaderNum, threads);</span>
+<span class="fc" id="L178">        return hits;</span>
+    }
+
+    public ConcurrentLinkedQueue&lt;Domain&gt; threadedFindAllWithinSimliarityThreshold(String search, double threshold) {
+<span class="fc" id="L182">        ConcurrentLinkedQueue&lt;Domain&gt; hits = new ConcurrentLinkedQueue&lt;&gt;();</span>
+<span class="fc" id="L183">        LevenshteinThread[] threads = new LevenshteinThread[threadCount];</span>
+<span class="fc bfc" id="L184" title="All 2 branches covered.">        for (int i = 0; i &lt; threads.length; i++) {</span>
+<span class="fc" id="L185">            threads[i] = new LevenshteinThread(search, threshold, hits, splitDoms.get(i));</span>
+        }
+<span class="fc bfc" id="L187" title="All 2 branches covered.">        for (int i = 0; i &lt; threads.length; i++) {</span>
+<span class="fc" id="L188">            threads[i].start();</span>
+        }
+
+<span class="fc" id="L191">        boolean busy = true;</span>
+<span class="fc bfc" id="L192" title="All 2 branches covered.">        for (int i = 0; i &lt; threads.length; i++) {</span>
+<span class="fc" id="L193">            System.out.println();</span>
+        }
+<span class="fc" id="L195">        int loaderNum = 0;</span>
+<span class="fc" id="L196">        final String[] loading = { &quot;-&quot;, &quot;\\&quot;, &quot;|&quot;, &quot;/&quot; };</span>
+<span class="fc bfc" id="L197" title="All 2 branches covered.">        while (busy) {</span>
+<span class="fc bfc" id="L198" title="All 2 branches covered.">            if (loaderNum == loading.length) {</span>
+<span class="fc" id="L199">                loaderNum = 0;</span>
+            }
+<span class="fc" id="L201">            spinThreadsTimed(500, loaderNum, threads);</span>
+<span class="fc" id="L202">            loaderNum++;</span>
+<span class="fc" id="L203">            busy = false;</span>
+<span class="fc bfc" id="L204" title="All 2 branches covered.">            for (int i = 0; i &lt; threads.length; i++) {</span>
+<span class="fc bfc" id="L205" title="All 2 branches covered.">                if (threads[i].isAlive()) {</span>
+<span class="fc" id="L206">                    busy = true;</span>
+<span class="fc" id="L207">                    break;</span>
+                }
+            }
+        }
+<span class="fc" id="L211">        spinThreads(loaderNum, threads);</span>
+<span class="fc" id="L212">        return hits;</span>
+    }
+
+    private void spinThreads(int position, Thread[] threads) {
+<span class="fc" id="L216">        final String[] loading = { &quot;-&quot;, &quot;\\&quot;, &quot;|&quot;, &quot;/&quot; };</span>
+<span class="fc" id="L217">        int loaderNum = position % loading.length;</span>
+<span class="fc bfc" id="L218" title="All 2 branches covered.">        for (int i = 0; i &lt; threads.length; i++) {</span>
+<span class="fc" id="L219">            System.out.print(&quot;\u001b[1000D&quot;);</span>
+<span class="fc" id="L220">            System.out.print(&quot;\u001b[1A&quot;);</span>
+        }
+<span class="fc bfc" id="L222" title="All 2 branches covered.">        for (int i = 0; i &lt; threads.length; i++) {</span>
+<span class="fc" id="L223">            System.out.println(</span>
+<span class="fc" id="L224">                    &quot;Thread &quot; + i + &quot;-\t&quot; + threads[i].getState().toString() + &quot;[&quot; + loading[loaderNum] + &quot;]&quot;);</span>
+        }
+<span class="fc" id="L226">    }</span>
+
+    private void spinThreadsTimed(int milliseconds, int position, Thread[] threads) {
+<span class="fc bfc" id="L229" title="All 2 branches covered.">        if (System.currentTimeMillis() % 500 == 0) {</span>
+<span class="fc" id="L230">            spinThreads(position, threads);</span>
+        }
+<span class="fc" id="L232">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

@@ -1,0 +1,17 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+domain_watch,avalanche.Network,SimpleHttpServer.PostHandler,128,0,10,0,32,0,7,0,2,0
+domain_watch,avalanche.Network,SimpleHttpServer,128,0,0,0,33,0,3,0,3,0
+domain_watch,avalanche.Threads,SoundexThread,0,78,0,8,0,18,0,6,0,2
+domain_watch,avalanche.Threads,LevenshteinThread,0,78,0,8,0,18,0,6,0,2
+domain_watch,avalanche.DistanceCalculators,SoundexCalculator,0,260,0,31,0,57,0,23,0,5
+domain_watch,avalanche.DistanceCalculators,LevensteinDistanceCalculator,59,541,3,55,5,76,3,32,0,6
+domain_watch,avalanche.Utility,DomainTokeniser.BestMatchResult,0,12,0,0,0,4,0,1,0,1
+domain_watch,avalanche.Utility,DomainTokeniser,0,266,0,22,0,60,0,18,0,7
+domain_watch,avalanche.DataClasses,Domain,0,201,0,16,0,40,0,19,0,11
+domain_watch,avalanche,main,21,0,0,0,9,0,2,0,2,0
+domain_watch,avalanche.Core,SimilarityChecker,3,601,3,61,1,123,3,42,0,13
+domain_watch,avalanche.Network.ServerState,Closed,0,5,0,0,0,2,0,2,0,2
+domain_watch,avalanche.Network.ServerState,ServerState,148,3,22,0,29,1,12,1,1,1
+domain_watch,avalanche.Network.ServerState,Running,186,0,16,0,43,0,10,0,2,0
+domain_watch,avalanche.Network.ServerState,Initialising,0,8,0,0,0,3,0,2,0,2
+domain_watch,avalanche.Settings,DomainWatchSettings,3,110,0,6,1,26,0,5,0,2
