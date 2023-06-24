@@ -29,6 +29,7 @@ jobs:
       - name: Run Jest with coverage
         run: |
           cd ${{ matrix.service }}
+          yarn add --dev jest
           yarn test:cov
 
       # generates coverage-report.md and publishes as checkrun
