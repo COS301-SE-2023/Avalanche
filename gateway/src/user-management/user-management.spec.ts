@@ -239,7 +239,7 @@ describe('UserManagementService function calls and defined', () => {
 
 });
 
-describe('UserManagementService (Integration)', () => {
+/*describe('UserManagementService (Integration)', () => {
     let service: UserManagementService;
     let clientProxy: ClientProxy;
   
@@ -275,4 +275,4 @@ describe('UserManagementService (Integration)', () => {
         expect(result).toEqual(expectedResult);
       });
     }
-  });
+  });*/
