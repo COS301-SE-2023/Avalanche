@@ -97,11 +97,12 @@ public class Domain implements Comparable {
             } else {
                 this.distance += (distance - this.name.length()) / distance;
             }
-
+            metrics++;
         } else if (metric.equals("Soundex")) {
             this.distance += distance * 0.25;
+            metrics++;
         }
-        metrics++;
+
     }
 
     /**

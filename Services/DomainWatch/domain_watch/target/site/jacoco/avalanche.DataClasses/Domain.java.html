@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Domain.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">domain_watch</a> &gt; <a href="index.source.html" class="el_package">avalanche.DataClasses</a> &gt; <span class="el_source">Domain.java</span></div><h1>Domain.java</h1><pre class="source lang-java linenums">package avalanche.DataClasses;
+
+public class Domain implements Comparable {
+    /**
+     * The name of the domain.
+     */
+    private String name;
+
+    /**
+     * The zone the domain is in.
+     */
+    private String zone;
+
+    /**
+     * The total distance from the search string across all metrics.
+     */
+    private double distance;
+
+    /**
+     * The total number of metrics applied.
+     */
+    private int metrics;
+
+    /**
+     * Partially parameterised constructor.
+     * &lt;br/&gt;
+     * Sets name and zone to parameters.&lt;br/&gt;
+     * Sets distance and metrics to 0.&lt;br/&gt;
+     * 
+     * @param name The name of the domain
+     * @param zone The zone the domain is in
+     * 
+     */
+<span class="fc" id="L34">    public Domain(String name, String zone) {</span>
+<span class="fc" id="L35">        this.name = name;// .substring(0, name.length() - zone.length() - 1);</span>
+<span class="fc" id="L36">        this.zone = zone;</span>
+<span class="fc" id="L37">        this.metrics = 0;</span>
+<span class="fc" id="L38">        this.distance = 0;</span>
+<span class="fc" id="L39">    }</span>
+
+    /**
+     * Standard copy constructor.
+     * &lt;br/&gt;
+     * Replicates all member variables but linked to new memory
+     * 
+     * 
+     * @param domain the domain to be copied
+     */
+<span class="fc" id="L49">    public Domain(Domain domain) {</span>
+<span class="fc" id="L50">        this.name = domain.name;</span>
+<span class="fc" id="L51">        this.zone = domain.zone;</span>
+<span class="fc" id="L52">        this.metrics = domain.metrics;</span>
+<span class="fc" id="L53">        this.distance = domain.distance;</span>
+<span class="fc" id="L54">    }</span>
+
+    /**
+     * @return String: returns the name of the domain
+     */
+    public String getName() {
+<span class="fc" id="L60">        return name;</span>
+    }
+
+    /**
+     * @return String: returns the zone of the domain
+     */
+    public String getZone() {
+<span class="fc" id="L67">        return zone;</span>
+    }
+
+    /**
+     * This method is used to update the total distance of this domain from some
+     * search string.
+     * &lt;br/&gt;
+     * this.distance holds the total distance accross all metrics.&lt;br/&gt;
+     * &lt;br/&gt;
+     * Different metrics add to the total distance in different ways.&lt;br/&gt;
+     * &lt;br/&gt;
+     * Levenshtein: this metric adds to the distance as follows&lt;br/&gt;
+     * 1. if the length of this.name is greater than the distance then the total
+     * distance is increased by (length-distance)/length&lt;br/&gt;
+     * 2. if the length of this.name is less than or equal to the distance then the
+     * total distance is increased by (distance-length)/distance&lt;br/&gt;
+     * &lt;br/&gt;
+     * Soundex: This metric adds to the distance as follows&lt;br/&gt;
+     * add 0.25 * distance to the total distance&lt;br/&gt;
+     * &lt;br/&gt;
+     * We then add 1 to the number of metrics so that we can take an average
+     * later&lt;br/&gt;
+     * 
+     * @param distance the distance of this.name from a certain string
+     * @param metric   the metric that was used to calculate the above distance
+     */
+    public void setDistance(double distance, String metric) {
+<span class="fc bfc" id="L94" title="All 2 branches covered.">        if (metric.equals(&quot;Levenshtein&quot;)) {</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">            if (this.name.length() &gt; distance) {</span>
+<span class="fc" id="L96">                this.distance += (this.name.length() - distance) / this.name.length();</span>
+<span class="fc" id="L97">            } else {</span>
+<span class="fc" id="L98">                this.distance += (distance - this.name.length()) / distance;</span>
+            }
+<span class="fc" id="L100">            metrics++;</span>
+<span class="fc bfc" id="L101" title="All 2 branches covered.">        } else if (metric.equals(&quot;Soundex&quot;)) {</span>
+<span class="fc" id="L102">            this.distance += distance * 0.25;</span>
+<span class="fc" id="L103">            metrics++;</span>
+        }
+
+<span class="fc" id="L106">    }</span>
+
+    /**
+     * @return double: the average distance of this.name from a certain string.&lt;br/&gt;
+     *         Returns -1 if setDistance() was never called using any metrics
+     */
+    public double getDistance() {
+<span class="fc bfc" id="L113" title="All 2 branches covered.">        if (metrics == 0) {</span>
+<span class="fc" id="L114">            return -1;</span>
+        }
+<span class="fc" id="L116">        return distance / metrics;</span>
+    }
+
+    /**
+     * Sets the distance and metric variables to 0.
+     */
+    public void resetDistance() {
+<span class="fc" id="L123">        this.distance = 0;</span>
+<span class="fc" id="L124">        this.metrics = 0;</span>
+<span class="fc" id="L125">    }</span>
+
+    /**
+     * Compares domains based on their distances from a certain string.
+     * 
+     * @param o (should be a domain): the domain to be compared against
+     * @return int: -1 if the input has a bigger distance than this
+     *         1 if the input has a smaller distance than this
+     *         0 if both have the same distance
+     */
+    @Override
+    public int compareTo(Object o) {
+<span class="fc" id="L137">        Domain d = (Domain) o;</span>
+<span class="fc bfc" id="L138" title="All 2 branches covered.">        if (d.getDistance() &gt; this.getDistance()) {</span>
+<span class="fc" id="L139">            return -1;</span>
+        }
+<span class="fc bfc" id="L141" title="All 2 branches covered.">        if (d.getDistance() &lt; this.getDistance()) {</span>
+<span class="fc" id="L142">            return 1;</span>
+        }
+<span class="fc" id="L144">        return 0;</span>
+    }
+
+    /**
+     * Checks if two domains are equal.
+     * &lt;br/&gt;
+     * Two domains are equal if they have the same name and the same zone
+     * 
+     * @param d The domain to check equality against
+     * @return true if the domains are equal
+     *         false if the domains are not equal
+     */
+    public boolean equals(Domain d) {
+<span class="fc bfc" id="L157" title="All 4 branches covered.">        return d.name.equals(this.name) &amp;&amp; d.zone.equals(this.zone);</span>
+    }
+
+    /**
+     * ToString() for domain objects.
+     * &lt;br/&gt;
+     * Does not print the similarity
+     * 
+     * @return String: A string representation of the domain in the format
+     *         &amp;lt;name&amp;gt;.&amp;lt;zone&amp;gt;
+     *         &amp;lt;name&amp;gt; and &amp;lt;zone&amp;gt; should both be lowercase
+     */
+    @Override
+    public String toString() {
+<span class="fc" id="L171">        return name + &quot;.&quot; + zone.toLowerCase();</span>
+    }
+
+    /**
+     * ToJSON() for domain objects, includes the similarity.
+     * 
+     * @return String: A JSON version of all the data in this object in the format
+     *         {&quot;domainName&quot;:&quot;&amp;lt;name&amp;gt;&quot;,&quot;zone&quot;:&quot;&amp;lt;zone&amp;gt;&quot;,&quot;similarity&quot;:(&amp;lt;floor(distance/metrics)*100)&amp;gt;}
+     */
+    public String toJSON() {
+<span class="fc" id="L181">        return &quot;{\&quot;domainName\&quot;:\&quot;&quot; + name + &quot;\&quot;,\&quot;zone\&quot;:\&quot;&quot; + zone + &quot;\&quot;,\&quot;similarity\&quot;:&quot;</span>
+<span class="fc" id="L182">                + Math.round(getDistance() * 100.0) + &quot;}&quot;;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

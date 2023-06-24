@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ServerState.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">domain_watch</a> &gt; <a href="index.source.html" class="el_package">avalanche.Network.ServerState</a> &gt; <span class="el_source">ServerState.java</span></div><h1>ServerState.java</h1><pre class="source lang-java linenums">package avalanche.Network.ServerState;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+<span class="fc" id="L9">public abstract class ServerState {</span>
+    public abstract String getResponse(String body, long st);
+
+    public static String validateRequest(JSONObject jsonObject) {
+<span class="fc" id="L13">        int errorIndex = -1;</span>
+<span class="fc" id="L14">        Set&lt;String&gt; allowedMetrics = new HashSet&lt;&gt;();</span>
+<span class="fc" id="L15">        allowedMetrics.add(&quot;Levenshtein&quot;);</span>
+<span class="fc" id="L16">        allowedMetrics.add(&quot;Soundex&quot;);</span>
+        try {
+<span class="fc" id="L18">            String domain = (jsonObject.getString(&quot;domain&quot;));</span>
+<span class="fc bfc" id="L19" title="All 2 branches covered.">            if (domain.length() &lt; 1) {</span>
+<span class="fc" id="L20">                return &quot;{\&quot;status\&quot;:\&quot;failure\&quot;,\&quot;request-error\&quot;:\&quot;The domain name must be longer than 0 characters\&quot;}&quot;;</span>
+            }
+<span class="fc" id="L22">            int numCalcs = (jsonObject.getJSONArray(&quot;types&quot;).length());</span>
+<span class="fc bfc" id="L23" title="All 2 branches covered.">            if (numCalcs &lt; 1) {</span>
+<span class="fc" id="L24">                return &quot;{\&quot;status\&quot;:\&quot;failure\&quot;,\&quot;request-error\&quot;:\&quot;At least one distance metric must be listed\&quot;}&quot;;</span>
+            }
+<span class="fc bfc" id="L26" title="All 2 branches covered.">            for (int i = 0; i &lt; numCalcs; i++) {</span>
+<span class="fc" id="L27">                errorIndex = i;</span>
+<span class="fc" id="L28">                String type = jsonObject.getJSONArray(&quot;types&quot;).getJSONObject(i).getString(&quot;type&quot;);</span>
+<span class="fc bfc" id="L29" title="All 2 branches covered.">                if (!allowedMetrics.contains(type)) {</span>
+<span class="fc" id="L30">                    return &quot;{\&quot;status\&quot;:\&quot;failure\&quot;,\&quot;request-error\&quot;:\&quot;Type:&quot; + type + &quot; is not a valid metric&quot;</span>
+<span class="fc" id="L31">                            + &quot;\&quot;}&quot;;</span>
+                }
+<span class="fc" id="L33">                double threshold = (jsonObject.getJSONArray(&quot;types&quot;).getJSONObject(i).getDouble(&quot;threshold&quot;));</span>
+<span class="fc bfc" id="L34" title="All 6 branches covered.">                if (type.equals(&quot;Levenshtein&quot;) &amp;&amp; (threshold &gt; domain.length() - 1 || threshold &lt; 1)) {</span>
+<span class="fc" id="L35">                    return &quot;{\&quot;status\&quot;:\&quot;failure\&quot;,\&quot;request-error\&quot;:\&quot;The threshold for Levenshtein distance must be greater than 0 and less than the length of the search domain\&quot;}&quot;;</span>
+                }
+<span class="fc bfc" id="L37" title="All 6 branches covered.">                if (type.equals(&quot;Soundex&quot;) &amp;&amp; (threshold &gt; 4 || threshold &lt; 1)) {</span>
+<span class="fc" id="L38">                    return &quot;{\&quot;status\&quot;:\&quot;failure\&quot;,\&quot;request-error\&quot;:\&quot;The threshold for Soundex distance must be in the range [1,4]\&quot;}&quot;;</span>
+                }
+            }
+<span class="fc" id="L41">            return &quot;&quot;;</span>
+<span class="fc" id="L42">        } catch (JSONException jsonException) {</span>
+<span class="fc bfc" id="L43" title="All 2 branches covered.">            if (errorIndex != -1) {</span>
+<span class="fc" id="L44">                return &quot;{\&quot;status\&quot;:\&quot;failure\&quot;,\&quot;request-error\&quot;:\&quot;&quot;</span>
+<span class="fc" id="L45">                        + jsonException.getMessage().substring(0, jsonException.getMessage().length() - 1)</span>
+<span class="fc" id="L46">                        + &quot; in metric number &quot;</span>
+<span class="fc" id="L47">                        + (errorIndex + 1) + &quot;\&quot;}&quot;;</span>
+            }
+<span class="fc" id="L49">            return &quot;{\&quot;status\&quot;:\&quot;failure\&quot;,\&quot;request-error\&quot;:\&quot;&quot; + jsonException.getMessage() + &quot;\&quot;}&quot;;</span>
+        }
+
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
