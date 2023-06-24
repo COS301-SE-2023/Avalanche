@@ -156,5 +156,20 @@ describe('User Management Organisation Management Integration From Gateway', () 
           expect(response.body.status).toBe('success');
         });
     });
+
+    it('should not allow a user to exit a random Organisation that does not exist', () => {
+      const organisationData = {
+        organisationName: `Non-existent_Organisation`,
+      };
+      return request(app.getHttpServer())
+        .post('/user-management/exitOrganisation')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send(organisationData)
+        .expect(400)
+        .then((response) => {
+          console.log(response.body);
+          expect(response.body.message).toBe('Organisation cannot be found');
+        });
+    });
   });
 });
