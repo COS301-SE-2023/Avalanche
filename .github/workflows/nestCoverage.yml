@@ -51,3 +51,9 @@ jobs:
           name: code-coverage-report-markdown
           path: '${{ matrix.service}}/coverage/coverage-results.md' 
           retention-days: 1  
+          
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+            files: coverage/lcov.info
+            token: ${{ secrets.CODECOV_TOKEN }}
