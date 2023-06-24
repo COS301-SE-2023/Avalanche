@@ -27,7 +27,7 @@ jobs:
 
       # Running tests with coverage for each service
       - name: Run Jest with coverage
-        run: yarn test:cov
+        run: yarn jest --coverage
 
       # generates coverage-report.md and publishes as checkrun
       - name: Istanbul Code Coverage Report
