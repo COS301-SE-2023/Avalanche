@@ -2,7 +2,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClientProxy, ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { UserManagementService } from './user-management.service';
-import { Observable, of } from 'rxjs';    
+import { of } from 'rxjs';    
+import {User} from '../../../user-management/src/entity/user.entity'
+//import { Redis } from 'ioredis';
+import { getRepositoryToken } from '@nestjs/typeorm';
+//import { Repository } from 'typeorm';
 
 describe('UserManagementService function calls and defined', () => {
     let service: UserManagementService;
@@ -242,8 +246,23 @@ describe('UserManagementService function calls and defined', () => {
 describe('UserManagementService (Integration)', () => {
   let service: UserManagementService;
   let clientProxy: ClientProxy;
+  //let mockRedis: jest.Mocked<Redis>;
+  //let mockUserRepository: jest.Mocked<Partial<Repository<User>>>;
 
   beforeEach(async () => {
+
+    const redis = {
+      get: jest.fn(),
+      set: jest.fn(),
+      del: jest.fn(),
+    };
+
+    const userRepository = {
+      findOne: jest.fn(),
+      create: jest.fn(),
+      save: jest.fn(),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UserManagementService,
@@ -256,25 +275,50 @@ describe('UserManagementService (Integration)', () => {
               port: 4001,
             },
           }),
+          //useFactory: () => ClientProxyFactory.create({})
         },
+        {
+          provide: getRepositoryToken(User),
+          useValue: userRepository,
+        },
+        {
+          provide: 'REDIS',
+          useValue: redis,
+        }
       ],
     }).compile();
 
     service = module.get<UserManagementService>(UserManagementService);
-    clientProxy = module.get<ClientProxy>('USER_MANAGEMENT_SERVICE');
+    clientProxy = module.get<ClientProxy>('USER_MANAGEMENT_SERVICE');    
+    //mockRedis = module.get('REDIS');
+    //mockUserRepository = module.get(getRepositoryToken(User));
   });
 
 
   describe('register', () => {
-    it('should send registration data to the user management service and return the response', async () => {
-      const data = { name: 'John Doe', email: 'john@example.com' };
-      const expectedResult = { success: true };
+    /*it('should send registration data to the user management service and return the response', async () => {
+      const data = {firstName: 'John2', lastName: 'Doe2', email: 'john2@example.com', password: "yes"};
+
+      mockRedis.set.mockResolvedValue('OK');
+
+      const result = await service.register(data);
+      console.log(result)
+
+      expect(mockRedis.set).toBeCalled()
+      expect(result).toBeDefined
+    });*/
+
+    it('should fail as there is no password', async () => {
+      const data = {firstName: 'John2', lastName: 'Doe2', email: 'john2@example.com'};
 
       const result = await service.register(data);
 
-      //expect(clientProxy.send).toHaveBeenCalledWith({ cmd: 'register' }, data);
-      expect(result).toEqual(expectedResult);
-    });
+      expect(result).toBeDefined
+      expect(result.status).toBe(400)
+      expect(result.error).toBe(true)
+      expect(result.message).toBe("Missing info")
+
+    })
   });
 
 });
