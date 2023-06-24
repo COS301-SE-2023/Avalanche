@@ -140,6 +140,4 @@ describe('User Management Organisation Management Integration From Gateway', () 
         .send(organisationData);
     });
   });
-
-  
 });
