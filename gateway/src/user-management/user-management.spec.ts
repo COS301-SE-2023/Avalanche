@@ -239,40 +239,42 @@ describe('UserManagementService function calls and defined', () => {
 
 });
 
-/*describe('UserManagementService (Integration)', () => {
-    let service: UserManagementService;
-    let clientProxy: ClientProxy;
-  
-    beforeEach(async () => {
-      const module: TestingModule = await Test.createTestingModule({
-        providers: [
-          UserManagementService,
-          {
-            provide: 'USER_MANAGEMENT_SERVICE',
-            useValue: ClientProxyFactory.create({
-              transport: Transport.TCP,
-              options: {
-                host: 'localhost',
-                port: 4001,
-              },
-            }),
-          },
-        ],
-      }).compile();
-  
-      service = module.get<UserManagementService>(UserManagementService);
-      clientProxy = module.get<ClientProxy>('USER_MANAGEMENT_SERVICE');
+describe('UserManagementService (Integration)', () => {
+  let service: UserManagementService;
+  let clientProxy: ClientProxy;
+
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        UserManagementService,
+        {
+          provide: 'USER_MANAGEMENT_SERVICE',
+          useValue: ClientProxyFactory.create({
+            transport: Transport.TCP,
+            options: {
+              host: 'localhost',
+              port: 4001,
+            },
+          }),
+        },
+      ],
+    }).compile();
+
+    service = module.get<UserManagementService>(UserManagementService);
+    clientProxy = module.get<ClientProxy>('USER_MANAGEMENT_SERVICE');
+  });
+
+
+  describe('register', () => {
+    it('should send registration data to the user management service and return the response', async () => {
+      const data = { name: 'John Doe', email: 'john@example.com' };
+      const expectedResult = { success: true };
+
+      const result = await service.register(data);
+
+      //expect(clientProxy.send).toHaveBeenCalledWith({ cmd: 'register' }, data);
+      expect(result).toEqual(expectedResult);
     });
-  
-    function oldTest(register: any) {
-      it('should send registration data to the user management service and return the response', async () => {
-        const data = { name: 'John Doe', email: 'john@example.com' };
-        const expectedResult = { success: true };
-  
-        const result = await service.register(data);
-  
-        expect(clientProxy.send).toHaveBeenCalledWith({ cmd: 'register' }, data);
-        expect(result).toEqual(expectedResult);
-      });
-    }
-  });*/
+  });
+
+});
