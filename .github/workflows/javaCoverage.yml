@@ -36,7 +36,7 @@ jobs:
           skip_check_run: false
           minimum_coverage: 75
           fail_below_threshold: true
-          publish_only_summary: true
+          publish_only_summary: false
             
             # Publish Coverage Job Summary  # Optional
       - name: Add Coverage Job Summary
