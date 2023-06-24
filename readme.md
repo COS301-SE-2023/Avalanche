@@ -15,6 +15,8 @@ Avalanche is a data analytics tool with flavor as an information management syst
 ## Documentation
 ### Demo 1
 [Presentation](https://www.canva.com/design/DAFjZPgvC5U/85tYwSR4TQRrY1IsCMRMnQ/edit?utm_content=DAFjZPgvC5U&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+### Demo 2
+[Presentation]([https://www.canva.com/design/DAFjZPgvC5U/85tYwSR4TQRrY1IsCMRMnQ/edit?utm_content=DAFjZPgvC5U&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton](https://www.canva.com/design/DAFmoXptQFE/Q2WRO4Xh-WqBES16kIqZlQ/edit?utm_content=DAFmoXptQFE&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton))
 ### Project Day
 ### Software Requirements Specification
 ### Architecture Document
