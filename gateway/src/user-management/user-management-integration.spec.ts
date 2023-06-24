@@ -209,5 +209,16 @@ describe('User Management Organisation Management Integration From Gateway', () 
           expect(response.body.status).toBe('success');
         });
     });
+
+    it('should not get members if token is invalid', () => {
+      return request(app.getHttpServer())
+        .post('/user-management/getMembers')
+        .set('Authorization', 'Bearer invalid_token')
+        .expect(401)
+        .then((response) => {
+          console.log(response.body);
+          expect(response.body.message).toBe('JWT invalid');
+        });
+    });
   });
 });
