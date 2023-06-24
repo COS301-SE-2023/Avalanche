@@ -29,7 +29,7 @@ public class SimpleHttpServer {
         this.state = new Closed();
     }
 
-    public void start() throws IOException {
+    public void start() throws IOException, InstantiationException {
         System.out.println("Starting server");
         httpServer.start();
         this.state = new Initialising();

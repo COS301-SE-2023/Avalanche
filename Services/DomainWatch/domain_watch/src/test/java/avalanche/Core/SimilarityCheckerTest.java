@@ -1,4 +1,4 @@
-package avalanche.Processing;
+package avalanche.Core;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -39,7 +39,7 @@ public class SimilarityCheckerTest {
     }
 
     @Test
-    public void searchForSimilarWithGivenList() throws FileNotFoundException {
+    public void searchForSimilarWithGivenList() throws FileNotFoundException, InstantiationException {
         DomainTokeniser.init();
         SimilarityChecker.init(true, 12);
         ConcurrentLinkedQueue<Domain> hits = new ConcurrentLinkedQueue<>();
@@ -96,23 +96,18 @@ public class SimilarityCheckerTest {
     }
 
     @Test
-    public void searchForSimilarSounds() throws FileNotFoundException {
+    public void searchForSimilarSounds() throws FileNotFoundException, InstantiationException {
         SimilarityChecker.init(true, 12);
         DomainTokeniser.init();
         SimilarityChecker similarityChecker = new SimilarityChecker();
-        ConcurrentLinkedQueue<Domain> results = similarityChecker.findAllSoundsAboveSimliarityThreshold("absabank",
-                3);
+        ConcurrentLinkedQueue<Domain> results = similarityChecker.findAllSoundsAboveSimliarityThreshold(
+                "firstnationalbank",
+                2);
         assertNotNull(results);
-        // System.out.println("INPUT: firstnationalbank\nThreshold:
-        // 4\n=======================");
-        // for (Domain domain : results) {
-        // System.out.println(domain.getName() + " " + domain.getZone() + " (" +
-        // domain.getDistance() + ")");
-        // }
     }
 
     @Test
-    public void concurrentSearchForSimilarSounds() throws FileNotFoundException {
+    public void concurrentSearchForSimilarSounds() throws FileNotFoundException, InstantiationException {
         SimilarityChecker.init(true, 12);
         DomainTokeniser.init();
         SimilarityChecker similarityChecker = new SimilarityChecker();

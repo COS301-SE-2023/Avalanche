@@ -1,5 +1,6 @@
 package avalanche.Threads;
 
+import java.io.FileNotFoundException;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -32,12 +33,14 @@ public class SoundexThread extends Thread {
             Domain d = allDomains.poll();
             if (d != null) {
 
-                double value = calc.calculateSoundexDifference(search, d.getName());
+                double value;
+                value = calc.calculateSoundexDifference(search, d.getName());
                 if (value >= threshold) {
                     Domain hit = new Domain(d);
                     hit.setDistance(value, "Soundex");
                     hits.add(d);
                 }
+
             }
         }
 

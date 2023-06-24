@@ -2,7 +2,11 @@ package avalanche.DistanceCalculators;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.lang.reflect.Field;
+
 import org.junit.jupiter.api.Test;
+
+import avalanche.Settings.DomainWatchSettings;
 
 public class LevensteinDistanceCalculatorTest {
 
@@ -185,42 +189,211 @@ public class LevensteinDistanceCalculatorTest {
     }
 
     @Test
-    public void Oto0changeShouldBesmall() {
+    public void Oto0changeShouldBeSmallWithExternal() {
+        boolean old = DomainWatchSettings.getInstace().useInternalSubstitutionCosts;
+        DomainWatchSettings.getInstace().useInternalSubstitutionCosts = false;
         LevensteinDistanceCalculator calc = new LevensteinDistanceCalculator();
         assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("O", "0"), 0);
         assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("0", "O"), 0);
         assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("0pera.com", "Opera.com"), 0);
         assertEquals(3.1, calc.calculateModifiedLevenshteinDistance("0pera.biz", "Opera.com"), 0);
+        DomainWatchSettings.getInstace().useInternalSubstitutionCosts = old;
     }
 
     @Test
-    public void ito1changeShouldBesmall() {
+    public void Oto0changeShouldBeSmallWithInternal() throws NoSuchFieldException, SecurityException {
+        boolean old = DomainWatchSettings.getInstace().useInternalSubstitutionCosts;
+        DomainWatchSettings.getInstace().useInternalSubstitutionCosts = true;
+
+        LevensteinDistanceCalculator calc = new LevensteinDistanceCalculator();
+        assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("O", "0"), 0);
+        assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("0", "O"), 0);
+        assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("0pera.com", "Opera.com"), 0);
+        assertEquals(3.1, calc.calculateModifiedLevenshteinDistance("0pera.biz", "Opera.com"), 0);
+
+        DomainWatchSettings.getInstace().useInternalSubstitutionCosts = old;
+    }
+
+    @Test
+    public void ito1changeShouldBeSmallWithExternal() {
+        boolean old = DomainWatchSettings.getInstace().useInternalSubstitutionCosts;
+        DomainWatchSettings.getInstace().useInternalSubstitutionCosts = false;
         LevensteinDistanceCalculator calc = new LevensteinDistanceCalculator();
         assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("i", "1"), 0);
         assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("1", "i"), 0);
         assertEquals(0.2, calc.calculateModifiedLevenshteinDistance("hii.biz", "h11.biz"), 0);
         assertEquals(5.2, calc.calculateModifiedLevenshteinDistance("hiithere.biz", "h11.biz"), 0);
         assertEquals(5.2, calc.calculateModifiedLevenshteinDistance("hii.biz", "thereh11.biz"), 0.000001);
+        DomainWatchSettings.getInstace().useInternalSubstitutionCosts = old;
     }
 
     @Test
-    public void lto1changeShouldBesmall() {
+    public void ito1changeShouldBeSmallWithInternal() {
+        boolean old = DomainWatchSettings.getInstace().useInternalSubstitutionCosts;
+        DomainWatchSettings.getInstace().useInternalSubstitutionCosts = true;
+        LevensteinDistanceCalculator calc = new LevensteinDistanceCalculator();
+        assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("i", "1"), 0);
+        assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("1", "i"), 0);
+        assertEquals(0.2, calc.calculateModifiedLevenshteinDistance("hii.biz", "h11.biz"), 0);
+        assertEquals(5.2, calc.calculateModifiedLevenshteinDistance("hiithere.biz", "h11.biz"), 0);
+        assertEquals(5.2, calc.calculateModifiedLevenshteinDistance("hii.biz", "thereh11.biz"), 0.000001);
+        DomainWatchSettings.getInstace().useInternalSubstitutionCosts = old;
+    }
+
+    @Test
+    public void lto1changeShouldBeSmallWithExternal() {
+        boolean old = DomainWatchSettings.getInstace().useInternalSubstitutionCosts;
+        DomainWatchSettings.getInstace().useInternalSubstitutionCosts = false;
         LevensteinDistanceCalculator calc = new LevensteinDistanceCalculator();
         assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("l", "1"), 0);
         assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("1", "l"), 0);
         assertEquals(0.2, calc.calculateModifiedLevenshteinDistance("hello.biz", "he11o.biz"), 0);
         assertEquals(5.2, calc.calculateModifiedLevenshteinDistance("hellothere.biz", "he11o.biz"), 0);
         assertEquals(5.2, calc.calculateModifiedLevenshteinDistance("hello.biz", "therehe11o.biz"), 0.000001);
+        DomainWatchSettings.getInstace().useInternalSubstitutionCosts = old;
     }
 
     @Test
-    public void bto8changeShouldBesmall() {
+    public void lto1changeShouldBeSmallWithInternal() {
+        boolean old = DomainWatchSettings.getInstace().useInternalSubstitutionCosts;
+        DomainWatchSettings.getInstace().useInternalSubstitutionCosts = true;
+        LevensteinDistanceCalculator calc = new LevensteinDistanceCalculator();
+        assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("l", "1"), 0);
+        assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("1", "l"), 0);
+        assertEquals(0.2, calc.calculateModifiedLevenshteinDistance("hello.biz", "he11o.biz"), 0);
+        assertEquals(5.2, calc.calculateModifiedLevenshteinDistance("hellothere.biz", "he11o.biz"), 0);
+        assertEquals(5.2, calc.calculateModifiedLevenshteinDistance("hello.biz", "therehe11o.biz"), 0.000001);
+        DomainWatchSettings.getInstace().useInternalSubstitutionCosts = old;
+    }
+
+    @Test
+    public void bto8changeShouldBeSmallWithExternal() {
+        boolean old = DomainWatchSettings.getInstace().useInternalSubstitutionCosts;
+        DomainWatchSettings.getInstace().useInternalSubstitutionCosts = false;
         LevensteinDistanceCalculator calc = new LevensteinDistanceCalculator();
         assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("b", "8"), 0);
         assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("8", "b"), 0);
         assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("big", "8ig"), 0);
         assertEquals(0.2, calc.calculateModifiedLevenshteinDistance("herebobthere", "here8o8there"), 0);
         assertEquals(0.2, calc.calculateModifiedLevenshteinDistance("herebobthere", "here8o8there"), 0);
+        DomainWatchSettings.getInstace().useInternalSubstitutionCosts = old;
+    }
+
+    @Test
+    public void bto8changeShouldBeSmallWithInternal() {
+        boolean old = DomainWatchSettings.getInstace().useInternalSubstitutionCosts;
+        DomainWatchSettings.getInstace().useInternalSubstitutionCosts = true;
+        LevensteinDistanceCalculator calc = new LevensteinDistanceCalculator();
+        assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("b", "8"), 0);
+        assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("8", "b"), 0);
+        assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("big", "8ig"), 0);
+        assertEquals(0.2, calc.calculateModifiedLevenshteinDistance("herebobthere", "here8o8there"), 0);
+        assertEquals(0.2, calc.calculateModifiedLevenshteinDistance("herebobthere", "here8o8there"), 0);
+        DomainWatchSettings.getInstace().useInternalSubstitutionCosts = old;
+    }
+
+    @Test
+    public void eto3changeShouldBeSmallWithExternal() {
+        boolean old = DomainWatchSettings.getInstace().useInternalSubstitutionCosts;
+        DomainWatchSettings.getInstace().useInternalSubstitutionCosts = false;
+        LevensteinDistanceCalculator calc = new LevensteinDistanceCalculator();
+        assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("e", "3"), 0);
+        assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("3", "e"), 0);
+        assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("hello", "h3llo"), 0);
+        assertEquals(0.3, calc.calculateModifiedLevenshteinDistance("herethere", "h3r3th3re"), 0.001);
+        assertEquals(0.3, calc.calculateModifiedLevenshteinDistance("meeep", "m333p"), 0.001);
+        DomainWatchSettings.getInstace().useInternalSubstitutionCosts = old;
+    }
+
+    @Test
+    public void eto3changeShouldBeSmallWithInternal() {
+        boolean old = DomainWatchSettings.getInstace().useInternalSubstitutionCosts;
+        DomainWatchSettings.getInstace().useInternalSubstitutionCosts = true;
+        LevensteinDistanceCalculator calc = new LevensteinDistanceCalculator();
+        assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("e", "3"), 0);
+        assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("3", "e"), 0);
+        assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("hello", "h3llo"), 0);
+        assertEquals(0.3, calc.calculateModifiedLevenshteinDistance("herethere", "h3r3th3re"), 0.001);
+        assertEquals(0.3, calc.calculateModifiedLevenshteinDistance("meeep", "m333p"), 0.001);
+        DomainWatchSettings.getInstace().useInternalSubstitutionCosts = old;
+    }
+
+    @Test
+    public void utoVChangeShouldBeSmallWithExternal() {
+        boolean old = DomainWatchSettings.getInstace().useInternalSubstitutionCosts;
+        DomainWatchSettings.getInstace().useInternalSubstitutionCosts = false;
+        LevensteinDistanceCalculator calc = new LevensteinDistanceCalculator();
+        assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("u", "v"), 0);
+        assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("v", "u"), 0);
+        assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("hug", "hvg"), 0);
+        assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("umbrella", "vmbrella"), 0.001);
+        assertEquals(0.5, calc.calculateModifiedLevenshteinDistance("valvaluevalve", "ualualveualue"), 0.001);
+        DomainWatchSettings.getInstace().useInternalSubstitutionCosts = old;
+    }
+
+    @Test
+    public void utoVChangeShouldBeSmallWithInternal() {
+        boolean old = DomainWatchSettings.getInstace().useInternalSubstitutionCosts;
+        DomainWatchSettings.getInstace().useInternalSubstitutionCosts = true;
+        LevensteinDistanceCalculator calc = new LevensteinDistanceCalculator();
+        assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("u", "v"), 0);
+        assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("v", "u"), 0);
+        assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("hug", "hvg"), 0);
+        assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("umbrella", "vmbrella"), 0.001);
+        assertEquals(0.5, calc.calculateModifiedLevenshteinDistance("valvaluevalve", "ualualveualue"), 0.001);
+        DomainWatchSettings.getInstace().useInternalSubstitutionCosts = old;
+    }
+
+    @Test
+    public void zto2ChangeShouldBeSmallWithInternal() {
+        boolean old = DomainWatchSettings.getInstace().useInternalSubstitutionCosts;
+        DomainWatchSettings.getInstace().useInternalSubstitutionCosts = true;
+        LevensteinDistanceCalculator calc = new LevensteinDistanceCalculator();
+        assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("2", "z"), 0);
+        assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("z", "2"), 0);
+        assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("zebra", "2ebra"), 0);
+        assertEquals(0.3, calc.calculateModifiedLevenshteinDistance("zol2zol", "2olz2ol"), 0.001);
+        assertEquals(0.4, calc.calculateModifiedLevenshteinDistance("zigzagzebra2", "2ig2ag2ebraz"), 0.001);
+        DomainWatchSettings.getInstace().useInternalSubstitutionCosts = old;
+    }
+
+    @Test
+    public void zto2ChangeShouldBeSmallWithExternal() {
+        boolean old = DomainWatchSettings.getInstace().useInternalSubstitutionCosts;
+        DomainWatchSettings.getInstace().useInternalSubstitutionCosts = false;
+        LevensteinDistanceCalculator calc = new LevensteinDistanceCalculator();
+        assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("2", "z"), 0);
+        assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("z", "2"), 0);
+        assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("zebra", "2ebra"), 0);
+        assertEquals(0.3, calc.calculateModifiedLevenshteinDistance("zol2zol", "2olz2ol"), 0.001);
+        assertEquals(0.4, calc.calculateModifiedLevenshteinDistance("zigzagzebra2", "2ig2ag2ebraz"), 0.001);
+        DomainWatchSettings.getInstace().useInternalSubstitutionCosts = old;
+    }
+
+    @Test
+    public void sto5ChangeShouldBeSmallWithInternal() {
+        boolean old = DomainWatchSettings.getInstace().useInternalSubstitutionCosts;
+        DomainWatchSettings.getInstace().useInternalSubstitutionCosts = true;
+        LevensteinDistanceCalculator calc = new LevensteinDistanceCalculator();
+        assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("s", "5"), 0);
+        assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("5", "s"), 0);
+        assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("sing", "5ing"), 0);
+        assertEquals(0.2, calc.calculateModifiedLevenshteinDistance("5ing5ong", "singsong"), 0.001);
+        assertEquals(0.4, calc.calculateModifiedLevenshteinDistance("sing5ong5times", "5ingsongstime5"), 0.001);
+        DomainWatchSettings.getInstace().useInternalSubstitutionCosts = old;
+    }
+
+    @Test
+    public void sto5ChangeShouldBeSmallWithExternal() {
+        boolean old = DomainWatchSettings.getInstace().useInternalSubstitutionCosts;
+        DomainWatchSettings.getInstace().useInternalSubstitutionCosts = false;
+        LevensteinDistanceCalculator calc = new LevensteinDistanceCalculator();
+        assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("s", "5"), 0);
+        assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("5", "s"), 0);
+        assertEquals(0.1, calc.calculateModifiedLevenshteinDistance("sing", "5ing"), 0);
+        assertEquals(0.2, calc.calculateModifiedLevenshteinDistance("5ing5ong", "singsong"), 0.001);
+        assertEquals(0.4, calc.calculateModifiedLevenshteinDistance("sing5ong5times", "5ingsongstime5"), 0.001);
+        DomainWatchSettings.getInstace().useInternalSubstitutionCosts = old;
     }
 
     @Test

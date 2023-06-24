@@ -1,5 +1,7 @@
 package avalanche.DistanceCalculators;
 
+import java.io.FileNotFoundException;
+
 import avalanche.Utility.DomainTokeniser;
 
 public class SoundexCalculator {
@@ -16,9 +18,21 @@ public class SoundexCalculator {
      *         and 4 being the most similar.
      */
     public double calculateSoundexDifference(String x, String y) {
-        DomainTokeniser domainTokeniser = new DomainTokeniser();
-        String xSpaced = domainTokeniser.inferSpaces(x);
-        String ySpaced = domainTokeniser.inferSpaces(y);
+        String xSpaced = x;
+        String ySpaced = y;
+        DomainTokeniser domainTokeniser;
+        try {
+            domainTokeniser = new DomainTokeniser();
+            xSpaced = domainTokeniser.inferSpaces(x);
+            ySpaced = domainTokeniser.inferSpaces(y);
+        } catch (FileNotFoundException e) {
+            System.out.println("Domain tokeniser could not find dictionary file");
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            System.out.println("Domain tokeniser could not be initialised because the dictionary count is wrong");
+            e.printStackTrace();
+        }
+
         if (xSpaced == null || ySpaced == null) {
             return 0;
         }

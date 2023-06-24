@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import avalanche.DataClasses.Domain;
 import avalanche.DistanceCalculators.LevensteinDistanceCalculator;
 import avalanche.DistanceCalculators.SoundexCalculator;
-import avalanche.Threads.CalculatorThread;
+import avalanche.Threads.LevenshteinThread;
 import avalanche.Threads.SoundexThread;
 
 public class SimilarityChecker {
@@ -105,7 +105,8 @@ public class SimilarityChecker {
         return hits;
     }
 
-    public ConcurrentLinkedQueue<Domain> findAllSoundsAboveSimliarityThreshold(String search, double threshold) {
+    public ConcurrentLinkedQueue<Domain> findAllSoundsAboveSimliarityThreshold(String search, double threshold)
+            throws FileNotFoundException {
         ConcurrentLinkedQueue<Domain> hits = new ConcurrentLinkedQueue<>();
         SoundexCalculator calc = new SoundexCalculator();
         // int count = 0;
@@ -179,9 +180,9 @@ public class SimilarityChecker {
 
     public ConcurrentLinkedQueue<Domain> threadedFindAllWithinSimliarityThreshold(String search, double threshold) {
         ConcurrentLinkedQueue<Domain> hits = new ConcurrentLinkedQueue<>();
-        CalculatorThread[] threads = new CalculatorThread[threadCount];
+        LevenshteinThread[] threads = new LevenshteinThread[threadCount];
         for (int i = 0; i < threads.length; i++) {
-            threads[i] = new CalculatorThread(search, threshold, hits, splitDoms.get(i));
+            threads[i] = new LevenshteinThread(search, threshold, hits, splitDoms.get(i));
         }
         for (int i = 0; i < threads.length; i++) {
             threads[i].start();
