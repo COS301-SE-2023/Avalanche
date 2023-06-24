@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - 'backend_dns_watch'
+      - 'stable'
+      - 'working'
 
 jobs:
   
