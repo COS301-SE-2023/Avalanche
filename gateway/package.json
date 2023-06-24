@@ -70,7 +70,7 @@
     },
     "collectCoverageFrom": [
       "**/*.(t|j)s",
-      "!**/*-integration.service.ts"
+      "!**/*-integration.service.spec.ts"
     ],
     "coverageDirectory": "/coverage",
     "testEnvironment": "node"
