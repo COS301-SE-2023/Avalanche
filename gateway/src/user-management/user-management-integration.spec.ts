@@ -80,11 +80,11 @@ describe('User Management Organisation Management Integration From Gateway', () 
   let accessToken: string;
 
   /*
-      In order to run most of these tests one neeeds to be logged in
+      In order to run most of these tests one neeeds to be logged in (happens in before each)
       For this purpose use:
           email: configService.get('MOCK_EMAIL')
           password: configService.get('MOCK_PASSWORD')
-    */
+*/
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -169,6 +169,20 @@ describe('User Management Organisation Management Integration From Gateway', () 
         .then((response) => {
           console.log(response.body);
           expect(response.body.message).toBe('Organisation cannot be found');
+        });
+    });
+  });
+
+  describe('Get User Info', () => {
+    it('should get user info', () => {
+      return request(app.getHttpServer())
+        .post('/user-management/getUserInfo')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .expect(201)
+        .then((response) => {
+          console.log(response.body);
+          expect(response.body.status).toBe('success');
+          expect(response.body.message.email).toBe('test@test.com');
         });
     });
   });
