@@ -10,7 +10,10 @@ on:
 jobs:
   
   test:
-    if: contains(github.event.head_commit.message, '_TEST_') || github.ref == github.ref == 'refs/heads/working' || github.ref == 'refs/heads/stable'
+    if: contains(github.event.head_commit.message, '_TEST_') || contains('
+        refs/heads/working
+        refs/heads/stable
+      ', github.ref)
     name: Test Domain Watch
     runs-on: ubuntu-latest
 
