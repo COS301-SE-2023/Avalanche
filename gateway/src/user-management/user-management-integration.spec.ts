@@ -221,4 +221,44 @@ describe('User Management Organisation Management Integration From Gateway', () 
         });
     });
   });
+
+  describe('Create User Group', () => {
+    let orgName;
+
+    beforeEach(async () => {
+      orgName = Random.word(8);
+      const organisationData = {
+        name: orgName,
+      };
+      return request(app.getHttpServer())
+        .post('/user-management/createOrganisation')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send(organisationData);
+    });
+    it('should create a user group', () => {
+      const groupData = Random.word(8);
+      const userGroupData = {
+        name: groupData,
+        permission: 1,
+      };
+      return request(app.getHttpServer())
+        .post('/user-management/createUserGroup')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send(userGroupData)
+        .expect(201)
+        .then((response) => {
+          expect(response.body.status).toBe('success');
+        });
+    }, 15000);
+
+    afterEach(async () => {
+      const organisationData = {
+        organisationName: orgName,
+      };
+      return request(app.getHttpServer())
+        .post('/user-management/exitOrganisation')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send(organisationData);
+    });
+  });
 });
