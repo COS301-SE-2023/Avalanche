@@ -141,5 +141,20 @@ describe('User Management Organisation Management Integration From Gateway', () 
     });
   });
 
-  
+  describe('Exit Organisation', () => {
+    it('should allow the user to exit  the organisation', () => {
+      const organisationData = {
+        organisationName: `Random.word(8)`,
+      };
+      return request(app.getHttpServer())
+        .post('/user-management/exitOrganisation')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send(organisationData)
+        .expect(201)
+        .then((response) => {
+          console.log(response.body);
+          expect(response.body.status).toBe('success');
+        });
+    });
+  });
 });
