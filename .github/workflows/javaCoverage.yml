@@ -10,7 +10,10 @@ on:
 jobs:
   
   test:
-    if: contains(github.event.head_commit.message, '_COV_')
+    if: contains(github.event.head_commit.message, '_COV_') || contains('
+        refs/heads/working
+        refs/heads/stable
+      ', github.ref)
     name: Coverage for Domain Watch
     permissions: write-all
     runs-on: windows-latest
