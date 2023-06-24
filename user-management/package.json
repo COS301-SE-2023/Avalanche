@@ -77,7 +77,7 @@
     "collectCoverageFrom": [
       "**/*.(t|j)s"
     ],
-    "coverageDirectory": "../gateway/coverage",
+    "coverageDirectory": "../coverage",
     "testEnvironment": "node"
   }
 }

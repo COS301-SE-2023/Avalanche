@@ -27,7 +27,9 @@ jobs:
 
       # Running tests with coverage for each service
       - name: Run Jest with coverage
-        run: yarn jest --coverage
+        run: |
+          cd ${{ matrix.service }}
+          yarn jest --coverage
 
       # generates coverage-report.md and publishes as checkrun
       - name: Istanbul Code Coverage Report
@@ -35,7 +37,7 @@ jobs:
         uses: romeovs/lcov-reporter-action@v0.2.21
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          lcov-file: 'gateway/coverage/lcov.info'
+          lcov-file: '${{ matrix.service}}/coverage/lcov.info'
 
       # Publish Coverage Job Summary  # Optional
       - name: Add Coverage Job Summary
@@ -46,7 +48,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: code-coverage-report-markdown
-          path: 'gateway/coverage/coverage-results.md' 
+          path: '${{ matrix.service}}/coverage/coverage-results.md' 
           retention-days: 1  
 
       # SonarCloud analysis
