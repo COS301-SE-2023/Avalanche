@@ -3,7 +3,7 @@
 2. [Logging In](#logging-in)
 3. [Homepage](#homepage)
 4. [Domain Watch](#domain-watch)
-5. [Organisations](#organisations)
+5. [Organisation Setting](#organisation)
 
 ## Signing Up
 ### Step 1
@@ -99,6 +99,8 @@ Once you have clicked this button, you can enter in a users email address and a 
 3. Click "Add to Group"
 
 Once the modal has closed, the other user will receieve an email with a link, the users must click that link in order to be added to the group.
+
+![](https://astonmartin.sloththe.dev/isawesome/03f00155-d8b4-4da1-8f25-47a3b354d003.png)
 
 Once the user clicks on the link, they will be redirected back to the website, where they will be added to the group. They can now view the group and view the members inside of that group.
 
