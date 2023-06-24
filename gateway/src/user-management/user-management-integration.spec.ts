@@ -5,7 +5,7 @@ import { AppModule } from '../app.module';
 import { Random } from 'mockjs';
 import { ConfigService } from '@nestjs/config';
 
-describe('User Management Integration From Gateway', () => {
+describe('User Management Auth Integration From Gateway', () => {
   let app: INestApplication;
   let configService: ConfigService;
 
@@ -72,4 +72,74 @@ describe('User Management Integration From Gateway', () => {
         });
     }, 15000);
   });
+});
+
+describe('User Management Organisation Management Integration From Gateway', () => {
+  let app: INestApplication;
+  let configService: ConfigService;
+  let accessToken: string;
+
+  /*
+      In order to run most of these tests one neeeds to be logged in
+      For this purpose use:
+          email: configService.get('MOCK_EMAIL')
+          password: configService.get('MOCK_PASSWORD')
+    */
+
+  beforeAll(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
+
+    configService = moduleFixture.get<ConfigService>(ConfigService);
+    app = moduleFixture.createNestApplication();
+    await app.init();
+  });
+
+  afterAll(async () => {
+    await app.close();
+  });
+
+  beforeEach(async () => {
+    const user = {
+      email: configService.get('MOCK_EMAIL'),
+      password: configService.get('MOCK_PASSWORD'),
+    };
+    const response = await request(app.getHttpServer())
+      .post('/user-management/login')
+      .send(user);
+
+    accessToken = response.body.userWithToken.token; // This may change based on the structure of your response
+  });
+
+  describe('Create Organisation', () => {
+    let orgName: string;
+    it('should create a new organisation', () => {
+      orgName = Random.word(8);
+      const organisationDto = {
+        name: orgName,
+      };
+      return request(app.getHttpServer())
+        .post('/user-management/createOrganisation')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send(organisationDto)
+        .expect(201)
+        .then((response) => {
+          console.log(response.body);
+          expect(response.body.status).toBe('success');
+        });
+    });
+
+    afterEach(async () => {
+      const organisationData = {
+        organisationName: orgName,
+      };
+      return request(app.getHttpServer())
+        .post('/user-management/exitOrganisation')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send(organisationData);
+    });
+  });
+
+  
 });
