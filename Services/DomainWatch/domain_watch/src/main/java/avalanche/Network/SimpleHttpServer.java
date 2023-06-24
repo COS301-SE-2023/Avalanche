@@ -14,24 +14,33 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.util.concurrent.Executor;
 
 public class SimpleHttpServer {
 
     private HttpServer httpServer;
+    private Executor threadPool;
     private int port;
     private ServerState state;
 
     public SimpleHttpServer(int port) throws IOException {
         this.port = port;
-        this.httpServer = HttpServer.create(new InetSocketAddress(port), 0);
-        httpServer.createContext("/domainWatch/list", new PostHandler(this));
-        httpServer.setExecutor(java.util.concurrent.Executors.newCachedThreadPool()); // creates a default executor
         this.state = new Closed();
     }
 
     public void start() throws IOException, InstantiationException {
+        if (!(state instanceof Closed)) {
+            System.out.println("Server already running");
+            return;
+        }
+
         System.out.println("Starting server");
+        httpServer = HttpServer.create(new InetSocketAddress(port), 0);
+        httpServer.createContext("/domainWatch/list", new PostHandler(this));
+        threadPool = java.util.concurrent.Executors.newCachedThreadPool();
+        httpServer.setExecutor(threadPool); // creates a default executor
         httpServer.start();
+
         this.state = new Initialising();
         System.out.println("Found " + Runtime.getRuntime().availableProcessors() + " processors");
         long st = System.currentTimeMillis();
@@ -49,6 +58,18 @@ public class SimpleHttpServer {
         System.out.println("Server started\n========================\n");
         System.out.println("\n\nWaiting for next request...\n");
 
+    }
+
+    public void stop() {
+        System.out.println("\n\n Stopping server\n");
+        httpServer.stop(3);
+        this.state = new Closed();
+        System.out.println("\n\nServer stopped\n");
+
+    }
+
+    public void forceState(ServerState state) {
+        this.state = state;
     }
 
     public void handleDummyRequest() throws IOException {

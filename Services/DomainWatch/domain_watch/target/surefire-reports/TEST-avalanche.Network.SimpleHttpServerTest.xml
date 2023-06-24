@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="avalanche.Network.ServerState.ClosedTest" time="0.003" tests="1" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="avalanche.Network.SimpleHttpServerTest" time="49.52" tests="9" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="19"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -58,5 +58,13 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="63.0"/>
   </properties>
-  <testcase name="getResponseBodyShouldReturnError" classname="avalanche.Network.ServerState.ClosedTest" time="0"/>
+  <testcase name="closedServerShouldReturn500" classname="avalanche.Network.SimpleHttpServerTest" time="3.82"/>
+  <testcase name="dummyRequest" classname="avalanche.Network.SimpleHttpServerTest" time="5.265"/>
+  <testcase name="stopServerTest" classname="avalanche.Network.SimpleHttpServerTest" time="7.035"/>
+  <testcase name="postWithValidRequestShouldNotReturnError" classname="avalanche.Network.SimpleHttpServerTest" time="18.275"/>
+  <testcase name="startRunningServerTest" classname="avalanche.Network.SimpleHttpServerTest" time="0.001"/>
+  <testcase name="optionsShouldNotReturnError" classname="avalanche.Network.SimpleHttpServerTest" time="0.001"/>
+  <testcase name="postWithInvalidRequestShouldReturn400" classname="avalanche.Network.SimpleHttpServerTest" time="0.005"/>
+  <testcase name="getShouldReturnError405" classname="avalanche.Network.SimpleHttpServerTest" time="0.002"/>
+  <testcase name="putShouldReturnError405" classname="avalanche.Network.SimpleHttpServerTest" time="0.002"/>
 </testsuite>
