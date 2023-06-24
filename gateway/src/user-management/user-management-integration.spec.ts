@@ -197,4 +197,17 @@ describe('User Management Organisation Management Integration From Gateway', () 
         });
     });
   });
+
+  describe('Get Members', () => {
+    it('should get members', () => {
+      return request(app.getHttpServer())
+        .post('/user-management/getMembers')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .expect(201)
+        .then((response) => {
+          console.log(response.body);
+          expect(response.body.status).toBe('success');
+        });
+    });
+  });
 });
