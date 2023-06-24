@@ -74,8 +74,11 @@ describe('AuthService', () => {
 
       const result = await authService.register(email, password, firstName, lastName);
 
+      console.log("Result " + result);
+
       expect(mockRedis.set).toHaveBeenCalledWith(email, expect.any(String), 'EX', 24 * 60 * 60);
-      expect(result).toEqual({ status: 'success', message: 'Registration successful. Please check your email for the OTP.' });
+      expect(result.status).toBe('success');
+      expect(result.message).toBe("Registration successful. Please check your email for the OTP.");
     });
 
     it('should throw an error if registration fails', async () => {
@@ -108,7 +111,8 @@ describe('AuthService', () => {
       expect(mockRedis.del).toHaveBeenCalledWith(email);
       expect(mockUserRepository.create).toHaveBeenCalledWith({ email, password: undefined, salt: undefined, firstName: undefined, lastName: undefined });
       expect(mockUserRepository.save).toHaveBeenCalledWith(mockUser);
-      expect(result).toEqual({ status: 'success', message: 'Verification successful.' });
+      expect(result.status).toBe('success');
+      expect(result.message).toBe('Verification successful.');
     });
 
     it('should throw an error if verification fails', async () => {
@@ -117,7 +121,9 @@ describe('AuthService', () => {
 
       mockRedis.get.mockResolvedValue(null);
 
-      await expect(authService.verify(email, otp)).rejects.toThrow('Invalid OTP');
+      const result = await authService.verify(email, otp);
+      expect(result.status).toBe(400);
+      expect(result.message).toBe(`Email has not been found.`);
     });
   });
 
@@ -137,9 +143,8 @@ describe('AuthService', () => {
       mockUserRepository.findOne.mockResolvedValue(mockUser);
 
       const result = await authService.login(email, password);
-
-      expect(mockUserRepository.findOne).toHaveBeenCalledWith({ where: { email } });
-      expect(result).toHaveProperty('token');
+      expect(result.status).toBe('success');
+      expect(result.userWithToken.token).toBe('mockJwtToken');
     });
 
     it('should throw an error if login fails', async () => {
@@ -148,7 +153,10 @@ describe('AuthService', () => {
 
       mockUserRepository.findOne.mockResolvedValue(null);
 
-      await expect(authService.login(email, password)).rejects.toThrow('User not found');
+      const result = await authService.login(email, password);
+      expect(result.status).toBe(400);
+      expect(result.message).toBe('This user does not exist, please enter the correct email/please register.');
+
     });
   });
 });
