@@ -36,11 +36,11 @@ jobs:
           skip_check_run: false
           minimum_coverage: 75
           fail_below_threshold: true
-          publish_only_summary: false
+          publish_only_summary: true
             
             # Publish Coverage Job Summary  # Optional
       - name: Add Coverage Job Summary
-        run: echo "${{ steps.jacoco_reporter.outputs.coverageSummary }}" >> $GITHUB_STEP_SUMMARY
+        run: echo "${{steps.jacoco_reporter.outputs.coverageSummary}}" >> $GITHUB_STEP_SUMMARY
                 
             # uploads the coverage-report.md artifact  # Optional
       
