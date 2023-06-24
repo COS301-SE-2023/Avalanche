@@ -331,6 +331,18 @@ describe('UserManagementService (Integration)', () => {
       expect(result.message).toBe("Missing info")
 
     })
+
+    it('should fail as there is no lastname', async () => {
+      const data = {firstName: 'Doe2', email: 'john2@example.com', password : "yes"};
+
+      const result = await service.register(data);
+
+      expect(result).toBeDefined
+      expect(result.status).toBe(400)
+      expect(result.error).toBe(true)
+      expect(result.message).toBe("Missing info")
+
+    })
   });
 
 });
