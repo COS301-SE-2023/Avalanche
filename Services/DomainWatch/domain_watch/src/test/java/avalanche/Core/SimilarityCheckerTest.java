@@ -12,6 +12,7 @@ import avalanche.DistanceCalculators.SoundexCalculator;
 import avalanche.Utility.DomainTokeniser;
 
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.mockito.Mock;
@@ -19,12 +20,16 @@ import org.mockito.Mockito;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.reflect.Whitebox;
+
+import com.sun.tools.javac.parser.Scanner;
+
 import static org.powermock.api.mockito.PowerMockito.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(SoundexCalculator.class)
+@PrepareForTest({SoundexCalculator.class, Domain.class})
 public class SimilarityCheckerTest {
     @Test
     public void construction() throws FileNotFoundException {
@@ -167,5 +172,23 @@ public class SimilarityCheckerTest {
             e.printStackTrace();
         }
 
+    }
+
+    @Test
+    public void testScannerExceptionCatch(){
+        try{
+            //Given
+            whenNew(Domain.class).withAnyArguments().thenThrow(new FileNotFoundException());
+
+            //When
+            SimilarityChecker.init(true, 1);
+            SimilarityChecker similarityChecker = new SimilarityChecker();
+
+            //Then
+            assertNotEquals(similarityChecker.getAllDomains().size(), 0);
+        } catch(Exception e){
+            e.printStackTrace();
+            assertNotEquals(e.getClass(), Exception.class);
+        }
     }
 }
