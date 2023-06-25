@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1687695459396" clover="3.2.0">
-  <project timestamp="1687695459396" name="All files">
+<coverage generated="1687697677852" clover="3.2.0">
+  <project timestamp="1687697677853" name="All files">
     <metrics statements="248" coveredstatements="227" conditionals="93" coveredconditionals="72" methods="45" coveredmethods="45" elements="386" coveredelements="344" complexity="0" loc="248" ncloc="248" packages="4" files="8" classes="8"/>
     <package name="src">
       <metrics statements="30" coveredstatements="25" conditionals="13" coveredconditionals="8" methods="3" coveredmethods="3"/>
@@ -55,15 +55,15 @@
       </file>
       <file name="domain-watch.service.ts" path="C:\Users\Marc\Documents\3rd Year\COS 301\api test\Avalanche v1.1\Avalanche\gateway\src\domain-watch\domain-watch.service.ts">
         <metrics statements="9" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
-        <line num="2" count="2" type="stmt"/>
-        <line num="3" count="2" type="stmt"/>
-        <line num="4" count="2" type="stmt"/>
-        <line num="7" count="2" type="stmt"/>
-        <line num="8" count="1" type="stmt"/>
-        <line num="11" count="1" type="stmt"/>
-        <line num="12" count="1" type="stmt"/>
-        <line num="13" count="1" type="stmt"/>
-        <line num="14" count="1" type="stmt"/>
+        <line num="2" count="3" type="stmt"/>
+        <line num="3" count="3" type="stmt"/>
+        <line num="4" count="3" type="stmt"/>
+        <line num="7" count="3" type="stmt"/>
+        <line num="8" count="3" type="stmt"/>
+        <line num="11" count="2" type="stmt"/>
+        <line num="12" count="2" type="stmt"/>
+        <line num="13" count="2" type="stmt"/>
+        <line num="14" count="2" type="stmt"/>
       </file>
     </package>
     <package name="src.user-management">
@@ -279,11 +279,11 @@
       </file>
       <file name="zacr.service.ts" path="C:\Users\Marc\Documents\3rd Year\COS 301\api test\Avalanche v1.1\Avalanche\gateway\src\zacr\zacr.service.ts">
         <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
-        <line num="2" count="1" type="stmt"/>
-        <line num="3" count="1" type="stmt"/>
-        <line num="6" count="1" type="stmt"/>
-        <line num="8" count="2" type="stmt"/>
-        <line num="12" count="1" type="stmt"/>
+        <line num="2" count="2" type="stmt"/>
+        <line num="3" count="2" type="stmt"/>
+        <line num="6" count="2" type="stmt"/>
+        <line num="8" count="4" type="stmt"/>
+        <line num="12" count="2" type="stmt"/>
       </file>
     </package>
   </project>
