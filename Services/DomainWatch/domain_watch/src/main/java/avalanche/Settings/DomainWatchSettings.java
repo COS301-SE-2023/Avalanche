@@ -9,8 +9,6 @@ import java.util.Scanner;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import avalanche.DataClasses.UnorderedPair;
-
 public class DomainWatchSettings {
 
     private static DomainWatchSettings domainWatchSettings;

@@ -28,7 +28,7 @@ jobs:
         id: jacoco_reporter
         uses: PavanMudigonda/jacoco-reporter@v4.8
         with:
-          coverage_results_path: Services/DomainWatch/domain_watch/target/site/jacoco/jacoco.xml
+          coverage_results_path: Services\DomainWatch\domain_watch\target\site\jacoco\jacoco.xml
           coverage_report_name: Coverage
           coverage_report_title: Domain Watch
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -39,7 +39,7 @@ jobs:
             
             # Publish Coverage Job Summary  # Optional
       - name: Add Coverage Job Summary
-        run: echo "${{ steps.jacoco_reporter.outputs.coverageSummary }}" >> $GITHUB_STEP_SUMMARY
+        run: echo "${{steps.jacoco_reporter.outputs.coverage_percentage}}" >> $GITHUB_STEP_SUMMARY
                 
             # uploads the coverage-report.md artifact  # Optional
       

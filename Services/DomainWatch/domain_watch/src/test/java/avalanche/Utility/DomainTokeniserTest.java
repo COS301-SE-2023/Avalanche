@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Queue;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
 import avalanche.Core.SimilarityChecker;
@@ -17,36 +19,72 @@ import avalanche.DataClasses.Domain;
 
 public class DomainTokeniserTest {
 
+    @AfterEach
+    public void fixDictionaryPath()
+            throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+        Field pathField = DomainTokeniser.class.getDeclaredField("DICTIONARY_PATH");
+        pathField.setAccessible(true);
+        pathField.set(null, "data/wordsByFreq.txt");
+    }
+
     @Test
     public void noFileFoundShouldThrow()
             throws NoSuchFieldException, SecurityException, IllegalArgumentException,
-            IllegalAccessException {
+            IllegalAccessException, InterruptedException {
         Field pathField = DomainTokeniser.class.getDeclaredField("DICTIONARY_PATH");
         pathField.setAccessible(true);
-
         pathField.set(null, "This/should/fail");
+        Thread.sleep(1000);
+
         assertThrows(FileNotFoundException.class, () -> {
+
             DomainTokeniser.init();
         });
         pathField.set(null, "data/wordsByFreq.txt");
 
     }
 
+    @Order(1)
     @Test
-    public void dictionaryMade() throws FileNotFoundException {
+    public void initFromObjectCreation() throws FileNotFoundException, NoSuchFieldException, SecurityException,
+            IllegalArgumentException, IllegalAccessException, InstantiationException {
+        Field pathField = DomainTokeniser.class.getDeclaredField("hasBeenInitialised");
+        pathField.setAccessible(true);
+        pathField.set(null, false);
+        DomainTokeniser domainTokeniser = new DomainTokeniser();
+        assertNotNull(DomainTokeniser.getDictionary());
+    }
+
+    @Test
+    public void wrongLengthInFileShouldThrow() throws FileNotFoundException, NoSuchFieldException, SecurityException,
+            IllegalArgumentException, IllegalAccessException, InterruptedException {
+        Field pathField = DomainTokeniser.class.getDeclaredField("DICTIONARY_PATH");
+        pathField.setAccessible(true);
+        pathField.set(null, "data/wordsByFreqWrongCount.txt");
+        Thread.sleep(1000);
+
+        assertThrows(InstantiationException.class, () -> {
+
+            DomainTokeniser.init();
+        });
+        pathField.set(null, "data/wordsByFreq.txt");
+    }
+
+    @Test
+    public void dictionaryMade() throws FileNotFoundException, InstantiationException {
         DomainTokeniser.init();
         assertNotNull(DomainTokeniser.getDictionary());
     }
 
     @Test
-    public void dictionaryLengthCorrect() throws FileNotFoundException {
+    public void dictionaryLengthCorrect() throws FileNotFoundException, InstantiationException {
 
         DomainTokeniser.init();
         assertEquals(125549, DomainTokeniser.getDictionary().size());
     }
 
     @Test
-    public void correctWordcost() throws FileNotFoundException {
+    public void correctWordcost() throws FileNotFoundException, InstantiationException {
 
         DomainTokeniser.init();
         assertEquals(0, DomainTokeniser.getDictionary().get("the"), 0.00001);
@@ -57,7 +95,7 @@ public class DomainTokeniserTest {
     }
 
     @Test
-    public void oneWordTest() throws FileNotFoundException {
+    public void oneWordTest() throws FileNotFoundException, InstantiationException {
 
         DomainTokeniser.init();
         DomainTokeniser domainTokeniser = new DomainTokeniser();
@@ -69,7 +107,7 @@ public class DomainTokeniserTest {
     }
 
     @Test
-    public void twoWordTest() throws FileNotFoundException {
+    public void twoWordTest() throws FileNotFoundException, InstantiationException {
         DomainTokeniser.init();
         DomainTokeniser domainTokeniser = new DomainTokeniser();
         assertEquals("hi there", domainTokeniser.inferSpaces("hithere"));
@@ -79,7 +117,7 @@ public class DomainTokeniserTest {
     }
 
     @Test
-    public void threeWordTest() throws FileNotFoundException {
+    public void threeWordTest() throws FileNotFoundException, InstantiationException {
         DomainTokeniser.init();
         DomainTokeniser domainTokeniser = new DomainTokeniser();
         assertEquals("hi there dude", domainTokeniser.inferSpaces("hitheredude"));
@@ -89,7 +127,7 @@ public class DomainTokeniserTest {
     }
 
     @Test
-    public void fourWordTest() throws FileNotFoundException {
+    public void fourWordTest() throws FileNotFoundException, InstantiationException {
         DomainTokeniser.init();
         DomainTokeniser domainTokeniser = new DomainTokeniser();
         assertEquals("hi there dude man", domainTokeniser.inferSpaces("hitheredudeman"));
@@ -101,7 +139,7 @@ public class DomainTokeniserTest {
     }
 
     @Test
-    public void fiveWordTest() throws FileNotFoundException {
+    public void fiveWordTest() throws FileNotFoundException, InstantiationException {
         DomainTokeniser.init();
         DomainTokeniser domainTokeniser = new DomainTokeniser();
         assertEquals("hi there dude man sir", domainTokeniser.inferSpaces("hitheredudemansir"));
@@ -110,7 +148,7 @@ public class DomainTokeniserTest {
     }
 
     @Test
-    public void tokeniseTest() throws FileNotFoundException {
+    public void tokeniseTest() throws FileNotFoundException, InstantiationException {
         DomainTokeniser.init();
         DomainTokeniser domainTokeniser = new DomainTokeniser();
 
