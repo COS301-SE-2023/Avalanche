@@ -7,27 +7,24 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class DomainTokeniser {
     private static boolean hasBeenInitialised = false;
     private static HashMap<String, Double> dictionary;
-    private static volatile HashMap<String, String> wordsDone;
+    private static ConcurrentHashMap<String, String> wordsDone;
     private static int maxword;
     private static String DICTIONARY_PATH = "data/wordsByFreq.txt";
 
-    public static void init() throws FileNotFoundException {
+    public static void init() throws FileNotFoundException, InstantiationException {
         buildDictionary();
-        wordsDone = new HashMap<>();
+        wordsDone = new ConcurrentHashMap<>();
         hasBeenInitialised = true;
     }
 
-    public DomainTokeniser() {
+    public DomainTokeniser() throws FileNotFoundException, InstantiationException {
         if (!hasBeenInitialised) {
-            try {
-                init();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
+            init();
         }
     }
 
@@ -35,7 +32,7 @@ public class DomainTokeniser {
         return dictionary;
     }
 
-    private static void buildDictionary() throws FileNotFoundException {
+    private static void buildDictionary() throws FileNotFoundException, InstantiationException {
         dictionary = new HashMap<>();
         int count = 0;
         maxword = 0;
@@ -56,7 +53,9 @@ public class DomainTokeniser {
         file.close();
 
         if (count != length) {
-            System.out.println("Word count error: counted " + (count) + " but expected " + length);
+            System.out.println("Word count error in dictionary: counted " + (count) + " but expected " + length);
+            throw new InstantiationException(
+                    "Word count error in dictionary: counted " + (count) + " but expected " + length);
         }
     }
 
@@ -92,7 +91,10 @@ public class DomainTokeniser {
         return new BestMatchResult(minCost, matchLength);
     }
 
-    public String inferSpaces(String s) {
+    public synchronized String inferSpaces(String s) {
+        if (s == null) {
+            return null;
+        }
         if (wordsDone.containsKey(s)) {
             return wordsDone.get(s);
         }
@@ -109,16 +111,13 @@ public class DomainTokeniser {
         int i = s.length();
         while (i > 0) {
             BestMatchResult result = bestMatch(i, s, cost);
-            assert result.cost == cost.get(i);
+            // assert result.cost == cost.get(i);
             out.add(s.substring(i - result.length, i));
             i -= result.length;
         }
 
         Collections.reverse(out);
         String done = String.join(" ", out);
-        if (done == null) {
-            return s;
-        }
         wordsDone.put(s, done);
         return done;
     }

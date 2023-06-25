@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SoundexCalculator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">domain_watch</a> &gt; <a href="index.source.html" class="el_package">avalanche.DistanceCalculators</a> &gt; <span class="el_source">SoundexCalculator.java</span></div><h1>SoundexCalculator.java</h1><pre class="source lang-java linenums">package avalanche.DistanceCalculators;
+
+import java.io.FileNotFoundException;
+
+import avalanche.Utility.DomainTokeniser;
+
+<span class="fc" id="L7">public class SoundexCalculator {</span>
+
+    /**
+     * Calculates the soundex difference between two strings that are not
+     * necessarily split into English words.
+     * &lt;br/&gt;
+     * 
+     * 
+     * @param x The first string to compare
+     * @param y The second string to compare
+     * @return returns a double in the range [0,4], with 0 being the least similar
+     *         and 4 being the most similar.
+     */
+    public double calculateSoundexDifference(String x, String y) {
+<span class="fc" id="L21">        String xSpaced = x;</span>
+<span class="fc" id="L22">        String ySpaced = y;</span>
+        DomainTokeniser domainTokeniser;
+        try {
+<span class="fc" id="L25">            domainTokeniser = new DomainTokeniser();</span>
+<span class="fc" id="L26">            xSpaced = domainTokeniser.inferSpaces(x);</span>
+<span class="fc" id="L27">            ySpaced = domainTokeniser.inferSpaces(y);</span>
+<span class="fc" id="L28">        } catch (FileNotFoundException e) {</span>
+<span class="fc" id="L29">            System.out.println(&quot;Domain tokeniser could not find dictionary file&quot;);</span>
+<span class="fc" id="L30">            e.printStackTrace();</span>
+<span class="fc" id="L31">        } catch (InstantiationException e) {</span>
+<span class="fc" id="L32">            System.out.println(&quot;Domain tokeniser could not be initialised because the dictionary count is wrong&quot;);</span>
+<span class="fc" id="L33">            e.printStackTrace();</span>
+        }
+
+<span class="fc bfc" id="L36" title="All 4 branches covered.">        if (xSpaced == null || ySpaced == null) {</span>
+<span class="fc" id="L37">            return 0;</span>
+        }
+<span class="fc" id="L39">        String[] splitX = xSpaced.split(&quot; &quot;);</span>
+<span class="fc" id="L40">        String[] splitY = ySpaced.split(&quot; &quot;);</span>
+
+<span class="fc" id="L42">        double[] diffs = new double[(int) Math.max(splitX.length, splitY.length)];</span>
+<span class="fc bfc" id="L43" title="All 2 branches covered.">        for (int i = 0; i &lt; diffs.length; i++) {</span>
+<span class="fc bfc" id="L44" title="All 4 branches covered.">            if (i &lt; splitX.length &amp;&amp; i &lt; splitY.length) {</span>
+<span class="fc" id="L45">                diffs[i] = getDifferenceBetweenTokens(splitX[i], splitY[i]);</span>
+<span class="fc" id="L46">            } else {</span>
+<span class="fc" id="L47">                diffs[i] = 0;</span>
+            }
+
+        }
+
+<span class="fc" id="L52">        double total = 0;</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">        for (double d : diffs) {</span>
+<span class="fc" id="L54">            total += d;</span>
+        }
+<span class="fc" id="L56">        return total / diffs.length;</span>
+    }
+
+    /**
+     * Calculates the soundex distance between two English words.
+     * &lt;br/&gt;
+     * This method encodes the two words and then calculates the difference between
+     * the two encodings
+     * 
+     * @param x The first word to compare
+     * @param y The second word to compare
+     * @return double: Returns either 1.0, 2.0, 3.0, 4.0 depending on the soundex
+     *         distance between the two words.
+     */
+    public double getDifferenceBetweenTokens(String x, String y) {
+        // Soundex s = new Soundex();
+<span class="fc" id="L72">        String xEncoded = encode(x);</span>
+<span class="fc" id="L73">        String yEncoded = encode(y);</span>
+
+<span class="fc" id="L75">        return difference(xEncoded, yEncoded) * 1.0;</span>
+    }
+
+    /**
+     * This is the method responsible for calculating the soundex distance between
+     * two word &lt;b&gt;encodings&lt;/b&gt;.
+     * &lt;br/&gt;
+     * This is where the distance is actually calculated.&lt;br/&gt;
+     * Note: these inputs should be of the form LDDD, where L is a capital letter
+     * and D is a decimal digit.
+     * e.g (R165)
+     * 
+     * @param x The first encoded string to compare.
+     * @param y The second encoded string to compare.
+     * @return double: Returns the number of characters that are the same in the two
+     *         encodings. Results should only be 1.0,2.0,3.0 or 4.0.
+     */
+    private double difference(String x, String y) {
+<span class="fc" id="L93">        double diff = 0;</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">        for (int i = 0; i &lt; x.length(); i++) {</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">            if (x.charAt(i) == y.charAt(i)) {</span>
+<span class="fc" id="L96">                diff += 1.0;</span>
+            }
+        }
+<span class="fc" id="L99">        return diff;</span>
+    }
+
+    /**
+     * Transforms a string to a soundex encoding.
+     * &lt;br/&gt;
+     * The encoding is of the form LDDD, where L is a capital letter and D is a
+     * decimal digit. e.g (R165) &lt;br/&gt;
+     * You can use this &lt;a href=
+     * &quot;https://www.ics.uci.edu/~dan/genealogy/Miller/javascrp/soundex.htm&quot;&gt;Soundex
+     * encoder&lt;/a&gt; to test certain encodings
+     * 
+     * @param s The string to be encoded.
+     * @return String: A string of the form LDDD, where L is a capital letter and D
+     *         is a decimal digit should be returned. e.g (R165)
+     */
+    public String encode(String s) {
+<span class="fc" id="L116">        char[] x = s.toUpperCase().toCharArray();</span>
+<span class="fc" id="L117">        char firstLetter = x[0];</span>
+
+        // convert letters to numeric code
+<span class="fc bfc" id="L120" title="All 2 branches covered.">        for (int i = 0; i &lt; x.length; i++) {</span>
+<span class="fc bfc" id="L121" title="All 7 branches covered.">            switch (x[i]) {</span>
+
+                case 'B':
+                case 'F':
+                case 'P':
+                case 'V':
+<span class="fc" id="L127">                    x[i] = '1';</span>
+<span class="fc" id="L128">                    break;</span>
+
+                case 'C':
+                case 'G':
+                case 'J':
+                case 'K':
+                case 'Q':
+                case 'S':
+                case 'X':
+                case 'Z':
+<span class="fc" id="L138">                    x[i] = '2';</span>
+<span class="fc" id="L139">                    break;</span>
+
+                case 'D':
+                case 'T':
+<span class="fc" id="L143">                    x[i] = '3';</span>
+<span class="fc" id="L144">                    break;</span>
+
+                case 'L':
+<span class="fc" id="L147">                    x[i] = '4';</span>
+<span class="fc" id="L148">                    break;</span>
+
+                case 'M':
+                case 'N':
+<span class="fc" id="L152">                    x[i] = '5';</span>
+<span class="fc" id="L153">                    break;</span>
+
+                case 'R':
+<span class="fc" id="L156">                    x[i] = '6';</span>
+<span class="fc" id="L157">                    break;</span>
+
+                default:
+<span class="fc" id="L160">                    x[i] = '0';</span>
+                    break;
+            }
+        }
+
+        // remove duplicates
+<span class="fc" id="L166">        String output = &quot;&quot; + firstLetter;</span>
+<span class="fc bfc" id="L167" title="All 2 branches covered.">        for (int i = 1; i &lt; x.length; i++)</span>
+<span class="fc bfc" id="L168" title="All 4 branches covered.">            if (x[i] != x[i - 1] &amp;&amp; x[i] != '0')</span>
+<span class="fc" id="L169">                output += x[i];</span>
+
+        // pad with 0's or truncate
+<span class="fc" id="L172">        output = output + &quot;0000&quot;;</span>
+<span class="fc" id="L173">        return output.substring(0, 4);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
