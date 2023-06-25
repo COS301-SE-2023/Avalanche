@@ -8,7 +8,6 @@ on:
       - 'working'
 
 jobs:
-  
   test:
     if: contains(github.event.head_commit.message, '_COV_') || contains('
         refs/heads/working

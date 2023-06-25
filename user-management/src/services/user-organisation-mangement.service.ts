@@ -310,8 +310,6 @@ export class UserOrganisationMangementService {
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
                 console.log(error);
-            } else {
-                console.log('Email sent: ' + info.response);
             }
         });
     }
@@ -346,8 +344,6 @@ export class UserOrganisationMangementService {
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
                 console.log(error);
-            } else {
-                console.log('Email sent: ' + info.response);
             }
         });
     }
@@ -570,7 +566,7 @@ export class UserOrganisationMangementService {
         }
         const userDetails = JSON.parse(userData);
 
-        const userToBeRemoved = await this.userRepository.findOne({ where: { email: userDetails.email }, relations: ['userGroups', 'organisations'], select: ['id', 'email', 'firstName', 'lastName', 'organisationId', 'products', 'userGroups', 'organisation'] });
+        const userToBeRemoved = await this.userRepository.findOne({ where: { email: userDetails.email }, relations: ['userGroups', 'organisation'], select: ['id', 'email', 'firstName', 'lastName', 'organisationId', 'products', 'userGroups', 'organisation'] });
         if (!userToBeRemoved) {
             return {
                 status: 400, error: true, message: 'User to be removed not found',
@@ -593,12 +589,15 @@ export class UserOrganisationMangementService {
         // Remove the user from each of the user groups they are part of
         if (userToBeRemoved.userGroups !== null) {
             for (const group of userToBeRemoved.userGroups) {
-                group.users = group.users.filter(user => user.id !== userToBeRemoved.id);
-                await this.userGroupRepository.save(group);
+                if (group.users) {
+                    group.users = group.users.filter(user => user.id !== userToBeRemoved.id);
+                    await this.userGroupRepository.save(group);
+                }
             }
         }
 
         // At this point the user has been removed from all their user groups and their organisation.
+        userToBeRemoved.organisationId = null;
         userToBeRemoved.organisation = null;
         userToBeRemoved.userGroups = null;
         await this.userRepository.save(userToBeRemoved);
