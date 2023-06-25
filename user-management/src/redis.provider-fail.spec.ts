@@ -12,8 +12,6 @@ jest.mock('@nestjs/config', () => ({
   ConfigService: jest.fn().mockImplementation(() => ({
     get: jest.fn().mockImplementation((key) => {
       switch (key) {
-        case 'REDIS_PORT':
-          return 6379;
         case 'REDIS_HOST':
           return 'localhost';
         case 'REDIS_USER':
@@ -28,23 +26,11 @@ jest.mock('@nestjs/config', () => ({
 }));
 
 describe('RedisProvider', () => {
-  let redisInstance: any;
-
-  beforeEach(async () => {
-    const moduleRef = await Test.createTestingModule({
-      providers: [RedisProvider, ConfigService],
-    }).compile();
-
-    redisInstance = moduleRef.get<Redis.default>('REDIS');
-  });
-
-  it('should be defined', () => {
-    expect(redisInstance).toBeDefined();
-    expect(Redis.default).toBeCalledWith({
-      host: 'localhost',
-      port: 6379,
-      username: 'testUser',
-      password: 'testPassword',
-    });
+  it('should throw error when REDIS_PORT is not defined', async () => {
+    await expect(
+      Test.createTestingModule({
+        providers: [RedisProvider, ConfigService],
+      }).compile(),
+    ).rejects.toThrow('Environment variable REDIS_PORT not found');
   });
 });
