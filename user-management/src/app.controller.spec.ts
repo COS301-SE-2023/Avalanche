@@ -29,6 +29,10 @@ describe('AppController', () => {
       .overrideProvider(UserOrganisationMangementService)
       .useValue({
         getUserInfo: jest.fn(),
+        getMembers: jest.fn(),
+        createOrganisation: jest.fn(),
+        createUserGroup: jest.fn(),
+        addUserToUserGroup: jest.fn(),
       })
       .overrideProvider(UserDataProductMangementService)
       .useValue({
@@ -54,7 +58,7 @@ describe('AppController', () => {
         message: 'hi',
         timestamp: 'time',
       };
-      const registerDto = {
+      const registerData = {
         email: 'test@example.com',
         password: 'password',
         firstName: 'John',
@@ -64,12 +68,12 @@ describe('AppController', () => {
         .spyOn(authService, 'register')
         .mockImplementation(() => Promise.resolve(result));
 
-      expect(await appController.register(registerDto)).toBe(result);
+      expect(await appController.register(registerData)).toBe(result);
       expect(authService.register).toHaveBeenCalledWith(
-        registerDto.email,
-        registerDto.password,
-        registerDto.firstName,
-        registerDto.lastName,
+        registerData.email,
+        registerData.password,
+        registerData.firstName,
+        registerData.lastName,
       );
     });
   });
@@ -82,15 +86,15 @@ describe('AppController', () => {
         message: 'hi',
         timestamp: 'time',
       };
-      const verifyDto = { email: 'test@example.com', otp: '1234' };
+      const verifyData = { email: 'test@example.com', otp: '1234' };
       jest
         .spyOn(authService, 'verify')
         .mockImplementation(() => Promise.resolve(result));
 
-      expect(await appController.verify(verifyDto)).toBe(result);
+      expect(await appController.verify(verifyData)).toBe(result);
       expect(authService.verify).toHaveBeenCalledWith(
-        verifyDto.email,
-        verifyDto.otp,
+        verifyData.email,
+        verifyData.otp,
       );
     });
   });
@@ -108,16 +112,39 @@ describe('AppController', () => {
         message: 'hi',
         timestamp: 'time',
       };
-      const loginDto = { email: 'test@example.com', password: 'password' };
+      const loginData = { email: 'test@example.com', password: 'password' };
       jest
         .spyOn(authService, 'login')
         .mockImplementation(() => Promise.resolve(result));
 
-      expect(await appController.login(loginDto)).toBe(result);
+      expect(await appController.login(loginData)).toBe(result);
       expect(authService.login).toHaveBeenCalledWith(
-        loginDto.email,
-        loginDto.password,
+        loginData.email,
+        loginData.password,
       );
+    });
+  });
+
+  //resend OTP method
+  describe('resend OTP', () => {
+    it('should return the result of authService.resendOTP()', async () => {
+      const mockUser = {
+        id: 1,
+        email: 'test@example.com',
+      };
+      const result = {
+        status: 200,
+        error: false,
+        message: 'hi',
+        timestamp: 'time',
+      };
+      const loginData = { email: 'test@example.com' };
+      jest
+        .spyOn(authService, 'resendOTP')
+        .mockImplementation(() => Promise.resolve(result));
+
+      expect(await appController.resendOTP(loginData)).toBe(result);
+      expect(authService.resendOTP).toHaveBeenCalledWith(loginData.email);
     });
   });
 
@@ -130,14 +157,111 @@ describe('AppController', () => {
         message: 'msg',
         timestamp: 'time',
       };
-      const userInfoDto = { token: 'some_token' };
+      const userInfoData = { token: 'some_token' };
       jest
         .spyOn(userOrgManService, 'getUserInfo')
         .mockImplementation(() => Promise.resolve(result));
 
-      expect(await appController.getUserInfo(userInfoDto)).toBe(result);
+      expect(await appController.getUserInfo(userInfoData)).toBe(result);
       expect(userOrgManService.getUserInfo).toHaveBeenCalledWith(
-        userInfoDto.token,
+        userInfoData.token,
+      );
+    });
+  });
+
+  // GetMembers method
+  describe('getMembers', () => {
+    it('should return the result of userOrgManService.getMembers()', async () => {
+      const result = {
+        status: 200,
+        error: false,
+        message: 'msg',
+        timestamp: 'time',
+      };
+      const userInfoData = { token: 'some_token' };
+      jest
+        .spyOn(userOrgManService, 'getMembers')
+        .mockImplementation(() => Promise.resolve(result));
+
+      expect(await appController.getMembers(userInfoData)).toBe(result);
+      expect(userOrgManService.getMembers).toHaveBeenCalledWith(
+        userInfoData.token,
+      );
+    });
+  });
+
+  //CreateOrganisation Method
+  describe('createOrganisation', () => {
+    it('should return the result of userOrgManService.createOrganisation()', async () => {
+      const result = {
+        status: 200,
+        error: false,
+        message: 'msg',
+        timestamp: 'time',
+      };
+      const userInfoData = { token: 'some_token', name: 'Org1' };
+      jest
+        .spyOn(userOrgManService, 'createOrganisation')
+        .mockImplementation(() => Promise.resolve(result));
+
+      expect(await appController.createOrganisation(userInfoData)).toBe(result);
+      expect(userOrgManService.createOrganisation).toHaveBeenCalledWith(
+        userInfoData.token,
+        userInfoData.name,
+      );
+    });
+  });
+
+  //CreateUserGrouup Method
+  describe('createUserGroup', () => {
+    it('should return the result of userOrgManService.createUserGroup()', async () => {
+      const result = {
+        status: 200,
+        error: false,
+        message: 'msg',
+        timestamp: 'time',
+      };
+      const userInfoData = {
+        token: 'some_token',
+        name: 'userGroup2',
+        permission: 1, //1 means admin, 2 means other e.g sales
+      };
+      jest
+        .spyOn(userOrgManService, 'createUserGroup')
+        .mockImplementation(() => Promise.resolve(result));
+
+      expect(await appController.createUserGroup(userInfoData)).toBe(result);
+      expect(userOrgManService.createUserGroup).toHaveBeenCalledWith(
+        userInfoData.token,
+        userInfoData.name,
+        userInfoData.permission,
+      );
+    });
+  });
+
+  //AddUserToGroup Method
+  describe('addUserToUserGroup', () => {
+    it('should return the result of userOrgManService.addUserToUserGroup()', async () => {
+      const result = {
+        status: 200,
+        error: false,
+        message: 'msg',
+        timestamp: 'time',
+      };
+      const userInfoData = {
+        token: 'some_token',
+        userEmail: 'example1@example.com',
+        userGroupName: 'userGroup1',
+      };
+      jest
+        .spyOn(userOrgManService, 'addUserToUserGroup')
+        .mockImplementation(() => Promise.resolve(result));
+
+      expect(await appController.addUserToUserGroup(userInfoData)).toBe(result);
+      expect(userOrgManService.addUserToUserGroup).toHaveBeenCalledWith(
+        userInfoData.token,
+        userInfoData.userEmail,
+        userInfoData.userGroupName,
       );
     });
   });
