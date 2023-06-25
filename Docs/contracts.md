@@ -275,21 +275,21 @@ interface ITransactionsResponse {
   timestamp: number
 }
 ```
-```
-ISettings:
+```ts
+interface ISettings:
   theme: ThemeEnum,
   graph: GraphSettingsEnum
 ```
 ## 2. Data for dashboard requests 
-```
-Dashboard Request:
+```ts
+interface IDashboardRequest:
 {
    userId: number,
    dashboardName: string
 }
 ```
-```
-DashBoard Response:
+```ts
+interface IDashBoardResponse:
 {
    name: string,
    id: number,
@@ -298,24 +298,24 @@ DashBoard Response:
 }
 ```
 ## 3. Graph data format:
-```
-Enum Warehouse:
+```ts
+interface IEnumWarehouse:
 {
    ZACR: "ZACR",
    AFRICA: "AFRICA",
    RyCE: "RyCE"
 }
 ```
-```
-IGraphs:
+```ts
+interface IGraphs:
 {
    name: string,
    warehouse: EnumWarehouse,
    data: IGraphData
 }
 ```
-```
-IGraphData
+```ts
+interface IGraphData
 {
    labels: string[],
    datasets: IDataSet[],
@@ -323,15 +323,15 @@ IGraphData
    
 }
 ```
-```
-IDataSet
+```ts 
+interface IDataSet
 {
   label: string,
   data: number[] | otherDataType[]
 }
 ```
-```
-IComment
+```ts
+interface IComment
 {
   userId: string,
   userName: string,
@@ -339,8 +339,8 @@ IComment
   createdAt: Timestamp
 }
 ```
-```
-graphBackendRequest:
+```ts
+interface IGraphBackendRequest:
 {
     registrar?: string,
     zone?: string,
@@ -350,8 +350,8 @@ graphBackendRequest:
     groupBy?: string
 }
 ```
-```
-graphFrontendRequest:
+```ts
+interface IGraphFrontendRequest:
 {
   zone : string,
   warehouse : EnumWarehouse,
@@ -359,8 +359,8 @@ graphFrontendRequest:
   filters : IFilter
 }
 ```
-```
-IFilter:
+```ts
+interface IFilter:
 {
   dateTo : string,
   dateFrom : string,
@@ -369,41 +369,41 @@ IFilter:
 }
 ```
 ## 4. Domain Watch:
-```
-IDomain
+```ts
+interface IDomain
 {
   domain: string,
 }
 ```
-```
+```ts
 enum AlgoType {
   LEV = "Levenshtein"
 }
 ```
-```
-IDomainWatchType
+```ts
+interface IDomainWatchType
 {
   type: AlgoType,
   threshold: number
 }
 ```
-```
-dnsWatchRequest
+```ts
+interface IDnsWatchRequest
 {
   domain: string,
   types : IDomainWatchType[],
 }
 ```
-```
-dnsWatchResponse
+```ts
+interface IDnsWatchResponse
 {
   domains: string[],
   distance: string[],
 }
 ```
 ## 5. Snowflake
-```
-ITransactionRequest
+```ts
+interface ITransactionRequest
 {
     registrars: string[], //registrarIDs
     transactions: string[], // create, grace, redeem, transfer, renew
@@ -414,10 +414,56 @@ ITransactionRequest
     group : string //"registrar"/ "all"
 }
 ```
-```
-IDomainWatchRequest
+```ts
+interface IDomainWatchRequest
 {
    granularity: string // day/week/month/year
    num:number //number of days, weeks, months or years back you want
+}
+```
+## 6. Domain Name Analysis:
+```ts
+interface IDomainNameAnalysisListRequest
+{
+    minimumAppearances: number,
+    data: string[]
+}
+```
+```ts
+interface IDomainNameAnalysisListResponse
+{
+    status: string, //success||failure
+    data: domainNameAnalysisListDataInterface[]
+}
+```
+```ts
+interface IDomainNameAnalysisListDataInterface
+{
+    word: string, 
+    frequency: number,
+    domains: string[]
+}
+```
+```ts
+interface IDomainNameAnalysisClassifyRequest
+{
+    data: string[],
+    labels?: string[],
+    minimumConfidence?: number
+}
+```
+```ts
+interface IDomainNameAnalysisClassifyResponse
+{
+    status: string,//request
+    data: IDomainNameAnalysisListDataInterface[]
+}
+```
+```ts
+interface IDomainNameAnalysisListDataInterface
+{
+    domain: string,//request
+    labels: string[],
+    score:  number[]
 }
 ```
