@@ -55,3 +55,5 @@ For more information request formal documentation from ...
 * 22/06
   * Day granularity fixed
   * Domain name analysis query update 
+* 25/06
+  * Transaction  Deployed on AFRICA
