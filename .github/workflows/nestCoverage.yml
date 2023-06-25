@@ -51,12 +51,9 @@ jobs:
           name: code-coverage-report-markdown
           path: '${{ matrix.service}}/coverage/coverage-results.md' 
           retention-days: 1  
-
-      # SonarCloud analysis
-      - name: SonarCloud Scan
-        uses: sonarsource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
         with:
-          projectBaseDir: './${{ matrix.service }}'
+            files: coverage/lcov.info
+            token: ${{ secrets.CODECOV_TOKEN }}
