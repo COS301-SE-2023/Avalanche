@@ -1,19 +1,19 @@
-# name: Testing
+name: Testing
 
-# on:
-#   push:
-#     branches:
-#       - working
-#       - stable
-#   pull_request:
-#     branches:
-#       - working
-#       - stable
+on:
+  push:
+    branches:
+      - working
+      - stable
+  pull_request:
+    branches:
+      - working
+      - stable
 
-# permissions:
-#     pull-requests: read
+permissions:
+    pull-requests: read
 
-# jobs:
+jobs:
 #   frontend-tests:
 #     name: Cypress run
 #     runs-on: ubuntu-22.04
@@ -37,3 +37,15 @@
 #           start: yarn start
 #           working-directory: frontend
 #           config: video=false
+  user-management-tests:
+    name: User Management Tests
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - run: yarn
+        working-directory: user-management
+      - name: Run tests
+        working-directory: user-management
+        run: |
+          yarn test

@@ -3,6 +3,7 @@
 2. [Logging In](#logging-in)
 3. [Homepage](#homepage)
 4. [Domain Watch](#domain-watch)
+5. [Organisation Setting](#organisation)
 
 ## Signing Up
 ### Step 1
@@ -65,3 +66,42 @@ This is an example of data being sorted by Similarity in ascending order.
 
 This is an example of data being sorted by Domain Name in descending order.
 ![](https://astonmartin.sloththe.dev/isawesome/1c0dc8ef-5c9e-45d0-9997-f21ea431cdc1.png)
+
+## Organisation
+This is the basic layout for the organisation settings page.
+![](https://astonmartin.sloththe.dev/isawesome/4aa4cd48-531c-4c07-99e5-01f1a368bd06.png)
+
+### Creating a Group
+You can create a group by simply clicking on the "Create a Group" button.
+
+![](https://astonmartin.sloththe.dev/isawesome/58066248-42ff-4596-a215-dff3129b1b28.png)
+
+Once you have pressed this button, a create a group modal will pop up. On this modal you can enter a group name and submit it.
+
+![](https://astonmartin.sloththe.dev/isawesome/00f1fb22-4d79-4a64-8ac8-fcd289cac26a.png)
+
+1. Enter in a group name
+2. Click on "Create Group"
+
+### Adding to a group
+Now that you have created a new group, you can add users to this group.
+
+To do this, click on "Add User to Group"
+
+![](https://astonmartin.sloththe.dev/isawesome/342a36cd-d836-4a9d-a79b-c8d55640efb9.png)
+
+Once you have clicked this button, you can enter in a users email address and a group name.
+
+![](https://astonmartin.sloththe.dev/isawesome/b655ac76-a862-44c7-9ecb-8bc62d41464e.png)
+
+1. Enter in a group name
+2. Enter in a email address for a user
+3. Click "Add to Group"
+
+Once the modal has closed, the other user will receieve an email with a link, the users must click that link in order to be added to the group.
+
+![](https://astonmartin.sloththe.dev/isawesome/03f00155-d8b4-4da1-8f25-47a3b354d003.png)
+
+Once the user clicks on the link, they will be redirected back to the website, where they will be added to the group. They can now view the group and view the members inside of that group.
+
+![](https://astonmartin.sloththe.dev/isawesome/720e185a-57d9-4020-88e3-d82d0c81864d.png)
