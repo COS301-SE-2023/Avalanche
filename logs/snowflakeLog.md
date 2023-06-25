@@ -61,3 +61,4 @@ For more information request formal documentation from ...
   *  All views required for transaction procedure created
   * Debug procedure - working now
   * Basic Marketshare
+  * Marketshare top and bottom rank
