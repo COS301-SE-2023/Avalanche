@@ -20,6 +20,7 @@ For more information request formal documentation from ...
 | Creates  | This procedure returns the aggregated create transactions for a specific registrar, all registrars grouped by registrar or all overall | JSON object string containing the registrar, zone, dateFom, dateTo and granularity   | JSON in graphDataInterface format|
 |Renewals  | This procedure returns the renewals for a specific registrar, all registrars grouped by registrar or all overall | JSON object string containing the registrar, zone, dateFom, dateTo and granularity   | JSON in graphDataInterface format|
 | Deletion  | This procedure returns the deletions for a specific registrar, all registrars grouped by registrar or all overall | JSON object string containing the registrar, zone, dateFom, dateTo and granularity   | JSON in graphDataInterface format|
+| Marketshare | This procedure returns market share of registrars  in the registry | JSON object string containing the registrars, zone and rank    | JSON of  registrar and count|
 
 ## Changes
 
@@ -59,3 +60,4 @@ For more information request formal documentation from ...
   * Transaction  Deployed on AFRICA
   *  All views required for transaction procedure created
   * Debug procedure - working now
+  * Basic Marketshare
