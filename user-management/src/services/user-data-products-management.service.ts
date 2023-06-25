@@ -5,8 +5,8 @@ import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../entity/user.entity';
 import { Repository } from 'typeorm';
-import { UserGroup } from 'src/entity/userGroup.entity';
-import { Organisation } from 'src/entity/organisation.entity';
+import { UserGroup } from '../entity/userGroup.entity';
+import { Organisation } from '../entity/organisation.entity';
 import axios from 'axios';
 import { Response } from 'express';
 import { Res} from '@nestjs/common';
@@ -50,20 +50,24 @@ export class UserDataProductMangementService {
 
                     console.log(responseGET.data);
                     let integrationString = responseGET.data.epp_username;
-                    if (type.includes("AFRICA")) {
+                    if (type==="AFRICA") {
                         integrationString += "-" + type + ",";
-                    } else if (type.includes("ZACR")) {
+                    } else if (type==="ZACR") {
                         integrationString += "-" + type + ",";
-                    } else if (type.includes("RyCE")) {
+                    } else if (type==="RyCE") {
                         integrationString += "-" + type + ",";
+                    } else{
+                        return {status : 400,error: true, message : 'Please enter a zone that is from the given choices - AFRICA, RyCE, ZACR', 
+                        timestamp: new Date().toISOString()};
                     }
                     const user = await this.userRepository.findOne({ where: { email: allocateToName } });
                     if(!user){
-                        return {status : 'failure', message : 'User does not exist', 
+                        return {status : 400,error: true, message : 'User does not exist', 
                         timestamp: new Date().toISOString()};
                     }
                     user.products += integrationString;
                     await this.userRepository.save(user);
+                    await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60 );
                     return { status: 'success', message: 'User is integrated with DNS', 
                     timestamp: new Date().toISOString() };
                 } catch (error) {
@@ -80,7 +84,7 @@ export class UserDataProductMangementService {
             // Retrieve the user with their groups based on the token
             const userData = await this.redis.get(token);
             if(!userData){
-                return {status : 'failure', message : 'Invalid token', 
+                return {status : 400, error: true, message : 'Invalid token', 
                 timestamp: new Date().toISOString()};
             }
             const userDetails = JSON.parse(userData);
@@ -108,16 +112,19 @@ export class UserDataProductMangementService {
 
                         console.log(responseGET.data);
                         let integrationString = responseGET.data.epp_username;
-                        if (type.includes("AFRICA")) {
+                        if (type==="AFRICA") {
                             integrationString += "-" + type + ",";
-                        } else if (type.includes("ZACR")) {
+                        } else if (type==="ZACR") {
                             integrationString += "-" + type + ",";
-                        } else if (type.includes("RyCE")) {
+                        } else if (type==="RyCE") {
                             integrationString += "-" + type + ",";
+                        } else{
+                            return {status : 400,error: true, message : 'Please enter a zone that is from the given choices - AFRICA, RyCE, ZACR', 
+                            timestamp: new Date().toISOString()};
                         }
                         const userGroup = await this.userGroupRepository.findOne({ where: { name: allocateToName } });
                         if(!userGroup){
-                            return {status : 'failure', message : 'Cannot find user group with the given name', 
+                            return {status: 400, error: true, message : 'Cannot find user group with the given name', 
                             timestamp: new Date().toISOString()}
                         }
                         userGroup.products += integrationString;
@@ -126,12 +133,12 @@ export class UserDataProductMangementService {
                         timestamp: new Date().toISOString() };
                     } catch (error) {
                         console.error(error);
-                        return { status: 'error', message: error, 
+                        return { status: 400, error: true, message: error, 
                         timestamp: new Date().toISOString() };
                     }
                 } catch (error) {
                     console.error(error);
-                    return { status: 'error', message: error, 
+                    return { status: 400, error: true , message: error, 
                     timestamp: new Date().toISOString() };
                 }
             }
@@ -147,26 +154,26 @@ export class UserDataProductMangementService {
             }
             const user = await this.userRepository.findOne({ where: { email: allocateToName } });
             if(!user){
-                return {status : 'failure', message : 'User does not exist', 
+                return {status : 400, error: true, message : 'User does not exist', 
                 timestamp: new Date().toISOString()};
             }
             user.products += typeW;
             await this.userRepository.save(user);
-            return { status: 'success', message: 'User is integrated with ' + type , 
+            return { status: 'success', message: user , 
             timestamp: new Date().toISOString()};
         } else if (personal == false) {
             // Retrieve the user with their groups based on the token
             const userData = await this.redis.get(token);
             const userDetails = JSON.parse(userData);
             const permission = userDetails.userGroups[0].permission;
-            if (permission == 1) {
+            if (permission === 1) {
                 let typeW;
                 if (type.length > 0) {
                     typeW += type + ',';
                 }
                 const userGroup = await this.userGroupRepository.findOne({ where: { name: allocateToName } });
                 if(!userGroup){
-                    return {status : 'failure', message : 'Cannot find user group with given name', 
+                    return {status : 400, error: true, message : 'Cannot find user group with given name', 
                     timestamp: new Date().toISOString()}
                 }
                 userGroup.products += typeW;

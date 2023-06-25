@@ -2,8 +2,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { AppState } from "../store";
 import { HYDRATE } from "next-redux-wrapper";
 import ky from "ky";
-import { ILoginRequest, IOTPVerifyRequest, IRegisterRequest, ICreateOrganisationRequest } from "@/interfaces/requests";
-import { IOTPVerifyResponse, IRegisterResponse, ILoginResponse, ICreateOrgnisationResponse } from "@/interfaces/responses";
+import { ILoginRequest, IOTPVerifyRequest, IRegisterRequest, ICreateOrganisationRequest, ICreateUserGroupRequest } from "@/interfaces/requests";
+import { IOTPVerifyResponse, IRegisterResponse, ILoginResponse, ICreateOrgnisationResponse, ICreateUserGroupResponse } from "@/interfaces/responses";
 import { setCookie, getCookie, deleteCookie } from 'cookies-next';
 import { ISettings, IOrganisation, IDataProduct, IUserGroups } from "@/interfaces/interfaces";
 
@@ -24,11 +24,17 @@ export interface IUserState {
 }
 
 export interface IUser {
-    username: string | null,
+    id: string | null,
     email: string | null,
     firstName: string | null,
-    lastName: string | null,
+    lastName: string | null
+    settings: ISettings | null,
     profilePicture: string | null,
+    // favourites: IDashBoard[] | null,
+    dataProducts: IDataProduct[] | null,
+    organisation: IOrganisation | null,
+    userGroups: IUserGroups[] | null,
+    token?: string | null
 }
 
 export interface IAuth {
@@ -152,7 +158,22 @@ export const userSlice = createSlice({
         })
         // Create Organisation
         builder.addCase(createOrganisation.fulfilled, (state, action) => {
-
+            const payload = action.payload as ICreateOrgnisationResponse;
+            state.user.organisation = payload.message.organisation;
+            state.user.userGroups = payload.message.userGroups;
+            state.loading = false;
+        })
+        builder.addCase(createOrganisation.pending, (state) => {
+            state.loading = true;
+        })
+        builder.addCase(createOrganisation.rejected, (state, action) => {
+            state.loading = false;
+        })
+        // Create User Group
+        builder.addCase(createOrganisationGroup.fulfilled, (state, action) => {
+            const payload = action.payload as ICreateUserGroupResponse;
+            state.user.userGroups?.push(payload.message);
+            // state.user.organisation = payload.message.organisation;
         })
     }
 });
@@ -209,7 +230,22 @@ export const createOrganisation = createAsyncThunk("ORG.CreateOrganisation", asy
                 "Authorization": `Bearer ${jwt}`
             }
         }).json();
-        // return response;
+        return response as ICreateOrgnisationResponse;
+    } catch (e) {
+        if (e instanceof Error) return rejectWithValue(e.message);
+    }
+})
+
+export const createOrganisationGroup = createAsyncThunk("ORG.CreateOrganisationGroup", async (object: ICreateUserGroupRequest, { rejectWithValue }) => {
+    try {
+        const jwt = getCookie("jwt");
+        const response = await ky.post(`${url}/createUserGroup`, {
+            json: object,
+            headers: {
+                "Authorization": `Bearer ${jwt}`
+            }
+        }).json();
+        return response as ICreateUserGroupResponse;
     } catch (e) {
         if (e instanceof Error) return rejectWithValue(e.message);
     }
