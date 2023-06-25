@@ -57,3 +57,4 @@ For more information request formal documentation from ...
   * Domain name analysis query update 
 * 25/06
   * Transaction  Deployed on AFRICA
+  *  All views required for transaction procedure created
