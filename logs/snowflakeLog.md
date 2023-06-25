@@ -58,3 +58,4 @@ For more information request formal documentation from ...
 * 25/06
   * Transaction  Deployed on AFRICA
   *  All views required for transaction procedure created
+  * Debug procedure - working now
