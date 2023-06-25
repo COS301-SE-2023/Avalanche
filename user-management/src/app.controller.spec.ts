@@ -33,10 +33,17 @@ describe('AppController', () => {
         createOrganisation: jest.fn(),
         createUserGroup: jest.fn(),
         addUserToUserGroup: jest.fn(),
+        addUserToOrganisation: jest.fn(),
+        exitOrganisation: jest.fn(),
+        removeUserFromUserGroup: jest.fn(),
+        exitUserGroup: jest.fn(),
+        removeUserFromOrganisation: jest.fn(),
+        addUserToUserGroupWithKey: jest.fn(),
       })
       .overrideProvider(UserDataProductMangementService)
       .useValue({
-        // methods from UserDataProductMangementService
+        integrateUserWithExternalAPI: jest.fn(),
+        integrateWithDataProducts: jest.fn(),
       })
       .compile();
 
@@ -262,6 +269,141 @@ describe('AppController', () => {
         userInfoData.token,
         userInfoData.userEmail,
         userInfoData.userGroupName,
+      );
+    });
+  });
+
+  //AddUserToGroup Method
+  describe('exitOrganisation', () => {
+    it('should return the result of userOrgManService.exitOrganisation()', async () => {
+      const result = {
+        status: 200,
+        error: false,
+        message: 'msg',
+        timestamp: 'time',
+      };
+      const userInfoData = {
+        token: 'some_token',
+        organisationName: 'string',
+      };
+      jest
+        .spyOn(userOrgManService, 'exitOrganisation')
+        .mockImplementation(() => Promise.resolve(result));
+
+      expect(await appController.exitOrganisation(userInfoData)).toBe(result);
+      expect(userOrgManService.exitOrganisation).toHaveBeenCalledWith(
+        userInfoData.token,
+        userInfoData.organisationName,
+      );
+    });
+  });
+
+  //ExitUserGroup Method
+  describe('exitUserGroup', () => {
+    it('should return the result of userOrgManService.exitUserGroup()', async () => {
+      const result = {
+        status: 200,
+        error: false,
+        message: 'msg',
+        timestamp: 'time',
+      };
+      const userInfoData = {
+        token: 'some_token',
+        userGroupName: 'userGroup1',
+      };
+      jest
+        .spyOn(userOrgManService, 'exitUserGroup')
+        .mockImplementation(() => Promise.resolve(result));
+
+      expect(await appController.exitUserGroup(userInfoData)).toBe(result);
+      expect(userOrgManService.exitUserGroup).toHaveBeenCalledWith(
+        userInfoData.token,
+        userInfoData.userGroupName,
+      );
+    });
+  });
+
+  //removeUserFromUserGroup Method
+  describe('removeUserFromUserGroup ', () => {
+    it('should return the result of userOrgManService.removeUserFromUserGroup ()', async () => {
+      const result = {
+        status: 200,
+        error: false,
+        message: 'msg',
+        timestamp: 'time',
+      };
+      const userInfoData = {
+        token: 'some_token',
+        userGroupName: 'userGroup1',
+        userEmail: 'example1@example.com',
+      };
+      jest
+        .spyOn(userOrgManService, 'removeUserFromUserGroup')
+        .mockImplementation(() => Promise.resolve(result));
+
+      expect(await appController.removeUserFromUserGroup(userInfoData)).toBe(
+        result,
+      );
+      expect(userOrgManService.removeUserFromUserGroup).toHaveBeenCalledWith(
+        userInfoData.token,
+        userInfoData.userGroupName,
+        userInfoData.userEmail,
+      );
+    });
+  });
+
+  //removeUserFromOrganisation Method
+  describe('removeUserFromOrganisation ', () => {
+    it('should return the result of userOrgManService.removeUserFromOrganisation()', async () => {
+      const result = {
+        status: 200,
+        error: false,
+        message: 'msg',
+        timestamp: 'time',
+      };
+      const userInfoData = {
+        token: 'some_token',
+        organisationName: 'org1',
+        userEmail: 'example1@example.com',
+      };
+      jest
+        .spyOn(userOrgManService, 'removeUserFromOrganisation')
+        .mockImplementation(() => Promise.resolve(result));
+
+      expect(await appController.removeUserFromOrganisation(userInfoData)).toBe(
+        result,
+      );
+      expect(userOrgManService.removeUserFromOrganisation).toHaveBeenCalledWith(
+        userInfoData.token,
+        userInfoData.organisationName,
+        userInfoData.userEmail,
+      );
+    });
+  });
+
+  //Method addUserToGroupWithKey
+  describe('addUserToGroupWithKey ', () => {
+    it('should return the result of userOrgManService.addUserToGroupWithKey()', async () => {
+      const result = {
+        status: 200,
+        error: false,
+        message: 'msg',
+        timestamp: 'time',
+      };
+      const userInfoData = {
+        token: 'some_token',
+        key: 'example123456789',
+      };
+      jest
+        .spyOn(userOrgManService, 'addUserToUserGroupWithKey')
+        .mockImplementation(() => Promise.resolve(result));
+
+      expect(await appController.addUserToUserGroupWithKey(userInfoData)).toBe(
+        result,
+      );
+      expect(userOrgManService.addUserToUserGroupWithKey).toHaveBeenCalledWith(
+        userInfoData.token,
+        userInfoData.key,
       );
     });
   });
