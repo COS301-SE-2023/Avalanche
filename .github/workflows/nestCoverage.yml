@@ -3,6 +3,8 @@ name: NestJS Coverage and SonarCloud Analysis
 on:
   push:
     branches: [ "working", "stable", "integration_dev" ]
+  pull_request:
+    branches: [ "working", "stable", "integration_dev" ]
 
 jobs:
   test:
@@ -38,7 +40,7 @@ jobs:
         uses: romeovs/lcov-reporter-action@v0.2.21
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          lcov-file: '${{ matrix.service}}/coverage/lcov.info'
+          lcov-file: '${{ matrix.service }}/${{ matrix.service }}/coverage/lcov.info'
 
       # Publish Coverage Job Summary  # Optional
       - name: Add Coverage Job Summary

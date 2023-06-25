@@ -44,6 +44,7 @@
     "@types/supertest": "^2.0.11",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
+    "axios-mock-adapter": "^1.21.5",
     "eslint": "^8.0.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
@@ -65,14 +66,20 @@
     ],
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",
-    "testPathIgnorePatterns": [".*-integration\\.service\\.spec\\.ts$"],
+    "testPathIgnorePatterns": [
+      ".*-integration\\.service\\.spec\\.ts$"
+    ],
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "collectCoverageFrom": [
-      "**/*.(t|j)s"
+      "**/*.(t|j)s",
+      "!**/*-integration.service.spec.ts",
+      "!**/rpc-excpetion.filter.ts",
+      "!**/app.module.ts",
+      "!**/main.ts"
     ],
-    "coverageDirectory": "/coverage",
+    "coverageDirectory": "../gateway/coverage",
     "testEnvironment": "node"
   }
 }
