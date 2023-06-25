@@ -8,11 +8,23 @@ import org.junit.jupiter.api.Test;
 
 import avalanche.Core.SimilarityChecker;
 import avalanche.DataClasses.Domain;
+import avalanche.DistanceCalculators.SoundexCalculator;
 import avalanche.Utility.DomainTokeniser;
 
 import java.io.FileNotFoundException;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import static org.powermock.api.mockito.PowerMockito.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
+
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(SoundexCalculator.class)
 public class SimilarityCheckerTest {
     @Test
     public void construction() throws FileNotFoundException {
@@ -131,5 +143,29 @@ public class SimilarityCheckerTest {
                 "selborne",
                 5);
         assertNotNull(results);
+    }
+
+    @Mock
+    private SoundexCalculator soundexCalculator;
+
+    @Test
+    public void testTreashold() {
+        try {
+            //Given
+            SimilarityChecker.init(true, 1);
+            SoundexCalculator soundexCalculator = Mockito.mock(SoundexCalculator.class);
+            whenNew(SoundexCalculator.class).withNoArguments().thenReturn(soundexCalculator);
+            Mockito.<Double>when(soundexCalculator.calculateSoundexDifference(anyString(), anyString())).thenReturn(0.7);
+            SimilarityChecker similarityChecker = new SimilarityChecker();
+
+            //When
+            ConcurrentLinkedQueue<Domain> result = similarityChecker.findAllSoundsAboveSimliarityThreshold("any",0.6);
+
+            //Then
+            assertNotEquals(0, result.size());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }
