@@ -42,7 +42,7 @@ describe('AppController', () => {
       })
       .overrideProvider(UserDataProductMangementService)
       .useValue({
-        integrateUserWithExternalAPI: jest.fn(),
+        integrateUserWithWExternalAPI: jest.fn(),
         integrateWithDataProducts: jest.fn(),
       })
       .compile();
@@ -404,6 +404,76 @@ describe('AppController', () => {
       expect(userOrgManService.addUserToUserGroupWithKey).toHaveBeenCalledWith(
         userInfoData.token,
         userInfoData.key,
+      );
+    });
+  });
+
+  //Method integrate with external API
+  describe('integrateWithExternalAPI', () => {
+    it('should return the result of userDataProductManService.integrateUserWithWExternalAPI()', async () => {
+      const result = {
+        status: 200,
+        error: false,
+        message: 'msg',
+        timestamp: 'time',
+      };
+      const userInfoData = {
+        token: 'some_token',
+        type: 'string', //AFRICA, RyCE, ZACR
+        allocateToName: 'string',
+        username: 'string',
+        password: 'string',
+        personal: 'boolean', //true for user, false for userGroup
+      };
+      jest
+        .spyOn(userDataProductManService, 'integrateUserWithWExternalAPI')
+        .mockImplementation(() => Promise.resolve(result));
+
+      expect(
+        await appController.integrateUserWithWExternalAPI(userInfoData),
+      ).toBe(result);
+      expect(
+        userDataProductManService.integrateUserWithWExternalAPI,
+      ).toHaveBeenCalledWith(
+        userInfoData.token,
+        userInfoData.type,
+        userInfoData.allocateToName,
+        userInfoData.username,
+        userInfoData.password,
+        userInfoData.personal,
+      );
+    });
+  });
+
+  //Method integrate with data products
+  describe('integrateWithDataProducts', () => {
+    it('should return the result of userDataProductManService.integrateWithDataProducts()', async () => {
+      const result = {
+        status: 200,
+        error: false,
+        message: 'msg',
+        timestamp: 'time',
+      };
+      const userInfoData = {
+        token: 'some_token',
+        type: 'string', //AFRICA, RyCE, ZACR
+        allocateToName: 'string',
+        personal: 'boolean', //true for user, false for userGroup
+      };
+      jest
+        .spyOn(userDataProductManService, 'integrateWithDataProducts')
+        .mockImplementation(() => Promise.resolve(result));
+
+      expect(await appController.integrateWithDataProducts(userInfoData)).toBe(
+        result,
+      );
+      expect(
+        userDataProductManService.integrateWithDataProducts,
+      ).toHaveBeenCalledWith(
+        userInfoData.token,
+        userInfoData.type,
+        userInfoData.allocateToName,
+        userInfoData.personal,
       );
     });
   });
