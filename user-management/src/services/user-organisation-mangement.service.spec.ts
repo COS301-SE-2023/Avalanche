@@ -87,6 +87,109 @@ describe('UserOrganisationMangementService', () => {
     expect(userOrganisationMangementService).toBeDefined();
   });
 
+  describe('getUserInfo', () => {
+    it('should return an error if the token is invalid', async () => {
+      mockRedis.get.mockResolvedValueOnce(null);
+      const result = await userOrganisationMangementService.getUserInfo('invalidToken');
+      expect(result.status).toEqual(400);
+      expect(result.message).toEqual('Invalid token.');
+      expect(result.timestamp).toBeDefined();
+    });
+  
+    it('should return an error if the user does not exist', async () => {
+      const userPayload = { email: 'userEmail' };
+      mockRedis.get.mockResolvedValueOnce(JSON.stringify(userPayload));
+      mockUserRepository.findOne.mockResolvedValueOnce(null);
+      const result = await userOrganisationMangementService.getUserInfo('validToken');
+      expect(result.status).toEqual(400);
+      expect(result.message).toEqual('User does not exist.');
+      expect(result.timestamp).toBeDefined();
+    });
+  
+    it('should return user information if the token and user are valid', async () => {
+      const userPayload = { email: 'userEmail' };
+      mockRedis.get.mockResolvedValueOnce(JSON.stringify(userPayload));
+      const user = new User();
+      user.email = 'userEmail';
+      user.firstName = 'Test';
+      user.lastName = 'User';
+      user.organisation = new Organisation();
+      user.userGroups = [new UserGroup()];
+      user.products = ['product1', 'product2'];
+      mockUserRepository.findOne.mockResolvedValueOnce(user);
+      mockRedis.set.mockResolvedValueOnce('OK');
+      const result = await userOrganisationMangementService.getUserInfo('validToken');
+      expect(result.status).toEqual('success');
+      expect(result.message).toEqual(user);
+      expect(result.timestamp).toBeDefined();
+    });
+  });  
+
+  describe('getMembers', () => {
+    it('should return an error if the token is invalid', async () => {
+      mockRedis.get.mockResolvedValueOnce(null);
+      const result = await userOrganisationMangementService.getMembers('invalidToken');
+      expect(result.status).toEqual(400);
+      expect(result.message).toEqual('Invalid token.');
+      expect(result.timestamp).toBeDefined();
+    });
+  
+    it('should return an error if the user does not exist', async () => {
+      const userPayload = { email: 'userEmail' };
+      mockRedis.get.mockResolvedValueOnce(JSON.stringify(userPayload));
+      mockUserRepository.findOne.mockResolvedValueOnce(null);
+      const result = await userOrganisationMangementService.getMembers('validToken');
+      expect(result.status).toEqual(400);
+      expect(result.message).toEqual('User does not exist.');
+      expect(result.timestamp).toBeDefined();
+    });
+  
+    it('should return user group information if the token and user are valid', async () => {
+      const userPayload = { email: 'userEmail' };
+      mockRedis.get.mockResolvedValueOnce(JSON.stringify(userPayload));
+  
+      const groupMember1 = new User();
+      groupMember1.firstName = 'Member1First';
+      groupMember1.lastName = 'Member1Last';
+      groupMember1.email = 'member1@email.com';
+  
+      const groupMember2 = new User();
+      groupMember2.firstName = 'Member2First';
+      groupMember2.lastName = 'Member2Last';
+      groupMember2.email = 'member2@email.com';
+  
+      const userGroup = new UserGroup();
+      userGroup.name = 'TestGroup';
+      userGroup.users = [groupMember1, groupMember2];
+      userGroup.id = 1;
+  
+      const user = new User();
+      user.email = 'userEmail';
+      user.userGroups = [userGroup];
+  
+      mockUserRepository.findOne.mockResolvedValueOnce(user);
+      mockUserGroupRepository.findOne.mockResolvedValueOnce(userGroup);
+  
+      const result = await userOrganisationMangementService.getMembers('validToken');
+      expect(result.status).toEqual('success');
+      expect(result.users[0].userGroupName).toEqual(userGroup.name);
+      expect(result.users[0].userGroupID).toEqual(userGroup.id);
+      expect(result.users[0].groupMembers).toEqual([
+        {
+          firstName: groupMember1.firstName,
+          lastName: groupMember1.lastName,
+          email: groupMember1.email
+        },
+        {
+          firstName: groupMember2.firstName,
+          lastName: groupMember2.lastName,
+          email: groupMember2.email
+        }
+      ]);
+      expect(result.timestamp).toBeDefined();
+    });
+  });  
+
   describe('createOrganisation', () => {
     const token = 'validToken';
     it('should return an error if the token is invalid', async () => {
@@ -718,5 +821,7 @@ describe('UserOrganisationMangementService', () => {
       expect(result.timestamp).toBeDefined();
     });
   });
+
+
 
 });

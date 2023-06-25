@@ -127,6 +127,35 @@ describe('AuthService', () => {
     });
   });
 
+  describe('resendOTP', () => {
+    it('should resend an OTP', async () => {
+      const email = 'test@test.com';
+      const otp = '123456';
+      const userPayload = JSON.stringify({ otp });
+  
+      mockRedis.get.mockResolvedValue(userPayload);
+      mockRedis.set.mockResolvedValue('OK');
+      jest.spyOn(authService, 'sendOTPEmail').mockResolvedValue();
+  
+      const result = await authService.resendOTP(email);
+  
+      expect(mockRedis.get).toHaveBeenCalledWith(email);
+      expect(result.status).toBe('success');
+      expect(result.message).toBe('Registration successful. Please check your email for the OTP.');
+    });
+  
+    it('should throw an error if resending OTP fails', async () => {
+      const email = 'test@test.com';
+  
+      mockRedis.get.mockResolvedValue(null);
+  
+      const result = await authService.resendOTP(email);
+  
+      expect(result.status).toBe(400);
+      expect(result.message).toBe('Could not find this email, please regsiter');
+    });
+  });
+  
   describe('login', () => {
     it('should log in a user', async () => {
       const email = 'test@test.com';
