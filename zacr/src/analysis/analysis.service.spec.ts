@@ -28,9 +28,9 @@ describe('AnalysisService', () => {
       {
         TRANSACTIONSBYREGISTRAR: [
           {
-            'key1': 'series1',
-            'key2': '2023-01-01 00:00:00.000 -0800',
-            'key3': '100',
+            key1: 'series1',
+            key2: '2023-01-01 00:00:00.000 -0800',
+            key3: '100',
           },
         ],
       },
@@ -45,14 +45,14 @@ describe('AnalysisService', () => {
       {
         TRANSACTIONSBYREGISTRAR: [
           {
-            'key1': 'series1',
-            'key2': '2023-01-01 00:00:00.000 -0800',
-            'key3': '100',
+            key1: 'series1',
+            key2: '2023-01-01 00:00:00.000 -0800',
+            key3: '100',
           },
           {
-            'key1': 'series2',
-            'key2': '2023-01-02 00:00:00.000 -0800',
-            'key3': '200',
+            key1: 'series2',
+            key2: '2023-01-02 00:00:00.000 -0800',
+            key3: '200',
           },
         ],
       },
