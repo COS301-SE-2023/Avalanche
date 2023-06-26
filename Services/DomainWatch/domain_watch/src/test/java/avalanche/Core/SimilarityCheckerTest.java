@@ -158,9 +158,10 @@ public class SimilarityCheckerTest {
         try {
             //Given
             SimilarityChecker.init(true, 1);
-            SoundexCalculator soundexCalculator = Mockito.mock(SoundexCalculator.class);
-            whenNew(SoundexCalculator.class).withNoArguments().thenReturn(soundexCalculator);
-            Mockito.<Double>when(soundexCalculator.calculateSoundexDifference(anyString(), anyString())).thenReturn(0.7);
+            SoundexCalculator soundexCalculator = Mockito.mock(SoundexCalculator.class); //makes fake SoundexCalc
+            whenNew(SoundexCalculator.class).withNoArguments().thenReturn(soundexCalculator); //powermock - hijacks constructor of SC and return with fake SC so can have control of behaviour of fake SC
+    
+            Mockito.<Double>when(soundexCalculator.calculateSoundexDifference(anyString(), anyString())).thenReturn(0.7); //forcing result of CSDifference to be 0.7, irrespective of params
             SimilarityChecker similarityChecker = new SimilarityChecker();
 
             //When

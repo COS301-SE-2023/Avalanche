@@ -36,12 +36,15 @@ describe('UserManagementService function calls and defined', () => {
         const expectedResult = { success: true };
         const responseObservable = of(expectedResult);
       
-        jest
+        jest //when clientproxy gets called with send, return responce observable
         .spyOn(clientProxy, 'send').mockImplementationOnce(() => responseObservable);
       
         const result = await service.register(data);
       
+        //when clietproxy.send was called, cmd register and data was passed
+        //maybe integration becasue inveestivgating communication betweeen services? 
         expect(clientProxy.send).toHaveBeenCalledWith({ cmd: 'register' }, data);
+        //what we get back is what we expect to get back
         expect(result).toBe(expectedResult)
     });
 
@@ -295,7 +298,11 @@ describe('UserManagementService (Integration)', () => {
   });
 
 
-  describe('register', () => {
+  //defs intergration tests below, dunno about above, need to get proper definition of integration
+
+
+  describe('register', () => { //issue with DB, deleting user from DB cuz othweiser fucky
+    //ideally delete user right after test, restore DB to what it was before test
     /*it('should send registration data to the user management service and return the response', async () => {
       const data = {firstName: 'John2', lastName: 'Doe2', email: 'john2@example.com', password: "yes"};
 
@@ -308,7 +315,7 @@ describe('UserManagementService (Integration)', () => {
       expect(result).toBeDefined
     });*/
 
-    it('should fail as there is no password', async () => {
+    it('should fail as there is no password', async () => { //gateway -> user management
       const data = {firstName: 'John2', lastName: 'Doe2', email: 'john2@example.com'};
 
       const result = await service.register(data);
