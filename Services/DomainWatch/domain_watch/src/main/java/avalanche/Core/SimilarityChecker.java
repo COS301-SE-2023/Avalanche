@@ -153,28 +153,16 @@ public class SimilarityChecker {
             threads[i].start();
         }
 
+        spinThreads(0, threads);
         for (int i = 0; i < threads.length; i++) {
-            System.out.println();
-        }
-
-        int loaderNum = 0;
-        final String[] loading = { "-", "\\", "|", "/" };
-        boolean busy = true;
-        while (busy) {
-            if (loaderNum == loading.length) {
-                loaderNum = 0;
-            }
-            spinThreadsTimed(500, loaderNum, threads);
-            loaderNum++;
-            busy = false;
-            for (int i = 0; i < threads.length; i++) {
-                if (threads[i].isAlive()) {
-                    busy = true;
-                    break;
-                }
+            try {
+                threads[i].join();
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             }
         }
-        spinThreads(loaderNum, threads);
+        spinThreads(0, threads);
         return hits;
     }
 
@@ -188,27 +176,16 @@ public class SimilarityChecker {
             threads[i].start();
         }
 
-        boolean busy = true;
+        spinThreads(0, threads);
         for (int i = 0; i < threads.length; i++) {
-            System.out.println();
-        }
-        int loaderNum = 0;
-        final String[] loading = { "-", "\\", "|", "/" };
-        while (busy) {
-            if (loaderNum == loading.length) {
-                loaderNum = 0;
-            }
-            spinThreadsTimed(500, loaderNum, threads);
-            loaderNum++;
-            busy = false;
-            for (int i = 0; i < threads.length; i++) {
-                if (threads[i].isAlive()) {
-                    busy = true;
-                    break;
-                }
+            try {
+                threads[i].join();
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             }
         }
-        spinThreads(loaderNum, threads);
+        spinThreads(0, threads);
         return hits;
     }
 
@@ -225,9 +202,10 @@ public class SimilarityChecker {
         }
     }
 
-    private void spinThreadsTimed(int milliseconds, int position, Thread[] threads) {
-        if (System.currentTimeMillis() % 500 == 0) {
-            spinThreads(position, threads);
-        }
-    }
+    // private void spinThreadsTimed(int milliseconds, int position, Thread[]
+    // threads) {
+    // if (System.currentTimeMillis() % 500 == 0) {
+    // spinThreads(position, threads);
+    // }
+    // }
 }

@@ -126,3 +126,6 @@ Services/DomainWatch/domain_watch/target/surefire-reports/TEST-avalanche.Threads
 Services/DomainWatch/domain_watch/target/surefire-reports/TEST-avalanche.Threads.SoundexThreadTest.xml
 Services/DomainWatch/domain_watch/target/surefire-reports/TEST-avalanche.Utility.DomainTokeniserTest.xml
 Services/DomainWatch/domain_watch/target/domain_watch-1.0.jar
+Services/DomainWatch/domain_watch/target/test-classes/avalanche/Network/ServerState/ClosedTest.class
+Services/DomainWatch/domain_watch/target/test-classes/avalanche/Network/ServerState/InitialisingTest.class
+Services/DomainWatch/domain_watch/target/test-classes/avalanche/Network/ServerState/RunningTest.class
