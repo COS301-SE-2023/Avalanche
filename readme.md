@@ -6,7 +6,9 @@
   <img src="https://github.com/COS301-SE-2023/Avalanche/actions/workflows/javaTest.yml/badge.svg">
   <img src="https://github.com/COS301-SE-2023/Avalanche/actions/workflows/javaCoverage.yml/badge.svg">
   <img src="https://github.com/COS301-SE-2023/Avalanche/actions/workflows/tests.yml/badge.svg">
-  <img src="https://codecov.io/gh/COS301-SE-2023/Avalanche/branch/working/graph/badge.svg?token=Q021VJLYQ8"/> 
+  <a href="https://codecov.io/github/COS301-SE-2023/Avalanche" > 
+ <img src="https://codecov.io/github/COS301-SE-2023/Avalanche/branch/integration_dev/graph/badge.svg?token=Q021VJLYQ8"/> 
+ </a>
 
 </div>
 
