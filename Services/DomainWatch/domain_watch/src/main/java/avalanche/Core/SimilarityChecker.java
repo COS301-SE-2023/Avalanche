@@ -164,7 +164,7 @@ public class SimilarityChecker {
             if (loaderNum == loading.length) {
                 loaderNum = 0;
             }
-            spinThreadsTimed(500, loaderNum, threads);
+            spinThreads(loaderNum, threads);
             loaderNum++;
             busy = false;
             for (int i = 0; i < threads.length; i++) {

@@ -51,3 +51,9 @@ jobs:
           path: '*/coverage-results.md' 
           retention-days: 1  
       
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+            files: Services\DomainWatch\domain_watch\target\site\jacoco\jacoco.xml
+            token: ${{ secrets.CODECOV_TOKEN }}
