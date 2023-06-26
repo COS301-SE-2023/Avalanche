@@ -160,11 +160,11 @@ public class SimilarityChecker {
         int loaderNum = 0;
         final String[] loading = { "-", "\\", "|", "/" };
         boolean busy = true;
+        spinThreads(loaderNum, threads);
         while (busy) {
             if (loaderNum == loading.length) {
                 loaderNum = 0;
             }
-            spinThreads(loaderNum, threads);
             loaderNum++;
             busy = false;
             for (int i = 0; i < threads.length; i++) {
