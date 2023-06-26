@@ -18,7 +18,7 @@ export default function Invitation() {
     }
 
     if (!jwt) {
-        sessionStorage.set('invite', JSON.stringify({ type, key }));
+        localStorage.set('invite', JSON.stringify({ type, key }));
         router.push("/");
         return;
     }
