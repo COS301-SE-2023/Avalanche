@@ -28,7 +28,7 @@ describe('JwtMiddleware', () => {
     expect(middleware).toBeDefined();
   });
 
-  it('should handle valid token', async () => {
+  it('should handle valid token with zacr', async () => {
     const nextMock = jest.fn();
     const resMock = {
       status: jest.fn().mockReturnThis(),
@@ -41,6 +41,56 @@ describe('JwtMiddleware', () => {
       baseUrl: '/zacr',
       body: {
         graphName: 'mygraph',
+      },
+    };
+
+    redisMock.get.mockResolvedValue(JSON.stringify({ userId: 'user1' }));
+
+    await middleware.use(reqMock as any, resMock as any, nextMock);
+
+    expect(redisMock.get).toHaveBeenCalledWith('mytoken');
+    expect(nextMock).toHaveBeenCalled();
+    expect(resMock.status).not.toHaveBeenCalled();
+  });
+
+  it('should handle valid token with domain watch', async () => {
+    const nextMock = jest.fn();
+    const resMock = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+    const reqMock = {
+      headers: {
+        authorization: 'Bearer mytoken',
+      },
+      baseUrl: '/domain-watch',
+      body: {
+        string: 'mystring',
+      },
+    };
+
+    redisMock.get.mockResolvedValue(JSON.stringify({ userId: 'user1' }));
+
+    await middleware.use(reqMock as any, resMock as any, nextMock);
+
+    expect(redisMock.get).toHaveBeenCalledWith('mytoken');
+    expect(nextMock).toHaveBeenCalled();
+    expect(resMock.status).not.toHaveBeenCalled();
+  });
+
+  it('should handle valid token with empty', async () => {
+    const nextMock = jest.fn();
+    const resMock = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+    const reqMock = {
+      headers: {
+        authorization: 'Bearer mytoken',
+      },
+      baseUrl: '',
+      body: {
+        string: 'mystring',
       },
     };
 
@@ -70,6 +120,27 @@ describe('JwtMiddleware', () => {
     await middleware.use(reqMock as any, resMock as any, nextMock);
 
     expect(redisMock.get).toHaveBeenCalledWith('invalidtoken');
+    expect(nextMock).not.toHaveBeenCalled();
+    expect(resMock.status).toHaveBeenCalledWith(401);
+    expect(resMock.json).toHaveBeenCalled();
+  });
+
+  it('should handle invalid token', async () => {
+    const nextMock = jest.fn();
+    const resMock = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+    const reqMock = {
+      headers: {
+        authorization: 'Bearer_invalidtoken',
+      },
+    };
+
+    redisMock.get.mockResolvedValue(null);
+
+    await middleware.use(reqMock as any, resMock as any, nextMock);
+
     expect(nextMock).not.toHaveBeenCalled();
     expect(resMock.status).toHaveBeenCalledWith(401);
     expect(resMock.json).toHaveBeenCalled();

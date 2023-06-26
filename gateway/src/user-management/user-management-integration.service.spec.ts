@@ -5,7 +5,7 @@ import { AppModule } from '../app.module';
 import { Random } from 'mockjs';
 import { ConfigService } from '@nestjs/config';
 
-describe('User Management Integration Tests From Gatewat', () => {
+describe('User Management Integration Tests From Gateway', () => {
   describe('User Management Auth Integration From Gateway', () => {
     let app: INestApplication;
     let configService: ConfigService;
