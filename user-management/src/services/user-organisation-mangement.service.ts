@@ -93,6 +93,7 @@ export class UserOrganisationMangementService {
                 const userInfoCopy = [];
                 usersInfo.forEach(val => userInfoCopy.push(Object.assign({}, val)));
                 userGroupDetails.push({ userGroupName: userGroup.name, userGroupID: userGroup.id, groupMembers: userInfoCopy });
+                uniqueUsers.clear();
                 usersInfo.length = 0;
             }
         }
@@ -541,7 +542,7 @@ export class UserOrganisationMangementService {
 
         // Add the user to the group
         user.organisation = userGroup.organisation;
-        user.userGroups = [userGroup];
+        user.userGroups.push(userGroup);
 
         // Save the changes
         const userB = await this.userRepository.save(user);
