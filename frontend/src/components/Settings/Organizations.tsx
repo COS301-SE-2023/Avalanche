@@ -23,6 +23,8 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
     const stateUser = useSelector(userState);
     const dispatch = useDispatch<any>();
 
+    console.log(stateUser);
+
     /**
      * When the component loads, it must fetch the latest organisation object and the latest user groups
      */
@@ -76,6 +78,20 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
         inactive: "inline-block px-4 py-3 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-white w-full"
     }
 
+    const renderGroups = () => {
+
+        if (stateUser.userGroups) {
+            return stateUser.userGroups.map((data: any, index: number) => {
+                const name = `${data.userGroupName}-${data.userGroupID}`;
+                return <li className="mr-2 cursor-pointer w-full" onClick={() => tabClick(name, index)} key={index}>
+                    <span className={groupTab === name ? tabOptions.active : tabOptions.inactive}>{data.userGroupName}</span>
+                </li>
+            })
+        }
+
+        return [];
+    }
+
     /**
      * This function handles the tab click.
      * @param value is the value that the group tab state variable will be updated to.
@@ -102,11 +118,7 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
                             dispatch(setAddUserGroupSuccess(false));
                             dispatch(setCurrentOpenState("ORG.AddUserToGroup"));
                         }} className="mb-2" />
-                        {stateUser.userGroups.map((data: any, index: number) => {
-                            return <li className="mr-2 cursor-pointer w-full" onClick={() => tabClick(`${data.userGroupName}-${data.userGroupID}`, index)} key={index}>
-                                <span className={groupTab === `${data.userGroupName}-${data.userGroupID}` ? tabOptions.active : tabOptions.inactive}>{data.userGroupName}</span>
-                            </li>
-                        })}
+                        {renderGroups()}
                     </ul>
                 </div>
                 <div className="w-full p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">

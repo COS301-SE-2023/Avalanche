@@ -181,7 +181,7 @@ export const userSlice = createSlice({
         })
         // Create User Group
         builder.addCase(createOrganisationGroup.fulfilled, (state, action) => {
-            console.log("ful");
+
             const payload = action.payload as ICreateUserGroupResponse;
             state.user.userGroups?.push(payload.message);
             state.createGroupSuccess = true;
@@ -191,7 +191,6 @@ export const userSlice = createSlice({
             state.createGroupSuccess = false;
         })
         builder.addCase(createOrganisationGroup.rejected, (state, action) => {
-            console.log("rejected", action);
             state.createGroupSuccess = false;
         })
         // Get User Group
@@ -359,8 +358,6 @@ export const getLatestOrganisation = createAsyncThunk("ORG.GetLatestOrganisation
                 "Authorization": `Bearer ${jwt}`
             }
         }).json();
-        console.log(response);
-        console.log(response.message.organisation);
         return response.message.organisation as any;
     } catch (e) {
         if (e instanceof Error) return rejectWithValue(e.message);
