@@ -20,4 +20,12 @@ describe('Home page test', () => {
     cy.get('#__next').should('exist');
     cy.get('#__NEXT_DATA__').should('exist');
   });
+
+  it('should have specific headers', () => {
+    cy.request('http://localhost:3000/')
+      .its('headers')
+      .should('include', {
+        'content-type': 'text/html; charset=utf-8',
+      });
+  });
 })
