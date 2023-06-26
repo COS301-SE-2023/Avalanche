@@ -23,8 +23,6 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
     const stateUser = useSelector(userState);
     const dispatch = useDispatch<any>();
 
-    console.log(stateUser);
-
     /**
      * When the component loads, it must fetch the latest organisation object and the latest user groups
      */
@@ -92,6 +90,19 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
         return [];
     }
 
+    const isAdmin = () => {
+        let found = null;
+
+        found = stateUser.user.userGroups.find((element: any) => element.permission === 1);
+
+        if (found) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
     /**
      * This function handles the tab click.
      * @param value is the value that the group tab state variable will be updated to.
@@ -105,19 +116,14 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
         {stateUser.user.organisation ? <>
             <div className="flex justify-between pb-2 mb-4">
                 <h2 className="text-2xl font-medium dark:text-white text-gray-800">{stateUser.user.organisation.name}</h2>
-                <DeleteButton text="Delete Organization" onClick={() => { }} />
+                <>
+                    {isAdmin() && false && <DeleteButton text="Delete Organization" onClick={() => { }} />}
+                </>
+
             </div>
             <div className="flex gap-2">
                 <div className="flex gap-5 mb-1 pb-1 w-48 items-start">
                     <ul className="flex text-sm font-medium text-center pr-2 text-gray-500 dark:text-gray-400 flex-col gap-1 w-full">
-                        <AlternativeButton text="Create a Group" onClick={() => {
-                            dispatch(setCreateGroupSuccess(false));
-                            dispatch(setCurrentOpenState("ORG.CreateGroup"));
-                        }} className="mb-2" />
-                        <AlternativeButton text="Add User to Group" onClick={() => {
-                            dispatch(setAddUserGroupSuccess(false));
-                            dispatch(setCurrentOpenState("ORG.AddUserToGroup"));
-                        }} className="mb-2" />
                         {renderGroups()}
                     </ul>
                 </div>
@@ -151,14 +157,24 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
                                         </Menu.Items>
                                     </Transition>
                                 </Menu> */}
+                                {isAdmin() && <AlternativeButton text="Create a Group" onClick={() => {
+                                    dispatch(setCreateGroupSuccess(false));
+                                    dispatch(setCurrentOpenState("ORG.CreateGroup"));
+                                }} className="mb-2" />}
+                                {isAdmin() && <AlternativeButton text="Add User to Group" onClick={() => {
+                                    dispatch(setAddUserGroupSuccess(false));
+                                    dispatch(setCurrentOpenState("ORG.AddUserToGroup"));
+                                }} className="mb-2" />}
                             </div>
-                            <label htmlFor="table-search" className="sr-only">Search</label>
-                            <div className="relative">
-                                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                    <svg className="w-5 h-5 text-gray-500 dark:text-gray-400" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd"></path></svg>
-                                </div>
-                                <input type="text" id="table-search-users" className="block p-2 pl-10 text-sm text-gray-900 border-1.5 border-gray-300 rounded-lg w-80 bg-gray-50 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Search for users" onChange={(event: React.FormEvent<HTMLInputElement>) => handleSearch(event)} />
-                            </div>
+                            <>
+                                {false && <>                            <label htmlFor="table-search" className="sr-only">Search</label>
+                                    <div className="relative">
+                                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                            <svg className="w-5 h-5 text-gray-500 dark:text-gray-400" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd"></path></svg>
+                                        </div>
+                                        <input type="text" id="table-search-users" className="block p-2 pl-10 text-sm text-gray-900 border-1.5 border-gray-300 rounded-lg w-80 bg-gray-50 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Search for users" onChange={(event: React.FormEvent<HTMLInputElement>) => handleSearch(event)} />
+                                    </div></>}
+                            </>
                         </div>
 
                         { /* Renders users */
@@ -177,9 +193,9 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
                                         <th scope="col" className="px-6 py-3">
                                             Added
                                         </th>
-                                        <th scope="col" className="px-6 py-3">
+                                        {isAdmin() && <th scope="col" className="px-6 py-3">
 
-                                        </th>
+                                        </th>}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -205,11 +221,11 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
                                                         Sometime in the past
                                                     </div>
                                                 </td>
-                                                <td className="float-right mr-2">
+                                                {isAdmin() && <td className="float-right mr-2">
                                                     <TableIconButton icon={<TrashIcon className="h-5 w-5 text-red-500 cursor-pointer" />} colour="red" handleModal={(value) => {
                                                         dispatch(setCurrentOpenState("ORG.RemoveUser"))
                                                     }} />
-                                                </td>
+                                                </td>}
                                             </tr>
                                         })
                                     }
