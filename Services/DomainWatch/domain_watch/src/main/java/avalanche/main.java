@@ -14,7 +14,7 @@ import avalanche.Utility.DomainTokeniser;
 public class main {
     public static void main(String[] args) {
         try {
-            SimpleHttpServer server = new SimpleHttpServer(4004);
+            SimpleHttpServer server = new SimpleHttpServer(4004, false);
             server.start();
             server.handleDummyRequest();
         } catch (IOException e) {

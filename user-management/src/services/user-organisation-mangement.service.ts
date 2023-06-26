@@ -75,7 +75,7 @@ export class UserOrganisationMangementService {
         const userGroupDetails = [];
         if (user.userGroups !== null) {
             for (const userGroup of user.userGroups) {
-                const userGroupUsers = await this.userGroupRepository.findOne({where : {name : userGroup.name}, relations : ['users']});
+                const userGroupUsers = await this.userGroupRepository.findOne({ where: { name: userGroup.name }, relations: ['users'] });
                 for (const groupUser of userGroupUsers.users) {
                     const userKey = `${groupUser.firstName}-${groupUser.lastName}-${groupUser.email}`;
                     if (!uniqueUsers.has(userKey)) {
@@ -91,14 +91,15 @@ export class UserOrganisationMangementService {
                     }
                 }
                 const userInfoCopy = [];
-                usersInfo.forEach(val => userInfoCopy.push(Object.assign({},val)));
-                userGroupDetails.push({userGroupName : userGroup.name, groupMembers : userInfoCopy});
+                usersInfo.forEach(val => userInfoCopy.push(Object.assign({}, val)));
+                userGroupDetails.push({ userGroupName: userGroup.name, userGroupID: userGroup.id, groupMembers: userInfoCopy });
+                uniqueUsers.clear();
                 usersInfo.length = 0;
             }
         }
         return {
-            status: 'success', 
-            users: userGroupDetails, 
+            status: 'success',
+            users: userGroupDetails,
             timestamp: new Date().toISOString()
         };
     }
@@ -194,7 +195,7 @@ export class UserOrganisationMangementService {
                 timestamp: new Date().toISOString()
             };
         }
-        const organisationId = user.organisation.id;
+        const organisationId = user.organisation?.id;
         const userPermission = user.userGroups[0].permission;
 
         if (userPermission === 1) {
@@ -271,7 +272,6 @@ export class UserOrganisationMangementService {
                     // Store the key in Redis with 7 days expiry time
                     const redisData = JSON.stringify({ userEmail: userEmail, userGroupName: userGroupName });
                     await this.redis.set(key, redisData, 'EX', 7 * 24 * 60 * 60);
-
                     // Send email to existing user with invitation link
                     await this.sendInvitationEmail(userEmail, key, userGroupName);
                     return {
@@ -295,14 +295,14 @@ export class UserOrganisationMangementService {
 
         const registrationHtmlTemplate = readFileSync(join(__dirname, '../../src/html/registration-email-template.html'), 'utf-8');
         let registrationHtml = registrationHtmlTemplate.replace('{UserGroup}', userGroupName);
-        registrationHtml = registrationHtmlTemplate.replace('{url}', `http://localhost:3000/invitation?key=${token}&type=group`);
+        registrationHtml = registrationHtml.replace('{url}', `http://localhost:3000/invitation?key=${token}&type=group`);
         // Email options
         const mailOptions = {
             from: 'theskunkworks301@gmail.com',
             to: email,
             subject: `Invitation to "${userGroupName}" on Avalanche Analytics`,
             html: registrationHtml,
-            text: `You have been invited to join "{{UserGroup}}" on Avalanche Analytics.\n
+            text: `You have been invited to join "${UserGroup}" on Avalanche Analytics.\n
             To accept the invitation please follow the link to register on our platform: 
             \nhttp://localhost:3000/invitation?key=${token}&type=group`
         };
@@ -311,8 +311,6 @@ export class UserOrganisationMangementService {
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
                 console.log(error);
-            } else {
-                console.log('Email sent: ' + info.response);
             }
         });
     }
@@ -329,14 +327,15 @@ export class UserOrganisationMangementService {
 
         const invitationHtmlTemplate = readFileSync(join(__dirname, '../../src/html/invitation-email-template.html'), 'utf-8');
         let invitationHtml = invitationHtmlTemplate.replace('{UserGroup}', userGroupName);
-        invitationHtml = invitationHtmlTemplate.replace('{url}', `http://localhost:3000/invitation?key=${token}&type=group`);
+        invitationHtml = invitationHtml.replace('{url}', `http://localhost:3000/invitation?key=${token}&type=group`);
         // Email options
+
         const mailOptions = {
             from: 'theskunkworks301@gmail.com',
             to: email,
             subject: `Invitation to "${userGroupName}" on Avalanche Analytics`,
             html: invitationHtml,
-            text: `You have been invited to join "{{UserGroup}}" on Avalanche Analytics.\n
+            text: `You have been invited to join "${userGroupName}" on Avalanche Analytics.\n
             To accept the invitation please follow the link: 
             \nhttp://localhost:3000/invitation?key=${token}&type=group`
         };
@@ -346,8 +345,6 @@ export class UserOrganisationMangementService {
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
                 console.log(error);
-            } else {
-                console.log('Email sent: ' + info.response);
             }
         });
     }
@@ -501,6 +498,8 @@ export class UserOrganisationMangementService {
         // Parse the data
         const { userEmail, userGroupName } = JSON.parse(redisData);
 
+        console.log("EMAIL", userEmail, "GROUP NAME", userGroupName);
+
         // Retrieve the user with their groups based on the token
         const user = await this.userRepository.findOne({
             where: { email: userEmail }, relations: ['userGroups', 'organisation'],
@@ -543,7 +542,7 @@ export class UserOrganisationMangementService {
 
         // Add the user to the group
         user.organisation = userGroup.organisation;
-        user.userGroups = [userGroup];
+        user.userGroups.push(userGroup);
 
         // Save the changes
         const userB = await this.userRepository.save(user);
@@ -568,7 +567,7 @@ export class UserOrganisationMangementService {
         }
         const userDetails = JSON.parse(userData);
 
-        const userToBeRemoved = await this.userRepository.findOne({ where: { email: userDetails.email }, relations: ['userGroups', 'organisations'], select: ['id', 'email', 'firstName', 'lastName', 'organisationId', 'products', 'userGroups', 'organisation'] });
+        const userToBeRemoved = await this.userRepository.findOne({ where: { email: userDetails.email }, relations: ['userGroups', 'organisation'], select: ['id', 'email', 'firstName', 'lastName', 'organisationId', 'products', 'userGroups', 'organisation'] });
         if (!userToBeRemoved) {
             return {
                 status: 400, error: true, message: 'User to be removed not found',
@@ -591,12 +590,15 @@ export class UserOrganisationMangementService {
         // Remove the user from each of the user groups they are part of
         if (userToBeRemoved.userGroups !== null) {
             for (const group of userToBeRemoved.userGroups) {
-                group.users = group.users.filter(user => user.id !== userToBeRemoved.id);
-                await this.userGroupRepository.save(group);
+                if (group.users) {
+                    group.users = group.users.filter(user => user.id !== userToBeRemoved.id);
+                    await this.userGroupRepository.save(group);
+                }
             }
         }
 
         // At this point the user has been removed from all their user groups and their organisation.
+        userToBeRemoved.organisationId = null;
         userToBeRemoved.organisation = null;
         userToBeRemoved.userGroups = null;
         await this.userRepository.save(userToBeRemoved);
@@ -634,7 +636,7 @@ export class UserOrganisationMangementService {
         }
 
         // Retrieve the user to be removed based on the email
-        const userToBeRemoved = await this.userRepository.findOne({ where: { email: userEmail }, relations: ['userGroups'] });
+        const userToBeRemoved = await this.userRepository.findOne({ where: { email: userEmail }, relations: ['userGroups', 'userGroups.users'] });
         if (!userToBeRemoved) {
             return {
                 status: 400, error: true, message: 'User to be removed not found',

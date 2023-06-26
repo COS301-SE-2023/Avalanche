@@ -8,7 +8,7 @@ export class AnalysisService {
       throw new Error('Invalid data');
     }
 
-    const keys = Object.keys(jsonData[0]['TRANSACTIONSBYREGISTRAR']);
+    const keys = Object.keys(jsonData[0]['TRANSACTIONSBYREGISTRAR'][0]);
     if (keys.length < 2) {
       throw new Error('Data should have at least two columns');
     }
@@ -16,7 +16,7 @@ export class AnalysisService {
     const seriesData =
       keys.length === 3 ? this.groupBySeries(jsonData) : { total: jsonData };
 
-    const statistics = {};
+    const statistics = { array: [] };
 
     for (const [series, data] of Object.entries(seriesData)) {
       const data = jsonData as Array<{ [key: string]: string | number }>;

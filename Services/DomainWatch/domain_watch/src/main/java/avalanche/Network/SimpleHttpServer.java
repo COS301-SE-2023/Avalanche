@@ -22,10 +22,12 @@ public class SimpleHttpServer {
     private Executor threadPool;
     private int port;
     private ServerState state;
+    private boolean useMock;
 
-    public SimpleHttpServer(int port) throws IOException {
+    public SimpleHttpServer(int port, boolean useMock) throws IOException {
         this.port = port;
         this.state = new Closed();
+        this.useMock = useMock;
     }
 
     public void start() throws IOException, InstantiationException {
@@ -45,7 +47,7 @@ public class SimpleHttpServer {
         System.out.println("Found " + Runtime.getRuntime().availableProcessors() + " processors");
         long st = System.currentTimeMillis();
         System.out.println("initialising domain list");
-        SimilarityChecker.init(false, Math.min(DomainWatchSettings.getInstace().maximumThreadsPerSearch,
+        SimilarityChecker.init(useMock, Math.min(DomainWatchSettings.getInstace().maximumThreadsPerSearch,
                 Runtime.getRuntime().availableProcessors() - 1));
         System.out.println("Done domain list\n");
 

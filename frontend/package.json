@@ -9,9 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "cypress": "cypress run --browser chrome --config video=false",
-    "cypress open": "cypress open",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "cypress open": "cypress open"
   },
   "dependencies": {
     "@emotion/core": "^11.0.0",

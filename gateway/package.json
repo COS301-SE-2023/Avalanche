@@ -14,6 +14,8 @@
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
+    "test:force": "jest --forceExit",
+    "test:open": "jest --detectOpenHandles",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
@@ -28,6 +30,7 @@
     "@nestjs/platform-express": "^9.0.0",
     "axios": "^1.4.0",
     "ioredis": "^5.3.2",
+    "mockjs": "^1.1.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0"
   },
@@ -41,6 +44,7 @@
     "@types/supertest": "^2.0.11",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
+    "axios-mock-adapter": "^1.21.5",
     "eslint": "^8.0.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
@@ -62,13 +66,20 @@
     ],
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",
+    "testPathIgnorePatterns": [
+      ".*-integration\\.service\\.spec\\.ts$"
+    ],
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "collectCoverageFrom": [
-      "**/*.(t|j)s"
+      "**/*.(t|j)s",
+      "!**/*-integration.service.spec.ts",
+      "!**/rpc-excpetion.filter.ts",
+      "!**/app.module.ts",
+      "!**/main.ts"
     ],
-    "coverageDirectory": "../coverage",
+    "coverageDirectory": "../gateway/coverage",
     "testEnvironment": "node"
   }
 }

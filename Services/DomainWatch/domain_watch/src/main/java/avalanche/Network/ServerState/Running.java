@@ -17,11 +17,11 @@ public class Running extends ServerState {
         SimilarityChecker similarityChecker = new SimilarityChecker();
         String resp = "{  \"status\":\"success\",  \"data\":[";
         ConcurrentLinkedQueue<Domain> hits = new ConcurrentLinkedQueue<>();
-        JSONObject obj = new JSONObject(body);
-        String validation = validateRequest(obj);
+        String validation = validateRequest(body);
         if (!validation.equals("")) {
             return validation;
         }
+        JSONObject obj = new JSONObject(body);
         String domain = (obj.getString("domain"));
 
         int numCalcs = (obj.getJSONArray("types").length());
@@ -29,24 +29,25 @@ public class Running extends ServerState {
         for (int j = 0; j < numCalcs; j++) {
             String type = obj.getJSONArray("types").getJSONObject(j).getString("type");
             double threshold = (obj.getJSONArray("types").getJSONObject(j).getDouble("threshold"));
-            if (type.equals("Levenshtein")) {
-                if (j == 0) {
-                    hits = similarityChecker.threadedFindAllWithinSimliarityThreshold(domain,
-                            threshold);
-                } else {
-                    hits = similarityChecker.findAllWithinSimliarityThreshold(domain,
-                            threshold, hits);
-                }
-
-            } else if (type.equals("Soundex")) {
-                if (j == 0) {
-                    hits = similarityChecker.threadedfindAllSoundsAboveSimliarityThreshold(domain,
-                            threshold);
-                } else {
-                    hits = similarityChecker.findAllSoundsAboveSimliarityThreshold(domain,
-                            threshold, hits);
-                }
-
+            switch (type) {
+                case "Levenshtein":
+                    if (j == 0) {
+                        hits = similarityChecker.threadedFindAllWithinSimliarityThreshold(domain,
+                                threshold);
+                    } else {
+                        hits = similarityChecker.findAllWithinSimliarityThreshold(domain,
+                                threshold, hits);
+                    }
+                    break;
+                case "Soundex":
+                    if (j == 0) {
+                        hits = similarityChecker.threadedfindAllSoundsAboveSimliarityThreshold(domain,
+                                threshold);
+                    } else {
+                        hits = similarityChecker.findAllSoundsAboveSimliarityThreshold(domain,
+                                threshold, hits);
+                    }
+                    break;
             }
         }
         Domain[] hitsArr = new Domain[hits.size()];

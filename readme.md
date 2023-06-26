@@ -5,6 +5,11 @@
   <img src="https://github.com/COS301-SE-2023/Avalanche/actions/workflows/tests.yml/badge.svg">
   <img src="https://github.com/COS301-SE-2023/Avalanche/actions/workflows/javaTest.yml/badge.svg">
   <img src="https://github.com/COS301-SE-2023/Avalanche/actions/workflows/javaCoverage.yml/badge.svg">
+  <img src="https://github.com/COS301-SE-2023/Avalanche/actions/workflows/tests.yml/badge.svg">
+  <a href="https://codecov.io/github/COS301-SE-2023/Avalanche" > 
+ <img src="https://codecov.io/github/COS301-SE-2023/Avalanche/branch/working/graph/badge.svg?token=Q021VJLYQ8"/> 
+ </a>
+
 </div>
 
 COS301 Capstone Project for [Domain Name Services (Pty) Ltd](https://dns.business/).
@@ -14,6 +19,8 @@ Avalanche is a data analytics tool with flavor as an information management syst
 ## Documentation
 ### Demo 1
 [Presentation](https://www.canva.com/design/DAFjZPgvC5U/85tYwSR4TQRrY1IsCMRMnQ/edit?utm_content=DAFjZPgvC5U&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+### Demo 2
+[Presentation](https://www.canva.com/design/DAFmoXptQFE/Q2WRO4Xh-WqBES16kIqZlQ/edit?utm_content=DAFmoXptQFE&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 ### Project Day
 ### Software Requirements Specification
 ### Architecture Document
