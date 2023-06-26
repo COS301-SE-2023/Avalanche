@@ -160,6 +160,7 @@ public class SimilarityChecker {
             } catch (InterruptedException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
+
             }
         }
         spinThreads(0, threads);
