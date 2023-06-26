@@ -8,8 +8,10 @@ import { selectModalManagerState } from "@/store/Slices/modalManagerSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { userState, logout } from "@/store/Slices/userSlice";
 import { useRouter } from "next/router";
-import { getCookie } from "cookies-next";
+import { getCookie, deleteCookie } from "cookies-next";
 import LoadingPage from "../Util/Loading";
+import ky from "ky";
+import { ErrorToast, SuccessToast } from "../Util";
 
 export default function Sidebar() {
     const { theme, setTheme } = useTheme();
@@ -19,18 +21,68 @@ export default function Sidebar() {
     const modalState = useSelector(selectModalManagerState);
     const router = useRouter();
 
+    const jwt = getCookie("jwt");
+
+    /**
+     * Handles the invitation
+     */
     useEffect(() => {
-        if (!stateUser.user.id) {
-            router.push("/");
+        if (localStorage.get("invite")) {
+            const ls: any = localStorage.getItem("invite");
+            const key = ls.key;
+            const type = ls.type;
+            if (key && type?.type === "group") {
+                handleGroupInvite(key, type);
+            }
+        }
+    }, [])
+
+    /**
+     * This will handle the group invites
+     * @param key is the key of the invitation
+     * @param type is the type of the invitation
+     */
+    const handleGroupInvite = async (key: string, type: string) => {
+        try {
+            await ky.post(`http://localho.st:4000/user-management/addUserToUserGroupWithKey`, {
+                json: { key: `${key}` },
+                headers: {
+                    "Authorization": `Bearer ${jwt}`
+                }
+            }).json();
+            SuccessToast({ text: "You have been successfully added to a group that you were invited to." });
+        } catch (e) {
+            if (e instanceof Error) ErrorToast({ text: `${e.message}` });
+        }
+    }
+
+    /**
+     * This clears any data that is used by the application
+     */
+    const clearingData = () => {
+        localStorage.removeItem("persist:nextjs");
+        deleteCookie("jwt");
+        router.push("/");
+    }
+
+    /**
+     * Handles if the user is not logged in, or the jwt token does not exist
+     */
+    useEffect(() => {
+        if (!stateUser.user.id || !jwt) {
+            clearingData();
         }
     }, [stateUser]);
 
+    /**
+     * Handles dark and light mode toggles
+     */
     const toggleDarkMode = (): void => {
         theme === "dark" ? setTheme('light') : setTheme("dark")
     }
 
     if (!getCookie("jwt")) {
-        router.push("/");
+        clearingData();
         return <LoadingPage />
     } else
         return (
