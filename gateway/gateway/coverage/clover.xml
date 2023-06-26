@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1687697677852" clover="3.2.0">
-  <project timestamp="1687697677853" name="All files">
+<coverage generated="1687779694004" clover="3.2.0">
+  <project timestamp="1687779694004" name="All files">
     <metrics statements="248" coveredstatements="227" conditionals="93" coveredconditionals="72" methods="45" coveredmethods="45" elements="386" coveredelements="344" complexity="0" loc="248" ncloc="248" packages="4" files="8" classes="8"/>
     <package name="src">
       <metrics statements="30" coveredstatements="25" conditionals="13" coveredconditionals="8" methods="3" coveredmethods="3"/>
-      <file name="jwt-middleware.middleware.ts" path="C:\Users\Marc\Documents\3rd Year\COS 301\api test\Avalanche v1.1\Avalanche\gateway\src\jwt-middleware.middleware.ts">
+      <file name="jwt-middleware.middleware.ts" path="C:\Users\Marc\Documents\3rd Year\COS 301\api test\Avalanche v1.2\Avalanche\gateway\src\jwt-middleware.middleware.ts">
         <metrics statements="23" coveredstatements="18" conditionals="12" coveredconditionals="7" methods="2" coveredmethods="2"/>
         <line num="2" count="1" type="stmt"/>
         <line num="4" count="1" type="stmt"/>
@@ -30,7 +30,7 @@
         <line num="36" count="0" type="stmt"/>
         <line num="40" count="0" type="stmt"/>
       </file>
-      <file name="redis.provider.ts" path="C:\Users\Marc\Documents\3rd Year\COS 301\api test\Avalanche v1.1\Avalanche\gateway\src\redis.provider.ts">
+      <file name="redis.provider.ts" path="C:\Users\Marc\Documents\3rd Year\COS 301\api test\Avalanche v1.2\Avalanche\gateway\src\redis.provider.ts">
         <metrics statements="7" coveredstatements="7" conditionals="1" coveredconditionals="1" methods="1" coveredmethods="1"/>
         <line num="3" count="2" type="stmt"/>
         <line num="4" count="2" type="stmt"/>
@@ -43,7 +43,7 @@
     </package>
     <package name="src.domain-watch">
       <metrics statements="16" coveredstatements="16" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="4"/>
-      <file name="domain-watch.controller.ts" path="C:\Users\Marc\Documents\3rd Year\COS 301\api test\Avalanche v1.1\Avalanche\gateway\src\domain-watch\domain-watch.controller.ts">
+      <file name="domain-watch.controller.ts" path="C:\Users\Marc\Documents\3rd Year\COS 301\api test\Avalanche v1.2\Avalanche\gateway\src\domain-watch\domain-watch.controller.ts">
         <metrics statements="7" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
@@ -53,7 +53,7 @@
         <line num="11" count="1" type="stmt"/>
         <line num="12" count="1" type="stmt"/>
       </file>
-      <file name="domain-watch.service.ts" path="C:\Users\Marc\Documents\3rd Year\COS 301\api test\Avalanche v1.1\Avalanche\gateway\src\domain-watch\domain-watch.service.ts">
+      <file name="domain-watch.service.ts" path="C:\Users\Marc\Documents\3rd Year\COS 301\api test\Avalanche v1.2\Avalanche\gateway\src\domain-watch\domain-watch.service.ts">
         <metrics statements="9" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
         <line num="2" count="3" type="stmt"/>
         <line num="3" count="3" type="stmt"/>
@@ -68,7 +68,7 @@
     </package>
     <package name="src.user-management">
       <metrics statements="186" coveredstatements="170" conditionals="80" coveredconditionals="64" methods="34" coveredmethods="34"/>
-      <file name="user-management.service.ts" path="C:\Users\Marc\Documents\3rd Year\COS 301\api test\Avalanche v1.1\Avalanche\gateway\src\user-management\user-management.service.ts">
+      <file name="user-management.service.ts" path="C:\Users\Marc\Documents\3rd Year\COS 301\api test\Avalanche v1.2\Avalanche\gateway\src\user-management\user-management.service.ts">
         <metrics statements="21" coveredstatements="21" conditionals="0" coveredconditionals="0" methods="17" coveredmethods="17"/>
         <line num="4" count="1" type="stmt"/>
         <line num="5" count="1" type="stmt"/>
@@ -92,7 +92,7 @@
         <line num="56" count="1" type="stmt"/>
         <line num="59" count="1" type="stmt"/>
       </file>
-      <file name="user-mangement.controller.ts" path="C:\Users\Marc\Documents\3rd Year\COS 301\api test\Avalanche v1.1\Avalanche\gateway\src\user-management\user-mangement.controller.ts">
+      <file name="user-mangement.controller.ts" path="C:\Users\Marc\Documents\3rd Year\COS 301\api test\Avalanche v1.2\Avalanche\gateway\src\user-management\user-mangement.controller.ts">
         <metrics statements="165" coveredstatements="149" conditionals="80" coveredconditionals="64" methods="17" coveredmethods="17"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
@@ -263,7 +263,7 @@
     </package>
     <package name="src.zacr">
       <metrics statements="16" coveredstatements="16" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="4"/>
-      <file name="zacr.controller.ts" path="C:\Users\Marc\Documents\3rd Year\COS 301\api test\Avalanche v1.1\Avalanche\gateway\src\zacr\zacr.controller.ts">
+      <file name="zacr.controller.ts" path="C:\Users\Marc\Documents\3rd Year\COS 301\api test\Avalanche v1.2\Avalanche\gateway\src\zacr\zacr.controller.ts">
         <metrics statements="11" coveredstatements="11" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
@@ -277,7 +277,7 @@
         <line num="15" count="1" type="stmt"/>
         <line num="16" count="1" type="stmt"/>
       </file>
-      <file name="zacr.service.ts" path="C:\Users\Marc\Documents\3rd Year\COS 301\api test\Avalanche v1.1\Avalanche\gateway\src\zacr\zacr.service.ts">
+      <file name="zacr.service.ts" path="C:\Users\Marc\Documents\3rd Year\COS 301\api test\Avalanche v1.2\Avalanche\gateway\src\zacr\zacr.service.ts">
         <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
         <line num="2" count="2" type="stmt"/>
         <line num="3" count="2" type="stmt"/>
