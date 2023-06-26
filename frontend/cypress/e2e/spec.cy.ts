@@ -5,9 +5,19 @@ describe('template spec', () => {
 })
 
 describe('Home page test', () => {
+  beforeEach(() => {
+    cy.visit('http://localhost:3000/');
+  })
+
   it('should return a successful response', () => {
-    cy.request('http://localhost:3000/')
-      .its('status')
+    cy.request('http://localhost:3000/').its("status")
       .should('equal', 200);
+  });
+
+  it('ensures all elements exist', () => {
+    cy.get('body').should('exist');
+    cy.get('script').should('exist');
+    cy.get('#__next').should('exist');
+    cy.get('#__NEXT_DATA__').should('exist');
   });
 })
