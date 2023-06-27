@@ -27,7 +27,7 @@ public class SimpleHttpServerTest {
 
     @BeforeAll
     public static void initServer() throws IOException, InstantiationException {
-        server = new SimpleHttpServer(4004, false);
+        server = new SimpleHttpServer(4004, true);
         server.start();
     }
 
