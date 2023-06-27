@@ -27,7 +27,7 @@ public class SimpleHttpServerTest {
 
     @BeforeAll
     public static void initServer() throws IOException, InstantiationException {
-        server = new SimpleHttpServer(4004);
+        server = new SimpleHttpServer(4004, false);
         server.start();
     }
 
@@ -64,6 +64,23 @@ public class SimpleHttpServerTest {
     }
 
     @Test
+    public void postWithNoBodyShouldReturnError() throws IOException, InstantiationException {
+
+        URL url = new URL("http://localhost:4004/domainWatch/list");
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("POST");
+        con.setRequestProperty("Content-Type", "application/json");
+        con.setRequestProperty("Accept", "application/json");
+        con.setDoOutput(true);
+        String jsonInputString = "";
+        try (OutputStream os = con.getOutputStream()) {
+            byte[] input = jsonInputString.getBytes("utf-8");
+            os.write(input, 0, input.length);
+        }
+        assertEquals(400, con.getResponseCode());
+    }
+
+    @Test
     public void postWithInvalidRequestShouldReturn400() throws IOException, InstantiationException {
 
         URL url = new URL("http://localhost:4004/domainWatch/list");
@@ -73,6 +90,23 @@ public class SimpleHttpServerTest {
         con.setRequestProperty("Accept", "application/json");
         con.setDoOutput(true);
         String jsonInputString = "{\"domain\":\"\",\"types\":[{\"type\":\"Soundex\",\"threshold\":3},{\"type\":\"Levenshtein\",\"threshold\":3}]}";
+        try (OutputStream os = con.getOutputStream()) {
+            byte[] input = jsonInputString.getBytes("utf-8");
+            os.write(input, 0, input.length);
+        }
+        assertEquals(400, con.getResponseCode());
+    }
+
+    @Test
+    public void postWithInvalidMetricShouldReturn400() throws IOException, InstantiationException {
+
+        URL url = new URL("http://localhost:4004/domainWatch/list");
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("POST");
+        con.setRequestProperty("Content-Type", "application/json");
+        con.setRequestProperty("Accept", "application/json");
+        con.setDoOutput(true);
+        String jsonInputString = "{\"domain\":\"domain\",\"types\":[{\"type\":\"BestMetric\",\"threshold\":3},{\"type\":\"Levenshtein\",\"threshold\":3}]}";
         try (OutputStream os = con.getOutputStream()) {
             byte[] input = jsonInputString.getBytes("utf-8");
             os.write(input, 0, input.length);
