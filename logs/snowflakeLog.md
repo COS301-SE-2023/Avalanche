@@ -20,6 +20,7 @@ For more information request formal documentation from ...
 | Creates  | This procedure returns the aggregated create transactions for a specific registrar, all registrars grouped by registrar or all overall | JSON object string containing the registrar, zone, dateFom, dateTo and granularity   | JSON in graphDataInterface format|
 |Renewals  | This procedure returns the renewals for a specific registrar, all registrars grouped by registrar or all overall | JSON object string containing the registrar, zone, dateFom, dateTo and granularity   | JSON in graphDataInterface format|
 | Deletion  | This procedure returns the deletions for a specific registrar, all registrars grouped by registrar or all overall | JSON object string containing the registrar, zone, dateFom, dateTo and granularity   | JSON in graphDataInterface format|
+| Marketshare | This procedure returns market share of registrars  in the registry | JSON object string containing the registrars, zone and rank    | JSON of  registrar and count|
 
 ## Changes
 
@@ -36,3 +37,28 @@ For more information request formal documentation from ...
   * Transformation into ChartJS format 
 * 22/05 
   * Dashboard
+* 30/05 
+  * Debugging Transaction procedure - undefined object
+  * Fixed registrar grouping
+  * Date From errors
+  * Fixed timezone
+* 11/06
+  * Started Domain Name Analysis Procedure
+  * Query for domain retrieval
+* 17/06
+  * Added per transaction query
+  * Bug in transaction query- array of types only returns last
+* 19/06
+  * Bug  fixed for Monthly granularity
+  * Overall dates fixed
+* 21/06
+  * Date formatting
+* 22/06
+  * Day granularity fixed
+  * Domain name analysis query update 
+* 25/06
+  * Transaction  Deployed on AFRICA
+  *  All views required for transaction procedure created
+  * Debug procedure - working now
+  * Basic Marketshare
+  * Marketshare top and bottom rank

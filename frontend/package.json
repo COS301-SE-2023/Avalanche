@@ -8,27 +8,29 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "cypress": "cypress open",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "cypress": "cypress run --browser chrome --config video=false",
+    "cypress open": "cypress open"
   },
   "dependencies": {
     "@emotion/core": "^11.0.0",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
+    "@headlessui/react": "^1.7.15",
     "@heroicons/react": "^2.0.17",
     "@reduxjs/toolkit": "^1.9.5",
     "@types/node": "18.16.1",
     "@types/react-dom": "18.2.1",
     "@types/redux-logger": "^3.0.9",
     "animate.css": "^4.1.1",
+    "animate.css-react": "^1.1.0",
     "autoprefixer": "10.4.14",
     "axios": "^1.4.0",
     "chart.js": "^4.2.1",
+    "cookies-next": "^2.1.2",
     "eslint": "8.39.0",
     "eslint-config-next": "13.3.1",
     "flowbite": "^1.6.5",
-    "flowbite-react": "^0.4.4",
+    "ky": "^0.33.3",
     "next": "13.3.1",
     "next-redux-wrapper": "^8.1.0",
     "next-themes": "^0.2.1",
@@ -45,17 +47,9 @@
     "tailwindcss": "3.3.2"
   },
   "devDependencies": {
-    "@storybook/addon-essentials": "7.0.12",
-    "@storybook/addon-interactions": "7.0.12",
-    "@storybook/addon-links": "7.0.12",
-    "@storybook/blocks": "7.0.12",
-    "@storybook/nextjs": "7.0.12",
-    "@storybook/react": "7.0.12",
-    "@storybook/testing-library": "0.0.14-next.2",
+    "@cypress/code-coverage": "^3.10.6",
     "@types/react": "^18.2.6",
     "cypress": "^12.11.0",
-    "eslint-plugin-storybook": "^0.6.12",
-    "storybook": "7.0.12",
     "typescript": "^5.0.4"
   }
 }

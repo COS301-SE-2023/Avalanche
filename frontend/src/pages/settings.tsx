@@ -6,16 +6,17 @@ import { useRouter } from 'next/router';
 import PageHeader from "@/components/Util/PageHeader";
 import { IntegrationLoginModal } from "@/components/Modals";
 import { SubmitButton, WarningAlert } from "@/components/Util";
-import toast, { Toaster } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 import OrganizationSettings from "@/components/Settings/Organizations";
 import API from "@/components/Settings/API";
+import { userState } from "@/store/Slices/userSlice";
 import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { ModalAnimationWrapper } from "@/components/Modals/ModalOptions";
 
 export default function Settings() {
 
     const modalState = useSelector(selectModalManagerState);
+    const user = useSelector(userState);
     const dispatch = useDispatch();
 
     /**
@@ -32,7 +33,6 @@ export default function Settings() {
         inactive: "inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
     }
 
-    const [demo, setDemo] = useState<boolean>(false);
 
     /**
      * This state variable holds the current active tab.
@@ -89,7 +89,7 @@ export default function Settings() {
                 <div className="flex items-center space-x-4 hidden lg:flex">
                     <img className="w-16 h-16 rounded-full" src="https://github.com/michaelrosstarr.png" alt="" />
                     <div className="font-medium dark:text-white text-black">
-                        <div>Michael Tarr</div>
+                        <div>{user.user.firstName} {user.user.lastName}</div>
                     </div>
                 </div>
             </div>
@@ -109,26 +109,13 @@ export default function Settings() {
                         <a href="?tab=apikeys" className={tab === "apikeys" ? tabOptions.active : tabOptions.inactive}>API Keys</a>
                     </li>
                 </ul>
-                <button type="button" className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 m-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 float-right" onClick={() => {
-                    setDemo(!demo);
-                    toast(`Demo mode: ${!demo ? 'on' : 'off'}`,
-                        {
-                            icon: '💀',
-                            style: {
-                                borderRadius: '10px',
-                                background: '#333',
-                                color: '#fff',
-                            },
-                        }
-                    );
-                }}>Demo Toggle</button>
             </div>
 
             {tab === "general" && <>
                 <WarningAlert title="Cannot Create!" text="Nothing to see here" />
             </>}
             {tab === "organizations" &&
-                <OrganizationSettings demo={demo} />
+                <OrganizationSettings demo={false} />
             }
             {tab === "integrations" && <>
                 <div className="flex justify-between items-center gap-10 mb-4">
@@ -136,11 +123,11 @@ export default function Settings() {
                     <SubmitButton text="Add a new Data Product" onClick={() => dispatch(setCurrentOpenState("INTE.CreateIntegration"))} />
                 </div>
             </>}
-            {tab === "apikeys" && <API demo={demo} />}
+            {tab === "apikeys" && <API demo={false} />}
         </div>
 
         {/* Models go here */}
-        {modalState.currentOpen === "INTE.CreateIntegration" && <ModalAnimationWrapper><IntegrationLoginModal /></ModalAnimationWrapper>}
+        {modalState.currentOpen === "INTE.CreateIntegration" && <IntegrationLoginModal />}
 
     </>
 }

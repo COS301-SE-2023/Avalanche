@@ -1,3 +1,4 @@
 export default interface IChart {
-    data: any
+    data: any,
+    addClass?: string
 }

@@ -32,9 +32,6 @@ export class User {
   @JoinTable()
   userGroups: UserGroup[];
 
-  @Column({ nullable: true })
-  userGroupId: number;
-
   @ManyToOne(() => Organisation, (organisation) => organisation.users, { nullable: true })
   @JoinColumn({ name: 'organisationId' })
   organisation: Organisation;

@@ -17,6 +17,7 @@ export default function ModalHeader({ title }: IModalHeader) {
             setTimeout(() => {
                 dispatch(clearCurrentOpenState())
                 dispatch(setAnimateManagerState(false));
+                document.body.style.overflow = "visible";
             }, 150);
         }}>
             <XMarkIcon className="h-5 w-5" />
