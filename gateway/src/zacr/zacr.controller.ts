@@ -15,4 +15,20 @@ export class ZacrController {
     const result = await lastValueFrom(this.client.send(pattern, payload));
     return result;
   }
+
+  @Post('marketShare')
+  async marketShare(@Body() data: any) {
+    const pattern = { cmd: 'marketShare' };
+    const payload = data;
+    const result = await lastValueFrom(this.client.send(pattern, payload));
+    return result;
+  }
+
+  @Post('age')
+  async age(@Body() data: any) {
+    const pattern = { cmd: 'age' };
+    const payload = data;
+    const result = await lastValueFrom(this.client.send(pattern, payload));
+    return result;
+  }
 }

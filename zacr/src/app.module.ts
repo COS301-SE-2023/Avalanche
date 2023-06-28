@@ -11,6 +11,8 @@ import { RedisProvider } from './redis.provider';
 import { AnalysisService } from './analysis/analysis.service';
 import { GraphFormatService } from './graph-format/graph-format.service';
 import { SnowflakeService } from './snowflake/snowflake.service';
+import { MarketShareService } from './marketShare/marketShare.service';
+import { AgeService } from './age/age.service';
 
 @Module({
   imports: [
@@ -65,10 +67,12 @@ import { SnowflakeService } from './snowflake/snowflake.service';
       },
     },
     TransactionService,
+    MarketShareService,
+    AgeService,
     AnalysisService,
     GraphFormatService,
     SnowflakeService
   ],
-  exports: [TransactionService,AnalysisService,GraphFormatService,SnowflakeService],
+  exports: [TransactionService,MarketShareService,AgeService,AnalysisService,GraphFormatService,SnowflakeService],
 })
 export class AppModule {}

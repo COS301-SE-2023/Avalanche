@@ -11,4 +11,12 @@ export class ZacrService {
   async transactions(data: any) {
     return this.client.send({ cmd: 'transactions' }, data).toPromise();
   }
+
+  async marketShare(data: any) {
+    return this.client.send({ cmd: 'marketShare' }, data).toPromise();
+  }
+
+  async age(data: any) {
+    return this.client.send({ cmd: 'age' }, data).toPromise();
+  }
 }
