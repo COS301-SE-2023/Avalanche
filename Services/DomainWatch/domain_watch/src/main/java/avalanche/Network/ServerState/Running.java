@@ -12,6 +12,32 @@ import avalanche.DataClasses.Domain;
 
 public class Running extends ServerState {
 
+    /**
+     * Gets a response from the server in the running state.
+     * <br/>
+     * <ul>
+     * <li>Servers in the <i>running</i> state should return a "status":"failure"
+     * and a "request-error":"&lt;relevant error&gt;" if the request has
+     * errors.</li>
+     * <li>Servers in the <i>running</i> state should return a "status":"success"
+     * and a "data":[{"domain":"&lt;domain&gt;","similarity":&lt;similarity&gt;}...]
+     * if the request has no errors.</li>
+     * </ul>
+     *
+     * @param body      The body of the request that has been sent to the server
+     * @param startTime The millisecond at which the request started being processed
+     * @return String:
+     *         <ul>
+     *         <li>Servers in the <i>running</i> state should return a
+     *         "status":"failure"
+     *         and a "request-error":"&lt;relevant error&gt;" if the request has
+     *         errors.</li>
+     *         <li>Servers in the <i>running</i> state should return a
+     *         "status":"success" and
+     *         "data":[{"domain":"&lt;domain&gt;","similarity":&lt;similarity&gt;}...]
+     *         if the request has no errors.</li>
+     *         </ul>
+     */
     public String getResponse(String body, long st) {
         System.out.println("Working on request");
         SimilarityChecker similarityChecker = new SimilarityChecker();
