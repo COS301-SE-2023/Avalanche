@@ -21,6 +21,7 @@ For more information request formal documentation from ...
 |Renewals  | This procedure returns the renewals for a specific registrar, all registrars grouped by registrar or all overall | JSON object string containing the registrar, zone, dateFom, dateTo and granularity   | JSON in graphDataInterface format|
 | Deletion  | This procedure returns the deletions for a specific registrar, all registrars grouped by registrar or all overall | JSON object string containing the registrar, zone, dateFom, dateTo and granularity   | JSON in graphDataInterface format|
 | Marketshare | This procedure returns market share of registrars  in the registry | JSON object string containing the registrars, zone and rank    | JSON of  registrar and count|
+| Age Analysis | This procedure returns the number of  domains per age, overall or per regisrar| JSON object string containing the registrars, zone and rank    | JSON of  registrar, age and count|
 
 ## Changes
 

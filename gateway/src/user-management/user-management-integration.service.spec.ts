@@ -110,7 +110,7 @@ describe('User Management Integration Tests From Gateway', () => {
         .post('/user-management/login')
         .send(user);
 
-      accessToken = response.body.userWithToken.token; // This may change based on the structure of your response
+      accessToken = response.body.userWithToken.token;
     });
 
     describe('Create Organisation', () => {
