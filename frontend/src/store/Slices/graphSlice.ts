@@ -5,6 +5,7 @@ import ky from "ky";
 import { ITransactionGraphRequest } from "@/interfaces/requests";
 import { getCookie } from "cookies-next";
 import { chartColours } from "@/components/Graphs/data";
+import IMarketShareGraphRequest from "@/interfaces/requests/MarketShareGraph";
 
 const url = "http://localhost:4000/zacr";
 
@@ -54,6 +55,23 @@ export const graphSlice = createSlice({
             state.loading = true;
             // state.graphs = [];
         })
+        builder.addCase(getMarketShareData.fulfilled, (state, action) => {
+            const payload = action.payload as any;
+            console.log(payload.data.labels.index);
+            // payload.data.labels.index.forEach((set: any, index: number) => {
+            //     set.backgroundColor = chartColours[index];
+            //     set.borderColor = chartColours[index];
+            //     set.pointRadius = 4;
+            //     set.pointHoverRadius = 5;
+            // })
+            state.graphs.push(payload.data);
+            state.latestAdd = state.graphs.length - 1;
+            state.loading = false;
+        })
+        builder.addCase(getMarketShareData.pending, (state) => {
+            state.loading = true;
+            // state.graphs = [];
+        })
         builder.addCase(getGraphDataArray.fulfilled, (state, action) => {
             // const payload = action.payload as any;
             // state.graphs = payload;
@@ -81,6 +99,21 @@ export const getGraphData = createAsyncThunk("GRAPH.GetGraphData", async (object
     }
 })
 
+export const getMarketShareData = createAsyncThunk("GRAPH.GetMarketShareData", async (object: IMarketShareGraphRequest, { rejectWithValue }) => {
+    try {
+        const jwt = getCookie("jwt");
+        const response = await ky.post(`${url}/marketShare`, {
+            json: object,
+            headers: {
+                "Authorization": `Bearer ${jwt}`
+            }
+        }).json();
+        return response;
+    } catch (e) {
+        if (e instanceof Error) return rejectWithValue(e.message);
+    }
+})
+
 export const getGraphDataArray = createAsyncThunk("GRAPH.GetGraphDataArray", async (object: ITransactionGraphRequest[], { rejectWithValue }) => {
     try {
         const array: any[] = [];
@@ -88,6 +121,32 @@ export const getGraphDataArray = createAsyncThunk("GRAPH.GetGraphDataArray", asy
         for (let i = 0; i < object.length; i++) {
             const graph = object[i];
             const res: any = await ky.post(`${url}/transactions`, {
+                json: graph,
+                headers: {
+                    "Authorization": `Bearer ${jwt}`
+                }
+            }).json();
+            res.data.datasets.forEach((set: any, index: number) => {
+                set.backgroundColor = chartColours[index];
+            })
+            array.push(res.data);
+            addToGraphs(res.data);
+        }
+
+        return array;
+
+    } catch (e) {
+        if (e instanceof Error) return rejectWithValue(e.message);
+    }
+})
+
+export const getMarketShareDataArray = createAsyncThunk("GRAPH.GetaMarketShareDataArray", async (object: IMarketShareGraphRequest[], { rejectWithValue }) => {
+    try {
+        const array: any[] = [];
+        const jwt = getCookie("jwt");
+        for (let i = 0; i < object.length; i++) {
+            const graph = object[i];
+            const res: any = await ky.post(`${url}/marketShare`, {
                 json: graph,
                 headers: {
                     "Authorization": `Bearer ${jwt}`
