@@ -5,11 +5,12 @@ import Head from "next/head"
 import { ChartCard } from "@/components/Graphs"
 import { ChartType } from "@/Enums";
 import { useDispatch, useSelector } from "react-redux";
-import { graphState, getGraphData } from "@/store/Slices/graphSlice"
+import { graphState, getGraphData, getMarketShareData } from "@/store/Slices/graphSlice"
 import { useState, useEffect } from "react";
 import { ITransactionGraphRequest } from "@/interfaces/requests";
 import { selectModalManagerState } from "@/store/Slices/modalManagerSlice"
 import GraphZoomModal from "@/components/Modals/GraphZoomModal"
+import IMarketShareGraphRequest from "@/interfaces/requests/MarketShareGraph"
 
 export default function Registrar() {
 
@@ -25,6 +26,7 @@ export default function Registrar() {
         // const data: ITransactionGraphRequest = { zone: "CO.ZA", granularity: "week", group: "registrar", dateFrom: "2023-01-02", graphName: "Your mom" };
 
         const array: ITransactionGraphRequest[] = [];
+        const arrayMarketShare: IMarketShareGraphRequest[] = [];
         const currentDate = new Date();
 
         // All transactions, monthly granularity, for the last year
@@ -61,8 +63,15 @@ export default function Registrar() {
         const dailyTwoWeeks: ITransactionGraphRequest = { registrar : [`afrihost`] ,graphName: `Daily, from ${dateFrom} to ${dateTo}`, granularity: "day", dateFrom, dateTo };
         array.push(dailyTwoWeeks);
 
+        const marketShare: IMarketShareGraphRequest = { rank : 'top5' };
+        arrayMarketShare.push(marketShare);
+
         array.forEach(data => {
             dispatch(getGraphData(data));
+        })
+
+        arrayMarketShare.forEach(data => {
+            dispatch(getMarketShareData(data));
         })
 
         // dispatch(getGraphDataArray(array));
@@ -92,6 +101,13 @@ export default function Registrar() {
                                 <div className="flex gap-1">
                                     <div className="h-6 w-6 bg-gray-200 rounded dark:bg-gray-800  w-32 p-1.5"></div>
                                     <div className="h-6 w-6 bg-gray-200 rounded dark:bg-gray-800 w-32 p-1.5"></div>
+                                </div>
+                            </div>
+                            <div role="status" className="flex justify-between h-64 w-full bg-gray-300 rounded-lg animate-customPulse dark:bg-gray-700 p-6">
+                                <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-800 w-32"></div>
+                                <div className="flex gap-1">
+                                    <div className="h-6 w-6 bg-gray-200 rounded dark:bg-gray-800 w-32"></div>
+                                    <div className="h-6 w-6 bg-gray-200 rounded dark:bg-gray-800 w-32"></div>
                                 </div>
                             </div>
                             <div role="status" className="flex justify-between h-64 w-full bg-gray-300 rounded-lg animate-customPulse dark:bg-gray-700 p-6">

@@ -21,14 +21,13 @@ export class GraphFormatService {
   async formatTransactions(data: string): Promise<string> {
     const dataArr = JSON.parse(JSON.parse(data)[0]['TRANSACTIONSBYREGISTRAR']);
     if (dataArr.length > 0) {
-      const arr0 = dataArr[0];
       const keys = Object.keys(dataArr[0]);
       if (keys.length === 3) {
         return this.formatThreeColumns(keys, data, 'TRANSACTIONSBYREGISTRAR');
       } else if (keys.length === 4) {
         return this.formatFourColumns(keys, data, 'TRANSACTIONSBYREGISTRAR');
       } else {
-        throw new Error('Invalid size array structure.');
+        throw new Error('Invalid size array structure in Transactions.');
       }
     } else {
       throw new Error('Empty data array.');

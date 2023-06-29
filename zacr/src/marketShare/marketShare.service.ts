@@ -27,9 +27,13 @@ export class MarketShareService {
     //   queryData,
     // );
 
+    const formattedData = await this.graphFormattingService.formatMarketshare(
+      JSON.stringify(queryData),
+    );
+
     return {
       status: 'success',
-      data: { graphName: graphName, ...queryData[0]['MARKETSHARE'] },
+      data: { graphName: graphName, ...JSON.parse(formattedData) },
       timestamp: new Date().toISOString(),
     };
   }

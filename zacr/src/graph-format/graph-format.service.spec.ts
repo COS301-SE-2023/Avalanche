@@ -16,199 +16,207 @@ describe('GraphFormatService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should throw an error when data array is empty', async () => {
-    await expect(
-      service.formatTransactions(
-        JSON.stringify([{ TRANSACTIONSBYREGISTRAR: [] }]),
-      ),
-    ).rejects.toThrow('Empty data array.');
-  });
+  describe('Transactions Format Service', () => {
+    it('should throw an error when data array is empty', async () => {
+      await expect(
+        service.formatTransactions(
+          JSON.stringify([{ TRANSACTIONSBYREGISTRAR: [] }]),
+        ),
+      ).rejects.toThrow('Empty data array.');
+    });
 
-  it('should succesfully return chartdata when length is 4', async () => {
-    const data = [
-      {
-        TRANSACTIONSBYREGISTRAR: [
-          {
-            Date: 'May 2022',
-            Code: 'CO.ZA_CLOSED_REDEEM',
-            Registrars: 'Afrihost',
-            Quantity: 3,
-          },
-          {
-            Date: 'May 2022',
-            Code: 'CO.ZA_GRACE',
-            Registrars: 'Afrihost',
-            Quantity: 37,
-          },
-          {
-            Date: 'May 2022',
-            Code: 'CO.ZA_NEW',
-            Registrars: 'Afrihost',
-            Quantity: 1238,
-          },
-          {
-            Date: 'May 2022',
-            Code: 'CO.ZA_RENEW',
-            Registrars: 'Afrihost',
-            Quantity: 2132,
-          },
-          {
-            Date: 'May 2022',
-            Code: 'CO.ZA_TRANSFER',
-            Registrars: 'Afrihost',
-            Quantity: 24,
-          },
-          {
-            Date: 'June 2022',
-            Code: 'CO.ZA_CLOSED_REDEEM',
-            Registrars: 'Afrihost',
-            Quantity: 20,
-          },
-          {
-            Date: 'June 2022',
-            Code: 'CO.ZA_GRACE',
-            Registrars: 'Afrihost',
-            Quantity: 264,
-          },
-          {
-            Date: 'June 2022',
-            Code: 'CO.ZA_NEW',
-            Registrars: 'Afrihost',
-            Quantity: 19279,
-          },
-          {
-            Date: 'June 2022',
-            Code: 'CO.ZA_RENEW',
-            Registrars: 'Afrihost',
-            Quantity: 16214,
-          },
-          {
-            Date: 'June 2022',
-            Code: 'CO.ZA_TRANSFER',
-            Registrars: 'Afrihost',
-            Quantity: 338,
-          },
-          {
-            Date: 'July 2022',
-            Code: 'CO.ZA_CLOSED_REDEEM',
-            Registrars: 'Afrihost',
-            Quantity: 23,
-          },
-          {
-            Date: 'July 2022',
-            Code: 'CO.ZA_GRACE',
-            Registrars: 'Afrihost',
-            Quantity: 288,
-          },
-          {
-            Date: 'July 2022',
-            Code: 'CO.ZA_NEW',
-            Registrars: 'Afrihost',
-            Quantity: 10380,
-          },
-          {
-            Date: 'July 2022',
-            Code: 'CO.ZA_RENEW',
-            Registrars: 'Afrihost',
-            Quantity: 16814,
-          },
-          {
-            Date: 'July 2022',
-            Code: 'CO.ZA_TRANSFER',
-            Registrars: 'Afrihost',
-            Quantity: 341,
-          },
-          {
-            Date: 'August 2022',
-            Code: 'CO.ZA_CLOSED_REDEEM',
-            Registrars: 'Afrihost',
-            Quantity: 25,
-          },
-          {
-            Date: 'August 2022',
-            Code: 'CO.ZA_GRACE',
-            Registrars: 'Afrihost',
-            Quantity: 184,
-          },
-          {
-            Date: 'August 2022',
-            Code: 'CO.ZA_NEW',
-            Registrars: 'Afrihost',
-            Quantity: 4522,
-          },
-          {
-            Date: 'August 2022',
-            Code: 'CO.ZA_RENEW',
-            Registrars: 'Afrihost',
-            Quantity: 16785,
-          },
-          {
-            Date: 'August 2022',
-            Code: 'CO.ZA_TRANSFER',
-            Registrars: 'Afrihost',
-            Quantity: 347,
-          },
-          {
-            Date: 'September 2022',
-            Code: 'CO.ZA_CLOSED_REDEEM',
-            Registrars: 'Afrihost',
-            Quantity: 27,
-          },
-          {
-            Date: 'September 2022',
-            Code: 'CO.ZA_GRACE',
-            Registrars: 'Afrihost',
-            Quantity: 165,
-          },
-          {
-            Date: 'September 2022',
-            Code: 'CO.ZA_NEW',
-            Registrars: 'Afrihost',
-            Quantity: 3878,
-          },
-          {
-            Date: 'September 2022',
-            Code: 'CO.ZA_RENEW',
-            Registrars: 'Afrihost',
-            Quantity: 15986,
-          },
-          {
-            Date: 'September 2022',
-            Code: 'CO.ZA_TRANSFER',
-            Registrars: 'Afrihost',
-            Quantity: 354,
-          },
-        ],
-      },
-    ];
-    const outp = await service.formatTransactions(JSON.stringify(data));
-    console.log(outp);
-    expect(outp).toBeDefined();
-  });
-
-  it('should successfully return chart data when the keys length is 3', async () => {
-    const data = [
-      {
-        TRANSACTIONSBYREGISTRAR: [
-          {
-            key1: 'value1',
-            key2: 'value2',
-            key3: 'value3',
-          },
-        ],
-      },
-    ];
-    const expectedData = {
-      labels: ['value2'],
-      datasets: [
+    it('should succesfully return chartdata when length is 4', async () => {
+      const data = [
         {
-          label: 'value1',
-          data: ['value3'],
+          TRANSACTIONSBYREGISTRAR: JSON.stringify([
+            {
+              Date: 'July 2022',
+              Code: 'CO.ZA_CLOSED_REDEEM',
+              Registrars: 'Registrar1',
+              Quantity: 23,
+            },
+            {
+              Date: 'July 2022',
+              Code: 'CO.ZA_GRACE',
+              Registrars: 'Registrar1',
+              Quantity: 288,
+            },
+            {
+              Date: 'August 2022',
+              Code: 'CO.ZA_CLOSED_REDEEM',
+              Registrars: 'Registrar1',
+              Quantity: 25,
+            },
+            {
+              Date: 'August 2022',
+              Code: 'CO.ZA_GRACE',
+              Registrars: 'Registrar1',
+              Quantity: 184,
+            },
+            {
+              Date: 'September 2022',
+              Code: 'CO.ZA_CLOSED_REDEEM',
+              Registrars: 'Registrar1',
+              Quantity: 27,
+            },
+            {
+              Date: 'September 2022',
+              Code: 'CO.ZA_GRACE',
+              Registrars: 'Registrar1',
+              Quantity: 165,
+            },
+          ]),
         },
-      ],
-    };
-    await expect(
-      service.formatTransactions(JSON.stringify(data)),
-    ).resolves.toEqual(JSON.stringify(expectedData));
+      ];
+      const outp = await service.formatTransactions(JSON.stringify(data));
+      console.log(outp);
+      expect(outp).toBeDefined();
+    });
+
+    it('should successfully return chart data when the keys length is 3', async () => {
+      const data = [
+        {
+          TRANSACTIONSBYREGISTRAR: JSON.stringify([
+            {
+              key1: 'value1',
+              key2: 'value2',
+              key3: 'value3',
+            },
+          ]),
+        },
+      ];
+      const expectedData = {
+        labels: ['value1'],
+        datasets: [
+          {
+            label: 'value2',
+            data: ['value3'],
+          },
+        ],
+      };
+      await expect(
+        service.formatTransactions(JSON.stringify(data)),
+      ).resolves.toEqual(JSON.stringify(expectedData));
+    });
+  });
+
+  describe('Marketshare Format Service', () => {
+    it('should throw an error when data array is empty', async () => {
+      await expect(
+        service.formatMarketshare(JSON.stringify([{ MARKETSHARE: [] }])),
+      ).rejects.toThrow('Empty data array.');
+    });
+
+    it('should succesfully return chartdata when length is 2', async () => {
+      const data = [
+        {
+          MARKETSHARE: JSON.stringify([
+            {
+              Registrar: 'Registrar1',
+              NumInRegistry: 100,
+            },
+            {
+              Registrar: 'Registrar2',
+              NumInRegistry: 58,
+            },
+            {
+              Registrar: 'Registrar3',
+              NumInRegistry: 77,
+            },
+            {
+              Registrar: 'Registrar4',
+              NumInRegistry: 82,
+            },
+            {
+              Registrar: 'Registrar5',
+              NumInRegistry: 34,
+            },
+          ]),
+        },
+      ];
+
+      const outp = await service.formatMarketshare(JSON.stringify(data));
+      console.log(outp);
+      expect(outp).toBeDefined();
+    });
+  });
+
+  describe('Age Analysis Format Service', () => {
+    it('should throw an error when data array is empty', async () => {
+      await expect(
+        service.formatAgeAnalysis(JSON.stringify([{ MARKETSHARE: [] }])),
+      ).rejects.toThrow('Empty data array.');
+    });
+
+    it('should succesfully return chartdata when length is 2', async () => {
+      const data = [
+        {
+          AGEANALYSIS: JSON.stringify([
+            {
+              Registrar: 'Registrar1',
+              NumInRegistry: 4,
+            },
+            {
+              Registrar: 'Registrar2',
+              NumInRegistry: 3,
+            },
+            {
+              Registrar: 'Registrar3',
+              NumInRegistry: 7,
+            },
+            {
+              Registrar: 'Registrar4',
+              NumInRegistry: 4,
+            },
+            {
+              Registrar: 'Registrar5',
+              NumInRegistry: 5,
+            },
+          ]),
+        },
+      ];
+
+      const outp = await service.formatAgeAnalysis(JSON.stringify(data));
+      console.log(outp);
+      expect(outp).toBeDefined();
+    });
+
+    it('should succesfully return chartdata when length is 3', async () => {
+      const data = [
+        {
+          AGEANALYSIS: JSON.stringify([
+            {
+              Age: 1,
+              Registrar: 'Registrar1',
+              NumInRegistry: 4,
+            },
+            {
+              Age: 2,
+              Registrar: 'Registrar1',
+              NumInRegistry: 3,
+            },
+            {
+              Age: 1,
+              Registrar: 'Registrar2',
+              NumInRegistry: 7,
+            },
+            {
+              Age: 2,
+              Registrar: 'Registrar2',
+              NumInRegistry: 4,
+            },
+            {
+              Age: 1,
+              Registrar: 'Registrar3',
+              NumInRegistry: 5,
+            },
+          ]),
+        },
+      ];
+
+      const outp = await service.formatAgeAnalysis(JSON.stringify(data));
+      console.log(outp);
+      expect(outp).toBeDefined();
+    });
   });
 });
