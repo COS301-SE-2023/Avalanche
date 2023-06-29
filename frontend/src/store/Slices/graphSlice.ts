@@ -7,6 +7,7 @@ import { getCookie } from "cookies-next";
 import { chartColours } from "@/components/Graphs/data";
 import IMarketShareGraphRequest from "@/interfaces/requests/MarketShareGraph";
 import IDomainNameAnalysisGraphRequest from "@/interfaces/requests/DomainNameAnalysis";
+import IAgeAnalysisGraphRequest from "@/interfaces/requests/AgeAnalysisGraph";
 
 const url = "http://localhost:4000/zacr";
 
@@ -73,6 +74,23 @@ export const graphSlice = createSlice({
             state.loading = true;
             // state.graphs = [];
         })
+        builder.addCase(getAgeAnalysisData.fulfilled, (state, action) => {
+            const payload = action.payload as any;
+            console.log(payload.data.labels);
+            // payload.data.labels.index.index.forEach((set: any, index: number) => {
+            //     set.backgroundColor = chartColours[index];
+            //     set.borderColor = chartColours[index];
+            //     set.pointRadius = 4;
+            //     set.pointHoverRadius = 5;
+            // })
+            state.graphs.push(payload.data);
+            state.latestAdd = state.graphs.length - 1;
+            state.loading = false;
+        })
+        builder.addCase(getAgeAnalysisData.pending, (state) => {
+            state.loading = true;
+            // state.graphs = [];
+        })
         builder.addCase(getDomainNameAnalysisData.fulfilled, (state, action) => {
             const payload = action.payload as any;
             console.log(payload.data.labels);
@@ -108,6 +126,15 @@ export const graphSlice = createSlice({
             state.loading = true;
             state.graphs = [];
         })
+        builder.addCase(getAgeAnalysisDataArray.fulfilled, (state, action) => {
+            // const payload = action.payload as any;
+            // state.graphs = payload;
+            state.loading = false;
+        })
+        builder.addCase(getAgeAnalysisDataArray.pending, (state, action) => {
+            state.loading = true;
+            state.graphs = [];
+        })
         builder.addCase(getDomainNameAnalysisDataArray.fulfilled, (state, action) => {
             // const payload = action.payload as any;
             // state.graphs = payload;
@@ -139,6 +166,21 @@ export const getMarketShareData = createAsyncThunk("GRAPH.GetMarketShareData", a
     try {
         const jwt = getCookie("jwt");
         const response = await ky.post(`${url}/marketShare`, {
+            json: object,
+            headers: {
+                "Authorization": `Bearer ${jwt}`
+            }
+        }).json();
+        return response;
+    } catch (e) {
+        if (e instanceof Error) return rejectWithValue(e.message);
+    }
+})
+
+export const getAgeAnalysisData = createAsyncThunk("GRAPH.GetAgeAnalysisData", async (object: IAgeAnalysisGraphRequest, { rejectWithValue }) => {
+    try {
+        const jwt = getCookie("jwt");
+        const response = await ky.post(`${url}/age`, {
             json: object,
             headers: {
                 "Authorization": `Bearer ${jwt}`
@@ -198,6 +240,32 @@ export const getMarketShareDataArray = createAsyncThunk("GRAPH.GetaMarketShareDa
         for (let i = 0; i < object.length; i++) {
             const graph = object[i];
             const res: any = await ky.post(`${url}/marketShare`, {
+                json: graph,
+                headers: {
+                    "Authorization": `Bearer ${jwt}`
+                }
+            }).json();
+            res.data.datasets.forEach((set: any, index: number) => {
+                set.backgroundColor = chartColours[index];
+            })
+            array.push(res.data);
+            addToGraphs(res.data);
+        }
+
+        return array;
+
+    } catch (e) {
+        if (e instanceof Error) return rejectWithValue(e.message);
+    }
+})
+
+export const getAgeAnalysisDataArray = createAsyncThunk("GRAPH.GetAgeAnalysisDataArray", async (object: IAgeAnalysisGraphRequest[], { rejectWithValue }) => {
+    try {
+        const array: any[] = [];
+        const jwt = getCookie("jwt");
+        for (let i = 0; i < object.length; i++) {
+            const graph = object[i];
+            const res: any = await ky.post(`${url}/age`, {
                 json: graph,
                 headers: {
                     "Authorization": `Bearer ${jwt}`

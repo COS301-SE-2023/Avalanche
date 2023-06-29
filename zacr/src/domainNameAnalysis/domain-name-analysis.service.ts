@@ -21,6 +21,8 @@ export class DomainNameAnalysisService {
     const queryData = await this.snowflakeService.execute(sqlQuery);
     console.log(queryData[0]['DOMAINNAMEANALYSIS']);
     data.data = queryData[0]['DOMAINNAMEANALYSIS'];
+    const num = data.jsonInput.num;
+    const granularity = data.jsonInput.granularity;
     delete data.jsonInput;
     const response = this.httpService.post(
       'http://zanet.cloud:4005/domainNameAnalysis/list',
@@ -36,9 +38,9 @@ export class DomainNameAnalysisService {
       data: {
         graphName:
           'Most common words in newly created domains  in the last ' +
-          data.num +
+          num +
           ' ' +
-          data.granularity +
+          granularity +
           's',
         ...JSON.parse(formattedData),
       },

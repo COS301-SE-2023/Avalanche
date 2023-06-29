@@ -17,12 +17,11 @@ export class MarketShareService {
   ) {}
 
   async marketShare(jsonInput: string, graphName: string): Promise<any> {
+    const rank = jsonInput['rank'] as string;
     jsonInput = JSON.stringify(jsonInput);
     console.log(jsonInput);
     const sqlQuery = `call marketShare('${jsonInput}')`;
-    console.log(sqlQuery);
     const queryData = await this.snowflakeService.execute(sqlQuery);
-    console.log(queryData);
     // const analyzedData = await this.statisticalAnalysisService.analyze(
     //   queryData,
     // );
@@ -30,10 +29,9 @@ export class MarketShareService {
     const formattedData = await this.graphFormattingService.formatMarketshare(
       JSON.stringify(queryData),
     );
-
     return {
       status: 'success',
-      data: { graphName: graphName, ...JSON.parse(formattedData) },
+      data: { graphName: 'Market share showing ' + rank , ...JSON.parse(formattedData) },
       timestamp: new Date().toISOString(),
     };
   }
