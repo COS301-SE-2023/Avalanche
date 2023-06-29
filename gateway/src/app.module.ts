@@ -12,6 +12,8 @@ import { ZacrService } from './zacr/zacr.service';
 import { DomainWatchController } from './domain-watch/domain-watch.controller';
 import { DomainWatchService } from './domain-watch/domain-watch.service';
 import { HttpModule } from '@nestjs/axios';
+import { DomainNameAnalysisService } from './domain-name-analysis/domain-name-analysis.service';
+import { DomainNameAnalysisController } from './domain-name-analysis/domain-name-analysis.controller';
 
 @Module({
   imports: [
@@ -36,8 +38,8 @@ import { HttpModule } from '@nestjs/axios';
     ]),
     ConfigModule.forRoot({ isGlobal: true }),
   ],
-  controllers: [UserManagementController, ZacrController, DomainWatchController],
-  providers: [UserManagementService, ZacrService, RedisProvider, DomainWatchService],
+  controllers: [UserManagementController, ZacrController, DomainWatchController, DomainNameAnalysisController],
+  providers: [UserManagementService, ZacrService, RedisProvider, DomainWatchService, DomainNameAnalysisService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
@@ -48,7 +50,6 @@ export class AppModule implements NestModule {
         { path: 'user-management/verify', method: RequestMethod.POST },
         { path: 'user-management/login', method: RequestMethod.POST },
         { path: 'user-management/resendOTP', method: RequestMethod.POST },
-        { path: 'domain-watch/list', method: RequestMethod.POST }
       )
       .forRoutes('*');
   }
