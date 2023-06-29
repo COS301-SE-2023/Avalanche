@@ -140,4 +140,83 @@ describe('GraphFormatService', () => {
       expect(outp).toBeDefined();
     });
   });
+
+  describe('Age Analysis Format Service', () => {
+    it('should throw an error when data array is empty', async () => {
+      await expect(
+        service.formatAgeAnalysis(JSON.stringify([{ MARKETSHARE: [] }])),
+      ).rejects.toThrow('Empty data array.');
+    });
+
+    it('should succesfully return chartdata when length is 2', async () => {
+      const data = [
+        {
+          AGEANALYSIS: JSON.stringify([
+            {
+              Registrar: 'Registrar1',
+              NumInRegistry: 4,
+            },
+            {
+              Registrar: 'Registrar2',
+              NumInRegistry: 3,
+            },
+            {
+              Registrar: 'Registrar3',
+              NumInRegistry: 7,
+            },
+            {
+              Registrar: 'Registrar4',
+              NumInRegistry: 4,
+            },
+            {
+              Registrar: 'Registrar5',
+              NumInRegistry: 5,
+            },
+          ]),
+        },
+      ];
+
+      const outp = await service.formatAgeAnalysis(JSON.stringify(data));
+      console.log(outp);
+      expect(outp).toBeDefined();
+    });
+
+    it('should succesfully return chartdata when length is 3', async () => {
+      const data = [
+        {
+          AGEANALYSIS: JSON.stringify([
+            {
+              Age: 1,
+              Registrar: 'Registrar1',
+              NumInRegistry: 4,
+            },
+            {
+              Age: 2,
+              Registrar: 'Registrar1',
+              NumInRegistry: 3,
+            },
+            {
+              Age: 1,
+              Registrar: 'Registrar2',
+              NumInRegistry: 7,
+            },
+            {
+              Age: 2,
+              Registrar: 'Registrar2',
+              NumInRegistry: 4,
+            },
+            {
+              Age: 1,
+              Registrar: 'Registrar3',
+              NumInRegistry: 5,
+            },
+          ]),
+        },
+      ];
+
+      const outp = await service.formatAgeAnalysis(JSON.stringify(data));
+      console.log(outp);
+      expect(outp).toBeDefined();
+    });
+  });
 });
