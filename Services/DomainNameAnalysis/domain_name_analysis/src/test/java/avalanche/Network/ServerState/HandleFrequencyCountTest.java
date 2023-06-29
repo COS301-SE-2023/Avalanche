@@ -6,16 +6,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-public class RunningTest {
+import avalanche.Network.HandlerStartegy.HandlerStrategy;
+import avalanche.Network.HandlerStartegy.RunningStrategies.HandleFrequencyCount;
+
+public class HandleFrequencyCountTest {
     @Test
     public void runningShouldNotReturnAServerError() {
-        ServerState state = new Running();
+        HandlerStrategy state = new HandleFrequencyCount();
         assertFalse((state.getResponse("anything", 0)).contains("server-error"));
     }
 
     @Test
     public void invalidJSONShouldReturnRequestError() {
-        ServerState state = new Running();
+        HandlerStrategy state = new HandleFrequencyCount();
         assertTrue((state.getResponse("anything", 0)).contains("request-error"));
         assertTrue((state.getResponse("{anything}", 0)).contains("request-error"));
         assertTrue((state.getResponse("{anything:}", 0)).contains("request-error"));
@@ -24,7 +27,9 @@ public class RunningTest {
 
     @Test
     public void validJSONWithoutValidFieldsShouldReturnRequestError() {
-        ServerState state = new Running();
+
+        HandlerStrategy state = new HandleFrequencyCount();
+
         assertTrue((state.getResponse("{\"hello\":\"there\"}", 0)).contains("request-error"));
     }
 

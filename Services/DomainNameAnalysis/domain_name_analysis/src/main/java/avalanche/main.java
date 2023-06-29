@@ -2,7 +2,7 @@ package avalanche;
 
 import java.io.IOException;
 
-import avalanche.Network.SimpleHttpServer;
+import avalanche.Network.ServiceHttpServer;
 
 /**
  * Hello world!
@@ -11,9 +11,9 @@ import avalanche.Network.SimpleHttpServer;
 public class main {
     public static void main(String[] args) throws Exception {
         try {
-            SimpleHttpServer server = new SimpleHttpServer(4005);
+            ServiceHttpServer server = new ServiceHttpServer(4005);
             server.start();
-            server.handleDummyRequest();
+            server.handleDummyRequest("classify");
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

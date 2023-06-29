@@ -1,6 +1,8 @@
-package avalanche.Network.ServerState;
+package avalanche.Network.HandlerStartegy;
 
-public class Initialising extends ServerState {
+import avalanche.Network.ServerState.ServerState;
+
+public class Initialising extends HandlerStrategy {
 
     @Override
     public String getResponse(String body, long st) {

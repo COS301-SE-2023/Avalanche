@@ -1,10 +1,7 @@
-package avalanche.Network.ServerState;
+package avalanche.Network.HandlerStartegy.RunningStrategies;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,9 +9,9 @@ import org.json.JSONObject;
 
 import avalanche.Core.FrequencyCounter;
 import avalanche.DataClasses.WordFrequency;
+import avalanche.Network.HandlerStartegy.Running;
 
-public class Running extends ServerState {
-
+public class HandleFrequencyCount extends Running {
     public String getResponse(String body, long st) {
         // Enter here
         System.out.println("Working on request");
@@ -22,21 +19,12 @@ public class Running extends ServerState {
         // Start building response
         String resp = "{\"status\":\"success\",  \"data\":[";
 
-        // Parse request to JSON
-        JSONObject obj = null;
-        try {
-
-            obj = new JSONObject(body);
-        } catch (JSONException jsonException) {
-            return "{\"status\":\"failure\",\"request-error\":\"" + jsonException.getMessage().toString()
-                    + "\"}";
-        }
-
         // Validate request
-        String validation = validateRequest(obj);
+        String validation = validateRequest(body);
         if (!validation.equals("")) {
             return validation;
         }
+        JSONObject obj = new JSONObject(body);
 
         // Get details from request here
         JSONArray data = obj.getJSONArray("data");
@@ -77,23 +65,24 @@ public class Running extends ServerState {
         return resp;
     }
 
-    /*
-     * Request structure
-     * 
-     * {
-     * data :
-     * [Domain1, Domain2,...]
-     * }
-     * 
-     * 
-     * Response structure
-     * 
-     * { data:
-     * [
-     * {"Word":"popularWord","Occurences":40},
-     * {"Word":"anotherWord","Occurences":30},
-     * ...
-     * ]
-     * }
-     */
+    public static String validateRequest(String body) {
+        String error = validateJSON(body);
+        if (!error.equals("")) {
+            return error;
+        }
+        JSONObject jsonObject = new JSONObject(body);
+        try {
+            JSONArray data = jsonObject.getJSONArray("data");
+            if (data.length() < 1) {
+                error = "{\"status\":\"failure\",\"request-error\":\"" + "Please supply at least 1 string in 'data' "
+                        + "\"}";
+            }
+            int minimunAppearances = jsonObject.getInt("minimumAppearances");
+        } catch (JSONException jsonException) {
+            error = "{\"status\":\"failure\",\"request-error\":\"" + jsonException.getMessage() + "\"}";
+        }
+        return error;
+
+    }
+
 }
