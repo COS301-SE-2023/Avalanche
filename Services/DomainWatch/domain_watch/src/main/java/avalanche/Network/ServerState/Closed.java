@@ -10,7 +10,7 @@ public class Closed extends ServerState {
      * 
      * @param body      The body of the request that has been sent to the server
      * @param startTime The millisecond at which the request started being processed
-     * @return String
+     * @return String:
      *         Servers in the <i>closed</i> state should return a "status":"failure"
      *         and a "server-error":"The server is closed"
      */
