@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { Inject, Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
 import { JwtService } from '@nestjs/jwt';
@@ -17,7 +16,7 @@ export class TransactionService {
     private readonly graphFormattingService: GraphFormatService,
   ) {}
 
-  async transactions(jsonInput: string, graphName: string): Promise<any>{
+  async transactions(jsonInput: string, graphName: string): Promise<any> {
     jsonInput = JSON.stringify(jsonInput);
     console.log(jsonInput);
     const sqlQuery = `call transactionsByRegistrar('${jsonInput}')`;
@@ -28,6 +27,10 @@ export class TransactionService {
     const formattedData = await this.graphFormattingService.formatTransactions(
       JSON.stringify(queryData),
     );
-    return {status: 'success', data: {graphName: graphName, ...JSON.parse(formattedData)} , timestamp: new Date().toISOString()};
+    return {
+      status: 'success',
+      data: { graphName: graphName, ...JSON.parse(formattedData) },
+      timestamp: new Date().toISOString(),
+    };
   }
 }
