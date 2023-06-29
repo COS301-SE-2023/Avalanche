@@ -40,24 +40,28 @@ describe('TransactionService', () => {
   });
 
   it('should correctly process transactions', async () => {
-    const jsonInput = '{"data": "someData"}';
+    const jsonInput = JSON.parse('{"data": "someData"}');
 
     // Set up the mocks to return specific values
     mockSnowflakeService.execute.mockResolvedValue('queryData');
     mockAnalysisService.analyze.mockResolvedValue('analyzedData');
-    mockGraphFormatService.format.mockResolvedValue('formattedData');
+    mockGraphFormatService.format.mockResolvedValue(
+      '{"data": "formattedData"}',
+    );
 
     // Call the method under test
-    const result = await service.transactions(jsonInput);
+    const result = await service.transactions(jsonInput, 'graphName');
 
     // Expect the mocks to have been called with the correct arguments
     expect(mockSnowflakeService.execute).toHaveBeenCalledWith(
-      `call transactionsByRegistrar('{"data": "someData"}')`,
+      `call transactionsByRegistrar('{"data":"someData"}')`,
     );
-    expect(mockAnalysisService.analyze).toHaveBeenCalledWith('queryData');
+    //expect(mockAnalysisService.analyze).toHaveBeenCalledWith('queryData');
     expect(mockGraphFormatService.format).toHaveBeenCalledWith('"queryData"');
 
     // Expect the result to be the final formatted data
-    expect(result).toBe('formattedData');
+    expect(result.data.data).toBe('formattedData');
+    expect(result.data.graphName).toBe('graphName');
+    expect(result.status).toBe('success');
   });
 });

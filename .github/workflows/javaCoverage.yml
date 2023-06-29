@@ -4,11 +4,15 @@ on:
   push:
     branches:
       - 'backend_dns_watch'
+      - 'stable'
+      - 'working'
 
 jobs:
-  
   test:
-    if: contains(github.event.head_commit.message, '_COV_')
+    if: contains(github.event.head_commit.message, '_COV_') || contains('
+        refs/heads/working
+        refs/heads/stable
+      ', github.ref)
     name: Coverage for Domain Watch
     permissions: write-all
     runs-on: windows-latest
@@ -40,7 +44,7 @@ jobs:
             
             # Publish Coverage Job Summary  # Optional
       - name: Add Coverage Job Summary
-        run: echo "${{ steps.jacoco_reporter.outputs.coverageSummary }}" >> $GITHUB_STEP_SUMMARY
+        run: echo "${{steps.jacoco_reporter.outputs.coverage_percentage}}" >> $GITHUB_STEP_SUMMARY
                 
             # uploads the coverage-report.md artifact  # Optional
       
@@ -50,4 +54,16 @@ jobs:
           name: code-coverage-report-markdown
           path: '*/coverage-results.md' 
           retention-days: 1  
+          
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+            files: Services/DomainWatch/domain_watch/target/site/jacoco/jacoco.xml
+            token: ${{ secrets.CODECOV_TOKEN }}
       
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+            files: Services\DomainWatch\domain_watch\target\site\jacoco\jacoco.xml
+            token: ${{ secrets.CODECOV_TOKEN }}

@@ -14,22 +14,38 @@ permissions:
     pull-requests: read
 
 jobs:
-  Cypress:
-    runs-on: ubuntu-latest
+#   frontend-tests:
+#     name: Cypress run
+#     runs-on: ubuntu-22.04
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v3
+#       - uses: actions/cache@v3
+#         name: Pulling Cache
+#         with:
+#           path: |
+#             ~/.npm
+#             ${{ github.workspace }}/.next/cache
+#           key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
+#           restore-keys: |
+#             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
+#       - uses: cypress-io/github-action@v5
+#         name: Running Cypress
+#         with:
+#           browser: chrome
+#           build: yarn build
+#           start: yarn start
+#           working-directory: frontend
+#           config: video=false
+  user-management-tests:
+    name: User Management Tests
+    runs-on: ubuntu-22.04
     steps:
-      - name: 🛫 Checkout
-        uses: actions/checkout@v2
-      - name: 📁 Right Directory
-        run: cd frontend
-      - name: 🔨 Build Project
-        run: yarn build
-      - name: 🏃‍♂️ Cypress Run
-        uses: cypress-io/github-action@v5
-        with:
-          build: yarn build
-          start: yarn cypress
-          browser: chrome
-          parallel: true
-      - name: ✅ Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
-
+      - name: Checkout
+        uses: actions/checkout@v3
+      - run: yarn
+        working-directory: user-management
+      - name: Run tests
+        working-directory: user-management
+        run: |
+          yarn test

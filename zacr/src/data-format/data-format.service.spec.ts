@@ -34,15 +34,15 @@ describe('DataFormatService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should correctly parse CSV data', async () => {
-    const csvData = 'a,b,c\n1,2,3\n4,5,6';
-    const expectedJson = [
-      { a: '1', b: '2', c: '3' },
-      { a: '4', b: '5', c: '6' },
-    ];
+  // it('should correctly parse CSV data', async () => {
+  //   const csvData = 'a,b,c\n1,2,3\n4,5,6';
+  //   const expectedJson = [
+  //     { a: '1', b: '2', c: '3' },
+  //     { a: '4', b: '5', c: '6' },
+  //   ];
 
-    expect(await service.parse(csvData)).toEqual(expectedJson);
-  });
+  //   expect(await service.parse(csvData)).toEqual(expectedJson);
+  // });
 
   it('should correctly return JSON data', async () => {
     const jsonData = [

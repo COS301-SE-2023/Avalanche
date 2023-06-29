@@ -56,6 +56,21 @@ export class AuthService {
     }
   }
 
+  async resendOTP(email: string){
+    const userPayload = await this.redis.get(email);
+    if(!userPayload){
+      return { status: 400,error: true, message: 'Could not find this email, please regsiter', 
+      timestamp: new Date().toISOString() };
+    }
+    const user = JSON.parse(userPayload);
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    user.otp = otp;
+    await this.redis.set(email, user, 'EX', 24 * 60 * 60);
+    await this.sendOTPEmail(email, otp);
+    return { status: 'success', message: 'Registration successful. Please check your email for the OTP.', 
+        timestamp: new Date().toISOString() };
+  }
+
   async sendOTPEmail(email: string, otp: string) {
     // Create transporter
     const transporter = nodemailer.createTransport({

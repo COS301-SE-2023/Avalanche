@@ -1,12 +1,26 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { SubmitButton, ErrorToast, InputLabel, Input } from '../Util';
 import { ModalContent, ModalHeader, ModalWrapper } from './ModalOptions';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearCurrentOpenState } from '@/store/Slices/modalManagerSlice';
+import { userState, getUserGroups } from '@/store/Slices/userSlice';
+import { createOrganisationGroup } from '@/store/Slices/userSlice';
+import { ICreateUserGroupRequest } from '@/interfaces/requests';
 
 interface ICreateGroupModal {
 
 }
 
 export default function CreateGroupModal({ }: ICreateGroupModal) {
+
+    const dispatch = useDispatch<any>();
+    const stateUser = useSelector(userState);
+
+    useEffect(() => {
+        if (stateUser.createGroupSuccess) {
+            dispatch(clearCurrentOpenState())
+        }
+    }, [stateUser.user.userGroups])
 
     /**
      * Boolean for if something is loading in the component.
@@ -39,20 +53,30 @@ export default function CreateGroupModal({ }: ICreateGroupModal) {
             setNameError(true);
         }
 
-        if (!description) {
-            error += "The group is missing a description.";
-            setDescriptionError(true);
-        }
+        // if (!description) {
+        //     error += "The group is missing a description.";
+        //     setDescriptionError(true);
+        // }
 
         if (nameError || descriptionError) {
             ErrorToast({ text: error });
             return;
         };
         setLoading(true);
-        ErrorToast({ text: "Nothing is implemented yet. Un-loading in 3 seconds." });
-        setTimeout(() => {
-            setLoading(false);
-        }, 3000);
+        // ErrorToast({ text: "Nothing is implemented yet. Un-loading in 3 seconds." });
+        // setTimeout(() => {
+        //     setLoading(false);
+        // }, 3000);
+
+        const data: ICreateUserGroupRequest = {
+            name,
+            permission: 2,
+            description: ""
+        }
+
+        console.log(data);
+
+        dispatch(createOrganisationGroup(data));
     }
 
     /**
@@ -70,13 +94,13 @@ export default function CreateGroupModal({ }: ICreateGroupModal) {
                             setName(event.currentTarget.value);
                         }} maxLength={20} error={nameError} />
                     </div>
-                    <div>
+                    {/* <div>
                         <InputLabel htmlFor="description" text="Group Description" />
                         <Input type="text" name="description" id="description" placeholder="This is paper sales group." required={true} disabled={loading} value={description} onChange={(event: React.FormEvent<HTMLInputElement>) => {
                             descriptionError && setDescriptionError(false);
                             setDescription(event.currentTarget.value);
                         }} maxLength={75} error={descriptionError} />
-                    </div>
+                    </div> */}
                     <SubmitButton text="Create Group" onClick={(event: React.FormEvent<HTMLFormElement>) => {
                         formSubmit(event);
                     }} className="w-full" loading={loading} />
