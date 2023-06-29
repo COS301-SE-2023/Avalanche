@@ -25,7 +25,7 @@ export class TransactionService {
     // const analyzedData = await this.statisticalAnalysisService.analyze(
     //   queryData,
     // );
-    const formattedData = await this.graphFormattingService.format(
+    const formattedData = await this.graphFormattingService.formatTransactions(
       JSON.stringify(queryData),
     );
     return {status: 'success', data: {graphName: graphName, ...JSON.parse(formattedData)} , timestamp: new Date().toISOString()};
