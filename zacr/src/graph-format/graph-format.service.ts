@@ -18,63 +18,75 @@ export class GraphFormatService {
         ],
       };
   */
-  async format(data: string): Promise<string> {
-    const dataArr = JSON.parse(data)[0]['TRANSACTIONSBYREGISTRAR'];
+  async formatTransactions(data: string): Promise<string> {
+    const dataArr = JSON.parse(JSON.parse(data)[0]['TRANSACTIONSBYREGISTRAR']);
     if (dataArr.length > 0) {
+      const arr0 = dataArr[0];
       const keys = Object.keys(dataArr[0]);
       if (keys.length === 3) {
-        const seriesKey = keys[0];
-        const indepKey = keys[1];
-        const depKey = keys[2];
-        const labels = [];
-        const datasets = {};
-
-        dataArr.forEach((datum) => {
-          if (!labels.includes(datum[indepKey])) {
-            labels.push(datum[indepKey]);
-          }
-          if (!datasets[datum[seriesKey]]) {
-            datasets[datum[seriesKey]] = {
-              label: datum[seriesKey],
-              data: [],
-            };
-          }
-          datasets[datum[seriesKey]].data.push(datum[depKey]);
-        });
-
-        return JSON.stringify({
-          labels,
-          datasets: Object.values(datasets),
-        });
-      } else if (keys.length === 2) {
-        const dataArr = JSON.parse(data).data;
-        const outputData: any = { labels: [], datasets: [] };
-
-        if (dataArr.length > 0) {
-          const keys = Object.keys(dataArr[0]);
-
-          if (keys.length === 3) {
-            // the existing code for the case of 3 keys...
-          } else if (keys.length === 2) {
-            const indepKey = keys[0];
-            const depKey = keys[1];
-            const depData = [];
-
-            for (let i = 0; i < dataArr.length; i++) {
-              outputData.labels.push(dataArr[i][indepKey]);
-              depData.push(dataArr[i][depKey]);
-            }
-
-            outputData.datasets.push({ label: 'Data', data: depData });
-          }
-        }
-
-        return JSON.stringify(outputData);
+        return this.formatThreeColumns(keys, data, 'TRANSACTIONSBYREGISTRAR');
+      } else if (keys.length === 4) {
+        return this.formatFourColumns(keys, data, 'TRANSACTIONSBYREGISTRAR');
       } else {
-        throw new Error('Invalid data structure.');
+        throw new Error('Invalid size array structure.');
       }
     } else {
       throw new Error('Empty data array.');
     }
+  }
+
+  formatThreeColumns(keys: string[], data: string, name: string): string {
+    const dataArr = JSON.parse(JSON.parse(data)[0][name]);
+    const seriesKey = keys[1];
+    const indepKey = keys[0];
+    const depKey = keys[2];
+    const labels = [];
+    const datasets = {};
+
+    dataArr.forEach((datum) => {
+      if (!labels.includes(datum[indepKey])) {
+        labels.push(datum[indepKey]);
+      }
+      if (!datasets[datum[seriesKey]]) {
+        datasets[datum[seriesKey]] = {
+          label: datum[seriesKey],
+          data: [],
+        };
+      }
+      datasets[datum[seriesKey]].data.push(datum[depKey]);
+    });
+
+    return JSON.stringify({
+      labels,
+      datasets: Object.values(datasets),
+    });
+  }
+
+  formatFourColumns(keys: string[], data: string, name: string): string {
+    const dataArr = JSON.parse(JSON.parse(data)[0][name]);
+    const seriesKey = keys[1];
+    const indepKey = keys[0];
+    const seriesKey2 = keys[2];
+    const depKey = keys[3];
+    const labels = [];
+    const datasets = {};
+
+    dataArr.forEach((datum) => {
+      if (!labels.includes(datum[indepKey])) {
+        labels.push(datum[indepKey]);
+      }
+      if (!datasets[datum[seriesKey]]) {
+        datasets[datum[seriesKey]] = {
+          label: datum[seriesKey] + '-' + datum[seriesKey2],
+          data: [],
+        };
+      }
+      datasets[datum[seriesKey]].data.push(datum[depKey]);
+    });
+
+    return JSON.stringify({
+      labels,
+      datasets: Object.values(datasets),
+    });
   }
 }
