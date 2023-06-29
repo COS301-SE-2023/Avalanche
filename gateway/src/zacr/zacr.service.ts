@@ -19,4 +19,8 @@ export class ZacrService {
   async age(data: any) {
     return this.client.send({ cmd: 'age' }, data).toPromise();
   }
+
+  async domainNameAnalysisCount(data: any) {
+    return this.client.send({ cmd: 'domainNameAnalysis/count' }, data).toPromise();
+  }
 }

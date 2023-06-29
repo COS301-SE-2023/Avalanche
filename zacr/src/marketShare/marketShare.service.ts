@@ -16,18 +16,21 @@ export class MarketShareService {
     private readonly graphFormattingService: GraphFormatService,
   ) {}
 
-
-  async marketShare(jsonInput: string, graphName: string): Promise<any>{
+  async marketShare(jsonInput: string, graphName: string): Promise<any> {
     jsonInput = JSON.stringify(jsonInput);
     console.log(jsonInput);
     const sqlQuery = `call marketShare('${jsonInput}')`;
-    console.log(sqlQuery  );
+    console.log(sqlQuery);
     const queryData = await this.snowflakeService.execute(sqlQuery);
     console.log(queryData);
     // const analyzedData = await this.statisticalAnalysisService.analyze(
     //   queryData,
     // );
-    
-    return {status: 'success', data: {graphName: graphName, ...queryData[0]['MARKETSHARE']} , timestamp: new Date().toISOString()};
+
+    return {
+      status: 'success',
+      data: { graphName: graphName, ...queryData[0]['MARKETSHARE'] },
+      timestamp: new Date().toISOString(),
+    };
   }
 }

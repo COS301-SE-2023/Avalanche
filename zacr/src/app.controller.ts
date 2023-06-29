@@ -1,15 +1,17 @@
 /* eslint-disable prettier/prettier */
-import { Controller } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 import { TransactionService } from './transactions/transactions.service';
 import { MarketShareService } from './marketShare/marketShare.service';
 import { AgeService } from './age/age.service';
+import { DomainNameAnalysisService } from './domainNameAnalysis/domain-name-analysis.service';
 
 @Controller('zacr')
 export class AppController {
   constructor(private readonly transactionsService: TransactionService, 
     private readonly marketShareService : MarketShareService,
-    private readonly ageService : AgeService) {}
+    private readonly ageService : AgeService,
+    private readonly domainNameAnalysisService : DomainNameAnalysisService) {}
 
   @MessagePattern({ cmd: 'transactions' })
   async transactions(data: any) {
@@ -25,5 +27,10 @@ export class AppController {
   @MessagePattern({ cmd: 'age' })
   async age(data: any) {
     return await this.ageService.age(data.jsonInput,data.graphName);
+  }
+
+  @MessagePattern({ cmd: 'domainNameAnalysis/count' })
+  async domainNameAnalysisCount(data: any) {
+    return await this.domainNameAnalysisService.sendData(data);
   }
 }

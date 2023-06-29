@@ -12,8 +12,6 @@ import { ZacrService } from './zacr/zacr.service';
 import { DomainWatchController } from './domain-watch/domain-watch.controller';
 import { DomainWatchService } from './domain-watch/domain-watch.service';
 import { HttpModule } from '@nestjs/axios';
-import { DomainNameAnalysisService } from './domain-name-analysis/domain-name-analysis.service';
-import { DomainNameAnalysisController } from './domain-name-analysis/domain-name-analysis.controller';
 
 @Module({
   imports: [
@@ -38,8 +36,8 @@ import { DomainNameAnalysisController } from './domain-name-analysis/domain-name
     ]),
     ConfigModule.forRoot({ isGlobal: true }),
   ],
-  controllers: [UserManagementController, ZacrController, DomainWatchController, DomainNameAnalysisController],
-  providers: [UserManagementService, ZacrService, RedisProvider, DomainWatchService, DomainNameAnalysisService],
+  controllers: [UserManagementController, ZacrController, DomainWatchController],
+  providers: [UserManagementService, ZacrService, RedisProvider, DomainWatchService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

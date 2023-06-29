@@ -31,4 +31,12 @@ export class ZacrController {
     const result = await lastValueFrom(this.client.send(pattern, payload));
     return result;
   }
+
+  @Post('domainNameAnalysis/count')
+  async domainNameAnalysisCount(@Body() data: any) {
+    const pattern = { cmd: 'domainNameAnalysis/count' };
+    const payload = data;
+    const result = await lastValueFrom(this.client.send(pattern, payload));
+    return result;
+  }
 }
