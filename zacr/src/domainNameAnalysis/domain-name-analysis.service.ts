@@ -27,8 +27,8 @@ export class DomainNameAnalysisService {
       data,
     );
     const responseData = await lastValueFrom(response);
-    const formattedData =
-      await this.graphFormattingService.formatDomainNameAnalysis(
+    console.log(responseData);
+    const formattedData = await this.graphFormattingService.formatDomainNameAnalysis(
         JSON.stringify(responseData.data),
       );
     return {

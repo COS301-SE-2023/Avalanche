@@ -74,12 +74,12 @@ export class GraphFormatService {
     if (dataArr.length > 0) {
       const keys = Object.keys(dataArr[0]);
       if (keys.length === 3) {
-        const dataToSend = JSON.stringify({ data: [data] });
+        const dataToSend = JSON.stringify( [{data : JSON.stringify(dataArr)}] );
         return this.formatTwoColumns(
           keys,
           dataToSend,
           'data',
-          'Domain Name Analysis Data',
+          'Count',
         );
       } else {
         throw new Error(
