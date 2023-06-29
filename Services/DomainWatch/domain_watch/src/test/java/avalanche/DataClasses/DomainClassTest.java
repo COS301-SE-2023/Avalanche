@@ -1,6 +1,8 @@
 package avalanche.DataClasses;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Field;
 
@@ -24,6 +26,20 @@ public class DomainClassTest {
         d = new Domain("AFRICA.AFRICA", "AFRICA");
         assertEquals("AFRICA.AFRICA", d.getName());
         assertEquals("AFRICA", d.getZone());
+    }
+
+    @Test
+    public void testCopyConstructor(){
+        //Given
+        Domain d = new Domain("a", "b");
+        
+        //When
+        Domain dCopy = new Domain(d);
+
+        //Then
+        assertEquals("a", dCopy.getName());
+        assertEquals("b", dCopy.getZone());
+        assertEquals(-1, dCopy.getDistance());
     }
 
     @Test
@@ -70,9 +86,77 @@ public class DomainClassTest {
     }
 
     @Test
-    public void testSimilarity() {
+    public void testSetDistanceLevenshtein() {
         Domain d = new Domain("slo", "CO.ZA");
         d.setDistance(5, "Levenshtein");
         assertEquals(0.4, d.getDistance(), 0);
     }
+
+    @Test
+    public void testSetDistanceSoundex() {
+        Domain d = new Domain("slo", "CO.ZA");
+        d.setDistance(3, "Soundex");
+        assertEquals(0.75, d.getDistance(), 0);
+    }
+
+    @Test
+    public void testSetDistanceDisallowedMetric() {
+        Domain d = new Domain("slo", "CO.ZA");
+        d.setDistance(10, "Blah");
+        assertEquals(-1, d.getDistance(), 0);
+
+        d = new Domain("slo", "CO.ZA");
+        d.setDistance(0, "Blah");
+        assertEquals(-1, d.getDistance(), 0);
+
+        d = new Domain("slo", "CO.ZA");
+        d.setDistance(-1, "Blah");
+        assertEquals(-1, d.getDistance(), 0);
+    }
+
+    @Test
+    public void testSetDistanceCombined() {
+        Domain d = new Domain("slo", "CO.ZA");
+        d.setDistance(10, "Blah");
+        assertEquals(-1, d.getDistance(), 0);
+
+        d.setDistance(3, "Soundex");
+        assertEquals(0.75, d.getDistance(), 0);
+
+        d.setDistance(5, "Levenshtein");
+        assertEquals(0.575, d.getDistance(), 0);
+    }
+
+    @Test
+    public void differentNamesShouldReturnFalse() {
+        Domain d1 = new Domain("domain1", "CO.ZA");
+        Domain d2 = new Domain("domain2", "CO.ZA");
+
+        assertFalse(d1.equals(d2));
+    }
+
+    @Test
+    public void differentZonesShouldReturnFalse() {
+        Domain d1 = new Domain("domain", "AFRICA");
+        Domain d2 = new Domain("domain", "CO.ZA");
+
+        assertFalse(d1.equals(d2));
+    }
+
+    @Test
+    public void differentNamesAndZonesShouldReturnFalse() {
+        Domain d1 = new Domain("domain1", "AFRICA");
+        Domain d2 = new Domain("domain2", "CO.ZA");
+
+        assertFalse(d1.equals(d2));
+    }
+
+    @Test
+    public void sameNameAndZoneShouldReturnTrue() {
+        Domain d1 = new Domain("domain", "CO.ZA");
+        Domain d2 = new Domain("domain", "CO.ZA");
+
+        assertTrue(d1.equals(d2));
+    }
+
 }
