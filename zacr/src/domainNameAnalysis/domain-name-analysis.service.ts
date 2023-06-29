@@ -34,7 +34,12 @@ export class DomainNameAnalysisService {
     return {
       status: 'success',
       data: {
-        graphName: 'Domain Name Analysis',
+        graphName:
+          'Most common words in newly created domains  in the last ' +
+          data.num +
+          ' ' +
+          data.granularity +
+          's',
         ...JSON.parse(formattedData),
       },
       timestamp: new Date().toISOString(),
