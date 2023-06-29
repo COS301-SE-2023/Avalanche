@@ -27,7 +27,7 @@ export default function Sidebar() {
      * Handles the invitation
      */
     useEffect(() => {
-        if (localStorage.get("invite")) {
+        if (localStorage.getItem("invite")) {
             const ls: any = localStorage.getItem("invite");
             const key = ls.key;
             const type = ls.type;

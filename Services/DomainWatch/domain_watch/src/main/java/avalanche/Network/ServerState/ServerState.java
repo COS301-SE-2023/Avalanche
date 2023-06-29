@@ -9,12 +9,13 @@ import org.json.JSONObject;
 public abstract class ServerState {
     public abstract String getResponse(String body, long st);
 
-    public static String validateRequest(JSONObject jsonObject) {
+    public static String validateRequest(String body) {
         int errorIndex = -1;
         Set<String> allowedMetrics = new HashSet<>();
         allowedMetrics.add("Levenshtein");
         allowedMetrics.add("Soundex");
         try {
+            JSONObject jsonObject = new JSONObject(body);
             String domain = (jsonObject.getString("domain"));
             if (domain.length() < 1) {
                 return "{\"status\":\"failure\",\"request-error\":\"The domain name must be longer than 0 characters\"}";

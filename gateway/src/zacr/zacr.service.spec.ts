@@ -32,4 +32,24 @@ describe('ZacrService', () => {
     expect(await service.transactions(data)).toEqual(expectedResponse);
     expect(client.send).toHaveBeenCalledWith({ cmd: 'transactions' }, data);
   });
+
+  it('should send marketShare', async () => {
+    const data = { key: 'value' };
+    const expectedResponse = { status: 'success' };
+
+    jest.spyOn(client, 'send').mockImplementationOnce(() => of(expectedResponse));
+
+    expect(await service.marketShare(data)).toEqual(expectedResponse);
+    expect(client.send).toHaveBeenCalledWith({ cmd: 'marketShare' }, data);
+  });
+
+  it('should send age', async () => {
+    const data = { key: 'value' };
+    const expectedResponse = { status: 'success' };
+
+    jest.spyOn(client, 'send').mockImplementationOnce(() => of(expectedResponse));
+
+    expect(await service.age(data)).toEqual(expectedResponse);
+    expect(client.send).toHaveBeenCalledWith({ cmd: 'age' }, data);
+  });
 });
