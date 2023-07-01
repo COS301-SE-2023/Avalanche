@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
-import { Method } from 'axios';
+import { AxiosHeaders, Method } from 'axios';
 import { map } from 'rxjs/operators';
 
 @Injectable()
@@ -10,9 +10,12 @@ export class ForwardService {
 
   async forwardRequest(method: string, url: string, body?: any, headers?: any, params?: any) {
     console.log('Forwarding headers:', headers);
+  if (headers && headers.authorization) {
+    body.token = headers.authorization;
+  }
     const response = await this.httpService.request({
       method: method as Method,
-      url: `http://localhost:3000${url}`,
+      url: `http://localhost:4000${url}`,
       data: body,
       params,
     }).pipe(map((axiosResponse) => axiosResponse.data)).toPromise();

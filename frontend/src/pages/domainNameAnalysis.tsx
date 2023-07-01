@@ -31,13 +31,13 @@ export default function DomainNameAnalysis() {
         const ageAnalysisAverageTop5: IDomainNameAnalysisGraphRequest = { granularity : 'week', num : 5, minimumAppearances: 150 };
         arrayDomainNameAnalysisShare.push(ageAnalysisAverageTop5);
 
-        const ageAnalysisTop5: IDomainNameAnalysisGraphRequest = {granularity : 'week', num : 1, minimumAppearances: 10};
+        const ageAnalysisTop5: IDomainNameAnalysisGraphRequest = {granularity : 'week', num : 1, minimumAppearances: 30};
         arrayDomainNameAnalysisShare.push(ageAnalysisTop5);
 
         const marketShareTop20: IDomainNameAnalysisGraphRequest = {granularity : 'week', num : 2, minimumAppearances: 50};
         arrayDomainNameAnalysisShare.push(marketShareTop20);
 
-        const ageAnalysisTop10: IDomainNameAnalysisGraphRequest = {granularity : 'week', num : 3, minimumAppearances: 150};
+        const ageAnalysisTop10: IDomainNameAnalysisGraphRequest = {granularity : 'week', num : 15, minimumAppearances: 150};
         arrayDomainNameAnalysisShare.push(ageAnalysisTop10);
 
         arrayDomainNameAnalysisShare.forEach(data => {
