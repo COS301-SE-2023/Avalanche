@@ -31,7 +31,10 @@ export class MarketShareService {
     );
     return {
       status: 'success',
-      data: { graphName: 'Market share showing ' + rank , ...JSON.parse(formattedData) },
+      data: {
+        graphName: 'Market share showing ' + rank,
+        ...JSON.parse(formattedData),
+      },
       timestamp: new Date().toISOString(),
     };
   }

@@ -38,10 +38,30 @@ export class GraphFormatService {
     const dataArr = JSON.parse(JSON.parse(data)[0]['TRANSACTIONSBYREGISTRAR']);
     if (dataArr.length > 0) {
       const keys = Object.keys(dataArr[0]);
-      if (keys.length === 3) {
-        return this.formatThreeColumns(keys, data, 'TRANSACTIONSBYREGISTRAR');
-      } else if (keys.length === 4) {
-        return this.formatFourColumns(keys, data, 'TRANSACTIONSBYREGISTRAR');
+      if (keys.length === 4) {
+        const seriesKey = keys[2];
+        const indepKey = keys[0];
+        const depKey = keys[3];
+        const labels = [];
+        const datasets = {};
+
+        dataArr.forEach((datum) => {
+          if (!labels.includes(datum[indepKey])) {
+            labels.push(datum[indepKey]);
+          }
+          if (!datasets[datum[seriesKey]]) {
+            datasets[datum[seriesKey]] = {
+              label: datum[seriesKey],
+              data: [],
+            };
+          }
+          datasets[datum[seriesKey]].data.push(datum[depKey]);
+        });
+
+        return JSON.stringify({
+          labels,
+          datasets: Object.values(datasets),
+        });
       } else {
         throw new Error('Invalid size array structure in Transactions.');
       }
@@ -90,13 +110,8 @@ export class GraphFormatService {
     if (dataArr.length > 0) {
       const keys = Object.keys(dataArr[0]);
       if (keys.length === 3) {
-        const dataToSend = JSON.stringify( [{data : JSON.stringify(dataArr)}] );
-        return this.formatTwoColumns(
-          keys,
-          dataToSend,
-          'data',
-          'Count',
-        );
+        const dataToSend = JSON.stringify([{ data: JSON.stringify(dataArr) }]);
+        return this.formatTwoColumns(keys, dataToSend, 'data', 'Count');
       } else {
         throw new Error(
           'Invalid size array structure in Domain Name Analysis.',
