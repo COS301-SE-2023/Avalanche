@@ -16,6 +16,15 @@ export class ZacrController {
     return result;
   }
 
+  @Post('transactions-ranking')
+  async transactionsRaking(@Body() data: any) {
+    const pattern = { cmd: 'transactions-ranking' };
+    console.log("here")
+    const payload = data;
+    const result = await lastValueFrom(this.client.send(pattern, payload));
+    return result;
+  }
+
   @Post('marketShare')
   async marketShare(@Body() data: any) {
     const pattern = { cmd: 'marketShare' };

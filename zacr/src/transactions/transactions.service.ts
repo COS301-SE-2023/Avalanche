@@ -33,4 +33,22 @@ export class TransactionService {
       timestamp: new Date().toISOString(),
     };
   }
+
+  async transactionsRanking(jsonInput: string, graphName: string): Promise<any> {
+    jsonInput = JSON.stringify(jsonInput);
+    console.log(jsonInput);
+    const sqlQuery = `call transactionsByRegistrar('${jsonInput}')`;
+    const queryData = await this.snowflakeService.execute(sqlQuery);
+    // const analyzedData = await this.statisticalAnalysisService.analyze(
+    //   queryData,
+    // );
+    const formattedData = await this.graphFormattingService.formatTransactionsRanking(
+      JSON.stringify(queryData),
+    );
+    return {
+      status: 'success',
+      data: { graphName: graphName, ...JSON.parse(formattedData) },
+      timestamp: new Date().toISOString(),
+    };
+  }
 }

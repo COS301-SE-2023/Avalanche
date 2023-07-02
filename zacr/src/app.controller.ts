@@ -19,6 +19,12 @@ export class AppController {
     return await this.transactionsService.transactions(data.jsonInput,data.graphName);
   }
 
+  @MessagePattern({ cmd: 'transactions-ranking' })
+  async transactionsRanking(data: any) {
+    console.log('Transactions: ', data);
+    return await this.transactionsService.transactionsRanking(data.jsonInput,data.graphName);
+  }
+
   @MessagePattern({ cmd: 'marketShare' })
   async marketShare(data: any) {
     return await this.marketShareService.marketShare(data.jsonInput,data.graphName);
