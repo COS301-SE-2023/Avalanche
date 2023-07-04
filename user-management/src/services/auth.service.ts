@@ -8,6 +8,7 @@ import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../entity/user.entity';
+import { v4 as uuidv4 } from 'uuid';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { Response, response } from 'express';
@@ -18,9 +19,11 @@ export class AuthService {
     private jwtService: JwtService) { }
 
   async register(email: string, password: string, firstName: string, lastName: string) {
-    if(!email || !password || !firstName || !lastName){
-      return {status: 400,error: true, message: "Missing info", 
-      timestamp: new Date().toISOString()}
+    if (!email || !password || !firstName || !lastName) {
+      return {
+        status: 400, error: true, message: "Missing info",
+        timestamp: new Date().toISOString()
+      }
     }
     const user = await this.userRepository.findOne({ where: { email }, relations: ['userGroups', 'organisation'] });
     if (!user) {
@@ -44,31 +47,41 @@ export class AuthService {
         // Send email with OTP link
         await this.sendOTPEmail(email, otp);
 
-        return { status: 'success', message: 'Registration successful. Please check your email for the OTP.', 
-        timestamp: new Date().toISOString() };
+        return {
+          status: 'success', message: 'Registration successful. Please check your email for the OTP.',
+          timestamp: new Date().toISOString()
+        };
       } else {
-        return { status: 400,error: true, message: 'Registration unsuccessful. Email is awaiting verification.', 
-        timestamp: new Date().toISOString() };
+        return {
+          status: 400, error: true, message: 'Registration unsuccessful. Email is awaiting verification.',
+          timestamp: new Date().toISOString()
+        };
       }
     } else {
-      return { status: 400,error: true, message: 'Registration unsuccessful. This email is in use.', 
-      timestamp: new Date().toISOString() };
+      return {
+        status: 400, error: true, message: 'Registration unsuccessful. This email is in use.',
+        timestamp: new Date().toISOString()
+      };
     }
   }
 
-  async resendOTP(email: string){
+  async resendOTP(email: string) {
     const userPayload = await this.redis.get(email);
-    if(!userPayload){
-      return { status: 400,error: true, message: 'Could not find this email, please regsiter', 
-      timestamp: new Date().toISOString() };
+    if (!userPayload) {
+      return {
+        status: 400, error: true, message: 'Could not find this email, please regsiter',
+        timestamp: new Date().toISOString()
+      };
     }
     const user = JSON.parse(userPayload);
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     user.otp = otp;
     await this.redis.set(email, user, 'EX', 24 * 60 * 60);
     await this.sendOTPEmail(email, otp);
-    return { status: 'success', message: 'Registration successful. Please check your email for the OTP.', 
-        timestamp: new Date().toISOString() };
+    return {
+      status: 'success', message: 'Registration successful. Please check your email for the OTP.',
+      timestamp: new Date().toISOString()
+    };
   }
 
   async sendOTPEmail(email: string, otp: string) {
@@ -100,15 +113,19 @@ export class AuthService {
     // Get user's info from Redis
     const userInfo = await this.redis.get(email);
     if (!userInfo) {
-      return { status: 400,error: true, message: 'Email has not been found.', 
-      timestamp: new Date().toISOString() };
+      return {
+        status: 400, error: true, message: 'Email has not been found.',
+        timestamp: new Date().toISOString()
+      };
     };
 
     const { password, salt, firstName, lastName, otp: savedOtp } = JSON.parse(userInfo);
     console.log(password + " " + otp);
     if (otp !== savedOtp) {
-      return {status: 400,error: true, message: 'Incorrect OTP.', 
-      timestamp: new Date().toISOString() };
+      return {
+        status: 400, error: true, message: 'Incorrect OTP.',
+        timestamp: new Date().toISOString()
+      };
     };
 
     // Save user's information to PostgreSQL
@@ -120,8 +137,10 @@ export class AuthService {
     // Remove user's information from Redis
     await this.redis.del(email);
 
-    return { status: 'success', message: 'Verification successful.', 
-    timestamp: new Date().toISOString() };
+    return {
+      status: 'success', message: 'Verification successful.',
+      timestamp: new Date().toISOString()
+    };
   }
 
   async login(email: string, passwordLogin: string) {
@@ -130,15 +149,17 @@ export class AuthService {
     console.log(user);
     // If user not found, throw error
     if (!user) {
-      return { status: 400,error: true, message: 'This user does not exist, please enter the correct email/please register.', 
-      timestamp: new Date().toISOString() };
+      return {
+        status: 400, error: true, message: 'This user does not exist, please enter the correct email/please register.',
+        timestamp: new Date().toISOString()
+      };
     }
 
     // Verify the provided password with the user's hashed password in the database
     const saltFromDB = user.salt;
     const passwordLogin1 = await bcrypt.hash(passwordLogin, saltFromDB);
     let passwordIsValid = false;
-    if(passwordLogin1 === user.password){
+    if (passwordLogin1 === user.password) {
       passwordIsValid = true;
     }
     console.log(user.password);
@@ -146,7 +167,7 @@ export class AuthService {
 
     // If the password isn't valid, throw error
     if (!passwordIsValid) {
-      return { 
+      return {
         status: 400,
         error: true,
         message: 'Incorrect password',
@@ -165,8 +186,73 @@ export class AuthService {
     await this.redis.set(jwtToken, JSON.stringify(userWithToken), 'EX', 24 * 60 * 60);
 
     // Send back user's information along with the token as a JSON object
-    return {status: "success", userWithToken, 
-    timestamp: new Date().toISOString()};
+    return {
+      status: "success", userWithToken,
+      timestamp: new Date().toISOString()
+    };
+  }
+
+  async getUserInfo(token: string) {
+    // Extract the JWT token
+    // Retrieve the user's information from Redis using the token
+    const userPayload = await this.redis.get(token);
+    if (!userPayload) {
+      return {
+        status: 400, error: true, message: 'Invalid token.',
+        timestamp: new Date().toISOString()
+      };
+    }
+    const { email: userEmail } = JSON.parse(userPayload);
+    console.log(userEmail);
+    const user = await this.userRepository.findOne({
+      where: { email: userEmail }, relations: ['userGroups', 'organisation'],
+      select: ['id', 'email', 'firstName', 'lastName', 'organisationId', 'products', 'userGroups', 'organisation']
+    });
+    if (!user) {
+      return {
+        status: 400, error: true, message: 'User does not exist.',
+        timestamp: new Date().toISOString()
+      };
+    }
+    delete user.salt;
+    // Update the user's information in Redis
+    await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60);
+
+    return {
+      status: 'success', message: user,
+      timestamp: new Date().toISOString()
+    };
+  }
+
+  async createAPIKey(token: string) {
+    const userData = await this.redis.get(token);
+    if (!userData) {
+      return {
+        status: 400, error: true, message: 'Invalid token',
+        timestamp: new Date().toISOString()
+      };
+    }
+    const userDetails = JSON.parse(userData);
+
+    const user = await this.userRepository.findOne({ where: { email: userDetails.email }, relations: ['userGroups', 'organisation'], select: ['id', 'email', 'firstName', 'lastName', 'organisationId', 'products', 'userGroups', 'organisation'] });
+    if (!user) {
+      return {
+        status: 400, error: true, message: 'User to be removed not found',
+        timestamp: new Date().toISOString()
+      };
+    }
+
+    const jwtToken = uuidv4();
+    user.apiKey = jwtToken;
+    await this.userRepository.save(user);
+    delete user.apiKey;
+    await this.redis.set(jwtToken, JSON.stringify(user));
+    const userWithToken = { ...user, token: jwtToken };
+    // Send back user's information along with the token as a JSON object
+    return {
+      status: "success", userWithToken,
+      timestamp: new Date().toISOString()
+    };
   }
 
 }

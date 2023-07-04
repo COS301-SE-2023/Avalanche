@@ -32,19 +32,19 @@ export default function Registrar() {
         // All transactions, monthly granularity, for the last year
         let dateFrom = `${currentDate.getFullYear() - 1}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
         let dateTo = `${currentDate.getFullYear()}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
-        const monthlyLastYear: ITransactionGraphRequest = { registrar : [`afrihost`] ,graphName: `Monthly, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo };
+        const monthlyLastYear: ITransactionGraphRequest = { registrar : [`afrihost`] ,graphName: `Afrihost monthly\n from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo };
         array.push(monthlyLastYear);
 
         // All transactions, monthly granularity, for the year before
         dateFrom = `${currentDate.getFullYear() - 2}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
         dateTo = `${currentDate.getFullYear() - 1}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
-        const monthlyPastYear: ITransactionGraphRequest = { registrar : [`afrihost`] ,graphName: `Monthly, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo };
+        const monthlyPastYear: ITransactionGraphRequest = { registrar : ["hetzner"] ,graphName: `Xneelo monthly\n from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo };
         array.push(monthlyPastYear);
 
         // All transactions, yearly, 5 years
         dateFrom = `${currentDate.getFullYear() - 5}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
         dateTo = `${currentDate.getFullYear()}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
-        const yearlyPastFive: ITransactionGraphRequest = { registrar : [`afrihost`] ,graphName: `Yearly, from ${dateFrom} to ${dateTo}`, granularity: "year", dateFrom, dateTo };
+        const yearlyPastFive: ITransactionGraphRequest = { registrar : ["diamatrix"] ,graphName: `domains.co.za yearly\n from ${dateFrom} to ${dateTo}`, granularity: "year", dateFrom, dateTo };
         array.push(yearlyPastFive);
 
         //  All transactions, weekly, last 3 months
@@ -52,7 +52,7 @@ export default function Registrar() {
         holderDate.getMonth() - 3;
         dateFrom = `${holderDate.getFullYear()}-${pad(holderDate.getMonth() - 3)}-${pad(holderDate.getDate())}`;
         dateTo = `${currentDate.getFullYear()}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
-        const weeklyThreeMonths: ITransactionGraphRequest = { registrar : [`afrihost`] ,graphName: `Weekly, from ${dateFrom} to ${dateTo}`, granularity: "week", dateFrom, dateTo };
+        const weeklyThreeMonths: ITransactionGraphRequest = { registrar : [`afrihost`] ,graphName: `Afrihost weekly\n from ${dateFrom} to ${dateTo}`, granularity: "week", dateFrom, dateTo };
         array.push(weeklyThreeMonths);
 
         // All transactions, daily, last 2 weeks
@@ -60,7 +60,7 @@ export default function Registrar() {
         holderDate.setDate(holderDate.getDate() - 14);
         dateFrom = `${holderDate.getFullYear()}-${pad(holderDate.getMonth())}-${pad(holderDate.getDate())}`;
         dateTo = `${currentDate.getFullYear()}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
-        const dailyTwoWeeks: ITransactionGraphRequest = { registrar : [`afrihost`] ,graphName: `Daily, from ${dateFrom} to ${dateTo}`, granularity: "day", dateFrom, dateTo };
+        const dailyTwoWeeks: ITransactionGraphRequest = { registrar : [`afrihost`] ,graphName: `Afrihost daily\n from ${dateFrom} to ${dateTo}`, granularity: "day", dateFrom, dateTo };
         array.push(dailyTwoWeeks);
 
 

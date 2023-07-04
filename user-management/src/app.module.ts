@@ -12,6 +12,7 @@ import { UserGroup } from './entity/userGroup.entity';
 import { Organisation } from './entity/organisation.entity';
 import { UserOrganisationMangementService } from './services/user-organisation-mangement.service';
 import { UserDataProductMangementService } from './services/user-data-products-management.service';
+import { UserUserGroupMangementService } from './services/user-userGroup-management.service';
 
 @Module({
   imports: [
@@ -53,8 +54,8 @@ import { UserDataProductMangementService } from './services/user-data-products-m
     TypeOrmModule.forFeature([User, UserGroup, Organisation]),
   ],
   controllers: [AppController],
-  providers: [AuthService, RedisProvider, UserOrganisationMangementService, UserDataProductMangementService],
-  exports: [AuthService, UserOrganisationMangementService, UserDataProductMangementService],
+  providers: [AuthService, RedisProvider, UserOrganisationMangementService, UserDataProductMangementService, UserUserGroupMangementService],
+  exports: [AuthService, UserOrganisationMangementService, UserDataProductMangementService, UserUserGroupMangementService],
 })
 export class AppModule {}
 

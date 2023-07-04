@@ -22,6 +22,9 @@ export class UserManagementService {
   async login(data: any) {
       return this.client.send({ cmd: 'login' }, data).toPromise();
   }
+  async createAPIKey(data: any) {
+    return this.client.send({ cmd: 'createAPIKey' }, data).toPromise();
+}
   async createOrganisation(data: any) {
     return this.client.send({ cmd: 'createOrganisation' }, data).toPromise();
   }

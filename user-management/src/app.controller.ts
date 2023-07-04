@@ -4,12 +4,14 @@ import { AuthService } from './services/auth.service';
 import { MessagePattern, RpcException } from '@nestjs/microservices';
 import { UserOrganisationMangementService } from './services/user-organisation-mangement.service';
 import { UserDataProductMangementService } from './services/user-data-products-management.service';
+import { UserUserGroupMangementService } from './services/user-userGroup-management.service';
 
 @Controller('user-management')
 export class AppController {
   constructor(private readonly authService: AuthService,
     private readonly userOrgManService: UserOrganisationMangementService,
-    private readonly userDataProductManService: UserDataProductMangementService) { }
+    private readonly userDataProductManService: UserDataProductMangementService,
+    private readonly userUserGroupManService: UserUserGroupMangementService) { }
 
   @MessagePattern({ cmd: 'register' })
   async register(data: any) {
@@ -59,10 +61,26 @@ export class AppController {
 
     return result;
   }
+
+  @MessagePattern({ cmd: 'createAPIKey' })
+  async createAPIKey(data: any) {
+    console.log("Creating key: ", data);
+    const result = await this.authService.createAPIKey(data.token);
+
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
   @MessagePattern({ cmd: 'getUserInfo' })
   async getUserInfo(data: any) {
     console.log("Get user info: ", data);
-    const result = await this.userOrgManService.getUserInfo(data.token);
+    const result = await this.authService.getUserInfo(data.token);
     if (result.error) {
       throw new RpcException({
         status: result.status,
@@ -104,7 +122,7 @@ export class AppController {
   @MessagePattern({ cmd: 'createUserGroup' })
   async createUserGroup(data: any) {
     console.log("Creating a user group: ", data);
-    const result = await this.userOrgManService.createUserGroup(data.token, data.name, data.permission);
+    const result = await this.userUserGroupManService.createUserGroup(data.token, data.name, data.permission);
     if (result.error) {
       throw new RpcException({
         status: result.status,
@@ -118,7 +136,7 @@ export class AppController {
   @MessagePattern({ cmd: 'addUserToUserGroup' })
   async addUserToUserGroup(data: any) {
     console.log("Adding a user to a user group: ", data);
-    const result = await this.userOrgManService.addUserToUserGroup(data.token, data.userEmail, data.userGroupName);
+    const result = await this.userUserGroupManService.addUserToUserGroup(data.token, data.userEmail, data.userGroupName);
     if (result.error) {
       throw new RpcException({
         status: result.status,
@@ -132,7 +150,7 @@ export class AppController {
   @MessagePattern({ cmd: 'exitUserGroup' })
   async exitUserGroup(data: any) {
     console.log("Removing you from the user group: ", data);
-    const result = await this.userOrgManService.exitUserGroup(data.token, data.userGroupName);
+    const result = await this.userUserGroupManService.exitUserGroup(data.token, data.userGroupName);
     if (result.error) {
       throw new RpcException({
         status: result.status,
@@ -146,7 +164,7 @@ export class AppController {
   @MessagePattern({ cmd: 'removeUserFromUserGroup' })
   async removeUserFromUserGroup(data: any) {
     console.log("Removing a user from a user group: ", data);
-    const result = await this.userOrgManService.removeUserFromUserGroup(data.token, data.userGroupName, data.userEmail);
+    const result = await this.userUserGroupManService.removeUserFromUserGroup(data.token, data.userGroupName, data.userEmail);
     if (result.error) {
       throw new RpcException({
         status: result.status,
@@ -188,7 +206,7 @@ export class AppController {
   @MessagePattern({ cmd: 'addUserToUserGroupWithKey' })
   async addUserToUserGroupWithKey(data: any) {
     console.log("Adding a user, with a key, to a user group: ", data);
-    const result = await this.userOrgManService.addUserToUserGroupWithKey(data.token, data.key);
+    const result = await this.userUserGroupManService.addUserToUserGroupWithKey(data.token, data.key);
     if (result.error) {
       throw new RpcException({
         status: result.status,
