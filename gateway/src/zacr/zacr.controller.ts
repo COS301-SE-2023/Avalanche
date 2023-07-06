@@ -48,4 +48,12 @@ export class ZacrController {
     const result = await lastValueFrom(this.client.send(pattern, payload));
     return result;
   }
+
+  @Post('domainNameAnalysis/length')
+  async domainNameAnalysisLength(@Body() data: any) {
+    const pattern = { cmd: 'domainNameAnalysis/length' };
+    const payload = data;
+    const result = await lastValueFrom(this.client.send(pattern, payload));
+    return result;
+  }
 }
