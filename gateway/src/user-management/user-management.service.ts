@@ -24,7 +24,10 @@ export class UserManagementService {
   }
   async createAPIKey(data: any) {
     return this.client.send({ cmd: 'createAPIKey' }, data).toPromise();
-}
+  }
+  async rerollAPIKey(data: any) {
+    return this.client.send({ cmd: 'rerollAPIKey' }, data).toPromise();
+  }
   async createOrganisation(data: any) {
     return this.client.send({ cmd: 'createOrganisation' }, data).toPromise();
   }

@@ -77,6 +77,23 @@ export class AppController {
 
     return result;
   }
+
+  @MessagePattern({ cmd: 'rerollAPIKey' })
+  async rerollAPIKey(data: any) {
+    console.log("Rerolling key: ", data);
+    const result = await this.authService.rerollAPIKey(data.token);
+
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
+
   @MessagePattern({ cmd: 'getUserInfo' })
   async getUserInfo(data: any) {
     console.log("Get user info: ", data);

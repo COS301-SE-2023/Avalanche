@@ -255,5 +255,51 @@ export class AuthService {
     };
   }
 
+  async rerollAPIKey(token: string) {
+    const userData = await this.redis.get(token);
+    if (!userData) {
+      return {
+        status: 400, error: true, message: 'Invalid token',
+        timestamp: new Date().toISOString()
+      };
+    }
+    const userDetails = JSON.parse(userData);
+
+    const user = await this.userRepository.findOne({ where: { email: userDetails.email }, relations: ['userGroups', 'organisation'], select: ['id', 'email', 'firstName', 'lastName', 'organisationId', 'products', 'userGroups', 'organisation', 'apiKey'] });
+    if (!user) {
+      return {
+        status: 400, error: true, message: 'User not found',
+        timestamp: new Date().toISOString()
+      };
+    }
+
+    if(user.apiKey == token){
+      return {
+        status: 400, error: true, message: 'Please enter JWT token',
+        timestamp: new Date().toISOString()
+      };
+    }
+
+    if(!user.apiKey){
+      return {
+        status: 400, error: true, message: 'User does not have an API key',
+        timestamp: new Date().toISOString()
+      };
+    }
+
+    const jwtToken = uuidv4();
+    user.apiKey = jwtToken;
+    await this.userRepository.save(user);
+    delete user.apiKey;
+    delete user.salt;
+    await this.redis.set(jwtToken, JSON.stringify(user));
+    await this.redis.del(token);
+    const userWithToken = { ...user, token: jwtToken };
+    // Send back user's information along with the token as a JSON object
+    return {
+      status: "success", userWithToken,
+      timestamp: new Date().toISOString()
+    };
+  }
 }
 
