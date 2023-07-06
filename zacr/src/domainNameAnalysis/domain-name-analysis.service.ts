@@ -30,7 +30,8 @@ export class DomainNameAnalysisService {
     );
     const responseData = await lastValueFrom(response);
     console.log(responseData);
-    const formattedData = await this.graphFormattingService.formatDomainNameAnalysis(
+    const formattedData =
+      await this.graphFormattingService.formatDomainNameAnalysis(
         JSON.stringify(responseData.data),
       );
     return {
@@ -44,6 +45,25 @@ export class DomainNameAnalysisService {
           's',
         ...JSON.parse(formattedData),
       },
+      timestamp: new Date().toISOString(),
+    };
+  }
+
+  async domainLength(jsonInput: string, graphName: string): Promise<any> {
+    jsonInput = JSON.stringify(jsonInput);
+    console.log(jsonInput);
+    const sqlQuery = `CALL SKUNKWORKS_DB.public.domainLengthAnalysis('${jsonInput}')`;
+    const queryData = await this.snowflakeService.execute(sqlQuery);
+    // const analyzedData = await this.statisticalAnalysisService.analyze(
+    //   queryData,
+    // );
+    const formattedData =
+      await this.graphFormattingService.formatDomainLengthAnalysis(
+        JSON.stringify(queryData),
+      );
+    return {
+      status: 'success',
+      data: { graphName: graphName, ...JSON.parse(formattedData) },
       timestamp: new Date().toISOString(),
     };
   }

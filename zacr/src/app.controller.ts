@@ -39,4 +39,9 @@ export class AppController {
   async domainNameAnalysisCount(data: any) {
     return await this.domainNameAnalysisService.sendData(data);
   }
+
+  @MessagePattern({ cmd: 'domainNameAnalysis/length' })
+  async domainNameAnalysisLength(data: any) {
+    return await this.domainNameAnalysisService.sendData(data);
+  }
 }
