@@ -1,9 +1,8 @@
 /* eslint-disable prettier/prettier */
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { UserGroup } from './userGroup.entity';
 import { Organisation } from './organisation.entity';
-// import { UserGroup } from './userGroup.entity';
-// import { Organisation } from './organisation.entity';
+import { Dashboard } from './dashboard.entity';
 
 @Entity()
 export class User {
@@ -38,6 +37,10 @@ export class User {
   @ManyToOne(() => Organisation, (organisation) => organisation.users, { nullable: true })
   @JoinColumn({ name: 'organisationId' })
   organisation: Organisation;
+
+  @OneToMany(() => Dashboard, (dashboard) => dashboard.user, { nullable: true })
+  @JoinTable()
+  dashboards: Dashboard[];
 
   @Column({ nullable: true })
   organisationId: number;

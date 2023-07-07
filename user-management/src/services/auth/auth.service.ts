@@ -7,7 +7,7 @@ import { join } from 'path';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from '../entity/user.entity';
+import { User } from '../../entity/user.entity';
 import { v4 as uuidv4 } from 'uuid';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
@@ -205,8 +205,8 @@ export class AuthService {
     const { email: userEmail } = JSON.parse(userPayload);
     console.log(userEmail);
     const user = await this.userRepository.findOne({
-      where: { email: userEmail }, relations: ['userGroups', 'organisation'],
-      select: ['id', 'email', 'firstName', 'lastName', 'organisationId', 'products', 'userGroups', 'organisation']
+      where: { email: userEmail }, relations: ['userGroups', 'organisation', 'dashboards'],
+      select: ['id', 'email', 'firstName', 'lastName', 'organisationId', 'products', 'userGroups', 'organisation', 'dashboards']
     });
     if (!user) {
       return {

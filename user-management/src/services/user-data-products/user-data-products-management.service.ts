@@ -3,13 +3,11 @@ import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from '../entity/user.entity';
+import { User } from '../../entity/user.entity';
 import { Repository } from 'typeorm';
-import { UserGroup } from '../entity/userGroup.entity';
-import { Organisation } from '../entity/organisation.entity';
+import { UserGroup } from '../../entity/userGroup.entity';
+import { Organisation } from '../../entity/organisation.entity';
 import axios from 'axios';
-import { Response } from 'express';
-import { Res} from '@nestjs/common';
 
 @Injectable()
 export class UserDataProductMangementService {

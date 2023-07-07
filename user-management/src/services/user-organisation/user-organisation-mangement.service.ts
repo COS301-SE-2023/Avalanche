@@ -3,14 +3,10 @@ import { ConflictException, Inject, Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from '../entity/user.entity';
+import { User } from '../../entity/user.entity';
 import { Repository } from 'typeorm';
-import { UserGroup } from '../entity/userGroup.entity';
-import { Organisation } from '../entity/organisation.entity';
-import { v4 as uuidv4 } from 'uuid';
-import * as nodemailer from 'nodemailer';
-import { readFileSync } from 'fs';
-import { join } from 'path';
+import { UserGroup } from '../../entity/userGroup.entity';
+import { Organisation } from '../../entity/organisation.entity';
 @Injectable()
 export class UserOrganisationMangementService {
     constructor(@Inject('REDIS') private readonly redis: Redis, private readonly configService: ConfigService,

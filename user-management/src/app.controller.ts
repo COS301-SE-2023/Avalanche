@@ -1,17 +1,19 @@
 /* eslint-disable prettier/prettier */
 import { Controller, HttpException, HttpStatus } from '@nestjs/common';
-import { AuthService } from './services/auth.service';
+import { AuthService } from './services/auth/auth.service';
 import { MessagePattern, RpcException } from '@nestjs/microservices';
-import { UserOrganisationMangementService } from './services/user-organisation-mangement.service';
-import { UserDataProductMangementService } from './services/user-data-products-management.service';
-import { UserUserGroupMangementService } from './services/user-userGroup-management.service';
+import { UserOrganisationMangementService } from './services/user-organisation/user-organisation-mangement.service';
+import { UserDataProductMangementService } from './services/user-data-products/user-data-products-management.service';
+import { UserUserGroupMangementService } from './services/user-userGroup/user-userGroup-management.service';
+import { UserDashboardMangementService } from './services/user-dashboard/user-dashboard-management.service';
 
 @Controller('user-management')
 export class AppController {
   constructor(private readonly authService: AuthService,
     private readonly userOrgManService: UserOrganisationMangementService,
     private readonly userDataProductManService: UserDataProductMangementService,
-    private readonly userUserGroupManService: UserUserGroupMangementService) { }
+    private readonly userUserGroupManService: UserUserGroupMangementService,
+    private readonly userDashboardManService : UserDashboardMangementService) { }
 
   @MessagePattern({ cmd: 'register' })
   async register(data: any) {
@@ -61,7 +63,6 @@ export class AppController {
 
     return result;
   }
-
   @MessagePattern({ cmd: 'createAPIKey' })
   async createAPIKey(data: any) {
     console.log("Creating key: ", data);
@@ -77,7 +78,6 @@ export class AppController {
 
     return result;
   }
-
   @MessagePattern({ cmd: 'rerollAPIKey' })
   async rerollAPIKey(data: any) {
     console.log("Rerolling key: ", data);
@@ -93,7 +93,20 @@ export class AppController {
 
     return result;
   }
+  @MessagePattern({ cmd: 'saveDashboard' })
+  async saveDashboard(data: any) {
+    console.log("Get user info: ", data);
+    const result = await this.userDashboardManService.saveDashbaord(data.token, data.name, data.graphs);
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
 
+    return result;
+  }
   @MessagePattern({ cmd: 'getUserInfo' })
   async getUserInfo(data: any) {
     console.log("Get user info: ", data);

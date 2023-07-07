@@ -2,9 +2,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { UserDataProductMangementService } from './user-data-products-management.service';
-import { User } from '../entity/user.entity';
-import { UserGroup } from '../entity/userGroup.entity';
-import { Organisation } from '../entity/organisation.entity';
+import { User } from '../../entity/user.entity';
+import { UserGroup } from '../../entity/userGroup.entity';
+import { Organisation } from '../../entity/organisation.entity';
 import { Repository } from 'typeorm';
 import Redis from 'ioredis';
 import { ConfigService } from '@nestjs/config';
