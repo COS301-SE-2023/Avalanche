@@ -14,16 +14,16 @@ export class DomainNameAnalysisService {
 
   async sendData(data: any): Promise<any> {
     console.log(data);
-    const jsonInput = JSON.stringify(data.jsonInput);
-    console.log(jsonInput);
-    const sqlQuery = `call domainNameAnalysis('${jsonInput}')`;
+    const filters = JSON.stringify(data.filters);
+    console.log(filters);
+    const sqlQuery = `call domainNameAnalysis('${filters}')`;
     console.log(sqlQuery);
     const queryData = await this.snowflakeService.execute(sqlQuery);
     console.log(queryData[0]['DOMAINNAMEANALYSIS']);
     data.data = queryData[0]['DOMAINNAMEANALYSIS'];
-    const num = data.jsonInput.num;
-    const granularity = data.jsonInput.granularity;
-    delete data.jsonInput;
+    const num = data.filters.num;
+    const granularity = data.filters.granularity;
+    delete data.filters;
     const response = this.httpService.post(
       'http://zanet.cloud:4005/domainNameAnalysis/list',
       data,
@@ -49,10 +49,10 @@ export class DomainNameAnalysisService {
     };
   }
 
-  async domainLength(jsonInput: string, graphName: string): Promise<any> {
-    jsonInput = JSON.stringify(jsonInput);
-    console.log(jsonInput);
-    const sqlQuery = `CALL SKUNKWORKS_DB.public.domainLengthAnalysis('${jsonInput}')`;
+  async domainLength(filters: string, graphName: string): Promise<any> {
+    filters = JSON.stringify(filters);
+    console.log(filters);
+    const sqlQuery = `CALL SKUNKWORKS_DB.public.domainLengthAnalysis('${filters}')`;
     const queryData = await this.snowflakeService.execute(sqlQuery);
     // const analyzedData = await this.statisticalAnalysisService.analyze(
     //   queryData,

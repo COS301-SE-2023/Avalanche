@@ -245,6 +245,8 @@ export class UserUserGroupMangementService {
             // Save the changes
             await this.userRepository.save(user);
             await this.userGroupRepository.save(userGroup);
+            delete user.salt;
+            delete user.apiKey;
             await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60);
     
             return {

@@ -27,11 +27,18 @@ export class JwtMiddleware implements NestMiddleware {
           const minNum = req.body.minimumAppearances;
           delete req.body.minimumAppearances;
           delete req.body.graphName;
-          req.body = { jsonInput: req.body };
-          req.body.graphName = graphName1;
-          req.body.minimumAppearances = minNum;
-          console.log(req.body);
-          next();
+          if(!req.body.filters){
+            req.body = { filters: req.body };
+            req.body.graphName = graphName1;
+            req.body.minimumAppearances = minNum;
+            console.log(req.body);
+            next();
+          }else{
+            req.body.graphName = graphName1;
+            req.body.minimumAppearances = minNum;
+            console.log(req.body);
+            next();
+          }
         }else{
           req.body.token = token;
           console.log(req.body);

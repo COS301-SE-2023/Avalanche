@@ -16,23 +16,23 @@ export class AppController {
   @MessagePattern({ cmd: 'transactions' })
   async transactions(data: any) {
     console.log('Transactions: ', data);
-    return await this.transactionsService.transactions(data.jsonInput,data.graphName);
+    return await this.transactionsService.transactions(data.filters,data.graphName);
   }
 
   @MessagePattern({ cmd: 'transactions-ranking' })
   async transactionsRanking(data: any) {
     console.log('Transactions: ', data);
-    return await this.transactionsService.transactionsRanking(data.jsonInput,data.graphName);
+    return await this.transactionsService.transactionsRanking(data.filters,data.graphName);
   }
 
   @MessagePattern({ cmd: 'marketShare' })
   async marketShare(data: any) {
-    return await this.marketShareService.marketShare(data.jsonInput,data.graphName);
+    return await this.marketShareService.marketShare(data.filters,data.graphName);
   }
 
   @MessagePattern({ cmd: 'age' })
   async age(data: any) {
-    return await this.ageService.age(data.jsonInput,data.graphName);
+    return await this.ageService.age(data.filters,data.graphName);
   }
 
   @MessagePattern({ cmd: 'domainNameAnalysis/count' })

@@ -18,10 +18,10 @@ export class AgeService {
     private readonly graphFormattingService: GraphFormatService,
   ) {}
 
-  async age(jsonInput: string, graphName: string): Promise<any>{
-    const rank = jsonInput['rank'];
-    const overall = jsonInput['overall'];
-    const average = jsonInput['average'];
+  async age(filters: string, graphName: string): Promise<any>{
+    const rank = filters['rank'];
+    const overall = filters['overall'];
+    const average = filters['average'];
     let filter = '';
     if(overall===true && average === true){
       filter = ', showing the overall average age'
@@ -30,9 +30,9 @@ export class AgeService {
     }else if(overall===true && average===false){
       filter = ', showing the overall age';
     }
-    jsonInput = JSON.stringify(jsonInput);
-    console.log(jsonInput);
-    const sqlQuery = `call ageAnalysis('${jsonInput}')`;
+    filters = JSON.stringify(filters);
+    console.log(filters);
+    const sqlQuery = `call ageAnalysis('${filters}')`;
     const queryData = await this.snowflakeService.execute(sqlQuery);
     const formattedData = await this.graphFormattingService.formatAgeAnalysis(
       JSON.stringify(queryData),

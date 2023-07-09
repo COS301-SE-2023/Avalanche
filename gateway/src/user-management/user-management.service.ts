@@ -31,6 +31,9 @@ export class UserManagementService {
   async saveDashboard(data: any) {
     return this.client.send({ cmd: 'saveDashboard' }, data).toPromise();
   }
+  async editDashboard(data: any) {
+    return this.client.send({ cmd: 'editDashboard' }, data).toPromise();
+  }
   async createOrganisation(data: any) {
     return this.client.send({ cmd: 'createOrganisation' }, data).toPromise();
   }

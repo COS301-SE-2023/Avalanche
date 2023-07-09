@@ -58,13 +58,16 @@ export class UserDataProductMangementService {
                         return {status : 400,error: true, message : 'Please enter a zone that is from the given choices - AFRICA, RyCE, ZACR', 
                         timestamp: new Date().toISOString()};
                     }
-                    const user = await this.userRepository.findOne({ where: { email: allocateToName } });
+                    const user = await this.userRepository.findOne({ where: { email: allocateToName }, relations: ['userGroups', 'organisation', 'dashboards'] });
                     if(!user){
                         return {status : 400,error: true, message : 'User does not exist', 
                         timestamp: new Date().toISOString()};
                     }
                     user.products += integrationString;
                     await this.userRepository.save(user);
+                    delete user.password;
+                    delete user.salt;
+                    delete user.apiKey;
                     await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60 );
                     return { status: 'success', message: 'User is integrated with DNS', 
                     timestamp: new Date().toISOString() };

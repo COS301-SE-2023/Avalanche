@@ -16,11 +16,11 @@ export class MarketShareService {
     private readonly graphFormattingService: GraphFormatService,
   ) {}
 
-  async marketShare(jsonInput: string, graphName: string): Promise<any> {
-    const rank = jsonInput['rank'] as string;
-    jsonInput = JSON.stringify(jsonInput);
-    console.log(jsonInput);
-    const sqlQuery = `call marketShare('${jsonInput}')`;
+  async marketShare(filters: string, graphName: string): Promise<any> {
+    const rank = filters['rank'] as string;
+    filters = JSON.stringify(filters);
+    console.log(filters);
+    const sqlQuery = `call marketShare('${filters}')`;
     const queryData = await this.snowflakeService.execute(sqlQuery);
     // const analyzedData = await this.statisticalAnalysisService.analyze(
     //   queryData,

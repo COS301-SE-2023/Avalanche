@@ -1,7 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn } from "typeorm";
 import { User } from "./user.entity";
-import { Graph } from "./graph.entity";
 
 @Entity()
 export class Dashboard {
@@ -10,6 +9,9 @@ export class Dashboard {
 
   @Column()
   name: string;
+
+  @Column()
+  endpointName: string;
 
   @ManyToOne(() => User, (user) => user.id)
   @JoinColumn({ name: 'userId' })

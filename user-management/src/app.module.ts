@@ -15,7 +15,6 @@ import { UserDataProductMangementService } from './services//user-data-products/
 import { UserUserGroupMangementService } from './services/user-userGroup/user-userGroup-management.service';
 import { UserDashboardMangementService } from './services/user-dashboard/user-dashboard-management.service';
 import { Dashboard } from './entity/dashboard.entity';
-import { Graph } from './entity/graph.entity';
 
 @Module({
   imports: [
@@ -49,12 +48,12 @@ import { Graph } from './entity/graph.entity';
         username: configService.get('POSTGRES_USER'),
         password: configService.get('POSTGRES_PASSWORD'),
         database: configService.get('POSTGRES_DB'),
-        entities: [User, UserGroup, Organisation, Dashboard, Graph], // We change entities to an array that includes the User entity. 
+        entities: [User, UserGroup, Organisation, Dashboard], // We change entities to an array that includes the User entity. 
         synchronize: true,
       }),
       inject: [ConfigService],
     }), 
-    TypeOrmModule.forFeature([User, UserGroup, Organisation, Dashboard, Graph]),
+    TypeOrmModule.forFeature([User, UserGroup, Organisation, Dashboard]),
   ],
   controllers: [AppController],
   providers: [AuthService, RedisProvider, UserOrganisationMangementService, UserDataProductMangementService, UserUserGroupMangementService, UserDashboardMangementService],

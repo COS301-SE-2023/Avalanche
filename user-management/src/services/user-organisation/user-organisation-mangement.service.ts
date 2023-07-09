@@ -81,7 +81,7 @@ export class UserOrganisationMangementService {
         const { email: userEmail } = JSON.parse(userPayload);
         console.log(userEmail);
         const user = await this.userRepository.findOne({
-            where: { email: userEmail }, relations: ['userGroups', 'organisation'],
+            where: { email: userEmail }, relations: ['userGroups', 'organisation', 'dashboards'],
             select: ['id', 'email', 'firstName', 'lastName', 'organisationId', 'products', 'userGroups', 'organisation']
         });
         if (!user) {
@@ -135,6 +135,7 @@ export class UserOrganisationMangementService {
         await this.userRepository.save(user);
 
         delete user.salt;
+        delete user.apiKey;
         // Update the user's information in Redis
         await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60);
 

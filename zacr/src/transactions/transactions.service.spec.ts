@@ -40,7 +40,7 @@ describe('TransactionService', () => {
   });
 
   it('should correctly process transactions', async () => {
-    const jsonInput = JSON.parse('{"data": "someData"}');
+    const filters = JSON.parse('{"data": "someData"}');
 
     // Set up the mocks to return specific values
     mockSnowflakeService.execute.mockResolvedValue('queryData');
@@ -50,7 +50,7 @@ describe('TransactionService', () => {
     );
 
     // Call the method under test
-    const result = await service.transactions(jsonInput, 'graphName');
+    const result = await service.transactions(filters, 'graphName');
 
     // Expect the mocks to have been called with the correct arguments
     expect(mockSnowflakeService.execute).toHaveBeenCalledWith(

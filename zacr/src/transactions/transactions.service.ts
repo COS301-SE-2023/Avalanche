@@ -16,10 +16,10 @@ export class TransactionService {
     private readonly graphFormattingService: GraphFormatService,
   ) {}
 
-  async transactions(jsonInput: string, graphName: string): Promise<any> {
-    jsonInput = JSON.stringify(jsonInput);
-    console.log(jsonInput);
-    const sqlQuery = `call transactionsByRegistrar('${jsonInput}')`;
+  async transactions(filters: string, graphName: string): Promise<any> {
+    filters = JSON.stringify(filters);
+    console.log(filters);
+    const sqlQuery = `call transactionsByRegistrar('${filters}')`;
     const queryData = await this.snowflakeService.execute(sqlQuery);
     // const analyzedData = await this.statisticalAnalysisService.analyze(
     //   queryData,
@@ -35,12 +35,12 @@ export class TransactionService {
   }
 
   async transactionsRanking(
-    jsonInput: string,
+    filters: string,
     graphName: string,
   ): Promise<any> {
-    jsonInput = JSON.stringify(jsonInput);
-    console.log(jsonInput);
-    const sqlQuery = `call transactionsByRegistrar('${jsonInput}')`;
+    filters = JSON.stringify(filters);
+    console.log(filters);
+    const sqlQuery = `call transactionsByRegistrar('${filters}')`;
     const queryData = await this.snowflakeService.execute(sqlQuery);
     // const analyzedData = await this.statisticalAnalysisService.analyze(
     //   queryData,

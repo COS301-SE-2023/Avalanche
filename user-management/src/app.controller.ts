@@ -95,8 +95,20 @@ export class AppController {
   }
   @MessagePattern({ cmd: 'saveDashboard' })
   async saveDashboard(data: any) {
-    console.log("Get user info: ", data);
     const result = await this.userDashboardManService.saveDashbaord(data.token, data.name, data.graphs);
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
+  @MessagePattern({ cmd: 'editDashboard' })
+  async editDashboard(data: any) {
+    const result = await this.userDashboardManService.editDashbaord(data.token, data.name, data.graphs);
     if (result.error) {
       throw new RpcException({
         status: result.status,

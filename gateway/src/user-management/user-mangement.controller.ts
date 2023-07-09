@@ -113,6 +113,21 @@ export class UserManagementController {
       throw error;
     }
   }
+  @Post('editDashboard')
+  async editDashboard(@Body() data: any) {
+    const pattern = { cmd: 'editDashboard' };
+    const payload = data;
+    try {
+      const result = await lastValueFrom(this.client.send(pattern, payload));
+      return result;
+    } catch (error) {
+      const rpcError = error
+      if (typeof rpcError === 'object') {
+        throw new HttpException(rpcError.message || 'An unexpected error occurred', rpcError.status || 500);
+      }
+      throw error;
+    }
+  }
   @Post('getUserInfo')
   async getUserInfo(@Body() data: any) {
     const pattern = { cmd: 'getUserInfo' };
