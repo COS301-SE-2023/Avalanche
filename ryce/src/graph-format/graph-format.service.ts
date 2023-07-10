@@ -126,7 +126,7 @@ export class GraphFormatService {
     const dataArr = JSON.parse(data)['DOMAINLENGTHANALYSIS'];
     if (dataArr.length > 0) {
       const keys = Object.keys(dataArr[0]);
-      if (keys.length === 3) {
+      if (keys.length === 2) {
         return this.formatTwoColumns(
           keys,
           data,
@@ -136,6 +136,27 @@ export class GraphFormatService {
       } else {
         throw new Error(
           'Invalid size array structure in Domain Length Analysis.',
+        );
+      }
+    } else {
+      throw new Error('Empty data array.');
+    }
+  }
+
+  async formatNettVertical(data: string): Promise<string> {
+    const dataArr = JSON.parse(data)['NETTVERTICALMOVEMENT'];
+    if (dataArr.length > 0) {
+      const keys = Object.keys(dataArr[0]);
+      if (keys.length === 2) {
+        return this.formatTwoColumns(
+          keys,
+          data,
+          'NETTVERTICALMOVEMENT',
+          'Count',
+        );
+      } else {
+        throw new Error(
+          'Invalid size array structure in Nett Vertical Movement.',
         );
       }
     } else {
