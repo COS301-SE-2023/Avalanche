@@ -9,7 +9,7 @@ import IMarketShareGraphRequest from "@/interfaces/requests/MarketShareGraph";
 import IDomainNameAnalysisGraphRequest from "@/interfaces/requests/DomainNameAnalysis";
 import IAgeAnalysisGraphRequest from "@/interfaces/requests/AgeAnalysisGraph";
 
-const url = "http://localhost:4000/zacr";
+const url = "http://localhost:4000/ryce";
 
 interface IGraphState {
     graphs: any[],
@@ -235,7 +235,7 @@ export const getAgeAnalysisData = createAsyncThunk("GRAPH.GetAgeAnalysisData", a
 export const getDomainNameAnalysisData = createAsyncThunk("GRAPH.GetDomainNameAnalysisData", async (object: IDomainNameAnalysisGraphRequest, { rejectWithValue }) => {
     try {
         const jwt = getCookie("jwt");
-        const response = await ky.post(`${url}/domainNameAnalysis/count`, {
+        const response = await ky.post(`http://localhost:4000/zacr/domainNameAnalysis/count`, {
             json: object,
             headers: {
                 "Authorization": `Bearer ${jwt}`
@@ -357,7 +357,7 @@ export const getDomainNameAnalysisDataArray = createAsyncThunk("GRAPH.GetDomainN
         const jwt = getCookie("jwt");
         for (let i = 0; i < object.length; i++) {
             const graph = object[i];
-            const res: any = await ky.post(`${url}/domainNameAnalysis/count`, {
+            const res: any = await ky.post(`http://localhost:4000/zacr/domainNameAnalysis/count`, {
                 json: graph,
                 headers: {
                     "Authorization": `Bearer ${jwt}`
