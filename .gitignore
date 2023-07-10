@@ -129,3 +129,5 @@ Services/DomainWatch/domain_watch/target/domain_watch-1.0.jar
 Services/DomainWatch/domain_watch/target/test-classes/avalanche/Network/ServerState/ClosedTest.class
 Services/DomainWatch/domain_watch/target/test-classes/avalanche/Network/ServerState/InitialisingTest.class
 Services/DomainWatch/domain_watch/target/test-classes/avalanche/Network/ServerState/RunningTest.class
+ryce/.env
+africa/.env

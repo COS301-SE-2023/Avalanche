@@ -12,6 +12,10 @@ import { ZacrService } from './zacr/zacr.service';
 import { DomainWatchController } from './domain-watch/domain-watch.controller';
 import { DomainWatchService } from './domain-watch/domain-watch.service';
 import { HttpModule } from '@nestjs/axios';
+import { RyceController } from './ryce/ryce.controller';
+import { RyceService } from './ryce/ryce.service';
+import { AfricaController } from './africa/africa.controller';
+import { AfricaService } from './africa/africa.service';
 
 @Module({
   imports: [
@@ -33,11 +37,27 @@ import { HttpModule } from '@nestjs/axios';
           port: 4002,
         },
       },
+      {
+        name: 'RyCE_SERVICE',
+        transport: Transport.TCP,
+        options: {
+          host: 'localhost',
+          port: 4004,
+        },
+      },
+      {
+        name: 'AFRICA_SERVICE',
+        transport: Transport.TCP,
+        options: {
+          host: 'localhost',
+          port: 4005,
+        },
+      },
     ]),
     ConfigModule.forRoot({ isGlobal: true }),
   ],
-  controllers: [UserManagementController, ZacrController, DomainWatchController],
-  providers: [UserManagementService, ZacrService, RedisProvider, DomainWatchService],
+  controllers: [UserManagementController, ZacrController, RyceController, AfricaController, DomainWatchController],
+  providers: [UserManagementService, ZacrService, RyceService, AfricaService, RedisProvider, DomainWatchService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
