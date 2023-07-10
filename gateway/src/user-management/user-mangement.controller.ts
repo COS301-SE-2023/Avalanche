@@ -68,6 +68,81 @@ export class UserManagementController {
       throw error;
     }
   }
+  @Post('createAPIKey')
+  async createAPIKey(@Body() data: any) {
+    const pattern = { cmd: 'createAPIKey' };
+    const payload = data;
+    try {
+      const result = await lastValueFrom(this.client.send(pattern, payload));
+      return result;
+    } catch (error) {
+      const rpcError = error
+      if (typeof rpcError === 'object') {
+        throw new HttpException(rpcError.message || 'An unexpected error occurred', rpcError.status || 500);
+      }
+      throw error;
+    }
+  }
+  @Post('rerollAPIKey')
+  async rerollAPIKey(@Body() data: any) {
+    const pattern = { cmd: 'rerollAPIKey' };
+    const payload = data;
+    try {
+      const result = await lastValueFrom(this.client.send(pattern, payload));
+      return result;
+    } catch (error) {
+      const rpcError = error
+      if (typeof rpcError === 'object') {
+        throw new HttpException(rpcError.message || 'An unexpected error occurred', rpcError.status || 500);
+      }
+      throw error;
+    }
+  }
+  @Post('saveDashboard')
+  async saveDashboard(@Body() data: any) {
+    const pattern = { cmd: 'saveDashboard' };
+    const payload = data;
+    try {
+      const result = await lastValueFrom(this.client.send(pattern, payload));
+      return result;
+    } catch (error) {
+      const rpcError = error
+      if (typeof rpcError === 'object') {
+        throw new HttpException(rpcError.message || 'An unexpected error occurred', rpcError.status || 500);
+      }
+      throw error;
+    }
+  }
+  @Post('editDashboard')
+  async editDashboard(@Body() data: any) {
+    const pattern = { cmd: 'editDashboard' };
+    const payload = data;
+    try {
+      const result = await lastValueFrom(this.client.send(pattern, payload));
+      return result;
+    } catch (error) {
+      const rpcError = error
+      if (typeof rpcError === 'object') {
+        throw new HttpException(rpcError.message || 'An unexpected error occurred', rpcError.status || 500);
+      }
+      throw error;
+    }
+  }
+  @Post('addCommentToGraph')
+  async addCommentToGraph(@Body() data: any) {
+    const pattern = { cmd: 'addCommentToGraph' };
+    const payload = data;
+    try {
+      const result = await lastValueFrom(this.client.send(pattern, payload));
+      return result;
+    } catch (error) {
+      const rpcError = error
+      if (typeof rpcError === 'object') {
+        throw new HttpException(rpcError.message || 'An unexpected error occurred', rpcError.status || 500);
+      }
+      throw error;
+    }
+  }
   @Post('getUserInfo')
   async getUserInfo(@Body() data: any) {
     const pattern = { cmd: 'getUserInfo' };

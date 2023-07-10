@@ -24,12 +24,12 @@ describe('AppController', () => {
   describe('transactions', () => {
     it('should return the result of transactions service', async () => {
       const result = 'test-result';
-      const data = { jsonInput: 'test-input', graphName: 'test-graph' };
+      const data = { filters: 'test-input', graphName: 'test-graph' };
       mockTransactionService.transactions.mockResolvedValue(result);
 
       expect(await appController.transactions(data)).toBe(result);
       expect(mockTransactionService.transactions).toHaveBeenCalledWith(
-        data.jsonInput,
+        data.filters,
         data.graphName,
       );
     });

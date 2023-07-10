@@ -14,11 +14,11 @@ import avalanche.Utility.DomainTokeniser;
 
 public class RunningTest {
     @Test
-    public void runningStateShouldThrowJSONExceptionWhenNoJSONObjectPassedIn() {
+    public void runningStateShouldReturnErrorWhenNoJSONObjectPassedIn() {
         ServerState state = new Running();
-        assertThrows(JSONException.class, () -> {
-            state.getResponse("anything without braces", 0);
-        });
+        assertEquals(
+                "{\"status\":\"failure\",\"request-error\":\"A JSONObject text must begin with '{' at 1 [character 2 line 1]\"}",
+                state.getResponse("anything without braces", 0));
     }
 
     @Test

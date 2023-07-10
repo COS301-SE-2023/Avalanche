@@ -11,9 +11,14 @@ import { RedisProvider } from './redis.provider';
 import { AnalysisService } from './analysis/analysis.service';
 import { GraphFormatService } from './graph-format/graph-format.service';
 import { SnowflakeService } from './snowflake/snowflake.service';
+import { MarketShareService } from './marketShare/marketShare.service';
+import { AgeService } from './age/age.service';
+import { DomainNameAnalysisService } from './domainNameAnalysis/domain-name-analysis.service';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
+    HttpModule,
     ClientsModule.register([
       {
         name: 'ZACR_SERVICE',
@@ -65,10 +70,13 @@ import { SnowflakeService } from './snowflake/snowflake.service';
       },
     },
     TransactionService,
+    MarketShareService,
+    AgeService,
+    DomainNameAnalysisService,
     AnalysisService,
     GraphFormatService,
-    SnowflakeService
+    SnowflakeService,
   ],
-  exports: [TransactionService,AnalysisService,GraphFormatService,SnowflakeService],
+  exports: [TransactionService,MarketShareService,AgeService,DomainNameAnalysisService,AnalysisService,GraphFormatService,SnowflakeService],
 })
 export class AppModule {}

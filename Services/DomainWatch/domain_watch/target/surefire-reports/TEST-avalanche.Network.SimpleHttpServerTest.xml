@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="avalanche.Network.SimpleHttpServerTest" time="49.52" tests="9" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="avalanche.Network.SimpleHttpServerTest" time="50.322" tests="11" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="19"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -15,7 +15,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="ZA"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-19\bin"/>
-    <property name="sun.java.command" value="C:\Users\User\AppData\Local\Temp\surefire3941312895695821776\surefirebooter14854738613501008589.jar C:\Users\User\AppData\Local\Temp\surefire3941312895695821776 2023-06-24T18-10-58_733-jvmRun1 surefire3298967113964336501tmp surefire_05897499997115349647tmp"/>
+    <property name="sun.java.command" value="C:\Users\User\AppData\Local\Temp\surefire14576265326857703859\surefirebooter9663049627355498537.jar C:\Users\User\AppData\Local\Temp\surefire14576265326857703859 2023-06-26T18-02-34_522-jvmRun1 surefire17055337276163477385tmp surefire_03547481407225867241tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="C:\Users\User\OneDrive\Documents\University of Pretoria\Year 3\Semester 1\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\target\test-classes;C:\Users\User\OneDrive\Documents\University of Pretoria\Year 3\Semester 1\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\target\classes;C:\Users\User\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.4.2\junit-jupiter-api-5.4.2.jar;C:\Users\User\.m2\repository\org\apiguardian\apiguardian-api\1.0.0\apiguardian-api-1.0.0.jar;C:\Users\User\.m2\repository\org\opentest4j\opentest4j\1.1.1\opentest4j-1.1.1.jar;C:\Users\User\.m2\repository\org\junit\platform\junit-platform-commons\1.4.2\junit-platform-commons-1.4.2.jar;C:\Users\User\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.4.2\junit-jupiter-engine-5.4.2.jar;C:\Users\User\.m2\repository\org\junit\platform\junit-platform-engine\1.4.2\junit-platform-engine-1.4.2.jar;C:\Users\User\.m2\repository\org\json\json\20230227\json-20230227.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -30,7 +30,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\User\AppData\Local\Temp\surefire3941312895695821776\surefirebooter14854738613501008589.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\User\AppData\Local\Temp\surefire14576265326857703859\surefirebooter9663049627355498537.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="19.0.1+10-21"/>
@@ -58,13 +58,15 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="63.0"/>
   </properties>
-  <testcase name="closedServerShouldReturn500" classname="avalanche.Network.SimpleHttpServerTest" time="3.82"/>
-  <testcase name="dummyRequest" classname="avalanche.Network.SimpleHttpServerTest" time="5.265"/>
-  <testcase name="stopServerTest" classname="avalanche.Network.SimpleHttpServerTest" time="7.035"/>
-  <testcase name="postWithValidRequestShouldNotReturnError" classname="avalanche.Network.SimpleHttpServerTest" time="18.275"/>
+  <testcase name="closedServerShouldReturn500" classname="avalanche.Network.SimpleHttpServerTest" time="3.351"/>
+  <testcase name="dummyRequest" classname="avalanche.Network.SimpleHttpServerTest" time="6.855"/>
+  <testcase name="postWithInvalidMetricShouldReturn400" classname="avalanche.Network.SimpleHttpServerTest" time="0.005"/>
+  <testcase name="stopServerTest" classname="avalanche.Network.SimpleHttpServerTest" time="6.802"/>
+  <testcase name="postWithNoBodyShouldReturnError" classname="avalanche.Network.SimpleHttpServerTest" time="0.003"/>
+  <testcase name="postWithValidRequestShouldNotReturnError" classname="avalanche.Network.SimpleHttpServerTest" time="19.197"/>
   <testcase name="startRunningServerTest" classname="avalanche.Network.SimpleHttpServerTest" time="0.001"/>
-  <testcase name="optionsShouldNotReturnError" classname="avalanche.Network.SimpleHttpServerTest" time="0.001"/>
+  <testcase name="optionsShouldNotReturnError" classname="avalanche.Network.SimpleHttpServerTest" time="0"/>
   <testcase name="postWithInvalidRequestShouldReturn400" classname="avalanche.Network.SimpleHttpServerTest" time="0.005"/>
-  <testcase name="getShouldReturnError405" classname="avalanche.Network.SimpleHttpServerTest" time="0.002"/>
+  <testcase name="getShouldReturnError405" classname="avalanche.Network.SimpleHttpServerTest" time="0.003"/>
   <testcase name="putShouldReturnError405" classname="avalanche.Network.SimpleHttpServerTest" time="0.002"/>
 </testsuite>

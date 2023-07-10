@@ -402,4 +402,10 @@ public class LevensteinDistanceCalculatorTest {
         assertEquals(5, calc.calculateModifiedLevenshteinDistance("selborne", "slo"), 0);
     }
 
+    @Test
+    public void blankToblank() {
+        LevensteinDistanceCalculator calc = new LevensteinDistanceCalculator();
+        assertEquals(0, calc.calculateModifiedLevenshteinDistance("", ""), 0);
+    }
+
 }

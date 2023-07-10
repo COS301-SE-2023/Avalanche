@@ -22,6 +22,21 @@ export class UserManagementService {
   async login(data: any) {
       return this.client.send({ cmd: 'login' }, data).toPromise();
   }
+  async createAPIKey(data: any) {
+    return this.client.send({ cmd: 'createAPIKey' }, data).toPromise();
+  }
+  async rerollAPIKey(data: any) {
+    return this.client.send({ cmd: 'rerollAPIKey' }, data).toPromise();
+  }
+  async saveDashboard(data: any) {
+    return this.client.send({ cmd: 'saveDashboard' }, data).toPromise();
+  }
+  async editDashboard(data: any) {
+    return this.client.send({ cmd: 'editDashboard' }, data).toPromise();
+  }
+  async addCommentToGraph(data: any) {
+    return this.client.send({ cmd: 'addCommentToGraph' }, data).toPromise();
+  }
   async createOrganisation(data: any) {
     return this.client.send({ cmd: 'createOrganisation' }, data).toPromise();
   }

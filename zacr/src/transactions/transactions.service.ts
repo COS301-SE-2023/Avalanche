@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { Inject, Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
 import { JwtService } from '@nestjs/jwt';
@@ -17,39 +16,43 @@ export class TransactionService {
     private readonly graphFormattingService: GraphFormatService,
   ) {}
 
-  
-  // async transactions(jsonInput: string): Promise<any> {
-  //   jsonInput = JSON.stringify(jsonInput);
-  //   console.log(jsonInput);
-  //   return new Promise((resolve, reject) => {
-  //     this.snowflakeConnection.execute({
-  //       sqlText: `call transactionsByRegistrar('${jsonInput}')`,
-  //       complete: async (err, stmt, rows) => {
-  //         if (err) {
-  //           console.error(`Failed to execute statement due to the following error: ${err.message}`);
-  //           reject(err);
-  //         } else {
-  //           console.log('Successfully executed statement.');
-  //           const result = JSON.stringify(rows);
-  //           await this.redis.set(jsonInput, result);
-  //           resolve(rows);
-  //         }
-  //       },
-  //     });
-  //   });
-  // }
-
-  async transactions(jsonInput: string, graphName: string): Promise<any>{
-    jsonInput = JSON.stringify(jsonInput);
-    console.log(jsonInput);
-    const sqlQuery = `call transactionsByRegistrar('${jsonInput}')`;
+  async transactions(filters: string, graphName: string): Promise<any> {
+    filters = JSON.stringify(filters);
+    console.log(filters);
+    const sqlQuery = `call transactionsByRegistrar('${filters}')`;
     const queryData = await this.snowflakeService.execute(sqlQuery);
     // const analyzedData = await this.statisticalAnalysisService.analyze(
     //   queryData,
     // );
-    const formattedData = await this.graphFormattingService.format(
+    const formattedData = await this.graphFormattingService.formatTransactions(
       JSON.stringify(queryData),
     );
-    return {status: 'success', data: {graphName: graphName, ...JSON.parse(formattedData)} , timestamp: new Date().toISOString()};
+    return {
+      status: 'success',
+      data: { graphName: graphName, ...JSON.parse(formattedData) },
+      timestamp: new Date().toISOString(),
+    };
+  }
+
+  async transactionsRanking(
+    filters: string,
+    graphName: string,
+  ): Promise<any> {
+    filters = JSON.stringify(filters);
+    console.log(filters);
+    const sqlQuery = `call transactionsByRegistrar('${filters}')`;
+    const queryData = await this.snowflakeService.execute(sqlQuery);
+    // const analyzedData = await this.statisticalAnalysisService.analyze(
+    //   queryData,
+    // );
+    const formattedData =
+      await this.graphFormattingService.formatTransactionsRanking(
+        JSON.stringify(queryData),
+      );
+    return {
+      status: 'success',
+      data: { graphName: graphName, ...JSON.parse(formattedData) },
+      timestamp: new Date().toISOString(),
+    };
   }
 }
