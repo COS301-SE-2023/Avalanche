@@ -119,6 +119,19 @@ export class AppController {
 
     return result;
   }
+  @MessagePattern({ cmd: 'addCommentToGraph' })
+  async addCommentToGraph(data: any) {
+    const result = await this.userDashboardManService.addCommentToGraph(data.token, data.name, data.graphName, data.comment);
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
   @MessagePattern({ cmd: 'getUserInfo' })
   async getUserInfo(data: any) {
     console.log("Get user info: ", data);

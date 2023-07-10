@@ -34,6 +34,9 @@ export class UserManagementService {
   async editDashboard(data: any) {
     return this.client.send({ cmd: 'editDashboard' }, data).toPromise();
   }
+  async addCommentToGraph(data: any) {
+    return this.client.send({ cmd: 'addCommentToGraph' }, data).toPromise();
+  }
   async createOrganisation(data: any) {
     return this.client.send({ cmd: 'createOrganisation' }, data).toPromise();
   }
