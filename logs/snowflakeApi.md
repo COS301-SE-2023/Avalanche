@@ -48,8 +48,12 @@ In the documentation to follow the registry you are trying to  access will be de
         {{baseURL}}/{{warehouse}}/transactions
 ```
 **Request to retrieve transaction related data**
+
 All parameters are optional and defaults are provided.
-Requests per warehouse:
+
+**Request parameters per warehouse:**
+
+The different registries have different transaction types and thus the "transactions"  parameter differs per registry operator request.
 
 `ZACR`
 
@@ -144,5 +148,73 @@ Requests per warehouse:
     * Eg. transfer premiumA in WIEN: wienTransferPremiumA
     * Eg. transfer null in TIROL: tirolTransferNull
 
+**Example Request Body**
+```
+ZACR request:
+{
+    "zone": "CO.ZA",
+    "dateFrom": "2022-01-01",
+    "dateTo": "2022-02-28",
+    "granularity" : "week"
+}
+```
+
+**Response Format**
+```
+//put response here
+```
+
+**Possible Status Codes**
+* 200 success
+
+#### 3.1.2 `POST` Transaction Ranking Request
+```
+        {{baseURL}}/{{warehouse}}/transactions-ranking
+```
+
+**Request to retrieve transaction related data per registrar to rank  registrars per transaction type**
+
+All parameters are optional and defaults are provided.
+
+Parameters, request and response same as /transactions
+
+#### 3.1.3 `POST` Marketshare
+```
+        {{baseURL}}/{{warehouse}}/marketshare
+```
+
+**Request to retrieve marketshare of registrars specified or those ranked at the  top  or bottom in that zone**
+
+All parameters are optional and defaults are provided.
+
+**Request parameters:**
+
+`ZACR RyCE and  AFRICA`
+
+| Parameter | Function | Possible Values | Default |
+| --|-------|--| -- |
+| zone  |  Selects the zone to include.  | Differs per registry | all |
+|- ZACR  |   | CO.ZA | all |
+|- AFRICA |   | AFRICA | all |
+|- RyCE  |   | COLOGNE / KOELN / WIEN / TIROL | all |
+| registrars | Allows users to specify in array form the registrars whose data is to be included. | The codes  that are valid can be found on the platform when the  *registrar  integration* is  authenticated | all (aggregated) |
+| rank | Selects the top or bottom n registrars in terms of marketshare| top5 / top10 / top20 / bottom5 / bottom10 / bottom20 | all |
+
+**Example Request Body**
+```
+ZACR request:
+{
+    "zone": "CO.ZA",
+    "rank" : "top5"
+}
+```
+
+**Response Format**
+```
+//put response here
+```
+
+**Possible Status Codes**
+* 200 success
 
 
