@@ -217,4 +217,84 @@ ZACR request:
 **Possible Status Codes**
 * 200 success
 
+#### 3.1.4 `POST` Domain Age Analysis
+```
+        {{baseURL}}/{{warehouse}}/age
+```
 
+**Request to retrieve:**
+* **average age of domains in a registry/zone/registrar.**
+* **number of domains per "age" in a registry/zone/registrar.**
+
+All parameters are optional and defaults are provided.
+
+**Request parameters:**
+
+`ZACR RyCE and  AFRICA`
+
+| Parameter | Function | Possible Values | Default |
+| --|-------|--| -- |
+| zone  |  Selects the zone to include.  | Differs per registry | all |
+|- ZACR  |   | CO.ZA | all |
+|- AFRICA |   | AFRICA | all |
+|- RyCE  |   | COLOGNE / KOELN / WIEN / TIROL | all |
+| registrars | Allows users to specify in array form the registrars whose data is to be included. | The codes  that are valid can be found on the platform when the  *registrar  integration* is  authenticated | all (aggregated) |
+| rank | Selects the top or bottom n registrars in terms of marketshare| top5 / top10 / top20 / bottom5 / bottom10 / bottom20 | all |
+| average | If true it selects the average age of domain for a registrar/zone/registry. If false it selects the  number of domains per age | true / false | false |
+| overall | If true  selects the overall average age  or domains per age for the selected zone/registrar/the entire registry.  If false, groups by registrar| true  /  false | true |
+
+**Example Request Body**
+```
+ZACR request:
+{
+    "zone": "CO.ZA",
+    "rank" : "top5",
+    "average" : false,
+    "overall" : false
+}
+```
+
+**Response Format**
+```
+//put response here
+```
+
+**Possible Status Codes**
+* 200 success
+
+#### 3.1.4 `POST` Domain Name Analysis - Count per substring
+```
+        {{baseURL}}/{{warehouse}}/domainNameAnalysis/count
+```
+
+**Request to retrieve the most common substrings present in domains created in the specified period**
+
+
+**Request parameters:**
+
+`ZACR RyCE and  AFRICA`
+
+| Parameter | Function | Possible Values | Default |
+| --|-------|--| -- |
+| granularity  |  Selects the granularity in  which to choose  the  most recent creates  | day / week / month / year | week |
+| num  | The number of units (unit value determined by granularity) back to start | Positive integer values | 1 |
+| minimumAppearances **required** |  The minimum number of appearances needed for the substring to  appear in the response | Positive integer | **REQUIRED** |
+
+
+**Example Request Body**
+```
+ZACR request:
+{
+    "granularity": "month",
+    "num" : 2,
+    "minimumAppearances" : 150
+}
+```
+
+**Response Format**
+```
+//put response here
+```
+
+**Possible Status Codes**
+* 200 success
