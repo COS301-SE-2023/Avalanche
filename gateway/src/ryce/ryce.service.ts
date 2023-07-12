@@ -31,4 +31,8 @@ export class RyceService {
   async domainNameAnalysisLength(data: any) {
     return this.client.send({ cmd: 'domainNameAnalysis/length' }, data).toPromise();
   }
+
+  async movementVertical(data: any) {
+    return this.client.send({ cmd: 'movement/vertical' }, data).toPromise();
+  }
 }

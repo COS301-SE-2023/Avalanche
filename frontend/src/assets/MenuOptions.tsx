@@ -1,4 +1,4 @@
-import { HomeIcon, DocumentIcon, HeartIcon, ArchiveBoxIcon, DocumentMagnifyingGlassIcon, TvIcon, ChartBarIcon, StarIcon, EyeIcon, MapIcon } from '@heroicons/react/24/solid';
+import { HomeIcon, DocumentIcon, HeartIcon, ArchiveBoxIcon, DocumentMagnifyingGlassIcon, TvIcon, ChartBarIcon, StarIcon, EyeIcon, MapIcon, BoltIcon, ClipboardIcon } from '@heroicons/react/24/solid';
 
 interface IMenuItem {
     text: string,
@@ -33,6 +33,18 @@ const MenuOptions: IMenu = {
             page: "registrarMarketComparison",
             role: ""
         },
+        // {
+        //     text: "Movement",
+        //     icon: <BoltIcon className={holder} />,
+        //     page: "movement",
+        //     role: ""
+        // },
+        // {
+        //     text: "Domain Length",
+        //     icon: <ClipboardIcon className={holder} />,
+        //     page: "domainLength",
+        //     role: ""
+        // },
         {
             text: "Market Share",
             icon: <ChartBarIcon className={holder} />,

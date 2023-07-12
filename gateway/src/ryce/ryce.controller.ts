@@ -56,4 +56,12 @@ export class RyceController {
     const result = await lastValueFrom(this.client.send(pattern, payload));
     return result;
   }
+
+  @Post('movement/vertical')
+  async movementVertical(@Body() data: any) {
+    const pattern = { cmd: 'movement/vertical' };
+    const payload = data;
+    const result = await lastValueFrom(this.client.send(pattern, payload));
+    return result;
+  }
 }
