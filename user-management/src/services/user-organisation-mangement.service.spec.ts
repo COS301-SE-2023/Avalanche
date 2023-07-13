@@ -87,6 +87,25 @@ describe('UserOrganisationMangementService', () => {
     expect(userOrganisationMangementService).toBeDefined();
   });
 
+  describe('getUserInfo', () => {
+    
+    it('invalid token', async () =>{
+      //given
+      const token = 'token';
+      mockRedis.get.mockResolvedValue(null);
+
+      //when
+      const result = await userOrganisationMangementService.getUserInfo(token);
+
+      //then
+      expect(result).not.toBeNull;
+      expect(result.status).toBe(400);
+      expect(result.error).toBe(true);
+      expect(result.message).toBe('Invalid token.')
+    });
+
+  })
+
   describe('createOrganisation', () => {
     const token = 'validToken';
     it('should return an error if the token is invalid', async () => {
