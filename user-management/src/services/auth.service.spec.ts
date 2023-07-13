@@ -228,6 +228,25 @@ describe('AuthService', () => {
 
     })
 
+    it('should return incorrect OTP',async () => {
+      //given
+      const otp = '123456';
+      const email = 'test@test.com';
+      const mockUser = new User();
+      mockUser.email = email;
+      mockRedis.get.mockResolvedValue(JSON.stringify({ otp }));
+
+      //when
+      const result = await authService.verify(email, '654321');
+
+      //then
+      expect(result).not.toBeNull;
+      expect(result.status).toBe(400);
+      expect(result.error).toBe(true);
+      expect(result.message).toBe('Incorrect OTP.');
+      
+    })
+
   });
 
   describe('login', () => {
