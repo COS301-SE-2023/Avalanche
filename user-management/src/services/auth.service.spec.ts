@@ -6,7 +6,7 @@ import { User } from '../entity/user.entity';
 import Redis from 'ioredis';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { ConfigService } from '@nestjs/config';
+import { ConfigService, registerAs } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 
 const mockJwtService = {
@@ -107,6 +107,23 @@ describe('AuthService', () => {
       expect(result.error).toBe(true);
       expect(result.message).toBe('Registration unsuccessful. This email is in use.');
 
+    })
+
+    it('missing email',async () => {
+      //given
+      const password = 'password';
+      const firstName = 'test';
+      const lastName = 'test';
+
+      //when
+      const result = await authService.register(null, password, firstName, lastName);
+
+      //then
+      expect(result).not.toBeNull();
+      expect(result.status).toBe(400);
+      expect(result.error).toBe(true);
+      expect(result.message).toBe('Missing info');
+      
     })
 
   });
