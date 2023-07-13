@@ -211,6 +211,23 @@ describe('AuthService', () => {
 
       await expect(authService.verify(email, otp)).rejects.toThrow('Invalid OTP');
     });
+
+    it('should not find email',async () => {
+      //given
+      const otp = '123456';
+
+      //when
+      mockRedis.get.mockResolvedValue(null)
+      const result = await authService.verify("", otp);
+
+      //then
+      expect(result).not.toBeNull;
+      expect(result.status).toBe(400);
+      expect(result.error).toBe(true);
+      expect(result.message).toBe('Email has not been found.');
+
+    })
+
   });
 
   describe('login', () => {
