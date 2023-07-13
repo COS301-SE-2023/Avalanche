@@ -39,12 +39,17 @@ public class SimilarityChecker {
             while (file.hasNext()) {
                 line = file.nextLine();
                 String[] split = line.split(",");
-                Domain d = new Domain(split[0], split[1]);
-                allDomains.add(d);
-                splitDoms.get(count % threadCount).add(d);
+                if (split.length != 2) {
+                    System.out.println("Invalid domain on line " + count);
+                } else {
+                    Domain d = new Domain(split[0], split[1]);
+                    allDomains.add(d);
+                    splitDoms.get(count % threadCount).add(d);
+                }
                 count++;
             }
             file.close();
+            System.out.println("============================\n\n\n\n\n\n\n\n\n");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
