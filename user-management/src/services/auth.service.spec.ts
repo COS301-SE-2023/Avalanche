@@ -88,6 +88,27 @@ describe('AuthService', () => {
 
       await expect(authService.register(email, password, firstName, lastName)).rejects.toThrow('Redis error');
     });
+
+    it('email already exists',async () => {
+      //given
+      const email = 'test@test.com';
+      const password = 'password';
+      const firstName = 'test';
+      const lastName = 'test';
+      const newUser = new User();
+      mockUserRepository.findOne.mockResolvedValue(newUser);
+      
+      //when
+      const result = await authService.register(email, password, firstName, lastName);
+      
+      //then
+      expect(result).not.toBeNull();
+      expect(result.status).toBe(400);
+      expect(result.error).toBe(true);
+      expect(result.message).toBe('Registration unsuccessful. This email is in use.');
+
+    })
+
   });
 
   describe('verify', () => {
