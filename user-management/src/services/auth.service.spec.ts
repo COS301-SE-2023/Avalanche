@@ -143,6 +143,26 @@ describe('AuthService', () => {
       
     })
 
+    it('missing first name',async () => {
+      //given
+      const password = 'password';
+      const email = 'test@test.com';
+    
+      const lastName = 'test';
+
+      //when
+      const result = await authService.register(email, password, null, lastName);
+
+      //then
+      expect(result).not.toBeNull();
+      expect(result.status).toBe(400);
+      expect(result.error).toBe(true);
+      expect(result.message).toBe('Missing info');
+      
+    })
+
+    
+
   });
 
   describe('verify', () => {
