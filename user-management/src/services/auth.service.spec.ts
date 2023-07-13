@@ -278,5 +278,23 @@ describe('AuthService', () => {
 
       await expect(authService.login(email, password)).rejects.toThrow('User not found');
     });
+
+    it('should give an error if user does not exist',async () => {
+      //given
+      const email = 'test@test.com';
+      const password = 'password';
+      mockUserRepository.findOne.mockResolvedValue(null);
+
+      //when
+      const result = await authService.login(email, "");
+    
+      //then
+      expect(result).not.toBeNull;
+      expect(result.status).toBe(400);
+      expect(result.error).toBe(true);
+      expect(result.message).toBe('This user does not exist, please enter the correct email/please register.');
+      
+    })
+
   });
 });
