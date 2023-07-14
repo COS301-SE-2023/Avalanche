@@ -68,7 +68,8 @@ export class AppModule implements NestModule {
         { path: 'user-management/verify', method: RequestMethod.POST },
         { path: 'user-management/login', method: RequestMethod.POST },
         { path: 'user-management/resendOTP', method: RequestMethod.POST },
-        { path: 'domain-watch/list', method: RequestMethod.POST }
+        { path: 'domain-watch/list', method: RequestMethod.POST },
+        { path: 'user-management/graphFilters', method: RequestMethod.GET}
       )
       .forRoutes('*');
   }
