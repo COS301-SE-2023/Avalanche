@@ -1,43 +1,23 @@
-package avalanche.Network.ServerState;
+package avalanche.Network.HandlerStrategy.RunningStrategies;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import avalanche.Core.SimilarityChecker;
 import avalanche.DataClasses.Domain;
+import avalanche.Network.HandlerStrategy.Running;
 
-public class Running extends ServerState {
-
-    /**
-     * Gets a response from the server in the running state.
-     * <br/>
-     * <ul>
-     * <li>Servers in the <i>running</i> state should return a "status":"failure"
-     * and a "request-error":"&lt;relevant error&gt;" if the request has
-     * errors.</li>
-     * <li>Servers in the <i>running</i> state should return a "status":"success"
-     * and a "data":[{"domain":"&lt;domain&gt;","similarity":&lt;similarity&gt;}...]
-     * if the request has no errors.</li>
-     * </ul>
-     *
-     * @param body      The body of the request that has been sent to the server
-     * @param startTime The millisecond at which the request started being processed
-     * @return String:
-     *         <ul>
-     *         <li>Servers in the <i>running</i> state should return a
-     *         "status":"failure"
-     *         and a "request-error":"&lt;relevant error&gt;" if the request has
-     *         errors.</li>
-     *         <li>Servers in the <i>running</i> state should return a
-     *         "status":"success" and
-     *         "data":[{"domain":"&lt;domain&gt;","similarity":&lt;similarity&gt;}...]
-     *         if the request has no errors.</li>
-     *         </ul>
-     */
+public class HandlePassive extends Running {
     public String getResponse(String body, long st) {
         System.out.println("Working on request");
         SimilarityChecker similarityChecker = new SimilarityChecker();
@@ -97,4 +77,48 @@ public class Running extends ServerState {
         System.gc();
         return resp;
     }
+
+    public static String validateRequest(String body) {
+        int errorIndex = -1;
+        Set<String> allowedMetrics = new HashSet<>();
+        allowedMetrics.add("Levenshtein");
+        allowedMetrics.add("Soundex");
+        try {
+            JSONObject jsonObject = new JSONObject(body);
+            String domain = (jsonObject.getString("domain"));
+            if (domain.length() < 1) {
+                return "{\"status\":\"failure\",\"request-error\":\"The domain name must be longer than 0 characters\"}";
+            }
+            int numCalcs = (jsonObject.getJSONArray("types").length());
+            if (numCalcs < 1) {
+                return "{\"status\":\"failure\",\"request-error\":\"At least one distance metric must be listed\"}";
+            }
+            for (int i = 0; i < numCalcs; i++) {
+                errorIndex = i;
+                String type = jsonObject.getJSONArray("types").getJSONObject(i).getString("type");
+                if (!allowedMetrics.contains(type)) {
+                    return "{\"status\":\"failure\",\"request-error\":\"Type:" + type + " is not a valid metric"
+                            + "\"}";
+                }
+                double threshold = (jsonObject.getJSONArray("types").getJSONObject(i).getDouble("threshold"));
+                if (type.equals("Levenshtein") && (threshold > domain.length() - 1 || threshold < 1)) {
+                    return "{\"status\":\"failure\",\"request-error\":\"The threshold for Levenshtein distance must be greater than 0 and less than the length of the search domain\"}";
+                }
+                if (type.equals("Soundex") && (threshold > 4 || threshold < 1)) {
+                    return "{\"status\":\"failure\",\"request-error\":\"The threshold for Soundex distance must be in the range [1,4]\"}";
+                }
+            }
+            return "";
+        } catch (JSONException jsonException) {
+            if (errorIndex != -1) {
+                return "{\"status\":\"failure\",\"request-error\":\""
+                        + jsonException.getMessage().substring(0, jsonException.getMessage().length() - 1)
+                        + " in metric number "
+                        + (errorIndex + 1) + "\"}";
+            }
+            return "{\"status\":\"failure\",\"request-error\":\"" + jsonException.getMessage() + "\"}";
+        }
+
+    }
+
 }

@@ -18,29 +18,27 @@ import org.json.JSONException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import avalanche.Network.ServerState.Initialising;
-import avalanche.Network.ServerState.Running;
+import avalanche.Network.HandlerStrategy.Initialising;
 
-public class SimpleHttpServerTest {
+public class ServiceHttpServerTest {
 
-    private static SimpleHttpServer server;
+    private static ServiceHttpServer server;
 
     @BeforeAll
     public static void initServer() throws IOException, InstantiationException {
-        server = new SimpleHttpServer(4004, true);
+        server = new ServiceHttpServer(4004, true);
         server.start();
     }
 
     @Test
     public void dummyRequest() throws IOException, InstantiationException {
-
-        server.handleDummyRequest();
+        server.handleDummyRequest("active");
     }
 
     @Test
     public void postWithValidRequestShouldNotReturnError() throws IOException, InstantiationException {
 
-        URL url = new URL("http://localhost:4004/domainWatch/list");
+        URL url = new URL("http://localhost:4004/domainWatch/active");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("POST");
         con.setRequestProperty("Content-Type", "application/json");
@@ -66,7 +64,7 @@ public class SimpleHttpServerTest {
     @Test
     public void postWithNoBodyShouldReturnError() throws IOException, InstantiationException {
 
-        URL url = new URL("http://localhost:4004/domainWatch/list");
+        URL url = new URL("http://localhost:4004/domainWatch/active");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("POST");
         con.setRequestProperty("Content-Type", "application/json");
@@ -83,7 +81,7 @@ public class SimpleHttpServerTest {
     @Test
     public void postWithInvalidRequestShouldReturn400() throws IOException, InstantiationException {
 
-        URL url = new URL("http://localhost:4004/domainWatch/list");
+        URL url = new URL("http://localhost:4004/domainWatch/active");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("POST");
         con.setRequestProperty("Content-Type", "application/json");
@@ -100,7 +98,7 @@ public class SimpleHttpServerTest {
     @Test
     public void postWithInvalidMetricShouldReturn400() throws IOException, InstantiationException {
 
-        URL url = new URL("http://localhost:4004/domainWatch/list");
+        URL url = new URL("http://localhost:4004/domainWatch/active");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("POST");
         con.setRequestProperty("Content-Type", "application/json");
@@ -116,8 +114,8 @@ public class SimpleHttpServerTest {
 
     @Test
     public void closedServerShouldReturn500() throws IOException, InstantiationException {
-        server.forceState(new Initialising());
-        URL url = new URL("http://localhost:4004/domainWatch/list");
+        server.forceAllStrategies(new Initialising());
+        URL url = new URL("http://localhost:4004/domainWatch/active");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("POST");
         con.setRequestProperty("Content-Type", "application/json");
@@ -129,14 +127,14 @@ public class SimpleHttpServerTest {
             os.write(input, 0, input.length);
         }
         int responseCode = con.getResponseCode();
-        server.forceState(new Running());
+        server.setDefaultStrategies();
         assertEquals(500, responseCode);
     }
 
     @Test
     public void optionsShouldNotReturnError() throws IOException, InstantiationException {
 
-        URL url = new URL("http://localhost:4004/domainWatch/list");
+        URL url = new URL("http://localhost:4004/domainWatch/active");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("OPTIONS");
         con.setRequestProperty("Content-Type", "application/json");
@@ -161,7 +159,7 @@ public class SimpleHttpServerTest {
     @Test
     public void getShouldReturnError405() throws IOException, InstantiationException {
 
-        URL url = new URL("http://localhost:4004/domainWatch/list");
+        URL url = new URL("http://localhost:4004/domainWatch/active");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
         int responseCode = con.getResponseCode();
@@ -173,7 +171,7 @@ public class SimpleHttpServerTest {
     @Test
     public void putShouldReturnError405() throws IOException, InstantiationException {
 
-        URL url = new URL("http://localhost:4004/domainWatch/list");
+        URL url = new URL("http://localhost:4004/domainWatch/active");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("PUT");
         int responseCode = con.getResponseCode();
