@@ -16,10 +16,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class SimilarityCheckerTest {
     @Test
     public void construction() throws FileNotFoundException {
-        SimilarityChecker.init(true, 12);
+        SimilarityChecker.init(false, 12);
         SimilarityChecker similarityChecker = new SimilarityChecker();
-        assertNotNull(similarityChecker.getAllDomains());
-        assertNotEquals(0, similarityChecker.getAllDomains().size());
+        assertNotNull(similarityChecker.getAllDomainsMap());
+        assertNotEquals(0, similarityChecker.getAllDomainsMap().size());
     }
 
     @Test

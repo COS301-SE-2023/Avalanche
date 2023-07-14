@@ -15,10 +15,13 @@ public class DomainWatchSettings {
     public HashMap<HashSet<String>, Double> substitutionCosts;
     public int maximumThreadsPerSearch;
     public boolean useInternalSubstitutionCosts;
+    public HashMap<String, String> domainFiles;
+    public String defaultZone;
 
     private DomainWatchSettings() {
         useInternalSubstitutionCosts = false;
         substitutionCosts = new HashMap<>();
+        domainFiles = new HashMap<>();
         maximumThreadsPerSearch = Runtime.getRuntime().availableProcessors() - 1;
         try {
             Scanner file = new Scanner(new FileReader("domainWatch.conf"));
@@ -40,6 +43,12 @@ public class DomainWatchSettings {
 
             }
             useInternalSubstitutionCosts = obj.getBoolean("useInternalSubstitutionCosts");
+            JSONArray domainFileArray = obj.getJSONArray("domainFiles");
+            for (int i = 0; i < domainFileArray.length(); i++) {
+                domainFiles.put(domainFileArray.getJSONObject(i).getString("zone"),
+                        domainFileArray.getJSONObject(i).getString("path"));
+            }
+            defaultZone = obj.getString("defaultZone");
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

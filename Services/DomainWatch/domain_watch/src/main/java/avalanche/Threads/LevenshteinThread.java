@@ -5,10 +5,10 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import avalanche.DataClasses.Domain;
-import avalanche.DistanceCalculators.LevensteinDistanceCalculator;
+import avalanche.DistanceCalculators.LevenshteinDistanceCalculator;
 
 public class LevenshteinThread extends Thread {
-    private LevensteinDistanceCalculator calc;
+    private LevenshteinDistanceCalculator calc;
     private ConcurrentLinkedQueue<Domain> hits;
     private Queue<Domain> allDomains;
     private String search;
@@ -16,7 +16,7 @@ public class LevenshteinThread extends Thread {
 
     public LevenshteinThread(String search, double threshold, ConcurrentLinkedQueue<Domain> hits,
             Queue<Domain> allDomains) {
-        calc = new LevensteinDistanceCalculator();
+        calc = new LevenshteinDistanceCalculator();
         this.allDomains = new LinkedList<>();
         for (Domain domain : allDomains) {
             this.allDomains.add(domain);

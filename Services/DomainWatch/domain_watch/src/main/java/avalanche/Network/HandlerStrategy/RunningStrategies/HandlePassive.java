@@ -1,7 +1,5 @@
 package avalanche.Network.HandlerStrategy.RunningStrategies;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,7 +22,7 @@ public class HandlePassive extends Running {
         SimilarityChecker similarityChecker = new SimilarityChecker();
         String resp = "{\"status\":\"success\",\"data\":{";
         ConcurrentLinkedQueue<Domain> recentlyCreated = new ConcurrentLinkedQueue<>();
-        HashMap<String, ConcurrentLinkedQueue<Domain>> notification = new HashMap();
+        HashMap<String, ConcurrentLinkedQueue<Domain>> notification = new HashMap<>();
 
         // Validate Request
         String validation = validateRequest(body);
@@ -92,7 +90,6 @@ public class HandlePassive extends Running {
             return validation;
         }
         int errorIndex = -1;
-        int innerErrorIndex = -1;
         String errorAttribute = "";
         Set<String> allowedMetrics = new HashSet<>();
         allowedMetrics.add("Levenshtein");
@@ -129,7 +126,6 @@ public class HandlePassive extends Running {
                     return "{\"status\":\"failure\",\"request-error\":\"At least one distance metric must be listed\"}";
                 }
                 for (int j = 0; j < numCalcs; j++) {
-                    innerErrorIndex = j;
                     String type = types.getJSONObject(j).getString("type");
                     if (!allowedMetrics.contains(type)) {
                         return "{\"status\":\"failure\",\"request-error\":\"Type:" + type + " is not a valid metric"
