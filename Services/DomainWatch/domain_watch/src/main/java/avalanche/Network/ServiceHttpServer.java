@@ -47,7 +47,7 @@ public class ServiceHttpServer {
         ServiceHttpHandler active = new ServiceHttpHandler(new Closed());
         ServiceHttpHandler passive = new ServiceHttpHandler(new Closed());
         httpHandlers.put("active", active);
-        httpHandlers.put("classify", passive);
+        httpHandlers.put("passive", passive);
         httpServer.createContext("/domainWatch/active", active);
         httpServer.createContext("/domainWatch/passive", passive);
     }
