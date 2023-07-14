@@ -1,13 +1,32 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, HttpException, Inject, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, Inject, Post } from '@nestjs/common';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { timeStamp } from 'console';
 import { lastValueFrom } from 'rxjs';
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
 
 @Controller('user-management')
 export class UserManagementController {
   constructor(@Inject('USER_MANAGEMENT_SERVICE') private client: ClientProxy) { }
+  @Get('graphFilters')
+  getFromFile(): any {
+    try {
+      const filePath = resolve("./src/user-management",'filters.txt');
 
+      // read the file and convert it to a string
+      const fileContent = readFileSync(filePath, 'utf-8');
+
+      const data = fileContent;
+
+      // return the data
+      return data;
+    } catch (error) {
+      // handle error
+      console.error(error);
+      return { status: 'error', message: 'Could not read file' };
+    }
+  }
   @Post('register')
   async register(@Body() data: any) {
     const pattern = { cmd: 'register' };
