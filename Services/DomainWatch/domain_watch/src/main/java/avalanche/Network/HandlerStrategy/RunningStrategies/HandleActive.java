@@ -19,7 +19,7 @@ import avalanche.Network.HandlerStrategy.Running;
 
 public class HandleActive extends Running {
     public String getResponse(String body, long st) {
-        System.out.println("Working on request");
+        System.out.println("Working on domain watch active request");
         SimilarityChecker similarityChecker = new SimilarityChecker();
         String resp = "{  \"status\":\"success\",  \"data\":[";
         ConcurrentLinkedQueue<Domain> hits = new ConcurrentLinkedQueue<>();

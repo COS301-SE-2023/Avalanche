@@ -25,23 +25,4 @@ public abstract class Running extends HandlerStrategy {
 
     }
 
-    /*
-     * Request structure
-     * 
-     * {
-     * data :
-     * [Domain1, Domain2,...]
-     * }
-     * 
-     * 
-     * Response structure
-     * 
-     * { data:
-     * [
-     * {"Word":"popularWord","Occurences":40},
-     * {"Word":"anotherWord","Occurences":30},
-     * ...
-     * ]
-     * }
-     */
 }
