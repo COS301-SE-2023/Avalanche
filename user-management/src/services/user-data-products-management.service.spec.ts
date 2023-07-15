@@ -239,6 +239,26 @@ describe('UserDataProductMangementService', () => {
             expect(result.status).toBe('success');
             expect(result.message).toBe('User is integrated with DNS')
         })
+
+        it('invalid token',async () => {
+            //given
+            const token = 'token';
+            const type = 'AFRICA';
+            const allocateToName = 'allocateToName';
+            const username = 'username';
+            const password = 'password';
+            const personal = false;
+        
+            
+            //when
+            const result = await userDataProductMangementService.integrateUserWithWExternalAPI(token, type, allocateToName, username, password, personal);
+
+            //then
+            expect(result).not.toBeNull;
+            expect(result.status).toBe(400);
+            expect(result.error).toBe(true);
+            expect(result.message).toBe('Invalid token')
+        })
         
 
         
