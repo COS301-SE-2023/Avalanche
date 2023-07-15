@@ -121,6 +121,25 @@ describe('UserOrganisationMangementService', () => {
       expect(result.message).toBe('User does not exist.')
     })
 
+    it('should succeed and update users information in Redis',async () => {
+      
+      const token = 'token';
+      const userPayload = { email: 'userEmail' };
+      const user = new User();
+      //if the get function of mockedoutredis is called, return JSON.stringify
+      //acting like database, can assume what the database is going to return 
+      mockRedis.get.mockResolvedValue(JSON.stringify(userPayload));
+      //if the findOne function of userrepo is called, return user
+      mockUserRepository.findOne.mockResolvedValue(user);
+      
+      const result = await userOrganisationMangementService.getUserInfo(token);
+      
+      expect(result).not.toBeNull;
+      expect(result.status).toBe('success');
+      expect(result.message).toBe(user);
+
+    })
+
   })
 
   describe('createOrganisation', () => {
