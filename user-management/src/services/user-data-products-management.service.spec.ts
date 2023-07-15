@@ -202,6 +202,45 @@ describe('UserDataProductMangementService', () => {
             expect(result.error).toBe(true);
             expect(result.message).toBe('User does not exist')
         })
+
+
+        it('should succeed and user will be integrated with DNS',async () => {
+            //given
+            const token = 'token';
+            const type = 'AFRICA';
+            const allocateToName = 'allocateToName';
+            const username = 'username';
+            const password = 'password';
+            const personal = true;
+
+            const responsePost = {
+                data : {
+                    token : "token",
+                },
+            };
+
+            const responseGet = {
+                data : {
+                    epp_userName : ""
+                }
+            }
+            mockAxios.post.mockResolvedValue(responsePost);
+            mockAxios.get.mockResolvedValue(responseGet);
+
+            const user = new User();
+            mockUserRepository.findOne.mockResolvedValue(user);
+        
+            
+            //when
+            const result = await userDataProductMangementService.integrateUserWithWExternalAPI(token, type, allocateToName, username, password, personal);
+
+            //then
+            expect(result).not.toBeNull;
+            expect(result.status).toBe('success');
+            expect(result.message).toBe('User is integrated with DNS')
+        })
+        
+
         
       })
 
