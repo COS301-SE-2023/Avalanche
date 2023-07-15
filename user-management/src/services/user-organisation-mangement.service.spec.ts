@@ -157,6 +157,23 @@ describe('UserOrganisationMangementService', () => {
       expect(result.error).toBe(true);
       expect(result.message).toBe('Invalid token.')
     });
+
+    it('should fail because user does not exist',async () => {
+      //given
+      const token = 'token';
+      const userPayload = { email: 'userEmail' };
+      mockRedis.get.mockResolvedValue(JSON.stringify(userPayload));
+      mockUserRepository.findOne.mockResolvedValue(null);
+      
+      //when
+      const result = await userOrganisationMangementService.getMembers(token);
+
+      //then
+      expect(result).not.toBeNull;
+      expect(result.status).toBe(400);
+      expect(result.error).toBe(true);
+      expect(result.message).toBe('User does not exist.')
+    })
   })
 
   describe('createOrganisation', () => {
