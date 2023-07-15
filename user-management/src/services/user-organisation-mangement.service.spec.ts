@@ -175,7 +175,7 @@ describe('UserOrganisationMangementService', () => {
       expect(result.message).toBe('User does not exist.')
     })
 
-    it('should succeed and update users information in Redis', async () => {
+    it('should succeed and update users information in Redis with user group', async () => {
       //given
       const token = 'token';
       const user = new User()
@@ -188,8 +188,8 @@ describe('UserOrganisationMangementService', () => {
       userGroup.users = [user]
       user.userGroups = [userGroup];
       //why valueonce this time? because for loop? 
-      mockUserGroupRepository.findOne.mockResolvedValueOnce(userGroup);
-      mockUserRepository.findOne.mockResolvedValueOnce(user);
+      mockUserGroupRepository.findOne.mockResolvedValue(userGroup);
+      mockUserRepository.findOne.mockResolvedValue(user);
 
 
       
@@ -200,6 +200,34 @@ describe('UserOrganisationMangementService', () => {
       expect(result).not.toBeNull;
       expect(result.status).toBe('success');
       expect(result.users.length).toBe(1);
+
+    })
+
+    it('should succeed and update users information in Redis with no user group', async () => {
+      //given
+      const token = 'token';
+      const user = new User()
+      const userPayload = { email: 'userEmail' };
+      mockRedis.get.mockResolvedValue(JSON.stringify(userPayload));
+      mockUserRepository.findOne.mockResolvedValue(user);
+
+      
+      const userGroup = new UserGroup();
+      userGroup.users = null;
+      user.userGroups = null;
+      //why valueonce this time? because for loop? 
+      mockUserGroupRepository.findOne.mockResolvedValue(userGroup);
+      mockUserRepository.findOne.mockResolvedValue(user);
+
+
+       
+      //when
+      const result = await userOrganisationMangementService.getMembers(token);
+      
+      //then
+      expect(result).not.toBeNull;
+      expect(result.status).toBe('success');
+      expect(result.users.length).toBe(0);
 
     })
 
