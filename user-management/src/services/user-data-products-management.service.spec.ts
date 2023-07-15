@@ -9,6 +9,9 @@ import Redis from "ioredis";
 import { ConfigService } from "@nestjs/config";
 import { TestingModule, Test } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
+import { response } from 'express';
+import axios, { Axios } from 'axios';
+jest.mock('axios');
 
 describe('UserDataProductMangementService', () => {
     let userDataProductMangementService: UserDataProductMangementService; //service we are testing
@@ -17,6 +20,10 @@ describe('UserDataProductMangementService', () => {
     let mockUserGroupRepository: jest.Mocked<Partial<Repository<UserGroup>>>;
     let mockOrganisationRepository: jest.Mocked<Partial<Repository<Organisation>>>;
     let mockRedis: jest.Mocked<Redis>;
+    //let mockAxios: jest.Mocked<Axios>;
+    
+    const mockAxios = axios as jest.Mocked<typeof axios>
+    mockAxios.post = jest.fn()
 
     beforeEach(async () => {
         const userRepository = {
@@ -43,6 +50,11 @@ describe('UserDataProductMangementService', () => {
           set: jest.fn(),
           del: jest.fn(),
         };
+
+        /*const axios = {
+            post: jest.fn(),
+            get: jest.fn()
+        }*/
     
         const module: TestingModule = await Test.createTestingModule({
           providers: [
@@ -63,6 +75,10 @@ describe('UserDataProductMangementService', () => {
               provide: 'REDIS', // Provide the mock redis service
               useValue: redis,
             },
+            /*{
+                provide: 'Axios',
+                useValue: axios
+            },*/
             ConfigService
           ],
         }).compile();
@@ -74,6 +90,7 @@ describe('UserDataProductMangementService', () => {
         //UserOrganisationMangementService.prototype.sendRegistrationEmail = mockSendRegistrationEmail;
         //UserOrganisationMangementService.prototype.sendInvitationEmail = mockSendInvitationEmail;
         mockRedis = module.get('REDIS');
+        //mockAxios = module.get('Axios');
       });
 
 
@@ -113,6 +130,41 @@ describe('UserDataProductMangementService', () => {
             expect(result.status).toBe(400);
             expect(result.error).toBe(true);
             expect(result.message).toBe('Please enter all account details')
+        })
+
+        it('invalid zone given',async () => {
+            //given
+            const token = 'token';
+            const type = 'type';
+            const allocateToName = 'allocateToName';
+            const username = 'username';
+            const password = 'password';
+            const personal = true;
+
+            const responsePost = {
+                data : {
+                    token : "token",
+                },
+            };
+
+            const responseGet = {
+                data : {
+                    epp_userName : ""
+                }
+            }
+            mockAxios.post.mockResolvedValue(responsePost);
+            mockAxios.get.mockResolvedValue(responseGet);
+        
+            
+            //when
+            const result = await userDataProductMangementService.integrateUserWithWExternalAPI(token, type, allocateToName, username, password, personal);
+
+            //then
+            expect(result).not.toBeNull;
+            expect(result.status).toBe(400);
+            expect(result.error).toBe(true);
+            expect(result.message).toBe('Please enter a zone that is from the given choices - AFRICA, RyCE, ZACR')
+            
         })
         
       })
