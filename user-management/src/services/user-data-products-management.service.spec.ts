@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
 
-import { Organisation } from "src/entity/organisation.entity";
-import { User } from "src/entity/user.entity";
-import { UserGroup } from "src/entity/userGroup.entity";
+import { User } from '../entity/user.entity';
+import { UserGroup } from '../entity/userGroup.entity';
+import { Organisation } from '../entity/organisation.entity';
 import { Repository } from "typeorm";
 import { UserDataProductMangementService } from "./user-data-products-management.service";
 import Redis from "ioredis";
@@ -10,7 +10,7 @@ import { ConfigService } from "@nestjs/config";
 import { TestingModule, Test } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
 
-describe('UserDataProductMangementService', async () => {
+describe('UserDataProductMangementService', () => {
     let userDataProductMangementService: UserDataProductMangementService; //service we are testing
     //the belwo are the repos we are going to be using
     let mockUserRepository: jest.Mocked<Partial<Repository<User>>>;
@@ -76,5 +76,33 @@ describe('UserDataProductMangementService', async () => {
         mockRedis = module.get('REDIS');
       });
 
-      
+
+      describe('integrateUserWithWExternalAPI',() => {
+        
+        it('username not entered',async () => {
+            //given
+            const token = 'token';
+            const type = 'type';
+            const allocateToName = 'allocateToName';
+            const password = 'password';
+            const personal = true;
+            
+            //when
+            const result = await userDataProductMangementService.integrateUserWithWExternalAPI(token, type, allocateToName, null, password, personal);
+
+            //then
+            expect(result).not.toBeNull;
+            expect(result.status).toBe(400);
+            expect(result.error).toBe(true);
+            expect(result.message).toBe('Please enter all account details')
+        })
+        
+      })
+
+      describe('integrateWithDataProducts', () => {
+        //
+        
+      })
+
+
 })
