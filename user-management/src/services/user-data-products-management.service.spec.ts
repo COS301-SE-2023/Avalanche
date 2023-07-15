@@ -96,6 +96,24 @@ describe('UserDataProductMangementService', () => {
             expect(result.error).toBe(true);
             expect(result.message).toBe('Please enter all account details')
         })
+
+        it('password not entered',async () => {
+            //given
+            const token = 'token';
+            const type = 'type';
+            const allocateToName = 'allocateToName';
+            const username = 'username';
+            const personal = true;
+            
+            //when
+            const result = await userDataProductMangementService.integrateUserWithWExternalAPI(token, type, allocateToName, username, null, personal);
+
+            //then
+            expect(result).not.toBeNull;
+            expect(result.status).toBe(400);
+            expect(result.error).toBe(true);
+            expect(result.message).toBe('Please enter all account details')
+        })
         
       })
 
