@@ -164,7 +164,43 @@ describe('UserDataProductMangementService', () => {
             expect(result.status).toBe(400);
             expect(result.error).toBe(true);
             expect(result.message).toBe('Please enter a zone that is from the given choices - AFRICA, RyCE, ZACR')
+        })
+
+        it('user does not exist',async () => {
+            //given
+            const token = 'token';
+            const type = 'AFRICA';
+            const allocateToName = 'allocateToName';
+            const username = 'username';
+            const password = 'password';
+            const personal = true;
+
+            const responsePost = {
+                data : {
+                    token : "token",
+                },
+            };
+
+            const responseGet = {
+                data : {
+                    epp_userName : ""
+                }
+            }
+            mockAxios.post.mockResolvedValue(responsePost);
+            mockAxios.get.mockResolvedValue(responseGet);
+
+            //const user = new User();
+            mockUserRepository.findOne.mockResolvedValue(null);
+        
             
+            //when
+            const result = await userDataProductMangementService.integrateUserWithWExternalAPI(token, type, allocateToName, username, password, personal);
+
+            //then
+            expect(result).not.toBeNull;
+            expect(result.status).toBe(400);
+            expect(result.error).toBe(true);
+            expect(result.message).toBe('User does not exist')
         })
         
       })
