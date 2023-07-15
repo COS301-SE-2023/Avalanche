@@ -175,13 +175,23 @@ describe('UserOrganisationMangementService', () => {
       expect(result.message).toBe('User does not exist.')
     })
 
-    it('should succeed and update users information in Redis',async () => {
+    it('should succeed and update users information in Redis', async () => {
       //given
       const token = 'token';
+      const user = new User()
       const userPayload = { email: 'userEmail' };
-      const user = new User(); 
       mockRedis.get.mockResolvedValue(JSON.stringify(userPayload));
       mockUserRepository.findOne.mockResolvedValue(user);
+
+      
+      const userGroup = new UserGroup();
+      userGroup.users = [user]
+      user.userGroups = [userGroup];
+      //why valueonce this time? because for loop? 
+      mockUserGroupRepository.findOne.mockResolvedValueOnce(userGroup);
+      mockUserRepository.findOne.mockResolvedValueOnce(user);
+
+
       
       //when
       const result = await userOrganisationMangementService.getMembers(token);
@@ -189,7 +199,7 @@ describe('UserOrganisationMangementService', () => {
       //then
       expect(result).not.toBeNull;
       expect(result.status).toBe('success');
-      //expect(result.users).toBe(userGroupDetails);
+      expect(result.users.length).toBe(1);
 
     })
 
