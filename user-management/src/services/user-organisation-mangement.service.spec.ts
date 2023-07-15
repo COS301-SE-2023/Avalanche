@@ -174,6 +174,25 @@ describe('UserOrganisationMangementService', () => {
       expect(result.error).toBe(true);
       expect(result.message).toBe('User does not exist.')
     })
+
+    it('should succeed and update users information in Redis',async () => {
+      //given
+      const token = 'token';
+      const userPayload = { email: 'userEmail' };
+      const user = new User(); 
+      mockRedis.get.mockResolvedValue(JSON.stringify(userPayload));
+      mockUserRepository.findOne.mockResolvedValue(user);
+      
+      //when
+      const result = await userOrganisationMangementService.getMembers(token);
+      
+      //then
+      expect(result).not.toBeNull;
+      expect(result.status).toBe('success');
+      //expect(result.users).toBe(userGroupDetails);
+
+    })
+
   })
 
   describe('createOrganisation', () => {
@@ -181,6 +200,7 @@ describe('UserOrganisationMangementService', () => {
     it('should return an error if the token is invalid', async () => {
       mockRedis.get.mockResolvedValueOnce(null);
       const result = await userOrganisationMangementService.createOrganisation('invalidToken', 'orgName');
+      expect(result).not.toBeNull;
       expect(result.status).toEqual(400);
       expect(result.message).toEqual('Invalid token.');
       expect(result.timestamp).toBeDefined();
@@ -191,6 +211,7 @@ describe('UserOrganisationMangementService', () => {
       mockRedis.get.mockResolvedValueOnce(JSON.stringify(userPayload));
       mockUserRepository.findOne.mockResolvedValueOnce(null);
       const result = await userOrganisationMangementService.createOrganisation(token, 'orgName');
+      expect(result).not.toBeNull;
       expect(result.status).toEqual(400);
       expect(result.message).toEqual('User does not exist.');
       expect(result.timestamp).toBeDefined();
@@ -204,6 +225,7 @@ describe('UserOrganisationMangementService', () => {
       mockRedis.get.mockResolvedValueOnce(JSON.stringify(userPayload));
       mockUserRepository.findOne.mockResolvedValueOnce(user);
       const result = await userOrganisationMangementService.createOrganisation(token, 'orgName');
+      expect(result).not.toBeNull;
       expect(result.status).toEqual(400);
       expect(result.message).toEqual('User already belongs to an organisation');
       expect(result.timestamp).toBeDefined();
@@ -217,6 +239,7 @@ describe('UserOrganisationMangementService', () => {
       mockUserRepository.findOne.mockResolvedValueOnce(user);
       mockOrganisationRepository.findOne.mockResolvedValueOnce(new Organisation());
       const result = await userOrganisationMangementService.createOrganisation(token, 'orgName');
+      expect(result).not.toBeNull;
       expect(result.status).toEqual(400);
       expect(result.message).toEqual('Organisation with this name already exists');
       expect(result.timestamp).toBeDefined();
@@ -230,6 +253,7 @@ describe('UserOrganisationMangementService', () => {
       mockUserRepository.findOne.mockResolvedValueOnce(user);
       mockOrganisationRepository.findOne.mockResolvedValueOnce(null);
       const result = await userOrganisationMangementService.createOrganisation(token, '');
+      expect(result).not.toBeNull;
       expect(result.status).toEqual(400);
       expect(result.message).toEqual('Please enter an organisation with charceters and a length greater than 0');
       expect(result.timestamp).toBeDefined();
@@ -243,6 +267,7 @@ describe('UserOrganisationMangementService', () => {
       mockUserRepository.findOne.mockResolvedValueOnce(user);
       mockOrganisationRepository.findOne.mockResolvedValueOnce(null);
       const result = await userOrganisationMangementService.createOrganisation(token, 'orgName');
+      expect(result).not.toBeNull;
       expect(result.status).toEqual('success');
       expect(result.message).toEqual(user);
       expect(result.timestamp).toBeDefined();
