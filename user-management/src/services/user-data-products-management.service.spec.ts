@@ -478,15 +478,15 @@ describe('UserDataProductMangementService', () => {
             }
             
             mockRedis.get.mockResolvedValue(JSON.stringify(userDetails));
+            mockUserGroupRepository.findOne.mockResolvedValue(userGroup);
 
             //when
             const result = await userDataProductMangementService.integrateWithDataProducts(token, type, allocateToName, personal)
 
             //then
             expect(result).not.toBeNull;
-            expect(result.status).toBe(400);
-            expect(result.error).toBe(true);
-            expect(result.message).toBe('Cannot find user group with given name');
+            expect(result.status).toBe('success');
+            expect(result.message).toBe('User group is integrated with ' + type);
 
         })
         
