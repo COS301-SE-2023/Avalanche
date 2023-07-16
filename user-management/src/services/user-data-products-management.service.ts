@@ -20,7 +20,7 @@ export class UserDataProductMangementService {
 
     async integrateUserWithWExternalAPI(token: string, type: string, allocateToName: string, username: string, password: string, personal: boolean) {
         if(!username || !password){
-            return { 
+            return { //test done
                 status: 400,
                 error: true,
                 message: 'Please enter all account details',
@@ -57,26 +57,31 @@ export class UserDataProductMangementService {
                     } else if (type==="RyCE") {
                         integrationString += "-" + type + ",";
                     } else{
+                        //test done
                         return {status : 400,error: true, message : 'Please enter a zone that is from the given choices - AFRICA, RyCE, ZACR', 
                         timestamp: new Date().toISOString()};
                     }
                     const user = await this.userRepository.findOne({ where: { email: allocateToName } });
                     if(!user){
+                        //test done
                         return {status : 400,error: true, message : 'User does not exist', 
                         timestamp: new Date().toISOString()};
                     }
                     user.products += integrationString;
                     await this.userRepository.save(user);
                     await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60 );
+                    //test done
                     return { status: 'success', message: 'User is integrated with DNS', 
                     timestamp: new Date().toISOString() };
                 } catch (error) {
                     console.error(error);
+                    //TEST STILLL NEED TO BE DONE
                     return { status: 400,error: true, message: error, 
                     timestamp: new Date().toISOString() };
                 }
             } catch (error) {
                 console.error(error);
+                //TEST STILLL NEED TO BE DONE
                 return { status: 400,error: true, message: error, 
                 timestamp: new Date().toISOString() };
             }
@@ -84,6 +89,7 @@ export class UserDataProductMangementService {
             // Retrieve the user with their groups based on the token
             const userData = await this.redis.get(token);
             if(!userData){
+                //test done
                 return {status : 400, error: true, message : 'Invalid token', 
                 timestamp: new Date().toISOString()};
             }
@@ -119,16 +125,19 @@ export class UserDataProductMangementService {
                         } else if (type==="RyCE") {
                             integrationString += "-" + type + ",";
                         } else{
+                            //test done
                             return {status : 400,error: true, message : 'Please enter a zone that is from the given choices - AFRICA, RyCE, ZACR', 
                             timestamp: new Date().toISOString()};
                         }
                         const userGroup = await this.userGroupRepository.findOne({ where: { name: allocateToName } });
                         if(!userGroup){
+                            //test done
                             return {status: 400, error: true, message : 'Cannot find user group with the given name', 
                             timestamp: new Date().toISOString()}
                         }
                         userGroup.products += integrationString;
                         await this.userRepository.save(userGroup);
+                        //test done
                         return { status: 'success', message: 'User is integrated with DNS', 
                         timestamp: new Date().toISOString() };
                     } catch (error) {
@@ -154,11 +163,13 @@ export class UserDataProductMangementService {
             }
             const user = await this.userRepository.findOne({ where: { email: allocateToName } });
             if(!user){
+                //test done
                 return {status : 400, error: true, message : 'User does not exist', 
                 timestamp: new Date().toISOString()};
             }
             user.products += typeW;
             await this.userRepository.save(user);
+            //test done
             return { status: 'success', message: user , 
             timestamp: new Date().toISOString()};
         } else if (personal == false) {
@@ -173,14 +184,17 @@ export class UserDataProductMangementService {
                 }
                 const userGroup = await this.userGroupRepository.findOne({ where: { name: allocateToName } });
                 if(!userGroup){
+                    //test done
                     return {status : 400, error: true, message : 'Cannot find user group with given name', 
                     timestamp: new Date().toISOString()}
                 }
                 userGroup.products += typeW;
                 await this.userGroupRepository.save(userGroup);
+                //test done
                 return { status: 'success', message: 'User group is integrated with ' + type , 
                 timestamp: new Date().toISOString()};
             } else {
+                //test doing
                 return { status: 400,error: true, message: 'User does not have the right permissions', 
                 timestamp: new Date().toISOString() };
             }

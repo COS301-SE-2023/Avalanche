@@ -462,7 +462,7 @@ describe('UserDataProductMangementService', () => {
 
         })
 
-        it('success, user is integrated',async () => {
+        it('user does not have right permissions',async () => {
             //given
             const token = 'token'
             const type = 'type';
@@ -470,7 +470,7 @@ describe('UserDataProductMangementService', () => {
             const personal = false;
 
             const userGroup = new UserGroup();
-            userGroup.permission = 1
+            userGroup.permission = -1;
             const userDetails = {
                 userGroups : [
                     userGroup
@@ -478,15 +478,15 @@ describe('UserDataProductMangementService', () => {
             }
             
             mockRedis.get.mockResolvedValue(JSON.stringify(userDetails));
-            mockUserGroupRepository.findOne.mockResolvedValue(userGroup);
 
             //when
             const result = await userDataProductMangementService.integrateWithDataProducts(token, type, allocateToName, personal)
 
             //then
             expect(result).not.toBeNull;
-            expect(result.status).toBe('success');
-            expect(result.message).toBe('User group is integrated with ' + type);
+            expect(result.status).toBe(400);
+            expect(result.error).toBe(true);
+            expect(result.message).toBe('User does not have the right permissions');
 
         })
         
