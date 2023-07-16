@@ -392,7 +392,29 @@ describe('UserDataProductMangementService', () => {
       })
 
       describe('integrateWithDataProducts', () => {
-        //
+        
+        it('user does not exist',async () => {
+            //given
+            const token = 'token'
+            const type = 'type';
+            const allocateToName = 'allocateToName';
+            const personal = true;
+
+            mockUserGroupRepository.findOne.mockResolvedValue(null);
+
+
+            //when
+            const result = await userDataProductMangementService.integrateWithDataProducts(token, type, allocateToName, personal)
+
+            //then
+            expect(result).not.toBeNull;
+            expect(result.status).toBe(400);
+            expect(result.error).toBe(true);
+            expect(result.message).toBe('User does not exist')
+
+
+
+        })
         
       })
 
