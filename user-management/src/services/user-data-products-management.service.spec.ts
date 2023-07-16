@@ -344,6 +344,48 @@ describe('UserDataProductMangementService', () => {
             expect(result.error).toBe(true);
             expect(result.message).toBe('Cannot find user group with the given name')
         })
+
+        it('succeed, user is integrated with DNS',async () => {
+            //given
+            const token = 'token'
+            const type = 'AFRICA';
+            const allocateToName = 'allocateToName';
+            const username = 'username';
+            const password = 'password';
+            const personal = false;
+            const userGroup = new UserGroup();
+            userGroup.permission = 1
+            const userDetails = {
+                userGroups : [
+                    userGroup
+                ]
+            }
+
+            const responsePost = {
+                data : {
+                    token : "token",
+                },
+            };
+            const responseGet = {
+                data : {
+                    epp_userName : ""
+                }
+            }
+
+            mockAxios.post.mockResolvedValue(responsePost);
+            mockAxios.get.mockResolvedValue(responseGet);
+            mockRedis.get.mockResolvedValue(JSON.stringify(userDetails));
+            mockUserGroupRepository.findOne.mockResolvedValue(userGroup);
+        
+            
+            //when
+            const result = await userDataProductMangementService.integrateUserWithWExternalAPI(token, type, allocateToName, username, password, personal);
+
+            //then
+            expect(result).not.toBeNull;
+            expect(result.status).toBe('success');
+            expect(result.message).toBe('User is integrated with DNS');
+        })
         
 
         
