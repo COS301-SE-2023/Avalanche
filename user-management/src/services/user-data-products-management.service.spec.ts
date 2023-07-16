@@ -259,6 +259,48 @@ describe('UserDataProductMangementService', () => {
             expect(result.error).toBe(true);
             expect(result.message).toBe('Invalid token')
         })
+
+        it('invalid zone #2',async () => {
+            //given
+            const token = 'token'
+            const type = 'type';
+            const allocateToName = 'allocateToName';
+            const username = 'username';
+            const password = 'password';
+            const personal = false;
+            const userGroup = new UserGroup();
+            userGroup.permission = 1
+            const userDetails = {
+                userGroups : [
+                    userGroup
+                ]
+            }
+
+            const responsePost = {
+                data : {
+                    token : "token",
+                },
+            };
+        
+            const responseGet = {
+                data : {
+                    epp_userName : ""
+                }
+            }
+            mockAxios.post.mockResolvedValue(responsePost);
+            mockAxios.get.mockResolvedValue(responseGet);
+            mockRedis.get.mockResolvedValue(JSON.stringify(userDetails));
+        
+            
+            //when
+            const result = await userDataProductMangementService.integrateUserWithWExternalAPI(token, type, allocateToName, username, password, personal);
+
+            //then
+            expect(result).not.toBeNull;
+            expect(result.status).toBe(400);
+            expect(result.error).toBe(true);
+            expect(result.message).toBe('Please enter a zone that is from the given choices - AFRICA, RyCE, ZACR')
+        })
         
 
         
