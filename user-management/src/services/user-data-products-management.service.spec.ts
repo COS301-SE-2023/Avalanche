@@ -489,6 +489,23 @@ describe('UserDataProductMangementService', () => {
             expect(result.message).toBe('User does not have the right permissions');
 
         })
+
+        it('error, personal == null',async () => {
+            //given
+            const token = 'token'
+            const type = 'type';
+            const allocateToName = 'allocateToName';
+
+            //when
+            const result = await userDataProductMangementService.integrateWithDataProducts(token, type, allocateToName, null)
+
+            //then
+            expect(result).not.toBeNull;
+            expect(result.status).toBe(400);
+            expect(result.error).toBe(true);
+            expect(result.message).toBe('Error occured, please try later again');
+
+        })
         
       })
 
