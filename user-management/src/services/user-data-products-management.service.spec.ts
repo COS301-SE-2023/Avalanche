@@ -431,7 +431,33 @@ describe('UserDataProductMangementService', () => {
             expect(result.status).toBe('success');
             expect(result.message).toBe(user);
 
+        })
 
+        it('cannot find user with given name',async () => {
+            //given
+            const token = 'token'
+            const type = 'type';
+            const allocateToName = 'allocateToName';
+            const personal = false;
+
+            const userGroup = new UserGroup();
+            userGroup.permission = 1
+            const userDetails = {
+                userGroups : [
+                    userGroup
+                ]
+            }
+            
+            mockRedis.get.mockResolvedValue(JSON.stringify(userDetails));
+
+            //when
+            const result = await userDataProductMangementService.integrateWithDataProducts(token, type, allocateToName, personal)
+
+            //then
+            expect(result).not.toBeNull;
+            expect(result.status).toBe(400);
+            expect(result.error).toBe(true);
+            expect(result.message).toBe('Cannot find user group with given name');
 
         })
         
