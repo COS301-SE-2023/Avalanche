@@ -400,8 +400,6 @@ describe('UserDataProductMangementService', () => {
             const allocateToName = 'allocateToName';
             const personal = true;
 
-            mockUserGroupRepository.findOne.mockResolvedValue(null);
-
 
             //when
             const result = await userDataProductMangementService.integrateWithDataProducts(token, type, allocateToName, personal)
@@ -410,7 +408,28 @@ describe('UserDataProductMangementService', () => {
             expect(result).not.toBeNull;
             expect(result.status).toBe(400);
             expect(result.error).toBe(true);
-            expect(result.message).toBe('User does not exist')
+            expect(result.message).toBe('User does not exist');
+
+        })
+
+        it('success',async () => {
+            //given
+            const token = 'token'
+            const type = 'type';
+            const allocateToName = 'allocateToName';
+            const personal = true;
+            const user = new User();
+
+            mockUserRepository.findOne.mockResolvedValue(user);
+
+
+            //when
+            const result = await userDataProductMangementService.integrateWithDataProducts(token, type, allocateToName, personal)
+
+            //then
+            expect(result).not.toBeNull;
+            expect(result.status).toBe('success');
+            expect(result.message).toBe(user);
 
 
 
