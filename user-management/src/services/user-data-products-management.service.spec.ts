@@ -13,7 +13,7 @@ import { response } from 'express';
 import axios, { Axios } from 'axios';
 jest.mock('axios');
 
-describe('UserDataProductMangementService', () => {
+describe('UserDataProductMangementService unit tests', () => {
     let userDataProductMangementService: UserDataProductMangementService; //service we are testing
     //the belwo are the repos we are going to be using
     let mockUserRepository: jest.Mocked<Partial<Repository<User>>>;
@@ -510,4 +510,118 @@ describe('UserDataProductMangementService', () => {
       })
 
 
+})
+
+describe('UserDataProductManagementService integration tests - repositories mocked', () => {
+    let userDataProductMangementService: UserDataProductMangementService; //service we are testing
+    //the belwo are the repos we are going to be using
+    let mockUserRepository: jest.Mocked<Partial<Repository<User>>>;
+    let mockUserGroupRepository: jest.Mocked<Partial<Repository<UserGroup>>>;
+    let mockOrganisationRepository: jest.Mocked<Partial<Repository<Organisation>>>;
+    //let mockAxios: jest.Mocked<Axios>;
+    let redis: Redis;
+    
+    const mockAxios = axios as jest.Mocked<typeof axios>
+    mockAxios.post = jest.fn()
+
+    beforeAll(async () =>{
+        redis = new Redis();
+    })
+
+    beforeEach(async () => {
+        await redis.flushdb();
+        const userRepository = {
+          findOne: jest.fn(),
+          create: jest.fn(),
+          save: jest.fn(),
+        };
+    
+        const userGroupRepository = {
+          findOne: jest.fn(),
+          create: jest.fn(),
+          save: jest.fn(),
+        };
+    
+    
+        const organisationRepository = {
+          findOne: jest.fn(),
+          create: jest.fn(),
+          save: jest.fn(),
+        };
+
+        /*const axios = {
+            post: jest.fn(),
+            get: jest.fn()
+        }*/
+    
+        const module: TestingModule = await Test.createTestingModule({
+          providers: [
+            UserDataProductMangementService,
+            {
+              provide: getRepositoryToken(User),
+              useValue: userRepository,
+            },
+            {
+              provide: getRepositoryToken(UserGroup),
+              useValue: userGroupRepository,
+            },
+            {
+              provide: getRepositoryToken(Organisation),
+              useValue: organisationRepository,
+            },
+            /*{
+                provide: 'Axios',
+                useValue: axios
+            },*/
+            ConfigService
+          ],
+        }).compile();
+    
+        userDataProductMangementService = module.get<UserDataProductMangementService>(UserDataProductMangementService);
+        mockUserRepository = module.get(getRepositoryToken(User));
+        mockUserGroupRepository = module.get(getRepositoryToken(UserGroup));
+        mockOrganisationRepository = module.get(getRepositoryToken(Organisation));
+        //UserOrganisationMangementService.prototype.sendRegistrationEmail = mockSendRegistrationEmail;
+        //UserOrganisationMangementService.prototype.sendInvitationEmail = mockSendInvitationEmail;
+        //mockAxios = module.get('Axios');
+      });
+
+    describe('integrateUserWithWExternalAPI', () => {
+        it('Test A', async () => {
+            //given
+            const token = 'token';
+            const type = 'AFRICA';
+            const allocateToName = 'allocateToName';
+            const username = 'username';
+            const password = 'password';
+            const personal = true;
+
+            const responsePost = {
+                data : {
+                    token : "token",
+                },
+            };
+
+            const responseGet = {
+                data : {
+                    epp_userName : ""
+                }
+            }
+            mockAxios.post.mockResolvedValue(responsePost);
+            mockAxios.get.mockResolvedValue(responseGet);
+
+            const user = new User();
+            mockUserRepository.findOne.mockResolvedValue(user);
+        
+            
+            //when
+            const result = await userDataProductMangementService.integrateUserWithWExternalAPI(token, type, allocateToName, username, password, personal);
+
+            //then
+            redis
+            expect(result).not.toBeNull;
+            expect(result.status).toBe('success');
+            expect(result.message).toBe('User is integrated with DNS')
+        })
+    })
 })
