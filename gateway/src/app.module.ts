@@ -21,7 +21,7 @@ import { HttpModule } from '@nestjs/axios';
         name: 'USER_MANAGEMENT_SERVICE',
         transport: Transport.TCP,
         options: {
-          host: 'localhost',
+          host: 'usermanagement',
           port: 4001,
         },
       },
@@ -29,7 +29,7 @@ import { HttpModule } from '@nestjs/axios';
         name: 'ZACR_SERVICE',
         transport: Transport.TCP,
         options: {
-          host: 'localhost',
+          host: 'zacr',
           port: 4002,
         },
       },
