@@ -131,3 +131,5 @@ Services/DomainWatch/domain_watch/target/test-classes/avalanche/Network/ServerSt
 Services/DomainWatch/domain_watch/target/test-classes/avalanche/Network/ServerState/RunningTest.class
 ryce/.env
 africa/.env
+*.old
+docker-compose.yml

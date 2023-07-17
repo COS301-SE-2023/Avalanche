@@ -25,7 +25,7 @@ import { AfricaService } from './africa/africa.service';
         name: 'USER_MANAGEMENT_SERVICE',
         transport: Transport.TCP,
         options: {
-          host: 'localhost',
+          host: 'usermanagement',
           port: 4001,
         },
       },
@@ -33,7 +33,7 @@ import { AfricaService } from './africa/africa.service';
         name: 'ZACR_SERVICE',
         transport: Transport.TCP,
         options: {
-          host: 'localhost',
+          host: 'zacr',
           port: 4002,
         },
       },

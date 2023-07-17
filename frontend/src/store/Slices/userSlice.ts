@@ -100,6 +100,7 @@ export const userSlice = createSlice({
         },
         logout(state) {
             deleteCookie("jwt");
+            localStorage.removeItem("persist:nextjs");
             state.user = initialState;
         }
     },
@@ -181,7 +182,6 @@ export const userSlice = createSlice({
         })
         // Create User Group
         builder.addCase(createOrganisationGroup.fulfilled, (state, action) => {
-
             const payload = action.payload as ICreateUserGroupResponse;
             state.user.userGroups?.push(payload.message);
             state.createGroupSuccess = true;
@@ -196,7 +196,6 @@ export const userSlice = createSlice({
         // Get User Group
         builder.addCase(getUserGroups.fulfilled, (state, action) => {
             const payload = action.payload as any;
-            console.log(payload.users);
             state.userGroups = payload.users;
             state.loading = false;
         })
@@ -221,7 +220,8 @@ export const userSlice = createSlice({
         // Get Latest Org
         builder.addCase(getLatestOrganisation.fulfilled, (state, action) => {
             const payload = action.payload as any;
-            state.user.organisation = payload;
+            state.user.organisation = payload.organisation;
+            state.user.userGroups = payload.userGroups;
             state.loading = false;
         })
         builder.addCase(getLatestOrganisation.rejected, (state, action) => {
@@ -358,7 +358,7 @@ export const getLatestOrganisation = createAsyncThunk("ORG.GetLatestOrganisation
                 "Authorization": `Bearer ${jwt}`
             }
         }).json();
-        return response.message.organisation as any;
+        return response.message as any;
     } catch (e) {
         if (e instanceof Error) return rejectWithValue(e.message);
     }

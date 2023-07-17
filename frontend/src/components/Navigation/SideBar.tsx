@@ -29,8 +29,9 @@ export default function Sidebar() {
     useEffect(() => {
         if (localStorage.getItem("invite")) {
             const ls: any = localStorage.getItem("invite");
-            const key = ls.key;
-            const type = ls.type;
+            const data = JSON.parse(ls);
+            const key = data.key;
+            const type = data.type;
             if (key && type?.type === "group") {
                 handleGroupInvite(key, type);
             }
