@@ -8,8 +8,9 @@ import { chartColours } from "@/components/Graphs/data";
 import IMarketShareGraphRequest from "@/interfaces/requests/MarketShareGraph";
 import IDomainNameAnalysisGraphRequest from "@/interfaces/requests/DomainNameAnalysis";
 import IAgeAnalysisGraphRequest from "@/interfaces/requests/AgeAnalysisGraph";
+import IMovementGraphRequest from "@/interfaces/requests/Movement";
 
-const url = "http://localhost:4000/zacr";
+const url = "http://localhost:4000/ryce";
 
 interface IGraphState {
     graphs: any[],
@@ -232,10 +233,40 @@ export const getAgeAnalysisData = createAsyncThunk("GRAPH.GetAgeAnalysisData", a
     }
 })
 
+export const getDomainLengthData = createAsyncThunk("GRAPH.GetDomainLengthData", async (object: IDomainNameAnalysisGraphRequest, { rejectWithValue }) => {
+    try {
+        const jwt = getCookie("jwt");
+        const response = await ky.post(`${url}/domainNameAnalysis/length`, {
+            json: object,
+            headers: {
+                "Authorization": `Bearer ${jwt}`
+            }
+        }).json();
+        return response;
+    } catch (e) {
+        if (e instanceof Error) return rejectWithValue(e.message);
+    }
+})
+
+export const getMovementVerticalData = createAsyncThunk("GRAPH.GetMovementVerticalData", async (object: IMovementGraphRequest, { rejectWithValue }) => {
+    try {
+        const jwt = getCookie("jwt");
+        const response = await ky.post(`${url}/movement/vertical`, {
+            json: object,
+            headers: {
+                "Authorization": `Bearer ${jwt}`
+            }
+        }).json();
+        return response;
+    } catch (e) {
+        if (e instanceof Error) return rejectWithValue(e.message);
+    }
+})
+
 export const getDomainNameAnalysisData = createAsyncThunk("GRAPH.GetDomainNameAnalysisData", async (object: IDomainNameAnalysisGraphRequest, { rejectWithValue }) => {
     try {
         const jwt = getCookie("jwt");
-        const response = await ky.post(`${url}/domainNameAnalysis/count`, {
+        const response = await ky.post(`http://localhost:4000/zacr/domainNameAnalysis/count`, {
             json: object,
             headers: {
                 "Authorization": `Bearer ${jwt}`
@@ -254,6 +285,58 @@ export const getGraphDataArray = createAsyncThunk("GRAPH.GetGraphDataArray", asy
         for (let i = 0; i < object.length; i++) {
             const graph = object[i];
             const res: any = await ky.post(`${url}/transactions`, {
+                json: graph,
+                headers: {
+                    "Authorization": `Bearer ${jwt}`
+                }
+            }).json();
+            res.data.datasets.forEach((set: any, index: number) => {
+                set.backgroundColor = chartColours[index];
+            })
+            array.push(res.data);
+            addToGraphs(res.data);
+        }
+
+        return array;
+
+    } catch (e) {
+        if (e instanceof Error) return rejectWithValue(e.message);
+    }
+})
+
+export const getDomainLenghtDataArray = createAsyncThunk("GRAPH.GetDomainLengthDataArray", async (object: IDomainNameAnalysisGraphRequest[], { rejectWithValue }) => {
+    try {
+        const array: any[] = [];
+        const jwt = getCookie("jwt");
+        for (let i = 0; i < object.length; i++) {
+            const graph = object[i];
+            const res: any = await ky.post(`${url}/domainNameANalysis/length`, {
+                json: graph,
+                headers: {
+                    "Authorization": `Bearer ${jwt}`
+                }
+            }).json();
+            res.data.datasets.forEach((set: any, index: number) => {
+                set.backgroundColor = chartColours[index];
+            })
+            array.push(res.data);
+            addToGraphs(res.data);
+        }
+
+        return array;
+
+    } catch (e) {
+        if (e instanceof Error) return rejectWithValue(e.message);
+    }
+})
+
+export const getMovementVerticalDataArray = createAsyncThunk("GRAPH.GetMovementVerticalDataArray", async (object: IMovementGraphRequest[], { rejectWithValue }) => {
+    try {
+        const array: any[] = [];
+        const jwt = getCookie("jwt");
+        for (let i = 0; i < object.length; i++) {
+            const graph = object[i];
+            const res: any = await ky.post(`${url}/movement/vertical`, {
                 json: graph,
                 headers: {
                     "Authorization": `Bearer ${jwt}`
@@ -357,7 +440,7 @@ export const getDomainNameAnalysisDataArray = createAsyncThunk("GRAPH.GetDomainN
         const jwt = getCookie("jwt");
         for (let i = 0; i < object.length; i++) {
             const graph = object[i];
-            const res: any = await ky.post(`${url}/domainNameAnalysis/count`, {
+            const res: any = await ky.post(`http://localhost:4000/zacr/domainNameAnalysis/count`, {
                 json: graph,
                 headers: {
                     "Authorization": `Bearer ${jwt}`

@@ -29,23 +29,23 @@ export default function RegistrarMarketComparison() {
         // All transactions, monthly granularity, for the last year
         let dateFrom = `${currentDate.getFullYear() - 1}-01-01`;
         let dateTo = `${currentDate.getFullYear()-1}-12-31`;
-        const monthlyLastYearRenewRanking: ITransactionGraphRequest = { graphName: `Monthly renew ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, registrar : ["afrihost", "hetzner", "diamatrix"], transactions : ["renew"] };
+        const monthlyLastYearRenewRanking: ITransactionGraphRequest = { graphName: `Monthly renew ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: 'WIEN', registrar : ["1und1","registrygate","internetx"], transactions : ["renew"] };
         arrayRanking.push(monthlyLastYearRenewRanking);
-        const monthlyLastYearCreateRanking: ITransactionGraphRequest = { graphName: `Monthly create ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, registrar : ["afrihost", "hetzner", "diamatrix"], transactions : ["create"] };
+        const monthlyLastYearCreateRanking: ITransactionGraphRequest = { graphName: `Monthly create ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: 'WIEN', registrar : ["1und1","registrygate","internetx"], transactions : ["create"] };
         arrayRanking.push(monthlyLastYearCreateRanking);
-        const monthlyLastYearTransferRanking: ITransactionGraphRequest = { graphName: `Monthly transfer ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, registrar : ["afrihost", "hetzner", "diamatrix"], transactions : ["transfer"] };
-        arrayRanking.push(monthlyLastYearTransferRanking);
+        // const monthlyLastYearTransferRanking: ITransactionGraphRequest = { graphName: `Monthly grace ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: 'WIEN', registrar : ["1und1","registrygate","internetx"], transactions : ["grace"] };
+        // arrayRanking.push(monthlyLastYearTransferRanking);
 
         //  All transactions, weekly, last 3 months
         let holderDate = new Date();
         holderDate.getMonth() - 3;
         dateFrom = `${holderDate.getFullYear()}-${pad(holderDate.getMonth() - 3)}-01`;
         dateTo = `${currentDate.getFullYear()}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
-        const monthlyThreeMonthsTransferRanking: ITransactionGraphRequest = { graphName: `Monthly transfer ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, registrar : ["afrihost", "hetzner", "diamatrix"], transactions : ["transfer"] };
+        const monthlyThreeMonthsTransferRanking: ITransactionGraphRequest = { graphName: `Monthly transfer ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, registrar : ["1und1","registrygate","internetx"], transactions : ["transfer"] };
         arrayRanking.push(monthlyThreeMonthsTransferRanking);
-        const monthlyThreeMonthsCreateRanking: ITransactionGraphRequest = { graphName: `Monthly create ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, registrar : ["afrihost", "hetzner", "diamatrix"], transactions : ["create"] };
+        const monthlyThreeMonthsCreateRanking: ITransactionGraphRequest = { graphName: `Monthly create ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, registrar : ["1und1","registrygate","internetx"], transactions : ["create"] };
         arrayRanking.push(monthlyThreeMonthsCreateRanking);
-        const monthlyThreeMonthsRenewRanking: ITransactionGraphRequest = { graphName: `Monthly renew ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, registrar : ["afrihost", "hetzner", "diamatrix"], transactions : ["renew"] };
+        const monthlyThreeMonthsRenewRanking: ITransactionGraphRequest = { graphName: `Monthly renew ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, registrar : ["1und1","registrygate","internetx"], transactions : ["renew"] };
         arrayRanking.push(monthlyThreeMonthsRenewRanking);
 
         arrayRanking.forEach(data => {
