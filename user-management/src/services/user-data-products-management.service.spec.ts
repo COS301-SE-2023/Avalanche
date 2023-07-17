@@ -11,6 +11,7 @@ import { TestingModule, Test } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { response } from 'express';
 import axios, { Axios } from 'axios';
+
 jest.mock('axios');
 
 describe('UserDataProductMangementService unit tests', () => {
@@ -525,7 +526,12 @@ describe('UserDataProductManagementService integration tests - repositories mock
     mockAxios.post = jest.fn()
 
     beforeAll(async () =>{
-        redis = new Redis();
+        const redisOptions = {
+            host: process.env.REDIS_HOST,
+            port: parseInt(process.env.REDIS_PORT, 10),
+            password: process.env.REDIS_PASSWORD,
+          };
+        redis = new Redis(redisOptions);
     })
 
     beforeEach(async () => {
@@ -569,6 +575,10 @@ describe('UserDataProductManagementService integration tests - repositories mock
               provide: getRepositoryToken(Organisation),
               useValue: organisationRepository,
             },
+            {
+                provide: 'REDIS', // Provide the mock redis service
+                useValue: redis,
+            },
             /*{
                 provide: 'Axios',
                 useValue: axios
@@ -584,6 +594,10 @@ describe('UserDataProductManagementService integration tests - repositories mock
         //UserOrganisationMangementService.prototype.sendRegistrationEmail = mockSendRegistrationEmail;
         //UserOrganisationMangementService.prototype.sendInvitationEmail = mockSendInvitationEmail;
         //mockAxios = module.get('Axios');
+      });
+
+      afterAll(() => {
+        redis.quit(); // Close Redis client connection after all tests
       });
 
     describe('integrateUserWithWExternalAPI', () => {
@@ -604,7 +618,7 @@ describe('UserDataProductManagementService integration tests - repositories mock
 
             const responseGet = {
                 data : {
-                    epp_userName : ""
+                    epp_username : ""
                 }
             }
             mockAxios.post.mockResolvedValue(responsePost);
@@ -618,10 +632,12 @@ describe('UserDataProductManagementService integration tests - repositories mock
             const result = await userDataProductMangementService.integrateUserWithWExternalAPI(token, type, allocateToName, username, password, personal);
 
             //then
-            redis
+            const redistResult = await redis.get(token);
             expect(result).not.toBeNull;
             expect(result.status).toBe('success');
             expect(result.message).toBe('User is integrated with DNS')
+            expect(redistResult).not.toBeNull();
+            expect(JSON.parse(redistResult).products).toContain(type);
         })
     })
 })
