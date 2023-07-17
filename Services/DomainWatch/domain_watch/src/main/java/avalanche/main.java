@@ -14,6 +14,7 @@ import avalanche.Utility.DomainTokeniser;
 public class main {
     public static void main(String[] args) {
         try {
+            DomainWatchSettings.init();
             ServiceHttpServer server = new ServiceHttpServer(4004, false);
             server.start();
             server.handleDummyRequest("active");
@@ -23,6 +24,10 @@ public class main {
         } catch (InstantiationException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            System.out.println(e.getMessage());
+
         }
 
     }

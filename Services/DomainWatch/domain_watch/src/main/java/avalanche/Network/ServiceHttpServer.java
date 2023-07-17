@@ -101,6 +101,9 @@ public class ServiceHttpServer {
             case "active":
                 handleDummyRequestActive();
                 break;
+            case "passive":
+                handleDummyRequestPassive();
+                break;
 
             default:
                 break;
@@ -115,6 +118,17 @@ public class ServiceHttpServer {
                 "{domain: \"selborne\", types: [{type: \"Soundex\", threshold: 3}, {type: \"Levenshtein\", threshold: 2}]}",
                 st);
         System.out.println(o);
+        System.out.println("time in millis " + (System.currentTimeMillis() - st));
+    }
+
+    private void handleDummyRequestPassive() {
+        System.out.println("Dummy request sent");
+        long st = System.currentTimeMillis();
+        // String o = getResponse("active",
+        // "{domain: \"selborne\", types: [{type: \"Soundex\", threshold: 3}, {type:
+        // \"Levenshtein\", threshold: 2}]}",
+        // st);
+        // System.out.println(o);
         System.out.println("time in millis " + (System.currentTimeMillis() - st));
     }
 

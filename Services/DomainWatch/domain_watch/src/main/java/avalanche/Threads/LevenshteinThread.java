@@ -32,7 +32,7 @@ public class LevenshteinThread extends Thread {
             Domain d = allDomains.poll();
             if (d != null) {
 
-                double value = calc.calculateModifiedLevenshteinDistance(search, d.getName());
+                double value = calc.calculateModifiedLevenshteinDistance(search, d.getName(), threshold);
                 if (value <= threshold) {
                     Domain hit = new Domain(d);
                     hit.setDistance(value, "Levenshtein");

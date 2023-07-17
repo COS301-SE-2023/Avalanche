@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HandlePassive.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">domain_watch</a> &gt; <a href="index.source.html" class="el_package">avalanche.Network.HandlerStrategy.RunningStrategies</a> &gt; <span class="el_source">HandlePassive.java</span></div><h1>HandlePassive.java</h1><pre class="source lang-java linenums">package avalanche.Network.HandlerStrategy.RunningStrategies;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import avalanche.Core.SimilarityChecker;
+import avalanche.DataClasses.Domain;
+import avalanche.Network.HandlerStrategy.Running;
+
+<span class="fc" id="L16">public class HandlePassive extends Running {</span>
+    public String getResponse(String body, long st) {
+        // Enter here
+<span class="fc" id="L19">        System.out.println(&quot;Working on domain watch passive request&quot;);</span>
+
+        // Setup
+<span class="fc" id="L22">        SimilarityChecker similarityChecker = new SimilarityChecker();</span>
+<span class="fc" id="L23">        String resp = &quot;{\&quot;status\&quot;:\&quot;success\&quot;,\&quot;data\&quot;:{&quot;;</span>
+<span class="fc" id="L24">        ConcurrentLinkedQueue&lt;Domain&gt; recentlyCreated = new ConcurrentLinkedQueue&lt;&gt;();</span>
+<span class="fc" id="L25">        HashMap&lt;String, ConcurrentLinkedQueue&lt;Domain&gt;&gt; notification = new HashMap&lt;&gt;();</span>
+
+        // Validate Request
+<span class="fc" id="L28">        String validation = validateRequest(body);</span>
+<span class="fc bfc" id="L29" title="All 2 branches covered.">        if (!validation.equals(&quot;&quot;)) {</span>
+<span class="fc" id="L30">            return validation;</span>
+        }
+<span class="fc" id="L32">        JSONObject request = new JSONObject(body);</span>
+
+        // Process request
+<span class="fc" id="L35">        JSONArray jsonRecentlyCreated = request.getJSONArray(&quot;recently-created&quot;);</span>
+<span class="fc bfc" id="L36" title="All 2 branches covered.">        for (int i = 0; i &lt; jsonRecentlyCreated.length(); i++) {</span>
+<span class="fc" id="L37">            recentlyCreated.add(new Domain(jsonRecentlyCreated.getString(i), &quot;&quot;));</span>
+        }
+
+<span class="fc" id="L40">        JSONArray watched = request.getJSONArray(&quot;watched&quot;);</span>
+
+<span class="fc bfc" id="L42" title="All 2 branches covered.">        for (int i = 0; i &lt; watched.length(); i++) {</span>
+<span class="fc" id="L43">            String person = watched.getJSONObject(i).getString(&quot;person&quot;);</span>
+<span class="fc" id="L44">            JSONArray domains = watched.getJSONObject(i).getJSONArray(&quot;domains&quot;);</span>
+<span class="fc" id="L45">            ConcurrentLinkedQueue&lt;Domain&gt; toNotify = new ConcurrentLinkedQueue&lt;&gt;();</span>
+<span class="fc bfc" id="L46" title="All 2 branches covered.">            for (int j = 0; j &lt; domains.length(); j++) {</span>
+<span class="fc" id="L47">                ConcurrentLinkedQueue&lt;Domain&gt; found = doSearch(domains.getString(j),</span>
+<span class="fc" id="L48">                        watched.getJSONObject(i).getJSONArray(&quot;types&quot;),</span>
+<span class="fc" id="L49">                        similarityChecker, recentlyCreated);</span>
+<span class="fc" id="L50">                int size = found.size();</span>
+<span class="fc bfc" id="L51" title="All 2 branches covered.">                for (int k = 0; k &lt; size; k++) {</span>
+<span class="fc" id="L52">                    toNotify.add(found.poll());</span>
+                }
+            }
+<span class="fc" id="L55">            notification.put(person, toNotify);</span>
+        }
+
+        // Build rest of response
+<span class="fc" id="L59">        resp += &quot;\&quot;alerts\&quot;:[&quot;;</span>
+<span class="fc" id="L60">        int numberOfAlerts = notification.size();</span>
+<span class="fc" id="L61">        int numberAdded = 0;</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">        for (String name : notification.keySet()) {</span>
+<span class="fc" id="L63">            resp += &quot;{\&quot;person\&quot;:\&quot;&quot; + name + &quot;\&quot;,\&quot;domains\&quot;:[&quot;;</span>
+<span class="fc" id="L64">            ConcurrentLinkedQueue&lt;Domain&gt; domainsToNotify = notification.get(name);</span>
+<span class="fc" id="L65">            int size = domainsToNotify.size();</span>
+<span class="fc bfc" id="L66" title="All 2 branches covered.">            for (int i = 0; i &lt; size; i++) {</span>
+<span class="fc" id="L67">                System.out.println();</span>
+<span class="fc" id="L68">                resp += &quot;\&quot;&quot; + domainsToNotify.poll().getName() + &quot;\&quot;&quot;;</span>
+<span class="fc bfc" id="L69" title="All 2 branches covered.">                if (i &lt; size - 1) {</span>
+<span class="fc" id="L70">                    resp += &quot;,&quot;;</span>
+                }
+            }
+<span class="fc" id="L73">            resp += &quot;]}&quot;;</span>
+<span class="fc" id="L74">            numberAdded++;</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">            if (numberAdded &lt; numberOfAlerts) {</span>
+<span class="fc" id="L76">                resp += &quot;,&quot;;</span>
+            }
+        }
+<span class="fc bfc" id="L79" title="All 2 branches covered.">        if (st == 0) {</span>
+<span class="fc" id="L80">            resp += &quot;]}}&quot;;</span>
+<span class="fc" id="L81">        } else {</span>
+<span class="fc" id="L82">            resp += &quot;]},\&quot;searchTime(ms)\&quot;:&quot; + (System.currentTimeMillis() - st) + &quot;}&quot;;</span>
+        }
+<span class="fc" id="L84">        return resp;</span>
+    }
+
+    public static String validateRequest(String body) {
+<span class="fc" id="L88">        String validation = validateJSON(body);</span>
+<span class="fc bfc" id="L89" title="All 2 branches covered.">        if (!validation.equals(&quot;&quot;)) {</span>
+<span class="fc" id="L90">            return validation;</span>
+        }
+<span class="fc" id="L92">        int errorIndex = -1;</span>
+<span class="fc" id="L93">        String errorAttribute = &quot;&quot;;</span>
+<span class="fc" id="L94">        Set&lt;String&gt; allowedMetrics = new HashSet&lt;&gt;();</span>
+<span class="fc" id="L95">        allowedMetrics.add(&quot;Levenshtein&quot;);</span>
+<span class="fc" id="L96">        allowedMetrics.add(&quot;Soundex&quot;);</span>
+        try {
+
+<span class="fc" id="L99">            JSONObject jsonObject = new JSONObject(body);</span>
+
+            // Ensure that watched object is supplied
+<span class="fc" id="L102">            JSONArray watched = new JSONArray(jsonObject.getJSONArray(&quot;watched&quot;));</span>
+<span class="fc bfc" id="L103" title="All 2 branches covered.">            if (watched.length() == 0) {</span>
+<span class="fc" id="L104">                return &quot;{\&quot;status\&quot;:\&quot;failure\&quot;,\&quot;request-error\&quot;:\&quot;At least one 'watched' object must be provided. A 'watched' object consists of a person and a list of domains\&quot;}&quot;;</span>
+            }
+
+            // Validate all watched objects
+<span class="fc bfc" id="L108" title="All 2 branches covered.">            for (int i = 0; i &lt; watched.length(); i++) {</span>
+<span class="fc" id="L109">                errorIndex = i;</span>
+
+                // Validate person in watched object
+<span class="fc" id="L112">                errorAttribute = &quot;&quot;;</span>
+<span class="fc" id="L113">                String person = watched.getJSONObject(i).getString(&quot;person&quot;);</span>
+<span class="fc" id="L114">                errorAttribute = &quot; in person&quot;;</span>
+<span class="fc bfc" id="L115" title="All 2 branches covered.">                if (person.equals(&quot;&quot;)) {</span>
+<span class="fc" id="L116">                    return &quot;{\&quot;status\&quot;:\&quot;failure\&quot;,\&quot;request-error\&quot;:\&quot;Person in 'watched' object number &quot; + (i + 1)</span>
+<span class="fc" id="L117">                            + &quot; cannot be blank\&quot;}&quot;;</span>
+                }
+
+                // Validate types in watched object
+<span class="fc" id="L121">                errorAttribute = &quot;&quot;;</span>
+<span class="fc" id="L122">                JSONArray types = watched.getJSONObject(i).getJSONArray(&quot;types&quot;);</span>
+<span class="fc" id="L123">                errorAttribute = &quot; in types&quot;;</span>
+<span class="fc" id="L124">                int numCalcs = (types.length());</span>
+<span class="fc bfc" id="L125" title="All 2 branches covered.">                if (numCalcs &lt; 1) {</span>
+<span class="fc" id="L126">                    return &quot;{\&quot;status\&quot;:\&quot;failure\&quot;,\&quot;request-error\&quot;:\&quot;At least one distance metric must be listed\&quot;}&quot;;</span>
+                }
+<span class="fc bfc" id="L128" title="All 2 branches covered.">                for (int j = 0; j &lt; numCalcs; j++) {</span>
+<span class="fc" id="L129">                    String type = types.getJSONObject(j).getString(&quot;type&quot;);</span>
+<span class="fc bfc" id="L130" title="All 2 branches covered.">                    if (!allowedMetrics.contains(type)) {</span>
+<span class="fc" id="L131">                        return &quot;{\&quot;status\&quot;:\&quot;failure\&quot;,\&quot;request-error\&quot;:\&quot;Type:&quot; + type + &quot; is not a valid metric&quot;</span>
+<span class="fc" id="L132">                                + &quot;\&quot;}&quot;;</span>
+                    }
+<span class="fc" id="L134">                    double threshold = (types.getJSONObject(j).getDouble(&quot;threshold&quot;));</span>
+<span class="fc bfc" id="L135" title="All 4 branches covered.">                    if (type.equals(&quot;Levenshtein&quot;) &amp;&amp; (threshold &lt; 1)) {</span>
+<span class="fc" id="L136">                        return &quot;{\&quot;status\&quot;:\&quot;failure\&quot;,\&quot;request-error\&quot;:\&quot;The threshold for Levenshtein distance must be greater than 0\&quot;}&quot;;</span>
+                    }
+<span class="pc bpc" id="L138" title="1 of 6 branches missed.">                    if (type.equals(&quot;Soundex&quot;) &amp;&amp; (threshold &gt; 4 || threshold &lt; 1)) {</span>
+<span class="fc" id="L139">                        return &quot;{\&quot;status\&quot;:\&quot;failure\&quot;,\&quot;request-error\&quot;:\&quot;The threshold for Soundex distance must be in the range [1,4]\&quot;}&quot;;</span>
+                    }
+                }
+
+                // Validate domains in watched object
+<span class="fc" id="L144">                errorAttribute = &quot;&quot;;</span>
+<span class="fc" id="L145">                JSONArray domains = watched.getJSONObject(i).getJSONArray(&quot;domains&quot;);</span>
+<span class="fc" id="L146">                errorAttribute = &quot; in domains&quot;;</span>
+<span class="fc bfc" id="L147" title="All 2 branches covered.">                if (domains.length() == 0) {</span>
+<span class="fc" id="L148">                    return &quot;{\&quot;status\&quot;:\&quot;failure\&quot;,\&quot;request-error\&quot;:\&quot;Domain list in 'watched' object number &quot;</span>
+<span class="fc" id="L149">                            + (i + 1) + &quot; cannot be empty\&quot;}&quot;;</span>
+                }
+<span class="fc bfc" id="L151" title="All 2 branches covered.">                for (int j = 0; j &lt; domains.length(); j++) {</span>
+<span class="fc" id="L152">                    String domain = domains.getString(j);</span>
+<span class="fc bfc" id="L153" title="All 2 branches covered.">                    if (domain.equals(&quot;&quot;)) {</span>
+<span class="fc" id="L154">                        return &quot;{\&quot;status\&quot;:\&quot;failure\&quot;,\&quot;request-error\&quot;:\&quot;Domain number &quot; + (j + 1)</span>
+<span class="fc" id="L155">                                + &quot; in 'watched' object number &quot; + (i + 1) + &quot; cannot be blank\&quot;}&quot;;</span>
+
+                    }
+                }
+            }
+<span class="fc" id="L160">            errorIndex = -1;</span>
+
+            // Ensure that recently-created is supplied
+<span class="fc" id="L163">            JSONArray recentlyCreated = jsonObject.getJSONArray(&quot;recently-created&quot;);</span>
+<span class="fc bfc" id="L164" title="All 2 branches covered.">            if (recentlyCreated.length() == 0) {</span>
+<span class="fc" id="L165">                return &quot;{\&quot;status\&quot;:\&quot;failure\&quot;,\&quot;request-error\&quot;:\&quot;List of recently added domains cannot be empty\&quot;}&quot;;</span>
+            }
+
+            // No errors found
+<span class="fc" id="L169">            return &quot;&quot;;</span>
+<span class="fc" id="L170">        } catch (JSONException jsonException) {</span>
+            // JSON error found
+<span class="fc bfc" id="L172" title="All 2 branches covered.">            if (errorIndex != -1) {</span>
+<span class="fc" id="L173">                return &quot;{\&quot;status\&quot;:\&quot;failure\&quot;,\&quot;request-error\&quot;:\&quot;&quot;</span>
+<span class="fc" id="L174">                        + jsonException.getMessage().substring(0, jsonException.getMessage().length() - 1)</span>
+<span class="fc" id="L175">                        + &quot;&quot; + errorAttribute + &quot; in 'watched' object number &quot; + (errorIndex + 1) + &quot;\&quot;}&quot;;</span>
+            }
+<span class="fc" id="L177">            return &quot;{\&quot;status\&quot;:\&quot;failure\&quot;,\&quot;request-error\&quot;:\&quot;&quot; + jsonException.getMessage() + &quot;\&quot;}&quot;;</span>
+        }
+
+    }
+
+    public ConcurrentLinkedQueue&lt;Domain&gt; doSearch(String domain, JSONArray types, SimilarityChecker similarityChecker,
+            ConcurrentLinkedQueue&lt;Domain&gt; searchSpace) {
+<span class="fc" id="L184">        ConcurrentLinkedQueue&lt;Domain&gt; hits = new ConcurrentLinkedQueue&lt;&gt;();</span>
+<span class="fc" id="L185">        int numCalcs = (types.length());</span>
+<span class="fc bfc" id="L186" title="All 2 branches covered.">        for (int j = 0; j &lt; numCalcs; j++) {</span>
+<span class="fc" id="L187">            String type = types.getJSONObject(j).getString(&quot;type&quot;);</span>
+<span class="fc" id="L188">            double threshold = (types.getJSONObject(j).getDouble(&quot;threshold&quot;));</span>
+<span class="fc bfc" id="L189" title="All 3 branches covered.">            switch (type) {</span>
+                case &quot;Levenshtein&quot;:
+<span class="fc bfc" id="L191" title="All 2 branches covered.">                    if (j == 0) {</span>
+<span class="fc" id="L192">                        hits = similarityChecker.findAllWithinSimliarityThreshold(domain,</span>
+<span class="fc" id="L193">                                threshold, searchSpace);</span>
+<span class="fc" id="L194">                    } else {</span>
+<span class="fc" id="L195">                        hits = similarityChecker.findAllWithinSimliarityThreshold(domain,</span>
+<span class="fc" id="L196">                                threshold, hits);</span>
+                    }
+<span class="fc" id="L198">                    break;</span>
+                case &quot;Soundex&quot;:
+<span class="fc bfc" id="L200" title="All 2 branches covered.">                    if (j == 0) {</span>
+<span class="fc" id="L201">                        hits = similarityChecker.findAllSoundsAboveSimliarityThreshold(domain,</span>
+<span class="fc" id="L202">                                threshold, searchSpace);</span>
+<span class="fc" id="L203">                    } else {</span>
+<span class="fc" id="L204">                        hits = similarityChecker.findAllSoundsAboveSimliarityThreshold(domain,</span>
+<span class="fc" id="L205">                                threshold, searchSpace);</span>
+                    }
+                    break;
+            }
+        }
+<span class="fc" id="L210">        return hits;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

@@ -21,13 +21,15 @@ public class LevenshteinDistanceCalculator {
      * @return The levenshtein distance between the two string taking into account
      *         the special rules described.
      */
-    public double calculateModifiedLevenshteinDistance(String x, String y) {
+    public double calculateModifiedLevenshteinDistance(String x, String y, double limit) {
         x = x.toLowerCase();
         y = y.toLowerCase();
+
         double[][] dp = new double[x.length() + 1][y.length() + 1];
 
         for (int i = 0; i <= x.length(); i++) {
             for (int j = 0; j <= y.length(); j++) {
+
                 if (i == 0) {
                     if (j == 0) {
                         dp[i][j] = 0;
@@ -60,11 +62,13 @@ public class LevenshteinDistanceCalculator {
                                 + costOfSubstitution(x.charAt(i - 1), y.charAt(j - 1)),
                                 dp[i - 1][j] + insertionCost(x.charAt(i - 1), x.charAt(i - 2)),
                                 dp[i][j - 1] + insertionCost(y.charAt(j - 1), y.charAt(j - 2)));
-                    }
 
+                    }
                 }
+
             }
         }
+
         return dp[x.length()][y.length()];
     }
 

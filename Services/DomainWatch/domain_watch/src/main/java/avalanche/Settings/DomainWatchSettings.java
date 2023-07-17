@@ -18,13 +18,19 @@ public class DomainWatchSettings {
     public HashMap<String, String> domainFiles;
     public String defaultZone;
 
-    private DomainWatchSettings() {
+    public static String configFilePath = "domainWatch.conf";
+
+    public static DomainWatchSettings getDomainWatchSettings() {
+        return domainWatchSettings;
+    }
+
+    private DomainWatchSettings() throws Exception {
         useInternalSubstitutionCosts = false;
         substitutionCosts = new HashMap<>();
         domainFiles = new HashMap<>();
         maximumThreadsPerSearch = Runtime.getRuntime().availableProcessors() - 1;
         try {
-            Scanner file = new Scanner(new FileReader("domainWatch.conf"));
+            Scanner file = new Scanner(new FileReader(configFilePath));
             String conf = "";
             while (file.hasNext()) {
                 conf += file.nextLine();
@@ -50,16 +56,50 @@ public class DomainWatchSettings {
             }
             defaultZone = obj.getString("defaultZone");
         } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            throw new Exception("\n======" + //
+                    "\n" + //
+                    "NO CONFIG FILE FOUND (domainWatch.conf)\n" + //
+                    "I'm going to die now\n" + //
+                    "Why was it deleted?\n" + //
+                    "Seriously, why?\n" + //
+                    "Did you think you were clever?\n" + //
+                    "Did you rename it?\n" + //
+                    "Do you hate me?\n" + //
+                    "Do you hate yourself?\n" + //
+                    "I die for real now...\n" + //
+                    "Goodbye cruel world!\n" + //
+                    "======\n" + //
+                    "");
         }
 
     }
 
+    public static void init() throws Exception {
+        domainWatchSettings = new DomainWatchSettings();
+    }
+
     public static DomainWatchSettings getInstace() {
         if (domainWatchSettings == null) {
-            domainWatchSettings = new DomainWatchSettings();
-            return domainWatchSettings;
+            System.out.println("Settings were not initialised, trying my best");
+            try {
+                DomainWatchSettings.init();
+            } catch (Exception e) {
+                System.out.println(("\n======" + //
+                        "\n" + //
+                        "NO CONFIG FILE FOUND (domainWatch.conf)\n" + //
+                        "I'm going to die now\n" + //
+                        "Why was it deleted?\n" + //
+                        "Seriously, why?\n" + //
+                        "Did you think you were clever?\n" + //
+                        "Did you rename it?\n" + //
+                        "Do you hate me?\n" + //
+                        "Do you hate yourself?\n" + //
+                        "I die for real now...\n" + //
+                        "Goodbye cruel world!\n" + //
+                        "======\n" + //
+                        ""));
+                System.exit(1);
+            }
         }
         return domainWatchSettings;
     }

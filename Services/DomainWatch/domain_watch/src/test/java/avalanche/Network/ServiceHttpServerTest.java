@@ -18,6 +18,7 @@ import org.json.JSONException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import avalanche.Network.HandlerStrategy.Closed;
 import avalanche.Network.HandlerStrategy.Initialising;
 
 public class ServiceHttpServerTest {
@@ -31,8 +32,36 @@ public class ServiceHttpServerTest {
     }
 
     @Test
-    public void dummyRequest() throws IOException, InstantiationException {
+    public void setSpecificStrategy() throws IOException {
+        server.setSpecificStrategy("active", new Closed());
+        URL url = new URL("http://localhost:4004/domainWatch/active");
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("POST");
+        con.setRequestProperty("Content-Type", "application/json");
+        con.setRequestProperty("Accept", "application/json");
+        con.setDoOutput(true);
+        String jsonInputString = "{\"domain\":\"domain\",\"types\":[{\"type\":\"Soundex\",\"threshold\":3},{\"type\":\"Levenshtein\",\"threshold\":3}]}";
+        try (OutputStream os = con.getOutputStream()) {
+            byte[] input = jsonInputString.getBytes("utf-8");
+            os.write(input, 0, input.length);
+        }
+        assertEquals(500, con.getResponseCode());
+        server.setDefaultStrategies();
+    }
+
+    @Test
+    public void dummyRequestActive() throws IOException, InstantiationException {
         server.handleDummyRequest("active");
+    }
+
+    @Test
+    public void dummyRequestNone() throws IOException, InstantiationException {
+        server.handleDummyRequest("none");
+    }
+
+    @Test
+    public void dummyRequestPassive() throws IOException, InstantiationException {
+        server.handleDummyRequest("passive");
     }
 
     @Test

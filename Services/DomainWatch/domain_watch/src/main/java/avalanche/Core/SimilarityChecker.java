@@ -25,10 +25,10 @@ public class SimilarityChecker {
     public static void init(boolean useMock, int threadCount) {
         SimilarityChecker.threadCount = threadCount;
         HashMap<String, String> domainFiles = DomainWatchSettings.getInstace().domainFiles;
-        String path = "data/Domain Retrieval.csv";
-        if (useMock) {
-            path = "data/Domain Retrieval mock.csv";
-        }
+        // String path = "data/Domain Retrieval.csv";
+        // if (useMock) {
+        // path = "data/Domain Retrieval mock.csv";
+        // }
         splitDoms = new HashMap<>();
         allDomainsMap = new HashMap<>();
         for (String zone : domainFiles.keySet()) {
@@ -102,7 +102,7 @@ public class SimilarityChecker {
 
     private void addIfBelowLevenshteinThreshold(LevenshteinDistanceCalculator calc, double threshold, String search,
             Domain domain, ConcurrentLinkedQueue<Domain> hits) {
-        double value = calc.calculateModifiedLevenshteinDistance(search, domain.getName());
+        double value = calc.calculateModifiedLevenshteinDistance(search, domain.getName(), threshold);
         if (value <= threshold) {
             domain.setDistance(value, "Levenshtein");
             hits.add(domain);
@@ -121,7 +121,7 @@ public class SimilarityChecker {
     public ConcurrentLinkedQueue<Domain> findAllWithinSimliarityThreshold(String search, double threshold) {
         ConcurrentLinkedQueue<Domain> hits = new ConcurrentLinkedQueue<>();
         LevenshteinDistanceCalculator calc = new LevenshteinDistanceCalculator();
-        if (DomainWatchSettings.getInstace().defaultZone.equals("*")) {
+        if (DomainWatchSettings.getInstace().defaultZone.equals("all")) {
             for (HashSet<Domain> zoneDomains : allDomainsMap.values()) {
                 for (Domain domain : zoneDomains) {
                     addIfBelowLevenshteinThreshold(calc, threshold, search, domain, hits);
@@ -141,7 +141,7 @@ public class SimilarityChecker {
         ConcurrentLinkedQueue<Domain> hits = new ConcurrentLinkedQueue<>();
         LevenshteinDistanceCalculator calc = new LevenshteinDistanceCalculator();
         for (Domain domain : searchSpace) {
-            double value = calc.calculateModifiedLevenshteinDistance(search, domain.getName());
+            double value = calc.calculateModifiedLevenshteinDistance(search, domain.getName(), threshold);
             if (value <= threshold) {
                 domain.setDistance(value, "Levenshtein");
                 hits.add(domain);
@@ -155,7 +155,7 @@ public class SimilarityChecker {
             throws FileNotFoundException {
         ConcurrentLinkedQueue<Domain> hits = new ConcurrentLinkedQueue<>();
         SoundexCalculator calc = new SoundexCalculator();
-        if (DomainWatchSettings.getInstace().defaultZone.equals("*")) {
+        if (DomainWatchSettings.getInstace().defaultZone.equals("all")) {
             for (HashSet<Domain> zoneDomains : allDomainsMap.values()) {
                 for (Domain domain : zoneDomains) {
                     addIfAboveSoundexThreshold(calc, threshold, search, domain, hits);
@@ -189,7 +189,7 @@ public class SimilarityChecker {
             double threshold) {
         ConcurrentLinkedQueue<Domain> hits = new ConcurrentLinkedQueue<>();
         SoundexThread[] threads = new SoundexThread[threadCount];
-        if (DomainWatchSettings.getInstace().getInstace().defaultZone.equals("*")) {
+        if (DomainWatchSettings.getInstace().getInstace().defaultZone.equals("all")) {
             for (ArrayList<Queue<Domain>> zoneDomainList : splitDoms.values()) {
                 for (int i = 0; i < threads.length; i++) {
                     threads[i] = new SoundexThread(search, threshold, hits,
@@ -237,8 +237,7 @@ public class SimilarityChecker {
     public ConcurrentLinkedQueue<Domain> threadedFindAllWithinSimliarityThreshold(String search, double threshold) {
         ConcurrentLinkedQueue<Domain> hits = new ConcurrentLinkedQueue<>();
         LevenshteinThread[] threads = new LevenshteinThread[threadCount];
-
-        if (DomainWatchSettings.getInstace().defaultZone.equals("*")) {
+        if (DomainWatchSettings.getInstace().defaultZone.equals("all")) {
             for (ArrayList<Queue<Domain>> zoneDomains : splitDoms.values()) {
                 for (int i = 0; i < threads.length; i++) {
                     threads[i] = new LevenshteinThread(search, threshold, hits, zoneDomains.get(i));

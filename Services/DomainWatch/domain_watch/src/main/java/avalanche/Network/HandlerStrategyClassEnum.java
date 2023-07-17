@@ -24,10 +24,6 @@ public enum HandlerStrategyClassEnum {
         return new Closed();
     }
 
-    public HandlerStrategy getHandlerClass() {
-        return handlerClass;
-    }
-
     public String getEndPointName() {
         return endPoint;
     }

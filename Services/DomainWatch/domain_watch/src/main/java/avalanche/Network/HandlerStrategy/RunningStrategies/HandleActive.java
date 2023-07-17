@@ -65,8 +65,11 @@ public class HandleActive extends Running {
             }
 
         }
-        long ttlTime = System.currentTimeMillis() - st;
-        resp += "  ],\"searchTime(ms)\":" + ttlTime + "}";
+        if (st == 0) {
+            resp += "]}";
+        } else {
+            resp += "],\"searchTime(ms)\":" + (System.currentTimeMillis() - st) + "}";
+        }
 
         // System.out.println(resp);
         System.out.println("Done");
