@@ -300,4 +300,32 @@ export class AppController {
 
     return result;
   }
+  @MessagePattern({ cmd: 'addDomainWatchPassiveDetails' })
+  async addDomainWatchPassiveDetails(data: any) {
+    console.log("Integrating with Data product: ", data);
+    const result = await this.userDataProductManService.addDomainWatchPassiveDetails(data.token, data.types, data.domains);
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
+  @MessagePattern({ cmd: 'getDomainWatchPassive' })
+  async getDomainWatchPassive(data: any) {
+    console.log("Domain Watch Passive Active", data);
+    const result = await this.userDataProductManService.getDomainWatchPassive();
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
 }

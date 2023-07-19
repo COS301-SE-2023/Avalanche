@@ -16,16 +16,18 @@ import { RyceController } from './ryce/ryce.controller';
 import { RyceService } from './ryce/ryce.service';
 import { AfricaController } from './africa/africa.controller';
 import { AfricaService } from './africa/africa.service';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     HttpModule,
     ClientsModule.register([
       {
         name: 'USER_MANAGEMENT_SERVICE',
         transport: Transport.TCP,
         options: {
-          host: 'usermanagement',
+          host: 'localhost',
           port: 4001,
         },
       },
@@ -33,7 +35,7 @@ import { AfricaService } from './africa/africa.service';
         name: 'ZACR_SERVICE',
         transport: Transport.TCP,
         options: {
-          host: 'zacr',
+          host: 'localhost',
           port: 4002,
         },
       },
@@ -69,7 +71,9 @@ export class AppModule implements NestModule {
         { path: 'user-management/login', method: RequestMethod.POST },
         { path: 'user-management/resendOTP', method: RequestMethod.POST },
         { path: 'domain-watch/list', method: RequestMethod.POST },
-        { path: 'user-management/graphFilters', method: RequestMethod.GET}
+        { path: 'domain-watch/passive', method: RequestMethod.GET },
+        { path: 'user-management/graphFilters', method: RequestMethod.GET},
+        { path: 'user-management/getDomainWatchPassive', method: RequestMethod.POST}
       )
       .forRoutes('*');
   }

@@ -1,4 +1,4 @@
-[{"endpoint": "zacr",
+[{"endpoint": "zacr", "graphs" :
 [{"name": "transaction","filters":
 [{"name" : "zone", "type": "string", "values": ["CO.ZA","ORG.ZA","NET.ZA"], "input" : "checkbox"},
 {"name" : "dateFrom", "type" : "string", "input" : "date-picker"},
@@ -23,12 +23,12 @@
 {"name" : "average", "type" : "boolean", "input" : "togglebox"},
 {"name" : "overall", "type" : "boolean", "input" : "togglebox"},
 ]},
-{"name" : "domainNameAnalysis/count", "filters" : [{
+{"name" : "domainNameAnalysis/count", "filters" : [
 {"name" : "granularity", "type" : "string", "values" : ["day","week","month","year"], "input" : "radiobox"},
 {"name" : "num", "type" : "number", "input" : "inputbox"},
 {"name" : "minimumAppearances", "type" : "number", "input" : "inputbox"},
-}]}]},
-{"endpoint": "africa",
+]}]},
+{"endpoint": "africa", "graphs" :
 [{"name": "transaction","filters":
 [{"name" : "zone", "type": "string", "values": ["AFRICA"], "input" : "checkbox"},
 {"name" : "dateFrom", "type" : "string", "input" : "date-picker"},
@@ -53,11 +53,11 @@
 {"name" : "average", "type" : "boolean", "input" : "togglebox"},
 {"name" : "overall", "type" : "boolean", "input" : "togglebox"},
 ]},
-{"name" : "domainNameAnalysis/count", "filters" : [{
+{"name" : "domainNameAnalysis/count", "filters" : [
 {"name" : "granularity", "type" : "string", "values" : ["day","week","month","year"], "input" : "radiobox"},
 {"name" : "num", "type" : "number", "input" : "inputbox"},
-{"name" : "minimumAppearances", "type" : "number", "input" : "inputbox"}}]}]},
-{"endpoint": "ryce",
+{"name" : "minimumAppearances", "type" : "number", "input" : "inputbox"}]}]},
+{"endpoint": "ryce", "graphs" :
 [{"name": "transaction","filters":
 [{"name" : "zone", "type": "string", "values": ["WIEN", "COLOGNE", "KOELN", "TIROL"], "input" : "checkbox"},
 {"name" : "dateFrom", "type" : "string", "input" : "date-picker"},
@@ -82,7 +82,7 @@
 {"name" : "average", "type" : "boolean", "input" : "togglebox"},
 {"name" : "overall", "type" : "boolean", "input" : "togglebox"},
 ]},
-{"name" : "domainNameAnalysis/count", "filters" : [{
+{"name" : "domainNameAnalysis/count", "filters" : [
 {"name" : "granularity", "type" : "string", "values" : ["day","week","month","year"], "input" : "radiobox"},
 {"name" : "num", "type" : "number", "input" : "inputbox"},
-{"name" : "minimumAppearances", "type" : "number", "input" : "inputbox"}}]}]}]
+{"name" : "minimumAppearances", "type" : "number", "input" : "inputbox"}]}]}]
