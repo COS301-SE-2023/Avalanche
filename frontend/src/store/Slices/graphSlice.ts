@@ -125,6 +125,40 @@ export const graphSlice = createSlice({
             state.loading = true;
             // state.graphs = [];
         })
+        builder.addCase(getDomainLengthData.fulfilled, (state, action) => {
+            const payload = action.payload as any;
+            console.log(payload.data.labels);
+            // payload.data.labels.index.index.forEach((set: any, index: number) => {
+            //     set.backgroundColor = chartColours[index];
+            //     set.borderColor = chartColours[index];
+            //     set.pointRadius = 4;
+            //     set.pointHoverRadius = 5;
+            // })
+            state.graphs.push(payload.data);
+            state.latestAdd = state.graphs.length - 1;
+            state.loading = false;
+        })
+        builder.addCase(getMovementVerticalData.pending, (state) => {
+            state.loading = true;
+            // state.graphs = [];
+        })
+        builder.addCase(getMovementVerticalData.fulfilled, (state, action) => {
+            const payload = action.payload as any;
+            console.log(payload.data.labels);
+            // payload.data.labels.index.index.forEach((set: any, index: number) => {
+            //     set.backgroundColor = chartColours[index];
+            //     set.borderColor = chartColours[index];
+            //     set.pointRadius = 4;
+            //     set.pointHoverRadius = 5;
+            // })
+            state.graphs.push(payload.data);
+            state.latestAdd = state.graphs.length - 1;
+            state.loading = false;
+        })
+        builder.addCase(getDomainLengthData.pending, (state) => {
+            state.loading = true;
+            // state.graphs = [];
+        })
         builder.addCase(getGraphDataArray.fulfilled, (state, action) => {
             // const payload = action.payload as any;
             // state.graphs = payload;

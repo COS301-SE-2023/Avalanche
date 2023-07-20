@@ -5,13 +5,15 @@ import { TransactionService } from './transactions/transactions.service';
 import { MarketShareService } from './marketShare/marketShare.service';
 import { AgeService } from './age/age.service';
 import { DomainNameAnalysisService } from './domainNameAnalysis/domain-name-analysis.service';
+import { DomainWatchService } from './domainWatch/domain-watch-analysis.service';
 
 @Controller('africa')
 export class AppController {
   constructor(private readonly transactionsService: TransactionService, 
     private readonly marketShareService : MarketShareService,
     private readonly ageService : AgeService,
-    private readonly domainNameAnalysisService : DomainNameAnalysisService) {}
+    private readonly domainNameAnalysisService : DomainNameAnalysisService,
+    private readonly domainWatchService : DomainWatchService) {}
 
   @MessagePattern({ cmd: 'transactions' })
   async transactions(data: any) {
@@ -43,5 +45,10 @@ export class AppController {
   @MessagePattern({ cmd: 'domainNameAnalysis/length' })
   async domainNameAnalysisLength(data: any) {
     return await this.domainNameAnalysisService.sendData(data);
+  }
+
+  @MessagePattern({ cmd: 'domainWatchPassive' })
+  async domainWatchPassive() {
+    return await this.domainWatchService.passive();
   }
 }

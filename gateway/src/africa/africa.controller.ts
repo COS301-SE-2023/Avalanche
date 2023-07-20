@@ -56,4 +56,12 @@ export class AfricaController {
     const result = await lastValueFrom(this.client.send(pattern, payload));
     return result;
   }
+
+  @Post('domainWatchPassive')
+  async domainWatchPassive(@Body() data: any) {
+    const pattern = { cmd: 'domainWatchPassive' };
+    const payload = data;
+    const result = await lastValueFrom(this.client.send(pattern, payload));
+    return result;
+  }
 }

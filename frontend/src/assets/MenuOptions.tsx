@@ -33,18 +33,18 @@ const MenuOptions: IMenu = {
             page: "registrarMarketComparison",
             role: ""
         },
-        // {
-        //     text: "Movement",
-        //     icon: <BoltIcon className={holder} />,
-        //     page: "movement",
-        //     role: ""
-        // },
-        // {
-        //     text: "Domain Length",
-        //     icon: <ClipboardIcon className={holder} />,
-        //     page: "domainLength",
-        //     role: ""
-        // },
+        {
+            text: "Movement",
+            icon: <BoltIcon className={holder} />,
+            page: "movement",
+            role: ""
+        },
+        {
+            text: "Domain Length",
+            icon: <ClipboardIcon className={holder} />,
+            page: "domainLength",
+            role: ""
+        },
         {
             text: "Market Share",
             icon: <ChartBarIcon className={holder} />,

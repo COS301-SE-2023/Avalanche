@@ -20,6 +20,8 @@ export class DomainWatchService {
     console.log('Running every day at midnight');
     const userData  = await this.httpService.post('http://localhost:4000/user-management/getDomainWatchPassive').toPromise();
     console.log(userData.data.emailData);
+    const africaData = await this.httpService.post('http://localhost:4000/africa/domainWatchPassive').toPromise();
+    console.log(africaData.data);
     //const response = await this.httpService.post('http://zanet.cloud:4004/domainWatch/list').toPromise();
     return JSON.stringify(userData.data);
   }
