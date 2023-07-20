@@ -1,4 +1,4 @@
-import { HomeIcon, DocumentIcon, HeartIcon, ArchiveBoxIcon, DocumentMagnifyingGlassIcon, TvIcon, ChartBarIcon, StarIcon, EyeIcon, MapIcon, BoltIcon, ClipboardIcon } from '@heroicons/react/24/solid';
+import { HomeIcon, DocumentIcon, HeartIcon, ArchiveBoxIcon, DocumentMagnifyingGlassIcon, TvIcon, ChartBarIcon, StarIcon, EyeIcon, MapIcon, BoltIcon, ClipboardIcon, CubeIcon } from '@heroicons/react/24/solid';
 
 interface IMenuItem {
     text: string,
@@ -68,6 +68,12 @@ const MenuOptions: IMenu = {
             icon: <ArchiveBoxIcon className={holder} />,
             page: "reports",
             role: "",
+        },
+        {
+            text: "Q-Bee",
+            icon: <CubeIcon className={holder} />,
+            page: "queryBuilder",
+            role: ""
         },
         {
             text: "Domain Watch",

@@ -61,6 +61,7 @@ export class DomainNameAnalysisService {
       await this.graphFormattingService.formatDomainLengthAnalysis(
         JSON.stringify(queryData),
       );
+    console.log(formattedData);
     return {
       status: 'success',
       data: { graphName: graphName, ...JSON.parse(formattedData) },
