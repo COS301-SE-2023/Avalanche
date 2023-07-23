@@ -16,10 +16,11 @@ import ReactFlow, {
 import "reactflow/dist/style.css";
 
 import ParentNode from "./ParentNode";
+import SelectorNode from "./SelectorNode"
 
 // we define the nodeTypes outside of the component to prevent re-renderings
 // you could also use useMemo inside the component
-const nodeTypes = { parentNode: ParentNode };
+const nodeTypes = { parentNode: ParentNode, selectorNode: SelectorNode };
 
 function Star() {
   const initialNodes: Node[] = [
@@ -27,12 +28,30 @@ function Star() {
       id: "fact",
       type: "parentNode",
       position: { x: 50, y: 50 },
+    style: {
+      width: 170,
+      height: 140,
+    },
       data: {
         value: 123,
         heading: "Select Data",
         description: "This is a cool description",
+        
       },
     },
+    {
+        id: "dim1",
+        type: "selectorNode",
+        position: { x: 10, y: 10 },
+        parentNode: 'fact',
+        extent: 'parent',
+        data: {
+          value: 123,
+          heading: "Test",
+          description: "Column Name",
+          
+        },
+      },
   ];
 
   const initialEdges: Edge[] = [];

@@ -28,10 +28,10 @@ export default function DomainLength() {
 
         const arrayDomainNameAnalysisShare: IDomainNameAnalysisGraphRequest[] = [];
 
-        const ageAnalysisAverageTop5: IDomainNameAnalysisGraphRequest = {  };
+        const ageAnalysisAverageTop5: IDomainNameAnalysisGraphRequest = { zone: "WIEN"};
         arrayDomainNameAnalysisShare.push(ageAnalysisAverageTop5);
 
-        const ageAnalysisTop5: IDomainNameAnalysisGraphRequest = {dateFrom: "2022-05-08"};
+        const ageAnalysisTop5: IDomainNameAnalysisGraphRequest = {dateFrom: "2022-05-08", zone: "WIEN"};
         arrayDomainNameAnalysisShare.push(ageAnalysisTop5);
 
        

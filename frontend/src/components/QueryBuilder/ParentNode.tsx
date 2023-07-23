@@ -1,4 +1,5 @@
 import { Handle, Position } from "reactflow";
+import SelectorNode from "./SelectorNode";
 
 function ParentNode({ data, isConnectable }: any) {
   const { heading, description } = data;
@@ -24,19 +25,16 @@ function ParentNode({ data, isConnectable }: any) {
   //     </div>
   //   );
   return (
-    <div className="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 dark:bg-gray-800 dark:border-gray-700">
+    <div className="w-full h-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 dark:bg-gray-800 dark:border-gray-700">
       <Handle
         type="source"
-        position={Position.Bottom}
+        position={Position.Top}
         id="a"
         isConnectable={isConnectable}
       />
-      <h5 className="mb-3 text-base font-semibold text-gray-900 md:text-xl dark:text-white">
+      <h5 className="mb-3 text-base font-semibold text-gray-900 md:text-sm dark:text-white">
         {heading}
       </h5>
-      <p className="text-sm font-normal text-gray-500 dark:text-gray-400">
-        {description}
-      </p>
       <Handle
         type="source"
         position={Position.Bottom}
