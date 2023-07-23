@@ -51,18 +51,32 @@ export class UserUserGroupMangementService {
                         timestamp: new Date().toISOString()
                     };
                 }
-                const userGroup = new UserGroup();
-                userGroup.name = name;
-                userGroup.organisation = existingOrganisation;
-                userGroup.permission = permission;
+                let check = false;
+                const userGroupUsers = await this.userGroupRepository.find({ where: { organisationId: user.organisationId }, select: ['users', 'organisation'], relations: ['users'] });
+                for (const userGroup1 of userGroupUsers) {
+                    if (userGroup1.name == name) {
+                        check = true;
+                    }
+                }
+                if (check == false) {
+                    const userGroup = new UserGroup();
+                    userGroup.name = name;
+                    userGroup.organisation = existingOrganisation;
+                    userGroup.permission = permission;
 
-                // Save the user group
-                await this.userGroupRepository.save(userGroup);
+                    // Save the user group
+                    await this.userGroupRepository.save(userGroup);
 
-                return {
-                    status: 'success', message: userGroup,
-                    timestamp: new Date().toISOString()
-                };
+                    return {
+                        status: 'success', message: userGroup,
+                        timestamp: new Date().toISOString()
+                    };
+                } else {
+                    return {
+                        status: 400, error: true, message: 'A user group with this name exists',
+                        timestamp: new Date().toISOString()
+                    };
+                }
             }
         } else {
             return {
@@ -132,7 +146,7 @@ export class UserUserGroupMangementService {
             }
         });
 
-        const registrationHtmlTemplate = readFileSync(join(__dirname, '/dist/html/registration-email-template.html'), 'utf-8');
+        const registrationHtmlTemplate = readFileSync(join(__dirname, './../../src/html/registration-email-template.html'), 'utf-8');
         let registrationHtml = registrationHtmlTemplate.replace('{UserGroup}', userGroupName);
         registrationHtml = registrationHtml.replace('{url}', `http://localhost:3000/invitation?key=${token}&type=group`);
         // Email options

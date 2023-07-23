@@ -155,10 +155,9 @@ export class GraphFormatService {
           'NETTVERTICALMOVEMENT',
           'Count',
         );
-      }else if (keys.length === 3) {
+      } else if (keys.length === 3) {
         return this.formatThreeColumns(keys, data, 'NETTVERTICALMOVEMENT');
-      }
-       else {
+      } else {
         throw new Error(
           'Invalid size array structure in Nett Vertical Movement.',
         );

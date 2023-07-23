@@ -16,27 +16,50 @@ export class AgeService {
     private readonly snowflakeService: SnowflakeService,
     private readonly statisticalAnalysisService: AnalysisService,
     private readonly graphFormattingService: GraphFormatService,
-  ) {}
+  ) { }
 
-  async age(filters: string, graphName: string): Promise<any>{
-    const rank = filters['rank'];
-    const overall = filters['overall'];
-    const average = filters['average'];
-    let filter = '';
-    if(overall===true && average === true){
-      filter = ', showing the overall average age'
-    }else if(overall===false && average ===true){
-      filter = ', showing the average age';
-    }else if(overall===true && average===false){
-      filter = ', showing the overall age';
-    }
+  async age(filters: string, graphName: string): Promise<any> {
+    graphName = this.ageGraphName(filters);
+
     filters = JSON.stringify(filters);
     console.log(filters);
     const sqlQuery = `call ageAnalysis('${filters}')`;
-    const queryData = await this.snowflakeService.execute(sqlQuery);
-    const formattedData = await this.graphFormattingService.formatAgeAnalysis(
-      JSON.stringify(queryData),
-    );
-    return {status: 'success', data: {graphName: 'Average age of domains for the ' + rank + filter , ...JSON.parse(formattedData)} , timestamp: new Date().toISOString()};
+
+    let formattedData = await this.redis.get(sqlQuery);
+
+    if (!formattedData) {
+      const queryData = await this.snowflakeService.execute(sqlQuery);
+      
+      formattedData = await this.graphFormattingService.formatAgeAnalysis(
+        JSON.stringify(queryData),
+      );
+      
+      await this.redis.set(sqlQuery, formattedData, 'EX', 24 * 60 * 60);
+    }
+
+    return { status: 'success', data: { graphName: graphName, ...JSON.parse(formattedData) }, timestamp: new Date().toISOString() };
   }
+
+  ageGraphName(filters: string): string {
+    let rank = filters['rank'];
+    if (rank) {
+      rank = " the " + rank + " registrars in terms of domain count ";
+    } else {
+      rank = " all registrars ";
+    }
+    const overall = filters['overall'];
+    const average = filters['average'];
+    let filter = '';
+    if (overall === true && average === true) {
+      filter = ', showing the overall average age'
+    } else if (overall === false && average === true) {
+      filter = ', showing the average age per registrar';
+    } else if (overall === true && average === false) {
+      filter = ', showing the overall number of domains per age';
+    } else if (overall === false && average === false) {
+      filter = ', showing the number of domains per age per registrar';
+    }
+    return 'Age Analysis of domains for ' + rank + filter;
+  }
+
 }
