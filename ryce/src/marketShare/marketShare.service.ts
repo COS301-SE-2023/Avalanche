@@ -17,25 +17,67 @@ export class MarketShareService {
   ) {}
 
   async marketShare(filters: string, graphName: string): Promise<any> {
-    const rank = filters['rank'] as string;
+    graphName = this.marketShareGraphName(filters);
+
     filters = JSON.stringify(filters);
     console.log(filters);
     const sqlQuery = `call marketShare('${filters}')`;
-    const queryData = await this.snowflakeService.execute(sqlQuery);
-    // const analyzedData = await this.statisticalAnalysisService.analyze(
-    //   queryData,
-    // );
 
-    const formattedData = await this.graphFormattingService.formatMarketshare(
-      JSON.stringify(queryData),
-    );
+    let formattedData = await this.redis.get(sqlQuery);
+
+    if (!formattedData) {
+      const queryData = await this.snowflakeService.execute(sqlQuery);
+
+      formattedData = await this.graphFormattingService.formatMarketshare(
+        JSON.stringify(queryData),
+      );
+
+      await this.redis.set(sqlQuery, formattedData, 'EX', 24 * 60 * 60);
+    }
     return {
       status: 'success',
       data: {
-        graphName: 'Market share showing ' + rank,
+        graphName: graphName,
         ...JSON.parse(formattedData),
       },
       timestamp: new Date().toISOString(),
     };
+  }
+
+  marketShareGraphName(filters: string): string {
+    let rank = filters['rank'];
+    if (rank) {
+      rank = ' for the ' + rank + ' registrars in terms of domain count ';
+    }
+
+    let registrar = filters['registrar'];
+    if (registrar) {
+      if (registrar.length > 0) {
+        const regArr = [];
+        for (const r of registrar) {
+          regArr.push(r);
+        }
+        registrar += regArr.join(', ');
+        registrar = ' across ' + registrar;
+      }
+    } else {
+      registrar = ' across all registrars ';
+    }
+
+    let zone = filters['zone'];
+    if (zone) {
+      if (zone.length > 0) {
+        const zoneArr = [];
+        for (const r of zone) {
+          zoneArr.push(r);
+        }
+        zone += zoneArr.join(', ');
+      }
+      zone = ' for ' + zone;
+    } else {
+      zone = ' all zones ';
+    }
+
+    return 'Domain count marketshare ' + rank + registrar + zone;
   }
 }
