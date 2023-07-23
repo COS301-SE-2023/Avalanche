@@ -17,58 +17,92 @@ export class TransactionService {
   ) {}
 
   async transactions(filters: string, graphName: string): Promise<any> {
-    graphName = this.transactionsGraphName(filters, false);
+    try {
+      graphName = this.transactionsGraphName(filters, false);
 
-    filters = JSON.stringify(filters);
-    console.log(filters);
-    const sqlQuery = `call transactionsByRegistrar('${filters}')`;
+      filters = JSON.stringify(filters);
+      console.log(filters);
+      const sqlQuery = `call transactionsByRegistrar('${filters}')`;
 
-    let formattedData = await this.redis.get(sqlQuery);
+      let formattedData = await this.redis.get(sqlQuery);
 
-    if (!formattedData) {
-      const queryData = await this.snowflakeService.execute(sqlQuery);
-      // const analyzedData = await this.statisticalAnalysisService.analyze(
-      //   queryData,
-      // );
-      formattedData = await this.graphFormattingService.formatTransactions(
-        JSON.stringify(queryData),
-      );
-      await this.redis.set(sqlQuery, formattedData, 'EX', 24 * 60 * 60);
+      if (!formattedData) {
+        let queryData;
+
+        try {
+          queryData = await this.snowflakeService.execute(sqlQuery);
+        } catch (e) {
+          return {
+            status: 500,
+            error: true,
+            message: 'Data Warehouse Error',
+            timestamp: new Date().toISOString(),
+          };
+        }
+
+        formattedData = await this.graphFormattingService.formatTransactions(
+          JSON.stringify(queryData),
+        );
+        await this.redis.set(sqlQuery, formattedData, 'EX', 24 * 60 * 60);
+      }
+
+      return {
+        status: 'success',
+        data: { graphName: graphName, ...JSON.parse(formattedData) },
+        timestamp: new Date().toISOString(),
+      };
+    } catch (e) {
+      return {
+        status: 500,
+        error: true,
+        message: e,
+        timestamp: new Date().toISOString(),
+      };
     }
-
-    return {
-      status: 'success',
-      data: { graphName: graphName, ...JSON.parse(formattedData) },
-      timestamp: new Date().toISOString(),
-    };
   }
 
   async transactionsRanking(filters: string, graphName: string): Promise<any> {
-    graphName = this.transactionsGraphName(filters, true);
+    try {
+      graphName = this.transactionsGraphName(filters, true);
 
-    filters = JSON.stringify(filters);
-    console.log(filters);
-    const sqlQuery = `call transactionsByRegistrar('${filters}')`;
+      filters = JSON.stringify(filters);
+      console.log(filters);
+      const sqlQuery = `call transactionsByRegistrar('${filters}')`;
 
-    let formattedData = await this.redis.get(sqlQuery);
+      let formattedData = await this.redis.get(sqlQuery);
 
-    if (!formattedData) {
-      const queryData = await this.snowflakeService.execute(sqlQuery);
-      // const analyzedData = await this.statisticalAnalysisService.analyze(
-      //   queryData,
-      // );
-      formattedData =
-        await this.graphFormattingService.formatTransactionsRanking(
-          JSON.stringify(queryData),
-        );
+      if (!formattedData) {
+        let queryData;
+        try {
+          queryData = await this.snowflakeService.execute(sqlQuery);
+        } catch (e) {
+          return {
+            status: 500,
+            error: true,
+            message: 'Data Warehouse Error',
+            timestamp: new Date().toISOString(),
+          };
+        }
+        formattedData =
+          await this.graphFormattingService.formatTransactionsRanking(
+            JSON.stringify(queryData),
+          );
 
-      await this.redis.set(sqlQuery, formattedData, 'EX', 24 * 60 * 60);
+        await this.redis.set(sqlQuery, formattedData, 'EX', 24 * 60 * 60);
+      }
+      return {
+        status: 'success',
+        data: { graphName: graphName, ...JSON.parse(formattedData) },
+        timestamp: new Date().toISOString(),
+      };
+    } catch (e) {
+      return {
+        status: 500,
+        error: true,
+        message: e,
+        timestamp: new Date().toISOString(),
+      };
     }
-    return {
-      status: 'success',
-      data: { graphName: graphName, ...JSON.parse(formattedData) },
-      timestamp: new Date().toISOString(),
-    };
   }
 
   transactionsGraphName(filters: string, perReg: boolean): string {
