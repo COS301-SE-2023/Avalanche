@@ -7,7 +7,7 @@ import { User } from '../../entity/user.entity';
 import { Repository } from 'typeorm';
 import { UserGroup } from '../../entity/userGroup.entity';
 import { Organisation } from '../../entity/organisation.entity';
-import { Dashboard } from 'src/entity/dashboard.entity';
+import { Dashboard } from '../../entity/dashboard.entity';
 import { time, timeStamp } from 'console';
 @Injectable()
 export class UserDashboardMangementService {

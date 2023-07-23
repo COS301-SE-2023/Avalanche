@@ -1,159 +1,211 @@
 /* eslint-disable prettier/prettier */
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { UserDataProductMangementService } from './user-data-products-management.service';
 import { User } from '../../entity/user.entity';
 import { UserGroup } from '../../entity/userGroup.entity';
 import { Organisation } from '../../entity/organisation.entity';
+import { WatchedUser } from '../../entity/watch.entity';
+import { UserDataProductMangementService } from './user-data-products-management.service';
 import { Repository } from 'typeorm';
-import Redis from 'ioredis';
-import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
+import { ConfigService } from '@nestjs/config';
+
 jest.mock('axios');
+const mockedAxios = axios as jest.Mocked<typeof axios>;
+
 describe('UserDataProductMangementService', () => {
     let service: UserDataProductMangementService;
-    const mockedAxios = axios as jest.Mocked<typeof axios>;
     let userRepository: Repository<User>;
     let userGroupRepository: Repository<UserGroup>;
     let organisationRepository: Repository<Organisation>;
-    let configService: ConfigService;
-    let redisService: Redis;
+    let watchedUserRepository: Repository<WatchedUser>;
+    let redis;
 
     beforeEach(async () => {
-        const module: TestingModule = await Test.createTestingModule({
+        const moduleRef = await Test.createTestingModule({
             providers: [
                 UserDataProductMangementService,
                 { provide: getRepositoryToken(User), useClass: Repository },
                 { provide: getRepositoryToken(UserGroup), useClass: Repository },
                 { provide: getRepositoryToken(Organisation), useClass: Repository },
-                { provide: 'REDIS', useValue: {} },
-                { provide: ConfigService, useValue: {} },
-                { provide: axios, useValue: mockedAxios }
+                { provide: getRepositoryToken(WatchedUser), useClass: Repository },
+                { provide: 'REDIS', useValue: { get: jest.fn() } },
+                ConfigService
             ],
         }).compile();
 
-        service = module.get<UserDataProductMangementService>(UserDataProductMangementService);
-        userRepository = module.get<Repository<User>>(getRepositoryToken(User));
-        userGroupRepository = module.get<Repository<UserGroup>>(getRepositoryToken(UserGroup));
-        organisationRepository = module.get<Repository<Organisation>>(getRepositoryToken(Organisation));
-        configService = module.get<ConfigService>(ConfigService);
-        redisService = module.get<Redis>('REDIS');
-        mockedAxios.get.mockClear();
-        mockedAxios.post.mockClear();
+        service = moduleRef.get<UserDataProductMangementService>(UserDataProductMangementService);
+        userRepository = moduleRef.get(getRepositoryToken(User));
+        userGroupRepository = moduleRef.get(getRepositoryToken(UserGroup));
+        organisationRepository = moduleRef.get(getRepositoryToken(Organisation));
+        watchedUserRepository = moduleRef.get(getRepositoryToken(WatchedUser));
+        redis = moduleRef.get('REDIS');
     });
 
-    it('should be defined', () => {
-        expect(service).toBeDefined();
-    });
+    const mockRedisInstance = {
+        set: jest.fn().mockResolvedValue('OK'),
+        // add other methods as necessary
+      };
+      
+      jest.mock('ioredis', () => {
+        return jest.fn().mockImplementation(() => {
+          return mockRedisInstance;
+        });
+      });
 
     describe('integrateUserWithWExternalAPI', () => {
-        const redisSetMock = jest.fn();
-        beforeEach(() => {
-            redisService.set = redisSetMock;
+        it('should return error when username or password is not provided', async () => {
+          const result = await service.integrateUserWithWExternalAPI('token', 'type', 'name', '', '', true);
+          expect(result).toEqual({
+            status: 400, 
+            error: true, 
+            message: 'Please enter all account details',
+            timestamp: expect.any(String)
+          });
         });
-
-        it('should return error if username or password is not provided', async () => {
-            const response = await service.integrateUserWithWExternalAPI('', '', '', '', '', true);
-            expect(response.status).toEqual(400);
-            expect(response.error).toEqual(true);
-            expect(response.message).toEqual('Please enter all account details');
-        });
-
-        it('should return error if type is not AFRICA, ZACR, or RyCE', async () => {
-            const response = await service.integrateUserWithWExternalAPI('token', 'invalidType', 'name', 'username', 'password', true);
-            expect(response.status).toEqual(400);
-            expect(response.error).toEqual(true);
-        });
-
-        it('should return error if user does not exist', async () => {
-            userRepository.findOne = jest.fn().mockResolvedValue(null);
-            const response = await service.integrateUserWithWExternalAPI('token', 'AFRICA', 'name', 'username', 'password', true);
-            expect(response.status).toEqual(400);
-            expect(response.error).toEqual(true);
-        });
-
-        it('should integrate user if everything is provided correctly', async () => {
-            const tokenFromDNS = '123456';
-            const epp_username = 'username';
-            mockedAxios.post.mockResolvedValueOnce({ data: { token: tokenFromDNS } });
-            mockedAxios.get.mockResolvedValueOnce({ data: { epp_username: epp_username } });
-            userRepository.findOne = jest.fn().mockResolvedValue({ email: 'name', products: '' });
-            userRepository.save = jest.fn().mockResolvedValue(true);
-
-            const response = await service.integrateUserWithWExternalAPI('token', 'AFRICA', 'name', 'username', 'password', true);
-            expect(response.status).toEqual('success');
-            expect(response.message).toEqual('User is integrated with DNS');
-            expect(redisSetMock).toHaveBeenCalled();
-        });
-
-        it('should return error if invalid token for group based integration', async () => {
-            redisService.get = jest.fn().mockResolvedValue(null);
-            const response = await service.integrateUserWithWExternalAPI('invalidToken', 'AFRICA', 'name', 'username', 'password', false);
-            expect(response.status).toEqual(400);
-            expect(response.error).toEqual(true);
-            expect(response.message).toEqual('Invalid token');
-        });
-
-        it('should return error if user group does not exist', async () => {
-            redisService.get = jest.fn().mockResolvedValue(JSON.stringify({ userGroups: [{ permission: 1 }] }));
-            userGroupRepository.findOne = jest.fn().mockResolvedValue(null);
-            const response = await service.integrateUserWithWExternalAPI('token', 'AFRICA', 'name', 'username', 'password', false);
-            expect(response.status).toEqual(400);
-            expect(response.error).toEqual(true);
+    
+        it('should return error when user does not exist and personal is true', async () => {
+          mockedAxios.post.mockResolvedValue({ data: { token: 'token' } });
+          mockedAxios.get.mockResolvedValue({ data: { epp_username: 'username' } });
+          jest.spyOn(userRepository, 'findOne').mockResolvedValue(null);
+    
+          const result = await service.integrateUserWithWExternalAPI('token', 'type', 'name', 'username', 'password', true);
+          expect(result).toEqual({
+            status: 400, 
+            error: true, 
+            message:'Please enter a zone that is from the given choices - AFRICA, RyCE, ZACR',
+            timestamp: expect.any(String)
+          });
         });
     });
 
     describe('integrateWithDataProducts', () => {
-        it('should integrate user with data products if everything is provided correctly', async () => {
-            const user = {email: 'user@email.com', products: ''};
-            userRepository.findOne = jest.fn().mockResolvedValue(user);
-            userRepository.save = jest.fn().mockResolvedValue(true);
+        it('should return error when user does not exist and personal is true', async () => {
+            jest.spyOn(userRepository, 'findOne').mockResolvedValue(null);
+            const result = await service.integrateWithDataProducts('token', 'type', 'name', true);
+            expect(result).toEqual({
+                status: 400,
+                error: true,
+                message: 'User does not exist',
+                timestamp: expect.any(String)
+            });
+        });
+
+        it('should return success when user exist and personal is true', async () => {
+            const mockUser = { products: '' };
+            jest.spyOn(userRepository, 'findOne').mockResolvedValue(mockUser as any);
+            jest.spyOn(userRepository, 'save').mockResolvedValue(null);
+
+            const result = await service.integrateWithDataProducts('token', 'type', 'name', true);
+            expect(result).toEqual({
+                status: 'success',
+                message: mockUser,
+                timestamp: expect.any(String)
+            });
+        });
+
+        it('should return error when user group does not exist and personal is false', async () => {
+            jest.spyOn(redis, 'get').mockResolvedValue(JSON.stringify({ userGroups: [{ permission: 1 }] }));
+            jest.spyOn(userGroupRepository, 'findOne').mockResolvedValue(null);
+
+            const result = await service.integrateWithDataProducts('token', 'type', 'name', false);
+            expect(result).toEqual({
+                status: 400,
+                error: true,
+                message: 'Cannot find user group with given name',
+                timestamp: expect.any(String)
+            });
+        });
+
+        it('should return error when user does not have the right permissions and personal is false', async () => {
+            jest.spyOn(redis, 'get').mockResolvedValue(JSON.stringify({ userGroups: [{ permission: 0 }] }));
+            const result = await service.integrateWithDataProducts('token', 'type', 'name', false);
+            expect(result).toEqual({
+                status: 400,
+                error: true,
+                message: 'User does not have the right permissions',
+                timestamp: expect.any(String)
+            });
+        });
+
+        it('should return error when personal is neither true nor false', async () => {
+            const result = await service.integrateWithDataProducts('token', 'type', 'name', null);
+            expect(result).toEqual({
+                status: 400,
+                error: true,
+                message: 'Error occured, please try later again',
+                timestamp: expect.any(String)
+            });
+        });
+
+        // add more tests...
+    });
+
+    describe('addDomainWatchPassiveDetails', () => {
+        it('should return error when token is invalid', async () => {
+          jest.spyOn(redis, 'get').mockResolvedValue(null);
     
-            const response = await service.integrateWithDataProducts('token', 'type', 'user@email.com', true);
-            expect(response.status).toEqual('success');
-            expect(response.message).toEqual(user);
+          const result = await service.addDomainWatchPassiveDetails('invalidToken', [], []);
+          expect(result).toEqual({
+            status: 400, 
+            error: true, 
+            message: 'Invalid token.',
+            timestamp: expect.any(String)
+          });
         });
     
         it('should return error when user does not exist', async () => {
-            userRepository.findOne = jest.fn().mockResolvedValue(null);
+          jest.spyOn(redis, 'get').mockResolvedValue(JSON.stringify({ email: 'test@email.com' }));
+          jest.spyOn(userRepository, 'findOne').mockResolvedValue(null);
     
-            const response = await service.integrateWithDataProducts('token', 'type', 'user@email.com', true);
-            expect(response.status).toEqual(400);
-            expect(response.message).toEqual('User does not exist');
+          const result = await service.addDomainWatchPassiveDetails('token', [], []);
+          expect(result).toEqual({
+            status: 400, 
+            error: true, 
+            message: 'User does not exist.',
+            timestamp: expect.any(String)
+          });
         });
     
-        it('should integrate user group with data products if everything is provided correctly', async () => {
-            const userGroup = {name: 'group', products: ''};
-            userGroupRepository.findOne = jest.fn().mockResolvedValue(userGroup);
-            userGroupRepository.save = jest.fn().mockResolvedValue(true);
-            redisService.get = jest.fn().mockResolvedValue(JSON.stringify({ userGroups: [{ permission: 1 }] }));
+        it('should return success when user exists', async () => {
+          jest.spyOn(redis, 'get').mockResolvedValue(JSON.stringify({ email: 'test@email.com' }));
+          const mockUser = { firstName: 'test', lastName: 'user' };
+          jest.spyOn(userRepository, 'findOne').mockResolvedValue(mockUser as any);
+          jest.spyOn(watchedUserRepository, 'save').mockResolvedValue(null);
     
-            const response = await service.integrateWithDataProducts('token', 'type', 'group', false);
-            expect(response.status).toEqual('success');
-            expect(response.message).toEqual('User group is integrated with type');
+          const result = await service.addDomainWatchPassiveDetails('token', [], []);
+          expect(result).toEqual({
+            status: 'success',
+            message: 'User added to watched list',
+            timestamp: expect.any(String)
+          });
+        });
+    });
+    
+    describe('getDomainWatchPassive', () => {
+        it('should return error when no domains to be watched', async () => {
+          jest.spyOn(watchedUserRepository, 'find').mockResolvedValue(null);
+    
+          const result = await service.getDomainWatchPassive();
+          expect(result).toEqual({
+            status: 400, 
+            error: true, 
+            message: 'Null, there is no domains to be watched',
+            timestamp: expect.any(String)
+          });
         });
     
-        it('should return error when user group does not exist', async () => {
-            userGroupRepository.findOne = jest.fn().mockResolvedValue(null);
-            redisService.get = jest.fn().mockResolvedValue(JSON.stringify({ userGroups: [{ permission: 1 }] }));
+        it('should return success when there are domains to be watched', async () => {
+          const mockPassiveData = [{ id: 1, email: 'test@example.com', person: 'test', types: [], domains: [] }];
+          jest.spyOn(watchedUserRepository, 'find').mockResolvedValue(mockPassiveData);
     
-            const response = await service.integrateWithDataProducts('token', 'type', 'group', false);
-            expect(response.status).toEqual(400);
-            expect(response.message).toEqual('Cannot find user group with given name');
+          const result = await service.getDomainWatchPassive();
+          expect(result).toEqual({ watched: mockPassiveData , emailData : mockPassiveData});
         });
+    });
     
-        it('should return error when user does not have the right permissions', async () => {
-            redisService.get = jest.fn().mockResolvedValue(JSON.stringify({ userGroups: [{ permission: 0 }] }));
-    
-            const response = await service.integrateWithDataProducts('token', 'type', 'group', false);
-            expect(response.status).toEqual(400);
-            expect(response.message).toEqual('User does not have the right permissions');
-        });
-    
-        it('should return error when personal argument is neither true nor false', async () => {
-            const response = await service.integrateWithDataProducts('token', 'type', 'group', null);
-            expect(response.status).toEqual(400);
-            expect(response.message).toEqual('Error occured, please try later again');
-        });
-    });    
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
 });

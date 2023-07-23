@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { ConflictException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -68,6 +68,7 @@ export class UserOrganisationMangementService {
             timestamp: new Date().toISOString()
         };
     }
+    
     async createOrganisation(token: string, name: string) {
         // Extract the JWT token
         // Retrieve the user's information from Redis using the token

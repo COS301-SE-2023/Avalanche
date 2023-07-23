@@ -132,7 +132,7 @@ export class UserUserGroupMangementService {
                 }
             });
     
-            const registrationHtmlTemplate = readFileSync(join(__dirname, '../../src/html/registration-email-template.html'), 'utf-8');
+            const registrationHtmlTemplate = readFileSync(join(__dirname, '../../html/registration-email-template.html'), 'utf-8');
             let registrationHtml = registrationHtmlTemplate.replace('{UserGroup}', userGroupName);
             registrationHtml = registrationHtml.replace('{url}', `http://localhost:3000/invitation?key=${token}&type=group`);
             // Email options
@@ -164,7 +164,7 @@ export class UserUserGroupMangementService {
                 }
             });
     
-            const invitationHtmlTemplate = readFileSync(join(__dirname, '../../src/html/invitation-email-template.html'), 'utf-8');
+            const invitationHtmlTemplate = readFileSync(join(__dirname, '../../html/invitation-email-template.html'), 'utf-8');
             let invitationHtml = invitationHtmlTemplate.replace('{UserGroup}', userGroupName);
             invitationHtml = invitationHtml.replace('{url}', `http://localhost:3000/invitation?key=${token}&type=group`);
             // Email options
