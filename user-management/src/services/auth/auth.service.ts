@@ -94,7 +94,7 @@ export class AuthService {
       },
     });
 
-    const otpHtmlTemplate = readFileSync(join(__dirname, '../../../src/html/otp-email-template.html'), 'utf-8');
+    const otpHtmlTemplate = readFileSync(join(__dirname, '/dist/html/otp-email-template.html'), 'utf-8');
     const otpHtml = otpHtmlTemplate.replace('{OTP}', otp);
 
     // Send email
