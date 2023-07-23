@@ -83,12 +83,33 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
                 const name = `${data.userGroupName}-${data.userGroupID}`;
                 const displayName = data.userGroupName.startsWith("admin-") ? "Administrators" : data.userGroupName;
                 return <li className="mr-2 cursor-pointer w-full" onClick={() => tabClick(name, index)} key={index}>
-                    <span className={groupTab === name ? tabOptions.active : tabOptions.inactive}><span className="flex w-3 h-3 bg-green-500 rounded-full" /> {displayName}</span>
+                    <span className={groupTab === name ? tabOptions.active : tabOptions.inactive}><span className={`flex w-3 h-3 bg-green-500 rounded-full ${isInGroup(data.userGroupID) ? "bg-green-500" : "bg-gray-900 dark:bg-gray-700"}`} /> {displayName}</span>
                 </li>
             })
         }
 
         return [];
+    }
+
+    const isInGroup = (id: number) => {
+        let group = null;
+        let found = null;
+
+        // Handling finding the group
+
+        group = stateUser.userGroups.find((element: any) => element.userGroupID === id);
+
+        if (!group) return false;
+
+        // Handling checking if the user is in the group
+
+        found = group.groupMembers.find((element: any) => element.email === stateUser.user.email);
+
+        if (found) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     const isAdmin = () => {

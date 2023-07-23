@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { SubmitButton, ErrorToast, InputLabel, Input } from '../Util';
+import { SubmitButton, ErrorToast, InputLabel, Input, SuccessToast } from '../Util';
 import { ModalContent, ModalHeader, ModalWrapper } from './ModalOptions';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearCurrentOpenState } from '@/store/Slices/modalManagerSlice';
@@ -18,6 +18,7 @@ export default function CreateGroupModal({ }: ICreateGroupModal) {
 
     useEffect(() => {
         if (stateUser.createGroupSuccess) {
+            SuccessToast({ text: `Group with the name ${name} has been successfully created` });
             dispatch(clearCurrentOpenState())
         }
     }, [stateUser.user.userGroups])
@@ -31,13 +32,11 @@ export default function CreateGroupModal({ }: ICreateGroupModal) {
      * these two variables are the fields from the form.
      */
     const [name, setName] = useState<string>("");
-    const [description, setDescription] = useState<string>("");
 
     /**
      * These two variables are for error checking.
      */
     const [nameError, setNameError] = useState<boolean>(false);
-    const [descriptionError, setDescriptionError] = useState<boolean>(false);
 
     /**
      * This function handles the form submit.
@@ -53,7 +52,7 @@ export default function CreateGroupModal({ }: ICreateGroupModal) {
             setNameError(true);
         }
 
-        if (nameError || descriptionError) {
+        if (nameError) {
             ErrorToast({ text: error });
             return;
         };
@@ -83,13 +82,6 @@ export default function CreateGroupModal({ }: ICreateGroupModal) {
                             setName(event.currentTarget.value);
                         }} maxLength={20} error={nameError} />
                     </div>
-                    {/* <div>
-                        <InputLabel htmlFor="description" text="Group Description" />
-                        <Input type="text" name="description" id="description" placeholder="This is paper sales group." required={true} disabled={loading} value={description} onChange={(event: React.FormEvent<HTMLInputElement>) => {
-                            descriptionError && setDescriptionError(false);
-                            setDescription(event.currentTarget.value);
-                        }} maxLength={75} error={descriptionError} />
-                    </div> */}
                     <SubmitButton text="Create Group" onClick={(event: React.FormEvent<HTMLFormElement>) => {
                         formSubmit(event);
                     }} className="w-full" loading={loading} />
