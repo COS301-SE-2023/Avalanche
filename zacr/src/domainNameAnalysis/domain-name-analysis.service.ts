@@ -23,7 +23,7 @@ export class DomainNameAnalysisService {
 
     const sqlQuery = `call domainNameAnalysis('${filters}')`;
     console.log(sqlQuery);
-    const formattedData = await this.redis.get(sqlQuery);
+    let formattedData = await this.redis.get(sqlQuery);
 
     if (!formattedData) {
       const queryData = await this.snowflakeService.execute(sqlQuery);
@@ -36,7 +36,7 @@ export class DomainNameAnalysisService {
       );
       const responseData = await lastValueFrom(response);
       console.log(responseData);
-      const formattedData =
+      formattedData =
         await this.graphFormattingService.formatDomainNameAnalysis(
           JSON.stringify(responseData.data),
         );

@@ -71,7 +71,7 @@ export class MovementService {
             }
             zone = ' for ' + zone;
         } else {
-            zone = ' all zones ';
+            zone = ' all zones in registry';
         }
 
         var dateFrom;
