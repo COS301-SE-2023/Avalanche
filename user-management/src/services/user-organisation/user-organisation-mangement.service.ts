@@ -40,26 +40,53 @@ export class UserOrganisationMangementService {
         const userGroupDetails = [];
         if (user.userGroups !== null) {
             for (const userGroup of user.userGroups) {
-                const userGroupUsers = await this.userGroupRepository.findOne({ where: { name: userGroup.name }, relations: ['users'] });
-                for (const groupUser of userGroupUsers.users) {
-                    const userKey = `${groupUser.firstName}-${groupUser.lastName}-${groupUser.email}`;
-                    if (!uniqueUsers.has(userKey)) {
-                        uniqueUsers.add(userKey);
-                        usersInfo.push({
-                            firstName: groupUser.firstName,
-                            lastName: groupUser.lastName,
-                            email: groupUser.email
-                        });
-                        console.log(groupUser.email);
-                        console.log(groupUser.firstName);
-                        console.log(groupUser.lastName);
+                if (userGroup.permission == 1) {
+                    const userGroupUsers = await this.userGroupRepository.find({where: {organisationId : user.organisationId}, select: ['users', 'organisation'], relations: ['users'] });
+                    for (const userGroup1 of userGroupUsers) {
+                            for (const groupUser of userGroup1.users) {
+                                const userKey = `${groupUser.firstName}-${groupUser.lastName}-${groupUser.email}`;
+                                if (!uniqueUsers.has(userKey)) {
+                                    uniqueUsers.add(userKey);
+                                    usersInfo.push({
+                                        firstName: groupUser.firstName,
+                                        lastName: groupUser.lastName,
+                                        email: groupUser.email
+                                    });
+                                    console.log(groupUser.email);
+                                    console.log(groupUser.firstName);
+                                    console.log(groupUser.lastName);
+                                }
+                            }
+                            const userInfoCopy = [];
+                            usersInfo.forEach(val => userInfoCopy.push(Object.assign({}, val)));
+                            userGroupDetails.push({ userGroupName: userGroup1.name, userGroupID: userGroup1.id, groupMembers: userInfoCopy });
+                            uniqueUsers.clear();
+                            usersInfo.length = 0;
+                    }
+                    return {
+                        status: 'success',
+                        users: userGroupDetails,
+                        timestamp: new Date().toISOString()
+                    };
+                } else {
+                    for (const userGroup of user.userGroups) {
+                        const userGroupUsers = await this.userGroupRepository.findOne({ where: { name: userGroup.name }, relations: ['users'] });
+                        for (const groupUser of userGroupUsers.users) {
+                            const userKey = `${groupUser.firstName}-${groupUser.lastName}-${groupUser.email}`;
+                            if (!uniqueUsers.has(userKey)) {
+                                uniqueUsers.add(userKey);
+                                usersInfo.push({
+                                    firstName: groupUser.firstName,
+                                    lastName: groupUser.lastName,
+                                    email: groupUser.email
+                                });
+                                console.log(groupUser.email);
+                                console.log(groupUser.firstName);
+                                console.log(groupUser.lastName);
+                            }
+                        }
                     }
                 }
-                const userInfoCopy = [];
-                usersInfo.forEach(val => userInfoCopy.push(Object.assign({}, val)));
-                userGroupDetails.push({ userGroupName: userGroup.name, userGroupID: userGroup.id, groupMembers: userInfoCopy });
-                uniqueUsers.clear();
-                usersInfo.length = 0;
             }
         }
         return {
@@ -68,7 +95,7 @@ export class UserOrganisationMangementService {
             timestamp: new Date().toISOString()
         };
     }
-    
+
     async createOrganisation(token: string, name: string) {
         // Extract the JWT token
         // Retrieve the user's information from Redis using the token

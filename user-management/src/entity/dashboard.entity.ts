@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, ManyToOne } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, ManyToMany } from "typeorm";
 import { User } from "./user.entity";
 
 @Entity()
@@ -10,9 +10,9 @@ export class Dashboard {
   @Column()
   name: string;
 
-  @ManyToOne(() => User, (user) => user.id)
+  @ManyToMany(() => User, (user) => user.dashboards)
   @JoinColumn({ name: 'userId' })
-  user: User;
+  user: User[];
 
   @Column("json", { nullable: true })
   graphs : {graphName: string, endpointName: string, filters: string[], comments?: {userName: string, comment: string}[]}[]

@@ -119,6 +119,19 @@ export class AppController {
 
     return result;
   }
+  @MessagePattern({ cmd: 'shareDashboards' })
+  async shareDashboards(data: any) {
+    const result = await this.userDashboardManService.shareDashboards(data.token, data.userGroupName, data.dashboardName);
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
   @MessagePattern({ cmd: 'addCommentToGraph' })
   async addCommentToGraph(data: any) {
     const result = await this.userDashboardManService.addCommentToGraph(data.token, data.name, data.graphName, data.comment);

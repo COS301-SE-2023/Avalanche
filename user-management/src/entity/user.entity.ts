@@ -38,7 +38,7 @@ export class User {
   @JoinColumn({ name: 'organisationId' })
   organisation: Organisation;
 
-  @OneToMany(() => Dashboard, (dashboard) => dashboard.user, { nullable: true })
+  @ManyToMany(() => Dashboard, (dashboard) => dashboard.user, { nullable: true })
   @JoinTable()
   dashboards: Dashboard[];
 
