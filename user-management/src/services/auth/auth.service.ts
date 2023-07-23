@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
 import * as nodemailer from 'nodemailer';
 import { readFileSync } from 'fs';
-import { join } from 'path';
+import { join, resolve } from 'path';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -94,7 +94,8 @@ export class AuthService {
       },
     });
 
-    const otpHtmlTemplate = readFileSync(join(__dirname, './src/otp-email-template.html'), 'utf-8');
+    const filePath = resolve("./src/services/auth",'otp-email-template.html');
+    const otpHtmlTemplate = readFileSync(filePath, 'utf-8');
     const otpHtml = otpHtmlTemplate.replace('{OTP}', otp);
 
     // Send email
