@@ -67,7 +67,7 @@ export class MovementService {
                 for (var r of zone) {
                     zoneArr.push(r);
                 }
-                zone += regArr.join(", ");
+                zone += zoneArr.join(", ");
             }
             zone = ' for ' + zone;
         } else {
