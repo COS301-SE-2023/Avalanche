@@ -232,16 +232,6 @@ export const userSlice = createSlice({
             const payload = action.payload as any;
             const response = payload.response;
             const data = payload.data;
-
-            // const array = [...state.userGroups];
-
-            // const group = array.find((element: any) => element.userGroupName === data.userGroupName);
-            // if(group) {
-            //     const index = array.findIndex((element: any) => element.email === data.userEmail);
-            //     array 
-            // }
-
-
         })
         builder.addCase(removeUserFromGroup.pending, (state) => {
             state.loading = true;

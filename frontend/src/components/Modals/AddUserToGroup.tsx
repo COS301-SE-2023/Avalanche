@@ -13,11 +13,12 @@ export default function AddUserToGroup() {
     const stateUser = useSelector(userState);
 
     useEffect(() => {
+        console.log("bingo");
         if (stateUser.addUserGroupSuccess) {
             dispatch(clearCurrentOpenState())
             SuccessToast({ text: "Successfully sent invitation email." });
         }
-    }, [stateUser.addUserGroupSuccess])
+    }, [stateUser])
 
     /**
      * Boolean for if something is loading in the component.
