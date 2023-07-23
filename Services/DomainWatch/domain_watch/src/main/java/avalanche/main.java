@@ -15,7 +15,7 @@ public class main {
     public static void main(String[] args) {
         try {
             DomainWatchSettings.init();
-            ServiceHttpServer server = new ServiceHttpServer(4004, false);
+            ServiceHttpServer server = new ServiceHttpServer(DomainWatchSettings.getInstace().port, false);
             server.start();
             server.handleDummyRequest("active");
         } catch (IOException e) {

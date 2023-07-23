@@ -11,8 +11,6 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.SocketException;
 import java.net.URL;
-import java.net.http.HttpClient;
-import java.net.http.HttpResponse;
 
 import org.json.JSONException;
 import org.junit.jupiter.api.BeforeAll;

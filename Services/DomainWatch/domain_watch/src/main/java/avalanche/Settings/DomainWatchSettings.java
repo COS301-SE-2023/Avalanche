@@ -17,6 +17,7 @@ public class DomainWatchSettings {
     public boolean useInternalSubstitutionCosts;
     public HashMap<String, String> domainFiles;
     public String defaultZone;
+    public int port;
 
     public static String configFilePath = "domainWatch.conf";
 
@@ -55,6 +56,8 @@ public class DomainWatchSettings {
                         domainFileArray.getJSONObject(i).getString("path"));
             }
             defaultZone = obj.getString("defaultZone");
+            port = obj.getInt("port");
+
         } catch (FileNotFoundException e) {
             throw new Exception("\n======" + //
                     "\n" + //
