@@ -72,8 +72,8 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
      * active refers to the active tab while inactive refers to the inactive tabs (tabs that are not selected).
      */
     const tabOptions = {
-        active: "inline-block px-4 py-3 text-white bg-avalancheBlue dark:bg-blue-600 rounded-lg active w-full",
-        inactive: "inline-block px-4 py-3 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-white w-full"
+        active: "inline-block px-4 py-3 text-white bg-avalancheBlue dark:bg-blue-600 rounded-lg active w-full flex items-center gap-2",
+        inactive: "inline-block px-4 py-3 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-white w-full flex items-center gap-2"
     }
 
     const renderGroups = () => {
@@ -81,8 +81,9 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
         if (stateUser.userGroups) {
             return stateUser.userGroups.map((data: any, index: number) => {
                 const name = `${data.userGroupName}-${data.userGroupID}`;
+                const displayName = data.userGroupName.startsWith("admin-") ? "Administrators" : data.userGroupName;
                 return <li className="mr-2 cursor-pointer w-full" onClick={() => tabClick(name, index)} key={index}>
-                    <span className={groupTab === name ? tabOptions.active : tabOptions.inactive}>{data.userGroupName}</span>
+                    <span className={groupTab === name ? tabOptions.active : tabOptions.inactive}><span className="flex w-3 h-3 bg-green-500 rounded-full" /> {displayName}</span>
                 </li>
             })
         }
@@ -130,33 +131,7 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
                 <div className="w-full p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
                     <div className="relative overflow-x-auto w-full p-1">
                         <div className="flex items-center justify-between pb-4 w-full">
-                            <div>
-                                {/* <Menu as="div" className="relative inline-block text-left">
-                                    <div>
-                                        <Menu.Button className="p-3 text-sm font-medium text-gray-900 focus:outline-none bg-gray-400 rounded-lg hover:bg-gray-100 hover:text-blue-700 dark:bg-primaryBackground dark:text-gray-200 dark:hover:text-white dark:hover:bg-gray-700 flex">
-                                            Actions
-                                            <ChevronDownIcon className="w-6 h-6" />
-                                        </Menu.Button>
-                                    </div>
-
-                                    <Transition
-                                        as={Fragment}
-                                        enter="transition ease-out duration-100"
-                                        enterFrom="transform opacity-0 scale-95"
-                                        enterTo="transform opacity-100 scale-100"
-                                        leave="transition ease-in duration-75"
-                                        leaveFrom="transform opacity-100 scale-100"
-                                        leaveTo="transform opacity-0 scale-95"
-                                    >
-                                        <Menu.Items className="absolute left-0 z-20 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-700">
-                                            <div className="py-1">
-                                                <Menu.Item>
-                                                    <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"></span>
-                                                </Menu.Item>
-                                            </div>
-                                        </Menu.Items>
-                                    </Transition>
-                                </Menu> */}
+                            <div className="flex gap-2">
                                 {isAdmin() && <AlternativeButton text="Create a Group" onClick={() => {
                                     dispatch(setCreateGroupSuccess(false));
                                     dispatch(setCurrentOpenState("ORG.CreateGroup"));
@@ -167,13 +142,15 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
                                 }} className="mb-2" />}
                             </div>
                             <>
-                                {false && <>                            <label htmlFor="table-search" className="sr-only">Search</label>
+                                {false && <>
+                                    <label htmlFor="table-search" className="sr-only">Search</label>
                                     <div className="relative">
                                         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                             <svg className="w-5 h-5 text-gray-500 dark:text-gray-400" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd"></path></svg>
                                         </div>
                                         <input type="text" id="table-search-users" className="block p-2 pl-10 text-sm text-gray-900 border-1.5 border-gray-300 rounded-lg w-80 bg-gray-50 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Search for users" onChange={(event: React.FormEvent<HTMLInputElement>) => handleSearch(event)} />
-                                    </div></>}
+                                    </div>
+                                </>}
                             </>
                         </div>
 
@@ -217,7 +194,6 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
                                                 </th>
                                                 <td className="px-6 py-4">
                                                     <div className="flex items-center">
-                                                        {/* <span className="h-2.5 w-2.5 rounded-full bg-green-500 mr-2"></span> {item.added} */}
                                                         Sometime in the past
                                                     </div>
                                                 </td>

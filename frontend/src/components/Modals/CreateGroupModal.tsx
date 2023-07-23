@@ -53,28 +53,17 @@ export default function CreateGroupModal({ }: ICreateGroupModal) {
             setNameError(true);
         }
 
-        // if (!description) {
-        //     error += "The group is missing a description.";
-        //     setDescriptionError(true);
-        // }
-
         if (nameError || descriptionError) {
             ErrorToast({ text: error });
             return;
         };
         setLoading(true);
-        // ErrorToast({ text: "Nothing is implemented yet. Un-loading in 3 seconds." });
-        // setTimeout(() => {
-        //     setLoading(false);
-        // }, 3000);
 
         const data: ICreateUserGroupRequest = {
             name,
             permission: 2,
             description: ""
         }
-
-        console.log(data);
 
         dispatch(createOrganisationGroup(data));
     }

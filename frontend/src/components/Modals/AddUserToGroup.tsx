@@ -61,10 +61,6 @@ export default function AddUserToGroup() {
             return;
         };
         setLoading(true);
-        // ErrorToast({ text: "Nothing is implemented yet. Un-loading in 3 seconds." });
-        // setTimeout(() => {
-        //     setLoading(false);
-        // }, 3000);
 
         const data = {
             userGroupName: name,

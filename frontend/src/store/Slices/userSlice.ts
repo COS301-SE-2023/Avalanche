@@ -7,7 +7,7 @@ import { IOTPVerifyResponse, IRegisterResponse, ILoginResponse, ICreateOrgnisati
 import { setCookie, getCookie, deleteCookie } from 'cookies-next';
 import { ISettings, IOrganisation, IDataProduct, IUserGroups } from "@/interfaces/interfaces";
 
-const url = "http://localho.st:4000/user-management";
+const url = `${process.env.NEXT_PUBLIC_API}/user-management`;
 
 export interface IUserState {
     id: string | null,
@@ -266,6 +266,7 @@ export const otpVerify = createAsyncThunk("AUTH.OTPVerify", async (object: IOTPV
  * This action handles calling the login api call
  */
 export const login = createAsyncThunk("AUTH.Login", async (object: ILoginRequest, { rejectWithValue }) => {
+    console.log(process.env);
     try {
         const response = await ky.post(`${url}/login`, {
             json: object

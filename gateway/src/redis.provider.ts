@@ -12,7 +12,7 @@ export const RedisProvider: Provider = {
     }
     return new Redis({
       host: configService.get('REDIS_HOST'),
-      port: 6005,
+      port: redisPort,
       connectTimeout: 100000
     });
   },
