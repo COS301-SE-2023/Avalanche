@@ -1239,6 +1239,14 @@
     "@types/mime" "*"
     "@types/node" "*"
 
+"@types/snowflake-sdk@^1.6.13":
+  version "1.6.13"
+  resolved "https://registry.yarnpkg.com/@types/snowflake-sdk/-/snowflake-sdk-1.6.13.tgz#b80f18efedb78fb6e11e1eb70b75abf30ebd44bf"
+  integrity sha512-WOOyHcrJWozRlapES0T7+Uk2e55xIW+ur81xKx1RbzHwgelosGiu+kvwvbLPVpkoh9p0sOvuPUednil1LLLW5Q==
+  dependencies:
+    "@types/node" "*"
+    generic-pool "^3.9.0"
+
 "@types/stack-utils@^2.0.0":
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-2.0.1.tgz#20f18294f797f2209b5f65c8e3b5c8e8261d127c"
@@ -3103,7 +3111,7 @@ gcp-metadata@^5.3.0:
     gaxios "^5.0.0"
     json-bigint "^1.0.0"
 
-generic-pool@^3.8.2:
+generic-pool@^3.8.2, generic-pool@^3.9.0:
   version "3.9.0"
   resolved "https://registry.yarnpkg.com/generic-pool/-/generic-pool-3.9.0.tgz#36f4a678e963f4fdb8707eab050823abc4e8f5e4"
   integrity sha512-hymDOu5B53XvN4QT9dBmZxPX4CWhBPPLguTZ9MMFeFa/Kg0xWVfylOVNlJji/E7yTZWFd/q9GO5TxDLq156D7g==
