@@ -146,7 +146,28 @@ export class UserUserGroupMangementService {
             }
         });
 
-        const registrationHtmlTemplate = readFileSync(join(__dirname, './../../src/html/registration-email-template.html'), 'utf-8');
+        const registrationHtmlTemplate = `
+            <div style="font-family: Helvetica,Arial,sans-serif;min-width:300px;max-width:1000px;overflow:auto;line-height:2;margin: 0 auto;">
+                <div style="margin:20px auto;width:90%;padding:20px 0">
+                    <div style="border-bottom:1px solid #eee">
+                        <a href="" style="font-size:1.4em;color: #007aff;text-decoration:none;font-weight:600">Avalanche Analytics</a>
+      </div>
+      <p style="font-size:1.1em">Hi,</p>
+      <p>You have been invited to join "{UserGroup}" on Avalanche Analytics. <br> 
+        To accept the invitation please follow the link to register on our platform: </p>
+     <a href = "{url}" style="text-decoration:none"> <h2 style="background: #007aff;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;">
+        Accept
+    </h2></a>
+      <p style="font-size:0.9em;">Regards,<br />Avalanche Team</p>
+      <hr style="border:none;border-top:1px solid #eee" />
+      <div style="padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300;text-align: center;">
+        <p>Avalanche</p>
+        <p>DNS Business</p>
+        <p>2023</p>
+      </div>
+    </div>
+  </div>
+            `;
         let registrationHtml = registrationHtmlTemplate.replace('{UserGroup}', userGroupName);
         registrationHtml = registrationHtml.replace('{url}', `http://localhost:3000/invitation?key=${token}&type=group`);
         // Email options
@@ -178,7 +199,28 @@ export class UserUserGroupMangementService {
             }
         });
 
-        const invitationHtmlTemplate = readFileSync(join(__dirname, '../../html/invitation-email-template.html'), 'utf-8');
+        const invitationHtmlTemplate = 
+        `<div style="font-family: Helvetica,Arial,sans-serif;min-width:300px;max-width:1000px;overflow:auto;line-height:2;margin: 0 auto;">
+        <div style="margin:20px auto;width:90%;padding:20px 0">
+          <div style="border-bottom:1px solid #eee">
+            <a href="" style="font-size:1.4em;color: #007aff;text-decoration:none;font-weight:600">Avalanche Analytics</a>
+          </div>
+          <p style="font-size:1.1em">Hi,</p>
+          <p>You have been invited to join {UserGroup} on Avalanche Analytics. <br> 
+            To accept the invitation please follow the link: </p>
+         <a href = "{url}" style="text-decoration:none"> <h2 style="background: #007aff;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;">
+            Accept
+        </h2></a>
+          <p style="font-size:0.9em;">Regards,<br />Avalanche Team</p>
+          <hr style="border:none;border-top:1px solid #eee" />
+          <div style="padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300;text-align: center;">
+            <p>Avalanche</p>
+            <p>DNS Business</p>
+            <p>2023</p>
+          </div>
+        </div>
+      </div>`;
+
         let invitationHtml = invitationHtmlTemplate.replace('{UserGroup}', userGroupName);
         invitationHtml = invitationHtml.replace('{url}', `http://localhost:3000/invitation?key=${token}&type=group`);
         // Email options
