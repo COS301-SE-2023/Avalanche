@@ -10,7 +10,7 @@ export class DomainWatchService {
 
   async sendData(data: any): Promise<any> {
     console.log(data);
-    const response = this.httpService.post('http://zanet.cloud:4004/domainWatch/list', data);
+    const response = this.httpService.post('http://zanet.cloud:4100/domainWatch/active', data);
     const responseData = await lastValueFrom(response);
     return JSON.stringify(responseData.data);
   }
@@ -22,9 +22,9 @@ export class DomainWatchService {
     const userInfo = userData.data.watched;
     const africaData = await this.httpService.post('http://localhost:4000/africa/domainWatchPassive').toPromise();
     const africaInfo = africaData.data.queryData[0]['DOMAINWATCHPASSIVE'];
-    const data = {'watched' : userInfo, 'recently-created' : africaInfo};
-    const response = await this.httpService.post('http://zanet.cloud:4004/domainWatch/passive', data).toPromise();
-    return JSON.stringify(response);
+    const check = {'watched' : userInfo , 'recently-created' : africaInfo};
+    const response = await this.httpService.post('http://zanet.cloud:4100/domainWatch/passive', check).toPromise();
+    return JSON.stringify(response.data);
   }
 }
 
