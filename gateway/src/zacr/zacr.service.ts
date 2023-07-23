@@ -31,4 +31,8 @@ export class ZacrService {
   async domainNameAnalysisLength(data: any) {
     return this.client.send({ cmd: 'domainNameAnalysis/length' }, data).toPromise();
   }
+
+  async domainWatchPassive(data: any){
+    return this.client.send({ cmd: 'domainWatchPassive'}, data).toPromise();
+  }
 }
