@@ -143,6 +143,31 @@ export class GraphFormatService {
     }
   }
 
+  async formatNettVertical(data: string): Promise<string> {
+    console.log(data);
+    const dataArr = JSON.parse(JSON.parse(data)[0]['NETTVERTICALMOVEMENT']);
+    if (dataArr.length > 0) {
+      const keys = Object.keys(dataArr[0]);
+      if (keys.length === 2) {
+        return this.formatTwoColumns(
+          keys,
+          data,
+          'NETTVERTICALMOVEMENT',
+          'Count',
+        );
+      }else if (keys.length === 3) {
+        return this.formatThreeColumns(keys, data, 'NETTVERTICALMOVEMENT');
+      }
+       else {
+        throw new Error(
+          'Invalid size array structure in Nett Vertical Movement.',
+        );
+      }
+    } else {
+      throw new Error('Empty data array.');
+    }
+  }
+
   formatTwoColumns(
     keys: string[],
     data: string,

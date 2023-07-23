@@ -5,13 +5,14 @@ import { TransactionService } from './transactions/transactions.service';
 import { MarketShareService } from './marketShare/marketShare.service';
 import { AgeService } from './age/age.service';
 import { DomainNameAnalysisService } from './domainNameAnalysis/domain-name-analysis.service';
-
+import { MovementService } from './movement/movement.service';
 @Controller('zacr')
 export class AppController {
   constructor(private readonly transactionsService: TransactionService, 
     private readonly marketShareService : MarketShareService,
     private readonly ageService : AgeService,
-    private readonly domainNameAnalysisService : DomainNameAnalysisService) {}
+    private readonly domainNameAnalysisService : DomainNameAnalysisService,
+    private readonly movementService: MovementService) {}
 
   @MessagePattern({ cmd: 'transactions' })
   async transactions(data: any) {
@@ -43,5 +44,13 @@ export class AppController {
   @MessagePattern({ cmd: 'domainNameAnalysis/length' })
   async domainNameAnalysisLength(data: any) {
     return await this.domainNameAnalysisService.sendData(data);
+  }
+
+  @MessagePattern({ cmd: 'movement/vertical' })
+  async nettVerticalMovement(data: any) {
+    return await this.movementService.nettVeritical(
+      data.filters,
+      data.graphName,
+    );
   }
 }
