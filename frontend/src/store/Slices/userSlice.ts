@@ -73,6 +73,8 @@ export const userSlice = createSlice({
         loading: false,
         createGroupSuccess: false,
         addUserGroupSuccess: false,
+        removeUserGroupSuccess: false,
+        error: "",
         userGroups: [],
     },
     reducers: {
@@ -102,6 +104,9 @@ export const userSlice = createSlice({
             deleteCookie("jwt");
             localStorage.removeItem("persist:nextjs");
             state.user = initialState;
+        },
+        clearError(state) {
+            state.error = "";
         }
     },
     extraReducers: (builder) => {
@@ -216,6 +221,37 @@ export const userSlice = createSlice({
         builder.addCase(addUserToGroup.rejected, (state, action) => {
             state.addUserGroupSuccess = false;
             state.loading = false;
+            state.error = "";
+        })
+        // Remove User
+        builder.addCase(removeUserFromGroup.fulfilled, (state, action) => {
+            state.removeUserGroupSuccess = true;
+            state.error = "";
+            state.loading = false;
+            // remove the user from the userGroups
+            const payload = action.payload as any;
+            const response = payload.response;
+            const data = payload.data;
+
+            // const array = [...state.userGroups];
+
+            // const group = array.find((element: any) => element.userGroupName === data.userGroupName);
+            // if(group) {
+            //     const index = array.findIndex((element: any) => element.email === data.userEmail);
+            //     array 
+            // }
+
+
+        })
+        builder.addCase(removeUserFromGroup.pending, (state) => {
+            state.loading = true;
+            state.removeUserGroupSuccess = false;
+            state.error = "";
+        })
+        builder.addCase(removeUserFromGroup.rejected, (state, action) => {
+            state.removeUserGroupSuccess = false;
+            state.loading = false;
+            state.error = action.payload as string;
         })
         // Get Latest Org
         builder.addCase(getLatestOrganisation.fulfilled, (state, action) => {
@@ -349,6 +385,24 @@ export const addUserToGroup = createAsyncThunk("ORG.AddUserToGroup", async (obje
 })
 
 /**
+ * This action removes a user from a user group
+ */
+export const removeUserFromGroup = createAsyncThunk("ORG.RemoveUserFromGroup", async (object: any, { rejectWithValue }) => {
+    try {
+        const jwt = getCookie("jwt");
+        const response = await ky.post(`${url}/removeUserFromUserGroup`, {
+            json: object,
+            headers: {
+                "Authorization": `Bearer ${jwt}`
+            }
+        }).json();
+        return { data: response, request: object } as any;
+    } catch (e) {
+        if (e instanceof Error) return rejectWithValue(e.message);
+    }
+})
+
+/**
  * This action gets the latest organistaion
  */
 export const getLatestOrganisation = createAsyncThunk("ORG.GetLatestOrganisation", async (object: any, { rejectWithValue }) => {
@@ -365,6 +419,6 @@ export const getLatestOrganisation = createAsyncThunk("ORG.GetLatestOrganisation
     }
 })
 
-export const { setAuth, getAuth, resetRequest, logout, setCreateGroupSuccess, setAddUserGroupSuccess } = userSlice.actions;
+export const { setAuth, getAuth, resetRequest, logout, setCreateGroupSuccess, setAddUserGroupSuccess, clearError } = userSlice.actions;
 export const userState = (state: AppState) => state.user;
 export default userSlice.reducer;
