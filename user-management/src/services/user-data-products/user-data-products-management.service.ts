@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import {  Inject, Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -8,7 +8,7 @@ import { Repository } from 'typeorm';
 import { UserGroup } from '../../entity/userGroup.entity';
 import { Organisation } from '../../entity/organisation.entity';
 import axios from 'axios';
-import { WatchedUser } from 'src/entity/watch.entity';
+import { WatchedUser } from '../../entity/watch.entity';
 
 @Injectable()
 export class UserDataProductMangementService {

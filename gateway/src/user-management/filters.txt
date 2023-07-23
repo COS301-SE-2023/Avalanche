@@ -1,88 +1,634 @@
-[{"endpoint": "zacr", "graphs" :
-[{"name": "transaction","filters":
-[{"name" : "zone", "type": "string", "values": ["CO.ZA","ORG.ZA","NET.ZA"], "input" : "checkbox"},
-{"name" : "dateFrom", "type" : "string", "input" : "date-picker"},
-{"name" : "dateTo", "type" : "string", "input" : "date-picker"},
-{"name" : "transactions", "type" : "string", "values" : ["create", "grace", "redeem", "transfer", "renew"], "input" : "checkbox"},
-{"name" : "granularity", "type" : "string", "values" : ["day","week","month","year"], "input" : "radiobox"}]},
-{name: "transactions-ranking", "filters":
-[{name : "zone", type: "string", values?: ["CO.ZA","ORG.ZA","NET.ZA"], input : "checkbox"},
-{name : "registrar", type: "string", "values": ["boi","boi2"], input : "checkbox"},
-{"name" : "dateFrom", "type" : "string", "input" : "date-picker"},
-{"name" : "dateTo", "type" : "string", "input" : "date-picker"},
-{"name" : "transactions", "type" : "string", "values" : ["create", "grace", "redeem", "transfer", "renew"], "input" : "checkbox"},
-{"name" : "granularity", "type" : "string", "values" : ["day","week","month","year"], "input" : "radiobox"}]},
-{"name" : "marketshare", "filters" : 
-[{"name": "zone", "type" : "string", "values" : ["CO.ZA", "NET.ZA", "ORG.ZA"], "input" : "checkbox"},
-{"name" : "registrar", "type" : "string", "input" : "checkbox"},
-{"name" : "rank", "type" : "string", "values" : ["top5","top10","top20","bottom5","bottom10","bottom15"], "input" : "radiobox"}]},
-{"name" : "age", "filters" : [
-{"name": "zone", "type" : "string", "values" : ["CO.ZA", "NET.ZA", "ORG.ZA"], "input" : "checkbox"},
-{"name" : "registrar", "type" : "string", "input" : "checkbox"},
-{"name" : "rank", "type" : "string", "values" : ["top5","top10","top20","bottom5","bottom10","bottom15"], "input" : "radiobox"},
-{"name" : "average", "type" : "boolean", "input" : "togglebox"},
-{"name" : "overall", "type" : "boolean", "input" : "togglebox"},
-]},
-{"name" : "domainNameAnalysis/count", "filters" : [
-{"name" : "granularity", "type" : "string", "values" : ["day","week","month","year"], "input" : "radiobox"},
-{"name" : "num", "type" : "number", "input" : "inputbox"},
-{"name" : "minimumAppearances", "type" : "number", "input" : "inputbox"},
-]}]},
-{"endpoint": "africa", "graphs" :
-[{"name": "transaction","filters":
-[{"name" : "zone", "type": "string", "values": ["AFRICA"], "input" : "checkbox"},
-{"name" : "dateFrom", "type" : "string", "input" : "date-picker"},
-{"name" : "dateTo", "type" : "string", "input" : "date-picker"},
-{"name" : "transactions", "type" : "string", "values" : ["create", "grace", "redeem", "transfer", "renew"], "input" : "checkbox"},
-{"name" : "granularity", "type" : "string", "values" : ["day","week","month","year"], "input" : "radiobox"}]},
-{name: "transactions-ranking", "filters":
-[{name : "zone", type: "string", values?: ["AFRICA"], input : "checkbox"},
-{name : "registrar", type: "string", "values": ["boi","boi2"], input : "checkbox"},
-{"name" : "dateFrom", "type" : "string", "input" : "date-picker"},
-{"name" : "dateTo", "type" : "string", "input" : "date-picker"},
-{"name" : "transactions", "type" : "string", "values" : ["create", "grace", "redeem", "transfer", "renew"], "input" : "checkbox"},
-{"name" : "granularity", "type" : "string", "values" : ["day","week","month","year"], "input" : "radiobox"}]},
-{"name" : "marketshare", "filters" : 
-[{"name": "zone", "type" : "string", "values" : ["AFRICA"], "input" : "checkbox"},
-{"name" : "registrar", "type" : "string", "input" : "checkbox"},
-{"name" : "rank", "type" : "string", "values" : ["top5","top10","top20","bottom5","bottom10","bottom15"], "input" : "radiobox"}]},
-{"name" : "age", "filters" : [
-{"name": "zone", "type" : "string", "values" : ["AFRICA"], "input" : "checkbox"},
-{"name" : "registrar", "type" : "string", "input" : "checkbox"},
-{"name" : "rank", "type" : "string", "values" : ["top5","top10","top20","bottom5","bottom10","bottom15"], "input" : "radiobox"},
-{"name" : "average", "type" : "boolean", "input" : "togglebox"},
-{"name" : "overall", "type" : "boolean", "input" : "togglebox"},
-]},
-{"name" : "domainNameAnalysis/count", "filters" : [
-{"name" : "granularity", "type" : "string", "values" : ["day","week","month","year"], "input" : "radiobox"},
-{"name" : "num", "type" : "number", "input" : "inputbox"},
-{"name" : "minimumAppearances", "type" : "number", "input" : "inputbox"}]}]},
-{"endpoint": "ryce", "graphs" :
-[{"name": "transaction","filters":
-[{"name" : "zone", "type": "string", "values": ["WIEN", "COLOGNE", "KOELN", "TIROL"], "input" : "checkbox"},
-{"name" : "dateFrom", "type" : "string", "input" : "date-picker"},
-{"name" : "dateTo", "type" : "string", "input" : "date-picker"},
-{"name" : "transactions", "type" : "string", "values" : ["create", "grace", "redeem", "transfer", "renew"], "input" : "checkbox"},
-{"name" : "granularity", "type" : "string", "values" : ["day","week","month","year"], "input" : "radiobox"}]},
-{name: "transactions-ranking", "filters":
-[{name : "zone", type: "string", values?: ["WIEN", "COLOGNE", "KOELN", "TIROL"], input : "checkbox"},
-{name : "registrar", type: "string", "values": ["boi","boi2"], input : "checkbox"},
-{"name" : "dateFrom", "type" : "string", "input" : "date-picker"},
-{"name" : "dateTo", "type" : "string", "input" : "date-picker"},
-{"name" : "transactions", "type" : "string", "values" : ["create", "grace", "redeem", "transfer", "renew"], "input" : "checkbox"},
-{"name" : "granularity", "type" : "string", "values" : ["day","week","month","year"], "input" : "radiobox"}]},
-{"name" : "marketshare", "filters" : 
-[{"name": "zone", "type" : "string", "values" : ["WIEN", "COLOGNE", "KOELN", "TIROL"], "input" : "checkbox"},
-{"name" : "registrar", "type" : "string", "input" : "checkbox"},
-{"name" : "rank", "type" : "string", "values" : ["top5","top10","top20","bottom5","bottom10","bottom15"], "input" : "radiobox"}]},
-{"name" : "age", "filters" : [
-{"name": "zone", "type" : "string", "values" : ["WIEN", "COLOGNE", "KOELN", "TIROL"], "input" : "checkbox"},
-{"name" : "registrar", "type" : "string", "input" : "checkbox"},
-{"name" : "rank", "type" : "string", "values" : ["top5","top10","top20","bottom5","bottom10","bottom15"], "input" : "radiobox"},
-{"name" : "average", "type" : "boolean", "input" : "togglebox"},
-{"name" : "overall", "type" : "boolean", "input" : "togglebox"},
-]},
-{"name" : "domainNameAnalysis/count", "filters" : [
-{"name" : "granularity", "type" : "string", "values" : ["day","week","month","year"], "input" : "radiobox"},
-{"name" : "num", "type" : "number", "input" : "inputbox"},
-{"name" : "minimumAppearances", "type" : "number", "input" : "inputbox"}]}]}]
+[
+    {
+        "endpoint": "zacr",
+        "graphs": [
+            {
+                "name": "transaction",
+                "filters": [
+                    {
+                        "name": "zone",
+                        "type": "string[]",
+                        "values": [
+                            "CO.ZA",
+                            "ORG.ZA",
+                            "NET.ZA"
+                        ],
+                        "input": "checkbox"
+                    },
+                    {
+                        "name": "dateFrom",
+                        "type": "string",
+                        "input": "date-picker"
+                    },
+                    {
+                        "name": "dateTo",
+                        "type": "string",
+                        "input": "date-picker"
+                    },
+                    {
+                        "name": "transactions",
+                        "type": "string",
+                        "values": [
+                            "create",
+                            "grace",
+                            "redeem",
+                            "transfer",
+                            "renew"
+                        ],
+                        "input": "checkbox"
+                    },
+                    {
+                        "name": "granularity",
+                        "type": "string",
+                        "values": [
+                            "day",
+                            "week",
+                            "month",
+                            "year"
+                        ],
+                        "input": "radiobox"
+                    }
+                ]
+            },
+            {
+                "name": "transactions-ranking",
+                "filters": [
+                    {
+                        "name": "zone",
+                        "type": "string[]",
+                        "values": [
+                            "CO.ZA",
+                            "ORG.ZA",
+                            "NET.ZA"
+                        ],
+                        "input": "checkbox"
+                    },
+                    {
+                        "name": "registrar",
+                        "type": "string",
+                        "values": [
+                            "boi",
+                            "boi2"
+                        ],
+                        "input": "checkbox"
+                    },
+                    {
+                        "name": "dateFrom",
+                        "type": "string",
+                        "input": "date-picker"
+                    },
+                    {
+                        "name": "dateTo",
+                        "type": "string",
+                        "input": "date-picker"
+                    },
+                    {
+                        "name": "transactions",
+                        "type": "string",
+                        "values": [
+                            "create",
+                            "grace",
+                            "redeem",
+                            "transfer",
+                            "renew"
+                        ],
+                        "input": "checkbox"
+                    },
+                    {
+                        "name": "granularity",
+                        "type": "string",
+                        "values": [
+                            "day",
+                            "week",
+                            "month",
+                            "year"
+                        ],
+                        "input": "radiobox"
+                    }
+                ]
+            },
+            {
+                "name": "marketshare",
+                "filters": [
+                    {
+                        "name": "zone",
+                        "type": "string[]",
+                        "values": [
+                            "CO.ZA",
+                            "NET.ZA",
+                            "ORG.ZA"
+                        ],
+                        "input": "checkbox"
+                    },
+                    {
+                        "name": "registrar",
+                        "type": "string",
+                        "input": "checkbox"
+                    },
+                    {
+                        "name": "rank",
+                        "type": "string",
+                        "values": [
+                            "top5",
+                            "top10",
+                            "top20",
+                            "bottom5",
+                            "bottom10",
+                            "bottom15"
+                        ],
+                        "input": "radiobox"
+                    }
+                ]
+            },
+            {
+                "name": "age",
+                "filters": [
+                    {
+                        "name": "zone",
+                        "type": "string[]",
+                        "values": [
+                            "CO.ZA",
+                            "NET.ZA",
+                            "ORG.ZA"
+                        ],
+                        "input": "checkbox"
+                    },
+                    {
+                        "name": "registrar",
+                        "type": "string",
+                        "input": "checkbox"
+                    },
+                    {
+                        "name": "rank",
+                        "type": "string",
+                        "values": [
+                            "top5",
+                            "top10",
+                            "top20",
+                            "bottom5",
+                            "bottom10",
+                            "bottom15"
+                        ],
+                        "input": "radiobox"
+                    },
+                    {
+                        "name": "average",
+                        "type": "boolean",
+                        "input": "togglebox"
+                    },
+                    {
+                        "name": "overall",
+                        "type": "boolean",
+                        "input": "togglebox"
+                    }
+                ]
+            },
+            {
+                "name": "domainNameAnalysis/count",
+                "filters": [
+                    {
+                        "name": "granularity",
+                        "type": "string",
+                        "values": [
+                            "day",
+                            "week",
+                            "month",
+                            "year"
+                        ],
+                        "input": "radiobox"
+                    },
+                    {
+                        "name": "num",
+                        "type": "number",
+                        "input": "inputbox"
+                    },
+                    {
+                        "name": "minimumAppearances",
+                        "type": "number",
+                        "input": "inputbox"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "endpoint": "africa",
+        "graphs": [
+            {
+                "name": "transaction",
+                "filters": [
+                    {
+                        "name": "zone",
+                        "type": "string[]",
+                        "values": [
+                            "AFRICA"
+                        ],
+                        "input": "checkbox"
+                    },
+                    {
+                        "name": "dateFrom",
+                        "type": "string",
+                        "input": "date-picker"
+                    },
+                    {
+                        "name": "dateTo",
+                        "type": "string",
+                        "input": "date-picker"
+                    },
+                    {
+                        "name": "transactions",
+                        "type": "string",
+                        "values": [
+                            "create",
+                            "grace",
+                            "redeem",
+                            "transfer",
+                            "renew"
+                        ],
+                        "input": "checkbox"
+                    },
+                    {
+                        "name": "granularity",
+                        "type": "string",
+                        "values": [
+                            "day",
+                            "week",
+                            "month",
+                            "year"
+                        ],
+                        "input": "radiobox"
+                    }
+                ]
+            },
+            {
+                "name": "transactions-ranking",
+                "filters": [
+                    {
+                        "name": "zone",
+                        "type": "string[]",
+                        "values": [
+                            "AFRICA"
+                        ],
+                        "input": "checkbox"
+                    },
+                    {
+                        "name": "registrar",
+                        "type": "string",
+                        "values": [
+                            "boi",
+                            "boi2"
+                        ],
+                        "input": "checkbox"
+                    },
+                    {
+                        "name": "dateFrom",
+                        "type": "string",
+                        "input": "date-picker"
+                    },
+                    {
+                        "name": "dateTo",
+                        "type": "string",
+                        "input": "date-picker"
+                    },
+                    {
+                        "name": "transactions",
+                        "type": "string",
+                        "values": [
+                            "create",
+                            "grace",
+                            "redeem",
+                            "transfer",
+                            "renew"
+                        ],
+                        "input": "checkbox"
+                    },
+                    {
+                        "name": "granularity",
+                        "type": "string",
+                        "values": [
+                            "day",
+                            "week",
+                            "month",
+                            "year"
+                        ],
+                        "input": "radiobox"
+                    }
+                ]
+            },
+            {
+                "name": "marketshare",
+                "filters": [
+                    {
+                        "name": "zone",
+                        "type": "string[]",
+                        "values": [
+                            "AFRICA"
+                        ],
+                        "input": "checkbox"
+                    },
+                    {
+                        "name": "registrar",
+                        "type": "string",
+                        "input": "checkbox"
+                    },
+                    {
+                        "name": "rank",
+                        "type": "string",
+                        "values": [
+                            "top5",
+                            "top10",
+                            "top20",
+                            "bottom5",
+                            "bottom10",
+                            "bottom15"
+                        ],
+                        "input": "radiobox"
+                    }
+                ]
+            },
+            {
+                "name": "age",
+                "filters": [
+                    {
+                        "name": "zone",
+                        "type": "string[]",
+                        "values": [
+                            "AFRICA"
+                        ],
+                        "input": "checkbox"
+                    },
+                    {
+                        "name": "registrar",
+                        "type": "string",
+                        "input": "checkbox"
+                    },
+                    {
+                        "name": "rank",
+                        "type": "string",
+                        "values": [
+                            "top5",
+                            "top10",
+                            "top20",
+                            "bottom5",
+                            "bottom10",
+                            "bottom15"
+                        ],
+                        "input": "radiobox"
+                    },
+                    {
+                        "name": "average",
+                        "type": "boolean",
+                        "input": "togglebox"
+                    },
+                    {
+                        "name": "overall",
+                        "type": "boolean",
+                        "input": "togglebox"
+                    }
+                ]
+            },
+            {
+                "name": "domainNameAnalysis/count",
+                "filters": [
+                    {
+                        "name": "granularity",
+                        "type": "string",
+                        "values": [
+                            "day",
+                            "week",
+                            "month",
+                            "year"
+                        ],
+                        "input": "radiobox"
+                    },
+                    {
+                        "name": "num",
+                        "type": "number",
+                        "input": "inputbox"
+                    },
+                    {
+                        "name": "minimumAppearances",
+                        "type": "number",
+                        "input": "inputbox"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "endpoint": "ryce",
+        "graphs": [
+            {
+                "name": "transaction",
+                "filters": [
+                    {
+                        "name": "zone",
+                        "type": "string[]",
+                        "values": [
+                            "WIEN",
+                            "COLOGNE",
+                            "KOELN",
+                            "TIROL"
+                        ],
+                        "input": "checkbox"
+                    },
+                    {
+                        "name": "dateFrom",
+                        "type": "string",
+                        "input": "date-picker"
+                    },
+                    {
+                        "name": "dateTo",
+                        "type": "string",
+                        "input": "date-picker"
+                    },
+                    {
+                        "name": "transactions",
+                        "type": "string",
+                        "values": [
+                            "create",
+                            "grace",
+                            "redeem",
+                            "transfer",
+                            "renew"
+                        ],
+                        "input": "checkbox"
+                    },
+                    {
+                        "name": "granularity",
+                        "type": "string",
+                        "values": [
+                            "day",
+                            "week",
+                            "month",
+                            "year"
+                        ],
+                        "input": "radiobox"
+                    }
+                ]
+            },
+            {
+                "name": "transactions-ranking",
+                "filters": [
+                    {
+                        "name": "zone",
+                        "type": "string[]",
+                        "values": [
+                            "WIEN",
+                            "COLOGNE",
+                            "KOELN",
+                            "TIROL"
+                        ],
+                        "input": "checkbox"
+                    },
+                    {
+                        "name": "registrar",
+                        "type": "string",
+                        "values": [
+                            "boi",
+                            "boi2"
+                        ],
+                        "input": "checkbox"
+                    },
+                    {
+                        "name": "dateFrom",
+                        "type": "string",
+                        "input": "date-picker"
+                    },
+                    {
+                        "name": "dateTo",
+                        "type": "string",
+                        "input": "date-picker"
+                    },
+                    {
+                        "name": "transactions",
+                        "type": "string",
+                        "values": [
+                            "create",
+                            "grace",
+                            "redeem",
+                            "transfer",
+                            "renew"
+                        ],
+                        "input": "checkbox"
+                    },
+                    {
+                        "name": "granularity",
+                        "type": "string",
+                        "values": [
+                            "day",
+                            "week",
+                            "month",
+                            "year"
+                        ],
+                        "input": "radiobox"
+                    }
+                ]
+            },
+            {
+                "name": "marketshare",
+                "filters": [
+                    {
+                        "name": "zone",
+                        "type": "string[]",
+                        "values": [
+                            "WIEN",
+                            "COLOGNE",
+                            "KOELN",
+                            "TIROL"
+                        ],
+                        "input": "checkbox"
+                    },
+                    {
+                        "name": "registrar",
+                        "type": "string",
+                        "input": "checkbox"
+                    },
+                    {
+                        "name": "rank",
+                        "type": "string",
+                        "values": [
+                            "top5",
+                            "top10",
+                            "top20",
+                            "bottom5",
+                            "bottom10",
+                            "bottom15"
+                        ],
+                        "input": "radiobox"
+                    }
+                ]
+            },
+            {
+                "name": "age",
+                "filters": [
+                    {
+                        "name": "zone",
+                        "type": "string[]",
+                        "values": [
+                            "WIEN",
+                            "COLOGNE",
+                            "KOELN",
+                            "TIROL"
+                        ],
+                        "input": "checkbox"
+                    },
+                    {
+                        "name": "registrar",
+                        "type": "string",
+                        "input": "checkbox"
+                    },
+                    {
+                        "name": "rank",
+                        "type": "string",
+                        "values": [
+                            "top5",
+                            "top10",
+                            "top20",
+                            "bottom5",
+                            "bottom10",
+                            "bottom15"
+                        ],
+                        "input": "radiobox"
+                    },
+                    {
+                        "name": "average",
+                        "type": "boolean",
+                        "input": "togglebox"
+                    },
+                    {
+                        "name": "overall",
+                        "type": "boolean",
+                        "input": "togglebox"
+                    }
+                ]
+            },
+            {
+                "name": "domainNameAnalysis/count",
+                "filters": [
+                    {
+                        "name": "granularity",
+                        "type": "string",
+                        "values": [
+                            "day",
+                            "week",
+                            "month",
+                            "year"
+                        ],
+                        "input": "radiobox"
+                    },
+                    {
+                        "name": "num",
+                        "type": "number",
+                        "input": "inputbox"
+                    },
+                    {
+                        "name": "minimumAppearances",
+                        "type": "number",
+                        "input": "inputbox"
+                    }
+                ]
+            }
+        ]
+    }
+]
