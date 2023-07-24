@@ -24,7 +24,7 @@ export class TransactionService {
       console.log(filters);
       const sqlQuery = `call transactionsByRegistrar('${filters}')`;
 
-      let formattedData = await this.redis.get(sqlQuery);
+      let formattedData = await this.redis.get(`zacr` + sqlQuery);
 
       if (!formattedData) {
         let queryData;
@@ -43,7 +43,12 @@ export class TransactionService {
         formattedData = await this.graphFormattingService.formatTransactions(
           JSON.stringify(queryData),
         );
-        await this.redis.set(sqlQuery, formattedData, 'EX', 24 * 60 * 60);
+        await this.redis.set(
+          `zacr` + sqlQuery,
+          formattedData,
+          'EX',
+          24 * 60 * 60,
+        );
       }
 
       return {
@@ -69,7 +74,7 @@ export class TransactionService {
       console.log(filters);
       const sqlQuery = `call transactionsByRegistrar('${filters}')`;
 
-      let formattedData = await this.redis.get(sqlQuery);
+      let formattedData = await this.redis.get(`zacr` + sqlQuery);
 
       if (!formattedData) {
         let queryData;
@@ -88,7 +93,12 @@ export class TransactionService {
             JSON.stringify(queryData),
           );
 
-        await this.redis.set(sqlQuery, formattedData, 'EX', 24 * 60 * 60);
+        await this.redis.set(
+          `zacr` + sqlQuery,
+          formattedData,
+          'EX',
+          24 * 60 * 60,
+        );
       }
       return {
         status: 'success',

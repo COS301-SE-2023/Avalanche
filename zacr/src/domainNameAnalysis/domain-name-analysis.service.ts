@@ -24,7 +24,7 @@ export class DomainNameAnalysisService {
 
       const sqlQuery = `call domainNameAnalysis('${filters}')`;
       console.log(sqlQuery);
-      let formattedData = await this.redis.get(sqlQuery);
+      let formattedData = await this.redis.get(`zacr` + sqlQuery);
 
       if (!formattedData) {
         let queryData;
@@ -51,7 +51,12 @@ export class DomainNameAnalysisService {
           await this.graphFormattingService.formatDomainNameAnalysis(
             JSON.stringify(responseData.data),
           );
-        await this.redis.set(sqlQuery, formattedData, 'EX', 24 * 60 * 60);
+        await this.redis.set(
+          `zacr` + sqlQuery,
+          formattedData,
+          'EX',
+          24 * 60 * 60,
+        );
       }
 
       return {
@@ -85,7 +90,7 @@ export class DomainNameAnalysisService {
       console.log(filters);
       const sqlQuery = `CALL SKUNKWORKS_DB.public.domainLengthAnalysis('${filters}')`;
 
-      let formattedData = await this.redis.get(sqlQuery);
+      let formattedData = await this.redis.get(`zacr` + sqlQuery);
 
       if (!formattedData) {
         let queryData;
@@ -107,7 +112,12 @@ export class DomainNameAnalysisService {
           await this.graphFormattingService.formatDomainLengthAnalysis(
             JSON.stringify(queryData),
           );
-        await this.redis.set(sqlQuery, formattedData, 'EX', 24 * 60 * 60);
+        await this.redis.set(
+          `zacr` + sqlQuery,
+          formattedData,
+          'EX',
+          24 * 60 * 60,
+        );
       }
       return {
         status: 'success',
