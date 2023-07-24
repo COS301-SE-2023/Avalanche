@@ -271,6 +271,37 @@ export class AuthService {
     };
   }
 
+  async checkUserAPIKey(token: string) {
+    const userData = await this.redis.get(token);
+    if (!userData) {
+      return {
+        status: 400, error: true, message: 'Invalid token',
+        timestamp: new Date().toISOString()
+      };
+    }
+    const userDetails = JSON.parse(userData);
+
+    const user = await this.userRepository.findOne({ where: { email: userDetails.email }, relations: ['userGroups', 'organisation'], select: ['id', 'email', 'firstName', 'lastName', 'organisationId', 'products', 'userGroups', 'organisation', 'apiKey'] });
+    if (!user) {
+      return {
+        status: 400, error: true, message: 'User to be removed not found',
+        timestamp: new Date().toISOString()
+      };
+    }
+    if(!user.apiKey){
+      return{
+        status : "success",message: false,
+        timestamp: new Date().toISOString()
+      }
+    }else{
+      return{
+        status : "success",message: true,
+        timestamp: new Date().toISOString()
+      }
+    }
+  }
+
+
   async rerollAPIKey(token: string) {
     const userData = await this.redis.get(token);
     if (!userData) {

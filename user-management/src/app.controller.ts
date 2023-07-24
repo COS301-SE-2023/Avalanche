@@ -78,6 +78,22 @@ export class AppController {
 
     return result;
   }
+
+  @MessagePattern({ cmd: 'checkUserAPIKey' })
+  async checkUserAPIKey(data: any) {
+    console.log("Creating key: ", data);
+    const result = await this.authService.checkUserAPIKey(data.token);
+
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
   @MessagePattern({ cmd: 'rerollAPIKey' })
   async rerollAPIKey(data: any) {
     console.log("Rerolling key: ", data);

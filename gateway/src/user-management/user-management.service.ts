@@ -25,6 +25,9 @@ export class UserManagementService {
   async createAPIKey(data: any) {
     return this.client.send({ cmd: 'createAPIKey' }, data).toPromise();
   }
+  async checkUserAPIKey(data: any) {
+    return this.client.send({ cmd: 'checkUserAPIKey' }, data).toPromise();
+  }
   async rerollAPIKey(data: any) {
     return this.client.send({ cmd: 'rerollAPIKey' }, data).toPromise();
   }
