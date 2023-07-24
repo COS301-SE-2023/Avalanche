@@ -9,11 +9,17 @@
                         "name": "zone",
                         "type": "string[]",
                         "values": [
-                            "CO.ZA",
+                            {"name" :"CO.ZA", "filters" : [{
+                                "name": "transactions",
+                                 "type": "string[]",
+                                 "values": ["cozaCreate","cozaGrace", "cozaRedeem", "cozaTransfer", "cozaRenew"],
+                                 "input" : "checkbox"
+                            }]},
                             "ORG.ZA",
-                            "NET.ZA"
+                            "NET.ZA",
+                            "WEB.ZA"
                         ],
-                        "input": "checkbox"
+                        "input": "nestedCheckbox"
                     },
                     {
                         "name": "dateFrom",
@@ -57,11 +63,16 @@
                         "name": "zone",
                         "type": "string[]",
                         "values": [
-                            "CO.ZA",
+                            {"name" :"CO.ZA", "filters" : [{
+                                "name": "transactions",
+                                 "type": "string[]",
+                                 "values": ["cozaCreate","cozaGrace", "cozaRedeem", "cozaTransfer", "cozaRenew"],
+                                 "input" : "checkbox"
+                            }]},
                             "ORG.ZA",
                             "NET.ZA"
                         ],
-                        "input": "checkbox"
+                        "input": "nestedCheckbox"
                     },
                     {
                         "name": "registrar",
@@ -81,18 +92,6 @@
                         "name": "dateTo",
                         "type": "string",
                         "input": "date-picker"
-                    },
-                    {
-                        "name": "transactions",
-                        "type": "string",
-                        "values": [
-                            "create",
-                            "grace",
-                            "redeem",
-                            "transfer",
-                            "renew"
-                        ],
-                        "input": "checkbox"
                     },
                     {
                         "name": "granularity",

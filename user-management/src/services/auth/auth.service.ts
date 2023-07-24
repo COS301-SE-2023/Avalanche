@@ -163,6 +163,7 @@ export class AuthService {
     // Fetch user from the PostgreSQL database
     const user = await this.userRepository.findOne({ where: { email }, relations: ['userGroups', 'organisation', 'dashboards'] });
     console.log(user);
+    delete user.apiKey;
     // If user not found, throw error
     if (!user) {
       return {
@@ -258,12 +259,19 @@ export class AuthService {
       };
     }
 
+    if(user.apiKey.length > 0){
+      return {
+        status: 400, error: true, message: 'User already has an api key',
+        timestamp: new Date().toISOString()
+      };
+    }
+
     const jwtToken = uuidv4();
     user.apiKey = jwtToken;
     await this.userRepository.save(user);
     delete user.apiKey;
     await this.redis.set(jwtToken, JSON.stringify(user));
-    const userWithToken = { ...user, token: jwtToken };
+    const userWithToken = { ...user, apiKey: jwtToken };
     // Send back user's information along with the token as a JSON object
     return {
       status: "success", userWithToken,
