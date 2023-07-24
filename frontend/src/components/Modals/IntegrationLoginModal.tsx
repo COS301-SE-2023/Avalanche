@@ -49,7 +49,6 @@ export default function IntegrationLoginModal({ }: IIntegrationLoginModal) {
     const formSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
         event.preventDefault();
         setLoading(true);
-        ErrorToast({ text: "Nothing is implemented yet. Un-loading in 3 seconds." });
         setTimeout(() => {
             setLoading(false);
         }, 3000);

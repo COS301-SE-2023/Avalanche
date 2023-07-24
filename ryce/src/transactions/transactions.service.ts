@@ -14,7 +14,7 @@ export class TransactionService {
     private readonly snowflakeService: SnowflakeService,
     private readonly statisticalAnalysisService: AnalysisService,
     private readonly graphFormattingService: GraphFormatService,
-  ) {}
+  ) { }
 
   async transactions(filters: string, graphName: string): Promise<any> {
     try {
@@ -157,13 +157,6 @@ export class TransactionService {
 
     let zone = filters['zone'];
     if (zone) {
-      if (zone.length > 0) {
-        const zoneArr = [];
-        for (const r of zone) {
-          zoneArr.push(r);
-        }
-        zone += zoneArr.join(', ');
-      }
       zone = ' for ' + zone;
     } else {
       zone = ' for all zones in registry';

@@ -10,7 +10,7 @@ import IDomainNameAnalysisGraphRequest from "@/interfaces/requests/DomainNameAna
 import IAgeAnalysisGraphRequest from "@/interfaces/requests/AgeAnalysisGraph";
 import IMovementGraphRequest from "@/interfaces/requests/Movement";
 
-const url = "http://localhost:4000/ryce";
+const url = `${process.env.NEXT_PUBLIC_API}/ryce`;
 
 interface IGraphState {
     graphs: any[],
@@ -56,7 +56,7 @@ export const graphSlice = createSlice({
         })
         builder.addCase(getGraphData.pending, (state) => {
             state.loading = true;
-            // state.graphs = [];
+            state.graphs = [];
         })
         builder.addCase(getGraphDataRanking.fulfilled, (state, action) => {
             const payload = action.payload as any;
@@ -72,92 +72,62 @@ export const graphSlice = createSlice({
         })
         builder.addCase(getGraphDataRanking.pending, (state) => {
             state.loading = true;
-            // state.graphs = [];
+            state.graphs = [];
         })
         builder.addCase(getMarketShareData.fulfilled, (state, action) => {
             const payload = action.payload as any;
             console.log(payload.data.labels);
-            // payload.data.datasets.index.index.forEach((set: any, index: number) => {
-            //     set.backgroundColor = chartColours[index];
-            //     set.borderColor = chartColours[index];
-            //     set.pointRadius = 4;
-            //     set.pointHoverRadius = 5;
-            // })
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
         })
         builder.addCase(getMarketShareData.pending, (state) => {
             state.loading = true;
-            // state.graphs = [];
+            state.graphs = [];
         })
         builder.addCase(getAgeAnalysisData.fulfilled, (state, action) => {
             const payload = action.payload as any;
             console.log(payload.data.labels);
-            // payload.data.labels.index.index.forEach((set: any, index: number) => {
-            //     set.backgroundColor = chartColours[index];
-            //     set.borderColor = chartColours[index];
-            //     set.pointRadius = 4;
-            //     set.pointHoverRadius = 5;
-            // })
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
         })
         builder.addCase(getAgeAnalysisData.pending, (state) => {
             state.loading = true;
-            // state.graphs = [];
+            state.graphs = [];
         })
         builder.addCase(getDomainNameAnalysisData.fulfilled, (state, action) => {
             const payload = action.payload as any;
             console.log(payload.data.labels);
-            // payload.data.labels.index.index.forEach((set: any, index: number) => {
-            //     set.backgroundColor = chartColours[index];
-            //     set.borderColor = chartColours[index];
-            //     set.pointRadius = 4;
-            //     set.pointHoverRadius = 5;
-            // })
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
         })
         builder.addCase(getDomainNameAnalysisData.pending, (state) => {
             state.loading = true;
-            // state.graphs = [];
+            state.graphs = [];
         })
         builder.addCase(getDomainLengthData.fulfilled, (state, action) => {
             const payload = action.payload as any;
             console.log(payload.data.labels);
-            // payload.data.labels.index.index.forEach((set: any, index: number) => {
-            //     set.backgroundColor = chartColours[index];
-            //     set.borderColor = chartColours[index];
-            //     set.pointRadius = 4;
-            //     set.pointHoverRadius = 5;
-            // })
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
         })
         builder.addCase(getMovementVerticalData.pending, (state) => {
             state.loading = true;
-            // state.graphs = [];
+            state.graphs = [];
         })
         builder.addCase(getMovementVerticalData.fulfilled, (state, action) => {
             const payload = action.payload as any;
             console.log(payload.data.labels);
-            // payload.data.labels.index.index.forEach((set: any, index: number) => {
-            //     set.backgroundColor = chartColours[index];
-            //     set.borderColor = chartColours[index];
-            //     set.pointRadius = 4;
-            //     set.pointHoverRadius = 5;
-            // })
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
         })
         builder.addCase(getDomainLengthData.pending, (state) => {
             state.loading = true;
-            // state.graphs = [];
+            state.graphs = [];
         })
         builder.addCase(getGraphDataArray.fulfilled, (state, action) => {
             // const payload = action.payload as any;

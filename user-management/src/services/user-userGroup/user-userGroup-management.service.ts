@@ -71,7 +71,7 @@ export class UserUserGroupMangementService {
                         status: 'success', message: userGroup,
                         timestamp: new Date().toISOString()
                     };
-                }else{
+                } else {
                     return {
                         status: 400, error: true, message: 'A user group with this name exists',
                         timestamp: new Date().toISOString()
@@ -199,8 +199,8 @@ export class UserUserGroupMangementService {
             }
         });
 
-        const invitationHtmlTemplate = 
-        `<div style="font-family: Helvetica,Arial,sans-serif;min-width:300px;max-width:1000px;overflow:auto;line-height:2;margin: 0 auto;">
+        const invitationHtmlTemplate =
+            `<div style="font-family: Helvetica,Arial,sans-serif;min-width:300px;max-width:1000px;overflow:auto;line-height:2;margin: 0 auto;">
         <div style="margin:20px auto;width:90%;padding:20px 0">
           <div style="border-bottom:1px solid #eee">
             <a href="" style="font-size:1.4em;color: #007aff;text-decoration:none;font-weight:600">Avalanche Analytics</a>
@@ -229,7 +229,26 @@ export class UserUserGroupMangementService {
             from: 'theskunkworks301@gmail.com',
             to: email,
             subject: `Invitation to "${userGroupName}" on Avalanche Analytics`,
-            html: invitationHtml,
+            html: `<div style="font-family: Helvetica,Arial,sans-serif;min-width:300px;max-width:1000px;overflow:auto;line-height:2;margin: 0 auto;">
+                        <div style="margin:20px auto;width:90%;padding:20px 0">
+                        <div style="border-bottom:1px solid #eee">
+                            <a href="" style="font-size:1.4em;color: #007aff;text-decoration:none;font-weight:600">Avalanche Analytics</a>
+                        </div>
+                        <p style="font-size:1.1em">Hi,</p>
+                        <p>You have been invited to join ${userGroupName} on Avalanche Analytics. <br> 
+                            To accept the invitation please follow the link: </p>
+                        <a href="http://localhost:3000/invitation?key=${token}&type=group" style="text-decoration:none"> <h2 style="background: #007aff;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;">
+                            Accept
+                        </h2></a>
+                        <p style="font-size:0.9em;">Regards,<br />Avalanche Team</p>
+                        <hr style="border:none;border-top:1px solid #eee" />
+                        <div style="padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300;text-align: center;">
+                            <p>Avalanche</p>
+                            <p>DNS Business</p>
+                            <p>2023</p>
+                        </div>
+                        </div>
+                    </div>`,
             text: `You have been invited to join "${userGroupName}" on Avalanche Analytics.\n
                 To accept the invitation please follow the link: 
                 \nhttp://localhost:3000/invitation?key=${token}&type=group`

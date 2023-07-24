@@ -3,8 +3,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
-import snowflake = require('snowflake-sdk');
-
+import * as snowflake from "snowflake-sdk";
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { TransactionService } from './transactions/transactions.service';
 import { RedisProvider } from './redis.provider';
@@ -25,22 +24,22 @@ import { DomainWatchService } from './domainWatch/domain-watch-analysis.service'
         name: 'AFRICA_SERVICE',
         transport: Transport.TCP,
         options: {
-          host: 'localhost',
+          host: process.env.AFRICA,
           port: 4005,
         },
       },
     ]),
     JwtModule.registerAsync({
-      imports: [ConfigModule], 
+      imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => {
         return {
-          secret: configService.get<string>('JWT_SECRET'), 
+          secret: configService.get<string>('JWT_SECRET'),
           signOptions: { expiresIn: '24h' },
         } as JwtModuleOptions;
       },
       inject: [ConfigService],
     }),
-    ConfigModule.forRoot({ isGlobal: true }), 
+    ConfigModule.forRoot({ isGlobal: true }),
   ],
   controllers: [AppController],
   providers: [RedisProvider,
@@ -79,6 +78,6 @@ import { DomainWatchService } from './domainWatch/domain-watch-analysis.service'
     SnowflakeService,
     DomainWatchService
   ],
-  exports: [TransactionService,MarketShareService,AgeService,DomainNameAnalysisService,AnalysisService,GraphFormatService,SnowflakeService,DomainWatchService],
+  exports: [TransactionService, MarketShareService, AgeService, DomainNameAnalysisService, AnalysisService, GraphFormatService, SnowflakeService, DomainWatchService],
 })
-export class AppModule {}
+export class AppModule { }
