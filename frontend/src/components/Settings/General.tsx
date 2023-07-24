@@ -5,6 +5,11 @@ interface IGeneralSettings {
 }
 
 export default function GeneralSettings({ user }: IGeneralSettings) {
+
+    const createAPIKey = () => {
+
+    }
+
     return (
         <>
             <h4 className="text-2xl font-bold text-gray-700 dark:text-white mb-2">API Key</h4>
