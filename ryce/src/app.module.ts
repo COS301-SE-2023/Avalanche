@@ -15,6 +15,7 @@ import { AgeService } from './age/age.service';
 import { DomainNameAnalysisService } from './domainNameAnalysis/domain-name-analysis.service';
 import { HttpModule } from '@nestjs/axios';
 import { MovementService } from './movement/movement.service';
+import { RegistrarNameService } from './registrarName/registrarName.service';
 
 @Module({
   imports: [
@@ -76,8 +77,9 @@ import { MovementService } from './movement/movement.service';
     AnalysisService,
     GraphFormatService,
     SnowflakeService,
-    MovementService
+    MovementService,
+    RegistrarNameService,
   ],
-  exports: [TransactionService, MarketShareService, AgeService, DomainNameAnalysisService, AnalysisService, GraphFormatService, SnowflakeService, MovementService],
+  exports: [TransactionService, MarketShareService, AgeService, DomainNameAnalysisService, AnalysisService, GraphFormatService, SnowflakeService, MovementService, RegistrarNameService],
 })
 export class AppModule { }

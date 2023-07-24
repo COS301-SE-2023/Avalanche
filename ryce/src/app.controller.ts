@@ -5,6 +5,7 @@ import { MarketShareService } from './marketShare/marketShare.service';
 import { AgeService } from './age/age.service';
 import { DomainNameAnalysisService } from './domainNameAnalysis/domain-name-analysis.service';
 import { MovementService } from './movement/movement.service';
+import { RegistrarNameService } from './registrarName/registrarName.service';
 
 @Controller('ryce')
 export class AppController {
@@ -14,6 +15,7 @@ export class AppController {
     private readonly ageService: AgeService,
     private readonly domainNameAnalysisService: DomainNameAnalysisService,
     private readonly movementService: MovementService,
+    private readonly registrarNameService: RegistrarNameService,
   ) {}
 
   @MessagePattern({ cmd: 'transactions' })
@@ -66,5 +68,10 @@ export class AppController {
       data.filters,
       data.graphName,
     );
+  }
+
+  @MessagePattern({ cmd: 'registrarName' })
+  async registarName(data: any) {
+    return await this.registrarNameService.registrarName(data);
   }
 }

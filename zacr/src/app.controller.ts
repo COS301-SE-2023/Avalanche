@@ -7,6 +7,7 @@ import { AgeService } from './age/age.service';
 import { DomainNameAnalysisService } from './domainNameAnalysis/domain-name-analysis.service';
 import { MovementService } from './movement/movement.service';
 import { DomainWatchService } from './domainWatch/domain-watch-analysis.service';
+import { RegistrarNameService } from './registrarName/registrarName.service';
 @Controller('zacr')
 export class AppController {
   constructor(private readonly transactionsService: TransactionService, 
@@ -14,7 +15,8 @@ export class AppController {
     private readonly ageService : AgeService,
     private readonly domainNameAnalysisService : DomainNameAnalysisService,
     private readonly movementService: MovementService,
-    private readonly domainWatchService : DomainWatchService) {}
+    private readonly domainWatchService : DomainWatchService,
+    private readonly registrarNameService: RegistrarNameService) {}
 
   @MessagePattern({ cmd: 'transactions' })
   async transactions(data: any) {
@@ -113,5 +115,10 @@ export class AppController {
   @MessagePattern({ cmd: 'domainWatchPassive' })
   async domainWatchPassive() {
     return await this.domainWatchService.passive();
+  }
+
+  @MessagePattern({ cmd: 'registrarName' })
+  async registarName(data: any) {
+    return await this.registrarNameService.registrarName(data);
   }
 }
