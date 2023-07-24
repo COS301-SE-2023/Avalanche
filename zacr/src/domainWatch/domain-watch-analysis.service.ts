@@ -16,6 +16,6 @@ export class DomainWatchService {
     const sqlQuery = `call domainWatchPassive('')`;
     const queryData = await this.snowflakeService.execute(sqlQuery);
     console.log(queryData);
-    return {queryData};
+    return { queryData };
   }
 }

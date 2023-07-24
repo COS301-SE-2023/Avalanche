@@ -24,7 +24,7 @@ export class AgeService {
       console.log(filters);
       const sqlQuery = `call ageAnalysis('${filters}')`;
 
-      let formattedData = await this.redis.get(sqlQuery);
+      let formattedData = await this.redis.get(`zacr` + sqlQuery);
 
       if (!formattedData) {
         let queryData: any;
@@ -44,7 +44,12 @@ export class AgeService {
           JSON.stringify(queryData),
         );
 
-        await this.redis.set(sqlQuery, formattedData, 'EX', 24 * 60 * 60);
+        await this.redis.set(
+          `zacr` + sqlQuery,
+          formattedData,
+          'EX',
+          24 * 60 * 60,
+        );
       }
 
       return {

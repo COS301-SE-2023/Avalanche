@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { Inject, Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
 import { JwtService } from '@nestjs/jwt';
@@ -16,42 +15,70 @@ export class AgeService {
     private readonly snowflakeService: SnowflakeService,
     private readonly statisticalAnalysisService: AnalysisService,
     private readonly graphFormattingService: GraphFormatService,
-  ) { }
+  ) {}
 
   async age(filters: string, graphName: string): Promise<any> {
-    graphName = this.ageGraphName(filters);
+    try {
+      graphName = this.ageGraphName(filters);
+      filters = JSON.stringify(filters);
+      console.log(filters);
+      const sqlQuery = `call ageAnalysis('${filters}')`;
 
-    filters = JSON.stringify(filters);
-    console.log(filters);
-    const sqlQuery = `call ageAnalysis('${filters}')`;
+      let formattedData = await this.redis.get(`ryce` + sqlQuery);
 
-    let formattedData = await this.redis.get(sqlQuery);
+      if (!formattedData) {
+        let queryData: any;
 
-    if (!formattedData) {
-      const queryData = await this.snowflakeService.execute(sqlQuery);
-      
-      formattedData = await this.graphFormattingService.formatAgeAnalysis(
-        JSON.stringify(queryData),
-      );
-      
-      await this.redis.set(sqlQuery, formattedData, 'EX', 24 * 60 * 60);
+        try {
+          queryData = await this.snowflakeService.execute(sqlQuery);
+        } catch (e) {
+          return {
+            status: 500,
+            error: true,
+            message: 'Data Warehouse Error',
+            timestamp: new Date().toISOString(),
+          };
+        }
+
+        formattedData = await this.graphFormattingService.formatAgeAnalysis(
+          JSON.stringify(queryData),
+        );
+
+        await this.redis.set(
+          `ryce` + sqlQuery,
+          formattedData,
+          'EX',
+          24 * 60 * 60,
+        );
+      }
+
+      return {
+        status: 'success',
+        data: { graphName: graphName, ...JSON.parse(formattedData) },
+        timestamp: new Date().toISOString(),
+      };
+    } catch (e) {
+      return {
+        status: 500,
+        error: true,
+        message: e,
+        timestamp: new Date().toISOString(),
+      };
     }
-
-    return { status: 'success', data: { graphName: graphName, ...JSON.parse(formattedData) }, timestamp: new Date().toISOString() };
   }
 
   ageGraphName(filters: string): string {
     let rank = filters['rank'];
     if (rank) {
-      rank = " the " + rank + " registrars in terms of domain count ";
+      rank = ' the ' + rank + ' registrars in terms of domain count ';
     } else {
-      rank = " all registrars ";
+      rank = ' all registrars ';
     }
     const overall = filters['overall'];
     const average = filters['average'];
     let filter = '';
     if (overall === true && average === true) {
-      filter = ', showing the overall average age'
+      filter = ', showing the overall average age';
     } else if (overall === false && average === true) {
       filter = ', showing the average age per registrar';
     } else if (overall === true && average === false) {
@@ -61,5 +88,4 @@ export class AgeService {
     }
     return 'Age Analysis of domains for ' + rank + filter;
   }
-
 }

@@ -24,7 +24,7 @@ export class MovementService {
       console.log(filters);
       const sqlQuery = `call nettVerticalMovement('${filters}')`;
 
-      let formattedData = await this.redis.get(sqlQuery);
+      let formattedData = await this.redis.get(`zacr` + sqlQuery);
 
       if (!formattedData) {
         let queryData;
@@ -43,7 +43,12 @@ export class MovementService {
           JSON.stringify(queryData),
         );
 
-        await this.redis.set(sqlQuery, formattedData, 'EX', 24 * 60 * 60);
+        await this.redis.set(
+          `zacr` + sqlQuery,
+          formattedData,
+          'EX',
+          24 * 60 * 60,
+        );
       }
 
       filters = JSON.parse(filters);

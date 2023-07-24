@@ -17,33 +17,55 @@ export class MovementService {
   ) {}
 
   async nettVeritical(filters: string, graphName: string): Promise<any> {
-    graphName = this.netVerticalGraphName(filters);
+    try {
+      graphName = this.netVerticalGraphName(filters);
 
-    filters = JSON.stringify(filters);
-    console.log(filters);
-    const sqlQuery = `call nettVerticalMovement('${filters}')`;
+      filters = JSON.stringify(filters);
+      console.log(filters);
+      const sqlQuery = `call nettVerticalMovement('${filters}')`;
 
-    let formattedData = await this.redis.get(sqlQuery);
+      let formattedData = await this.redis.get(`ryce` + sqlQuery);
 
-    if (!formattedData) {
-      const queryData = await this.snowflakeService.execute(sqlQuery);
-      // const analyzedData = await this.statisticalAnalysisService.analyze(
-      //   queryData,
-      // );
-      formattedData = await this.graphFormattingService.formatNettVertical(
-        JSON.stringify(queryData),
-      );
+      if (!formattedData) {
+        let queryData;
+        try {
+          queryData = await this.snowflakeService.execute(sqlQuery);
+        } catch (e) {
+          return {
+            status: 500,
+            error: true,
+            message: 'Data Warehouse Error',
+            timestamp: new Date().toISOString(),
+          };
+        }
 
-      await this.redis.set(sqlQuery, formattedData, 'EX', 24 * 60 * 60);
+        formattedData = await this.graphFormattingService.formatNettVertical(
+          JSON.stringify(queryData),
+        );
+
+        await this.redis.set(
+          `ryce` + sqlQuery,
+          formattedData,
+          'EX',
+          24 * 60 * 60,
+        );
+      }
+
+      filters = JSON.parse(filters);
+
+      return {
+        status: 'success',
+        data: { graphName: graphName, ...JSON.parse(formattedData) },
+        timestamp: new Date().toISOString(),
+      };
+    } catch (e) {
+      return {
+        status: 500,
+        error: true,
+        message: e,
+        timestamp: new Date().toISOString(),
+      };
     }
-
-    filters = JSON.parse(filters);
-
-    return {
-      status: 'success',
-      data: { graphName: graphName, ...JSON.parse(formattedData) },
-      timestamp: new Date().toISOString(),
-    };
   }
 
   netVerticalGraphName(filters: string): string {
@@ -71,7 +93,7 @@ export class MovementService {
       }
       zone = ' for ' + zone;
     } else {
-      zone = ' all zones ';
+      zone = ' all zones in registry';
     }
 
     let dateFrom;

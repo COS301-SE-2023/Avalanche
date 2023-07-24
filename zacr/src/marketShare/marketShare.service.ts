@@ -21,7 +21,7 @@ export class MarketShareService {
       console.log(filters);
       const sqlQuery = `call marketShare('${filters}')`;
 
-      let formattedData = await this.redis.get(sqlQuery);
+      let formattedData = await this.redis.get(`zacr` + sqlQuery);
 
       if (!formattedData) {
         let queryData;
@@ -39,7 +39,12 @@ export class MarketShareService {
           JSON.stringify(queryData),
         );
 
-        await this.redis.set(sqlQuery, formattedData, 'EX', 24 * 60 * 60);
+        await this.redis.set(
+          `zacr` + sqlQuery,
+          formattedData,
+          'EX',
+          24 * 60 * 60,
+        );
       }
       return {
         status: 'success',
