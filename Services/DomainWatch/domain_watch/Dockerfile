@@ -11,5 +11,6 @@ EXPOSE 4004
 COPY src ./src
 COPY target ./target
 COPY data ./data
+COPY domainWatch.conf ./domainWatch.conf
 
 CMD ["java","-jar","target/domain_watch-1.0-jar-with-dependencies.jar"]

@@ -25,7 +25,7 @@ import { RegistrarNameService } from './registrarName/registrarName.service';
         name: 'RyCE_SERVICE',
         transport: Transport.TCP,
         options: {
-          host: process.env.HOST,
+          host: process.env.HOST || 'localhost',
           port: 4004,
         },
       },

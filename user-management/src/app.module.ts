@@ -24,16 +24,16 @@ import { WatchedUser } from './entity/watch.entity';
         name: 'USER_MANAGEMENT_SERVICE',
         transport: Transport.TCP,
         options: {
-          host: 'localhost',
+          host: process.env.HOST || 'localhost',
           port: 4001,
         },
       },
     ]),
     JwtModule.registerAsync({
-      imports: [ConfigModule], 
+      imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => {
         return {
-          secret: configService.get<string>('JWT_SECRET'), 
+          secret: configService.get<string>('JWT_SECRET'),
           signOptions: { expiresIn: '24h' },
         } as JwtModuleOptions;
       },
@@ -53,12 +53,12 @@ import { WatchedUser } from './entity/watch.entity';
         synchronize: true,
       }),
       inject: [ConfigService],
-    }), 
+    }),
     TypeOrmModule.forFeature([User, UserGroup, Organisation, Dashboard, WatchedUser]),
   ],
   controllers: [AppController],
   providers: [AuthService, RedisProvider, UserOrganisationMangementService, UserDataProductMangementService, UserUserGroupMangementService, UserDashboardMangementService],
   exports: [AuthService, UserOrganisationMangementService, UserDataProductMangementService, UserUserGroupMangementService, UserDashboardMangementService],
 })
-export class AppModule {}
+export class AppModule { }
 

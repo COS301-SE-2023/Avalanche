@@ -157,3 +157,6 @@ ryce/.env
 africa/.env
 *.old
 docker-compose.yml
+Services/DomainWatch/domain_watch/target/test-classes/avalanche/Network/HandlerStrategy/RunningStrategies/HandlePassiveTest.class
+*.class
+*.class
