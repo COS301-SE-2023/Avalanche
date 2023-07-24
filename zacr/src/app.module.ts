@@ -25,7 +25,7 @@ import { MovementService } from './movement/movement.service';
         name: 'ZACR_SERVICE',
         transport: Transport.TCP,
         options: {
-          host: 'localhost',
+          host: process.env.HOST || 'localhost',
           port: 4002,
         },
       },
@@ -81,6 +81,6 @@ import { MovementService } from './movement/movement.service';
     SnowflakeService,
     MovementService
   ],
-  exports: [TransactionService,MarketShareService,MovementService,AgeService,DomainNameAnalysisService,AnalysisService,GraphFormatService,SnowflakeService,DomainWatchService],
+  exports: [TransactionService, MarketShareService, MovementService, AgeService, DomainNameAnalysisService, AnalysisService, GraphFormatService, SnowflakeService, DomainWatchService],
 })
-export class AppModule {}
+export class AppModule { }

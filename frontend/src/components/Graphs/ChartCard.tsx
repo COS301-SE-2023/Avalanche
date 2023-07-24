@@ -1,6 +1,6 @@
 import { ChartBarIcon, FunnelIcon, MagnifyingGlassPlusIcon, ChevronDownIcon } from "@heroicons/react/24/solid";
 import { BarChart, BubbleChart, LineChart, PieChart, PolarAreaChart, RadarChart } from "@/components/Graphs";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ChartType, ChartTypeArray } from "@/Enums";
 import { ChartCardButton } from "./ChartCardHeader";
 import { Fragment } from 'react'
@@ -8,8 +8,10 @@ import { Menu, Transition } from '@headlessui/react'
 import "animate.css";
 import { useDispatch } from "react-redux";
 import { setCurrentOpenState, setData } from "@/store/Slices/modalManagerSlice";
-import { CheckboxFilter, DatePickerFilter, RadioboxFilter } from "./Filters";
+import { CheckboxFilter, DatePickerFilter, RadioboxFilter, ToggleFilter } from "./Filters";
 import { Disclosure } from '@headlessui/react'
+import { v4 as uuidv4 } from 'uuid';
+import { SubmitButton } from "../Util";
 
 interface IChartCard {
     title: string,
@@ -23,6 +25,62 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
 
     const [type, setType] = useState<ChartType>(defaultGraph);
     const [filterDropdown, setFilterDropdown] = useState<boolean>(false);
+
+    const [request, setRequest] = useState<any>({});
+
+    const addRequestObject = (key: string, value: any) => {
+        if (!request[key]) {
+            const temp = { ...request };
+            temp[key] = value;
+            console.log(generateDefaultValue(value.type));
+            temp[key].value = generateDefaultValue(value.input);
+            setRequest(temp);
+        }
+    }
+
+    const generateDefaultValue = (type: string) => {
+        switch (type) {
+            case "togglebox": {
+                return false;
+            }
+            case "string": {
+                return "";
+            }
+            case "checkbox": {
+                return [];
+            }
+            case "radiobox": {
+                return "";
+            }
+        }
+    }
+
+    const updateRequestObject = (key: string, value: any) => {
+        if (request[key]) {
+            const temp = { ...request };
+            temp[key].value = value;
+            setRequest(temp);
+        }
+    }
+
+    const removeRequestObject = (key: string) => {
+        const temp = { ...request };
+        delete temp[key];
+        setRequest(temp);
+    }
+
+    const existsRequestObject = (key: string) => {
+        const t = request[key];
+        if (t) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    useEffect(() => {
+        console.log(request);
+    }, [request])
 
     const handleMagnifyModal = (value: boolean): void => {
         const modal: any = {
@@ -81,22 +139,39 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
 
         return tempFilters.map((element: any, index: number) => (
             <Disclosure key={index}>
-                {({ open }) => (
+                {({ open, close }) => (
                     <>
-                        <Disclosure.Button className="flex w-full justify-between rounded-lg px-4 py-2 text-left text-sm font-medium hover:bg-gray-300 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75">
-                            {camelCaseRenderer(element.name)}
+                        <Disclosure.Button className="flex w-full justify-between rounded-lg px-4 py-2 text-left text-sm font-medium hover:bg-gray-300 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75" onClick={() => {
+                            addRequestObject(element.name, element);
+                        }}>
+                            <div className="flex gap-4 items-center">
+                                {camelCaseRenderer(element.name)}
+                            </div>
                             <ChevronDownIcon className={`w-6 h-6 ${open && "rotate-180"}`} />
                         </Disclosure.Button>
                         <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
-                            {element.input === "checkbox" && <CheckboxFilter data={element} />}
-                            {element.input === "date-picker" && <DatePickerFilter data={element} />}
-                            {element.input === "radiobox" && <RadioboxFilter data={element} />}
+                            {element.input === "checkbox" && <CheckboxFilter data={element} request={request[element.name]} update={updateRequestObject} />}
+                            {element.input === "date-picker" && <DatePickerFilter data={element} request={request[element.name]} update={updateRequestObject} />}
+                            {element.input === "radiobox" && <RadioboxFilter data={element} request={request[element.name]} update={updateRequestObject} camelCase={camelCaseRenderer} />}
+                            {element.input === "togglebox" && <ToggleFilter data={element} request={request[element.name]} update={updateRequestObject} />}
                         </Disclosure.Panel>
                         <hr />
                     </>
                 )}
             </Disclosure>
         ))
+    }
+
+    const filterSubmit = () => {
+        const keys = Object.keys(request);
+
+        const requestObject: any = {};
+
+        keys.forEach((key, index) => {
+            requestObject[key] = request[key].value;
+        });
+
+        console.log(requestObject);
     }
 
     const camelCaseRenderer = (value: string) => {
@@ -126,6 +201,7 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
                             <div className="absolute right-0 z-20 w-96 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none p-2 dark:bg-gray-700 max-h-72 overflow-y-scroll">
                                 <h1 className="text-xl underline font-semibold">Filters</h1>
                                 {renderFilters()}
+                                <SubmitButton text="Get Results" className="mt-4 w-full" onClick={() => filterSubmit()} />
                             </div>
                         </Transition>
 

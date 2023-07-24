@@ -24,7 +24,7 @@ import { DomainWatchService } from './domainWatch/domain-watch-analysis.service'
         name: 'AFRICA_SERVICE',
         transport: Transport.TCP,
         options: {
-          host: process.env.AFRICA,
+          host: process.env.AFRICA || 'localhost',
           port: 4005,
         },
       },
