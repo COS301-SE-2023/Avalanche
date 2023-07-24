@@ -424,7 +424,12 @@
                         "name": "zone",
                         "type": "string[]",
                         "values": [
-                            "WIEN",
+                            {"name" :"WIEN", "filters" : [{
+                                "name": "transactions",
+                                 "type": "string[]",
+                                 "values": ["cozaCreate","cozaGrace", "cozaRedeem", "cozaTransfer", "cozaRenew"],
+                                 "input" : "checkbox"
+                            }]},
                             "COLOGNE",
                             "KOELN",
                             "TIROL"
