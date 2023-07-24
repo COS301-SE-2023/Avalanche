@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
@@ -109,8 +110,11 @@ describe('User Management Integration Tests From Gateway', () => {
       const response = await request(app.getHttpServer())
         .post('/user-management/login')
         .send(user);
-
-      accessToken = response.body.userWithToken.token; // This may change based on the structure of your response
+      console.log(response.body.userWithToken);
+      if(response.body.userWithToken.token){
+        accessToken = response.body.userWithToken.token;
+      }
+ // This may change based on the structure of your response
     });
 
     describe('Create Organisation', () => {

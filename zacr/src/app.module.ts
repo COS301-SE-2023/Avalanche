@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -11,9 +10,16 @@ import { RedisProvider } from './redis.provider';
 import { AnalysisService } from './analysis/analysis.service';
 import { GraphFormatService } from './graph-format/graph-format.service';
 import { SnowflakeService } from './snowflake/snowflake.service';
+import { MarketShareService } from './marketShare/marketShare.service';
+import { AgeService } from './age/age.service';
+import { DomainNameAnalysisService } from './domainNameAnalysis/domain-name-analysis.service';
+import { HttpModule } from '@nestjs/axios';
+import { DomainWatchService } from './domainWatch/domain-watch-analysis.service';
+import { MovementService } from './movement/movement.service';
 
 @Module({
   imports: [
+    HttpModule,
     ClientsModule.register([
       {
         name: 'ZACR_SERVICE',
@@ -25,19 +31,20 @@ import { SnowflakeService } from './snowflake/snowflake.service';
       },
     ]),
     JwtModule.registerAsync({
-      imports: [ConfigModule], 
+      imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => {
         return {
-          secret: configService.get<string>('JWT_SECRET'), 
+          secret: configService.get<string>('JWT_SECRET'),
           signOptions: { expiresIn: '24h' },
         } as JwtModuleOptions;
       },
       inject: [ConfigService],
     }),
-    ConfigModule.forRoot({ isGlobal: true }), 
+    ConfigModule.forRoot({ isGlobal: true }),
   ],
   controllers: [AppController],
-  providers: [RedisProvider,
+  providers: [
+    RedisProvider,
     {
       provide: 'SNOWFLAKE_CONNECTION',
       useFactory: () => {
@@ -65,10 +72,15 @@ import { SnowflakeService } from './snowflake/snowflake.service';
       },
     },
     TransactionService,
+    MarketShareService,
+    AgeService,
+    DomainNameAnalysisService,
+    DomainWatchService,
     AnalysisService,
     GraphFormatService,
-    SnowflakeService
+    SnowflakeService,
+    MovementService
   ],
-  exports: [TransactionService,AnalysisService,GraphFormatService,SnowflakeService],
+  exports: [TransactionService,MarketShareService,MovementService,AgeService,DomainNameAnalysisService,AnalysisService,GraphFormatService,SnowflakeService,DomainWatchService],
 })
 export class AppModule {}

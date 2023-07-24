@@ -51,7 +51,6 @@ export default function APIKeyCreateModal({ }: IAPIKeyCreateModal) {
         };
 
         setLoading(true);
-        ErrorToast({ text: "Nothing is implemented yet. Un-loading in 3 seconds." });
         setTimeout(() => {
             setLoading(false);
         }, 3000);

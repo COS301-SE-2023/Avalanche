@@ -1,5 +1,5 @@
 export default interface ITransactionGraphRequest {
-    registrar?: string,
+    registrar?: string[],
     zone?: string,
     dateFrom?: string //format yyyy-mm-dd
     dateTo?: string //format yyyy-mm-dd

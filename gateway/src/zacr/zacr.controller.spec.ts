@@ -25,9 +25,35 @@ describe('ZacrController', () => {
     const data = { key: 'value' };
     const expectedResponse = { status: 'success' };
 
-    jest.spyOn(client, 'send').mockImplementationOnce(() => of(expectedResponse));
+    jest
+      .spyOn(client, 'send')
+      .mockImplementationOnce(() => of(expectedResponse));
 
     expect(await controller.transactions(data)).toEqual(expectedResponse);
     expect(client.send).toHaveBeenCalledWith({ cmd: 'transactions' }, data);
+  });
+
+  it('should post marketShare', async () => {
+    const data = { key: 'value' };
+    const expectedResponse = { status: 'success' };
+
+    jest
+      .spyOn(client, 'send')
+      .mockImplementationOnce(() => of(expectedResponse));
+
+    expect(await controller.marketShare(data)).toEqual(expectedResponse);
+    expect(client.send).toHaveBeenCalledWith({ cmd: 'marketShare' }, data);
+  });
+
+  it('should post age', async () => {
+    const data = { key: 'value' };
+    const expectedResponse = { status: 'success' };
+
+    jest
+      .spyOn(client, 'send')
+      .mockImplementationOnce(() => of(expectedResponse));
+
+    expect(await controller.age(data)).toEqual(expectedResponse);
+    expect(client.send).toHaveBeenCalledWith({ cmd: 'age' }, data);
   });
 });

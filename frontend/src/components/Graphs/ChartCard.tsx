@@ -1,4 +1,4 @@
-import { ChartBarIcon, FunnelIcon, MagnifyingGlassPlusIcon } from "@heroicons/react/24/solid";
+import { ChartBarIcon, FunnelIcon, MagnifyingGlassPlusIcon, ChevronDownIcon } from "@heroicons/react/24/solid";
 import { BarChart, BubbleChart, LineChart, PieChart, PolarAreaChart, RadarChart } from "@/components/Graphs";
 import { useState } from 'react';
 import { ChartType, ChartTypeArray } from "@/Enums";
@@ -8,6 +8,8 @@ import { Menu, Transition } from '@headlessui/react'
 import "animate.css";
 import { useDispatch } from "react-redux";
 import { setCurrentOpenState, setData } from "@/store/Slices/modalManagerSlice";
+import { CheckboxFilter, DatePickerFilter, RadioboxFilter } from "./Filters";
+import { Disclosure } from '@headlessui/react'
 
 interface IChartCard {
     title: string,
@@ -20,7 +22,7 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
     const dispatch = useDispatch();
 
     const [type, setType] = useState<ChartType>(defaultGraph);
-    const [magnifyModal, setMagnifyModal] = useState<boolean>(false);
+    const [filterDropdown, setFilterDropdown] = useState<boolean>(false);
 
     const handleMagnifyModal = (value: boolean): void => {
         const modal: any = {
@@ -30,15 +32,104 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
         dispatch(setData(modal));
     }
 
+    const renderFilters = () => {
+        const tempFilters = [
+            {
+                "name": "zone",
+                "type": "string[]",
+                "values": [
+                    "CO.ZA",
+                    "ORG.ZA",
+                    "NET.ZA"
+                ],
+                "input": "checkbox"
+            },
+            {
+                "name": "dateFrom",
+                "type": "string",
+                "input": "date-picker"
+            },
+            {
+                "name": "dateTo",
+                "type": "string",
+                "input": "date-picker"
+            },
+            {
+                "name": "transactions",
+                "type": "string",
+                "values": [
+                    "create",
+                    "grace",
+                    "redeem",
+                    "transfer",
+                    "renew"
+                ],
+                "input": "checkbox"
+            },
+            {
+                "name": "granularity",
+                "type": "string",
+                "values": [
+                    "day",
+                    "week",
+                    "month",
+                    "year"
+                ],
+                "input": "radiobox"
+            }
+        ]
+
+        return tempFilters.map((element: any, index: number) => (
+            <Disclosure key={index}>
+                {({ open }) => (
+                    <>
+                        <Disclosure.Button className="flex w-full justify-between rounded-lg px-4 py-2 text-left text-sm font-medium hover:bg-gray-300 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75">
+                            {camelCaseRenderer(element.name)}
+                            <ChevronDownIcon className={`w-6 h-6 ${open && "rotate-180"}`} />
+                        </Disclosure.Button>
+                        <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
+                            {element.input === "checkbox" && <CheckboxFilter data={element} />}
+                            {element.input === "date-picker" && <DatePickerFilter data={element} />}
+                            {element.input === "radiobox" && <RadioboxFilter data={element} />}
+                        </Disclosure.Panel>
+                        <hr />
+                    </>
+                )}
+            </Disclosure>
+        ))
+    }
+
+    const camelCaseRenderer = (value: string) => {
+        return value.replace(/([A-Z])/g, ' $1').replace(/^./, function (str) { return str.toUpperCase(); })
+    }
+
     return (<>
         <div className="block p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-primaryBackground dark:border-primaryBackground w-full animate__animated animate__fadeIn animate__slow">
             <div className="flex justify-between mb-5 text-black dark:text-white">
                 <h1 className="p-1.5">{title}</h1>
                 <div className="flex flex-row gap-1">
-                    {/* <ChartCardButton onClick={(value: boolean) => setTypeDropdown(value)}>
-                        <FunnelIcon className="w-6 h-6" />
-                    </ChartCardButton>
-                    */}
+                    <div className="relative">
+                        <div className="inline-flex justify-center p-1.5 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-lightHover dark:hover:bg-gray-600" onClick={() => setFilterDropdown(!filterDropdown)}>
+                            <FunnelIcon className="w-6 h-6" />
+                        </div>
+                        <Transition
+                            as={Fragment}
+                            enter="transition ease-out duration-100"
+                            enterFrom="transform opacity-0 scale-95"
+                            enterTo="transform opacity-100 scale-100"
+                            leave="transition ease-in duration-75"
+                            leaveFrom="transform opacity-100 scale-100"
+                            leaveTo="transform opacity-0 scale-95"
+                            appear={true}
+                            show={filterDropdown}
+                        >
+                            <div className="absolute right-0 z-20 w-96 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none p-2 dark:bg-gray-700 max-h-72 overflow-y-scroll">
+                                <h1 className="text-xl underline font-semibold">Filters</h1>
+                                {renderFilters()}
+                            </div>
+                        </Transition>
+
+                    </div>
                     <ChartCardButton onClick={(value: boolean) => {
                         handleMagnifyModal(value);
                     }}>
@@ -76,7 +167,6 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
                             </Menu.Items>
                         </Transition>
                     </Menu>
-
                 </div>
             </div>
             {type === ChartType.Bar && <BarChart data={data} />}

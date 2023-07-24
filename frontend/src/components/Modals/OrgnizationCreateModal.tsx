@@ -42,12 +42,11 @@ export default function OrgnizationCreateModal({ }: IOrgnizationCreateModal) {
         event.preventDefault();
 
         if (!name) {
-            ErrorToast({ text: "Invalid organization name. Please provide a valid one." });
+            return ErrorToast({ text: "Invalid organization name. Please provide a valid one." });
         } else if (name.length > nameLength) {
-            ErrorToast({ text: "Organization name is too long. Please shorten it. " });
+            return ErrorToast({ text: "Organization name is too long. Please shorten it. " });
         } else {
             setLoading(true);
-            ErrorToast({ text: "Nothing is implemented yet. Un-loading in 3 seconds." });
             setTimeout(() => {
                 setLoading(false);
             }, 3000);

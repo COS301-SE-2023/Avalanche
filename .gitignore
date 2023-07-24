@@ -153,3 +153,7 @@ Services/DomainNameAnalysis/domain_name_analysis/target/classes/avalanche/Networ
 Services/DomainNameAnalysis/domain_name_analysis/target/classes/avalanche/Utility/DomainTokeniser.class
 Services/DomainNameAnalysis/domain_name_analysis/target/classes/avalanche/Utility/DomainTokeniser$BestMatchResult.class
 Services/DomainWatch/domain_watch/domain_watch.rar
+ryce/.env
+africa/.env
+*.old
+docker-compose.yml
