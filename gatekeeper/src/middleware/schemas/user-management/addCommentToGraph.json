@@ -1,0 +1,17 @@
+
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string"
+      },
+      "graphName": {
+        "type": "string"
+      },
+      "comment": {
+        "type": "string"
+      }
+    },
+    "required": ["name", "graphName", "comment"]
+  }

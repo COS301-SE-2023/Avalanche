@@ -13,21 +13,6 @@
         },
         "zone": {
             "type": "string"
-        },
-        "dateFrom": {
-            "type": "string",
-            "format": "date"
-        },
-        "dateTo": {
-            "type": "string",
-            "format": "date"
-        },
-        "granularity": {
-            "type": "string",
-            "enum": ["day", "month", "week", "year"]
-        },
-        "group": {
-            "type": "string"
         }
     }
 }

@@ -5,20 +5,10 @@
         "graphName" : {
             "type" : "string"
         },
-        "registrars": {
-            "type": "array",
-            "items": {
-                "type": "string"
-            }
-        },
-        "zone": {
-            "type": "string"
+        "num": {
+            "type" : "number"
         },
         "dateFrom": {
-            "type": "string",
-            "format": "date"
-        },
-        "dateTo": {
             "type": "string",
             "format": "date"
         },
@@ -26,8 +16,8 @@
             "type": "string",
             "enum": ["day", "month", "week", "year"]
         },
-        "group": {
-            "type": "string"
+        "minimumAppearances": {
+            "type": "number"
         }
     }
 }
