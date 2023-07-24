@@ -14,10 +14,10 @@ function classNames(...classes: any[]) {
 }
 
 interface IOrganizationSettings {
-    demo?: boolean,
+
 }
 
-export default function OrganizationSettings({ demo }: IOrganizationSettings) {
+export default function OrganizationSettings({ }: IOrganizationSettings) {
 
     const modalState = useSelector(selectModalManagerState);
     const stateUser = useSelector(userState);
@@ -252,7 +252,7 @@ export default function OrganizationSettings({ demo }: IOrganizationSettings) {
             </div>
 
         </> : <div className="flex justify-between items-center gap-10 mb-4">
-            <WarningAlert title="Cannot Create!" text="Organizations are created automatically htmlFor you when you setup an integration." />
+            <WarningAlert title="No Organisation" text='To create an organisation, simply click on the "Add a new organisation" button to get started!' />
             <SubmitButton text="Add a new organization" onClick={() => dispatch(setCurrentOpenState("ORG.CreateOrg"))} />
         </div>
         }
