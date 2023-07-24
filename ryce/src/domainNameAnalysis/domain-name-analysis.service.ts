@@ -15,74 +15,123 @@ export class DomainNameAnalysisService {
   ) {}
 
   async sendData(data: any): Promise<any> {
-    console.log(data);
-    const filters = JSON.stringify(data.filters);
-    console.log(filters);
-    const num = data.filters.num;
-    const granularity = data.filters.granularity;
+    try {
+      console.log(data);
+      const filters = JSON.stringify(data.filters);
+      console.log(filters);
+      const num = data.filters.num;
+      const granularity = data.filters.granularity;
 
-    const sqlQuery = `call domainNameAnalysis('${filters}')`;
-    console.log(sqlQuery);
-    const formattedData = await this.redis.get(sqlQuery);
+      const sqlQuery = `call domainNameAnalysis('${filters}')`;
+      console.log(sqlQuery);
+      let formattedData = await this.redis.get(`ryce` + sqlQuery);
 
-    if (!formattedData) {
-      const queryData = await this.snowflakeService.execute(sqlQuery);
-      console.log(queryData[0]['DOMAINNAMEANALYSIS']);
-      data.data = queryData[0]['DOMAINNAMEANALYSIS'];
-      delete data.filters;
-      const response = this.httpService.post(
-        'http://zanet.cloud:4005/domainNameAnalysis/list',
-        data,
-      );
-      const responseData = await lastValueFrom(response);
-      console.log(responseData);
-      const formattedData =
-        await this.graphFormattingService.formatDomainNameAnalysis(
-          JSON.stringify(responseData.data),
+      if (!formattedData) {
+        let queryData;
+        try {
+          queryData = await this.snowflakeService.execute(sqlQuery);
+        } catch (e) {
+          return {
+            status: 500,
+            error: true,
+            message: 'Data Warehouse Error',
+            timestamp: new Date().toISOString(),
+          };
+        }
+        console.log(queryData[0]['DOMAINNAMEANALYSIS']);
+        data.data = queryData[0]['DOMAINNAMEANALYSIS'];
+        delete data.filters;
+        const response = this.httpService.post(
+          'http://zanet.cloud:4005/domainNameAnalysis/list',
+          data,
         );
-      await this.redis.set(sqlQuery, formattedData, 'EX', 24 * 60 * 60);
-    }
+        const responseData = await lastValueFrom(response);
+        console.log(responseData);
+        formattedData =
+          await this.graphFormattingService.formatDomainNameAnalysis(
+            JSON.stringify(responseData.data),
+          );
+        await this.redis.set(
+          `ryce` + sqlQuery,
+          formattedData,
+          'EX',
+          24 * 60 * 60,
+        );
+      }
 
-    return {
-      status: 'success',
-      data: {
-        graphName:
-          'Most common sub words in newly created domains in the last ' +
-          num +
-          ' ' +
-          granularity +
-          '(s)',
-        ...JSON.parse(formattedData),
-      },
-      timestamp: new Date().toISOString(),
-    };
+      return {
+        status: 'success',
+        data: {
+          graphName:
+            'Most common sub words in newly created domains in the last ' +
+            num +
+            ' ' +
+            granularity +
+            '(s)',
+          ...JSON.parse(formattedData),
+        },
+        timestamp: new Date().toISOString(),
+      };
+    } catch (e) {
+      return {
+        status: 500,
+        error: true,
+        message: e,
+        timestamp: new Date().toISOString(),
+      };
+    }
   }
 
   async domainLength(filters: string, graphName: string): Promise<any> {
-    graphName = this.domainLengthGraphName(filters);
+    try {
+      graphName = this.domainLengthGraphName(filters);
 
-    filters = JSON.stringify(filters);
-    console.log(filters);
-    const sqlQuery = `CALL SKUNKWORKS_DB.public.domainLengthAnalysis('${filters}')`;
+      filters = JSON.stringify(filters);
+      console.log(filters);
+      const sqlQuery = `CALL SKUNKWORKS_DB.public.domainLengthAnalysis('${filters}')`;
 
-    let formattedData = await this.redis.get(sqlQuery);
+      let formattedData = await this.redis.get(`ryce` + sqlQuery);
 
-    if (!formattedData) {
-      const queryData = await this.snowflakeService.execute(sqlQuery);
-      // const analyzedData = await this.statisticalAnalysisService.analyze(
-      //   queryData,
-      // );
-      formattedData =
-        await this.graphFormattingService.formatDomainLengthAnalysis(
-          JSON.stringify(queryData),
+      if (!formattedData) {
+        let queryData;
+
+        try {
+          queryData = await this.snowflakeService.execute(sqlQuery);
+        } catch (e) {
+          return {
+            status: 500,
+            error: true,
+            message: 'Data Warehouse Error',
+            timestamp: new Date().toISOString(),
+          };
+        }
+        // const analyzedData = await this.statisticalAnalysisService.analyze(
+        //   queryData,
+        // );
+        formattedData =
+          await this.graphFormattingService.formatDomainLengthAnalysis(
+            JSON.stringify(queryData),
+          );
+        await this.redis.set(
+          `ryce` + sqlQuery,
+          formattedData,
+          'EX',
+          24 * 60 * 60,
         );
-      await this.redis.set(sqlQuery, formattedData, 'EX', 24 * 60 * 60);
+      }
+      return {
+        status: 'success',
+        data: { graphName: graphName, ...JSON.parse(formattedData) },
+        timestamp: new Date().toISOString(),
+      };
+    } catch (e) {
+      return {
+        status: 500,
+        error: true,
+        message: e,
+        timestamp: new Date().toISOString(),
+      };
     }
-    return {
-      status: 'success',
-      data: { graphName: graphName, ...JSON.parse(formattedData) },
-      timestamp: new Date().toISOString(),
-    };
   }
 
   domainLengthGraphName(filters: string): string {
