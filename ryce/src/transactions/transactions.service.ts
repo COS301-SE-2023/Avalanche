@@ -14,7 +14,7 @@ export class TransactionService {
     private readonly snowflakeService: SnowflakeService,
     private readonly statisticalAnalysisService: AnalysisService,
     private readonly graphFormattingService: GraphFormatService,
-  ) { }
+  ) {}
 
   async transactions(filters: string, graphName: string): Promise<any> {
     try {
@@ -69,12 +69,13 @@ export class TransactionService {
   async transactionsRanking(filters: string, graphName: string): Promise<any> {
     try {
       graphName = this.transactionsGraphName(filters, true);
-
-      filters = JSON.stringify(filters);
+      const filterObj = JSON.parse(JSON.stringify(filters));
+      filterObj.isRanking = true;
+      filters = JSON.stringify(filterObj);
       console.log(filters);
       const sqlQuery = `call transactionsByRegistrar('${filters}')`;
 
-      let formattedData = await this.redis.get(`ryce` + sqlQuery);
+      let formattedData = await this.redis.get(`ryceessele` + sqlQuery);
 
       if (!formattedData) {
         let queryData;
@@ -88,11 +89,14 @@ export class TransactionService {
             timestamp: new Date().toISOString(),
           };
         }
+        console.log('QD');
+        console.log(queryData);
         formattedData =
           await this.graphFormattingService.formatTransactionsRanking(
             JSON.stringify(queryData),
           );
 
+        console.log('FD ' + formattedData);
         await this.redis.set(
           `ryce` + sqlQuery,
           formattedData,
@@ -109,7 +113,7 @@ export class TransactionService {
       return {
         status: 500,
         error: true,
-        message: e,
+        message: e.message,
         timestamp: new Date().toISOString(),
       };
     }
