@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { DeleteButton, SubmitButton, ErrorToast } from '../Util';
-import { ModalContent, ModalHeader, ModalWrapper } from './ModalOptions';
+import { ModalWrapper } from './ModalOptions';
 
 // Redux Stuff
 import { setAnimateManagerState, clearCurrentOpenState } from '@/store/Slices/modalManagerSlice';
@@ -27,22 +27,19 @@ export default function ConfirmModal({ text, buttonSuccess, buttonCancel, title 
     }
 
     return (
-        <ModalWrapper>
-            <ModalHeader title={title} />
-            <ModalContent>
-                <p className="text-sm mb-4 text-gray-500">{text}</p>
-                <form className="flex gap-5" onSubmit={(event) => formSubmit(event)}>
-                    <SubmitButton text={buttonSuccess} onClick={(event: React.FormEvent<HTMLFormElement>) => {
-                        formSubmit(event);
-                        setLoading(true);
-                    }} className="w-full" loading={loading} />
-                    <DeleteButton text={buttonCancel} onClick={(event: React.FormEvent<HTMLFormElement>) => {
-                        event.preventDefault();
-                        dispatch(clearCurrentOpenState());
-                        dispatch(setAnimateManagerState(true));
-                    }} className="w-full" disabled={loading} />
-                </form>
-            </ModalContent>
+        <ModalWrapper title={title}>
+            <p className="text-sm mb-4 text-gray-500">{text}</p>
+            <form className="flex gap-5" onSubmit={(event) => formSubmit(event)}>
+                <SubmitButton text={buttonSuccess} onClick={(event: React.FormEvent<HTMLFormElement>) => {
+                    formSubmit(event);
+                    setLoading(true);
+                }} className="w-full" loading={loading} />
+                <DeleteButton text={buttonCancel} onClick={(event: React.FormEvent<HTMLFormElement>) => {
+                    event.preventDefault();
+                    dispatch(clearCurrentOpenState());
+                    dispatch(setAnimateManagerState(true));
+                }} className="w-full" disabled={loading} />
+            </form>
         </ModalWrapper>
     )
 }

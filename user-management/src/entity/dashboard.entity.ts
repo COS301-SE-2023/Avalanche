@@ -11,7 +11,7 @@ export class Dashboard {
   name: string;
 
   @Column()
-  id : string;
+  dashboardID : string;
 
   @ManyToMany(() => User, (user) => user.dashboards)
   @JoinColumn({ name: 'userId' })

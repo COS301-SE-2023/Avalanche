@@ -14,7 +14,7 @@ export class TransactionService {
     private readonly snowflakeService: SnowflakeService,
     private readonly statisticalAnalysisService: AnalysisService,
     private readonly graphFormattingService: GraphFormatService,
-  ) {}
+  ) { }
 
   async transactions(filters: string, graphName: string): Promise<any> {
     try {
@@ -51,6 +51,8 @@ export class TransactionService {
         );
       }
 
+      console.log(formattedData);
+
       return {
         status: 'success',
         data: {
@@ -62,6 +64,7 @@ export class TransactionService {
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
+      console.log(e.message);
       return {
         status: 500,
         error: true,

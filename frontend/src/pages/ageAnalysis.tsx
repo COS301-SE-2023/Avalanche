@@ -28,16 +28,16 @@ export default function AgeAnalysis() {
 
         const arrayAgeAnalysisShare: IAgeAnalysisGraphRequest[] = [];
 
-        const ageAnalysisAverageTop5: IAgeAnalysisGraphRequest = { rank : 'top5', average : true, overall: false, zone: 'WIEN' };
+        const ageAnalysisAverageTop5: IAgeAnalysisGraphRequest = { rank: 'top5', average: true, overall: false, zone: ['WIEN'] };
         arrayAgeAnalysisShare.push(ageAnalysisAverageTop5);
 
-        const ageAnalysisTop5: IAgeAnalysisGraphRequest = {rank : 'top5', overall: false, average: false, zone: 'WIEN'};
+        const ageAnalysisTop5: IAgeAnalysisGraphRequest = { rank: 'top5', overall: false, average: false, zone: ['WIEN'] };
         arrayAgeAnalysisShare.push(ageAnalysisTop5);
 
-        const marketShareTop20: IAgeAnalysisGraphRequest = {rank : 'top20', overall: false, average: true, zone: 'WIEN'};
+        const marketShareTop20: IAgeAnalysisGraphRequest = { rank: 'top20', overall: false, average: true, zone: ['WIEN'] };
         arrayAgeAnalysisShare.push(marketShareTop20);
 
-        const ageAnalysisTop10: IAgeAnalysisGraphRequest = {rank : 'top10', overall: false, average: true, zone: 'WIEN'};
+        const ageAnalysisTop10: IAgeAnalysisGraphRequest = { rank: 'top10', overall: false, average: true, zone: ['WIEN'] };
         arrayAgeAnalysisShare.push(ageAnalysisTop10);
 
         arrayAgeAnalysisShare.forEach(data => {
@@ -95,7 +95,7 @@ export default function AgeAnalysis() {
                                     <div className="h-6 w-6 bg-gray-200 rounded dark:bg-gray-800 w-32"></div>
                                 </div>
                             </div>
-                        
+
                         </>
                     }
                     {/* <ChartCard title="A ChartJS Chart 1" data={chartData} defaultGraph={ChartType.Pie} />
