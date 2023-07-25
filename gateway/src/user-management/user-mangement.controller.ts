@@ -28,11 +28,40 @@ export class UserManagementController {
                   "name": "zone",
                   "type": "string[]",
                   "values": [
-                    "CO.ZA",
-                    "ORG.ZA",
-                    "NET.ZA"
+                    {
+                      "name": "CO.ZA", "filters": [{
+                        "name": "transactions",
+                        "type": "string[]",
+                        "values": ["cozaAccredited", "cozaCreate", "cozaGrace", "cozaRedeem", "cozaTransfer", "cozaRenew"],
+                        "input": "checkbox"
+                      }]
+                    },
+                    {
+                      "name": "ORG.ZA", "filters": [{
+                        "name": "transactions",
+                        "type": "string[]",
+                        "values": ["orgzaRedeem", "orgzaGrace", "orgzaLandrush", "orgzaLandrushPremium", "orgzaLegacyTransfer", "orgzaCreate", "orgzaPremium", "orgzaRenew", "orgzaSunrise", "orgzaPremium", "orgzaTransfer"],
+                        "input": "checkbox"
+                      }]
+                    },
+                    {
+                      "name": "NET.ZA", "filters": [{
+                        "name": "transactions",
+                        "type": "string[]",
+                        "values": ["netzaRedeem", "netzaGrace", "netzaLandrush", "netzaLandrushPremium", "netzaLegacyTransfer", "netzaCreate", "netzaPremium", "netzaRenew", "netzaSunrise", "netzaSunrisePremium", "netzaTrnasfer"],
+                        "input": "checkbox"
+                      }]
+                    },
+                    {
+                      "name": "WEB.ZA", "filters": [{
+                        "name": "transactions",
+                        "type": "string[]",
+                        "values": ["webzaRedeem", "webzaGrace", "webzaLandrush", "webzaLandrushPremium", "webzaCreate", "webzaCreateVT", "webzaPremium", "webzaRenew", "webzaSunrise", "webzaSunrisePremium", "webzaTransfer"],
+                        "input": "checkbox"
+                      }]
+                    }
                   ],
-                  "input": "checkbox"
+                  "input": "nestedCheckbox"
                 },
                 {
                   "name": "dateFrom",
@@ -43,18 +72,6 @@ export class UserManagementController {
                   "name": "dateTo",
                   "type": "string",
                   "input": "date-picker"
-                },
-                {
-                  "name": "transactions",
-                  "type": "string",
-                  "values": [
-                    "create",
-                    "grace",
-                    "redeem",
-                    "transfer",
-                    "renew"
-                  ],
-                  "input": "checkbox"
                 },
                 {
                   "name": "granularity",
@@ -76,11 +93,40 @@ export class UserManagementController {
                   "name": "zone",
                   "type": "string[]",
                   "values": [
-                    "CO.ZA",
-                    "ORG.ZA",
-                    "NET.ZA"
+                    {
+                      "name": "CO.ZA", "filters": [{
+                        "name": "transactions",
+                        "type": "string[]",
+                        "values": ["cozaAccredited", "cozaCreate", "cozaGrace", "cozaRedeem", "cozaTransfer", "cozaRenew"],
+                        "input": "checkbox"
+                      }]
+                    },
+                    {
+                      "name": "ORG.ZA", "filters": [{
+                        "name": "transactions",
+                        "type": "string[]",
+                        "values": ["orgzaRedeem", "orgzaGrace", "orgzaLandrush", "orgzaLandrushPremium", "orgzaLegacyTransfer", "orgzaCreate", "orgzaPremium", "orgzaRenew", "orgzaSunrise", "orgzaPremium", "orgzaTransfer"],
+                        "input": "checkbox"
+                      }]
+                    },
+                    {
+                      "name": "NET.ZA", "filters": [{
+                        "name": "transactions",
+                        "type": "string[]",
+                        "values": ["netzaRedeem", "netzaGrace", "netzaLandrush", "netzaLandrushPremium", "netzaLegacyTransfer", "netzaCreate", "netzaPremium", "netzaRenew", "netzaSunrise", "netzaSunrisePremium", "netzaTrnasfer"],
+                        "input": "checkbox"
+                      }]
+                    },
+                    {
+                      "name": "WEB.ZA", "filters": [{
+                        "name": "transactions",
+                        "type": "string[]",
+                        "values": ["webzaRedeem", "webzaGrace", "webzaLandrush", "webzaLandrushPremium", "webzaCreate", "webzaCreateVT", "webzaPremium", "webzaRenew", "webzaSunrise", "webzaSunrisePremium", "webzaTransfer"],
+                        "input": "checkbox"
+                      }]
+                    }
                   ],
-                  "input": "checkbox"
+                  "input": "nestedCheckbox"
                 },
                 {
                   "name": "registrar",
@@ -100,18 +146,6 @@ export class UserManagementController {
                   "name": "dateTo",
                   "type": "string",
                   "input": "date-picker"
-                },
-                {
-                  "name": "transactions",
-                  "type": "string",
-                  "values": [
-                    "create",
-                    "grace",
-                    "redeem",
-                    "transfer",
-                    "renew"
-                  ],
-                  "input": "checkbox"
                 },
                 {
                   "name": "granularity",
@@ -135,7 +169,8 @@ export class UserManagementController {
                   "values": [
                     "CO.ZA",
                     "NET.ZA",
-                    "ORG.ZA"
+                    "ORG.ZA",
+                    "WEB.ZA"
                   ],
                   "input": "checkbox"
                 },
@@ -168,7 +203,8 @@ export class UserManagementController {
                   "values": [
                     "CO.ZA",
                     "NET.ZA",
-                    "ORG.ZA"
+                    "ORG.ZA",
+                    "WEB.ZA"
                   ],
                   "input": "checkbox"
                 },
@@ -226,6 +262,27 @@ export class UserManagementController {
                   "type": "number",
                   "input": "inputbox"
                 }
+              ]
+            },
+            {
+              "name": "movement",
+              "filters": [
+                {
+                  "name": "zone",
+                  "type": "string[]",
+                  "values": [
+                    "CO.ZA",
+                    "NET.ZA",
+                    "ORG.ZA",
+                    "WEB.ZA"
+                  ],
+                  "input": "checkbox"
+                },
+                {
+                  "name": "registrar",
+                  "type": "string",
+                  "input": "checkbox"
+                },
               ]
             }
           ]
@@ -240,9 +297,16 @@ export class UserManagementController {
                   "name": "zone",
                   "type": "string[]",
                   "values": [
-                    "AFRICA"
+                    {
+                      "name": "AFRICA", "filters": [{
+                        "name": "transactions",
+                        "type": "string[]",
+                        "values": ["create", "grace", "redeem", "transfer", "renew", "genesis", "sunrisePremium", "sunrise", "landrush1", "landrush2", "landrush3", "landrush4", "premium",],
+                        "input": "checkbox"
+                      }]
+                    }
                   ],
-                  "input": "checkbox"
+                  "input": "nestedCheckbox"
                 },
                 {
                   "name": "dateFrom",
@@ -253,18 +317,6 @@ export class UserManagementController {
                   "name": "dateTo",
                   "type": "string",
                   "input": "date-picker"
-                },
-                {
-                  "name": "transactions",
-                  "type": "string",
-                  "values": [
-                    "create",
-                    "grace",
-                    "redeem",
-                    "transfer",
-                    "renew"
-                  ],
-                  "input": "checkbox"
                 },
                 {
                   "name": "granularity",
@@ -286,9 +338,16 @@ export class UserManagementController {
                   "name": "zone",
                   "type": "string[]",
                   "values": [
-                    "AFRICA"
+                    {
+                      "name": "AFRICA", "filters": [{
+                        "name": "transactions",
+                        "type": "string[]",
+                        "values": ["create", "grace", "redeem", "transfer", "renew", "genesis", "sunrisePremium", "sunrise", "landrush1", "landrush2", "landrush3", "landrush4", "premium",],
+                        "input": "checkbox"
+                      }]
+                    }
                   ],
-                  "input": "checkbox"
+                  "input": "nestedCheckbox"
                 },
                 {
                   "name": "registrar",
@@ -308,18 +367,6 @@ export class UserManagementController {
                   "name": "dateTo",
                   "type": "string",
                   "input": "date-picker"
-                },
-                {
-                  "name": "transactions",
-                  "type": "string",
-                  "values": [
-                    "create",
-                    "grace",
-                    "redeem",
-                    "transfer",
-                    "renew"
-                  ],
-                  "input": "checkbox"
                 },
                 {
                   "name": "granularity",
@@ -430,6 +477,24 @@ export class UserManagementController {
                   "type": "number",
                   "input": "inputbox"
                 }
+              ]
+            },
+            {
+              "name": "movement",
+              "filters": [
+                {
+                  "name": "zone",
+                  "type": "string[]",
+                  "values": [
+                    "AFRICA"
+                  ],
+                  "input": "checkbox"
+                },
+                {
+                  "name": "registrar",
+                  "type": "string",
+                  "input": "checkbox"
+                },
               ]
             }
           ]
@@ -444,12 +509,40 @@ export class UserManagementController {
                   "name": "zone",
                   "type": "string[]",
                   "values": [
-                    "WIEN",
-                    "COLOGNE",
-                    "KOELN",
-                    "TIROL"
+                    {
+                      "name": "WIEN", "filters": [{
+                        "name": "transactions",
+                        "type": "string[]",
+                        "values": ["wienGrace", "wienCreate", "wienPremiumA", "wienPremiumB", "wienPremiumC", "wienPremiumD", "wienPremiumE", "wienPremiumF", "wienPremiumG", "wienPremiumH", "wienRenew", "wienRenewPremiumA", "wienRenewPremiumB", "wienRenewPremiumC", "wienRenewPremiumD", "wienRenewPremiumE", "wienRenewPremiumG", "wienRenewPremiumH", "wienRestore", "wienTransfer", "wienTransferNull", "wienTransferPremiumA", "wienTransferPremiumB", "wienTransferPremiumC", "wienTransferPremiumD", "wienTransferPremiumE", "wienTransferPremiumG", "wienTransferPremiumH"],
+                        "input": "checkbox"
+                      }]
+                    },
+                    {
+                      "name": "COLOGNE", "filters": [{
+                        "name": "transactions",
+                        "type": "string[]",
+                        "values": ["cologneAutoRenew", "cologneCreate", "colognePremiumD", "colognePremiumI", "cologneRenew", "cologneRenewPremiumD", "cologneRenewPremiumI", "cologneRestore", "cologneTransfer", "cologneTransferPremiumD", "cologneTransferPremiumI"],
+                        "input": "checkbox"
+                      }]
+                    },
+                    {
+                      "name": "KOELN", "filters": [{
+                        "name": "transactions",
+                        "type": "string[]",
+                        "values": ["koelnAutoRenew", "koelnCreate", "koelnPremiumD", "koelnPremiumI", "koelnRenew", "koelnRenewPremiumD", "koelnRenewPremiumI", "koelnRestore", "koelnTransfer", "koelnTransferPremiumD", "koelnTransferPremiumI"],
+                        "input": "checkbox"
+                      }]
+                    },
+                    {
+                      "name": "TIROL", "filters": [{
+                        "name": "transactions",
+                        "type": "string[]",
+                        "values": ["tirolGrace", "tirolCreate", "tirolRenew", "tirolRestore", "tirolTransfer", "tirolTransferNull",],
+                        "input": "checkbox"
+                      }]
+                    },
                   ],
-                  "input": "checkbox"
+                  "input": "nestedCheckbox"
                 },
                 {
                   "name": "dateFrom",
@@ -460,18 +553,6 @@ export class UserManagementController {
                   "name": "dateTo",
                   "type": "string",
                   "input": "date-picker"
-                },
-                {
-                  "name": "transactions",
-                  "type": "string",
-                  "values": [
-                    "create",
-                    "grace",
-                    "redeem",
-                    "transfer",
-                    "renew"
-                  ],
-                  "input": "checkbox"
                 },
                 {
                   "name": "granularity",
@@ -493,12 +574,40 @@ export class UserManagementController {
                   "name": "zone",
                   "type": "string[]",
                   "values": [
-                    "WIEN",
-                    "COLOGNE",
-                    "KOELN",
-                    "TIROL"
+                    {
+                      "name": "WIEN", "filters": [{
+                        "name": "transactions",
+                        "type": "string[]",
+                        "values": ["wienGrace", "wienCreate", "wienPremiumA", "wienPremiumB", "wienPremiumC", "wienPremiumD", "wienPremiumE", "wienPremiumF", "wienPremiumG", "wienPremiumH", "wienRenew", "wienRenewPremiumA", "wienRenewPremiumB", "wienRenewPremiumC", "wienRenewPremiumD", "wienRenewPremiumE", "wienRenewPremiumG", "wienRenewPremiumH", "wienRestore", "wienTransfer", "wienTransferNull", "wienTransferPremiumA", "wienTransferPremiumB", "wienTransferPremiumC", "wienTransferPremiumD", "wienTransferPremiumE", "wienTransferPremiumG", "wienTransferPremiumH"],
+                        "input": "checkbox"
+                      }]
+                    },
+                    {
+                      "name": "COLOGNE", "filters": [{
+                        "name": "transactions",
+                        "type": "string[]",
+                        "values": ["cologneAutoRenew", "cologneCreate", "colognePremiumD", "colognePremiumI", "cologneRenew", "cologneRenewPremiumD", "cologneRenewPremiumI", "cologneRestore", "cologneTransfer", "cologneTransferPremiumD", "cologneTransferPremiumI"],
+                        "input": "checkbox"
+                      }]
+                    },
+                    {
+                      "name": "KOELN", "filters": [{
+                        "name": "transactions",
+                        "type": "string[]",
+                        "values": ["koelnAutoRenew", "koelnCreate", "koelnPremiumD", "koelnPremiumI", "koelnRenew", "koelnRenewPremiumD", "koelnRenewPremiumI", "koelnRestore", "koelnTransfer", "koelnTransferPremiumD", "koelnTransferPremiumI"],
+                        "input": "checkbox"
+                      }]
+                    },
+                    {
+                      "name": "TIROL", "filters": [{
+                        "name": "transactions",
+                        "type": "string[]",
+                        "values": ["tirolGrace", "tirolCreate", "tirolRenew", "tirolRestore", "tirolTransfer", "tirolTransferNull",],
+                        "input": "checkbox"
+                      }]
+                    },
                   ],
-                  "input": "checkbox"
+                  "input": "nestedCheckbox"
                 },
                 {
                   "name": "registrar",
@@ -518,18 +627,6 @@ export class UserManagementController {
                   "name": "dateTo",
                   "type": "string",
                   "input": "date-picker"
-                },
-                {
-                  "name": "transactions",
-                  "type": "string",
-                  "values": [
-                    "create",
-                    "grace",
-                    "redeem",
-                    "transfer",
-                    "renew"
-                  ],
-                  "input": "checkbox"
                 },
                 {
                   "name": "granularity",
@@ -646,6 +743,27 @@ export class UserManagementController {
                   "type": "number",
                   "input": "inputbox"
                 }
+              ]
+            },
+            {
+              "name": "movement",
+              "filters": [
+                {
+                  "name": "zone",
+                  "type": "string[]",
+                  "values": [
+                    "WIEN",
+                    "COLOGNE",
+                    "KOELN",
+                    "TIROL"
+                  ],
+                  "input": "checkbox"
+                },
+                {
+                  "name": "registrar",
+                  "type": "string",
+                  "input": "checkbox"
+                },
               ]
             }
           ]

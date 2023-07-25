@@ -1,6 +1,6 @@
 import Sidebar from "@/components/Navigation/SideBar"
 import PageHeader from "@/components/Util/PageHeader"
-import { HomeIcon } from "@heroicons/react/24/solid"
+import { ChevronDownIcon, HomeIcon } from "@heroicons/react/24/solid"
 import Head from "next/head"
 import { ChartCard } from "@/components/Graphs"
 import { ChartType } from "@/Enums";
@@ -10,6 +10,8 @@ import { useState, useEffect } from "react";
 import { ITransactionGraphRequest } from "@/interfaces/requests";
 import { selectModalManagerState } from "@/store/Slices/modalManagerSlice"
 import GraphZoomModal from "@/components/Modals/GraphZoomModal"
+import { Popover, Transition } from "@headlessui/react"
+import { Fragment, useRef } from "react"
 
 export default function Dashboard() {
 
@@ -70,6 +72,9 @@ export default function Dashboard() {
     }, [])
 
     return (<>
+        {
+            modalState.currentOpen === "GRAPH.Modal" && <GraphZoomModal />
+        }
         <Head>
             <title>Dashboard</title>
         </Head>
@@ -133,8 +138,5 @@ export default function Dashboard() {
                 </div>
             </div>
         </div>
-        {
-            modalState.currentOpen === "GRAPH.Modal" && <GraphZoomModal />
-        }
     </>)
 }

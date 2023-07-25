@@ -5,5 +5,6 @@ import { BubbleChart } from "./BubbleChart";
 import { RadarChart } from "./RadarChart";
 import { PolarAreaChart } from "./PolarAreaChart";
 import ChartCard from "./ChartCard";
+import CustomChartCard from "./CustomChartCard";
 
-export { PieChart, BarChart, LineChart, BubbleChart, RadarChart, PolarAreaChart, ChartCard }
+export { PieChart, BarChart, LineChart, BubbleChart, RadarChart, PolarAreaChart, ChartCard, CustomChartCard }

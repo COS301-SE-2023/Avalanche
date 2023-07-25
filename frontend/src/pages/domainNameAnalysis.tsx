@@ -5,7 +5,7 @@ import Head from "next/head"
 import { ChartCard } from "@/components/Graphs"
 import { ChartType } from "@/Enums";
 import { useDispatch, useSelector } from "react-redux";
-import { graphState,  getDomainNameAnalysisData } from "@/store/Slices/graphSlice"
+import { graphState, getDomainNameAnalysisData } from "@/store/Slices/graphSlice"
 import { useState, useEffect } from "react";
 import { ITransactionGraphRequest } from "@/interfaces/requests";
 import { selectModalManagerState } from "@/store/Slices/modalManagerSlice"
@@ -24,28 +24,25 @@ export default function DomainNameAnalysis() {
     }
 
     useEffect(() => {
-        // const data: ITransactionGraphRequest = { zone: "CO.ZA", granularity: "week", group: "registrar", dateFrom: "2023-01-02", graphName: "Your mom" };
 
         const arrayDomainNameAnalysisShare: IDomainNameAnalysisGraphRequest[] = [];
 
-        const ageAnalysisAverageTop5: IDomainNameAnalysisGraphRequest = { granularity : 'week', num : 5, minimumAppearances: 150 };
+        const ageAnalysisAverageTop5: IDomainNameAnalysisGraphRequest = { granularity: 'week', num: 5, minimumAppearances: 150 };
         arrayDomainNameAnalysisShare.push(ageAnalysisAverageTop5);
 
-        const ageAnalysisTop5: IDomainNameAnalysisGraphRequest = {granularity : 'week', num : 1, minimumAppearances: 30};
+        const ageAnalysisTop5: IDomainNameAnalysisGraphRequest = { granularity: 'week', num: 1, minimumAppearances: 30 };
         arrayDomainNameAnalysisShare.push(ageAnalysisTop5);
 
-        const marketShareTop20: IDomainNameAnalysisGraphRequest = {granularity : 'week', num : 2, minimumAppearances: 50};
+        const marketShareTop20: IDomainNameAnalysisGraphRequest = { granularity: 'week', num: 2, minimumAppearances: 50 };
         arrayDomainNameAnalysisShare.push(marketShareTop20);
 
-        const ageAnalysisTop10: IDomainNameAnalysisGraphRequest = {granularity : 'week', num : 15, minimumAppearances: 150};
+        const ageAnalysisTop10: IDomainNameAnalysisGraphRequest = { granularity: 'week', num: 15, minimumAppearances: 150 };
         arrayDomainNameAnalysisShare.push(ageAnalysisTop10);
 
         arrayDomainNameAnalysisShare.forEach(data => {
             dispatch(getDomainNameAnalysisData(data));
         })
 
-
-        // dispatch(getGraphDataArray(array));
     }, [])
 
     return (<>
@@ -95,7 +92,7 @@ export default function DomainNameAnalysis() {
                                     <div className="h-6 w-6 bg-gray-200 rounded dark:bg-gray-800 w-32"></div>
                                 </div>
                             </div>
-                        
+
                         </>
                     }
                     {/* <ChartCard title="A ChartJS Chart 1" data={chartData} defaultGraph={ChartType.Pie} />

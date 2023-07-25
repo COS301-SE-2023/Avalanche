@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { SubmitButton, ErrorToast, InputLabel, Input, SuccessToast } from '../Util';
-import { ModalContent, ModalHeader, ModalWrapper } from './ModalOptions';
+import { ModalWrapper } from './ModalOptions';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearCurrentOpenState } from '@/store/Slices/modalManagerSlice';
 import { userState, getUserGroups } from '@/store/Slices/userSlice';
@@ -75,29 +75,26 @@ export default function AddUserToGroup() {
      * This function renders the component to the DOM
      */
     return (
-        <ModalWrapper>
-            <ModalHeader title="Add a User to a Group" />
-            <ModalContent>
-                <form className="space-y-6" onSubmit={(event) => formSubmit(event)}>
-                    <div>
-                        <InputLabel htmlFor="name" text="Group Name" />
-                        <Input type="text" name="name" id="name" placeholder="Paper Sales" required={true} disabled={loading} value={name} onChange={(event: React.FormEvent<HTMLInputElement>) => {
-                            nameError && setNameError(false);
-                            setName(event.currentTarget.value);
-                        }} maxLength={20} error={nameError} />
-                    </div>
-                    <div>
-                        <InputLabel htmlFor="email" text="User Email" />
-                        <Input type="email" name="email" id="email" placeholder="john@example.com" required={true} disabled={loading} value={email} onChange={(event: React.FormEvent<HTMLInputElement>) => {
-                            emailError && setEmailError(false);
-                            setEmail(event.currentTarget.value);
-                        }} error={emailError} />
-                    </div>
-                    <SubmitButton text="Create Group" onClick={(event: React.FormEvent<HTMLFormElement>) => {
-                        formSubmit(event);
-                    }} className="w-full" loading={loading} />
-                </form>
-            </ModalContent>
+        <ModalWrapper title="Add a User to a Group">
+            <form className="space-y-6" onSubmit={(event) => formSubmit(event)}>
+                <div>
+                    <InputLabel htmlFor="name" text="Group Name" />
+                    <Input type="text" name="name" id="name" placeholder="Paper Sales" required={true} disabled={loading} value={name} onChange={(event: React.FormEvent<HTMLInputElement>) => {
+                        nameError && setNameError(false);
+                        setName(event.currentTarget.value);
+                    }} maxLength={20} error={nameError} />
+                </div>
+                <div>
+                    <InputLabel htmlFor="email" text="User Email" />
+                    <Input type="email" name="email" id="email" placeholder="john@example.com" required={true} disabled={loading} value={email} onChange={(event: React.FormEvent<HTMLInputElement>) => {
+                        emailError && setEmailError(false);
+                        setEmail(event.currentTarget.value);
+                    }} error={emailError} />
+                </div>
+                <SubmitButton text="Create Group" onClick={(event: React.FormEvent<HTMLFormElement>) => {
+                    formSubmit(event);
+                }} className="w-full" loading={loading} />
+            </form>
         </ModalWrapper>
     )
 }

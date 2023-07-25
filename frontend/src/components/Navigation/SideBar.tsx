@@ -4,7 +4,7 @@ import Link from "next/link"
 import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import { MoonIcon, SunIcon, Cog6ToothIcon, Bars4Icon, ArrowLeftOnRectangleIcon } from "@heroicons/react/24/solid";
-import { selectModalManagerState } from "@/store/Slices/modalManagerSlice";
+import { selectModalManagerState, setCurrentOpenState } from "@/store/Slices/modalManagerSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { userState, logout } from "@/store/Slices/userSlice";
 import { useRouter } from "next/router";
@@ -12,7 +12,7 @@ import { getCookie, deleteCookie } from "cookies-next";
 import LoadingPage from "../Util/Loading";
 import ky from "ky";
 import { ErrorToast, SubmitButton, SuccessToast } from "../Util";
-import { v4 as uuidv4 } from 'uuid';
+import CreateDashboardModal from "../Modals/CreateDashboardModal";
 
 export default function Sidebar() {
     const { theme, setTheme } = useTheme();
@@ -21,6 +21,8 @@ export default function Sidebar() {
     const dispatch = useDispatch();
     const modalState = useSelector(selectModalManagerState);
     const router = useRouter();
+
+    console.log(stateUser);
 
     const jwt = getCookie("jwt");
 
@@ -111,7 +113,7 @@ export default function Sidebar() {
                             <ul className="pt-4 mt-4 space-y-2 font-medium border-t border-gray-700 dark:border-gray-700">
                                 <li>
                                     <SubmitButton text="Create a Dashboard" className="w-full" onClick={() => {
-                                        router.push(`/custom/${uuidv4()}`);
+                                        dispatch(setCurrentOpenState("GRAPH.CreateDashboard"))
                                     }} />
                                 </li>
                                 <li>
@@ -144,7 +146,7 @@ export default function Sidebar() {
                         </div>
                     </aside>
                 </div>
-
+                {modalState.currentOpen === "GRAPH.CreateDashboard" && <CreateDashboardModal />}
             </>
         )
 }

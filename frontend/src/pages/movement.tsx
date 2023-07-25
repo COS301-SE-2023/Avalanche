@@ -5,7 +5,7 @@ import Head from "next/head"
 import { ChartCard } from "@/components/Graphs"
 import { ChartType } from "@/Enums";
 import { useDispatch, useSelector } from "react-redux";
-import { graphState,  getDomainNameAnalysisData, getMovementVerticalData } from "@/store/Slices/graphSlice"
+import { graphState, getDomainNameAnalysisData, getMovementVerticalData } from "@/store/Slices/graphSlice"
 import { useState, useEffect } from "react";
 import { ITransactionGraphRequest } from "@/interfaces/requests";
 import { selectModalManagerState } from "@/store/Slices/modalManagerSlice"
@@ -29,10 +29,10 @@ export default function Movement() {
 
         const arrayMovementVerticalShare: IMovementGraphRequest[] = [];
 
-        const movementVertical: IMovementGraphRequest = { zone: "WIEN", };
+        const movementVertical: IMovementGraphRequest = { zone: ["WIEN"], };
         arrayMovementVerticalShare.push(movementVertical);
 
-        const movementVerticalRegistrar: IMovementGraphRequest = { zone: "WIEN", registrar: ["1und1","registrygate","internetx"] };
+        const movementVerticalRegistrar: IMovementGraphRequest = { zone: ["WIEN"], registrar: ["1und1", "registrygate", "internetx"] };
         arrayMovementVerticalShare.push(movementVerticalRegistrar);
 
 
@@ -91,7 +91,7 @@ export default function Movement() {
                                     <div className="h-6 w-6 bg-gray-200 rounded dark:bg-gray-800 w-32"></div>
                                 </div>
                             </div>
-                        
+
                         </>
                     }
                     {/* <ChartCard title="A ChartJS Chart 1" data={chartData} defaultGraph={ChartType.Pie} />

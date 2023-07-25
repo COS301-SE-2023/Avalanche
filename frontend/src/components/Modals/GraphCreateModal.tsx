@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react';
-import { SubmitButton, ErrorToast, InputLabel, Input, SuccessToast, Dropdown } from '../Util';
-import { ModalContent, ModalHeader, ModalWrapper } from './ModalOptions';
+import { SubmitButton, ErrorToast, InputLabel, Input, Dropdown } from '../Util';
+import { ModalWrapper } from './ModalOptions';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearCurrentOpenState, setAnimateManagerState } from '@/store/Slices/modalManagerSlice';
-import { userState, getUserGroups } from '@/store/Slices/userSlice';
-import { createOrganisationGroup } from '@/store/Slices/userSlice';
-import { ICreateUserGroupRequest } from '@/interfaces/requests';
+import { userState } from '@/store/Slices/userSlice';
 
 interface ICreateGroupModal {
     state: any,
@@ -80,33 +78,31 @@ export default function GraphCreateModal({ state, add }: ICreateGroupModal) {
      * This function renders the component to the DOM
      */
     return (
-        <ModalWrapper>
-            <ModalHeader title="Add a Graph" text="Time to make a new graph." />
-            <ModalContent>
-                <form className="space-y-6" onSubmit={(event) => formSubmit(event)}>
-                    <div>
-                        <InputLabel htmlFor="name" text="Graph Name" />
-                        <Input type="text" name="name" id="name" placeholder="Domain sales over time" required={true} disabled={state.loading} value={name} onChange={(event: React.FormEvent<HTMLInputElement>) => {
-                            nameError && setNameError(false);
-                            setName(event.currentTarget.value);
-                        }} maxLength={20} error={nameError} />
-                    </div>
+        <ModalWrapper title="Add a Graph">
+            <form className="space-y-6" onSubmit={(event) => formSubmit(event)}>
+                <div>
+                    <InputLabel htmlFor='endpointDropdown' text='Warehouses' />
+                    <Dropdown id='endpointDropdown' items={state.filters.map((item: any) => item.endpoint)} option={endpoint} set={setEndpoint} text="Select a warehouse" />
+                </div>
 
-                    <div>
-                        <InputLabel htmlFor='endpointDropdown' text='Warehouses' />
-                        <Dropdown id='endpointDropdown' items={state.filters.map((item: any) => item.endpoint)} option={endpoint} set={setEndpoint} text="Select a warehouse" />
-                    </div>
+                {endpoint && <div>
+                    <InputLabel htmlFor='graphType' text='Graph Type' />
+                    <Dropdown id='graphType' items={filterGraphs()} option={graph} set={setGraph} text="Select a graph type" />
+                </div>}
 
-                    {endpoint && <div>
-                        <InputLabel htmlFor='graphType' text='Graph Type' />
-                        <Dropdown id='graphType' items={filterGraphs()} option={graph} set={setGraph} text="Select a graph type" />
-                    </div>}
+                {endpoint && graph && <div>
+                    <InputLabel htmlFor="name" text="Graph Name" />
+                    <Input type="text" name="name" id="name" placeholder="Domain sales over time" required={true} disabled={state.loading} value={name} onChange={(event: React.FormEvent<HTMLInputElement>) => {
+                        nameError && setNameError(false);
+                        setName(event.currentTarget.value);
+                    }} maxLength={20} error={nameError} />
+                </div>
+                }
 
-                    <SubmitButton text="Create Graph" onClick={(event: React.FormEvent<HTMLFormElement>) => {
-                        formSubmit(event);
-                    }} className="w-full" loading={state.loading} />
-                </form>
-            </ModalContent>
+                <SubmitButton text="Create Graph" onClick={(event: React.FormEvent<HTMLFormElement>) => {
+                    formSubmit(event);
+                }} className="w-full" loading={state.loading} />
+            </form>
         </ModalWrapper>
     )
 }

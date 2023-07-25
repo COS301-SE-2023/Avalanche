@@ -9,6 +9,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      transitionProperty: {
+        'height': 'height'
+      },
       keyframes: {
         wiggle: {
           '50%': { opacity: 0.5 },
