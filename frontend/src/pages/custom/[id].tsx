@@ -10,9 +10,10 @@ import { useState, useEffect } from "react";
 import { ITransactionGraphRequest } from "@/interfaces/requests";
 import { selectModalManagerState, setCurrentOpenState } from "@/store/Slices/modalManagerSlice"
 import GraphZoomModal from "@/components/Modals/GraphZoomModal"
-import { SubmitButton } from "@/components/Util"
+import { ErrorToast, SubmitButton } from "@/components/Util"
 import GraphCreateModal from "@/components/Modals/GraphCreateModal";
 import { getFilters } from "@/store/Slices/graphSlice"
+import { userState } from "@/store/Slices/userSlice"
 import { Toaster } from "react-hot-toast"
 import { useRouter } from "next/router"
 import ky from "ky"
@@ -22,11 +23,15 @@ import { updateDashboards } from "@/store/Slices/userSlice"
 export default function CreateCustomDashboard() {
     const dispatch = useDispatch<any>();
     const stateGraph = useSelector(graphState);
+    const stateUser = useSelector(userState);
     const modalState = useSelector(selectModalManagerState);
     const router = useRouter();
 
-    const name = router.query.name;
-    const id = router.query.id;
+    const [name, setName] = useState<string>(router.query.name as string || "");
+    const [id, setID] = useState<string>(router.query.id as string || document.location.pathname.split("/")[2]);
+    const [newDash, setND] = useState<boolean>(true);
+
+    console.log(document.location.pathname.split("/")[2]);
 
     const [graphs, setGraphs] = useState<any>([]);
 
@@ -41,8 +46,16 @@ export default function CreateCustomDashboard() {
     }, []);
 
     useEffect(() => {
-        // renderGraphs();
-    }, [graphs]);
+        if (!name) {
+            setND(false);
+            const dash = stateUser.user.dashboards.find((item: any) => item.dashboardID == id);
+            if (!dash) {
+                return ErrorToast({ text: "This dashboard does not exist." })
+            };
+            setName(dash.name);
+            setGraphs(dash.graphs);
+        }
+    }, [stateUser]);
 
 
     const renderGraphs = () => {
@@ -56,9 +69,13 @@ export default function CreateCustomDashboard() {
         const dataaaaaaaaa = [] as any;
 
         graphs.forEach((g: any) => {
+            console.log(g.endpointName);
+            const d = g.endpointName?.split("/");
+            const warehouse = g.warehouse || d[0];
+            const type = g.type || d[1];
             const gg = {
-                endpointName: g.warehouse + "/" + g.type,
-                graphName: g.name,
+                endpointName: warehouse + "/" + type,
+                graphName: g.name || g.graphName,
                 filters: g.filters,
             };
             dataaaaaaaaa.push(gg);
@@ -70,7 +87,9 @@ export default function CreateCustomDashboard() {
             graphs: dataaaaaaaaa
         }
 
-        const res = await ky.post(`${process.env.NEXT_PUBLIC_API}/user-management/saveDashboard`, {
+        console.log(boo);
+
+        const res = await ky.post(`${process.env.NEXT_PUBLIC_API}/user-management/${newDash ? "saveDashboard" : "editDashboard"}`, {
             json: boo,
             headers: {
                 "Authorization": `Bearer ${getCookie("jwt")}`

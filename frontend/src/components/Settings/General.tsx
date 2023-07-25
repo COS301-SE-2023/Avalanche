@@ -1,4 +1,6 @@
-import { SubmitButton, WarningAlert } from "../Util"
+import { getCookie } from "cookies-next";
+import { ErrorToast, SubmitButton, WarningAlert } from "../Util"
+import ky from "ky"
 
 interface IGeneralSettings {
     user: any
@@ -6,8 +8,17 @@ interface IGeneralSettings {
 
 export default function GeneralSettings({ user }: IGeneralSettings) {
 
-    const createAPIKey = () => {
-
+    const createAPIKey = async () => {
+        try {
+            const res = await ky.post(`${process.env.NEXT_PUBLIC_API}/user-management/createAPIKey`, {
+                headers: {
+                    "Authorization": `Bearer ${getCookie("jwt")}`
+                }
+            }).json();
+        } catch (e) {
+            console.log(e);
+            if (e instanceof Error) return ErrorToast({ text: e.message });
+        }
     }
 
     return (

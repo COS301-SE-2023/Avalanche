@@ -16,12 +16,11 @@ export interface IUserState {
     lastName: string | null
     settings: ISettings | null,
     profilePicture: string | null,
-    // favourites: IDashBoard[] | null,
     dataProducts: IDataProduct[] | null,
     organisation: IOrganisation | null,
     userGroups: IUserGroups[] | null,
     token?: string | null,
-    dashboards?: any[] | null
+    dashboards?: any[] | null,
 }
 
 export interface IUser {
@@ -31,11 +30,10 @@ export interface IUser {
     lastName: string | null
     settings: ISettings | null,
     profilePicture: string | null,
-    // favourites: IDashBoard[] | null,
     dataProducts: IDataProduct[] | null,
     organisation: IOrganisation | null,
     userGroups: IUserGroups[] | null,
-    token?: string | null
+    token?: string | null,
 }
 
 export interface IAuth {
@@ -112,7 +110,6 @@ export const userSlice = createSlice({
             state.error = "";
         },
         updateDashboards(state, action) {
-            console.log(action.payload);
             state.user.dashboards = action.payload;
         }
     },
@@ -261,15 +258,6 @@ export const userSlice = createSlice({
         builder.addCase(getLatestOrganisation.pending, (state) => {
             state.loading = true;
         })
-        // API Create
-        builder.addCase(checkAPIKey.fulfilled, (state, action) => {
-            state.loading = false;
-            const payload = action.payload as any;
-            state.api = payload;
-        })
-        builder.addCase(checkAPIKey.rejected, (state, action) => {
-            state.loading = false;
-        })
     }
 });
 
@@ -415,22 +403,6 @@ export const getLatestOrganisation = createAsyncThunk("ORG.GetLatestOrganisation
         const response: any = await ky.post(`${url}/getUserInfo`, {
             headers: {
                 "Authorization": `Bearer ${jwt}`
-            }
-        }).json();
-        return response.message as any;
-    } catch (e) {
-        if (e instanceof Error) return rejectWithValue(e.message);
-    }
-})
-
-/**
- * Check API Key if it exists
- */
-export const checkAPIKey = createAsyncThunk("ORG.CheckAPIKey", async (object: any, { rejectWithValue }) => {
-    try {
-        const response: any = await ky.post(`${url}/createAPIKey`, {
-            headers: {
-                "Authorization": `Bearer ${getCookie("jwt")}`
             }
         }).json();
         return response.message as any;

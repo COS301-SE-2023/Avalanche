@@ -1016,6 +1016,7 @@ export class UserManagementController {
   }
   @Post('createAPIKey')
   async createAPIKey(@Body() data: any) {
+    console.log("12pi4jl");
     const pattern = { cmd: 'createAPIKey' };
     const payload = data;
     try {
