@@ -3,7 +3,7 @@
         "endpoint": "zacr",
         "graphs": [
             {
-                "name": "transaction",
+                "name": "transactions",
                 "filters": [
                     {
                         "name": "zone",
@@ -97,8 +97,9 @@
                         "name": "registrar",
                         "type": "string",
                         "values": [
-                            "boi",
-                            "boi2"
+                            "afrihost",
+                            "hetzner",
+                            "diamatrix"
                         ],
                         "input": "checkbox"
                     },
@@ -142,6 +143,11 @@
                     {
                         "name": "registrar",
                         "type": "string",
+                        "values":[
+                            "afrihost",
+                            "hetzner",
+                            "diamatrix"
+                        ]
                         "input": "checkbox"
                     },
                     {
@@ -176,6 +182,11 @@
                     {
                         "name": "registrar",
                         "type": "string",
+                        "values": [
+                            "afrihost",
+                            "hetzner",
+                            "diamatrix"
+                        ]
                         "input": "checkbox"
                     },
                     {
@@ -246,6 +257,11 @@
                     {
                         "name": "registrar",
                         "type": "string",
+                        "values": [
+                            "afrihost",
+                            "hetzner",
+                            "diamatrix"
+                        ]
                         "input": "checkbox"
                     },
                 ]
@@ -256,7 +272,7 @@
         "endpoint": "africa",
         "graphs": [
             {
-                "name": "transaction",
+                "name": "transactions",
                 "filters": [
                     {
                         "name": "zone",
@@ -314,8 +330,11 @@
                         "name": "registrar",
                         "type": "string",
                         "values": [
-                            "boi",
-                            "boi2"
+                            "dnsafric6lc9ke",
+                            "tucowsdominc",
+                            "namecheap4ch",
+                            "diamatrix",
+                            "101domain"
                         ],
                         "input": "checkbox"
                     },
@@ -356,6 +375,13 @@
                     {
                         "name": "registrar",
                         "type": "string",
+                        "values": [
+                            "dnsafric6lc9ke",
+                            "tucowsdominc",
+                            "namecheap4ch",
+                            "diamatrix",
+                            "101domain"
+                        ]
                         "input": "checkbox"
                     },
                     {
@@ -387,6 +413,13 @@
                     {
                         "name": "registrar",
                         "type": "string",
+                        "values": [
+                            "dnsafric6lc9ke",
+                            "tucowsdominc",
+                            "namecheap4ch",
+                            "diamatrix",
+                            "101domain"
+                        ]
                         "input": "checkbox"
                     },
                     {
@@ -454,6 +487,13 @@
                     {
                         "name": "registrar",
                         "type": "string",
+                        "values": [
+                            "dnsafric6lc9ke",
+                            "tucowsdominc",
+                            "namecheap4ch",
+                            "diamatrix",
+                            "101domain"
+                        ]
                         "input": "checkbox"
                     },
                 ]
@@ -464,7 +504,7 @@
         "endpoint": "ryce",
         "graphs": [
             {
-                "name": "transaction",
+                "name": "transactions",
                 "filters": [
                     {
                         "name": "zone",
@@ -558,8 +598,11 @@
                         "name": "registrar",
                         "type": "string",
                         "values": [
-                            "boi",
-                            "boi2"
+                            "1und1",
+                            "registrygate",
+                            "internetx",
+                            "uniteddomains",
+                            "keysystems"
                         ],
                         "input": "checkbox"
                     },
@@ -603,6 +646,13 @@
                     {
                         "name": "registrar",
                         "type": "string",
+                        "values": [
+                            "1und1",
+                            "registrygate",
+                            "internetx",
+                            "uniteddomains",
+                            "keysystems"
+                        ],
                         "input": "checkbox"
                     },
                     {
@@ -637,6 +687,13 @@
                     {
                         "name": "registrar",
                         "type": "string",
+                        "values": [
+                            "1und1",
+                            "registrygate",
+                            "internetx",
+                            "uniteddomains",
+                            "keysystems"
+                        ],
                         "input": "checkbox"
                     },
                     {
@@ -707,6 +764,13 @@
                     {
                         "name": "registrar",
                         "type": "string",
+                        "values": [
+                            "1und1",
+                            "registrygate",
+                            "internetx",
+                            "uniteddomains",
+                            "keysystems"
+                        ],
                         "input": "checkbox"
                     },
                 ]
