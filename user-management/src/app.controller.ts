@@ -111,7 +111,7 @@ export class AppController {
   }
   @MessagePattern({ cmd: 'saveDashboard' })
   async saveDashboard(data: any) {
-    const result = await this.userDashboardManService.saveDashbaord(data.token, data.id, data.name, data.graphs);
+    const result = await this.userDashboardManService.saveDashbaord(data.token, data.dashboardID, data.name, data.graphs);
     if (result.error) {
       throw new RpcException({
         status: result.status,
@@ -124,7 +124,7 @@ export class AppController {
   }
   @MessagePattern({ cmd: 'editDashboard' })
   async editDashboard(data: any) {
-    const result = await this.userDashboardManService.editDashbaord(data.token, data.id, data.name, data.graphs);
+    const result = await this.userDashboardManService.editDashbaord(data.token, data.dashboardID, data.name, data.graphs);
     if (result.error) {
       throw new RpcException({
         status: result.status,
@@ -137,7 +137,7 @@ export class AppController {
   }
   @MessagePattern({ cmd: 'shareDashboards' })
   async shareDashboards(data: any) {
-    const result = await this.userDashboardManService.shareDashboards(data.token, data.userGroupName, data.dashboardId);
+    const result = await this.userDashboardManService.shareDashboards(data.token, data.userGroupName, data.dashboardID);
     if (result.error) {
       throw new RpcException({
         status: result.status,
@@ -150,7 +150,7 @@ export class AppController {
   }
   @MessagePattern({ cmd: 'addCommentToGraph' })
   async addCommentToGraph(data: any) {
-    const result = await this.userDashboardManService.addCommentToGraph(data.token, data.id, data.graphName, data.comment);
+    const result = await this.userDashboardManService.addCommentToGraph(data.token, data.dashboardID, data.graphName, data.comment);
     if (result.error) {
       throw new RpcException({
         status: result.status,
