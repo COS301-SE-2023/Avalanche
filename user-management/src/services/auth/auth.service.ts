@@ -163,7 +163,7 @@ export class AuthService {
     // Fetch user from the PostgreSQL database
     const user = await this.userRepository.findOne({ where: { email }, relations: ['userGroups', 'organisation', 'dashboards'] });
     console.log(user);
-    delete user.apiKey;
+    
     // If user not found, throw error
     if (!user) {
       return {
@@ -171,7 +171,7 @@ export class AuthService {
         timestamp: new Date().toISOString()
       };
     }
-
+    delete user.apiKey;
     // Verify the provided password with the user's hashed password in the database
     const saltFromDB = user.salt;
     const passwordLogin1 = await bcrypt.hash(passwordLogin, saltFromDB);
