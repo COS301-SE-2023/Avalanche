@@ -17,6 +17,7 @@ import { Toaster } from "react-hot-toast"
 import { useRouter } from "next/router"
 import ky from "ky"
 import { getCookie } from "cookies-next"
+import { updateDashboards } from "@/store/Slices/userSlice"
 
 export default function CreateCustomDashboard() {
     const dispatch = useDispatch<any>();
@@ -51,14 +52,6 @@ export default function CreateCustomDashboard() {
     }
 
     const saveDashboard = async () => {
-        console.log(graphs);
-
-        /**
-         * filters: {}
-         * name: "" // graph name
-         * type: "" // type of graph
-         * warehouse: "" // warehouse
-         */
 
         const dataaaaaaaaa = [] as any;
 
@@ -77,14 +70,14 @@ export default function CreateCustomDashboard() {
             graphs: dataaaaaaaaa
         }
 
-        console.log(boo);
-
-        await ky.post(`${process.env.NEXT_PUBLIC_API}/user-management/saveDashboard`, {
+        const res = await ky.post(`${process.env.NEXT_PUBLIC_API}/user-management/saveDashboard`, {
             json: boo,
             headers: {
                 "Authorization": `Bearer ${getCookie("jwt")}`
             }
-        })
+        }).json() as any;
+
+        dispatch(updateDashboards(res.message));
     }
 
     return (<>

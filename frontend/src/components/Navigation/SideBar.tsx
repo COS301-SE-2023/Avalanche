@@ -3,7 +3,7 @@ import SideBarItem from "./SidebarItem"
 import Link from "next/link"
 import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
-import { MoonIcon, SunIcon, Cog6ToothIcon, Bars4Icon, ArrowLeftOnRectangleIcon } from "@heroicons/react/24/solid";
+import { MoonIcon, SunIcon, Cog6ToothIcon, Bars4Icon, ArrowLeftOnRectangleIcon, PencilIcon } from "@heroicons/react/24/solid";
 import { selectModalManagerState, setCurrentOpenState } from "@/store/Slices/modalManagerSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { userState, logout } from "@/store/Slices/userSlice";
@@ -102,7 +102,8 @@ export default function Sidebar() {
                             e.stopPropagation()
                         }}
                     >
-                        <div className="relative overflow-y-auto py-5 px-3 h-full border-r border-gray-200 bg-gray-200 dark:bg-primaryBackground dark:border-secondaryBackground z-999">
+                        <div className="flex flex-col overflow-y-auto py-5 px-3 h-full border-r border-gray-200 bg-gray-200 dark:bg-primaryBackground dark:border-secondaryBackground">
+                            {/* top list */}
                             <ul className="space-y-2">
                                 {
                                     MenuOptions.items.map((option, index) => {
@@ -110,15 +111,20 @@ export default function Sidebar() {
                                     })
                                 }
                             </ul>
-                            <ul className="pt-4 mt-4 space-y-2 font-medium border-t border-gray-700 dark:border-gray-700">
+                            {/* bottom list */}
+                            <ul className="pt-4 mt-4 space-y-2 font-medium border-t border-gray-700 dark:border-gray-700 flex flex-col gap-2">
                                 <li>
                                     <SubmitButton text="Create a Dashboard" className="w-full" onClick={() => {
                                         dispatch(setCurrentOpenState("GRAPH.CreateDashboard"))
                                     }} />
                                 </li>
-                                <li>
-
-                                </li>
+                                <ul className="overflow-y-scroll overflow-x-hidden flex-auto">
+                                    {
+                                        stateUser.user.dashboards.map((option: any, index: number) => {
+                                            return <SideBarItem text={option.name} icon={<PencilIcon className="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />} page={`/custom/${option.dashboardID}`} key={index} />
+                                        })
+                                    }
+                                </ul>
                             </ul>
                         </div>
                         <div className="absolute bottom-0 left-0 justify-center p-4 w-full lg:flex flex-col gap-2 bg-gray-200 dark:bg-primaryBackground z-20 border-r border-gray-200 dark:border-secondaryBackground">

@@ -20,7 +20,8 @@ export interface IUserState {
     dataProducts: IDataProduct[] | null,
     organisation: IOrganisation | null,
     userGroups: IUserGroups[] | null,
-    token?: string | null
+    token?: string | null,
+    dashboards?: any[] | null
 }
 
 export interface IUser {
@@ -50,7 +51,8 @@ const initialState: IUserState = {
     profilePicture: null,
     dataProducts: null,
     organisation: null,
-    userGroups: null
+    userGroups: null,
+    dashboards: null
 }
 
 export const userSlice = createSlice({
@@ -108,6 +110,10 @@ export const userSlice = createSlice({
         },
         clearError(state) {
             state.error = "";
+        },
+        updateDashboards(state, action) {
+            console.log(action.payload);
+            state.user.dashboards = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -433,6 +439,6 @@ export const checkAPIKey = createAsyncThunk("ORG.CheckAPIKey", async (object: an
     }
 })
 
-export const { setAuth, getAuth, resetRequest, logout, setCreateGroupSuccess, setAddUserGroupSuccess, clearError } = userSlice.actions;
+export const { setAuth, getAuth, resetRequest, logout, setCreateGroupSuccess, setAddUserGroupSuccess, clearError, updateDashboards } = userSlice.actions;
 export const userState = (state: AppState) => state.user;
 export default userSlice.reducer;
