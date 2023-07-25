@@ -76,6 +76,7 @@ export const userSlice = createSlice({
         removeUserGroupSuccess: false,
         error: "",
         userGroups: [],
+        api: false,
     },
     reducers: {
         setAuth(state) {
@@ -157,13 +158,11 @@ export const userSlice = createSlice({
             let d = new Date();
             d.setTime(d.getTime() + (1440 * 60 * 1000));
             setCookie('jwt', payload.userWithToken.token, { expires: d });
-
             const userObj: IUserState = { ...payload.userWithToken };
             delete userObj.token;
             state.user = userObj;
             state.loading = false;
             state.login.success = true;
-
         })
         builder.addCase(login.pending, (state) => {
             state.loading = true;
@@ -255,6 +254,15 @@ export const userSlice = createSlice({
         })
         builder.addCase(getLatestOrganisation.pending, (state) => {
             state.loading = true;
+        })
+        // API Create
+        builder.addCase(checkAPIKey.fulfilled, (state, action) => {
+            state.loading = false;
+            const payload = action.payload as any;
+            state.api = payload;
+        })
+        builder.addCase(checkAPIKey.rejected, (state, action) => {
+            state.loading = false;
         })
     }
 });
@@ -401,6 +409,22 @@ export const getLatestOrganisation = createAsyncThunk("ORG.GetLatestOrganisation
         const response: any = await ky.post(`${url}/getUserInfo`, {
             headers: {
                 "Authorization": `Bearer ${jwt}`
+            }
+        }).json();
+        return response.message as any;
+    } catch (e) {
+        if (e instanceof Error) return rejectWithValue(e.message);
+    }
+})
+
+/**
+ * Check API Key if it exists
+ */
+export const checkAPIKey = createAsyncThunk("ORG.CheckAPIKey", async (object: any, { rejectWithValue }) => {
+    try {
+        const response: any = await ky.post(`${url}/createAPIKey`, {
+            headers: {
+                "Authorization": `Bearer ${getCookie("jwt")}`
             }
         }).json();
         return response.message as any;

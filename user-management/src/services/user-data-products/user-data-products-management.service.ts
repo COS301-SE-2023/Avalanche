@@ -247,6 +247,21 @@ export class UserDataProductMangementService {
                 timestamp: new Date().toISOString()
             };
         }
+
+        const watchedFoundUser = await this.watchedUserRepository.findOne({
+            where : {email : user.email}
+        });
+
+        if(watchedFoundUser){
+            watchedFoundUser.types = types;
+            watchedFoundUser.domains = domains;
+            await this.watchedUserRepository.save(watchedFoundUser);
+            return {
+                status: "success",
+                message: "User watched list details updated",
+                timestamp: new Date().toISOString()
+            };
+        }
         // If the user exists, add them to the WatchedUser table
         const watchedUser = new WatchedUser();
         watchedUser.person = user.firstName + " " + user.lastName; // Set the person's name

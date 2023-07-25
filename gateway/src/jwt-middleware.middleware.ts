@@ -19,7 +19,7 @@ export class JwtMiddleware implements NestMiddleware {
         userInfo = await this.redis.get(token);
         console.log(userInfo);
       } catch (e) {
-        console.log(e);
+        res.status(401).json({ status: 'failure', message: e.message, timestamp: new Date().toISOString() });
       }
 
       if (!userInfo) {
