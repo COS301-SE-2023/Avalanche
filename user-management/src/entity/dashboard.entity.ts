@@ -5,7 +5,7 @@ import { User } from "./user.entity";
 @Entity()
 export class Dashboard {
   @PrimaryGeneratedColumn()
-  id: number;
+  autoID: number;
 
   @Column()
   name: string;
