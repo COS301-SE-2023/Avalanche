@@ -26,5 +26,19 @@ export class DomainWatchService {
     const response = await this.httpService.post('http://zanet.cloud:4100/domainWatch/passive', check).toPromise();
     return JSON.stringify(response.data);
   }
+
+  @Cron(CronExpression.EVERY_DAY_AT_7AM)
+  async loadDomains() {
+    console.log('Running every day');
+    const africaData = await this.httpService.post('http://localhost:4000/africa/loadDomains').toPromise();
+    const africaInfo = africaData.data.queryData[0]['LOADDOMAINS'];
+    const zacrData = await this.httpService.post('http://localhost:4000/zacr/loadDomains').toPromise();
+    const zacrInfo = zacrData.data.queryData[0]['LOADDOMAINS'];
+    const ryceData = await this.httpService.post('http://localhost:4000/africa/loadDomains').toPromise();
+    const ryceInfo = ryceData.data.queryData[0]['LOADDOMAINS'];
+    const check = {'domains' : [{'name': 'AFRICA_domains','domains':africaInfo}, {'name': 'ZACR_domains','domains':zacrInfo}, {'name': 'RYCE_domains','domains':ryceInfo}]};
+    const response = await this.httpService.post('http://zanet.cloud:4100/domainWatch/loadDomains', check).toPromise();
+    return JSON.stringify(response.data);
+  }
 }
 

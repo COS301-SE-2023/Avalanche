@@ -16,4 +16,10 @@ export class DomainWatchController {
     const result = await this.domainWatchService.passive();
     return result;
   }
+
+  @Get('loadDomains')
+  async loadDomains() {
+    const result = await this.domainWatchService.loadDomains();
+    return result;
+  }
 }
