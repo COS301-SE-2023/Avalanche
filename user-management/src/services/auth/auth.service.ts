@@ -332,14 +332,15 @@ export class AuthService {
       };
     }
 
-    if (user.apiKey == token) {
+    // reroll your api key with an api key check
+    if (user['apiKey'] == token) {
       return {
         status: 400, error: true, message: 'Please enter JWT token',
         timestamp: new Date().toISOString()
       };
     }
 
-    if (!user.apiKey) {
+    if (!user['apiKey']) {
       return {
         status: 400, error: true, message: 'User does not have an API key',
         timestamp: new Date().toISOString()
@@ -356,7 +357,7 @@ export class AuthService {
     const userWithToken = { ...user, token: jwtToken };
     // Send back user's information along with the token as a JSON object
     return {
-      status: "success", userWithToken,
+      status: "success", message: userWithToken.apiKey,
       timestamp: new Date().toISOString()
     };
   }
