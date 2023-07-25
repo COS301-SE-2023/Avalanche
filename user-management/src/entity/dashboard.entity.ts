@@ -5,13 +5,13 @@ import { User } from "./user.entity";
 @Entity()
 export class Dashboard {
   @PrimaryGeneratedColumn()
-  autoID: number;
+  id: number;
 
   @Column()
   name: string;
 
   @Column()
-  id : string;
+  dashboardID : string;
 
   @ManyToMany(() => User, (user) => user.dashboards)
   @JoinColumn({ name: 'userId' })
