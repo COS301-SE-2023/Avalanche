@@ -6,6 +6,7 @@ import { AgeService } from './age/age.service';
 import { DomainNameAnalysisService } from './domainNameAnalysis/domain-name-analysis.service';
 import { MovementService } from './movement/movement.service';
 import { RegistrarNameService } from './registrarName/registrarName.service';
+import { DomainWatchService } from './domainWatch/domain-watch-analysis.service';
 
 @Controller('ryce')
 export class AppController {
@@ -16,6 +17,7 @@ export class AppController {
     private readonly domainNameAnalysisService: DomainNameAnalysisService,
     private readonly movementService: MovementService,
     private readonly registrarNameService: RegistrarNameService,
+    private readonly domainWatchService: DomainWatchService,
   ) {}
 
   @MessagePattern({ cmd: 'transactions' })
@@ -68,6 +70,16 @@ export class AppController {
       data.filters,
       data.graphName,
     );
+  }
+
+  @MessagePattern({ cmd: 'domainWatchPassive' })
+  async domainWatchPassive() {
+    return await this.domainWatchService.passive();
+  }
+
+  @MessagePattern({ cmd: 'loadDomains' })
+  async loadDomains() {
+    return await this.domainWatchService.loadDomains();
   }
 
   @MessagePattern({ cmd: 'registrarName' })

@@ -54,6 +54,11 @@ export class AppController {
     return await this.domainWatchService.passive();
   }
 
+  @MessagePattern({ cmd: 'loadDomains' })
+  async loadDomains() {
+    return await this.domainWatchService.loadDomains();
+  }
+
   @MessagePattern({ cmd: 'registrarName' })
   async registarName(data: any) {
     return await this.registrarNameService.registrarName(data);

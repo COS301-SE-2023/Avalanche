@@ -14,7 +14,34 @@ export class DomainWatchService {
 
   async passive(): Promise<any> {
     const sqlQuery = `call domainWatchPassive('')`;
-    const queryData = await this.snowflakeService.execute(sqlQuery);
+    let queryData;
+    try {
+      queryData = await this.snowflakeService.execute(sqlQuery);
+    } catch (e) {
+      return {
+        status: 500,
+        error: true,
+        message: 'Data Warehouse Error',
+        timestamp: new Date().toISOString(),
+      };
+    }
+    console.log(queryData);
+    return { queryData };
+  }
+
+  async loadDomains(): Promise<any> {
+    const sqlQuery = `call loadDomains()`;
+    let queryData;
+    try {
+      queryData = await this.snowflakeService.execute(sqlQuery);
+    } catch (e) {
+      return {
+        status: 500,
+        error: true,
+        message: 'Data Warehouse Error',
+        timestamp: new Date().toISOString(),
+      };
+    }
     console.log(queryData);
     return { queryData };
   }

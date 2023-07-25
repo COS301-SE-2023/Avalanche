@@ -96,4 +96,4 @@ import { RegistrarNameService } from './registrarName/registrarName.service';
     RegistrarNameService,
   ],
 })
-export class AppModule { }
+export class AppModule {}
