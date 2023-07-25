@@ -259,7 +259,7 @@ export class AuthService {
       };
     }
 
-    if(user.apiKey.length > 0){
+    if(user.apiKey?.length > 0){
       return {
         status: 400, error: true, message: 'User already has an api key',
         timestamp: new Date().toISOString()
