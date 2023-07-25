@@ -17,7 +17,7 @@ export class UserDashboardMangementService {
         @InjectRepository(Organisation) private organisationRepository: Repository<Organisation>,
         @InjectRepository(Dashboard) private dashboardRepository: Repository<Dashboard>) { }
 
-    async saveDashbaord(token: string, name: string, graphs: { graphName: string, endpointName: string, filters: string[], comments: [{ userName: string; comment: string; }] }[]) {
+    async saveDashbaord(token: string, id: string, name: string, graphs: { graphName: string, endpointName: string, filters: string[], comments: [{ userName: string; comment: string; }] }[]) {
         const userPayload = await this.redis.get(token);
         if (!userPayload) {
             return {
@@ -53,6 +53,7 @@ export class UserDashboardMangementService {
 
         const dashboard = new Dashboard();
         dashboard.name = name;
+        dashboard.id = id;
         dashboard.graphs = graphs;
         await this.dashboardRepository.save(dashboard);
 
@@ -70,7 +71,7 @@ export class UserDashboardMangementService {
         };
     }
 
-    async editDashbaord(token: string, name: string, graphs: { graphName: string, endpointName: string, filters: string[], comments: [{ userName: string; comment: string; }] }[]) {
+    async editDashbaord(token: string, id: string, name: string, graphs: { graphName: string, endpointName: string, filters: string[], comments: [{ userName: string; comment: string; }] }[]) {
         const userPayload = await this.redis.get(token);
         if (!userPayload) {
             return {
@@ -99,14 +100,14 @@ export class UserDashboardMangementService {
 
         let check = false;
         for (const dashboards of user.dashboards) {
-            if (dashboards.name == name) {
+            if (dashboards.id == id) {
                 check = true;
             }
         }
 
         if (check == true) {
             for (const dashboards of user.dashboards) {
-                if (dashboards.name == name) {
+                if (dashboards.id == id) {
                     dashboards.graphs = graphs;
                     await this.dashboardRepository.save(dashboards);
                     await this.redis.set(token, JSON.stringify(user))
@@ -127,7 +128,7 @@ export class UserDashboardMangementService {
         }
     }
 
-    async shareDashboards(token: string, userGroupName: string, dashboardName: string) {
+    async shareDashboards(token: string, userGroupName: string, dashboardId: string) {
         const userPayload = await this.redis.get(token);
         if (!userPayload) {
             return {
@@ -157,7 +158,7 @@ export class UserDashboardMangementService {
 
         let dashboard = new Dashboard();
         for(const userDashboard of user.dashboards){
-            if(userDashboard.name == dashboardName){
+            if(userDashboard.id == dashboardId){
                 dashboard = userDashboard;
             }else{
                 return {
@@ -195,7 +196,7 @@ export class UserDashboardMangementService {
         }
     }
 
-    async addCommentToGraph(token: string, name: string, graphName: string, comment: string) {
+    async addCommentToGraph(token: string, id: string, graphName: string, comment: string) {
         const userPayload = await this.redis.get(token);
         if (!userPayload) {
             return {
@@ -224,7 +225,7 @@ export class UserDashboardMangementService {
 
         let check = false;
         for (const dashboards of user.dashboards) {
-            if (dashboards.name == name) {
+            if (dashboards.id == id) {
                 for (const graphs of dashboards.graphs) {
                     if (graphs.graphName == graphName) {
                         check = true;

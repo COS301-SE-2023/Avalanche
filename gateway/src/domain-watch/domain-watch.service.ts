@@ -70,7 +70,7 @@ export class DomainWatchService {
         if (err) {
           reject(err);
         } else {
-          resolve({ data: data });
+          resolve({ "data": data });
         }
       });
     });
