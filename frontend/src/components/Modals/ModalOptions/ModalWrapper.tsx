@@ -22,7 +22,7 @@ export default function ModalWrapper({ children, addClass, addClassAdd, smallMod
     }}>
         {/*  */}
         <div className={`relative w-full h-full ${smallModal && "max-w-md max-h-full"}`} onClick={(event) => event.stopPropagation()}>
-            <div className={`relative bg-white rounded-lg shadow dark:bg-primaryBackground px-6 py-6 lg:px-8 ${addClassAdd}`}>
+            <div className={`relative bg-white rounded-lg shadow dark:bg-primaryBackground px-6 py-6 lg:px-8 ${addClassAdd && addClassAdd}`}>
                 {children}
             </div>
         </div>
