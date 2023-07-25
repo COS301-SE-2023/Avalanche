@@ -315,6 +315,7 @@ export class AuthService {
 
 
   async rerollAPIKey(token: string) {
+    console.log("olaeihfldfkedhslsfhjsledhfklk4rjhefdoplirwefcj korilfsdkxhcjoweifdlkch")
     const userData = await this.redis.get(token);
     if (!userData) {
       return {
@@ -332,6 +333,8 @@ export class AuthService {
       };
     }
 
+    console.log(user);
+
     // reroll your api key with an api key check
     if (user['apiKey'] == token) {
       return {
@@ -339,6 +342,8 @@ export class AuthService {
         timestamp: new Date().toISOString()
       };
     }
+
+    console.log(user);
 
     if (!user['apiKey']) {
       return {
@@ -353,8 +358,8 @@ export class AuthService {
     delete user.apiKey;
     delete user.salt;
     await this.redis.set(jwtToken, JSON.stringify(user));
-    await this.redis.del(token);
-    const userWithToken = { ...user, token: jwtToken };
+    // await this.redis.del(token);
+    const userWithToken = { ...user, apiKey: jwtToken };
     // Send back user's information along with the token as a JSON object
     return {
       status: "success", message: userWithToken.apiKey,

@@ -31,7 +31,7 @@ export default function GeneralSettings({ user }: IGeneralSettings) {
 
     const rerollAPIKey = async () => {
         try {
-            const res = await ky.post(`${process.env.NEXT_PUBLIC_API}/user-management/createAPIKey`, {
+            const res = await ky.post(`${process.env.NEXT_PUBLIC_API}/user-management/rerollAPIKey`, {
                 headers: {
                     "Authorization": `Bearer ${getCookie("jwt")}`
                 }
@@ -54,7 +54,7 @@ export default function GeneralSettings({ user }: IGeneralSettings) {
             <div className="flex gap-5 justify-between items-center">
                 <WarningAlert title="No API Key" text={user.api ? "You already have an API Key" : "You have no API key registered."} className="flex-auto" />
                 <SubmitButton text="Create API Key" onClick={() => {
-                    createAPIKey();
+                    rerollAPIKey();
                 }} className="h-full" />
             </div>
         </>

@@ -1048,6 +1048,7 @@ export class UserManagementController {
   }
   @Post('rerollAPIKey')
   async rerollAPIKey(@Body() data: any) {
+    console.log("rust can go fuck off");
     const pattern = { cmd: 'rerollAPIKey' };
     const payload = data;
     try {
