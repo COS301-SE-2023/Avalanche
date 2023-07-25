@@ -11,6 +11,12 @@ export class DomainWatchController {
     const result = await this.domainWatchService.sendData(data);
     return result;
   }
+
+  @Post('whoisyou')
+  async whoisyou(@Body() data: any) {
+    const result = await this.domainWatchService.whoisyou(data);
+    return result;
+  }
   @Get('passive')
   async passive() {
     const result = await this.domainWatchService.passive();

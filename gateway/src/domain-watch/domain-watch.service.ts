@@ -2,6 +2,7 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { lastValueFrom } from 'rxjs';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import * as whois from 'node-whois';
 
 @Injectable()
 export class DomainWatchService {
@@ -61,5 +62,17 @@ export class DomainWatchService {
       .post('http://zanet.cloud:4100/domainWatch/loadDomains', check)
       .toPromise();
     return JSON.stringify(response.data);
+  }
+
+  async whoisyou(data: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+      whois.lookup(data.domain, function (err, data) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve({ data: data });
+        }
+      });
+    });
   }
 }
