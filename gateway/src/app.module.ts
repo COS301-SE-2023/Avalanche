@@ -27,7 +27,7 @@ import { ScheduleModule } from '@nestjs/schedule';
         name: 'USER_MANAGEMENT_SERVICE',
         transport: Transport.TCP,
         options: {
-          host: process.env.UM_HOST || 'localhost',
+          host: 'localhost',
           port: 4001,
         },
       },
@@ -35,7 +35,7 @@ import { ScheduleModule } from '@nestjs/schedule';
         name: 'ZACR_SERVICE',
         transport: Transport.TCP,
         options: {
-          host: process.env.ZACR_HOST || 'localhost',
+          host: 'localhost',
           port: 4002,
         },
       },
@@ -43,7 +43,7 @@ import { ScheduleModule } from '@nestjs/schedule';
         name: 'RyCE_SERVICE',
         transport: Transport.TCP,
         options: {
-          host: process.env.RYCE_HOST || 'localhost',
+          host: 'localhost',
           port: 4004,
         },
       },
@@ -51,7 +51,7 @@ import { ScheduleModule } from '@nestjs/schedule';
         name: 'AFRICA_SERVICE',
         transport: Transport.TCP,
         options: {
-          host: process.env.AFRICA_HOST || 'localhost',
+          host: 'localhost',
           port: 4005,
         },
       },
@@ -73,6 +73,7 @@ export class AppModule implements NestModule {
         { path: 'domain-watch/list', method: RequestMethod.POST },
         { path: 'domain-watch/passive', method: RequestMethod.GET },
         { path: 'domain-watch/loadDomains', method: RequestMethod.GET },
+        { path: 'domain-watch/whoisyou', method: RequestMethod.POST },
         { path: 'user-management/graphFilters', method: RequestMethod.GET },
         { path: 'user-management/getDomainWatchPassive', method: RequestMethod.POST },
         { path: 'africa/domainWatchPassive', method: RequestMethod.POST }
