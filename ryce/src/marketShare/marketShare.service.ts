@@ -50,6 +50,8 @@ export class MarketShareService {
         status: 'success',
         data: {
           graphName: graphName,
+          warehouse: 'ryce',
+          graphType: 'marketshare',
           ...JSON.parse(formattedData),
         },
         timestamp: new Date().toISOString(),

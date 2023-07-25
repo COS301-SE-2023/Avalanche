@@ -53,7 +53,12 @@ export class TransactionService {
 
       return {
         status: 'success',
-        data: { graphName: graphName, ...JSON.parse(formattedData) },
+        data: {
+          graphName: graphName,
+          warehouse: 'ryce',
+          graphType: 'transactions',
+          ...JSON.parse(formattedData),
+        },
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
@@ -75,7 +80,7 @@ export class TransactionService {
       console.log(filters);
       const sqlQuery = `call transactionsByRegistrar('${filters}')`;
 
-      let formattedData = await this.redis.get(`ryceessele` + sqlQuery);
+      let formattedData = await this.redis.get(`ryce` + sqlQuery);
 
       if (!formattedData) {
         let queryData;
@@ -89,14 +94,12 @@ export class TransactionService {
             timestamp: new Date().toISOString(),
           };
         }
-        console.log('QD');
         console.log(queryData);
         formattedData =
           await this.graphFormattingService.formatTransactionsRanking(
             JSON.stringify(queryData),
           );
 
-        console.log('FD ' + formattedData);
         await this.redis.set(
           `ryce` + sqlQuery,
           formattedData,
@@ -106,7 +109,12 @@ export class TransactionService {
       }
       return {
         status: 'success',
-        data: { graphName: graphName, ...JSON.parse(formattedData) },
+        data: {
+          graphName: graphName,
+          warehouse: 'ryce',
+          graphType: 'transactions-ranking',
+          ...JSON.parse(formattedData),
+        },
         timestamp: new Date().toISOString(),
       };
     } catch (e) {

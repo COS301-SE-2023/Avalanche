@@ -241,6 +241,43 @@
                 ]
             },
             {
+                "name": "domainNameAnalysis/length",
+                "filters": [
+                    {
+                        "name": "zone",
+                        "type": "string[]",
+                        "values": [
+                            "CO.ZA",
+                            "NET.ZA",
+                            "ORG.ZA",
+                            "WEB.ZA"
+                        ],
+                        "input": "checkbox"
+                    },
+                    {
+                        "name": "registrar",
+                        "type": "string",
+                        "values": [
+                            "afrihost",
+                            "hetzner",
+                            "diamatrix"
+                        ],
+                        "input": "checkbox"
+                    },
+                    {
+                        "name": "dateFrom",
+                        "type": "string",
+                        "input": "date-picker"
+                    },
+                    {
+                        "name": "dateTo",
+                        "type": "string",
+                        "input": "date-picker"
+                    },
+                    
+                ]
+            },
+            {
                 "name": "movement",
                 "filters": [
                     {
@@ -471,6 +508,42 @@
                         "type": "number",
                         "input": "inputbox"
                     }
+                ]
+            },
+            {
+                "name": "domainNameAnalysis/length",
+                "filters": [
+                    {
+                        "name": "zone",
+                        "type": "string[]",
+                        "values": [
+                            "AFRICA"
+                        ],
+                        "input": "checkbox"
+                    },
+                    {
+                        "name": "registrar",
+                        "type": "string",
+                        "values": [
+                            "dnsafric6lc9ke",
+                            "tucowsdominc",
+                            "namecheap4ch",
+                            "diamatrix",
+                            "101domain"
+                        ],
+                        "input": "checkbox"
+                    },
+                    {
+                        "name": "dateFrom",
+                        "type": "string",
+                        "input": "date-picker"
+                    },
+                    {
+                        "name": "dateTo",
+                        "type": "string",
+                        "input": "date-picker"
+                    },
+                    
                 ]
             },
             {
@@ -745,6 +818,45 @@
                         "type": "number",
                         "input": "inputbox"
                     }
+                ]
+            },
+            {
+                "name": "domainNameAnalysis/length",
+                "filters": [
+                    {
+                        "name": "zone",
+                        "type": "string[]",
+                        "values": [
+                            "WIEN",
+                            "COLOGNE",
+                            "KOELN",
+                            "TIROL"
+                        ],
+                        "input": "checkbox"
+                    },
+                    {
+                        "name": "registrar",
+                        "type": "string",
+                        "values": [
+                            "1und1",
+                            "registrygate",
+                            "internetx",
+                            "uniteddomains",
+                            "keysystems"
+                        ],
+                        "input": "checkbox"
+                    },
+                    {
+                        "name": "dateFrom",
+                        "type": "string",
+                        "input": "date-picker"
+                    },
+                    {
+                        "name": "dateTo",
+                        "type": "string",
+                        "input": "date-picker"
+                    },
+                    
                 ]
             },
             {
