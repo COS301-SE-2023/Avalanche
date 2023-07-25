@@ -66,7 +66,7 @@ export class UserDashboardMangementService {
 
         return {
             status: "success",
-            message: user,
+            message: user.dashboards,
             timestamp: new Date().toISOString()
         };
     }
@@ -115,7 +115,7 @@ export class UserDashboardMangementService {
                     delete user.apiKey;
                     return {
                         status: "success",
-                        message: user,
+                        message: user.dashboards,
                         timestamp: new Date().toISOString()
                     };
                 }
@@ -250,7 +250,7 @@ export class UserDashboardMangementService {
                             delete user.apiKey;
                             return {
                                 status: "success",
-                                message: user,
+                                message: user.dashboards,
                                 timestamp: new Date().toISOString()
                             };
                         }
