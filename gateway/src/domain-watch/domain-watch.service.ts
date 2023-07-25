@@ -44,14 +44,14 @@ export class DomainWatchService {
 
   async whoisyou(data: any): Promise<any> {
     return new Promise((resolve, reject) => {
-      whois.lookup(data.domain, function(err, data) {
-          if (err) {
-              reject(err);
-          } else {
-              resolve({"data" : data});
-          }
+      whois.lookup(data.domain, function (err, data) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve({ "data": data });
+        }
       });
-  });
+    });
   }
 }
 
