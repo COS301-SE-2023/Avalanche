@@ -216,7 +216,7 @@ export class UserDashboardMangementService {
                 timestamp: new Date().toISOString()
             };
         }
-        if (!name || name.length == 0) {
+        if (!id || id.length == 0) {
             return {
                 status: 400, error: true, message: 'Please enter a valid dashboard name.',
                 timestamp: new Date().toISOString()
@@ -236,7 +236,7 @@ export class UserDashboardMangementService {
 
         if (check == true) {
             for (const dashboards of user.dashboards) {
-                if (dashboards.name == name) {
+                if (dashboards.id == id) {
                     for (const graphs of dashboards.graphs) {
                         if (graphs.graphName == graphName) {
                             const userName = user.firstName + " " + user.lastName;
