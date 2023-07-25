@@ -68,6 +68,8 @@ export class DomainNameAnalysisService {
             ' ' +
             granularity +
             '(s)',
+          warehouse: 'ryce',
+          graphType: 'domainNameAnalysis/count',
           ...JSON.parse(formattedData),
         },
         timestamp: new Date().toISOString(),
@@ -121,7 +123,12 @@ export class DomainNameAnalysisService {
       }
       return {
         status: 'success',
-        data: { graphName: graphName, ...JSON.parse(formattedData) },
+        data: {
+          graphName: graphName,
+          warehouse: 'ryce',
+          graphType: 'domainNameAnalysis/length',
+          ...JSON.parse(formattedData),
+        },
         timestamp: new Date().toISOString(),
       };
     } catch (e) {

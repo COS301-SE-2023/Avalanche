@@ -218,7 +218,7 @@ export class UserDashboardMangementService {
         }
         if (!dashboardID || dashboardID.length == 0) {
             return {
-                status: 400, error: true, message: 'Please enter a valid dashboard name.',
+                status: 400, error: true, message: 'Please enter a valid dashboard id.',
                 timestamp: new Date().toISOString()
             };
         }
