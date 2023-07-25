@@ -83,7 +83,7 @@ export class AppController {
       throw new RpcException({
         status: result.status,
         message: result.message,
-        timestamp: result.timestamp,
+        timestamp: result['timestamp'],
       });
     }
 

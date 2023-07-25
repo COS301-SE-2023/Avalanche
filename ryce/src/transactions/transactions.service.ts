@@ -65,7 +65,7 @@ export class TransactionService {
       return {
         status: 500,
         error: true,
-        message: e,
+        message: `${e.message}`,
         timestamp: new Date().toISOString(),
       };
     }
@@ -121,7 +121,7 @@ export class TransactionService {
       return {
         status: 500,
         error: true,
-        message: e.message,
+        message: `${e.message}`,
         timestamp: new Date().toISOString(),
       };
     }
