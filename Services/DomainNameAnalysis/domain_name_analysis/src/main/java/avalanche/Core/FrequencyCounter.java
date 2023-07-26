@@ -28,6 +28,7 @@ public class FrequencyCounter {
         HashMap<String, CountAndList> wordFrequencies = new HashMap<>();
         DomainTokeniser.init();
         DomainTokeniser tokeniser = new DomainTokeniser();
+        int maximumAppearancesFound = 0;
         for (String string : allStrings) {
             String withSpaces = tokeniser.inferSpaces(string);
             String[] words = withSpaces.split(" ");
@@ -36,12 +37,16 @@ public class FrequencyCounter {
                     CountAndList countAndList = wordFrequencies.getOrDefault(word, new CountAndList());
                     countAndList.incrementCount();
                     countAndList.addDomain(string);
+                    if (countAndList.getFrequency() > maximumAppearancesFound) {
+                        maximumAppearancesFound = countAndList.getFrequency();
+                    }
                     wordFrequencies.put(word, countAndList);
                 }
 
             }
         }
 
+        minimunAppearances = Math.min(minimunAppearances, maximumAppearancesFound);
         ArrayList<WordFrequency> allWordFrequencies = new ArrayList<>();
         for (String word : wordFrequencies.keySet()) {
             if (wordFrequencies.get(word).getFrequency() >= minimunAppearances) {
