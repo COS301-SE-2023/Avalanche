@@ -17,7 +17,7 @@ public class main {
             DomainWatchSettings.init();
             ServiceHttpServer server = new ServiceHttpServer(DomainWatchSettings.getInstace().port, false);
             server.start();
-            server.handleDummyRequest("active");
+            // server.handleDummyRequest("active");
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

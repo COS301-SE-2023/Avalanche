@@ -78,6 +78,10 @@ public class HandleActive extends Running {
     }
 
     public static String validateRequest(String body) {
+        String validation = validateJSON(body);
+        if (!validation.equals("")) {
+            return validation;
+        }
         int errorIndex = -1;
         Set<String> allowedMetrics = new HashSet<>();
         allowedMetrics.add("Levenshtein");
