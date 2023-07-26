@@ -1,4 +1,7 @@
 const baseURL = 'http://localhost:3000/';
+const server = 'http://localhost:4000/'
+
+require('cypress-dotenv')();
 
 describe('template spec', () => {
   it('passes', () => {
@@ -32,10 +35,10 @@ describe('Home page test', () => {
   });
 })
 
-describe('Auth', () => {
+describe('User management', () => {
   describe('login', ()=>{
     it('Endpoint is reachable', async() => {
-      cy.request(baseURL + '/auth/login').its('status').should('equal', 200)
+      cy.request(baseURL + 'user-management/login').its('status').should('equal', 200)
     })
   })
 })
