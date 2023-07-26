@@ -2,16 +2,11 @@ package avalanche.Network.HandlerStrategy.RunningStrategies;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import avalanche.Core.SimilarityChecker;
-import avalanche.DataClasses.Domain;
 import avalanche.Network.HandlerStrategy.Running;
 import avalanche.Settings.DomainWatchSettings;
 
