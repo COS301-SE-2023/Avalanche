@@ -36,9 +36,36 @@ describe('Home page test', () => {
 })
 
 describe('User management', () => {
+  beforeEach(() => {
+    cy.clearCookies();
+    cy.clearLocalStorage();
+  });
   describe('login', ()=>{
     it('Endpoint is reachable', async() => {
-      cy.request(baseURL + 'user-management/login').its('status').should('equal', 200)
+      cy.request({
+        method: 'GET',
+        url: server + 'user-management/login',
+        failOnStatusCode: false
+      }).its('status').should('equal', 400)
+    })
+
+    it('Email and password is empty', async() => {
+      const requestBody = {
+        email : "",
+        password : ""
+      };
+
+      cy.request({
+        method: 'POST',
+        url : "127.0.0.1:4000/user-management/login",
+        headers: {
+          'Content-Type' : 'application/json'
+        },
+        body: requestBody,
+        failOnStatusCode: false
+      }).then((response) => {
+        expect(response.status).to.equal(400);
+      })
     })
   })
 })
