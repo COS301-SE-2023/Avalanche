@@ -30,7 +30,7 @@ export default function ConfirmModal({ text, buttonSuccess, buttonCancel, title 
         <ModalWrapper>
             <ModalHeader title={title} />
             <ModalContent>
-                <p className="text-sm mb-4">{text}</p>
+                <p className="text-sm mb-4 text-gray-500">{text}</p>
                 <form className="flex gap-5" onSubmit={(event) => formSubmit(event)}>
                     <SubmitButton text={buttonSuccess} onClick={(event: React.FormEvent<HTMLFormElement>) => {
                         formSubmit(event);

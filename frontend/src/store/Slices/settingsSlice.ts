@@ -5,7 +5,7 @@ import ky from "ky";
 import { ICreateOrganisationRequest } from "@/interfaces/requests";
 import { ICreateOrgnisationResponse } from "@/interfaces/responses";
 
-const url = "http://localho.st:4000/user-management";
+const url = `${process.env.NEXT_PUBLIC_API}/user-management`;
 
 export const settingsSlice = createSlice({
     name: "settings",
