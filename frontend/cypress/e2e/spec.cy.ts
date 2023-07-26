@@ -1,3 +1,5 @@
+const baseURL = 'http://localhost:3000/';
+
 describe('template spec', () => {
   it('passes', () => {
     cy.visit('https://example.cypress.io')
@@ -6,11 +8,11 @@ describe('template spec', () => {
 
 describe('Home page test', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:3000/');
+    cy.visit(baseURL);
   })
 
   it('should return a successful response', () => {
-    cy.request('http://localhost:3000/').its("status")
+    cy.request(baseURL).its("status")
       .should('equal', 200);
   });
 
@@ -22,10 +24,18 @@ describe('Home page test', () => {
   });
 
   it('should have specific headers', () => {
-    cy.request('http://localhost:3000/')
+    cy.request(baseURL)
       .its('headers')
       .should('include', {
         'content-type': 'text/html; charset=utf-8',
       });
   });
+})
+
+describe('Auth', () => {
+  describe('login', ()=>{
+    it('Endpoint is reachable', async() => {
+      cy.request(baseURL + '/auth/login').its('status').should('equal', 200)
+    })
+  })
 })
