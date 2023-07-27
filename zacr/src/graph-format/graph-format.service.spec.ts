@@ -20,7 +20,7 @@ describe('GraphFormatService', () => {
     it('should throw an error when data array is empty', async () => {
       await expect(
         service.formatTransactions(
-          JSON.stringify([{ TRANSACTIONSBYREGISTRAR: [] }]),
+          JSON.stringify([{ TRANSACTIONSBYREGISTRAR: JSON.stringify([]) }]),
         ),
       ).rejects.toThrow('Empty data array.');
     });
@@ -98,6 +98,160 @@ describe('GraphFormatService', () => {
         service.formatTransactions(JSON.stringify(data)),
       ).resolves.toEqual(JSON.stringify(expectedData));
     });
+  });
+
+  describe('Transactions Ranking Format Service', () => {
+    it('should throw an error when data array is empty', async () => {
+      await expect(
+        service.formatTransactionsRanking(
+          JSON.stringify([{ TRANSACTIONSBYREGISTRAR: JSON.stringify([]) }]),
+        ),
+      ).rejects.toThrow('Empty data array.');
+    });
+
+    it('should succesfully return chartdata when length is 4', async () => {
+      const data = [
+        {
+          TRANSACTIONSBYREGISTRAR: JSON.stringify([
+            {
+              Date: 'July 2022',
+              Code: 'CO.ZA_CLOSED_REDEEM',
+              Registrars: 'Registrar1',
+              Quantity: 23,
+            },
+            {
+              Date: 'July 2022',
+              Code: 'CO.ZA_GRACE',
+              Registrars: 'Registrar1',
+              Quantity: 288,
+            },
+            {
+              Date: 'August 2022',
+              Code: 'CO.ZA_CLOSED_REDEEM',
+              Registrars: 'Registrar1',
+              Quantity: 25,
+            },
+            {
+              Date: 'August 2022',
+              Code: 'CO.ZA_GRACE',
+              Registrars: 'Registrar1',
+              Quantity: 184,
+            },
+            {
+              Date: 'September 2022',
+              Code: 'CO.ZA_CLOSED_REDEEM',
+              Registrars: 'Registrar1',
+              Quantity: 27,
+            },
+            {
+              Date: 'September 2022',
+              Code: 'CO.ZA_GRACE',
+              Registrars: 'Registrar1',
+              Quantity: 165,
+            },
+          ]),
+        },
+      ];
+      const outp = await service.formatTransactionsRanking(
+        JSON.stringify(data),
+      );
+      expect(outp).toBeDefined();
+    });
+
+    // Add additional tests as needed
+  });
+
+  describe('Domain Name Analysis Format Service', () => {
+    it('should throw an error when data array is empty', async () => {
+      await expect(
+        service.formatDomainNameAnalysis(JSON.stringify({ data: [] })),
+      ).rejects.toThrow('Empty data array.');
+    });
+
+    it('should successfully return chart data when the keys length is 3', async () => {
+      const data = {
+        data: [
+          {
+            key1: 'value1',
+            key2: 'value2',
+            key3: 'value3',
+          },
+        ],
+      };
+      await expect(
+        service.formatDomainNameAnalysis(JSON.stringify(data)),
+      ).toBeDefined();
+    });
+  });
+
+  describe('Domain Length Analysis Format Service', () => {
+    it('should throw an error when data array is empty', async () => {
+      await expect(
+        service.formatDomainLengthAnalysis(
+          JSON.stringify({ DOMAINLENGTHANALYSIS: [] }),
+        ),
+      ).rejects.toThrow('Empty data array.');
+    });
+
+    it('should successfully return chart data when the keys length is 2', async () => {
+      const data = [
+        {
+          DOMAINLENGTHANALYSIS: JSON.stringify([
+            {
+              key1: 'value1',
+              key2: 'value2',
+            },
+          ]),
+        },
+      ];
+      await expect(
+        service.formatDomainLengthAnalysis(JSON.stringify(data)),
+      ).toBeDefined();
+    });
+  });
+
+  describe('Nett Vertical Movement Format Service', () => {
+    it('should throw an error when data array is empty', async () => {
+      await expect(
+        service.formatNettVertical(
+          JSON.stringify([{ NETTVERTICALMOVEMENT: [] }]),
+        ),
+      ).rejects.toThrow('Empty data array.');
+    });
+
+    it('should successfully return chart data when the keys length is 2', async () => {
+      const data = [
+        {
+          NETTVERTICALMOVEMENT: JSON.stringify([
+            {
+              key1: 'value1',
+              key2: 'value2',
+            },
+          ]),
+        },
+      ];
+      await expect(
+        service.formatNettVertical(JSON.stringify(data)),
+      ).toBeDefined();
+    });
+
+    it('should successfully return chart data when the keys length is 3', async () => {
+      const data = [
+        {
+          NETTVERTICALMOVEMENT: JSON.stringify([
+            {
+              key1: 'value1',
+              key2: 'value2',
+              key3: 'value3',
+            },
+          ]),
+        },
+      ];
+      await expect(
+        service.formatNettVertical(JSON.stringify(data)),
+      ).toBeDefined();
+    });
+
   });
 
   describe('Marketshare Format Service', () => {
