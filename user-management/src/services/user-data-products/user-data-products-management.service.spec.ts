@@ -34,12 +34,12 @@ describe('UserDataProductMangementService', () => {
             ],
         }).compile();
 
-        service = moduleRef.get<UserDataProductMangementService>(UserDataProductMangementService);
-        userRepository = moduleRef.get(getRepositoryToken(User));
-        userGroupRepository = moduleRef.get(getRepositoryToken(UserGroup));
-        organisationRepository = moduleRef.get(getRepositoryToken(Organisation));
-        watchedUserRepository = moduleRef.get(getRepositoryToken(WatchedUser));
-        redis = moduleRef.get('REDIS');
+        service = await moduleRef.get<UserDataProductMangementService>(UserDataProductMangementService);
+        userRepository = await moduleRef.get(getRepositoryToken(User));
+        userGroupRepository = await moduleRef.get(getRepositoryToken(UserGroup));
+        organisationRepository = await moduleRef.get(getRepositoryToken(Organisation));
+        watchedUserRepository = await moduleRef.get(getRepositoryToken(WatchedUser));
+        redis = await moduleRef.get('REDIS');
     });
 
     const mockRedisInstance = {
@@ -169,10 +169,11 @@ describe('UserDataProductMangementService', () => {
     
         it('should return success when user exists', async () => {
           jest.spyOn(redis, 'get').mockResolvedValue(JSON.stringify({ email: 'test@email.com' }));
-          const mockUser = { firstName: 'test', lastName: 'user' };
+          const mockUser = { firstName: 'test', lastName: 'user', email: 'test@email.com' };
           jest.spyOn(userRepository, 'findOne').mockResolvedValue(mockUser as any);
+          jest.spyOn(watchedUserRepository, 'findOne').mockResolvedValue(null); // Add this if not present
           jest.spyOn(watchedUserRepository, 'save').mockResolvedValue(null);
-    
+        
           const result = await service.addDomainWatchPassiveDetails('token', [], []);
           expect(result).toEqual({
             status: 'success',

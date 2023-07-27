@@ -2,7 +2,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { User } from '../entity/user.entity';
+import { User } from '../../entity/user.entity';
 import Redis from 'ioredis';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
