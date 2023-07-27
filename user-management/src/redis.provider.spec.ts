@@ -41,6 +41,7 @@ describe('RedisProvider', () => {
   it('should be defined', () => {
     expect(redisInstance).toBeDefined();
     expect(Redis.default).toBeCalledWith({
+      connectTimeout : 100000,
       host: 'localhost',
       port: 6379,
       username: 'testUser',

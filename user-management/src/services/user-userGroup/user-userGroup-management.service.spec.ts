@@ -36,6 +36,7 @@ describe('UserUserGroupMangementService', () => {
             findOne: jest.fn(),
             create: jest.fn(),
             save: jest.fn(),
+            find: jest.fn(),
         };
 
 
@@ -155,6 +156,7 @@ describe('UserUserGroupMangementService', () => {
             mockRedis.get.mockResolvedValueOnce(JSON.stringify(userPayload));
             mockOrganisationRepository.findOne.mockResolvedValueOnce(mockOrganisation);
             mockUserGroupRepository.save.mockResolvedValueOnce(userGroup);
+            mockUserGroupRepository.find.mockResolvedValueOnce([]);
 
             //Call function
             const result = await userOrganisationMangementService.createUserGroup(token, name, permission);

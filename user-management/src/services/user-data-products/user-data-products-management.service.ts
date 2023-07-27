@@ -12,7 +12,7 @@ import { WatchedUser } from '../../entity/watch.entity';
 
 @Injectable()
 export class UserDataProductMangementService {
-    constructor(@Inject('REDIS') private readonly redis: Redis, private readonly configService: ConfigService,
+    constructor(@Inject('REDIS') private readonly redis: Redis,
         @InjectRepository(User) private userRepository: Repository<User>,
         @InjectRepository(UserGroup) private userGroupRepository: Repository<UserGroup>,
         @InjectRepository(Organisation) private organisationRepository: Repository<Organisation>,

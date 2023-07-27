@@ -313,9 +313,7 @@ export class AuthService {
     }
   }
 
-
   async rerollAPIKey(token: string) {
-    console.log("olaeihfldfkedhslsfhjsledhfklk4rjhefdoplirwefcj korilfsdkxhcjoweifdlkch")
     const userData = await this.redis.get(token);
     if (!userData) {
       return {
@@ -351,13 +349,14 @@ export class AuthService {
         timestamp: new Date().toISOString()
       };
     }
-
+    const tempApi = user.apiKey;
     const jwtToken = uuidv4();
     user.apiKey = jwtToken;
     await this.userRepository.save(user);
     delete user.apiKey;
     delete user.salt;
     await this.redis.set(jwtToken, JSON.stringify(user));
+    await this.redis.del(tempApi);
     // await this.redis.del(token);
     const userWithToken = { ...user, apiKey: jwtToken };
     // Send back user's information along with the token as a JSON object
