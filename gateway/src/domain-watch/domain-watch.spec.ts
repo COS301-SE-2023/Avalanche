@@ -37,7 +37,7 @@ describe('domain watch service tests', () => {
       const result = await domainWatchService.sendData(data);
 
       expect(httpService.post).toHaveBeenCalledWith(
-        'http://zanet.cloud:4004/domainWatch/list',
+        'http://zanet.cloud:4100/domainWatch/active',
         data,
       );
       expect(result).toEqual(JSON.stringify(responseData));

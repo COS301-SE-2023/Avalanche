@@ -56,4 +56,52 @@ describe('ZacrController', () => {
     expect(await controller.age(data)).toEqual(expectedResponse);
     expect(client.send).toHaveBeenCalledWith({ cmd: 'age' }, data);
   });
+
+  it('should post transaction ranking', async () => {
+    const data = { key: 'value' };
+    const expectedResponse = { status: 'success' };
+
+    jest
+      .spyOn(client, 'send')
+      .mockImplementationOnce(() => of(expectedResponse));
+
+    expect(await controller.transactionsRaking(data)).toEqual(expectedResponse);
+    expect(client.send).toHaveBeenCalledWith({ cmd: 'transactions-ranking' }, data);
+  });
+
+  it('should post domain watch passive', async () => {
+    const data = { key: 'value' };
+    const expectedResponse = { status: 'success' };
+
+    jest
+      .spyOn(client, 'send')
+      .mockImplementationOnce(() => of(expectedResponse));
+
+    expect(await controller.domainWatchPassive(data)).toEqual(expectedResponse);
+    expect(client.send).toHaveBeenCalledWith({ cmd: 'domainWatchPassive' }, data);
+  });
+
+  it('should post domain name analysis count', async () => {
+    const data = { key: 'value' };
+    const expectedResponse = { status: 'success' };
+
+    jest
+      .spyOn(client, 'send')
+      .mockImplementationOnce(() => of(expectedResponse));
+
+    expect(await controller.domainNameAnalysisCount(data)).toEqual(expectedResponse);
+    expect(client.send).toHaveBeenCalledWith({ cmd: 'domainNameAnalysis/count' }, data);
+  });
+
+  it('should post domain name analysis length', async () => {
+    const data = { key: 'value' };
+    const expectedResponse = { status: 'success' };
+
+    jest
+      .spyOn(client, 'send')
+      .mockImplementationOnce(() => of(expectedResponse));
+
+    expect(await controller.domainNameAnalysisLength(data)).toEqual(expectedResponse);
+    expect(client.send).toHaveBeenCalledWith({ cmd: 'domainNameAnalysis/length' }, data);
+  });
 });

@@ -15,12 +15,6 @@ describe('UserOrganisationMangementService', () => {
   let mockUserGroupRepository: jest.Mocked<Partial<Repository<UserGroup>>>;
   let mockOrganisationRepository: jest.Mocked<Partial<Repository<Organisation>>>;
   let mockRedis: jest.Mocked<Redis>;
-
-  const mockUser = new User();
-  const mockUserGroup = new UserGroup();
-  const mockOrganisation = new Organisation();
-  const mockSendRegistrationEmail = jest.fn();
-  const mockSendInvitationEmail = jest.fn();
   jest.mock('uuid', () => ({
     v4: jest.fn(),
   }));
@@ -36,6 +30,7 @@ describe('UserOrganisationMangementService', () => {
       findOne: jest.fn(),
       create: jest.fn(),
       save: jest.fn(),
+      find: jest.fn(),
     };
 
 
@@ -148,6 +143,78 @@ describe('UserOrganisationMangementService', () => {
       ]);
       expect(result.timestamp).toBeDefined();
     });
+
+    it('should return information from multiple groups if the user belongs to multiple groups', async () => {
+      const userPayload = { email: 'userEmail' };
+      mockRedis.get.mockResolvedValueOnce(JSON.stringify(userPayload));
+    
+      const groupMember1 = new User();
+      groupMember1.firstName = 'Member1First';
+      groupMember1.lastName = 'Member1Last';
+      groupMember1.email = 'member1@email.com';
+    
+      const userGroup1 = new UserGroup();
+      userGroup1.name = 'TestGroup1';
+      userGroup1.users = [groupMember1];
+      userGroup1.id = 1;
+    
+      const groupMember2 = new User();
+      groupMember2.firstName = 'Member2First';
+      groupMember2.lastName = 'Member2Last';
+      groupMember2.email = 'member2@email.com';
+    
+      const userGroup2 = new UserGroup();
+      userGroup2.name = 'TestGroup2';
+      userGroup2.users = [groupMember2];
+      userGroup2.id = 2;
+    
+      const user = new User();
+      user.email = 'userEmail';
+      user.userGroups = [userGroup1, userGroup2];
+    
+      jest.spyOn(mockUserRepository, 'findOne').mockResolvedValueOnce(user);
+      jest.spyOn(mockUserGroupRepository, 'findOne').mockResolvedValue(userGroup1);
+      jest.spyOn(mockUserGroupRepository, 'findOne').mockResolvedValue(userGroup2);
+    
+      const result = await userOrganisationMangementService.getMembers('validToken');
+      expect(result.status).toEqual('success');
+      expect(result.users.length).toEqual(4);
+      expect(result.users[0].userGroupName).toEqual(userGroup1.name);
+      expect(result.users[0].userGroupID).toEqual(userGroup1.id);
+      expect(result.users[1].userGroupName).toEqual(userGroup2.name);
+      expect(result.users[1].userGroupID).toEqual(userGroup2.id);
+      expect(result.timestamp).toBeDefined();
+    });    
+
+    it('should return group member information according to userGroup permission', async () => {
+      const userPayload = { email: 'userEmail' };
+      mockRedis.get.mockResolvedValueOnce(JSON.stringify(userPayload));
+    
+      const groupMember1 = new User();
+      groupMember1.firstName = 'Member1First';
+      groupMember1.lastName = 'Member1Last';
+      groupMember1.email = 'member1@email.com';
+    
+      const userGroup = new UserGroup();
+      userGroup.name = 'TestGroup';
+      userGroup.users = [groupMember1];
+      userGroup.id = 1;
+      userGroup.permission = 2; // Set to test different permission levels
+    
+      const user = new User();
+      user.email = 'userEmail';
+      user.userGroups = [userGroup];
+    
+      mockUserRepository.findOne.mockResolvedValueOnce(user);
+      jest.spyOn(mockUserGroupRepository, 'findOne').mockResolvedValue(userGroup);
+    
+      const result = await userOrganisationMangementService.getMembers('validToken');
+      expect(result.status).toEqual('success');
+      expect(result.users[0].userGroupName).toEqual(userGroup.name);
+      expect(result.users[0].userGroupID).toEqual(userGroup.id);
+      expect(result.timestamp).toBeDefined();
+    });
+    
   });  
 
   describe('createOrganisation', () => {

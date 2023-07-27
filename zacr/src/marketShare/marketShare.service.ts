@@ -64,10 +64,12 @@ export class MarketShareService {
     }
   }
 
-  marketShareGraphName(filters: string): string {
+  marketShareGraphName(filters: any): string {
     let rank = filters['rank'];
     if (rank) {
-      rank = ' for the ' + rank + ' registrars in terms of domain count ';
+      rank = 'for the ' + rank + ' registrars in terms of domain count ';
+    } else {
+      rank = '';
     }
 
     let registrar = filters['registrar'];
@@ -77,11 +79,11 @@ export class MarketShareService {
         for (const r of registrar) {
           regArr.push(r);
         }
-        registrar += regArr.join(', ');
-        registrar = ' across ' + registrar;
+        registrar = regArr.join(', ');
+        registrar = 'across ' + registrar + ' ';
       }
     } else {
-      registrar = ' across all registrars ';
+      registrar = 'across all registrars ';
     }
 
     let zone = filters['zone'];
@@ -91,11 +93,11 @@ export class MarketShareService {
         for (const r of zone) {
           zoneArr.push(r);
         }
-        zone += zoneArr.join(', ');
+        zone = zoneArr.join(', ');
       }
-      zone = ' for ' + zone;
+      zone = 'for ' + zone;
     } else {
-      zone = ' all zones ';
+      zone = 'for all zones ';
     }
 
     return 'Domain count marketshare ' + rank + registrar + zone;
