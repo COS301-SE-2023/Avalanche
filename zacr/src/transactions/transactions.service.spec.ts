@@ -109,6 +109,29 @@ describe('TransactionService', () => {
       expect(result.error).toBe(true);
       expect(result.message).toBe('Data Warehouse Error');
     });
+
+    it('should correctly throw an error when transaction format fails', async () => {
+      const filters = JSON.stringify({ data: 'someData' });
+      const graphName = 'graphName';
+      const sqlQuery = `call transactionsByRegistrar('${JSON.stringify(filters)}')`;
+
+      // Set up mocks
+      mockRedis.get.mockResolvedValue(null);  // Simulate Redis cache miss
+      mockSnowflakeService.execute.mockResolvedValue('queryData');
+      mockGraphFormatService.formatTransactions.mockResolvedValue(new Error('Format error'));
+  
+      // Call the method under test
+      const result = await service.transactions(filters, graphName);
+  
+      // Expect the mocks to have been called with the correct arguments
+      expect(mockRedis.get).toHaveBeenCalledWith(`zacr${sqlQuery}`);
+      expect(mockSnowflakeService.execute).toHaveBeenCalledWith(sqlQuery);
+      expect(mockGraphFormatService.formatTransactions).toHaveBeenCalledWith(JSON.stringify('queryData'));
+      
+      // Expect the result to be error
+      expect(result.status).toBe(500);
+      expect(result.error).toBe(true);
+    });
   });
 
   describe('transactionsRanking', () => {
