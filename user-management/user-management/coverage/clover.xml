@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1690464341327" clover="3.2.0">
-  <project timestamp="1690464341327" name="All files">
-    <metrics statements="905" coveredstatements="774" conditionals="221" coveredconditionals="160" methods="92" coveredmethods="69" elements="1218" coveredelements="1003" complexity="0" loc="905" ncloc="905" packages="7" files="13" classes="13"/>
+<coverage generated="1690466026052" clover="3.2.0">
+  <project timestamp="1690466026052" name="All files">
+    <metrics statements="905" coveredstatements="776" conditionals="221" coveredconditionals="161" methods="92" coveredmethods="69" elements="1218" coveredelements="1006" complexity="0" loc="905" ncloc="905" packages="7" files="13" classes="13"/>
     <package name="src">
       <metrics statements="169" coveredstatements="145" conditionals="31" coveredconditionals="5" methods="28" coveredmethods="28"/>
       <file name="app.controller.ts" path="C:\Users\Marc\Documents\3rd Year\COS 301\api test\Avalanche v1.2\Avalanche\user-management\src\app.controller.ts">
@@ -526,9 +526,9 @@
       </file>
     </package>
     <package name="src.services.user-data-products">
-      <metrics statements="134" coveredstatements="76" conditionals="38" coveredconditionals="23" methods="5" coveredmethods="5"/>
+      <metrics statements="134" coveredstatements="78" conditionals="38" coveredconditionals="24" methods="5" coveredmethods="5"/>
       <file name="user-data-products-management.service.ts" path="C:\Users\Marc\Documents\3rd Year\COS 301\api test\Avalanche v1.2\Avalanche\user-management\src\services\user-data-products\user-data-products-management.service.ts">
-        <metrics statements="134" coveredstatements="76" conditionals="38" coveredconditionals="23" methods="5" coveredmethods="5"/>
+        <metrics statements="134" coveredstatements="78" conditionals="38" coveredconditionals="24" methods="5" coveredmethods="5"/>
         <line num="2" count="3" type="stmt"/>
         <line num="3" count="3" type="stmt"/>
         <line num="5" count="3" type="stmt"/>
@@ -539,14 +539,14 @@
         <line num="10" count="3" type="stmt"/>
         <line num="11" count="3" type="stmt"/>
         <line num="14" count="3" type="stmt"/>
-        <line num="15" count="12" type="stmt"/>
-        <line num="16" count="12" type="stmt"/>
-        <line num="17" count="12" type="stmt"/>
-        <line num="18" count="12" type="stmt"/>
-        <line num="19" count="12" type="stmt"/>
-        <line num="22" count="2" type="cond" truecount="3" falsecount="0"/>
-        <line num="23" count="1" type="stmt"/>
-        <line num="30" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="15" count="13" type="stmt"/>
+        <line num="16" count="13" type="stmt"/>
+        <line num="17" count="13" type="stmt"/>
+        <line num="18" count="13" type="stmt"/>
+        <line num="19" count="13" type="stmt"/>
+        <line num="22" count="3" type="cond" truecount="2" falsecount="1"/>
+        <line num="23" count="0" type="stmt"/>
+        <line num="30" count="3" type="cond" truecount="2" falsecount="0"/>
         <line num="31" count="1" type="stmt"/>
         <line num="32" count="1" type="stmt"/>
         <line num="37" count="1" type="stmt"/>
@@ -578,9 +578,9 @@
         <line num="84" count="0" type="stmt"/>
         <line num="90" count="0" type="stmt"/>
         <line num="91" count="0" type="stmt"/>
-        <line num="98" count="0" type="stmt"/>
-        <line num="99" count="0" type="cond" truecount="0" falsecount="1"/>
-        <line num="100" count="0" type="stmt"/>
+        <line num="98" count="2" type="stmt"/>
+        <line num="99" count="2" type="cond" truecount="1" falsecount="0"/>
+        <line num="100" count="2" type="stmt"/>
         <line num="105" count="0" type="stmt"/>
         <line num="106" count="0" type="stmt"/>
         <line num="107" count="0" type="cond" truecount="0" falsecount="1"/>
