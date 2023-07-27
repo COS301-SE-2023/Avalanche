@@ -40,6 +40,22 @@ describe('AnalysisService', () => {
     expect(typeof result).toBe('string');
   });
 
+  it('should return correct result for valid two column data', async () => {
+    const data = [
+      {
+        TRANSACTIONSBYREGISTRAR: [
+          {
+            key1: 'series1',
+            key2: '2023-01-01 00:00:00.000 -0800',
+          },
+        ],
+      },
+    ];
+    const result = await service.analyze(data);
+    console.log(result);
+    expect(typeof result).toBe('string');
+  });
+
   it('should group by series for data with more than two columns', async () => {
     const data = [
       {
