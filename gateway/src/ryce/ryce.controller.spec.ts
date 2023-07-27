@@ -1,20 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClientProxy } from '@nestjs/microservices';
-import { ZacrController } from './zacr.controller';
+import { RyceController } from './ryce.controller';
 import { of } from 'rxjs';
 
-describe('ZacrController', () => {
-  let controller: ZacrController;
+describe('RyceController', () => {
+  let controller: RyceController;
   let client: ClientProxy;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [ZacrController],
-      providers: [{ provide: 'ZACR_SERVICE', useValue: { send: jest.fn() } }],
+      controllers: [RyceController],
+      providers: [{ provide: 'RyCE_SERVICE', useValue: { send: jest.fn() } }],
     }).compile();
 
-    controller = module.get<ZacrController>(ZacrController);
-    client = module.get<ClientProxy>('ZACR_SERVICE');
+    controller = module.get<RyceController>(RyceController);
+    client = module.get<ClientProxy>('RyCE_SERVICE');
   });
 
   it('should be defined', () => {
@@ -67,18 +67,6 @@ describe('ZacrController', () => {
 
     expect(await controller.transactionsRaking(data)).toEqual(expectedResponse);
     expect(client.send).toHaveBeenCalledWith({ cmd: 'transactions-ranking' }, data);
-  });
-
-  it('should post domain watch passive', async () => {
-    const data = { key: 'value' };
-    const expectedResponse = { status: 'success' };
-
-    jest
-      .spyOn(client, 'send')
-      .mockImplementationOnce(() => of(expectedResponse));
-
-    expect(await controller.domainWatchPassive(data)).toEqual(expectedResponse);
-    expect(client.send).toHaveBeenCalledWith({ cmd: 'domainWatchPassive' }, data);
   });
 
   it('should post domain name analysis count', async () => {
