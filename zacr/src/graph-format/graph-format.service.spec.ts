@@ -188,7 +188,7 @@ describe('GraphFormatService', () => {
     it('should throw an error when data array is empty', async () => {
       await expect(
         service.formatDomainLengthAnalysis(
-          JSON.stringify({ DOMAINLENGTHANALYSIS: [] }),
+          JSON.stringify([{ DOMAINLENGTHANALYSIS: JSON.stringify([]) }]),
         ),
       ).rejects.toThrow('Empty data array.');
     });
@@ -214,7 +214,7 @@ describe('GraphFormatService', () => {
     it('should throw an error when data array is empty', async () => {
       await expect(
         service.formatNettVertical(
-          JSON.stringify([{ NETTVERTICALMOVEMENT: [] }]),
+          JSON.stringify([{ NETTVERTICALMOVEMENT: JSON.stringify([]) }]),
         ),
       ).rejects.toThrow('Empty data array.');
     });
@@ -251,13 +251,14 @@ describe('GraphFormatService', () => {
         service.formatNettVertical(JSON.stringify(data)),
       ).toBeDefined();
     });
-
   });
 
   describe('Marketshare Format Service', () => {
     it('should throw an error when data array is empty', async () => {
       await expect(
-        service.formatMarketshare(JSON.stringify([{ MARKETSHARE: [] }])),
+        service.formatMarketshare(
+          JSON.stringify([{ MARKETSHARE: JSON.stringify([]) }]),
+        ),
       ).rejects.toThrow('Empty data array.');
     });
 
@@ -298,7 +299,9 @@ describe('GraphFormatService', () => {
   describe('Age Analysis Format Service', () => {
     it('should throw an error when data array is empty', async () => {
       await expect(
-        service.formatAgeAnalysis(JSON.stringify([{ MARKETSHARE: [] }])),
+        service.formatAgeAnalysis(
+          JSON.stringify([{ AGEANALYSIS: JSON.stringify([]) }]),
+        ),
       ).rejects.toThrow('Empty data array.');
     });
 
