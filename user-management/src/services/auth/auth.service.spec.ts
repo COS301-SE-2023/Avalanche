@@ -188,4 +188,227 @@ describe('AuthService', () => {
 
     });
   });
+
+  describe('getUserInfo', () => {
+    it('should return error when user payload is not retrieved from Redis', async () => {
+      mockRedis.get.mockResolvedValue(null);
+      const result = await authService.getUserInfo('invalidToken');
+      expect(result).toEqual({
+        status: 400,
+        error: true,
+        message: 'Invalid token.',
+        timestamp: expect.any(String),
+      });
+    });
+  
+    it('should return error when user does not exist', async () => {
+      mockRedis.get.mockResolvedValue(JSON.stringify({ email: 'test@test.com' }));
+      mockUserRepository.findOne.mockResolvedValue(undefined);
+      const result = await authService.getUserInfo('token');
+      expect(result).toEqual({
+        status: 400,
+        error: true,
+        message: 'User does not exist.',
+        timestamp: expect.any(String),
+      });
+    });
+  
+    it('should return the user info successfully', async () => {
+      const mockUser = new User();
+      mockUser.id = 1;
+      mockUser.email = 'test@test.com';
+      mockUser.firstName = 'firstName';
+      mockUser.lastName = 'lastName';
+      mockUser.salt = 'salt';
+      mockUser.products = [];
+      mockUser.userGroups = [];
+      mockUser.organisationId = 1;
+      mockUser.organisation = null;
+      mockUser.dashboards = [];
+  
+      mockRedis.get.mockResolvedValue(JSON.stringify({ email: 'test@test.com' }));
+      mockUserRepository.findOne.mockResolvedValue(mockUser);
+      mockRedis.set.mockResolvedValue('OK');
+      const result = await authService.getUserInfo('token');
+      expect(result).toEqual({
+        status: 'success',
+        message: expect.any(User),
+        timestamp: expect.any(String),
+      });
+    });
+  });
+  
+  describe('createAPIKey', () => {
+    it('should return error when user payload is not retrieved from Redis', async () => {
+      mockRedis.get.mockResolvedValue(null);
+      const result = await authService.createAPIKey('invalidToken');
+      expect(result).toEqual({
+        status: 400,
+        error: true,
+        message: 'Invalid token',
+        timestamp: expect.any(String),
+      });
+    });
+  
+    it('should return error when user does not exist', async () => {
+      mockRedis.get.mockResolvedValue(JSON.stringify({ email: 'test@test.com' }));
+      mockUserRepository.findOne.mockResolvedValue(undefined);
+      const result = await authService.createAPIKey('token');
+      expect(result).toEqual({
+        status: 400,
+        error: true,
+        message: 'User not found',
+        timestamp: expect.any(String),
+      });
+    });
+  
+    it('should return error when user already has an API key', async () => {
+      const mockUser = new User();
+      mockUser.apiKey = 'existingAPIKey';
+      mockRedis.get.mockResolvedValue(JSON.stringify({ email: 'test@test.com' }));
+      mockUserRepository.findOne.mockResolvedValue(mockUser);
+      const result = await authService.createAPIKey('token');
+      expect(result).toEqual({
+        status: 400,
+        error: true,
+        message: 'User already has an api key',
+        timestamp: expect.any(String),
+      });
+    });
+  
+    it('should create a new API key successfully', async () => {
+      const mockUser = new User();
+      mockUser.apiKey = null;
+      mockRedis.get.mockResolvedValue(JSON.stringify({ email: 'test@test.com' }));
+      mockUserRepository.findOne.mockResolvedValue(mockUser);
+      mockRedis.set.mockResolvedValue('OK');
+      mockUserRepository.save.mockResolvedValue(mockUser);
+      const result = await authService.createAPIKey('token');
+      expect(result).toEqual({
+        status: 'success',
+        message: expect.any(String),
+        timestamp: expect.any(String),
+      });
+    });
+  });
+  
+  describe('checkUserAPIKey', () => {
+    it('should return error when user payload is not retrieved from Redis', async () => {
+      mockRedis.get.mockResolvedValue(null);
+      const result = await authService.checkUserAPIKey('invalidToken');
+      expect(result).toEqual({
+        status: 400,
+        error: true,
+        message: 'Invalid token',
+        timestamp: expect.any(String),
+      });
+    });
+  
+    it('should return error when user does not exist', async () => {
+      mockRedis.get.mockResolvedValue(JSON.stringify({ email: 'test@test.com' }));
+      mockUserRepository.findOne.mockResolvedValue(undefined);
+      const result = await authService.checkUserAPIKey('token');
+      expect(result).toEqual({
+        status: 400,
+        error: true,
+        message: 'User to be removed not found',
+        timestamp: expect.any(String),
+      });
+    });
+  
+    it('should return success status with false message when user does not have an API key', async () => {
+      const mockUser = new User();
+      mockUser.apiKey = null;
+      mockRedis.get.mockResolvedValue(JSON.stringify({ email: 'test@test.com' }));
+      mockUserRepository.findOne.mockResolvedValue(mockUser);
+      const result = await authService.checkUserAPIKey('token');
+      expect(result).toEqual({
+        status: 'success',
+        message: false,
+        timestamp: expect.any(String),
+      });
+    });
+  
+    it('should return success status with true message when user has an API key', async () => {
+      const mockUser = new User();
+      mockUser.apiKey = 'existingAPIKey';
+      mockRedis.get.mockResolvedValue(JSON.stringify({ email: 'test@test.com' }));
+      mockUserRepository.findOne.mockResolvedValue(mockUser);
+      const result = await authService.checkUserAPIKey('token');
+      expect(result).toEqual({
+        status: 'success',
+        message: true,
+        timestamp: expect.any(String),
+      });
+    });
+  });
+  
+  describe('rerollAPIKey', () => {
+    it('should return error when user payload is not retrieved from Redis', async () => {
+      mockRedis.get.mockResolvedValue(null);
+      const result = await authService.rerollAPIKey('invalidToken');
+      expect(result).toEqual({
+        status: 400,
+        error: true,
+        message: 'Invalid token',
+        timestamp: expect.any(String),
+      });
+    });
+  
+    it('should return error when user does not exist', async () => {
+      mockRedis.get.mockResolvedValue(JSON.stringify({ email: 'test@test.com' }));
+      mockUserRepository.findOne.mockResolvedValue(undefined);
+      const result = await authService.rerollAPIKey('token');
+      expect(result).toEqual({
+        status: 400,
+        error: true,
+        message: 'User not found',
+        timestamp: expect.any(String),
+      });
+    });
+  
+    it('should return error when the user\'s api key matches the token', async () => {
+      const token = 'existingAPIKey';
+      const mockUser = new User();
+      mockUser.apiKey = token;
+      mockRedis.get.mockResolvedValue(JSON.stringify({ email: 'test@test.com' }));
+      mockUserRepository.findOne.mockResolvedValue(mockUser);
+      const result = await authService.rerollAPIKey(token);
+      expect(result).toEqual({
+        status: 400,
+        error: true,
+        message: 'Please enter JWT token',
+        timestamp: expect.any(String),
+      });
+    });
+  
+    it('should return error when user does not have an API key', async () => {
+      const mockUser = new User();
+      mockUser.apiKey = null;
+      mockRedis.get.mockResolvedValue(JSON.stringify({ email: 'test@test.com' }));
+      mockUserRepository.findOne.mockResolvedValue(mockUser);
+      const result = await authService.rerollAPIKey('token');
+      expect(result).toEqual({
+        status: 400,
+        error: true,
+        message: 'User does not have an API key',
+        timestamp: expect.any(String),
+      });
+    });
+  
+    it('should return success when user\'s api key is rerolled', async () => {
+      const token = 'existingAPIKey';
+      const mockUser = new User();
+      mockUser.apiKey = token;
+      mockRedis.get.mockResolvedValue(JSON.stringify({ email: 'test@test.com' }));
+      mockUserRepository.findOne.mockResolvedValue(mockUser);
+      mockRedis.set.mockResolvedValue('OK');
+      mockRedis.del.mockResolvedValue(1);
+      const result = await authService.rerollAPIKey('jwtToken');
+      expect(result.status).toBe('success');
+      expect(result.message).toBeDefined();
+      expect(result.timestamp).toBeDefined();
+    });
+  });
+  
 });
