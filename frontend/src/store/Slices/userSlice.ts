@@ -111,6 +111,9 @@ export const userSlice = createSlice({
         },
         updateDashboards(state, action) {
             state.user.dashboards = action.payload;
+        },
+        updateAPI(state, action) {
+            state.api = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -411,6 +414,6 @@ export const getLatestOrganisation = createAsyncThunk("ORG.GetLatestOrganisation
     }
 })
 
-export const { setAuth, getAuth, resetRequest, logout, setCreateGroupSuccess, setAddUserGroupSuccess, clearError, updateDashboards } = userSlice.actions;
+export const { setAuth, getAuth, resetRequest, logout, setCreateGroupSuccess, setAddUserGroupSuccess, clearError, updateDashboards, updateAPI } = userSlice.actions;
 export const userState = (state: AppState) => state.user;
 export default userSlice.reducer;
