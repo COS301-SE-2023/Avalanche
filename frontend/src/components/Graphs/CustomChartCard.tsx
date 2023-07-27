@@ -28,6 +28,8 @@ export default function CustomChartCard({ title, data, defaultGraph, state }: IC
     const [type, setType] = useState<ChartType>(defaultGraph);
     const [filterDropdown, setFilterDropdown] = useState<boolean>(false);
     const [graphData, setGraphData] = useState<any>({});
+    const [warehouse, setWarehouse] = useState<string>("");
+    const [gType, setGType] = useState<string>("");
 
     const [request, setRequest] = useState<any>({});
 
@@ -71,9 +73,17 @@ export default function CustomChartCard({ title, data, defaultGraph, state }: IC
     }, [])
 
     const fetchGraphData = async (filters: any) => {
+        if (data.endpointName) {
+            const d = data.endpointName.split("/");
+            setWarehouse(d[0]);
+            setGType(d[1]);
+        } else {
+            setWarehouse(data.warehouse);
+            setGType(data.type);
+        }
         try {
             const jwt = getCookie("jwt");
-            const url = `${process.env.NEXT_PUBLIC_API}/${data.warehouse}/${data.type}`;
+            const url = data.endpointName ? `${process.env.NEXT_PUBLIC_API}/${data.endpointName}` : `${process.env.NEXT_PUBLIC_API}/${warehouse || data.warehouse}/${gType || data.type}`;
             const res = await ky.post(url, {
                 json: filters,
                 headers: {
@@ -97,18 +107,17 @@ export default function CustomChartCard({ title, data, defaultGraph, state }: IC
     }
 
     const filterGraphs = () => {
-        if (data.warehouse) {
-            const ep = state.filters.find((item: any) => item.endpoint === data.warehouse);
+        if (warehouse) {
+            const ep = state.filters.find((item: any) => item.endpoint === warehouse);
             if (!ep) return [];
-            return ep.graphs.find((item: any) => item.name === data.type);
+            return ep.graphs.find((item: any) => item.name === gType);
         }
 
         return [];
     }
 
     const renderFilters = () => {
-        return filterGraphs().filters.map((element: any, index: number) => {
-            console.log(element);
+        return filterGraphs()?.filters?.map((element: any, index: number) => {
             return <Disclosure key={index}>
                 {({ open, close }) => (
                     <>
@@ -136,11 +145,15 @@ export default function CustomChartCard({ title, data, defaultGraph, state }: IC
     const filterSubmit = () => {
         const keys = Object.keys(request);
 
+        console.log(request);
+
         const requestObject: any = {};
 
         keys.forEach((key, index) => {
             requestObject[key] = request[key].value;
         });
+
+        console.log(requestObject);
 
         setFilterDropdown(!filterDropdown)
         fetchGraphData(requestObject);
@@ -154,7 +167,7 @@ export default function CustomChartCard({ title, data, defaultGraph, state }: IC
     return (<>
         <div className="block p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-primaryBackground dark:border-primaryBackground w-full animate__animated animate__fadeIn animate__slow">
             <div className="flex justify-between mb-5 text-black dark:text-white">
-                <h1 className="p-1.5">{title}</h1>
+                <h1 className="p-1.5">{title || data.graphName}</h1>
                 <div className="flex flex-row gap-1">
                     <div className="relative">
                         <div className="inline-flex justify-center p-1.5 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-lightHover dark:hover:bg-gray-600" onClick={() => setFilterDropdown(!filterDropdown)}>

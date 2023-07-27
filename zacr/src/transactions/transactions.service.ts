@@ -53,14 +53,19 @@ export class TransactionService {
 
       return {
         status: 'success',
-        data: { graphName: graphName, ...JSON.parse(formattedData) },
+        data: {
+          graphName: graphName,
+          warehouse: 'zacr',
+          graphType: 'transactions',
+          ...JSON.parse(formattedData),
+        },
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
       return {
         status: 500,
         error: true,
-        message: e,
+        message: `${e.message}`,
         timestamp: new Date().toISOString(),
       };
     }
@@ -69,8 +74,9 @@ export class TransactionService {
   async transactionsRanking(filters: string, graphName: string): Promise<any> {
     try {
       graphName = this.transactionsGraphName(filters, true);
-
-      filters = JSON.stringify(filters);
+      const filterObj = JSON.parse(JSON.stringify(filters));
+      filterObj.isRanking = true;
+      filters = JSON.stringify(filterObj);
       console.log(filters);
       const sqlQuery = `call transactionsByRegistrar('${filters}')`;
 
@@ -88,6 +94,7 @@ export class TransactionService {
             timestamp: new Date().toISOString(),
           };
         }
+        console.log(queryData);
         formattedData =
           await this.graphFormattingService.formatTransactionsRanking(
             JSON.stringify(queryData),
@@ -102,14 +109,19 @@ export class TransactionService {
       }
       return {
         status: 'success',
-        data: { graphName: graphName, ...JSON.parse(formattedData) },
+        data: {
+          graphName: graphName,
+          warehouse: 'zacr',
+          graphType: 'transactions-ranking',
+          ...JSON.parse(formattedData),
+        },
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
       return {
         status: 500,
         error: true,
-        message: e,
+        message: `${e.message}`,
         timestamp: new Date().toISOString(),
       };
     }
@@ -157,13 +169,6 @@ export class TransactionService {
 
     let zone = filters['zone'];
     if (zone) {
-      if (zone.length > 0) {
-        const zoneArr = [];
-        for (const r of zone) {
-          zoneArr.push(r);
-        }
-        zone += zoneArr.join(', ');
-      }
       zone = ' for ' + zone;
     } else {
       zone = ' for all zones in registry';

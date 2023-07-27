@@ -78,7 +78,7 @@ export class DomainNameAnalysisService {
       return {
         status: 500,
         error: true,
-        message: e,
+        message: `${e.message}`,
         timestamp: new Date().toISOString(),
       };
     }
@@ -135,7 +135,7 @@ export class DomainNameAnalysisService {
       return {
         status: 500,
         error: true,
-        message: e,
+        message: `${e.message}`,
         timestamp: new Date().toISOString(),
       };
     }

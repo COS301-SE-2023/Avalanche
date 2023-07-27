@@ -22,7 +22,7 @@ export class UserManagementController {
           "endpoint": "zacr",
           "graphs": [
             {
-              "name": "transaction",
+              "name": "transactions",
               "filters": [
                 {
                   "name": "zone",
@@ -132,8 +132,9 @@ export class UserManagementController {
                   "name": "registrar",
                   "type": "string",
                   "values": [
-                    "boi",
-                    "boi2"
+                    "afrihost",
+                    "hetzner",
+                    "diamatrix"
                   ],
                   "input": "checkbox"
                 },
@@ -177,6 +178,11 @@ export class UserManagementController {
                 {
                   "name": "registrar",
                   "type": "string",
+                  "values": [
+                    "afrihost",
+                    "hetzner",
+                    "diamatrix"
+                  ],
                   "input": "checkbox"
                 },
                 {
@@ -211,6 +217,11 @@ export class UserManagementController {
                 {
                   "name": "registrar",
                   "type": "string",
+                  "values": [
+                    "afrihost",
+                    "hetzner",
+                    "diamatrix"
+                  ],
                   "input": "checkbox"
                 },
                 {
@@ -265,6 +276,43 @@ export class UserManagementController {
               ]
             },
             {
+              "name": "domainNameAnalysis/length",
+              "filters": [
+                {
+                  "name": "zone",
+                  "type": "string[]",
+                  "values": [
+                    "CO.ZA",
+                    "NET.ZA",
+                    "ORG.ZA",
+                    "WEB.ZA"
+                  ],
+                  "input": "checkbox"
+                },
+                {
+                  "name": "registrar",
+                  "type": "string",
+                  "values": [
+                    "afrihost",
+                    "hetzner",
+                    "diamatrix"
+                  ],
+                  "input": "checkbox"
+                },
+                {
+                  "name": "dateFrom",
+                  "type": "string",
+                  "input": "date-picker"
+                },
+                {
+                  "name": "dateTo",
+                  "type": "string",
+                  "input": "date-picker"
+                },
+
+              ]
+            },
+            {
               "name": "movement",
               "filters": [
                 {
@@ -281,6 +329,11 @@ export class UserManagementController {
                 {
                   "name": "registrar",
                   "type": "string",
+                  "values": [
+                    "afrihost",
+                    "hetzner",
+                    "diamatrix"
+                  ],
                   "input": "checkbox"
                 },
               ]
@@ -291,7 +344,7 @@ export class UserManagementController {
           "endpoint": "africa",
           "graphs": [
             {
-              "name": "transaction",
+              "name": "transactions",
               "filters": [
                 {
                   "name": "zone",
@@ -353,8 +406,11 @@ export class UserManagementController {
                   "name": "registrar",
                   "type": "string",
                   "values": [
-                    "boi",
-                    "boi2"
+                    "dnsafric6lc9ke",
+                    "tucowsdominc",
+                    "namecheap4ch",
+                    "diamatrix",
+                    "101domain"
                   ],
                   "input": "checkbox"
                 },
@@ -395,6 +451,13 @@ export class UserManagementController {
                 {
                   "name": "registrar",
                   "type": "string",
+                  "values": [
+                    "dnsafric6lc9ke",
+                    "tucowsdominc",
+                    "namecheap4ch",
+                    "diamatrix",
+                    "101domain"
+                  ],
                   "input": "checkbox"
                 },
                 {
@@ -426,6 +489,13 @@ export class UserManagementController {
                 {
                   "name": "registrar",
                   "type": "string",
+                  "values": [
+                    "dnsafric6lc9ke",
+                    "tucowsdominc",
+                    "namecheap4ch",
+                    "diamatrix",
+                    "101domain"
+                  ],
                   "input": "checkbox"
                 },
                 {
@@ -480,6 +550,42 @@ export class UserManagementController {
               ]
             },
             {
+              "name": "domainNameAnalysis/length",
+              "filters": [
+                {
+                  "name": "zone",
+                  "type": "string[]",
+                  "values": [
+                    "AFRICA"
+                  ],
+                  "input": "checkbox"
+                },
+                {
+                  "name": "registrar",
+                  "type": "string",
+                  "values": [
+                    "dnsafric6lc9ke",
+                    "tucowsdominc",
+                    "namecheap4ch",
+                    "diamatrix",
+                    "101domain"
+                  ],
+                  "input": "checkbox"
+                },
+                {
+                  "name": "dateFrom",
+                  "type": "string",
+                  "input": "date-picker"
+                },
+                {
+                  "name": "dateTo",
+                  "type": "string",
+                  "input": "date-picker"
+                },
+
+              ]
+            },
+            {
               "name": "movement",
               "filters": [
                 {
@@ -493,6 +599,13 @@ export class UserManagementController {
                 {
                   "name": "registrar",
                   "type": "string",
+                  "values": [
+                    "dnsafric6lc9ke",
+                    "tucowsdominc",
+                    "namecheap4ch",
+                    "diamatrix",
+                    "101domain"
+                  ],
                   "input": "checkbox"
                 },
               ]
@@ -503,7 +616,7 @@ export class UserManagementController {
           "endpoint": "ryce",
           "graphs": [
             {
-              "name": "transaction",
+              "name": "transactions",
               "filters": [
                 {
                   "name": "zone",
@@ -613,8 +726,11 @@ export class UserManagementController {
                   "name": "registrar",
                   "type": "string",
                   "values": [
-                    "boi",
-                    "boi2"
+                    "1und1",
+                    "registrygate",
+                    "internetx",
+                    "uniteddomains",
+                    "keysystems"
                   ],
                   "input": "checkbox"
                 },
@@ -658,6 +774,13 @@ export class UserManagementController {
                 {
                   "name": "registrar",
                   "type": "string",
+                  "values": [
+                    "1und1",
+                    "registrygate",
+                    "internetx",
+                    "uniteddomains",
+                    "keysystems"
+                  ],
                   "input": "checkbox"
                 },
                 {
@@ -692,6 +815,13 @@ export class UserManagementController {
                 {
                   "name": "registrar",
                   "type": "string",
+                  "values": [
+                    "1und1",
+                    "registrygate",
+                    "internetx",
+                    "uniteddomains",
+                    "keysystems"
+                  ],
                   "input": "checkbox"
                 },
                 {
@@ -746,6 +876,45 @@ export class UserManagementController {
               ]
             },
             {
+              "name": "domainNameAnalysis/length",
+              "filters": [
+                {
+                  "name": "zone",
+                  "type": "string[]",
+                  "values": [
+                    "WIEN",
+                    "COLOGNE",
+                    "KOELN",
+                    "TIROL"
+                  ],
+                  "input": "checkbox"
+                },
+                {
+                  "name": "registrar",
+                  "type": "string",
+                  "values": [
+                    "1und1",
+                    "registrygate",
+                    "internetx",
+                    "uniteddomains",
+                    "keysystems"
+                  ],
+                  "input": "checkbox"
+                },
+                {
+                  "name": "dateFrom",
+                  "type": "string",
+                  "input": "date-picker"
+                },
+                {
+                  "name": "dateTo",
+                  "type": "string",
+                  "input": "date-picker"
+                },
+
+              ]
+            },
+            {
               "name": "movement",
               "filters": [
                 {
@@ -762,6 +931,13 @@ export class UserManagementController {
                 {
                   "name": "registrar",
                   "type": "string",
+                  "values": [
+                    "1und1",
+                    "registrygate",
+                    "internetx",
+                    "uniteddomains",
+                    "keysystems"
+                  ],
                   "input": "checkbox"
                 },
               ]
@@ -840,6 +1016,7 @@ export class UserManagementController {
   }
   @Post('createAPIKey')
   async createAPIKey(@Body() data: any) {
+    console.log("12pi4jl");
     const pattern = { cmd: 'createAPIKey' };
     const payload = data;
     try {
@@ -871,6 +1048,7 @@ export class UserManagementController {
   }
   @Post('rerollAPIKey')
   async rerollAPIKey(@Body() data: any) {
+    console.log("rust can go fuck off");
     const pattern = { cmd: 'rerollAPIKey' };
     const payload = data;
     try {

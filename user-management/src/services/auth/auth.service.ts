@@ -163,7 +163,7 @@ export class AuthService {
     // Fetch user from the PostgreSQL database
     const user = await this.userRepository.findOne({ where: { email }, relations: ['userGroups', 'organisation', 'dashboards'] });
     console.log(user);
-    
+
     // If user not found, throw error
     if (!user) {
       return {
@@ -242,6 +242,7 @@ export class AuthService {
   }
 
   async createAPIKey(token: string) {
+    console.log("elo");
     const userData = await this.redis.get(token);
     if (!userData) {
       return {
@@ -251,15 +252,18 @@ export class AuthService {
     }
     const userDetails = JSON.parse(userData);
 
-    const user = await this.userRepository.findOne({ where: { email: userDetails.email }, relations: ['userGroups', 'organisation'], select: ['id', 'email', 'firstName', 'lastName', 'organisationId', 'products', 'userGroups', 'organisation'] });
+    const user = await this.userRepository.findOne({ where: { email: userDetails.email }, relations: ['userGroups', 'organisation'], select: ['id', 'email', 'firstName', 'lastName', 'organisationId', 'products', 'userGroups', 'organisation', 'apiKey'] });
     if (!user) {
       return {
-        status: 400, error: true, message: 'User to be removed not found',
+        status: 400, error: true, message: 'User not found',
         timestamp: new Date().toISOString()
       };
     }
 
-    if(user.apiKey?.length > 0){
+    // console.log(user);
+    // console.log(user['apiKey']);
+
+    if (user['apiKey']?.length > 0 || user['apiKey']) {
       return {
         status: 400, error: true, message: 'User already has an api key',
         timestamp: new Date().toISOString()
@@ -274,7 +278,7 @@ export class AuthService {
     const userWithToken = { ...user, apiKey: jwtToken };
     // Send back user's information along with the token as a JSON object
     return {
-      status: "success", userWithToken,
+      status: "success", message: userWithToken.apiKey,
       timestamp: new Date().toISOString()
     };
   }
@@ -296,14 +300,14 @@ export class AuthService {
         timestamp: new Date().toISOString()
       };
     }
-    if(!user.apiKey){
-      return{
-        status : "success",message: false,
+    if (!user.apiKey) {
+      return {
+        status: "success", message: false,
         timestamp: new Date().toISOString()
       }
-    }else{
-      return{
-        status : "success",message: true,
+    } else {
+      return {
+        status: "success", message: true,
         timestamp: new Date().toISOString()
       }
     }
@@ -311,6 +315,7 @@ export class AuthService {
 
 
   async rerollAPIKey(token: string) {
+    console.log("olaeihfldfkedhslsfhjsledhfklk4rjhefdoplirwefcj korilfsdkxhcjoweifdlkch")
     const userData = await this.redis.get(token);
     if (!userData) {
       return {
@@ -328,14 +333,19 @@ export class AuthService {
       };
     }
 
-    if (user.apiKey == token) {
+    console.log(user);
+
+    // reroll your api key with an api key check
+    if (user['apiKey'] == token) {
       return {
         status: 400, error: true, message: 'Please enter JWT token',
         timestamp: new Date().toISOString()
       };
     }
 
-    if (!user.apiKey) {
+    console.log(user);
+
+    if (!user['apiKey']) {
       return {
         status: 400, error: true, message: 'User does not have an API key',
         timestamp: new Date().toISOString()
@@ -348,11 +358,11 @@ export class AuthService {
     delete user.apiKey;
     delete user.salt;
     await this.redis.set(jwtToken, JSON.stringify(user));
-    await this.redis.del(token);
-    const userWithToken = { ...user, token: jwtToken };
+    // await this.redis.del(token);
+    const userWithToken = { ...user, apiKey: jwtToken };
     // Send back user's information along with the token as a JSON object
     return {
-      status: "success", userWithToken,
+      status: "success", message: userWithToken.apiKey,
       timestamp: new Date().toISOString()
     };
   }

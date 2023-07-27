@@ -69,8 +69,9 @@ export class TransactionService {
   async transactionsRanking(filters: string, graphName: string): Promise<any> {
     try {
       graphName = this.transactionsGraphName(filters, true);
-
-      filters = JSON.stringify(filters);
+      const filterObj = JSON.parse(JSON.stringify(filters));
+      filterObj.isRanking = true;
+      filters = JSON.stringify(filterObj);
       console.log(filters);
       const sqlQuery = `call transactionsByRegistrar('${filters}')`;
 
@@ -109,7 +110,7 @@ export class TransactionService {
       return {
         status: 500,
         error: true,
-        message: e,
+        message: `${e.message}`,
         timestamp: new Date().toISOString(),
       };
     }
