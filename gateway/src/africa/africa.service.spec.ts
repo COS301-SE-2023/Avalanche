@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClientProxy } from '@nestjs/microservices';
-import { AfricaService } from './Africa.service';
+import { AfricaService } from './africa.service';
 import { of } from 'rxjs';
 
 describe('AfricaService', () => {

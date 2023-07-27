@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClientProxy } from '@nestjs/microservices';
-import { AfricaController } from './Africa.controller';
+import { AfricaController } from './africa.controller';
 import { of } from 'rxjs';
 
 describe('AfricaController', () => {
