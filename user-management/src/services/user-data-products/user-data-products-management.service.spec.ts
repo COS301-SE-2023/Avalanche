@@ -68,13 +68,13 @@ describe('UserDataProductMangementService', () => {
         timestamp: expect.any(String)
       });
     });
-    
+
     it('should return error when user group does not exist and personal is false', async () => {
       mockedAxios.post.mockResolvedValue({ data: { token: 'token' } });
       mockedAxios.get.mockResolvedValue({ data: { epp_username: 'username' } });
       jest.spyOn(userRepository, 'findOne').mockResolvedValue(new User());
       jest.spyOn(userGroupRepository, 'findOne').mockResolvedValue(null);
-    
+
       const result = await service.integrateUserWithWExternalAPI('token', 'AFRICA', 'name', 'username', 'password', false);
       expect(result).toEqual({
         status: 400,
@@ -156,8 +156,6 @@ describe('UserDataProductMangementService', () => {
         timestamp: expect.any(String)
       });
     });
-
-    // add more tests...
   });
 
   describe('addDomainWatchPassiveDetails', () => {
@@ -169,6 +167,37 @@ describe('UserDataProductMangementService', () => {
         status: 400,
         error: true,
         message: 'Invalid token.',
+        timestamp: expect.any(String)
+      });
+    });
+
+    it('should return success when watched user exists', async () => {
+      jest.spyOn(redis, 'get').mockResolvedValue(JSON.stringify({ email: 'test@email.com' }));
+      const mockUser = { firstName: 'test', lastName: 'user', email: 'test@email.com' };
+      jest.spyOn(userRepository, 'findOne').mockResolvedValue(mockUser as any);
+      jest.spyOn(watchedUserRepository, 'findOne').mockResolvedValue(mockUser as any);
+      jest.spyOn(watchedUserRepository, 'save').mockResolvedValue(null);
+
+      const result = await service.addDomainWatchPassiveDetails('token', [], []);
+      expect(result).toEqual({
+        status: 'success',
+        message: 'User watched list details updated',
+        timestamp: expect.any(String)
+      });
+    });
+
+    it('should successfully save a new watched user', async () => {
+      jest.spyOn(redis, 'get').mockResolvedValue(JSON.stringify({ email: 'test@email.com' }));
+      const mockUser = { firstName: 'test', lastName: 'user', email: 'test@email.com' };
+      jest.spyOn(userRepository, 'findOne').mockResolvedValue(mockUser as any);
+      jest.spyOn(watchedUserRepository, 'findOne').mockResolvedValue(null);
+      const mockWatchedUser = new WatchedUser();
+      jest.spyOn(watchedUserRepository, 'save').mockResolvedValue(mockWatchedUser);
+
+      const result = await service.addDomainWatchPassiveDetails('token', [], []);
+      expect(result).toEqual({
+        status: 'success',
+        message: 'User added to watched list',
         timestamp: expect.any(String)
       });
     });
@@ -215,6 +244,60 @@ describe('UserDataProductMangementService', () => {
       });
     });
 
+    it('should return only passiveData when only passiveData exists', async () => {
+      const mockPassiveData = [{ id: 1, email: 'test@example.com', person: 'test', types: [], domains: [] }];
+      jest.spyOn(watchedUserRepository, 'find').mockImplementation(async (options) => {
+        if (Array.isArray(options.select) && options.select.includes('types')) {
+          return mockPassiveData;
+        } else {
+          return null;
+        }
+      });
+
+      const result = await service.getDomainWatchPassive();
+      expect(result).toEqual({
+        status: 400,
+        error: true,
+        message: 'Null, there is no domains to be watched',
+        timestamp: expect.any(String)
+      });
+    });
+
+
+    it('should return only emailData when only emailData exists', async () => {
+      const mockEmailData = [{ id: 1, email: 'test@example.com', person: 'test', types: [], domains: [] }];
+      jest.spyOn(watchedUserRepository, 'find').mockImplementation(async (options) => {
+        if (Array.isArray(options.select) && options.select.includes('email')) {
+          return mockEmailData;
+        } else {
+          return null;
+        }
+      });
+
+      const result = await service.getDomainWatchPassive();
+      expect(result).toEqual({
+        status: 400,
+        error: true,
+        message: 'Null, there is no domains to be watched',
+        timestamp: expect.any(String)
+      });
+    });
+
+    it('should return different passiveData and emailData when both are available and different', async () => {
+      const mockPassiveData = [{ id: 1, email: 'test1@example.com', person: 'test1', types: [], domains: [] }];
+      const mockEmailData = [{ id: 2, email: 'test2@example.com', person: 'test2', types: [], domains: [] }];
+      jest.spyOn(watchedUserRepository, 'find').mockImplementation(async (options) => {
+        if (Array.isArray(options.select) && options.select.includes('types')) {
+          return mockPassiveData;
+        } else if (Array.isArray(options.select) && options.select.includes('email')) {
+          return mockEmailData;
+        }
+      });
+
+      const result = await service.getDomainWatchPassive();
+      expect(result).toEqual({ watched: mockPassiveData, emailData: mockEmailData });
+    });
+
     it('should return success when there are domains to be watched', async () => {
       const mockPassiveData = [{ id: 1, email: 'test@example.com', person: 'test', types: [], domains: [] }];
       jest.spyOn(watchedUserRepository, 'find').mockResolvedValue(mockPassiveData);
@@ -223,7 +306,6 @@ describe('UserDataProductMangementService', () => {
       expect(result).toEqual({ watched: mockPassiveData, emailData: mockPassiveData });
     });
   });
-
 
   afterEach(() => {
     jest.clearAllMocks();

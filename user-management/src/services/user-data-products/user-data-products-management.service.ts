@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import {  Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -249,10 +249,10 @@ export class UserDataProductMangementService {
         }
 
         const watchedFoundUser = await this.watchedUserRepository.findOne({
-            where : {email : user.email}
+            where: { email: user.email }
         });
 
-        if(watchedFoundUser){
+        if (watchedFoundUser) {
             watchedFoundUser.types = types;
             watchedFoundUser.domains = domains;
             await this.watchedUserRepository.save(watchedFoundUser);
@@ -279,11 +279,11 @@ export class UserDataProductMangementService {
     }
 
     async getDomainWatchPassive() {
-        const passiveData = await this.watchedUserRepository.find({select: ["person", "types", "domains"]});
-        const emailData = await this.watchedUserRepository.find({select : ["person","email", "domains"]});
+        const passiveData = await this.watchedUserRepository.find({ select: ["person", "types", "domains"] });
+        const emailData = await this.watchedUserRepository.find({ select: ["person", "email", "domains"] });
         console.log("here");
         if (passiveData && emailData) {
-            return { watched: passiveData , emailData : emailData};
+            return { watched: passiveData, emailData: emailData };
         }
         else {
             return {
