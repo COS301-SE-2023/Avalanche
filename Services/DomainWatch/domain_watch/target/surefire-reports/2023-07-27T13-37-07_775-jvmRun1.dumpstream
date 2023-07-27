@@ -1,0 +1,1080 @@
+# Created at 2023-07-27T13:37:49.088
+TestSet has not finished before stream error has appeared >> initializing exit by non-null configuration: null
+java.io.EOFException
+	at java.io.DataInputStream.readInt(DataInputStream.java:392)
+	at org.apache.maven.surefire.booter.MasterProcessCommand.decode(MasterProcessCommand.java:115)
+	at org.apache.maven.surefire.booter.CommandReader$CommandRunnable.run(CommandReader.java:391)
+	at java.lang.Thread.run(Thread.java:750)
+
+
+# Created at 2023-07-27T13:37:52.459
+Unexpected IOException with stream: 
+
+Server stopped
+
+
+
+# Created at 2023-07-27T13:37:52.463
+Unexpected IOException with stream: Starting server
+
+
+# Created at 2023-07-27T13:37:52.471
+Unexpected IOException with stream: active created
+
+
+# Created at 2023-07-27T13:37:52.472
+Unexpected IOException with stream: passive created
+
+
+# Created at 2023-07-27T13:37:52.476
+Unexpected IOException with stream: loadDomains created
+
+
+# Created at 2023-07-27T13:37:52.478
+Unexpected IOException with stream: listZones created
+
+
+# Created at 2023-07-27T13:37:52.481
+Unexpected IOException with stream: Found 8 processors
+
+
+# Created at 2023-07-27T13:37:52.483
+Unexpected IOException with stream: initialising domain list
+
+
+# Created at 2023-07-27T13:37:53.908
+Unexpected IOException with stream: Loaded africa domains
+
+
+# Created at 2023-07-27T13:37:53.910
+Unexpected IOException with stream: ============================
+
+
+
+
+
+
+
+
+
+
+
+# Created at 2023-07-27T13:37:54.500
+Unexpected IOException with stream: Loaded ryce domains
+
+
+# Created at 2023-07-27T13:37:54.501
+Unexpected IOException with stream: ============================
+
+
+
+
+
+
+
+
+
+
+
+# Created at 2023-07-27T13:37:54.502
+Unexpected IOException with stream: Done domain list
+
+
+
+# Created at 2023-07-27T13:37:54.504
+Unexpected IOException with stream: initialising word freq
+
+
+# Created at 2023-07-27T13:37:55.008
+Unexpected IOException with stream: Done word freq
+
+
+
+# Created at 2023-07-27T13:37:55.010
+Unexpected IOException with stream: Init time in millis 2526
+
+
+# Created at 2023-07-27T13:37:55.012
+Unexpected IOException with stream: Server started
+========================
+
+
+
+# Created at 2023-07-27T13:37:55.013
+Unexpected IOException with stream: 
+
+Waiting for next request...
+
+
+
+# Created at 2023-07-27T13:37:55.014
+Unexpected IOException: 6,1,avalanche.Network.ServiceHttpServerTest,stopServerTest,null,null,null
+
+
+# Created at 2023-07-27T13:37:55.016
+Unexpected IOException: 5,1,avalanche.Network.ServiceHttpServerTest,dummyRequestActive,null,null,null
+
+
+# Created at 2023-07-27T13:37:55.018
+Unexpected IOException with stream: Dummy request sent
+
+
+# Created at 2023-07-27T13:37:55.020
+Unexpected IOException with stream: Working on domain watch active request
+
+
+# Created at 2023-07-27T13:37:55.054
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:55.055
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:55.057
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:55.057
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:55.061
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:55.063
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:55.064
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:55.065
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:55.069
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:55.070
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:55.071
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:55.072
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:55.072
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:55.072
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:55.072
+Unexpected IOException with stream: Thread 0-	RUNNABLE[-]
+
+
+# Created at 2023-07-27T13:37:55.078
+Unexpected IOException with stream: Thread 1-	RUNNABLE[-]
+
+
+# Created at 2023-07-27T13:37:55.078
+Unexpected IOException with stream: Thread 2-	RUNNABLE[-]
+
+
+# Created at 2023-07-27T13:37:55.078
+Unexpected IOException with stream: Thread 3-	RUNNABLE[-]
+
+
+# Created at 2023-07-27T13:37:55.078
+Unexpected IOException with stream: Thread 4-	RUNNABLE[-]
+
+
+# Created at 2023-07-27T13:37:55.078
+Unexpected IOException with stream: Thread 5-	RUNNABLE[-]
+
+
+# Created at 2023-07-27T13:37:55.084
+Unexpected IOException with stream: Thread 6-	RUNNABLE[-]
+
+
+# Created at 2023-07-27T13:37:56.841
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:56.843
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:56.844
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:56.845
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:56.847
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:56.848
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:56.849
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:56.852
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:56.853
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:56.855
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:56.856
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:56.857
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:56.858
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:56.859
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:56.860
+Unexpected IOException with stream: Thread 0-	TERMINATED[-]
+
+
+# Created at 2023-07-27T13:37:56.862
+Unexpected IOException with stream: Thread 1-	TERMINATED[-]
+
+
+# Created at 2023-07-27T13:37:56.864
+Unexpected IOException with stream: Thread 2-	TERMINATED[-]
+
+
+# Created at 2023-07-27T13:37:56.865
+Unexpected IOException with stream: Thread 3-	TERMINATED[-]
+
+
+# Created at 2023-07-27T13:37:56.866
+Unexpected IOException with stream: Thread 4-	TERMINATED[-]
+
+
+# Created at 2023-07-27T13:37:56.867
+Unexpected IOException with stream: Thread 5-	TERMINATED[-]
+
+
+# Created at 2023-07-27T13:37:56.868
+Unexpected IOException with stream: Thread 6-	TERMINATED[-]
+
+
+# Created at 2023-07-27T13:37:56.879
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:56.894
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:56.894
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:56.894
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:56.894
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:56.902
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:56.902
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:56.904
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:56.905
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:56.905
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:56.905
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:56.905
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:56.905
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:56.905
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:56.913
+Unexpected IOException with stream: Thread 0-	RUNNABLE[-]
+
+
+# Created at 2023-07-27T13:37:56.914
+Unexpected IOException with stream: Thread 1-	RUNNABLE[-]
+
+
+# Created at 2023-07-27T13:37:56.917
+Unexpected IOException with stream: Thread 2-	RUNNABLE[-]
+
+
+# Created at 2023-07-27T13:37:56.943
+Unexpected IOException with stream: Thread 3-	RUNNABLE[-]
+
+
+# Created at 2023-07-27T13:37:56.943
+Unexpected IOException with stream: Thread 4-	RUNNABLE[-]
+
+
+# Created at 2023-07-27T13:37:56.951
+Unexpected IOException with stream: Thread 5-	RUNNABLE[-]
+
+
+# Created at 2023-07-27T13:37:56.951
+Unexpected IOException with stream: Thread 6-	RUNNABLE[-]
+
+
+# Created at 2023-07-27T13:37:57.726
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:57.727
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:57.728
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:57.729
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:57.731
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:57.732
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:57.732
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:57.733
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:57.734
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:57.735
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:57.737
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:57.738
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:57.739
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:57.741
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:57.742
+Unexpected IOException with stream: Thread 0-	TERMINATED[-]
+
+
+# Created at 2023-07-27T13:37:57.743
+Unexpected IOException with stream: Thread 1-	TERMINATED[-]
+
+
+# Created at 2023-07-27T13:37:57.744
+Unexpected IOException with stream: Thread 2-	TERMINATED[-]
+
+
+# Created at 2023-07-27T13:37:57.746
+Unexpected IOException with stream: Thread 3-	TERMINATED[-]
+
+
+# Created at 2023-07-27T13:37:57.747
+Unexpected IOException with stream: Thread 4-	TERMINATED[-]
+
+
+# Created at 2023-07-27T13:37:57.748
+Unexpected IOException with stream: Thread 5-	TERMINATED[-]
+
+
+# Created at 2023-07-27T13:37:57.750
+Unexpected IOException with stream: Thread 6-	TERMINATED[-]
+
+
+# Created at 2023-07-27T13:37:57.790
+Unexpected IOException with stream: 
+Found 3 matches
+Building response
+
+
+
+# Created at 2023-07-27T13:37:57.791
+Unexpected IOException with stream: Done
+
+
+# Created at 2023-07-27T13:37:58.348
+Unexpected IOException with stream: {  "status":"success",  "data":[    {"domainName":"selborne","zone":"AFRICA","similarity":100},    {"domainName":"selborne-p4","zone":"AFRICA","similarity":95},    {"domainName":"melbourne","zone":"AFRICA","similarity":76}],"searchTime(ms)":2772}
+
+
+# Created at 2023-07-27T13:37:58.349
+Unexpected IOException with stream: time in millis 3330
+
+
+# Created at 2023-07-27T13:37:58.351
+Unexpected IOException: 6,1,avalanche.Network.ServiceHttpServerTest,dummyRequestActive,null,null,null
+
+
+# Created at 2023-07-27T13:37:58.353
+Unexpected IOException: 5,1,avalanche.Network.ServiceHttpServerTest,postWithNoBodyShouldReturnError,null,null,null
+
+
+# Created at 2023-07-27T13:37:58.357
+Unexpected IOException with stream: received request
+
+
+# Created at 2023-07-27T13:37:58.358
+Unexpected IOException with stream: received POST
+
+
+# Created at 2023-07-27T13:37:58.360
+Unexpected IOException with stream: 
+
+
+# Created at 2023-07-27T13:37:58.362
+Unexpected IOException with stream: Working on domain watch active request
+
+
+# Created at 2023-07-27T13:37:58.363
+Unexpected IOException with stream: time in millis 1
+
+
+# Created at 2023-07-27T13:37:58.807
+Unexpected IOException with stream: 
+
+Waiting for next request...
+
+
+
+# Created at 2023-07-27T13:37:58.808
+Unexpected IOException: 6,1,avalanche.Network.ServiceHttpServerTest,postWithNoBodyShouldReturnError,null,null,null
+
+
+# Created at 2023-07-27T13:37:58.811
+Unexpected IOException: 5,1,avalanche.Network.ServiceHttpServerTest,postWithValidRequestShouldNotReturnError,null,null,null
+
+
+# Created at 2023-07-27T13:37:58.815
+Unexpected IOException with stream: received request
+
+
+# Created at 2023-07-27T13:37:58.816
+Unexpected IOException with stream: received POST
+
+
+# Created at 2023-07-27T13:37:58.818
+Unexpected IOException with stream: {"domain":"domain","types":[{"type":"Soundex","threshold":3},{"type":"Levenshtein","threshold":3}]}
+
+
+# Created at 2023-07-27T13:37:58.819
+Unexpected IOException with stream: Working on domain watch active request
+
+
+# Created at 2023-07-27T13:37:58.845
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:58.846
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:58.848
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:58.848
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:58.848
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:58.848
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:58.848
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:58.848
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:58.848
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:58.856
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:58.857
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:58.858
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:58.858
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:58.858
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:58.862
+Unexpected IOException with stream: Thread 0-	RUNNABLE[-]
+
+
+# Created at 2023-07-27T13:37:58.863
+Unexpected IOException with stream: Thread 1-	RUNNABLE[-]
+
+
+# Created at 2023-07-27T13:37:58.864
+Unexpected IOException with stream: Thread 2-	RUNNABLE[-]
+
+
+# Created at 2023-07-27T13:37:58.865
+Unexpected IOException with stream: Thread 3-	RUNNABLE[-]
+
+
+# Created at 2023-07-27T13:37:58.866
+Unexpected IOException with stream: Thread 4-	RUNNABLE[-]
+
+
+# Created at 2023-07-27T13:37:58.866
+Unexpected IOException with stream: Thread 5-	RUNNABLE[-]
+
+
+# Created at 2023-07-27T13:37:58.868
+Unexpected IOException with stream: Thread 6-	RUNNABLE[-]
+
+
+# Created at 2023-07-27T13:37:59.017
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:59.019
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:59.021
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:59.022
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:59.022
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:59.024
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:59.025
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:59.027
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:59.028
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:59.029
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:59.030
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:59.031
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:59.031
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:59.032
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:59.033
+Unexpected IOException with stream: Thread 0-	TERMINATED[-]
+
+
+# Created at 2023-07-27T13:37:59.034
+Unexpected IOException with stream: Thread 1-	TERMINATED[-]
+
+
+# Created at 2023-07-27T13:37:59.035
+Unexpected IOException with stream: Thread 2-	TERMINATED[-]
+
+
+# Created at 2023-07-27T13:37:59.036
+Unexpected IOException with stream: Thread 3-	TERMINATED[-]
+
+
+# Created at 2023-07-27T13:37:59.037
+Unexpected IOException with stream: Thread 4-	TERMINATED[-]
+
+
+# Created at 2023-07-27T13:37:59.037
+Unexpected IOException with stream: Thread 5-	TERMINATED[-]
+
+
+# Created at 2023-07-27T13:37:59.038
+Unexpected IOException with stream: Thread 6-	TERMINATED[-]
+
+
+# Created at 2023-07-27T13:37:59.056
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:59.057
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:59.059
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:59.060
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:59.061
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:59.063
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:59.066
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:59.068
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:59.069
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:59.069
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:59.070
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:59.071
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:59.073
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:59.075
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:59.076
+Unexpected IOException with stream: Thread 0-	RUNNABLE[-]
+
+
+# Created at 2023-07-27T13:37:59.076
+Unexpected IOException with stream: Thread 1-	RUNNABLE[-]
+
+
+# Created at 2023-07-27T13:37:59.076
+Unexpected IOException with stream: Thread 2-	RUNNABLE[-]
+
+
+# Created at 2023-07-27T13:37:59.080
+Unexpected IOException with stream: Thread 3-	RUNNABLE[-]
+
+
+# Created at 2023-07-27T13:37:59.081
+Unexpected IOException with stream: Thread 4-	RUNNABLE[-]
+
+
+# Created at 2023-07-27T13:37:59.082
+Unexpected IOException with stream: Thread 5-	RUNNABLE[-]
+
+
+# Created at 2023-07-27T13:37:59.083
+Unexpected IOException with stream: Thread 6-	RUNNABLE[-]
+
+
+# Created at 2023-07-27T13:37:59.146
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:59.148
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:59.148
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:59.150
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:59.151
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:59.153
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:59.154
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:59.154
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:59.155
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:59.157
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:59.158
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:59.159
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:59.160
+Unexpected IOException with stream: [1000D
+
+# Created at 2023-07-27T13:37:59.162
+Unexpected IOException with stream: [1A
+
+# Created at 2023-07-27T13:37:59.163
+Unexpected IOException with stream: Thread 0-	TERMINATED[-]
+
+
+# Created at 2023-07-27T13:37:59.164
+Unexpected IOException with stream: Thread 1-	TERMINATED[-]
+
+
+# Created at 2023-07-27T13:37:59.166
+Unexpected IOException with stream: Thread 2-	TERMINATED[-]
+
+
+# Created at 2023-07-27T13:37:59.167
+Unexpected IOException with stream: Thread 3-	TERMINATED[-]
+
+
+# Created at 2023-07-27T13:37:59.168
+Unexpected IOException with stream: Thread 4-	TERMINATED[-]
+
+
+# Created at 2023-07-27T13:37:59.169
+Unexpected IOException with stream: Thread 5-	TERMINATED[-]
+
+
+# Created at 2023-07-27T13:37:59.170
+Unexpected IOException with stream: Thread 6-	TERMINATED[-]
+
+
+# Created at 2023-07-27T13:37:59.191
+Unexpected IOException with stream: 
+Found 86 matches
+Building response
+
+
+
+# Created at 2023-07-27T13:37:59.195
+Unexpected IOException with stream: Done
+
+
+# Created at 2023-07-27T13:37:59.670
+Unexpected IOException with stream: time in millis 851
+
+
+# Created at 2023-07-27T13:38:00.047
+Unexpected IOException with stream: 
+
+Waiting for next request...
+
+
+
+# Created at 2023-07-27T13:38:00.048
+Unexpected IOException with stream: {  "status":"success",  "data":[    {"domainName":"domain","zone":"KOELN","similarity":100},    {"domainName":"domain","zone":"WIEN","similarity":100},    {"domainName":"domain","zone":"COLOGNE","similarity":100},    {"domainName":"domain1","zone":"KOELN","similarity":93},    {"domainName":"domain-s","zone":"AFRICA","similarity":86},    {"domainName":"down-in","zone":"AFRICA","similarity":85},    {"domainName":"domini","zone":"AFRICA","similarity":83},    {"domainName":"domino","zone":"AFRICA","similarity":83},    {"domainName":"domin8","zone":"AFRICA","similarity":83},    {"domainName":"domina","zone":"WIEN","similarity":83},    {"domainName":"domina","zone":"KOELN","similarity":83},    {"domainName":"domains","zone":"AFRICA","similarity":80},    {"domainName":"domains","zone":"KOELN","similarity":80},    {"domainName":"domains","zone":"COLOGNE","similarity":80},    {"domainName":"domains4","zone":"AFRICA","similarity":75},    {"domainName":"1onmain","zone":"AFRICA","similarity":73},    {"domainName":"homo-in","zone":"KOELN","similarity":73},    {"domainName":"dam-man","zone":"AFRICA","similarity":72},    {"domainName":"e-woman","zone":"AFRICA","similarity":72},    {"domainName":"d5mail","zone":"AFRICA","similarity":71},    {"domainName":"dom-it","zone":"COLOGNE","similarity":71},    {"domainName":"dom-it","zone":"KOELN","similarity":71},    {"domainName":"doosan","zone":"AFRICA","similarity":70},    {"domainName":"damon","zone":"AFRICA","similarity":70},    {"domainName":"dominion","zone":"AFRICA","similarity":69},    {"domainName":"woman","zone":"AFRICA","similarity":68},    {"domainName":"drain","zone":"AFRICA","similarity":68},    {"domainName":"roman","zone":"COLOGNE","similarity":68},    {"domainName":"woman","zone":"KOELN","similarity":68},    {"domainName":"woman","zone":"WIEN","similarity":68},    {"domainName":"90min","zone":"WIEN","similarity":67},    {"domainName":"dominos","zone":"AFRICA","similarity":66},    {"domainName":"312main","zone":"AFRICA","similarity":66},    {"domainName":"dominik","zone":"AFRICA","similarity":66},    {"domainName":"dominos","zone":"KOELN","similarity":66},    {"domainName":"dominik","zone":"KOELN","similarity":66},    {"domainName":"dominus","zone":"KOELN","similarity":66},    {"domainName":"dominus","zone":"WIEN","similarity":66},    {"domainName":"romano","zone":"AFRICA","similarity":63},    {"domainName":"nomin8","zone":"AFRICA","similarity":63},    {"domainName":"demand","zone":"AFRICA","similarity":63},    {"domainName":"bowman","zone":"AFRICA","similarity":63},    {"domainName":"donate","zone":"AFRICA","similarity":63},    {"domainName":"doreen","zone":"AFRICA","similarity":63},    {"domainName":"dom2go","zone":"KOELN","similarity":63},    {"domainName":"die1in","zone":"WIEN","similarity":63},    {"domainName":"dom-zu","zone":"KOELN","similarity":63},    {"domainName":"dom2go","zone":"COLOGNE","similarity":63},    {"domainName":"hamann","zone":"KOELN","similarity":63},    {"domainName":"romano","zone":"KOELN","similarity":63},    {"domainName":"h8mann","zone":"KOELN","similarity":63},    {"domainName":"dylan","zone":"AFRICA","similarity":57},    {"domainName":"d-map","zone":"AFRICA","similarity":57},    {"domainName":"divan","zone":"AFRICA","similarity":57},    {"domainName":"women","zone":"AFRICA","similarity":57},    {"domainName":"maman","zone":"AFRICA","similarity":57},    {"domainName":"human","zone":"AFRICA","similarity":57},    {"domainName":"saman","zone":"AFRICA","similarity":57},    {"domainName":"b-man","zone":"AFRICA","similarity":57},    {"domainName":"dm-it","zone":"AFRICA","similarity":57},    {"domainName":"donau","zone":"WIEN","similarity":57},    {"domainName":"demir","zone":"COLOGNE","similarity":57},    {"domainName":"dom-x","zone":"COLOGNE","similarity":57},    {"domainName":"dejan","zone":"WIEN","similarity":57},    {"domainName":"duran","zone":"WIEN","similarity":57},    {"domainName":"women","zone":"KOELN","similarity":57},    {"domainName":"diwan","zone":"KOELN","similarity":57},    {"domainName":"women","zone":"COLOGNE","similarity":57},    {"domainName":"diwan","zone":"WIEN","similarity":57},    {"domainName":"liman","zone":"WIEN","similarity":57},    {"domainName":"dom-x","zone":"KOELN","similarity":57},    {"domainName":"demir","zone":"KOELN","similarity":57},    {"domainName":"duma","zone":"AFRICA","similarity":50},    {"domainName":"dawn","zone":"AFRICA","similarity":50},    {"domainName":"damn","zone":"AFRICA","similarity":50},    {"domainName":"dian","zone":"AFRICA","similarity":50},    {"domainName":"damn","zone":"WIEN","similarity":50},    {"domainName":"dawn","zone":"TIROL","similarity":50},    {"domainName":"dome","zone":"KOELN","similarity":50},    {"domainName":"dome","zone":"COLOGNE","similarity":50},    {"domainName":"dma","zone":"WIEN","similarity":38},    {"domainName":"dom","zone":"COLOGNE","similarity":38},    {"domainName":"dom","zone":"WIEN","similarity":38},    {"domainName":"dom","zone":"KOELN","similarity":38},    {"domainName":"dan","zone":"TIROL","similarity":38},    {"domainName":"dan","zone":"WIEN","similarity":38}],"searchTime(ms)":376}
+
+
+# Created at 2023-07-27T13:38:00.050
+Unexpected IOException: 6,1,avalanche.Network.ServiceHttpServerTest,postWithValidRequestShouldNotReturnError,null,null,null
+
+
+# Created at 2023-07-27T13:38:00.052
+Unexpected IOException: 5,1,avalanche.Network.ServiceHttpServerTest,dummyRequestPassive,null,null,null
+
+
+# Created at 2023-07-27T13:38:00.053
+Unexpected IOException with stream: Dummy request sent
+
+
+# Created at 2023-07-27T13:38:00.054
+Unexpected IOException with stream: time in millis 0
+
+
+# Created at 2023-07-27T13:38:00.059
+Unexpected IOException: 6,1,avalanche.Network.ServiceHttpServerTest,dummyRequestPassive,null,null,null
+
+
+# Created at 2023-07-27T13:38:00.061
+Unexpected IOException: 5,1,avalanche.Network.ServiceHttpServerTest,dummyRequestNone,null,null,null
+
+
+# Created at 2023-07-27T13:38:00.063
+Unexpected IOException: 6,1,avalanche.Network.ServiceHttpServerTest,dummyRequestNone,null,null,null
+
+
+# Created at 2023-07-27T13:38:00.064
+Unexpected IOException: 5,1,avalanche.Network.ServiceHttpServerTest,startRunningServerTest,null,null,null
+
+
+# Created at 2023-07-27T13:38:00.066
+Unexpected IOException with stream: Server already running
+
+
+# Created at 2023-07-27T13:38:00.067
+Unexpected IOException: 6,1,avalanche.Network.ServiceHttpServerTest,startRunningServerTest,null,null,null
+
+
+# Created at 2023-07-27T13:38:00.069
+Unexpected IOException: 5,1,avalanche.Network.ServiceHttpServerTest,optionsShouldNotReturnError,null,null,null
+
+
+# Created at 2023-07-27T13:38:00.071
+Unexpected IOException with stream: received request
+
+
+# Created at 2023-07-27T13:38:00.073
+Unexpected IOException with stream: 
+
+
+# Created at 2023-07-27T13:38:00.075
+Unexpected IOException: 6,1,avalanche.Network.ServiceHttpServerTest,optionsShouldNotReturnError,null,null,null
+
+
+# Created at 2023-07-27T13:38:00.077
+Unexpected IOException: 5,1,avalanche.Network.ServiceHttpServerTest,postWithInvalidRequestShouldReturn400,null,null,null
+
+
+# Created at 2023-07-27T13:38:00.080
+Unexpected IOException with stream: received request
+
+
+# Created at 2023-07-27T13:38:00.080
+Unexpected IOException with stream: received POST
+
+
+# Created at 2023-07-27T13:38:00.083
+Unexpected IOException with stream: {"domain":"","types":[{"type":"Soundex","threshold":3},{"type":"Levenshtein","threshold":3}]}
+
+
+# Created at 2023-07-27T13:38:00.084
+Unexpected IOException with stream: Working on domain watch active request
+
+
+# Created at 2023-07-27T13:38:00.085
+Unexpected IOException with stream: time in millis 1
+
+
+# Created at 2023-07-27T13:38:00.493
+Unexpected IOException with stream: 
+
+Waiting for next request...
+
+
+
+# Created at 2023-07-27T13:38:00.494
+Unexpected IOException: 6,1,avalanche.Network.ServiceHttpServerTest,postWithInvalidRequestShouldReturn400,null,null,null
+
+
+# Created at 2023-07-27T13:38:00.496
+Unexpected IOException: 5,1,avalanche.Network.ServiceHttpServerTest,getShouldReturnError405,null,null,null
+
+
+# Created at 2023-07-27T13:38:00.500
+Unexpected IOException with stream: received request
+
+
+# Created at 2023-07-27T13:38:00.501
+Unexpected IOException with stream: reject method not allowed: GET
+
+
+# Created at 2023-07-27T13:38:00.503
+Unexpected IOException with stream: GET Response Code :: 405
+
+
+# Created at 2023-07-27T13:38:00.505
+Unexpected IOException: 6,1,avalanche.Network.ServiceHttpServerTest,getShouldReturnError405,null,null,null
+
+
+# Created at 2023-07-27T13:38:00.507
+Unexpected IOException: 5,1,avalanche.Network.ServiceHttpServerTest,putShouldReturnError405,null,null,null
+
+
+# Created at 2023-07-27T13:38:00.510
+Unexpected IOException with stream: received request
+
+
+# Created at 2023-07-27T13:38:00.512
+Unexpected IOException with stream: reject method not allowed: PUT
+
+
+# Created at 2023-07-27T13:38:00.513
+Unexpected IOException with stream: PUT Response Code :: 405
+
+
+# Created at 2023-07-27T13:38:00.514
+Unexpected IOException: 6,1,avalanche.Network.ServiceHttpServerTest,putShouldReturnError405,null,null,null
+
+
+# Created at 2023-07-27T13:38:00.515
+Unexpected IOException: 2,1,org.apache.maven.surefire.junitplatform.JUnitPlatformProvider,avalanche.Network.ServiceHttpServerTest,null,null,null
+
+
+# Created at 2023-07-27T13:38:00.517
+Unexpected IOException: 1,1,org.apache.maven.surefire.junitplatform.JUnitPlatformProvider,avalanche.Settings.DomainWatchSettingsTest,null,null,null
+
+
+# Created at 2023-07-27T13:38:00.519
+Unexpected IOException: 5,1,avalanche.Settings.DomainWatchSettingsTest,noConfFileShouldThrowError,null,null,null
+
+
+# Created at 2023-07-27T13:38:00.524
+Unexpected IOException: 6,1,avalanche.Settings.DomainWatchSettingsTest,noConfFileShouldThrowError,null,null,null
+
+
+# Created at 2023-07-27T13:38:00.526
+Unexpected IOException: 2,1,org.apache.maven.surefire.junitplatform.JUnitPlatformProvider,avalanche.Settings.DomainWatchSettingsTest,null,null,null
+
+
+# Created at 2023-07-27T13:38:00.528
+Unexpected IOException: 1,1,org.apache.maven.surefire.junitplatform.JUnitPlatformProvider,avalanche.Threads.LevenshteinThreadTest,null,null,null
+
+
+# Created at 2023-07-27T13:38:00.530
+Unexpected IOException: 5,1,avalanche.Threads.LevenshteinThreadTest,testOnListWithNull,null,null,null
+
+
+# Created at 2023-07-27T13:38:00.532
+Unexpected IOException: 6,1,avalanche.Threads.LevenshteinThreadTest,testOnListWithNull,null,null,null
+
+
+# Created at 2023-07-27T13:38:00.533
+Unexpected IOException: 2,1,org.apache.maven.surefire.junitplatform.JUnitPlatformProvider,avalanche.Threads.LevenshteinThreadTest,null,null,null
+
+
+# Created at 2023-07-27T13:38:00.535
+Unexpected IOException: 1,1,org.apache.maven.surefire.junitplatform.JUnitPlatformProvider,avalanche.Threads.SoundexThreadTest,null,null,null
+
+
+# Created at 2023-07-27T13:38:00.536
+Unexpected IOException: 5,1,avalanche.Threads.SoundexThreadTest,testOnListWithNull,null,null,null
+
+
+# Created at 2023-07-27T13:38:00.538
+Unexpected IOException: 6,1,avalanche.Threads.SoundexThreadTest,testOnListWithNull,null,null,null
+
+
+# Created at 2023-07-27T13:38:00.539
+Unexpected IOException: 2,1,org.apache.maven.surefire.junitplatform.JUnitPlatformProvider,avalanche.Threads.SoundexThreadTest,null,null,null
+
+
+# Created at 2023-07-27T13:38:00.544
+Unexpected IOException: 1,1,org.apache.maven.surefire.junitplatform.JUnitPlatformProvider,avalanche.Utility.DomainTokeniserTest,null,null,null
+
+
+# Created at 2023-07-27T13:38:00.546
+Unexpected IOException: 5,1,avalanche.Utility.DomainTokeniserTest,initFromObjectCreation,null,null,null
+
+
+# Created at 2023-07-27T13:38:01.011
+Unexpected IOException: 6,1,avalanche.Utility.DomainTokeniserTest,initFromObjectCreation,null,null,null
+
+
+# Created at 2023-07-27T13:38:01.014
+Unexpected IOException: 5,1,avalanche.Utility.DomainTokeniserTest,dictionaryLengthCorrect,null,null,null
+
+
+# Created at 2023-07-27T13:38:01.478
+Unexpected IOException: 6,1,avalanche.Utility.DomainTokeniserTest,dictionaryLengthCorrect,null,null,null
+
+
+# Created at 2023-07-27T13:38:01.482
+Unexpected IOException: 5,1,avalanche.Utility.DomainTokeniserTest,correctWordcost,null,null,null
+
+
+# Created at 2023-07-27T13:38:01.960
+Unexpected IOException: 6,1,avalanche.Utility.DomainTokeniserTest,correctWordcost,null,null,null
+
+
+# Created at 2023-07-27T13:38:01.968
+Unexpected IOException: 5,1,avalanche.Utility.DomainTokeniserTest,tokeniseTest,null,null,null
+
+
+# Created at 2023-07-27T13:38:02.474
+Unexpected IOException: 6,1,avalanche.Utility.DomainTokeniserTest,tokeniseTest,null,null,null
+
+
+# Created at 2023-07-27T13:38:02.476
+Unexpected IOException: 5,1,avalanche.Utility.DomainTokeniserTest,oneWordTest,null,null,null
+
+
+# Created at 2023-07-27T13:38:03.080
+Unexpected IOException: 6,1,avalanche.Utility.DomainTokeniserTest,oneWordTest,null,null,null
+
+
+# Created at 2023-07-27T13:38:03.088
+Unexpected IOException: 5,1,avalanche.Utility.DomainTokeniserTest,fiveWordTest,null,null,null
+
+
+# Created at 2023-07-27T13:38:03.584
+Unexpected IOException: 6,1,avalanche.Utility.DomainTokeniserTest,fiveWordTest,null,null,null
+
+
+# Created at 2023-07-27T13:38:03.586
+Unexpected IOException: 5,1,avalanche.Utility.DomainTokeniserTest,wrongLengthInFileShouldThrow,null,null,null
+
+
+# Created at 2023-07-27T13:38:04.602
+Unexpected IOException with stream: Word count error in dictionary: counted 1 but expected 2
+
+
+# Created at 2023-07-27T13:38:04.608
+Unexpected IOException: 6,1,avalanche.Utility.DomainTokeniserTest,wrongLengthInFileShouldThrow,null,null,null
+
+
+# Created at 2023-07-27T13:38:04.613
+Unexpected IOException: 5,1,avalanche.Utility.DomainTokeniserTest,fourWordTest,null,null,null
+
+
+# Created at 2023-07-27T13:38:05.340
+Unexpected IOException: 6,1,avalanche.Utility.DomainTokeniserTest,fourWordTest,null,null,null
+
+
+# Created at 2023-07-27T13:38:05.340
+Unexpected IOException: 5,1,avalanche.Utility.DomainTokeniserTest,twoWordTest,null,null,null
+
+
+# Created at 2023-07-27T13:38:06.289
+Unexpected IOException: 6,1,avalanche.Utility.DomainTokeniserTest,twoWordTest,null,null,null
+
+
+# Created at 2023-07-27T13:38:06.290
+Unexpected IOException: 5,1,avalanche.Utility.DomainTokeniserTest,noFileFoundShouldThrow,null,null,null
+
+
+# Created at 2023-07-27T13:38:07.305
+Unexpected IOException: 6,1,avalanche.Utility.DomainTokeniserTest,noFileFoundShouldThrow,null,null,null
+
+
+# Created at 2023-07-27T13:38:07.311
+Unexpected IOException: 5,1,avalanche.Utility.DomainTokeniserTest,threeWordTest,null,null,null
+
+
+# Created at 2023-07-27T13:38:07.899
+Unexpected IOException: 6,1,avalanche.Utility.DomainTokeniserTest,threeWordTest,null,null,null
+
+
+# Created at 2023-07-27T13:38:07.900
+Unexpected IOException: 5,1,avalanche.Utility.DomainTokeniserTest,dictionaryMade,null,null,null
+
+
+# Created at 2023-07-27T13:38:08.587
+Unexpected IOException: 6,1,avalanche.Utility.DomainTokeniserTest,dictionaryMade,null,null,null
+
+
+# Created at 2023-07-27T13:38:08.587
+Unexpected IOException: 2,1,org.apache.maven.surefire.junitplatform.JUnitPlatformProvider,avalanche.Utility.DomainTokeniserTest,null,null,null
+
+

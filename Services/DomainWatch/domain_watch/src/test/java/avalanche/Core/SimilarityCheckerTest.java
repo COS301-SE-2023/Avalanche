@@ -20,6 +20,11 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class SimilarityCheckerTest {
 
+    @BeforeEach
+    public void reset() {
+        DomainWatchSettings.getDomainWatchSettings().defaultZone = "ryce";
+    }
+
     @BeforeAll
     public static void setUp() {
         SimilarityChecker.init(false, 12);
@@ -43,6 +48,26 @@ public class SimilarityCheckerTest {
         SimilarityChecker similarityChecker = new SimilarityChecker();
         Set<String> zones = new HashSet<>();
         zones.add("ryce");
+        ConcurrentLinkedQueue<Domain> results = similarityChecker.findAllWithinSimliarityThreshold("firstnationalbank",
+                4, zones);
+        assertNotNull(results);
+    }
+
+    @Test
+    public void searchForSimilarWithAll() throws FileNotFoundException {
+        SimilarityChecker similarityChecker = new SimilarityChecker();
+        Set<String> zones = new HashSet<>();
+        DomainWatchSettings.getDomainWatchSettings().defaultZone = "all";
+        ConcurrentLinkedQueue<Domain> results = similarityChecker.findAllWithinSimliarityThreshold("firstnationalbank",
+                4, zones);
+        assertNotNull(results);
+    }
+
+    @Test
+    public void searchForSimilarWithRyce() throws FileNotFoundException {
+        SimilarityChecker similarityChecker = new SimilarityChecker();
+        Set<String> zones = new HashSet<>();
+        DomainWatchSettings.getDomainWatchSettings().defaultZone = "ryce";
         ConcurrentLinkedQueue<Domain> results = similarityChecker.findAllWithinSimliarityThreshold("firstnationalbank",
                 4, zones);
         assertNotNull(results);
@@ -115,11 +140,11 @@ public class SimilarityCheckerTest {
     }
 
     @Test
-    public void searchForSimilarSounds() throws FileNotFoundException, InstantiationException {
+    public void searchForSimilarSoundsWithAll() throws FileNotFoundException, InstantiationException {
         DomainTokeniser.init();
+        DomainWatchSettings.getDomainWatchSettings().defaultZone = "all";
         SimilarityChecker similarityChecker = new SimilarityChecker();
         Set<String> zones = new HashSet<>();
-        zones.add("africa");
         ConcurrentLinkedQueue<Domain> results = similarityChecker.findAllSoundsAboveSimliarityThreshold(
                 "firstnationalbank",
                 2, zones);
@@ -127,9 +152,20 @@ public class SimilarityCheckerTest {
     }
 
     @Test
-    public void searchForSimilarSoundsWithAll() throws FileNotFoundException, InstantiationException {
+    public void searchForSimilarSounds() throws FileNotFoundException, InstantiationException {
         DomainTokeniser.init();
-        // DomainWatchSettings.getDomainWatchSettings().defaultZone = "*";
+        DomainWatchSettings.getDomainWatchSettings().defaultZone = "ryce";
+        SimilarityChecker similarityChecker = new SimilarityChecker();
+        Set<String> zones = new HashSet<>();
+        ConcurrentLinkedQueue<Domain> results = similarityChecker.findAllSoundsAboveSimliarityThreshold(
+                "firstnationalbank",
+                2, zones);
+        assertNotNull(results);
+    }
+
+    @Test
+    public void searchForSimilarSoundsWithZones() throws FileNotFoundException, InstantiationException {
+        DomainTokeniser.init();
         Set<String> zones = new HashSet<>();
         zones.add("africa");
         SimilarityChecker similarityChecker = new SimilarityChecker();

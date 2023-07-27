@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HandleListZones.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">domain_watch</a> &gt; <a href="index.source.html" class="el_package">avalanche.Network.HandlerStrategy.RunningStrategies</a> &gt; <span class="el_source">HandleListZones.java</span></div><h1>HandleListZones.java</h1><pre class="source lang-java linenums">package avalanche.Network.HandlerStrategy.RunningStrategies;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import avalanche.Core.SimilarityChecker;
+import avalanche.DataClasses.Domain;
+import avalanche.Network.HandlerStrategy.Running;
+import avalanche.Settings.DomainWatchSettings;
+
+<span class="fc" id="L19">public class HandleListZones extends Running {</span>
+
+    @Override
+    public String getResponse(String body, long startTime) {
+        // Enter
+<span class="fc" id="L24">        System.out.println(&quot;Working on domain watch list zones&quot;);</span>
+<span class="fc" id="L25">        String resp = &quot;{  \&quot;status\&quot;:\&quot;success\&quot;,  \&quot;data\&quot;:[&quot;;</span>
+
+        // Validate
+<span class="fc" id="L28">        String validation = validateRequest(body);</span>
+<span class="pc bpc" id="L29" title="1 of 2 branches missed.">        if (!validation.equals(&quot;&quot;)) {</span>
+<span class="nc" id="L30">            return validation;</span>
+        }
+
+        // Process
+<span class="fc" id="L34">        Set&lt;String&gt; registires = DomainWatchSettings.getInstace().domainFiles.keySet();</span>
+
+        // Build data
+<span class="fc" id="L37">        int size = registires.size();</span>
+<span class="fc" id="L38">        int i = 0;</span>
+<span class="fc bfc" id="L39" title="All 2 branches covered.">        for (String registry : registires) {</span>
+<span class="fc" id="L40">            resp += &quot;\&quot;&quot; + registry + &quot;\&quot;&quot;;</span>
+<span class="pc bpc" id="L41" title="1 of 2 branches missed.">            if (i &lt; size - 1) {</span>
+<span class="fc" id="L42">                resp += &quot;,&quot;;</span>
+            }
+        }
+
+        // Finish Response
+<span class="pc bpc" id="L47" title="1 of 2 branches missed.">        if (startTime == 0) {</span>
+<span class="fc" id="L48">            resp += &quot;]}&quot;;</span>
+<span class="fc" id="L49">        } else {</span>
+<span class="nc" id="L50">            resp += &quot;],\&quot;searchTime(ms)\&quot;:&quot; + (System.currentTimeMillis() - startTime) + &quot;}&quot;;</span>
+        }
+
+        // System.out.println(resp);
+<span class="fc" id="L54">        System.out.println(&quot;Done&quot;);</span>
+<span class="fc" id="L55">        System.gc();</span>
+<span class="fc" id="L56">        return resp;</span>
+    }
+
+    public static String validateRequest(String body) {
+<span class="fc" id="L60">        return &quot;&quot;;</span>
+    }
+
+    /*
+     * {
+     * registryDomains: [
+     * { registryName: 'AFRICA_Domains', domains:
+     * &quot;Domain,Zone\nmycooldomain,AFRICA&quot;},
+     * { registryName: 'ZACR_Domains', domains: &quot;Domain,Zone\nmycooldomain,CO.ZA&quot; },
+     * { registryName: 'RYCE_Domains', domains: &quot;Domain,Zone\nmycooldomain,WIEN&quot; },
+     * ],
+     * }
+     */
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

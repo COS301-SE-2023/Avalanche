@@ -25,6 +25,10 @@ public class HandleListZones extends Running {
         String resp = "{  \"status\":\"success\",  \"data\":[";
 
         // Validate
+        String validation = validateRequest(body);
+        if (!validation.equals("")) {
+            return validation;
+        }
 
         // Process
         Set<String> registires = DomainWatchSettings.getInstace().domainFiles.keySet();
