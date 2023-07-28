@@ -38,4 +38,21 @@ describe('login', () =>{
             expect(result.body.message).to.equal("Incorrect password")
         })
     })
+
+    it('Correct email and correct password', () => {
+        cy.get('input[name=email]').type('kihale5691@sportrid.com');
+        cy.get('input[name=password]').type('12345');
+        cy.intercept("POST", "user-management/login").as("response")
+
+        cy.get('button[type=submit]').click();
+
+        cy.wait("@response").then((interception) => {
+            const result = interception.response
+            expect(result.statusCode).to.equal(201)
+        })
+
+        cy.url().should("include", "/dashboard")
+    })
+
+
 })
