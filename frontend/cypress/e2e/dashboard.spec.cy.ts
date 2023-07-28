@@ -20,7 +20,9 @@ describe('Dashboard', () => {
 
         navBarChecks("/dashboard", "Home")
         navBarChecks("/registrar", "Registrar")
-
+        navBarChecks("/registrarMarketComparison", "Registrar Market Comparison")
+        navBarChecks("/movement", "Movement")
+        navBarChecks("/domainLength", "Domain Length")
     });
 
     it('renders page header', () => {
