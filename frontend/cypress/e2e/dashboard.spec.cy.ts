@@ -23,6 +23,11 @@ describe('Dashboard', () => {
         navBarChecks("/registrarMarketComparison", "Registrar Market Comparison")
         navBarChecks("/movement", "Movement")
         navBarChecks("/domainLength", "Domain Length")
+        navBarChecks("/marketShare", "Market Share")
+        navBarChecks("/ageAnalysis", "Registrar Age Analysis")
+        navBarChecks("/domainNameAnalysis", "Domain Name Analysis")
+        navBarChecks("/watch", "Domain Watch")
+        
     });
 
     it('renders page header', () => {
