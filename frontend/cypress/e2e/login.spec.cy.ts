@@ -24,4 +24,18 @@ describe('login', () =>{
             expect(result.body.message).to.equal("This user does not exist, please enter the correct email/please register.")
         })
     })
+
+    it('Correct email but incorrect password', () => {
+        cy.get('input[name=email]').type('kihale5691@sportrid.com');
+        cy.get('input[name=password]').type('fakePassword');
+        cy.intercept("POST", "user-management/login").as("response")
+
+        cy.get('button[type=submit]').click();
+
+        cy.wait("@response").then((interception) => {
+            const result = interception.response
+            expect(result.statusCode).to.equal(400)
+            expect(result.body.message).to.equal("Incorrect password")
+        })
+    })
 })
