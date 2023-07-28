@@ -42,7 +42,18 @@ describe("Settings", () => {
         subMenuChecker("general", "General Settings")
         subMenuChecker("subusers", "Organizations")
         subMenuChecker("integrations", "Data Products")
+    })
 
-        
+    it("Setting submenu has button", ()=> {
+        function buttonChecker(tab){
+            cy.get('a[href="?tab='+tab+'"]').click()
+            cy.get('button[type=submit]').should('exist')
+            cy.url().should("include", tab)
+            cy.get('a[data-tooltip-target="tooltip-settings"]').click();
+        }
+
+        buttonChecker("general")
+        //buttonChecker("subusers") --waiting for response
+        buttonChecker("integrations")
     })
 })
