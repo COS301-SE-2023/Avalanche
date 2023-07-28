@@ -36,4 +36,8 @@ describe('Dashboard', () => {
     
     });
     
+    it('setting page button works', () => {
+        cy.get('a[data-tooltip-target="tooltip-settings"].inline-flex.justify-center.p-2.text-black.rounded.cursor-pointer.dark\\:text-white.dark\\:hover\\:text-white.hover\\:text-gray-900.hover\\:bg-gray-100.dark\\:hover\\:bg-gray-600[href="/settings"]').click();
+        cy.url().should("include", "/setting")
+    })
 });
