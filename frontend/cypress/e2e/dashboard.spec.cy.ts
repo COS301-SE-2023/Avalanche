@@ -1,22 +1,26 @@
 describe('Dashboard', () => {
     beforeEach(() => {
         cy.visit('http://localhost:3000');
-        cy.get('input[name=email]').type('ingeodendaal5@gmail.com');
-    cy.get('input[name=password]').type('password');
+        cy.get('input[name=email]').type('kihale5691@sportrid.com');
+    cy.get('input[name=password]').type('12345');
     cy.get('button[type=submit]').click(); // Please replace with the actual route of your Dashboard page.
     });
-    
+
     it('renders Sidebar with links', () => {
-        it('The navigation should be visible', () => {
-            cy.get('#default-sidebar')
-              .should('be.visible');
-          });
-        
-          it('Home link is visible', () => {
-            cy.get('#default-sidebar a[href="/dashboard"]')
-              .should('be.visible')
-              .and('contain', 'Home');
-          });
+        function navBarChecks(href, contain){
+            cy.get('#default-sidebar a[href="'+href+'"]')
+                .should('be.visible')
+                .and('contain', contain);
+        }
+
+        cy.url().should("include", "/dashboard")
+
+        cy.get('#default-sidebar')
+            .should('be.visible');
+
+        navBarChecks("/dashboard", "Home")
+        navBarChecks("/registrar", "Registrar")
+
     });
 
     it('renders page header', () => {
