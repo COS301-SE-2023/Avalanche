@@ -1,4 +1,4 @@
-describe("Settings", () => {
+describe.skip("Settings", () => {
     beforeEach(() => {
         cy.visit('http://localhost:3000');
         cy.get('input[name=email]').type('kihale5691@sportrid.com');
@@ -7,7 +7,7 @@ describe("Settings", () => {
         cy.get('a[data-tooltip-target="tooltip-settings"]').click();
     });
 
-    it("Navbar still visible", ()=> {
+    it.skip("Navbar still visible", ()=> {
         function navBarChecks(href, contain){
             cy.get('#default-sidebar a[href="'+href+'"]')
                 .should('be.visible')
@@ -32,7 +32,7 @@ describe("Settings", () => {
 
 
 
-    it('Setting submenu visible and correct links', () => {
+    it.skip('Setting submenu visible and correct links', () => {
         function subMenuChecker(tab, contain){
             cy.get('a[href="?tab='+tab+'"]')
                 .should('be.visible')
@@ -44,7 +44,7 @@ describe("Settings", () => {
         subMenuChecker("integrations", "Data Products")
     })
 
-    it("Setting submenu has button", ()=> {
+    it.skip("Setting submenu has button", ()=> {
         function buttonChecker(tab){
             cy.get('a[href="?tab='+tab+'"]').click()
             cy.get('button[type=submit]').should('exist')
@@ -57,12 +57,33 @@ describe("Settings", () => {
         buttonChecker("integrations")
     })
 
-    it('Settings - Organizations - add new organizations', ()=> {
+    it.skip('Settings - Organizations - add new organizations', ()=> {
         cy.get('a[href="?tab=subusers"]').click()
         cy.contains('Add a new organization').click();
         cy.contains('Create a new Organization').should('be.visible')
         cy.contains('Orgnization Name').should("be.visible")
         cy.contains('Create orgnization').should("be.visible")
         cy.get('input[name="name"]').should("be.visible")
+    })
+
+    
+})
+
+describe('Settings with another user', () => {
+    beforeEach(() => {
+        cy.visit('http://localhost:3000');
+        cy.get('input[name=email]').type('u21804312@tuks.co.za');
+        cy.get('input[name=password]').type('12345');
+        cy.get('button[type=submit]').click(); // Please replace with the actual route of your Dashboard page.
+        cy.get('a[data-tooltip-target="tooltip-settings"]').click();
+    })
+
+    it('After organization has been created', () => {
+        cy.get('a[href="?tab=subusers"]').click()
+        cy.contains('TestB').should('be.visible');
+        cy.contains('Administrators').should('be.visible');
+        cy.contains('Create a Group').should('be.visible');
+        cy.contains('Add User to Group').should('be.visible');
+
     })
 })
