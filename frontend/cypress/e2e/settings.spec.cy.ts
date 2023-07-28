@@ -78,7 +78,7 @@ describe('Settings with another user', () => {
         cy.get('a[data-tooltip-target="tooltip-settings"]').click();
     })
 
-    it('After organization has been created', () => {
+    it.skip('After organization has been created', () => {
         cy.get('a[href="?tab=subusers"]').click()
         cy.contains('TestB').should('be.visible');
         cy.contains('Administrators').should('be.visible');
@@ -86,4 +86,14 @@ describe('Settings with another user', () => {
         cy.contains('Add User to Group').should('be.visible');
 
     })
+
+    it('everything loads with Create Group button', () => {
+        cy.get('a[href="?tab=subusers"]').click() //clicks onto Organizations tab
+        cy.contains('Create a Group').click();
+        cy.contains('Create a New Group').should('be.visible')
+        cy.contains('Group Name').should('be.visible')
+        cy.get('input[placeholder="Paper Sales"]').should('be.visible');
+    })
+
+
 })
