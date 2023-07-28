@@ -56,4 +56,13 @@ describe("Settings", () => {
         //buttonChecker("subusers") --waiting for response
         buttonChecker("integrations")
     })
+
+    it('Settings - Organizations - add new organizations', ()=> {
+        cy.get('a[href="?tab=subusers"]').click()
+        cy.contains('Add a new organization').click();
+        cy.contains('Create a new Organization').should('be.visible')
+        cy.contains('Orgnization Name').should("be.visible")
+        cy.contains('Create orgnization').should("be.visible")
+        cy.get('input[name="name"]').should("be.visible")
+    })
 })
