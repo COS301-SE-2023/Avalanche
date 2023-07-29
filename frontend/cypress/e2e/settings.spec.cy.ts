@@ -57,6 +57,8 @@ describe("Settings", () => {
         buttonChecker("integrations")
     })
 
+    //need to add "everything loads" for General Settings because frontend fucky=============
+
     it('Settings - Organizations - add new organizations', ()=> {
         cy.get('a[href="?tab=subusers"]').click()
         cy.contains('Add a new organization').click();
@@ -95,14 +97,22 @@ describe('Settings with another user', () => {
         cy.get('input[placeholder="Paper Sales"]').should('be.visible');
     })
 
-    it.only('everything loads with Add User to Group button', () => {
-        cy.get('a[href="?tab=subusers"]').click() //clicks onto Organizations tab
+    it('everything loads with Add User to Group button', () => {
+        cy.get('a[href="?tab=subusers"]').click()
         cy.contains('Add User to Group ').click();
-        cy.contains('Add a User to a Group').should('be.visible')
-        cy.contains('Group Name').should('be.visible')
+        cy.contains('Add a User to a Group').should('be.visible');
+        cy.contains('Group Name').should('be.visible');
         cy.get('input[placeholder="Paper Sales"]').should('be.visible');
-        cy.contains('User Email').should('be.visible')
+        cy.contains('User Email').should('be.visible');
         cy.get('input[placeholder="john@example.com"]').should('be.visible');
+    })
+
+    //adding group is fucky===========================
+
+    it.only('everything loads with Data Products', () => {
+        cy.get('a[href="?tab=integrations"]').click()
+        cy.contains('Add a new Data Product').should('be.visible');
+        cy.contains('No Data Products. You have not added any Data Products...').should('be.visible');
     })
 
 
