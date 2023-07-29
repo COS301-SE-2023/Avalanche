@@ -133,7 +133,7 @@ describe('Settings with another user', () => {
             .should('be.visible');
     })
 
-    it.only('ZARC has been clicked from dropdown and results shown', () => {
+    it('ZARC has been clicked from dropdown and results shown', () => {
         cy.get('a[href="?tab=integrations"]').click()
         cy.contains('Add a new Data Product').click();
         cy.contains('Add a new Data Product').should('be.visible');
