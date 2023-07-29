@@ -261,9 +261,9 @@ export class AuthService {
     }
 
     // console.log(user);
-    // console.log(user['apiKey']);
+    console.log(user['apiKey']);
 
-    if (user['apiKey']?.length > 0 || user['apiKey']) {
+    if (user.apiKey?.length > 0 || user.apiKey) {
       return {
         status: 400, error: true, message: 'User already has an api key',
         timestamp: new Date().toISOString()

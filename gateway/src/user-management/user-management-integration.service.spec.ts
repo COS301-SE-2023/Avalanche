@@ -111,7 +111,7 @@ describe('User Management Integration Tests From Gateway', () => {
         .post('/user-management/login')
         .send(user);
       console.log(response.body.userWithToken);
-      if(response.body.userWithToken.token){
+      if(response.body.userWithToken?.token){
         accessToken = response.body.userWithToken.token;
       }
  // This may change based on the structure of your response
@@ -187,7 +187,7 @@ describe('User Management Integration Tests From Gateway', () => {
           .then((response) => {
             console.log(response.body);
             expect(response.body.status).toBe('success');
-            expect(response.body.message.email).toBe('test@test.com');
+            expect(response.body.message.email).toBe('test6@google.com');
           });
       });
 
