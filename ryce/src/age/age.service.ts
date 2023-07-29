@@ -72,7 +72,7 @@ export class AgeService {
     }
   }
 
-  ageGraphName(filters: string): string {
+  ageGraphName(filters: any): string {
     let rank = filters['rank'];
     if (rank) {
       rank = ' the ' + rank + ' registrars in terms of domain count ';

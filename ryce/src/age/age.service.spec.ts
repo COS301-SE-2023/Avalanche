@@ -135,5 +135,59 @@ describe('AgeService', () => {
     });
   });
 
-  
+  describe('ageGraphName', () => {
+    it('should handle no filters and return default name', () => {
+      const filters = {};
+      const result = service.ageGraphName(filters);
+      expect(result).toBe('Age Analysis of domains for all registrars ');
+    });
+
+    it('should handle rank filter', () => {
+      const filters = { rank: 'top' };
+      const result = service.ageGraphName(filters);
+      expect(result).toBe(
+        'Age Analysis of domains for the top registrars in terms of domain count ',
+      );
+    });
+
+    it('should handle overall and average both true', () => {
+      const filters = { overall: true, average: true };
+      const result = service.ageGraphName(filters);
+      expect(result).toBe(
+        'Age Analysis of domains for all registrars , showing the overall average age',
+      );
+    });
+
+    it('should handle overall false and average true', () => {
+      const filters = { overall: false, average: true };
+      const result = service.ageGraphName(filters);
+      expect(result).toBe(
+        'Age Analysis of domains for all registrars , showing the average age per registrar',
+      );
+    });
+
+    it('should handle overall true and average false', () => {
+      const filters = { overall: true, average: false };
+      const result = service.ageGraphName(filters);
+      expect(result).toBe(
+        'Age Analysis of domains for all registrars , showing the overall number of domains per age',
+      );
+    });
+
+    it('should handle overall and average both false', () => {
+      const filters = { overall: false, average: false };
+      const result = service.ageGraphName(filters);
+      expect(result).toBe(
+        'Age Analysis of domains for all registrars , showing the number of domains per age per registrar',
+      );
+    });
+
+    it('should handle all filters', () => {
+      const filters = { rank: 'top', overall: true, average: false };
+      const result = service.ageGraphName(filters);
+      expect(result).toBe(
+        'Age Analysis of domains for the top registrars in terms of domain count , showing the overall number of domains per age',
+      );
+    });
+  });
 });
