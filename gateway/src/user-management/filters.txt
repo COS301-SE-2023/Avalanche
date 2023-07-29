@@ -278,7 +278,7 @@
                 ]
             },
             {
-                "name": "movement",
+                "name": "movement/vertical",
                 "filters": [
                     {
                         "name": "zone",
@@ -547,7 +547,7 @@
                 ]
             },
             {
-                "name": "movement",
+                "name": "movement/vertical",
                 "filters": [
                     {
                         "name": "zone",
@@ -860,7 +860,7 @@
                 ]
             },
             {
-                "name": "movement",
+                "name": "movement/vertical",
                 "filters": [
                     {
                         "name": "zone",

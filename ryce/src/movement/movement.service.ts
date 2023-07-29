@@ -58,7 +58,7 @@ export class MovementService {
         data: {
           graphName: graphName,
           warehouse: 'ryce',
-          graphType: 'movement',
+          graphType: 'movement/vertical',
           ...JSON.parse(formattedData),
         },
         timestamp: new Date().toISOString(),

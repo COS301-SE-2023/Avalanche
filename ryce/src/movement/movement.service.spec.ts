@@ -46,7 +46,7 @@ describe('MovementService', () => {
         graphName:
           'Monthly Nett Vertical Movement (Creates-Deletes) from 2022-01-01 to 2022-12-31 for all registrars for all zones in registry',
         foo: 'bar',
-        graphType: 'movement',
+        graphType: 'movement/vertical',
         warehouse: 'ryce',
       });
     });
@@ -77,7 +77,7 @@ describe('MovementService', () => {
         graphName:
           'Monthly Nett Vertical Movement (Creates-Deletes) from 2022-01-01 to 2022-12-31 for all registrars for all zones in registry',
         ...JSON.parse(JSON.stringify({ data: 'formattedData' })),
-        graphType: 'movement',
+        graphType: 'movement/vertical',
         warehouse: 'ryce',
       });
     });
