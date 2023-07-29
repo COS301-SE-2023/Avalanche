@@ -20,7 +20,7 @@ describe('main', () => {
       transport: Transport.TCP,
       options: {
         host: 'localhost',
-        port: 4002,
+        port: 4004,
       },
     });
   });
