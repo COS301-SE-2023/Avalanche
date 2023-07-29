@@ -1,13 +1,13 @@
 import Image from 'next/image'
 import Link from 'next/link';
 import Head from 'next/head'
-import { useState, } from 'react';
+import { useState, useEffect } from 'react';
 import React from 'react';
-import { SubmitButton, DangerAlert, Input, InputLabel, Anchor } from '@/components/Util';
+import { SubmitButton, DangerAlert, Input, InputLabel, Anchor, ErrorToast } from '@/components/Util';
 import tempLogo from '../assets/logo.png';
 import { Toaster } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
-import { userState, login } from '@/store/Slices/userSlice';
+import { userState, login, clearError } from '@/store/Slices/userSlice';
 import { ILoginRequest } from '@/interfaces/requests';
 import { useRouter } from 'next/router';
 import LoadingPage from '@/components/Util/Loading';
@@ -42,6 +42,14 @@ export default function Home() {
     } as ILoginRequest));
 
   }
+
+  useEffect(() => {
+    if(stateUser.requests.error) {
+      ErrorToast({text: `${stateUser.requests.error}`});
+      dispatch(clearError());
+    }
+      
+  }, [stateUser.requests.error]);
 
   const validate = (): boolean => {
     if (!email || !password) {
