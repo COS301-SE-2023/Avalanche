@@ -73,7 +73,7 @@ export class MovementService {
     }
   }
 
-  netVerticalGraphName(filters: string): string {
+  netVerticalGraphName(filters: any): string {
     let registrar = filters['registrar'];
     if (registrar) {
       if (registrar.length > 0) {
@@ -81,10 +81,10 @@ export class MovementService {
         for (const r of registrar) {
           regArr.push(r);
         }
-        registrar += regArr.join(', ');
+        registrar = regArr.join(', ');
       }
     } else {
-      registrar = ' all registrars ';
+      registrar = 'all registrars';
     }
 
     let zone = filters['zone'];
@@ -94,11 +94,11 @@ export class MovementService {
         for (const r of zone) {
           zoneArr.push(r);
         }
-        zone += zoneArr.join(', ');
+        zone = zoneArr.join(', ');
       }
       zone = ' for ' + zone;
     } else {
-      zone = ' all zones in registry';
+      zone = ' for all zones in registry';
     }
 
     let dateFrom;
@@ -142,7 +142,7 @@ export class MovementService {
 
     return (
       granularity +
-      ' Nett Vertical Movement (Creates-Deletes) from ' +
+      'Nett Vertical Movement (Creates-Deletes) from ' +
       dateFrom +
       ' to ' +
       dateTo +
