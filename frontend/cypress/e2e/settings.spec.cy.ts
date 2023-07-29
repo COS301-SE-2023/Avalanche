@@ -109,12 +109,20 @@ describe('Settings with another user', () => {
 
     //adding group is fucky===========================
 
-    it.only('everything loads with Data Products', () => {
+    it('everything loads with Data Products', () => {
         cy.get('a[href="?tab=integrations"]').click()
         cy.contains('Add a new Data Product').should('be.visible');
         cy.contains('No Data Products. You have not added any Data Products...').should('be.visible');
     })
 
+    it.only('Add a new Data Product has been clicked', () => {
+        cy.get('a[href="?tab=integrations"]').click()
+        cy.contains('Add a new Data Product').click();
+        cy.contains('Add a new Data Product').should('be.visible');
+        cy.get('button[type="button"]')
+            .should('be.visible');
+        cy.contains("Select Provider").should("be.visible")
+    })
 
 
 })
