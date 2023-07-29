@@ -31,7 +31,7 @@ export default function CreateCustomDashboard() {
     const [id, setID] = useState<string>(router.query.id as string || document.location.pathname.split("/")[2]);
     const [newDash, setND] = useState<boolean>(true);
 
-    console.log(document.location.pathname.split("/")[2]);
+    // console.log(document.location.pathname.split("/")[2]);
 
     const [graphs, setGraphs] = useState<any>([]);
 
@@ -60,7 +60,7 @@ export default function CreateCustomDashboard() {
 
     const renderGraphs = () => {
         return graphs.map((graph: any, index: number) => {
-            return <CustomChartCard title={graph.name} defaultGraph={ChartType.Pie} data={graph} key={index} state={stateGraph} />
+            return <CustomChartCard title={graph.name} defaultGraph={ChartType.Pie} data={graph} key={index} state={stateGraph} id={id} />
         })
     }
 
@@ -86,8 +86,6 @@ export default function CreateCustomDashboard() {
             dashboardID: id,
             graphs: dataaaaaaaaa
         }
-
-        console.log(boo);
 
         const res = await ky.post(`${process.env.NEXT_PUBLIC_API}/user-management/${newDash ? "saveDashboard" : "editDashboard"}`, {
             json: boo,
@@ -127,6 +125,6 @@ export default function CreateCustomDashboard() {
 
         {/* Modals */}
         {modalState.currentOpen === "GRAPH.AddGraph" && <GraphCreateModal state={stateGraph} add={addToGraphs} />}
-        {modalState.currentOpen === "GRAPH.Modal" && <GraphZoomModal />}
+        {modalState.currentOpen === "GRAPH.Modal" && <GraphZoomModal custom={true} />}
     </>)
 }

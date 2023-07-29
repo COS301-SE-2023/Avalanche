@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { AppState } from "../store";
 import { HYDRATE } from "next-redux-wrapper";
-import ky from "ky";
+import ky, { HTTPError } from "ky";
 import { ILoginRequest, IOTPVerifyRequest, IRegisterRequest, ICreateOrganisationRequest, ICreateUserGroupRequest } from "@/interfaces/requests";
 import { IOTPVerifyResponse, IRegisterResponse, ILoginResponse, ICreateOrgnisationResponse, ICreateUserGroupResponse } from "@/interfaces/responses";
 import { setCookie, getCookie, deleteCookie } from 'cookies-next';
@@ -109,7 +109,8 @@ export const userSlice = createSlice({
         clearError(state) {
             state.error = "";
             state.requests.error = "";
-            state.login.error = "";
+            state.login.error = false;
+            state.login.message = "";
         },
         updateDashboards(state, action) {
             state.user.dashboards = action.payload;
@@ -177,7 +178,7 @@ export const userSlice = createSlice({
         })
         builder.addCase(login.rejected, (state, action) => {
             state.loading = false;
-            state.requests.error = payload.messagw;
+            state.requests.error = action.payload as any;
         })
         // Create Organisation
         builder.addCase(createOrganisation.fulfilled, (state, action) => {
@@ -225,16 +226,19 @@ export const userSlice = createSlice({
         })
         builder.addCase(addUserToGroup.pending, (state) => {
             state.loading = true;
+            state.addUserGroupSuccess = false;
         })
         builder.addCase(addUserToGroup.rejected, (state, action) => {
+            console.log(action);
             state.addUserGroupSuccess = false;
             state.loading = false;
-            state.error = "";
+            console.log(action.payload);
+            state.requests.error = action.payload as string;
         })
         // Remove User
         builder.addCase(removeUserFromGroup.fulfilled, (state, action) => {
             state.removeUserGroupSuccess = true;
-            state.error = "";
+            state.requests.error = "";
             state.loading = false;
             // remove the user from the userGroups
             const payload = action.payload as any;
@@ -244,12 +248,12 @@ export const userSlice = createSlice({
         builder.addCase(removeUserFromGroup.pending, (state) => {
             state.loading = true;
             state.removeUserGroupSuccess = false;
-            state.error = "";
+            state.requests.error = "";
         })
         builder.addCase(removeUserFromGroup.rejected, (state, action) => {
             state.removeUserGroupSuccess = false;
             state.loading = false;
-            state.error = action.payload as string;
+            state.requests.error = action.payload as string;
         })
         // Get Latest Org
         builder.addCase(getLatestOrganisation.fulfilled, (state, action) => {
@@ -378,7 +382,11 @@ export const addUserToGroup = createAsyncThunk("ORG.AddUserToGroup", async (obje
         }).json();
         return response as any;
     } catch (e) {
-        if (e instanceof Error) return rejectWithValue(e.message);
+        let error = e as HTTPError;
+        if (error.name === 'HTTPError') {
+            const newError = await error.response.json();
+            return rejectWithValue(newError.message);
+        }
     }
 })
 
