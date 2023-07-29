@@ -1,43 +1,157 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { DomainNameAnalysisService } from './domain-name-analysis.service';
 import { HttpService } from '@nestjs/axios';
-import { SnowflakeService } from 'src/snowflake/snowflake.service';
+import { lastValueFrom, of } from 'rxjs';
+import Redis from 'ioredis';
+import { DomainNameAnalysisService } from './domain-name-analysis.service';
+import { SnowflakeService } from '../snowflake/snowflake.service';
+import { GraphFormatService } from '../graph-format/graph-format.service';
+
+jest.mock('@nestjs/axios');
 
 describe('DomainNameAnalysisService', () => {
   let service: DomainNameAnalysisService;
+  const mockHttpService = { post: jest.fn() };
+  const mockRedis = { get: jest.fn(), set: jest.fn() };
+  const mockSnowflakeService = { execute: jest.fn() };
+  const mockGraphFormatService = {
+    formatDomainLengthAnalysis: jest.fn(),
+    formatDomainNameAnalysis: jest.fn(),
+  };
 
   beforeEach(async () => {
-    const mockHttpService = {}; // Mock out HttpService, since we don't need it for the test
-    const mockSnowflakeService = {}; // Mock out SnowflakeService, since we don't need it for the test
-
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         DomainNameAnalysisService,
         { provide: HttpService, useValue: mockHttpService },
+        { provide: 'REDIS', useValue: mockRedis },
         { provide: SnowflakeService, useValue: mockSnowflakeService },
+        { provide: GraphFormatService, useValue: mockGraphFormatService },
       ],
     }).compile();
 
     service = module.get<DomainNameAnalysisService>(DomainNameAnalysisService);
   });
 
-  it('should correctly normalize data', () => {
-    const data = JSON.stringify({
-      data: [
-        { word: 'test1', frequency: 5, domains: ['domain1', 'domain2'] },
-        { word: 'test2', frequency: 15, domains: ['domain3', 'domain4'] },
-        { word: 'test3', frequency: 25, domains: ['domain5', 'domain6'] },
-        { word: 'test4', frequency: 35, domains: ['domain7', 'domain8'] },
-        { word: 'test5', frequency: 45, domains: ['domain9', 'domain10'] },
-      ],
+  describe('sendData', () => {
+    it('should return formatted data from Redis if it exists', async () => {
+      const mockData = JSON.stringify({ test: 'data' });
+      const filters = { num: 10, granularity: 'month' };
+      const mockQuery = `call domainNameAnalysis('${JSON.stringify(filters)}')`;
+
+      mockRedis.get.mockResolvedValue(mockData);
+      mockGraphFormatService.formatDomainNameAnalysis.mockResolvedValue(
+        mockData,
+      );
+
+      const result = await service.sendData({ filters });
+
+      expect(mockRedis.get).toHaveBeenCalledWith(`ryce` + mockQuery);
+      expect(result).toEqual({
+        status: 'success',
+        data: {
+          graphName:
+            'Most common sub words in newly created domains in the last 10 month(s)',
+          test: 'data',
+          warehouse: 'ryce',
+          graphType: 'domainNameAnalysis/count',
+        },
+        timestamp: expect.any(String),
+      });
     });
 
-    const result = JSON.parse(service.normaliseData(data));
+    it('should execute SnowflakeService and set data in Redis if no data in Redis', async () => {
+      const mockData = { DOMAINNAMEANALYSIS: 'test' };
+      const filters = { num: 10, granularity: 'month' };
+      const mockQuery = `call domainNameAnalysis('${JSON.stringify(filters)}')`;
 
-    expect(result[0].normalisedFrequency).toBeCloseTo(10);
-    expect(result[1].normalisedFrequency).toBeCloseTo(21.6667, 4);
-    expect(result[2].normalisedFrequency).toBeCloseTo(33.3333, 4);
-    expect(result[3].normalisedFrequency).toBeCloseTo(45, 4);
-    expect(result[4].normalisedFrequency).toBeCloseTo(56.6667, 4);
+      mockRedis.get.mockResolvedValue(null);
+      mockSnowflakeService.execute.mockResolvedValue([mockData]);
+      mockGraphFormatService.formatDomainNameAnalysis.mockResolvedValue(
+        JSON.stringify({ formattedData: 'formattedData' }),
+      );
+      mockHttpService.post.mockReturnValue(of({ data: 'responseData' }));
+
+      const result = await service.sendData({ filters });
+
+      expect(mockSnowflakeService.execute).toHaveBeenCalledWith(mockQuery);
+      expect(mockHttpService.post).toHaveBeenCalled();
+      expect(mockRedis.set).toHaveBeenCalledWith(
+        `ryce` + mockQuery,
+        JSON.stringify({ formattedData: 'formattedData' }),
+        'EX',
+        24 * 60 * 60,
+      );
+      expect(result).toEqual({
+        status: 'success',
+        data: {
+          graphName:
+            'Most common sub words in newly created domains in the last 10 month(s)',
+          formattedData: 'formattedData',
+
+          warehouse: 'ryce',
+          graphType: 'domainNameAnalysis/count',
+        },
+        timestamp: expect.any(String),
+      });
+    });
+
+    it('should return error if SnowflakeService throws an error', async () => {
+      const filters = { num: 10, granularity: 'month' };
+
+      mockSnowflakeService.execute.mockRejectedValue(
+        new Error('Data Warehouse Error'),
+      );
+
+      const result = await service.sendData({ filters });
+
+      expect(result).toEqual({
+        status: 500,
+        error: true,
+        message: 'Data Warehouse Error',
+        timestamp: expect.any(String),
+      });
+    });
+
+    it('should return error if format throws an error', async () => {
+      const filters = { num: 10, granularity: 'month' };
+
+      mockRedis.get.mockResolvedValue(null);
+
+      mockGraphFormatService.formatDomainNameAnalysis.mockRejectedValue(
+        new Error('Format Error'),
+      );
+
+      const mockData = { DOMAINNAMEANALYSIS: 'test' };
+      mockSnowflakeService.execute.mockResolvedValue([mockData]);
+
+      mockHttpService.post.mockReturnValue(of({ data: 'responseData' }));
+
+      const result = await service.sendData({ filters });
+
+      expect(result).toEqual({
+        status: 500,
+        error: true,
+        message: 'Format Error',
+        timestamp: expect.any(String),
+      });
+    });
+
+    // it('should return error if httpService throws an error', async () => {
+    //   const filters = { num: 10, granularity: 'month' };
+
+    //   mockSnowflakeService.execute.mockReturnValue([
+    //     { DOMAINNAMEANALYSIS: 'data' },
+    //   ]);
+    //   mockHttpService.post.mockReturnValue(new Error('HTTP Error'));
+
+    //   const result = await service.sendData({ filters });
+
+    //   expect(result).toEqual({
+    //     status: 500,
+    //     error: true,
+    //     message: 'HTTP Error',
+    //     timestamp: expect.any(String),
+    //   });
+    // });
   });
 });
