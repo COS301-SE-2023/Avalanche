@@ -1,4 +1,4 @@
-describe.skip("Settings", () => {
+describe("Settings", () => {
     beforeEach(() => {
         cy.visit('http://localhost:3000');
         cy.get('input[name=email]').type('kihale5691@sportrid.com');
@@ -7,7 +7,7 @@ describe.skip("Settings", () => {
         cy.get('a[data-tooltip-target="tooltip-settings"]').click();
     });
 
-    it.skip("Navbar still visible", ()=> {
+    it("Navbar still visible", ()=> {
         function navBarChecks(href, contain){
             cy.get('#default-sidebar a[href="'+href+'"]')
                 .should('be.visible')
@@ -32,7 +32,7 @@ describe.skip("Settings", () => {
 
 
 
-    it.skip('Setting submenu visible and correct links', () => {
+    it('Setting submenu visible and correct links', () => {
         function subMenuChecker(tab, contain){
             cy.get('a[href="?tab='+tab+'"]')
                 .should('be.visible')
@@ -44,7 +44,7 @@ describe.skip("Settings", () => {
         subMenuChecker("integrations", "Data Products")
     })
 
-    it.skip("Setting submenu has button", ()=> {
+    it("Setting submenu has button", ()=> {
         function buttonChecker(tab){
             cy.get('a[href="?tab='+tab+'"]').click()
             cy.get('button[type=submit]').should('exist')
@@ -57,7 +57,7 @@ describe.skip("Settings", () => {
         buttonChecker("integrations")
     })
 
-    it.skip('Settings - Organizations - add new organizations', ()=> {
+    it('Settings - Organizations - add new organizations', ()=> {
         cy.get('a[href="?tab=subusers"]').click()
         cy.contains('Add a new organization').click();
         cy.contains('Create a new Organization').should('be.visible')
@@ -78,7 +78,7 @@ describe('Settings with another user', () => {
         cy.get('a[data-tooltip-target="tooltip-settings"]').click();
     })
 
-    it.skip('After organization has been created', () => {
+    it('After organization has been created', () => {
         cy.get('a[href="?tab=subusers"]').click()
         cy.contains('TestB').should('be.visible');
         cy.contains('Administrators').should('be.visible');
