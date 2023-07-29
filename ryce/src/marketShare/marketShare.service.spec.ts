@@ -42,6 +42,8 @@ describe('MarketShareService', () => {
           graphName:
             'Domain count marketshare across all registrars for all zones ',
           ...mockData,
+          warehouse: 'ryce',
+          graphType: 'marketshare',
         },
         timestamp: expect.any(String),
       });
@@ -65,6 +67,8 @@ describe('MarketShareService', () => {
           graphName:
             'Domain count marketshare across all registrars for all zones ',
           formatted: JSON.parse(mockFormattedData).formatted,
+          warehouse: 'ryce',
+          graphType: 'marketshare',
         },
         timestamp: expect.any(String),
       });
