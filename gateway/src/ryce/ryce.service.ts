@@ -35,4 +35,8 @@ export class RyceService {
   async movementVertical(data: any) {
     return this.client.send({ cmd: 'movement/vertical' }, data).toPromise();
   }
+
+  async domainWatchPassive(data: any) {
+    return this.client.send({ cmd: 'domainWatchPassive' }, data).toPromise();
+  }
 }

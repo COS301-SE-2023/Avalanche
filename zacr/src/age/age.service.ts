@@ -67,7 +67,7 @@ export class AgeService {
     }
   }
 
-  ageGraphName(filters: string): string {
+  ageGraphName(filters: any): string {
     let rank = filters['rank'];
     if (rank) {
       rank = ' the ' + rank + ' registrars in terms of domain count ';
@@ -86,6 +86,6 @@ export class AgeService {
     } else if (overall === false && average === false) {
       filter = ', showing the number of domains per age per registrar';
     }
-    return 'Age Analysis of domains for ' + rank + filter;
+    return 'Age Analysis of domains for' + rank + filter;
   }
 }

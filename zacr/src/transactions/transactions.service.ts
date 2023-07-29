@@ -71,7 +71,7 @@ export class TransactionService {
     }
   }
 
-  async transactionsRanking(filters: string, graphName: string): Promise<any> {
+  async transactionsRanking(filters: any, graphName: string): Promise<any> {
     try {
       graphName = this.transactionsGraphName(filters, true);
       const filterObj = JSON.parse(JSON.stringify(filters));
@@ -127,7 +127,7 @@ export class TransactionService {
     }
   }
 
-  transactionsGraphName(filters: string, perReg: boolean): string {
+  transactionsGraphName(filters: any, perReg: boolean): string {
     let dateFrom;
     if (filters['dateFrom'] === undefined) {
       dateFrom = new Date();
@@ -156,15 +156,15 @@ export class TransactionService {
       dateTo = dateTo.getUTCFullYear() + '-' + month + '-' + day;
     }
 
-    let granularity = 'Monthly ';
+    let granularity = 'Monthly';
     const gCheck = filters['granularity'];
 
     if (gCheck == 'year') {
-      granularity = 'Yearly ';
+      granularity = 'Yearly';
     } else if (gCheck == 'week') {
-      granularity = 'Weekly ';
+      granularity = 'Weekly';
     } else if (gCheck == 'day') {
-      granularity = 'Daily ';
+      granularity = 'Daily';
     }
 
     let zone = filters['zone'];
@@ -176,7 +176,7 @@ export class TransactionService {
 
     let reg = '';
     if (perReg) {
-      reg = ' per registrar ';
+      reg = 'per registrar ';
     }
     return (
       granularity +

@@ -8,7 +8,6 @@ import { IntegrationLoginModal } from "@/components/Modals";
 import { SubmitButton, WarningAlert } from "@/components/Util";
 import { Toaster } from 'react-hot-toast';
 import OrganizationSettings from "@/components/Settings/Organizations";
-import API from "@/components/Settings/API";
 import { userState } from "@/store/Slices/userSlice";
 import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
 import { useDispatch, useSelector } from 'react-redux';

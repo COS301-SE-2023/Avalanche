@@ -92,7 +92,10 @@ export class AppController {
 
   @MessagePattern({ cmd: 'domainNameAnalysis/length' })
   async domainNameAnalysisLength(data: any) {
-    const result = await this.domainNameAnalysisService.sendData(data);
+    const result = await this.domainNameAnalysisService.domainLength(
+      data.filters,
+      data.graphName,
+    );
     if (result.error) {
       throw new RpcException({
         status: result.status,
@@ -106,24 +109,61 @@ export class AppController {
 
   @MessagePattern({ cmd: 'movement/vertical' })
   async nettVerticalMovement(data: any) {
-    return await this.movementService.nettVeritical(
+    const result =  await this.movementService.nettVeritical(
       data.filters,
       data.graphName,
     );
+
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
   }
 
   @MessagePattern({ cmd: 'domainWatchPassive' })
   async domainWatchPassive() {
-    return await this.domainWatchService.passive();
+    const result = await this.domainWatchService.passive();
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
   }
 
   @MessagePattern({ cmd: 'loadDomains' })
   async loadDomains() {
-    return await this.domainWatchService.loadDomains();
+    const result =  await this.domainWatchService.loadDomains();
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
   }
 
   @MessagePattern({ cmd: 'registrarName' })
   async registarName(data: any) {
-    return await this.registrarNameService.registrarName(data);
+    const result = await this.registrarNameService.registrarName(data);
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
   }
 }

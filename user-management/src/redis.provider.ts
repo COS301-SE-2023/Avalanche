@@ -13,6 +13,8 @@ export const RedisProvider: Provider = {
     return new Redis({
       host: configService.get('REDIS_HOST'),
       port: configService.get('REDIS_PORT'),
+      username : configService.get('REDIS_USER') || null,
+      password : configService.get('REDIS_PASSWORD') || null,
       connectTimeout: 100000
     });
   },

@@ -313,7 +313,6 @@ export class AuthService {
     }
   }
 
-
   async rerollAPIKey(token: string) {
     const userData = await this.redis.get(token);
     if (!userData) {

@@ -45,6 +45,7 @@ describe('RedisProvider', () => {
       port: 6379,
       username: 'testUser',
       password: 'testPassword',
+      connectTimeout: 100000
     });
   });
 });

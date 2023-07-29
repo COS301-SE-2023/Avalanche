@@ -76,7 +76,8 @@ export class AppModule implements NestModule {
         { path: 'domain-watch/whoisyou', method: RequestMethod.POST },
         { path: 'user-management/graphFilters', method: RequestMethod.GET },
         { path: 'user-management/getDomainWatchPassive', method: RequestMethod.POST },
-        { path: 'africa/domainWatchPassive', method: RequestMethod.POST }
+        { path: 'africa/domainWatchPassive', method: RequestMethod.POST },
+        { path: 'ryce/domainWatchPassive', method: RequestMethod.POST }
       )
       .forRoutes('*');
   }
