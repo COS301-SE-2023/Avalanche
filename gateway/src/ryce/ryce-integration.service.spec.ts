@@ -29,7 +29,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
   });
 
 
-  describe('Transactions', () => {
+  describe('Transactions integration tests', () => {
     const currentDate = new Date();
     const dateFrom = `${currentDate.getFullYear()-1}-${(currentDate.getMonth()).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
     const dateTo = `${currentDate.getFullYear()}-${(currentDate.getMonth()).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;;
@@ -64,21 +64,99 @@ describe('RyCE Service Integration Tests From Gateway', () => {
     }, 100000);
   });
 
-  // Similar tests for the other endpoints
-  
-  describe('Domain Watch Passive', () => {
-    it('should perform domain watch passively', () => {
-      const data = {}; // Replace this with actual data
-
+  describe('Transactions by registrar integration tests', () => {
+    const currentDate = new Date();
+    const dateFrom = `${currentDate.getFullYear()-1}-${(currentDate.getMonth()).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
+    const dateTo = `${currentDate.getFullYear()}-${(currentDate.getMonth()).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;;
+    it('should perform transactions for a granularity of a month for registrar 1und1', () => {
+      const data = {
+        zone : ["WIEN"],registrar: ["1und1"], dateFrom : dateFrom, dateTo: dateTo, graphName: `Monthly, from ${dateFrom} to ${dateTo}`, granularity: "month"
+      }; // Replace this with actual data
+      
       return request(app.getHttpServer())
-        .post('/africa/domainWatchPassive')
+        .post('/ryce/transactions')
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
-        .expect(201)
         .then((response) => {
           console.log(response.body);
-          expect(response.body);
+          expect(response.body.status).toBe('success');
+        });
+    }, 100000);
+
+    it('should perform transactions for a granularity of a month for registrar registrygate', () => {
+      const data = {
+        zone : ["WIEN"], registrar: ["registrygate"], dateFrom : dateFrom, dateTo: dateTo, graphName: `Monthly, from ${dateFrom} to ${dateTo}`, granularity: "month"
+      }; // Replace this with actual data
+      
+      return request(app.getHttpServer())
+        .post('/ryce/transactions')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send(data)
+        .then((response) => {
+          console.log(response.body);
+          expect(response.body.status).toBe('success');
+        });
+    }, 100000);
+
+    it('should perform transactions for a granularity of a year for registrar 1und1', () => {
+      const data = {
+        zone : ["WIEN"], dateFrom : dateFrom, dateTo: dateTo, graphName: `Yearly, from ${dateFrom} to ${dateTo}`, granularity: "year"
+      }; // Replace this with actual data
+      
+      return request(app.getHttpServer())
+        .post('/ryce/transactions')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send(data)
+        .then((response) => {
+          console.log(response.body);
+          expect(response.body.status).toBe('success');
         });
     }, 100000);
   });
+
+  describe('Transactions ranking by registrar', () => {
+    const currentDate = new Date();
+    const dateFrom = `${currentDate.getFullYear()-1}-${(currentDate.getMonth()).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
+    const dateTo = `${currentDate.getFullYear()}-${(currentDate.getMonth()).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;;
+    it('should perform transactions ranking for renew', () => {
+      const data = { graphName: `Monthly renew ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: ['WIEN'], registrar: ["1und1", "registrygate", "internetx"], transactions: ["renew"] } ;
+      
+      return request(app.getHttpServer())
+        .post('/ryce/transactions-ranking')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send(data)
+        .then((response) => {
+          console.log(response.body);
+          expect(response.body.status).toBe('success');
+        });
+    }, 100000);
+
+    it('should perform transactions ranking for create', () => {
+      const data = { graphName: `Monthly renew ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: ['WIEN'], registrar: ["1und1", "registrygate", "internetx"], transactions: ["create"] } ;
+      
+      return request(app.getHttpServer())
+        .post('/ryce/transactions-ranking')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send(data)
+        .then((response) => {
+          console.log(response.body);
+          expect(response.body.status).toBe('success');
+        });
+    }, 100000);
+
+    it('should perform transactions ranking for transfer', () => {
+      const data = { graphName: `Monthly renew ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: ['WIEN'], registrar: ["1und1", "registrygate", "internetx"], transactions: ["transfer"] } ;
+      
+      return request(app.getHttpServer())
+        .post('/ryce/transactions-ranking')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send(data)
+        .then((response) => {
+          console.log(response.body);
+          expect(response.body.status).toBe('success');
+        });
+    }, 100000);
+  });
+
+  
 });
