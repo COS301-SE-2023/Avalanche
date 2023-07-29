@@ -108,6 +108,8 @@ export const userSlice = createSlice({
         },
         clearError(state) {
             state.error = "";
+            state.requests.error = "";
+            state.login.error = "";
         },
         updateDashboards(state, action) {
             state.user.dashboards = action.payload;
@@ -175,6 +177,7 @@ export const userSlice = createSlice({
         })
         builder.addCase(login.rejected, (state, action) => {
             state.loading = false;
+            state.requests.error = payload.messagw;
         })
         // Create Organisation
         builder.addCase(createOrganisation.fulfilled, (state, action) => {
