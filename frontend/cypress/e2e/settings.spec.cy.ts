@@ -53,7 +53,7 @@ describe("Settings", () => {
         }
 
         buttonChecker("general")
-        //buttonChecker("subusers") --waiting for response
+        //buttonChecker("subusers")
         buttonChecker("integrations")
     })
 
@@ -94,6 +94,17 @@ describe('Settings with another user', () => {
         cy.contains('Group Name').should('be.visible')
         cy.get('input[placeholder="Paper Sales"]').should('be.visible');
     })
+
+    it.only('everything loads with Add User to Group button', () => {
+        cy.get('a[href="?tab=subusers"]').click() //clicks onto Organizations tab
+        cy.contains('Add User to Group ').click();
+        cy.contains('Add a User to a Group').should('be.visible')
+        cy.contains('Group Name').should('be.visible')
+        cy.get('input[placeholder="Paper Sales"]').should('be.visible');
+        cy.contains('User Email').should('be.visible')
+        cy.get('input[placeholder="john@example.com"]').should('be.visible');
+    })
+
 
 
 })
