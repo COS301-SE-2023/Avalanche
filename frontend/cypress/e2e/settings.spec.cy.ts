@@ -124,15 +124,29 @@ describe('Settings with another user', () => {
         cy.contains("Select Provider").should("be.visible")
     })
 
-    it.only('Select Provider has been clicked', () => {
+    it('Select Provider has been clicked', () => {
         cy.get('a[href="?tab=integrations"]').click()
         cy.contains('Add a new Data Product').click();
         cy.contains('Add a new Data Product').should('be.visible');
         cy.contains("Select Provider").click();
-        cy.get('#dropdown') // Select the dropdown element by its ID
-            .should('be.visible'); // Check if the dropdown is visible on the page
+        cy.get('#dropdown')
+            .should('be.visible');
+    })
 
-
+    it.only('ZARC has been clicked from dropdown and results shown', () => {
+        cy.get('a[href="?tab=integrations"]').click()
+        cy.contains('Add a new Data Product').click();
+        cy.contains('Add a new Data Product').should('be.visible');
+        cy.contains("Select Provider").click();
+        cy.get('#dropdown')
+            .should('be.visible')
+            .click();
+        cy.contains('Your email').should('be.visible');
+        cy.get('input[placeholder="name@company.com"]').should('be.visible');
+        cy.contains('Password').should('be.visible');
+        cy.get('input[placeholder="••••••••"]').should('be.visible');
+        cy.contains('Login to ZARC').should('be.visible')
+        
     })
 
 
