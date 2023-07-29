@@ -141,7 +141,7 @@ export class DomainNameAnalysisService {
     }
   }
 
-  domainLengthGraphName(filters: string): string {
+  domainLengthGraphName(filters: any): string {
     let registrar = filters['registrar'];
     if (registrar) {
       if (registrar.length > 0) {
@@ -208,36 +208,36 @@ export class DomainNameAnalysisService {
     );
   }
 
-  normaliseData(data: string): string {
-    const dataArr = JSON.parse(data)['data'];
-    const minFrequency = Math.min(...dataArr.map((item) => item.frequency));
-    const maxFrequency = Math.max(...dataArr.map((item) => item.frequency));
+  // normaliseData(data: string): string {
+  //   const dataArr = JSON.parse(data)['data'];
+  //   const minFrequency = Math.min(...dataArr.map((item) => item.frequency));
+  //   const maxFrequency = Math.max(...dataArr.map((item) => item.frequency));
 
-    const newMin = 10;
-    const newMax = 60;
+  //   const newMin = 10;
+  //   const newMax = 60;
 
-    // Normalize each frequency, scaling it to be within [newMin, newMax]
-    const normalizedData = dataArr.map((item) => ({
-      ...item,
-      normalisedFrequency: this.normalize(
-        item.frequency,
-        minFrequency,
-        maxFrequency,
-        newMin,
-        newMax,
-      ),
-    }));
+  //   // Normalize each frequency, scaling it to be within [newMin, newMax]
+  //   const normalizedData = dataArr.map((item) => ({
+  //     ...item,
+  //     normalisedFrequency: this.normalize(
+  //       item.frequency,
+  //       minFrequency,
+  //       maxFrequency,
+  //       newMin,
+  //       newMax,
+  //     ),
+  //   }));
 
-    return JSON.stringify(normalizedData);
-  }
+  //   return JSON.stringify(normalizedData);
+  // }
 
-  normalize(
-    value: number,
-    min: number,
-    max: number,
-    newMin: number,
-    newMax: number,
-  ): number {
-    return ((value - min) / (max - min)) * (newMax - newMin) + newMin;
-  }
+  // normalize(
+  //   value: number,
+  //   min: number,
+  //   max: number,
+  //   newMin: number,
+  //   newMax: number,
+  // ): number {
+  //   return ((value - min) / (max - min)) * (newMax - newMin) + newMin;
+  // }
 }

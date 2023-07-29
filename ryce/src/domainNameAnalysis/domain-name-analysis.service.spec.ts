@@ -154,4 +154,151 @@ describe('DomainNameAnalysisService', () => {
     //   });
     // });
   });
+
+  describe('domain length', () => {
+    it('should return formatted data from domainLength', async () => {
+      const mockData = JSON.stringify({ test: 'data' });
+      const filters = JSON.stringify({ registrar: [], zone: [] });
+
+      mockRedis.get.mockResolvedValue(mockData);
+      mockGraphFormatService.formatDomainLengthAnalysis.mockResolvedValue(
+        mockData,
+      );
+
+      const result = await service.domainLength(filters, '');
+
+      expect(result).toEqual({
+        status: 'success',
+        data: {
+          graphName: expect.any(String),
+          test: 'data',
+          warehouse: 'ryce',
+          graphType: 'domainNameAnalysis/length',
+        },
+        timestamp: expect.any(String),
+      });
+    });
+
+    it('should return error if domainLength catches an error', async () => {
+      const filters = JSON.stringify({ registrar: [], zone: [] });
+
+      mockRedis.get.mockReturnValue(null);
+
+      mockSnowflakeService.execute.mockRejectedValue(
+        new Error('Data Warehouse Error'),
+      );
+
+      const result = await service.domainLength(filters, '');
+
+      expect(result).toEqual({
+        status: 500,
+        error: true,
+        message: 'Data Warehouse Error',
+        timestamp: expect.any(String),
+      });
+    });
+
+    it('should return error if Redis get method throws an error', async () => {
+      const filters = JSON.stringify({ registrar: [], zone: [] });
+
+      mockRedis.get.mockImplementation(() => {
+        throw new Error('Redis Error');
+      });
+
+      const result = await service.domainLength(filters, '');
+
+      expect(result).toEqual({
+        status: 500,
+        error: true,
+        message: 'Redis Error',
+        timestamp: expect.any(String),
+      });
+    });
+
+    it('should return error if Redis set method throws an error', async () => {
+      const filters = JSON.stringify({ registrar: [], zone: [] });
+
+      mockRedis.get.mockResolvedValue(null);
+      mockSnowflakeService.execute.mockResolvedValue('results');
+      mockRedis.set.mockImplementation(() => {
+        throw new Error('Redis Error');
+      });
+
+      const result = await service.domainLength(filters, '');
+
+      expect(result).toEqual({
+        status: 500,
+        error: true,
+        message: 'Redis Error',
+        timestamp: expect.any(String),
+      });
+    });
+  });
+
+  describe('domainLengthGraphName function', () => {
+    it('should generate graph name with all properties', () => {
+      const filters = {
+        registrar: ['test1', 'test2'],
+        zone: ['zone1', 'zone2'],
+        dateFrom: '2022-01-01',
+        dateTo: '2022-12-31',
+      };
+
+      const graphName = service.domainLengthGraphName(filters);
+      expect(graphName).toBe(
+        'Length of newly created domains from 2022-01-01 to 2022-12-31 for test1, test2 for zone1, zone2',
+      );
+    });
+
+    it('should generate graph name with no properties', () => {
+      const filters = {};
+      const date = new Date();
+      const year = date.getUTCFullYear() - 1;
+
+      const graphName = service.domainLengthGraphName(filters);
+      expect(graphName).toBe(
+        `Length of newly created domains from ${year}-01-01 to ${year}-12-31 across all registrars for all zones`,
+      );
+    });
+
+    it('should generate graph name with some properties', () => {
+      const filters = { registrar: ['test1'] };
+      const date = new Date();
+      const year = date.getUTCFullYear() - 1;
+
+      const graphName = service.domainLengthGraphName(filters);
+      expect(graphName).toBe(
+        `Length of newly created domains from ${year}-01-01 to ${year}-12-31 for test1 for all zones`,
+      );
+    });
+
+    it('should generate graph name with multiple registrars and zones', () => {
+      const filters = {
+        registrar: ['test1', 'test2', 'test3'],
+        zone: ['zone1', 'zone2', 'zone3'],
+        dateFrom: '2022-01-01',
+        dateTo: '2022-12-31',
+      };
+
+      const date = new Date();
+      const year = date.getUTCFullYear() - 1;
+
+      const graphName = service.domainLengthGraphName(filters);
+      expect(graphName).toBe(
+        `Length of newly created domains from ${filters.dateFrom} to ${filters.dateTo} for test1, test2, test3 for zone1, zone2, zone3`,
+      );
+    });
+
+    it('should generate graph name with date formats', () => {
+      const filters = {
+        dateFrom: '2022-01-01',
+        dateTo: '2022-02-28',
+      };
+
+      const graphName = service.domainLengthGraphName(filters);
+      expect(graphName).toBe(
+        'Length of newly created domains from 2022-01-01 to 2022-02-28 across all registrars for all zones',
+      );
+    });
+  });
 });
