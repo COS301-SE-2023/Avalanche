@@ -7,7 +7,7 @@ import { Fragment } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import "animate.css";
 import { useDispatch } from "react-redux";
-import { setCurrentOpenState, setData } from "@/store/Slices/modalManagerSlice";
+import { setCurrentOpenState, setData, setZoomData } from "@/store/Slices/modalManagerSlice";
 import { CheckboxFilter, DatePickerFilter, RadioboxFilter, ToggleFilter } from "./Filters";
 import { Disclosure } from '@headlessui/react'
 import { ErrorToast, SubmitButton } from "../Util";
@@ -19,9 +19,10 @@ interface IChartCard {
     data: any,
     defaultGraph: ChartType,
     state: any,
+    id?: string
 }
 
-export default function CustomChartCard({ title, data, defaultGraph, state }: IChartCard) {
+export default function CustomChartCard({ title, data, defaultGraph, state, id }: IChartCard) {
 
     const dispatch = useDispatch();
 
@@ -104,6 +105,12 @@ export default function CustomChartCard({ title, data, defaultGraph, state }: IC
         }
         dispatch(setCurrentOpenState("GRAPH.Modal"))
         dispatch(setData(modal));
+
+        dispatch(setZoomData({
+            graphName: title,
+            id: id
+        }));
+
     }
 
     const filterGraphs = () => {

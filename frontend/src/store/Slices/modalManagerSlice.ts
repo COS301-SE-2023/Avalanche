@@ -10,7 +10,8 @@ import { HYDRATE } from "next-redux-wrapper";
 export interface IModalManagerState {
     animateManager: boolean,
     currentOpen: string,
-    data: any
+    data: any,
+    zoomedData: any
 }
 
 /**
@@ -19,7 +20,8 @@ export interface IModalManagerState {
 const initialState: IModalManagerState = {
     animateManager: false,
     currentOpen: "",
-    data: null
+    data: null,
+    zoomedData: null
 }
 
 // Creating the managing code to manage the modal manager
@@ -45,6 +47,15 @@ export const modalManagerSlice = createSlice({
         // Set data
         setData(state, action) {
             state.data = action.payload;
+        },
+        // Zoomed Data
+        setZoomData(state, action) {
+            state.zoomedData.graphName = action.payload.graphName;
+            state.zoomedData.dashboardID = action.payload.dashboardID;
+        },
+        // Clear Zoomed Data
+        clearZoomData(state) {
+            state.zoomedData = {};
         }
     },
     extraReducers: (builder) => {
@@ -57,7 +68,7 @@ export const modalManagerSlice = createSlice({
     }
 });
 
-export const { setAnimateManagerState, setCurrentOpenState, clearCurrentOpenState, setData } = modalManagerSlice.actions;
+export const { setAnimateManagerState, setCurrentOpenState, clearCurrentOpenState, setData, setZoomData, clearZoomData } = modalManagerSlice.actions;
 
 export const selectModalManagerState = (state: AppState) => state.modalManager;
 

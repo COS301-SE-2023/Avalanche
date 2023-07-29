@@ -87,8 +87,6 @@ export default function CreateCustomDashboard() {
             graphs: dataaaaaaaaa
         }
 
-        console.log(boo);
-
         const res = await ky.post(`${process.env.NEXT_PUBLIC_API}/user-management/${newDash ? "saveDashboard" : "editDashboard"}`, {
             json: boo,
             headers: {
@@ -127,6 +125,6 @@ export default function CreateCustomDashboard() {
 
         {/* Modals */}
         {modalState.currentOpen === "GRAPH.AddGraph" && <GraphCreateModal state={stateGraph} add={addToGraphs} />}
-        {modalState.currentOpen === "GRAPH.Modal" && <GraphZoomModal />}
+        {modalState.currentOpen === "GRAPH.Modal" && <GraphZoomModal custom={true} />}
     </>)
 }
