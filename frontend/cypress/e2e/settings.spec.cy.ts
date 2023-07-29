@@ -115,13 +115,24 @@ describe('Settings with another user', () => {
         cy.contains('No Data Products. You have not added any Data Products...').should('be.visible');
     })
 
-    it.only('Add a new Data Product has been clicked', () => {
+    it('Add a new Data Product has been clicked', () => {
         cy.get('a[href="?tab=integrations"]').click()
         cy.contains('Add a new Data Product').click();
         cy.contains('Add a new Data Product').should('be.visible');
         cy.get('button[type="button"]')
             .should('be.visible');
         cy.contains("Select Provider").should("be.visible")
+    })
+
+    it.only('Select Provider has been clicked', () => {
+        cy.get('a[href="?tab=integrations"]').click()
+        cy.contains('Add a new Data Product').click();
+        cy.contains('Add a new Data Product').should('be.visible');
+        cy.contains("Select Provider").click();
+        cy.get('#dropdown') // Select the dropdown element by its ID
+            .should('be.visible'); // Check if the dropdown is visible on the page
+
+
     })
 
 
