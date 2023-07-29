@@ -69,6 +69,8 @@ export class DomainNameAnalysisService {
             granularity +
             '(s)',
           ...JSON.parse(formattedData),
+          warehouse: 'africa',
+          graphType: 'domainNameAnalysis/count',
         },
         timestamp: new Date().toISOString(),
       };
@@ -121,7 +123,12 @@ export class DomainNameAnalysisService {
       }
       return {
         status: 'success',
-        data: { graphName: graphName, ...JSON.parse(formattedData) },
+        data: {
+          graphName: graphName,
+          ...JSON.parse(formattedData),
+          warehouse: 'africa',
+          graphType: 'domainNameAnalysis/length',
+        },
         timestamp: new Date().toISOString(),
       };
     } catch (e) {

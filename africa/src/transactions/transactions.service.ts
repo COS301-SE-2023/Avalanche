@@ -53,7 +53,12 @@ export class TransactionService {
 
       return {
         status: 'success',
-        data: { graphName: graphName, ...JSON.parse(formattedData) },
+        data: {
+          graphName: graphName,
+          ...JSON.parse(formattedData),
+          warehouse: 'africa',
+          graphType: 'transactions',
+        },
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
@@ -103,7 +108,12 @@ export class TransactionService {
       }
       return {
         status: 'success',
-        data: { graphName: graphName, ...JSON.parse(formattedData) },
+        data: {
+          graphName: graphName,
+          ...JSON.parse(formattedData),
+          warehouse: 'africa',
+          graphType: 'transactions-ranking',
+        },
         timestamp: new Date().toISOString(),
       };
     } catch (e) {

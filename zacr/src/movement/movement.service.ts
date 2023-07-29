@@ -55,7 +55,12 @@ export class MovementService {
 
       return {
         status: 'success',
-        data: { graphName: graphName, ...JSON.parse(formattedData) },
+        data: {
+          graphName: graphName,
+          ...JSON.parse(formattedData),
+          warehouse: 'zacr',
+          graphType: 'movement/vertical',
+        },
         timestamp: new Date().toISOString(),
       };
     } catch (e) {

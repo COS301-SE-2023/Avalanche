@@ -54,7 +54,12 @@ export class AgeService {
 
       return {
         status: 'success',
-        data: { graphName: graphName, ...JSON.parse(formattedData) },
+        data: {
+          graphName: graphName,
+          ...JSON.parse(formattedData),
+          warehouse: 'africa',
+          graphType: 'age',
+        },
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
