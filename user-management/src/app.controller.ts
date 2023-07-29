@@ -357,4 +357,18 @@ export class AppController {
 
     return result;
   }
+  @MessagePattern({ cmd: 'getDomainWatchPassiveUser' })
+  async getDomainWatchPassiveUser(data: any) {
+    console.log("Domain Watch Passive Active", data);
+    const result = await this.userDataProductManService.getDomainWatchPassiveUser(data.token);
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
 }

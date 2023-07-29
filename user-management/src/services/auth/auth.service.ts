@@ -171,7 +171,11 @@ export class AuthService {
         timestamp: new Date().toISOString()
       };
     }
-    delete user.apiKey;
+    let apiCheck = false;
+    if(user.apiKey){
+      apiCheck = true;
+      delete user.apiKey;
+    }
     // Verify the provided password with the user's hashed password in the database
     const saltFromDB = user.salt;
     const passwordLogin1 = await bcrypt.hash(passwordLogin, saltFromDB);
@@ -199,7 +203,7 @@ export class AuthService {
     // We exclude password and salt field here for security reasons
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, salt, ...userWithoutPassword } = user;
-    const userWithToken = { ...userWithoutPassword, token: jwtToken };
+    const userWithToken = { ...userWithoutPassword, token: jwtToken, apiCheck : apiCheck };
     await this.redis.set(jwtToken, JSON.stringify(userWithToken), 'EX', 24 * 60 * 60);
 
     // Send back user's information along with the token as a JSON object
