@@ -4,6 +4,7 @@ import { ModalWrapper } from './ModalOptions';
 import { userState, createOrganisation } from '@/store/Slices/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { ICreateOrganisationRequest } from '@/interfaces/requests';
+import { setAnimateManagerState, clearCurrentOpenState } from '@/store/Slices/modalManagerSlice';
 
 interface IOrgnizationCreateModal {
 
@@ -15,7 +16,7 @@ export default function OrgnizationCreateModal({ }: IOrgnizationCreateModal) {
     const stateUser = useSelector(userState);
 
     useEffect(() => {
-
+        dispatch(clearCurrentOpenState());
     }, [stateUser.user.organization])
 
     /**
