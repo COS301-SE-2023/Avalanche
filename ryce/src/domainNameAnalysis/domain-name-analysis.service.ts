@@ -149,11 +149,11 @@ export class DomainNameAnalysisService {
         for (const r of registrar) {
           regArr.push(r);
         }
-        registrar += regArr.join(', ');
+        registrar = regArr.join(', ');
         registrar = ' for ' + registrar;
       }
     } else {
-      registrar = ' across all registrars ';
+      registrar = ' across all registrars';
     }
 
     let zone = filters['zone'];
@@ -163,11 +163,11 @@ export class DomainNameAnalysisService {
         for (const r of zone) {
           zoneArr.push(r);
         }
-        zone += zoneArr.join(', ');
+        zone = zoneArr.join(', ');
       }
       zone = ' for ' + zone;
     } else {
-      zone = ' for all zones ';
+      zone = ' for all zones';
     }
 
     let dateFrom;
