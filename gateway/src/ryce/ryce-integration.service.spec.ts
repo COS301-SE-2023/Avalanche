@@ -158,5 +158,173 @@ describe('RyCE Service Integration Tests From Gateway', () => {
     }, 100000);
   });
 
-  
+  describe('Marketshare', () => {
+    const currentDate = new Date();
+    const dateFrom = `${currentDate.getFullYear()-1}-${(currentDate.getMonth()).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
+    const dateTo = `${currentDate.getFullYear()}-${(currentDate.getMonth()).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;;
+    it('top5', () => {
+      const data = { rank : 'top5' } ;
+      
+      return request(app.getHttpServer())
+        .post('/ryce/marketShare')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send(data)
+        .then((response) => {
+          console.log(response.body);
+          expect(response.body.status).toBe('success');
+        });
+    }, 100000);
+
+    it('top10', () => {
+      const data = { rank : 'top10' } ;
+      
+      return request(app.getHttpServer())
+        .post('/ryce/marketShare')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send(data)
+        .then((response) => {
+          console.log(response.body);
+          expect(response.body.status).toBe('success');
+        });
+    }, 100000);
+
+    it('top20', () => {
+      const data = { rank : 'top20' } ;
+      
+      return request(app.getHttpServer())
+        .post('/ryce/marketShare')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send(data)
+        .then((response) => {
+          console.log(response.body);
+          expect(response.body.status).toBe('success');
+        });
+    }, 100000);
+  });
+
+  describe('Age', () => {
+    const currentDate = new Date();
+    const dateFrom = `${currentDate.getFullYear()-1}-${(currentDate.getMonth()).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
+    const dateTo = `${currentDate.getFullYear()}-${(currentDate.getMonth()).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;;
+    it('top5 Average Age', () => {
+      const data = { rank: 'top5', average: true, overall: false, zone: ['WIEN'] } ;
+      
+      return request(app.getHttpServer())
+        .post('/ryce/age')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send(data)
+        .then((response) => {
+          console.log(response.body);
+          expect(response.body.status).toBe('success');
+        });
+    }, 100000);
+
+    it('top5', () => {
+      const data = { rank: 'top5', average: true, overall: false, zone: ['WIEN'] } ;
+      
+      return request(app.getHttpServer())
+        .post('/ryce/age')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send(data)
+        .then((response) => {
+          console.log(response.body);
+          expect(response.body.status).toBe('success');
+        });
+    }, 100000);
+
+    it('top10 Average Age', () => {
+      const data = { rank: 'top5', average: true, overall: false, zone: ['WIEN'] } ;
+      
+      return request(app.getHttpServer())
+        .post('/ryce/age')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send(data)
+        .then((response) => {
+          console.log(response.body);
+          expect(response.body.status).toBe('success');
+        });
+    }, 100000);
+  });
+
+  describe('Movement Vertical', () => {
+    it('empty data test', () => {
+      const data = {  } ;
+      
+      return request(app.getHttpServer())
+        .post('/ryce/domainNameAnalysis/length')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send(data)
+        .then((response) => {
+          console.log(response.body);
+          expect(response.body.status).toBe('success');
+        });
+    }, 100000);
+
+    it('dateFrom test', () => {
+      const data = { dateFrom: "2022-05-08" } ;
+      
+      return request(app.getHttpServer())
+        .post('/ryce/domainNameAnalysis/length')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send(data)
+        .then((response) => {
+          console.log(response.body);
+          expect(response.body.status).toBe('success');
+        });
+    }, 100000);
+
+    it('dateFrom test 2', () => {
+      const data = { dateFrom: "2021-05-08" } ;
+      
+      return request(app.getHttpServer())
+        .post('/ryce/domainNameAnalysis/length')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send(data)
+        .then((response) => {
+          console.log(response.body);
+          expect(response.body.status).toBe('success');
+        });
+    }, 100000);
+  });
+
+  describe('Movement Vertical', () => {
+    it('empty data test', () => {
+      const data = { zone: ["WIEN"] } ;
+      
+      return request(app.getHttpServer())
+        .post('/ryce/movement/vertical')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send(data)
+        .then((response) => {
+          console.log(response.body);
+          expect(response.body.status).toBe('success');
+        });
+    }, 100000);
+
+    it('Movement Vertical with three registrars', () => {
+      const data = { zone: ["WIEN"], registrar: ["1und1", "registrygate", "internetx"] } ;
+      
+      return request(app.getHttpServer())
+        .post('/ryce/movement/vertical')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send(data)
+        .then((response) => {
+          console.log(response.body);
+          expect(response.body.status).toBe('success');
+        });
+    }, 100000);
+
+    it('Movement Vertical with one registrar', () => {
+      const data = { zone: ["WIEN"], registrar: ["internetx"] } ;
+      
+      return request(app.getHttpServer())
+        .post('/ryce/movement/vertical')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send(data)
+        .then((response) => {
+          console.log(response.body);
+          expect(response.body.status).toBe('success');
+        });
+    }, 100000);
+  });
 });
