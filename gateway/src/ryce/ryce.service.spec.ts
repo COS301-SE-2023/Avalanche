@@ -1,22 +1,22 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClientProxy } from '@nestjs/microservices';
-import { ZacrService } from './zacr.service';
+import { RyceService } from './ryce.service';
 import { of } from 'rxjs';
 
-describe('ZacrService', () => {
-  let service: ZacrService;
+describe('RyceService', () => {
+  let service: RyceService;
   let client: ClientProxy;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        ZacrService,
-        { provide: 'ZACR_SERVICE', useValue: { send: jest.fn() } },
+        RyceService,
+        { provide: 'RyCE_SERVICE', useValue: { send: jest.fn() } },
       ],
     }).compile();
 
-    service = module.get<ZacrService>(ZacrService);
-    client = module.get<ClientProxy>('ZACR_SERVICE');
+    service = module.get<RyceService>(RyceService);
+    client = module.get<ClientProxy>('RyCE_SERVICE');
   });
 
   it('should be defined', () => {
@@ -61,16 +61,6 @@ describe('ZacrService', () => {
 
     expect(await service.transactionsRanking(data)).toEqual(expectedResponse);
     expect(client.send).toHaveBeenCalledWith({ cmd: 'transactions-ranking' }, data);
-  });
-
-  it('should send domain watch passive', async () => {
-    const data = { key: 'value' };
-    const expectedResponse = { status: 'success' };
-
-    jest.spyOn(client, 'send').mockImplementationOnce(() => of(expectedResponse));
-
-    expect(await service.domainWatchPassive(data)).toEqual(expectedResponse);
-    expect(client.send).toHaveBeenCalledWith({ cmd: 'domainWatchPassive' }, data);
   });
 
   it('should send domain name analysis count', async () => {

@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Provider } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { config } from 'dotenv';
 import Redis from 'ioredis';
 
 export const RedisProvider: Provider = {
@@ -13,6 +14,8 @@ export const RedisProvider: Provider = {
     return new Redis({
       host: configService.get('REDIS_HOST'),
       port: configService.get('REDIS_PORT'),
+      username: configService.get('REDIS_USER'),
+      password: configService.get('REDIS_PASSWORD')
     });
   },
   inject: [ConfigService], // <-- don't forget to inject ConfigService
