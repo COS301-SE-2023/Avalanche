@@ -220,7 +220,7 @@ export default function OrganizationSettings({ }: IOrganizationSettings) {
                                                         Sometime in the past
                                                     </div>
                                                 </td>
-                                                {isAdmin() && item.email !== stateUser.user.email && !stateUser.userGroups[activeGroupIndex].groupName.startsWith("admin-") && <td className="float-right mr-2">
+                                                {isAdmin() && item.email !== stateUser.user.email && !stateUser?.userGroups[activeGroupIndex]?.groupName?.startsWith("admin-") && <td className="float-right mr-2">
                                                     <TableIconButton icon={<TrashIcon className="h-5 w-5 text-red-500 cursor-pointer" />} colour="red" handleModal={(value) => {
                                                         dispatch(setCurrentOpenState("ORG.RemoveUser"))
                                                     }} />
