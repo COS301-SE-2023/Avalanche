@@ -12,6 +12,9 @@ import { selectModalManagerState } from "@/store/Slices/modalManagerSlice"
 import GraphZoomModal from "@/components/Modals/GraphZoomModal"
 import { Popover, Transition } from "@headlessui/react"
 import { Fragment, useRef } from "react"
+import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas";
+import { Document, Page, Image, View } from '@react-pdf/renderer';
 
 export default function Dashboard() {
 
@@ -71,6 +74,52 @@ export default function Dashboard() {
         // dispatch(getGraphDataArray(array));
     }, [])
 
+    function wrap() {
+        return new Promise((resolve) => setTimeout(resolve, 500));
+    }
+
+    async function logging(pdf: any, canva: any, width: any, height: any) {
+        await wrap();
+        if (typeof canva === 'object') {
+            // console.log(canva);
+            html2canvas(canva as any).then(async (caravan) => {
+                const imgData = caravan.toDataURL('image/png');
+                // const imgData = caravan.getContext("2d", { willReadFrequently: true })?.getImageData();
+                pdf.addImage(imgData, 'JPEG', 0, 0, width, height, "woooo", "FAST", 0);
+                pdf.addPage();
+                // console.log(caravan);
+            })
+        }
+    }
+
+    const downloadPDF = async () => {
+        const input = document.getElementById('pageData');
+        const canvas = document.getElementsByTagName('canvas');
+        // console.log(canvas);
+
+        var doc = new jsPDF("p", "mm", "a4");
+        var width = doc.internal.pageSize.getWidth();
+        var height = doc.internal.pageSize.getHeight();
+
+        for (let c in canvas) {
+            const canva = canvas[c];
+            await logging(doc, canva, width, height);
+        }
+
+        doc.save(`home.pdf`);
+
+        // html2canvas(input as any)
+        //     .then((canvas) => {
+        //         const imgData = canvas.toDataURL('image/png');
+        //         const pdf = new jsPDF('p', 'pt', 'a4');
+        //         console.log(pdf.canvas.height)
+
+        //         pdf.addImage(imgData, 'JPEG', 0, 0, pdf.canvas.width, pdf.canvas.height, "woooo", "FAST", 0);
+        //         pdf.addPage();
+        //         pdf.save(`home.pdf`);
+        //     });
+    }
+
     return (<>
         {
             modalState.currentOpen === "GRAPH.Modal" && <GraphZoomModal />
@@ -83,8 +132,9 @@ export default function Dashboard() {
         <div className="p-4 sm:ml-64 bg-gray-100 dark:bg-secondaryBackground min-h-screen">
             <div className="flex justify-between items-center">
                 <PageHeader title="Home" subtitle="Insights at your fingertips" icon={<HomeIcon className="h-16 w-16 text-black dark:text-white" />} />
+                <button onClick={() => downloadPDF()}>Download</button>
             </div>
-            <div className="p-0 pt-4 md:p-4">
+            <div className="p-0 pt-4 md:p-4" id="pageData">
                 <div className="grid lg:grid-cols-2 sm:grid-cols-1 md:grid-cols-2 gap-4 mb-4 grid-rows-2">
                     {
                         stateGraph.graphs?.length > 0 && stateGraph.graphs.map((data: any, index: number) => {

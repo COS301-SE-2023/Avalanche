@@ -25,8 +25,6 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
     const stateGraph = useSelector(graphState);
     const filters = stateGraph.filters;
 
-    console.log(data);
-
     useEffect(() => {
         dispatch(clearCurrentOpenState)
     }, [])

@@ -106,9 +106,11 @@ export default function CustomChartCard({ title, data, defaultGraph, state, id }
         dispatch(setCurrentOpenState("GRAPH.Modal"))
         dispatch(setData(modal));
 
+        console.log(data.graphName);
+
         dispatch(setZoomData({
-            graphName: title,
-            id: id
+            graphName: data.graphName,
+            dashboardID: id
         }));
 
     }
@@ -174,7 +176,7 @@ export default function CustomChartCard({ title, data, defaultGraph, state, id }
     return (<>
         <div className="block p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-primaryBackground dark:border-primaryBackground w-full animate__animated animate__fadeIn animate__slow">
             <div className="flex justify-between mb-5 text-black dark:text-white">
-                <h1 className="p-1.5">{title || data.graphName}</h1>
+                <h1 className="p-1.5">{data.graphName || title}</h1>
                 <div className="flex flex-row gap-1">
                     <div className="relative">
                         <div className="inline-flex justify-center p-1.5 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-lightHover dark:hover:bg-gray-600" onClick={() => setFilterDropdown(!filterDropdown)}>
