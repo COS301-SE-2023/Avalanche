@@ -74,6 +74,7 @@ export class TransactionService {
   async transactionsRanking(filters: any, graphName: string): Promise<any> {
     try {
       graphName = this.transactionsGraphName(filters, true);
+      console.log(graphName);
       const filterObj = JSON.parse(JSON.stringify(filters));
       filterObj.isRanking = true;
       filters = JSON.stringify(filterObj);
@@ -94,7 +95,7 @@ export class TransactionService {
             timestamp: new Date().toISOString(),
           };
         }
-        console.log(queryData);
+
         formattedData =
           await this.graphFormattingService.formatTransactionsRanking(
             JSON.stringify(queryData),
@@ -175,18 +176,17 @@ export class TransactionService {
     }
 
     let reg = '';
+    let trans = ' Transactions ';
     if (perReg) {
       reg = 'per registrar ';
+      console.log('WEEEEEEE');
+      console.log(filters['transactions']);
+      if (filters['transactions']?.length > 0) {
+        trans = ' ' + filters['transaction'].join(', ') + ' ';
+      }
     }
     return (
-      granularity +
-      ' Transactions ' +
-      reg +
-      ' from ' +
-      dateFrom +
-      ' to ' +
-      dateTo +
-      zone
+      granularity + trans + reg + ' from ' + dateFrom + ' to ' + dateTo + zone
     );
   }
 }
