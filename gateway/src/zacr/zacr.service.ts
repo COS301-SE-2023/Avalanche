@@ -32,6 +32,10 @@ export class ZacrService {
     return this.client.send({ cmd: 'domainNameAnalysis/length' }, data).toPromise();
   }
 
+  async movementVertical(data: any) {
+    return this.client.send({ cmd: 'movement/vertical' }, data).toPromise();
+  }
+
   async domainWatchPassive(data: any){
     return this.client.send({ cmd: 'domainWatchPassive'}, data).toPromise();
   }

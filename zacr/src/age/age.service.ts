@@ -35,7 +35,7 @@ export class AgeService {
           return {
             status: 500,
             error: true,
-            message: 'Data Warehouse Error',
+            message: `${e.message}`,
             timestamp: new Date().toISOString(),
           };
         }
