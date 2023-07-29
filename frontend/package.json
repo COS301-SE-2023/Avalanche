@@ -51,7 +51,7 @@
     "@cypress/code-coverage": "^3.10.6",
     "@types/react": "^18.2.6",
     "@types/uuid": "^9.0.2",
-    "cypress": "^12.11.0",
+    "cypress": "^12.17.2",
     "typescript": "^5.0.4"
   }
 }
