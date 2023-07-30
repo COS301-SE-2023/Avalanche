@@ -178,18 +178,22 @@ export class TransactionService {
     }
 
     let reg = '';
+    let trans = 'Transactions ';
     if (perReg) {
       reg = 'per registrar ';
+      console.log(filters['transactions']);
+      if (filters['transactions']?.length > 0) {
+        trans = '';
+        for (let i = 0; i < filters['transactions']?.length - 1; i++) {
+          trans += filters['transactions'][i] + ', ';
+        }
+        trans +=
+          filters['transactions'][filters['transactions']?.length - 1] + ' ';
+      }
     }
+
     return (
-      granularity +
-      'Transactions ' +
-      reg +
-      'from ' +
-      dateFrom +
-      ' to ' +
-      dateTo +
-      zone
+      granularity + trans + reg + 'from ' + dateFrom + ' to ' + dateTo + zone
     );
   }
 }
