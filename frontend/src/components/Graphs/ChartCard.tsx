@@ -23,8 +23,6 @@ interface IChartCard {
 
 export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
 
-    console.log(data);
-
     const dispatch = useDispatch<any>();
     const stateGraph = useSelector(graphState);
     const filters = stateGraph.filters;
@@ -90,7 +88,6 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
     }
 
     const filterGraphs = () => {
-        console.log(filters);
         if (warehouse) {
             const ep = filters.find((item: any) => item.endpoint === warehouse);
             if (!ep) return [];
@@ -101,8 +98,6 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
 
 
     const renderFilters = () => {
-        console.log("die");
-        console.log(filterGraphs());
         return filterGraphs()?.filters?.map((element: any, index: number) => (
             <Disclosure key={index}>
                 {({ open, close }) => (

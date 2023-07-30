@@ -92,11 +92,8 @@ export default function GeneralSettings({ user }: IGeneralSettings) {
     const deletePassive = (id: string) => {
         let temp = [...passive];
         const index = temp.findIndex((find: PassiveEntry) => find.id === id);
-
-        console.log(index);
         if (index === -1) return;
         temp.splice(index, 1);
-        console.log(temp);
         setPassive(temp);
     }
 
@@ -185,7 +182,6 @@ export default function GeneralSettings({ user }: IGeneralSettings) {
 
     const passiveSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        console.log(types);
 
         if (passive.length === 0) {
             return ErrorToast({ text: "You need some domains." })
