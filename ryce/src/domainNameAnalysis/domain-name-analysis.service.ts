@@ -174,28 +174,35 @@ export class DomainNameAnalysisService {
     if (filters['dateFrom'] === undefined) {
       dateFrom = new Date();
       dateFrom.setFullYear(dateFrom.getUTCFullYear() - 1);
-      dateFrom = dateFrom.getFullYear() + '-01-01';
+      dateFrom = '01 January ' + dateFrom.getUTCFullYear();
     } else {
       dateFrom = new Date(filters['dateFrom']);
-      let month = dateFrom.getUTCMonth() + 1;
-      month = month < 10 ? '0' + month : month;
+      const monthNum = dateFrom.getUTCMonth() + 1;
+      const month = monthNum < 10 ? '0' + monthNum : monthNum;
       let day = dateFrom.getUTCDate();
       day = day < 10 ? '0' + day : day;
-      dateFrom = dateFrom.getUTCFullYear() + '-' + month + '-' + day;
+      const year = dateFrom.getUTCFullYear();
+      dateFrom =
+        day +
+        ' ' +
+        this.getMonth(monthNum - 1) +
+        ' ' +
+        dateFrom.getUTCFullYear();
     }
 
     let dateTo;
     if (filters['dateTo'] === undefined) {
       dateTo = new Date();
       dateTo.setFullYear(dateTo.getUTCFullYear() - 1);
-      dateTo = dateTo.getFullYear() + '-12-31';
+      dateTo = '31 December ' + dateTo.getUTCFullYear();
     } else {
       dateTo = new Date(filters['dateTo']);
-      let month = dateTo.getUTCMonth() + 1;
-      month = month < 10 ? '0' + month : month;
+      const monthNum = dateTo.getUTCMonth() + 1;
+      const month = monthNum < 10 ? '0' + monthNum : monthNum;
       let day = dateTo.getUTCDate();
       day = day < 10 ? '0' + day : day;
-      dateTo = dateTo.getUTCFullYear() + '-' + month + '-' + day;
+      dateTo =
+        day + ' ' + this.getMonth(monthNum - 1) + ' ' + dateTo.getUTCFullYear();
     }
 
     return (
@@ -206,6 +213,24 @@ export class DomainNameAnalysisService {
       registrar +
       zone
     );
+  }
+
+  getMonth(num: number): string {
+    const monthNames = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+    return monthNames[num];
   }
 
   // normaliseData(data: string): string {
