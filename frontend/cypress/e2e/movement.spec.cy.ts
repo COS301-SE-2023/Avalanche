@@ -4,7 +4,7 @@ describe("Movement", () => {
         cy.get('input[name=email]').type('kihale5691@sportrid.com');
         cy.get('input[name=password]').type('12345');
         cy.get('button[type=submit]').click();
-        cy.get('a[id="registrar"]').click();
+        cy.get('a[id="movement"]').click();
 
     });
 
@@ -15,7 +15,7 @@ describe("Movement", () => {
                 .and('contain', contain);
         }
 
-        cy.url().should("include", "/registrar")
+        cy.url().should("include", "/movement")
 
         cy.get('#default-sidebar')
             .should('be.visible');
@@ -30,5 +30,19 @@ describe("Movement", () => {
         navBarChecks("/domainNameAnalysis", "Domain Name Analysis")
         navBarChecks("/watch", "Domain Watch")
     })
+
+    it('loads everything on Registrar page', ()=>{
+        cy.contains('Nett Movement').should('be.visible')
+        cy.contains('p', 'Insights at your fingertips').should('be.visible');
+        cy.get('canvas[role="img"]').should('be.visible'); //graph itself
+        cy.get('h1').should(($h1Elements) => { //headings
+            expect($h1Elements).to.have.length.above(1);
+            expect($h1Elements).to.be.visible;
+          });
+          
+        
+    })
+
+
 
 })
