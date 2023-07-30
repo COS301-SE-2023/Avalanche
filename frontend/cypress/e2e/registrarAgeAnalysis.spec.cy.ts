@@ -4,7 +4,7 @@ describe("Resgistrar Age Analysis", () => {
         cy.get('input[name=email]').type('kihale5691@sportrid.com');
         cy.get('input[name=password]').type('12345');
         cy.get('button[type=submit]').click();
-        cy.get('a[id="registrar"]').click();
+        cy.get('a[id="ageAnalysis"]').click();
 
     });
 
@@ -15,7 +15,7 @@ describe("Resgistrar Age Analysis", () => {
                 .and('contain', contain);
         }
 
-        cy.url().should("include", "/registrar")
+        cy.url().should("include", "/ageAnalysis")
 
         cy.get('#default-sidebar')
             .should('be.visible');
@@ -29,6 +29,17 @@ describe("Resgistrar Age Analysis", () => {
         navBarChecks("/ageAnalysis", "Registrar Age Analysis")
         navBarChecks("/domainNameAnalysis", "Domain Name Analysis")
         navBarChecks("/watch", "Domain Watch")
+    })
+
+    it('loads everything on Age Analysis page', ()=>{
+        cy.contains('Registrar').should('be.visible')
+        cy.contains('p', 'Insights at your fingertips').should('be.visible');
+        cy.get('canvas[role="img"]').should('be.visible'); //graph itself
+        cy.get('h1').should(($h1Elements) => { //headings
+            expect($h1Elements).to.have.length.above(1);
+            expect($h1Elements).to.be.visible;
+          });
+          
     })
 
 })
