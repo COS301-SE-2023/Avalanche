@@ -25,7 +25,6 @@ export default function Dashboard() {
     }
 
     useEffect(() => {
-        // const data: ITransactionGraphRequest = { zone: "CO.ZA", granularity: "week", group: "registrar", dateFrom: "2023-01-02", graphName: "Your mom" };
 
         const array: ITransactionGraphRequest[] = [];
         const currentDate = new Date();
@@ -69,7 +68,6 @@ export default function Dashboard() {
             dispatch(getGraphData(data));
         })
 
-        // dispatch(getGraphDataArray(array));
     }, [])
 
     const captureCanvasElements = async () => {
@@ -82,7 +80,6 @@ export default function Dashboard() {
                     allowTaint: true,
                     useCORS: true,
                 }).then((canvas) => canvas.toDataURL('image/png'));
-
                 canvasImages.push(dataUrl);
             } catch (error) {
                 console.error('Error capturing canvas:', error);
@@ -95,7 +92,7 @@ export default function Dashboard() {
     const generatePDF = async () => {
         const canvasImages = await captureCanvasElements();
 
-        const pdf = new jsPDF("l", "mm", "a10");
+        const pdf = new jsPDF("l", "mm", "a1");
 
         var width = pdf.internal.pageSize.getWidth();
         var height = pdf.internal.pageSize.getHeight();

@@ -66,7 +66,7 @@ export default function AgeAnalysis() {
     const generatePDF = async () => {
         const canvasImages = await captureCanvasElements();
 
-        const pdf = new jsPDF("l", "mm", "a10");
+        const pdf = new jsPDF("l", "mm", "a1");
 
         var width = pdf.internal.pageSize.getWidth();
         var height = pdf.internal.pageSize.getHeight();

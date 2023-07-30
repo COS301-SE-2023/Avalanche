@@ -20,10 +20,6 @@ export default function DomainNameAnalysis() {
     const stateGraph = useSelector(graphState);
     const modalState = useSelector(selectModalManagerState);
 
-    const pad = (d: number) => {
-        return (d < 10) ? '0' + d.toString() : d.toString();
-    }
-
     const captureCanvasElements = async () => {
         const canvasElements = Array.from(document.querySelectorAll('.graphChart'));
         const canvasImages = [];
@@ -47,7 +43,7 @@ export default function DomainNameAnalysis() {
     const generatePDF = async () => {
         const canvasImages = await captureCanvasElements();
 
-        const pdf = new jsPDF("l", "mm", "a10");
+        const pdf = new jsPDF("l", "mm", "a1");
 
         var width = pdf.internal.pageSize.getWidth();
         var height = pdf.internal.pageSize.getHeight();
@@ -133,11 +129,6 @@ export default function DomainNameAnalysis() {
 
                         </>
                     }
-                    {/* <ChartCard title="A ChartJS Chart 1" data={chartData} defaultGraph={ChartType.Pie} />
-                    <ChartCard title="A ChartJS Chart 2" data={chartData} defaultGraph={ChartType.Bar} />
-                    <ChartCard title="A ChartJS Chart 3" data={chartData} defaultGraph={ChartType.Line} />
-                    <ChartCard title="A ChartJS Chart 4" data={chartData} defaultGraph={ChartType.Radar} />
-                    <ChartCard title="A ChartJS Chart 5" data={chartData} defaultGraph={ChartType.PolarArea} /> */}
                 </div>
             </div>
         </div>
