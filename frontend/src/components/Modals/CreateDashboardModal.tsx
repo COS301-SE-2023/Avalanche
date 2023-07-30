@@ -34,10 +34,9 @@ export default function CreateDashboardModal({ }: ICreateDashboardModal) {
         router.push({
             pathname: `/custom/${uuidv4()}`,
             query: { name: name },
-
         }, undefined, {
             shallow: false
-        }).then(() => router.reload());
+        })
     }
 
     return (

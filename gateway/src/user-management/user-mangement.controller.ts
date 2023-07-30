@@ -162,7 +162,7 @@ export class UserManagementController {
               ]
             },
             {
-              "name": "marketshare",
+              "name": "marketShare",
               "filters": [
                 {
                   "name": "zone",
@@ -438,7 +438,7 @@ export class UserManagementController {
               ]
             },
             {
-              "name": "marketshare",
+              "name": "marketShare",
               "filters": [
                 {
                   "name": "zone",
@@ -758,7 +758,7 @@ export class UserManagementController {
               ]
             },
             {
-              "name": "marketshare",
+              "name": "marketShare",
               "filters": [
                 {
                   "name": "zone",

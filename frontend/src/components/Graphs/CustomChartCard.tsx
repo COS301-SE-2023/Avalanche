@@ -38,7 +38,6 @@ export default function CustomChartCard({ title, data, defaultGraph, state, id }
     const [loading, setLoading] = useState<boolean>(false);
 
     const addRequestObject = (key: string, value: any) => {
-
         if (!request[key]) {
             const temp = { ...request };
             let object = { ...value };
