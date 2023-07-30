@@ -42,6 +42,8 @@ describe('MarketShareService', () => {
           graphName:
             'Domain count marketshare across all registrars for all zones ',
           ...mockData,
+          warehouse: 'zacr',
+          graphType: 'marketShare',
         },
         timestamp: expect.any(String),
       });
