@@ -31,4 +31,10 @@ describe("Registrar", () => {
         navBarChecks("/watch", "Domain Watch")
     })
 
+    it.only('loads everything on Registrar page', ()=>{
+        cy.contains('Registrar').should('be.visible')
+        cy.contains('p', 'Insights at your fingertips').should('be.visible');
+        cy.get('canvas[role="img"]').should('be.visible');
+    })
+
 })
