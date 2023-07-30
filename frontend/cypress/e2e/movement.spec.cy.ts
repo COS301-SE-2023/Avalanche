@@ -31,7 +31,7 @@ describe("Movement", () => {
         navBarChecks("/watch", "Domain Watch")
     })
 
-    it('loads everything on Registrar page', ()=>{
+    it('loads everything on Movement page', ()=>{
         cy.contains('Nett Movement').should('be.visible')
         cy.contains('p', 'Insights at your fingertips').should('be.visible');
         cy.get('canvas[role="img"]').should('be.visible'); //graph itself
