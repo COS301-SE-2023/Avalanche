@@ -4,7 +4,7 @@ describe("Market Share", () => {
         cy.get('input[name=email]').type(Cypress.env('username'));
         cy.get('input[name=password]').type(Cypress.env('password'));
         cy.get('button[type=submit]').click();
-        cy.get('a[id="registrar"]').click();
+        cy.get('a[id="registrarMarketComparison"]').click();
 
     });
 
@@ -15,7 +15,7 @@ describe("Market Share", () => {
                 .and('contain', contain);
         }
 
-        cy.url().should("include", "/registrar")
+        cy.url().should("include", "/registrarMarketComparison")
 
         cy.get('#default-sidebar')
             .should('be.visible');
