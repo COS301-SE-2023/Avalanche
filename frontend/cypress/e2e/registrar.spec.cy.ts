@@ -34,7 +34,14 @@ describe("Registrar", () => {
     it.only('loads everything on Registrar page', ()=>{
         cy.contains('Registrar').should('be.visible')
         cy.contains('p', 'Insights at your fingertips').should('be.visible');
-        cy.get('canvas[role="img"]').should('be.visible');
+        cy.get('canvas[role="img"]').should('be.visible'); //graph itself
+        cy.get('h1').should(($h1Elements) => { //headings
+            expect($h1Elements).to.have.length.above(1);
+            expect($h1Elements).to.be.visible;
+          });
+          
+        
     })
+
 
 })
