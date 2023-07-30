@@ -2,8 +2,8 @@ import { HttpService } from '@nestjs/axios';
 import Redis from 'ioredis';
 import { Injectable, Inject } from '@nestjs/common';
 import { lastValueFrom } from 'rxjs';
-import { SnowflakeService } from 'src/snowflake/snowflake.service';
-import { GraphFormatService } from 'src/graph-format/graph-format.service';
+import { SnowflakeService } from '../snowflake/snowflake.service';
+import { GraphFormatService } from '../graph-format/graph-format.service';
 
 @Injectable()
 export class DomainNameAnalysisService {
@@ -69,6 +69,8 @@ export class DomainNameAnalysisService {
             granularity +
             '(s)',
           ...JSON.parse(formattedData),
+          warehouse: 'africa',
+          graphType: 'domainNameAnalysis/count',
         },
         timestamp: new Date().toISOString(),
       };
@@ -121,7 +123,12 @@ export class DomainNameAnalysisService {
       }
       return {
         status: 'success',
-        data: { graphName: graphName, ...JSON.parse(formattedData) },
+        data: {
+          graphName: graphName,
+          ...JSON.parse(formattedData),
+          warehouse: 'africa',
+          graphType: 'domainNameAnalysis/length',
+        },
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
@@ -134,7 +141,7 @@ export class DomainNameAnalysisService {
     }
   }
 
-  domainLengthGraphName(filters: string): string {
+  domainLengthGraphName(filters: any): string {
     let registrar = filters['registrar'];
     if (registrar) {
       if (registrar.length > 0) {
@@ -142,11 +149,11 @@ export class DomainNameAnalysisService {
         for (const r of registrar) {
           regArr.push(r);
         }
-        registrar += regArr.join(', ');
+        registrar = regArr.join(', ');
         registrar = ' for ' + registrar;
       }
     } else {
-      registrar = ' across all registrars ';
+      registrar = ' across all registrars';
     }
 
     let zone = filters['zone'];
@@ -156,39 +163,46 @@ export class DomainNameAnalysisService {
         for (const r of zone) {
           zoneArr.push(r);
         }
-        zone += zoneArr.join(', ');
+        zone = zoneArr.join(', ');
       }
       zone = ' for ' + zone;
     } else {
-      zone = ' for all zones ';
+      zone = ' for all zones';
     }
 
     let dateFrom;
     if (filters['dateFrom'] === undefined) {
       dateFrom = new Date();
       dateFrom.setFullYear(dateFrom.getUTCFullYear() - 1);
-      dateFrom = dateFrom.getFullYear() + '-01-01';
+      dateFrom = '01 January ' + dateFrom.getUTCFullYear();
     } else {
       dateFrom = new Date(filters['dateFrom']);
-      let month = dateFrom.getUTCMonth() + 1;
-      month = month < 10 ? '0' + month : month;
+      const monthNum = dateFrom.getUTCMonth() + 1;
+      const month = monthNum < 10 ? '0' + monthNum : monthNum;
       let day = dateFrom.getUTCDate();
       day = day < 10 ? '0' + day : day;
-      dateFrom = dateFrom.getUTCFullYear() + '-' + month + '-' + day;
+      const year = dateFrom.getUTCFullYear();
+      dateFrom =
+        day +
+        ' ' +
+        this.getMonth(monthNum - 1) +
+        ' ' +
+        dateFrom.getUTCFullYear();
     }
 
     let dateTo;
     if (filters['dateTo'] === undefined) {
       dateTo = new Date();
       dateTo.setFullYear(dateTo.getUTCFullYear() - 1);
-      dateTo = dateTo.getFullYear() + '-12-31';
+      dateTo = '31 December ' + dateTo.getUTCFullYear();
     } else {
       dateTo = new Date(filters['dateTo']);
-      let month = dateTo.getUTCMonth() + 1;
-      month = month < 10 ? '0' + month : month;
+      const monthNum = dateTo.getUTCMonth() + 1;
+      const month = monthNum < 10 ? '0' + monthNum : monthNum;
       let day = dateTo.getUTCDate();
       day = day < 10 ? '0' + day : day;
-      dateTo = dateTo.getUTCFullYear() + '-' + month + '-' + day;
+      dateTo =
+        day + ' ' + this.getMonth(monthNum - 1) + ' ' + dateTo.getUTCFullYear();
     }
 
     return (
@@ -201,6 +215,24 @@ export class DomainNameAnalysisService {
     );
   }
 
+  getMonth(num: number): string {
+    const monthNames = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+    return monthNames[num];
+  }
+  /*
   normaliseData(data: string): string {
     const dataArr = JSON.parse(data)['data'];
     const minFrequency = Math.min(...dataArr.map((item) => item.frequency));
@@ -233,4 +265,5 @@ export class DomainNameAnalysisService {
   ): number {
     return ((value - min) / (max - min)) * (newMax - newMin) + newMin;
   }
+  */
 }
