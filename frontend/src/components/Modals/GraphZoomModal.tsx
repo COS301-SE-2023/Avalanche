@@ -63,7 +63,7 @@ export default function GraphZoomModal({ custom }: IGraphZoomModal) {
     }
 
     return (
-        <ModalWrapper title={state.zoomedData.graphName || state.data.data.graphName} large={true}>
+        <ModalWrapper title={state.zoomedData?.graphName || state.data.data.graphName} large={true}>
             <div className="flex h-full">
                 <div className="relative p-6 space-y-6 flex-auto">
                     {state.data.type === ChartType.Bar && <BarChart data={state.data.data} />}

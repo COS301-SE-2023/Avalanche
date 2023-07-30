@@ -58,7 +58,7 @@ export default function IntegrationLoginModal({ }: IIntegrationLoginModal) {
         // user-management/integrateWithWExternalAPI
 
         try {
-            const res = await ky.post(`${process.env.NEXT_PUBLIC_API}/user-management/integrateWithWExternalAPI`, {
+            const res = await ky.post(`${process.env.NEXT_PUBLIC_API}/user-management/integrateUserWithWExternalAPI`, {
                 json: {
                     type: integration.name,
                     username: email,
