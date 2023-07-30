@@ -1,6 +1,7 @@
 describe('Sign in Page', () => {
     beforeEach(() => {
-      cy.visit('http://localhost:3000') ;
+      cy.visit(Cypress.env('baseURL') + ":" + Cypress.env('basePort'));
+      cy.url().should('eq', "http://"+Cypress.env('baseURL') + ":" + Cypress.env('basePort')+'/');
     });
   
     it('successfully loads', () => {
@@ -9,7 +10,7 @@ describe('Sign in Page', () => {
   
     it('should have email input', () => {
       cy.get('input[name=email]')
-        .should('have.attr', 'placeholder', 'name@company.com')
+        .should('have.attr', 'placeholder', 'michael@dundermifflin.com')
         .should('have.value', '');
     });
   
@@ -30,9 +31,10 @@ describe('Sign in Page', () => {
     });
   });
 
-describe('login', () =>{
+describe.only('login', () =>{
     beforeEach(() =>{
-        cy.visit('http://localhost:3000');
+      cy.visit(Cypress.env('baseURL') + ":" + Cypress.env('basePort'));
+      cy.url().should('eq', "http://"+Cypress.env('baseURL') + ":" + Cypress.env('basePort')+'/');
     })
 
     /*it('Signin with nothing completed', () => {
