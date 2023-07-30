@@ -79,7 +79,7 @@ describe('DomainNameAnalysisService', () => {
         `ryce` + mockQuery,
         JSON.stringify({ formattedData: 'formattedData' }),
         'EX',
-        24 * 60 * 60,
+        72 * 60 * 60,
       );
       expect(result).toEqual({
         status: 'success',
