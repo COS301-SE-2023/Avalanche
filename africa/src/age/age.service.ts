@@ -48,7 +48,7 @@ export class AgeService {
           `africa` + sqlQuery,
           formattedData,
           'EX',
-          24 * 60 * 60,
+          72 * 60 * 60,
         );
       }
 

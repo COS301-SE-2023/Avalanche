@@ -47,7 +47,7 @@ export class TransactionService {
           `ryce` + sqlQuery,
           formattedData,
           'EX',
-          24 * 60 * 60,
+          72 * 60 * 60,
         );
       }
 
@@ -107,7 +107,7 @@ export class TransactionService {
           `ryce` + sqlQuery,
           formattedData,
           'EX',
-          24 * 60 * 60,
+          72 * 60 * 60,
         );
       }
       return {
