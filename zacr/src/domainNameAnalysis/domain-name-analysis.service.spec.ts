@@ -52,6 +52,8 @@ describe('DomainNameAnalysisService', () => {
           graphName:
             'Most common sub words in newly created domains in the last 10 month(s)',
           test: 'data',
+          warehouse: 'zacr',
+          graphType: 'domainNameAnalysis/count',
         },
         timestamp: expect.any(String),
       });
@@ -85,6 +87,8 @@ describe('DomainNameAnalysisService', () => {
           graphName:
             'Most common sub words in newly created domains in the last 10 month(s)',
           formattedData: 'formattedData',
+          warehouse: 'zacr',
+          graphType: 'domainNameAnalysis/count',
         },
         timestamp: expect.any(String),
       });
@@ -167,6 +171,8 @@ describe('DomainNameAnalysisService', () => {
         data: {
           graphName: expect.any(String),
           test: 'data',
+          warehouse: 'zacr',
+          graphType: 'domainNameAnalysis/length',
         },
         timestamp: expect.any(String),
       });

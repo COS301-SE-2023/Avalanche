@@ -51,7 +51,7 @@ export class MarketShareService {
         data: {
           graphName: graphName,
           warehouse: 'africa',
-          graphType: 'marketshare',
+          graphType: 'marketShare',
           ...JSON.parse(formattedData),
         },
         timestamp: new Date().toISOString(),

@@ -49,9 +49,9 @@ export default function GraphZoomModal({ custom }: IGraphZoomModal) {
     }
 
     const renderComments = () => {
-        const dash = stateUser.user.dashboards.find((item: any) => item.dashboardID == state.zoomedData.dashboardID);
-        const graph = dash.graphs.find((item: any) => item.graphName === state.zoomedData.graphName);
-        return graph.comments.map((item: any, index: number) => (<div key={index} className="w-full p-4 text-gray-500 bg-white rounded-lg shadow dark:bg-gray-800 dark:text-gray-400" role="alert">
+        const dash = stateUser.user.dashboards.find((item: any) => item.dashboardID == state.zoomedData?.dashboardID);
+        const graph = dash.graphs.find((item: any) => item.graphName === state.zoomedData?.graphName);
+        return graph.comments?.map((item: any, index: number) => (<div key={index} className="w-full p-4 text-gray-500 bg-white rounded-lg shadow dark:bg-gray-800 dark:text-gray-400" role="alert">
             <div className="flex">
                 <img className="w-8 h-8 rounded-full shadow-lg" src="https://github.com/michaelrosstarr.png" alt="Jese Leos image" />
                 <div className="ml-3 text-sm font-normal">
@@ -63,7 +63,7 @@ export default function GraphZoomModal({ custom }: IGraphZoomModal) {
     }
 
     return (
-        <ModalWrapper title={state.zoomedData.graphName || state.data.data.graphName} large={true}>
+        <ModalWrapper title={state.zoomedData?.graphName || state.data?.data?.graphName} large={true}>
             <div className="flex h-full">
                 <div className="relative p-6 space-y-6 flex-auto">
                     {state.data.type === ChartType.Bar && <BarChart data={state.data.data} />}

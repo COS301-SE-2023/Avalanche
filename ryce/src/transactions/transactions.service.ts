@@ -97,7 +97,7 @@ export class TransactionService {
             timestamp: new Date().toISOString(),
           };
         }
-        console.log(queryData);
+        //console.log(queryData);
         formattedData =
           await this.graphFormattingService.formatTransactionsRanking(
             JSON.stringify(queryData),

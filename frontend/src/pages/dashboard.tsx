@@ -5,16 +5,13 @@ import Head from "next/head"
 import { ChartCard } from "@/components/Graphs"
 import { ChartType } from "@/Enums";
 import { useDispatch, useSelector } from "react-redux";
-import { graphState, getGraphData, getGraphDataRanking } from "@/store/Slices/graphSlice"
+import { graphState, getGraphData } from "@/store/Slices/graphSlice"
 import { useState, useEffect } from "react";
 import { ITransactionGraphRequest } from "@/interfaces/requests";
 import { selectModalManagerState } from "@/store/Slices/modalManagerSlice"
 import GraphZoomModal from "@/components/Modals/GraphZoomModal"
-import { Popover, Transition } from "@headlessui/react"
-import { Fragment, useRef } from "react"
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
-import { Document, Page, Image, View } from '@react-pdf/renderer';
 
 export default function Dashboard() {
 
@@ -84,6 +81,7 @@ export default function Dashboard() {
             // console.log(canva);
             html2canvas(canva as any).then(async (caravan) => {
                 const imgData = caravan.toDataURL('image/png');
+                // console.log(imgData);
                 // const imgData = caravan.getContext("2d", { willReadFrequently: true })?.getImageData();
                 pdf.addImage(imgData, 'JPEG', 0, 0, width, height, "woooo", "FAST", 0);
                 pdf.addPage();
@@ -93,11 +91,12 @@ export default function Dashboard() {
     }
 
     const downloadPDF = async () => {
+        // console.log(s)
         const input = document.getElementById('pageData');
-        const canvas = document.getElementsByTagName('canvas');
-        // console.log(canvas);
+        const canvas = document.getElementsByClassName('graphChart');
+        console.log(canvas);
 
-        var doc = new jsPDF("l", "px", "a4");
+        var doc = new jsPDF("l", "mm", "a10");
         var width = doc.internal.pageSize.getWidth();
         var height = doc.internal.pageSize.getHeight();
 

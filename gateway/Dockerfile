@@ -21,6 +21,7 @@ USER node
 WORKDIR /home/node
 
 COPY package*.json ./
+COPY ./src ./
 RUN yarn
 
 COPY --chown=node:node . .

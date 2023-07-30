@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93% </span>
+                <span class="strong">91.83% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>133/143</span>
+                <span class='fraction'>135/147</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85.29% </span>
+                <span class="strong">82.85% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>29/34</span>
+                <span class='fraction'>29/35</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">92.8% </span>
+                <span class="strong">91.6% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>129/139</span>
+                <span class='fraction'>131/143</span>
             </div>
         
             
@@ -432,25 +432,29 @@
 <a name='L367'></a><a href='#L367'>367</a>
 <a name='L368'></a><a href='#L368'>368</a>
 <a name='L369'></a><a href='#L369'>369</a>
-<a name='L370'></a><a href='#L370'>370</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
+<a name='L370'></a><a href='#L370'>370</a>
+<a name='L371'></a><a href='#L371'>371</a>
+<a name='L372'></a><a href='#L372'>372</a>
+<a name='L373'></a><a href='#L373'>373</a>
+<a name='L374'></a><a href='#L374'>374</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">25x</span>
-<span class="cline-any cline-yes">25x</span>
-<span class="cline-any cline-yes">25x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">27x</span>
+<span class="cline-any cline-yes">27x</span>
+<span class="cline-any cline-yes">27x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
@@ -606,6 +610,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -695,7 +703,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -974,7 +982,11 @@ export class AuthService {
         timestamp: new Date().toISOString()
       };
     }
-    delete user.apiKey;
+    let apiCheck = false;
+    <span class="missing-if-branch" title="if path not taken" >I</span>if(user.apiKey){
+<span class="cstat-no" title="statement not covered" >      apiCheck = true;</span>
+<span class="cstat-no" title="statement not covered" >      delete user.apiKey;</span>
+    }
     // Verify the provided password with the user's hashed password in the database
     const saltFromDB = user.salt;
     const passwordLogin1 = await bcrypt.hash(passwordLogin, saltFromDB);
@@ -1002,7 +1014,7 @@ export class AuthService {
     // We exclude password and salt field here for security reasons
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, salt, ...userWithoutPassword } = user;
-    const userWithToken = { ...userWithoutPassword, token: jwtToken };
+    const userWithToken = { ...userWithoutPassword, token: jwtToken, apiCheck : apiCheck };
     await this.redis.set(jwtToken, JSON.stringify(userWithToken), 'EX', 24 * 60 * 60);
 &nbsp;
     // Send back user's information along with the token as a JSON object
@@ -1064,9 +1076,9 @@ export class AuthService {
     }
 &nbsp;
     // console.log(user);
-    // console.log(user['apiKey']);
+    console.log(user['apiKey']);
 &nbsp;
-    if (user['apiKey']?.length &gt; 0 || user['apiKey']) {
+    if (user.apiKey?.length &gt; 0 || user.apiKey) {
       return {
         status: 400, error: true, message: 'User already has an api key',
         timestamp: new Date().toISOString()
@@ -1177,7 +1189,7 @@ export class AuthService {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-07-27T15:48:29.137Z
+                at 2023-07-30T11:16:03.623Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

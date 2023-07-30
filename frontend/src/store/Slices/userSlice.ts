@@ -10,6 +10,7 @@ import { ISettings, IOrganisation, IDataProduct, IUserGroups } from "@/interface
 const url = `${process.env.NEXT_PUBLIC_API}/user-management`;
 
 export interface IUserState {
+    [x: string]: any;
     id: string | null,
     email: string | null,
     firstName: string | null,
@@ -117,6 +118,11 @@ export const userSlice = createSlice({
         },
         updateAPI(state, action) {
             state.api = action.payload;
+            state.user.checkApi = action.payload;
+        },
+        clearLoading(state) {
+            state.requests.loading = false;
+            state.loading = false;
         }
     },
     extraReducers: (builder) => {
@@ -304,14 +310,19 @@ export const otpVerify = createAsyncThunk("AUTH.OTPVerify", async (object: IOTPV
  * This action handles calling the login api call
  */
 export const login = createAsyncThunk("AUTH.Login", async (object: ILoginRequest, { rejectWithValue }) => {
-    console.log(process.env);
+    // console.log(process.env);
     try {
         const response = await ky.post(`${url}/login`, {
             json: object
         }).json();
+        console.log(response);
         return response;
     } catch (e) {
-        if (e instanceof Error) return rejectWithValue(e.message);
+        let error = e as HTTPError;
+        if (error.name === 'HTTPError') {
+            const newError = await error.response.json();
+            return rejectWithValue(newError.message);
+        }
     }
 })
 
@@ -404,7 +415,11 @@ export const removeUserFromGroup = createAsyncThunk("ORG.RemoveUserFromGroup", a
         }).json();
         return { data: response, request: object } as any;
     } catch (e) {
-        if (e instanceof Error) return rejectWithValue(e.message);
+        let error = e as HTTPError;
+        if (error.name === 'HTTPError') {
+            const newError = await error.response.json();
+            return rejectWithValue(newError.message);
+        }
     }
 })
 
@@ -421,10 +436,14 @@ export const getLatestOrganisation = createAsyncThunk("ORG.GetLatestOrganisation
         }).json();
         return response.message as any;
     } catch (e) {
-        if (e instanceof Error) return rejectWithValue(e.message);
+        let error = e as HTTPError;
+        if (error.name === 'HTTPError') {
+            const newError = await error.response.json();
+            return rejectWithValue(newError.message);
+        }
     }
 })
 
-export const { setAuth, getAuth, resetRequest, logout, setCreateGroupSuccess, setAddUserGroupSuccess, clearError, updateDashboards, updateAPI } = userSlice.actions;
+export const { setAuth, getAuth, resetRequest, logout, setCreateGroupSuccess, setAddUserGroupSuccess, clearError, updateDashboards, updateAPI, clearLoading } = userSlice.actions;
 export const userState = (state: AppState) => state.user;
 export default userSlice.reducer;

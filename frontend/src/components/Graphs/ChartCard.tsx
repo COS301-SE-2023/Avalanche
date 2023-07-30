@@ -10,8 +10,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCurrentOpenState, setData, clearCurrentOpenState } from "@/store/Slices/modalManagerSlice";
 import { CheckboxFilter, DatePickerFilter, RadioboxFilter, ToggleFilter } from "./Filters";
 import { Disclosure } from '@headlessui/react'
-import { SubmitButton } from "../Util";
-import { graphState } from "@/store/Slices/graphSlice";
+import { ErrorToast, SubmitButton } from "../Util";
+import { getFilters, graphState } from "@/store/Slices/graphSlice";
+import { getCookie } from "cookies-next";
+import ky from "ky";
 
 interface IChartCard {
     title: string,
@@ -21,17 +23,23 @@ interface IChartCard {
 
 export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
 
-    const dispatch = useDispatch();
+    console.log(data);
+
+    const dispatch = useDispatch<any>();
     const stateGraph = useSelector(graphState);
     const filters = stateGraph.filters;
 
     useEffect(() => {
         dispatch(clearCurrentOpenState)
+        if (!filters) dispatch(getFilters({}));
     }, [])
 
     const [type, setType] = useState<ChartType>(defaultGraph);
     const [filterDropdown, setFilterDropdown] = useState<boolean>(false);
     const [graphData, setGraphData] = useState<any>(data);
+    const [warehouse, setWarehouse] = useState<string>(data.warehouse);
+    const [gType, setGType] = useState<string>(data.graphType);
+    const [loading, setLoading] = useState<boolean>(false);
 
     const [request, setRequest] = useState<any>({});
 
@@ -78,55 +86,18 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
         dispatch(setData(modal));
     }
 
-    const renderFilters = () => {
-        // problem is, i dont know what warehouse or type of graph is on the predefined ones
-        const tempFilters = [
-            {
-                "name": "zone",
-                "type": "string[]",
-                "values": [
-                    "CO.ZA",
-                    "ORG.ZA",
-                    "NET.ZA"
-                ],
-                "input": "checkbox"
-            },
-            {
-                "name": "dateFrom",
-                "type": "string",
-                "input": "date-picker"
-            },
-            {
-                "name": "dateTo",
-                "type": "string",
-                "input": "date-picker"
-            },
-            {
-                "name": "transactions",
-                "type": "string",
-                "values": [
-                    "create",
-                    "grace",
-                    "redeem",
-                    "transfer",
-                    "renew"
-                ],
-                "input": "checkbox"
-            },
-            {
-                "name": "granularity",
-                "type": "string",
-                "values": [
-                    "day",
-                    "week",
-                    "month",
-                    "year"
-                ],
-                "input": "radiobox"
-            }
-        ]
+    const filterGraphs = () => {
+        if (warehouse) {
+            const ep = filters.find((item: any) => item.endpoint === warehouse);
+            if (!ep) return [];
+            return ep.graphs.find((item: any) => item.name === gType);
+        }
+        return [];
+    }
 
-        return tempFilters.map((element: any, index: number) => (
+
+    const renderFilters = () => {
+        return filterGraphs().map((element: any, index: number) => (
             <Disclosure key={index}>
                 {({ open, close }) => (
                     <>
@@ -159,6 +130,37 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
         keys.forEach((key, index) => {
             requestObject[key] = request[key].value;
         });
+
+        setFilterDropdown(!filterDropdown)
+        fetchGraphData(requestObject);
+    }
+
+    const fetchGraphData = async (filters: any) => {
+        setLoading(true);
+        if (data.endpointName) {
+            const d = data.endpointName.split("/");
+            setWarehouse(d[0]);
+            setGType(d[1]);
+        } else {
+            setWarehouse(data.warehouse);
+            setGType(data.type);
+        }
+        try {
+            const jwt = getCookie("jwt");
+            const url = data.endpointName ? `${process.env.NEXT_PUBLIC_API}/${data.endpointName}` : `${process.env.NEXT_PUBLIC_API}/${warehouse || data.warehouse}/${gType || data.type}`;
+            const res = await ky.post(url, {
+                json: filters,
+                headers: {
+                    "Authorization": `Bearer ${jwt}`
+                }
+            }).json();
+            const d = res as any;
+            setGraphData(d.data);
+            setLoading(false);
+        } catch (e) {
+            if (e instanceof Error) return ErrorToast({ text: e.message })
+        }
+
     }
 
     const camelCaseRenderer = (value: string) => {
@@ -166,7 +168,7 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
     }
 
     return (<>
-        <div className="block p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-primaryBackground dark:border-primaryBackground w-full animate__animated animate__fadeIn animate__slow z-10">
+        <div className="block p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-primaryBackground dark:border-primaryBackground w-full animate__animated animate__fadeIn animate__slow z-10 graphChart">
             <div className="flex justify-between mb-5 text-black dark:text-white">
                 <h1 className="p-1.5">{title}</h1>
                 <div className="flex flex-row gap-1">

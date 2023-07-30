@@ -100,18 +100,20 @@ describe('UserDataProductMangementService', () => {
 
   describe('integrateWithDataProducts', () => {
     it('should return error when user does not exist and personal is true', async () => {
+      jest.spyOn(redis, 'get').mockResolvedValue(null);
       jest.spyOn(userRepository, 'findOne').mockResolvedValue(null);
       const result = await service.integrateWithDataProducts('token', 'type', 'name', true);
       expect(result).toEqual({
         status: 400,
         error: true,
-        message: 'User does not exist',
+        message: 'Invalid token.',
         timestamp: expect.any(String)
       });
     });
 
     it('should return success when user exist and personal is true', async () => {
       const mockUser = { products: '' };
+      jest.spyOn(redis, 'get').mockResolvedValue(JSON.stringify({ email: 'name' }));
       jest.spyOn(userRepository, 'findOne').mockResolvedValue(mockUser as any);
       jest.spyOn(userRepository, 'save').mockResolvedValue(null);
 
@@ -125,13 +127,20 @@ describe('UserDataProductMangementService', () => {
 
     it('should return error when user group does not exist and personal is false', async () => {
       jest.spyOn(redis, 'get').mockResolvedValue(JSON.stringify({ userGroups: [{ permission: 1 }] }));
+      jest.spyOn(userRepository, 'findOne').mockResolvedValue({
+        id: '1',
+        email: 'name',
+        password: 'password',
+        salt: 'salt',
+        userGroups: ['name'], // leave this as empty
+      } as any);
       jest.spyOn(userGroupRepository, 'findOne').mockResolvedValue(null);
 
       const result = await service.integrateWithDataProducts('token', 'type', 'name', false);
       expect(result).toEqual({
         status: 400,
         error: true,
-        message: 'Cannot find user group with given name',
+        message: 'User is not apart of this user group',
         timestamp: expect.any(String)
       });
     });

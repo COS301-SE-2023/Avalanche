@@ -11,7 +11,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
   let app: INestApplication;
   let configService: ConfigService;
   const accessToken = process.env.JWT_TOKEN_TO_TEST;
-  console.log(accessToken);
+  //console.log(accessToken);
 
 
   beforeAll(async () => {
@@ -43,7 +43,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -58,7 +58,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -78,7 +78,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -93,7 +93,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -108,7 +108,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -126,7 +126,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -139,7 +139,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -152,7 +152,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -170,7 +170,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -183,7 +183,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -196,7 +196,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -214,7 +214,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -227,7 +227,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -240,7 +240,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -255,7 +255,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -268,7 +268,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -281,7 +281,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -296,7 +296,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -309,7 +309,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -322,7 +322,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
