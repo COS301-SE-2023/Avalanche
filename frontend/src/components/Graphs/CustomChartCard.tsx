@@ -13,7 +13,7 @@ import { Disclosure } from '@headlessui/react'
 import { ErrorToast, SubmitButton } from "../Util";
 import ky from "ky";
 import { getCookie } from "cookies-next";
-import { renderFilters, filterGraphs, generateDefaultValue } from "./Filters/utils";
+// import { renderFilters, filterGraphs, generateDefaultValue } from "./Filters/utils";
 
 interface IChartCard {
     title: string,
@@ -35,6 +35,8 @@ export default function CustomChartCard({ title, data, defaultGraph, state, id }
 
     const [request, setRequest] = useState<any>({});
 
+    const [loading, setLoading] = useState<boolean>(false);
+
     const addRequestObject = (key: string, value: any) => {
         if (!request[key]) {
             const temp = { ...request };
@@ -53,11 +55,43 @@ export default function CustomChartCard({ title, data, defaultGraph, state, id }
         }
     }
 
+    const renderFilters = () => {
+        return filterGraphs()?.filters?.map((element: any, index: number) => {
+            return <Disclosure key={index}>
+                {({ open, close }) => (
+                    <>
+                        <Disclosure.Button className="flex w-full justify-between rounded-lg px-4 py-2 text-left text-sm font-medium hover:bg-gray-300 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75" onClick={() => {
+                            if (element.input === "nestedCheckbox") {
+                                addRequestObject("transactions", element)
+                            } else {
+                                addRequestObject(element.name, element);
+                            }
+                        }}>
+                            <div className="flex gap-4 items-center">
+                                {camelCaseRenderer(element.name)}
+                            </div>
+                            <ChevronDownIcon className={`w-6 h-6 ${open && "rotate-180"}`} />
+                        </Disclosure.Button>
+                        <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
+                            {element.input === "checkbox" && <CheckboxFilter data={element} request={request[element.name]} update={updateRequestObject} />}
+                            {element.input === "date-picker" && <DatePickerFilter data={element} request={request[element.name]} update={updateRequestObject} />}
+                            {element.input === "radiobox" && <RadioboxFilter data={element} request={request[element.name]} update={updateRequestObject} camelCase={camelCaseRenderer} />}
+                            {element.input === "togglebox" && <ToggleFilter data={element} request={request[element.name]} update={updateRequestObject} />}
+                            {element.input === "nestedCheckbox" && <NestedCheckbox data={element} request={request["transactions"]} update={updateRequestObject} />}
+                        </Disclosure.Panel>
+                        <hr />
+                    </>
+                )}
+            </Disclosure>
+        })
+    }
+
     useEffect(() => {
         fetchGraphData({})
     }, [])
 
     const fetchGraphData = async (filters: any) => {
+        setLoading(true);
         if (data.endpointName) {
             const d = data.endpointName.split("/");
             setWarehouse(d[0]);
@@ -77,10 +111,45 @@ export default function CustomChartCard({ title, data, defaultGraph, state, id }
             }).json();
             const d = res as any;
             setGraphData(d.data);
+            setLoading(false);
         } catch (e) {
             if (e instanceof Error) return ErrorToast({ text: e.message })
         }
 
+    }
+
+    const camelCaseRenderer = (value: string) => {
+        return value.replace(/([A-Z])/g, ' $1').replace(/^./, function (str) { return str.toUpperCase(); })
+    }
+
+    const generateDefaultValue = (type: string) => {
+        switch (type) {
+            case "togglebox": {
+                return false;
+            }
+            case "string": {
+                return "";
+            }
+            case "checkbox": {
+                return [];
+            }
+            case "radiobox": {
+                return "";
+            }
+            case "nestedCheckbox": {
+                return [];
+            }
+        }
+    }
+
+    const filterGraphs = () => {
+        if (warehouse) {
+            const ep = state.filters.find((item: any) => item.endpoint === warehouse);
+            if (!ep) return [];
+            return ep.graphs.find((item: any) => item.name === gType);
+        }
+
+        return [];
     }
 
     const handleMagnifyModal = (value: boolean): void => {
@@ -132,7 +201,7 @@ export default function CustomChartCard({ title, data, defaultGraph, state, id }
                         >
                             <div className="absolute right-0 z-20 w-96 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none p-2 dark:bg-gray-700 max-h-72 overflow-y-scroll">
                                 <h1 className="text-xl underline font-semibold">Filters</h1>
-                                {renderFilters(filterGraphs(warehouse, state, gType), addRequestObject, request, updateRequestObject)}
+                                {renderFilters()}
                                 <SubmitButton text="Get Results" className="mt-4 w-full" onClick={() => filterSubmit()} />
                             </div>
                         </Transition>
@@ -177,12 +246,14 @@ export default function CustomChartCard({ title, data, defaultGraph, state, id }
                     </Menu>
                 </div>
             </div>
-            {graphData && graphData?.labels && graphData?.datasets && type === ChartType.Bar && <BarChart data={graphData} />}
-            {graphData && graphData?.labels && graphData?.datasets && type === ChartType.Pie && <PieChart data={graphData} />}
-            {graphData && graphData?.labels && graphData?.datasets && type === ChartType.Line && <LineChart data={graphData} addClass="h-96" />}
-            {graphData && graphData?.labels && graphData?.datasets && type === ChartType.Bubble && <BubbleChart data={graphData} />}
-            {graphData && graphData?.labels && graphData?.datasets && type === ChartType.PolarArea && <PolarAreaChart data={graphData} />}
-            {graphData && graphData?.labels && graphData?.datasets && type === ChartType.Radar && <RadarChart data={graphData} />}
+            {!loading ? <div>
+                {graphData && graphData?.labels && graphData?.datasets && type === ChartType.Bar && <BarChart data={graphData} />}
+                {graphData && graphData?.labels && graphData?.datasets && type === ChartType.Pie && <PieChart data={graphData} />}
+                {graphData && graphData?.labels && graphData?.datasets && type === ChartType.Line && <LineChart data={graphData} addClass="h-96" />}
+                {graphData && graphData?.labels && graphData?.datasets && type === ChartType.Bubble && <BubbleChart data={graphData} />}
+                {graphData && graphData?.labels && graphData?.datasets && type === ChartType.PolarArea && <PolarAreaChart data={graphData} />}
+                {graphData && graphData?.labels && graphData?.datasets && type === ChartType.Radar && <RadarChart data={graphData} />}
+            </div> : <div role="status" className="flex justify-between h-64 w-full bg-gray-300 rounded-lg animate-customPulse dark:bg-gray-700 p-6" />}
         </div >
     </>)
 }
