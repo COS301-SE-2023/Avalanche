@@ -12,9 +12,10 @@ interface IInput {
     maxLength?: number,
     error?: boolean,
     showLength?: boolean,
+    pattern?: string
 }
 
-export default function Input({ type, placeholder, name, id, required, disabled, onChange, value, maxLength, error, showLength }: IInput) {
+export default function Input({ type, placeholder, name, id, required, disabled, onChange, value, maxLength, error, showLength, pattern }: IInput) {
 
     /**
      * This handles the input onChange method.

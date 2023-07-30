@@ -278,6 +278,40 @@ export class UserDataProductMangementService {
         };
     }
 
+    async getDomainWatchPassiveUser(token: string) {
+        const userPayload = await this.redis.get(token);
+        if (!userPayload) {
+            return {
+                status: 400, error: true, message: 'Invalid token.',
+                timestamp: new Date().toISOString()
+            };
+        }
+        const { email: userEmail } = JSON.parse(userPayload);
+        console.log(userEmail);
+        const user = await this.userRepository.findOne({
+            where: { email: userEmail }, relations: ['userGroups', 'organisation', 'dashboards'],
+            select: ['id', 'email', 'firstName', 'lastName', 'organisationId', 'products', 'userGroups', 'organisation', 'dashboards']
+        });
+        if (!user) {
+            return {
+                status: 400, error: true, message: 'User does not exist.',
+                timestamp: new Date().toISOString()
+            };
+        }
+        const passiveData = await this.watchedUserRepository.findOne({where: {email: user.email},  select: ["person", "types", "domains"] });
+        const emailData = await this.watchedUserRepository.findOne({ where: {email: user.email}, select: ["person", "email", "domains"] });
+        console.log("here");
+        if (passiveData && emailData) {
+            return { status: "success", message : {watched: passiveData, emailData: emailData}, timestamp: new Date().toISOString() };
+        }
+        else {
+            return {
+                status: 400, error: true, message: 'Null, there is no domains to be watched',
+                timestamp: new Date().toISOString()
+            };
+        }
+    }
+
     async getDomainWatchPassive() {
         const passiveData = await this.watchedUserRepository.find({ select: ["person", "types", "domains"] });
         const emailData = await this.watchedUserRepository.find({ select: ["person", "email", "domains"] });

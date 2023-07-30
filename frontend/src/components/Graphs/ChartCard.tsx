@@ -25,8 +25,6 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
     const stateGraph = useSelector(graphState);
     const filters = stateGraph.filters;
 
-    console.log(data);
-
     useEffect(() => {
         dispatch(clearCurrentOpenState)
     }, [])
@@ -168,7 +166,7 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
     }
 
     return (<>
-        <div className="block p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-primaryBackground dark:border-primaryBackground w-full animate__animated animate__fadeIn animate__slow z-10">
+        <div className="block p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-primaryBackground dark:border-primaryBackground w-full animate__animated animate__fadeIn animate__slow z-10 graphChart">
             <div className="flex justify-between mb-5 text-black dark:text-white">
                 <h1 className="p-1.5">{title}</h1>
                 <div className="flex flex-row gap-1">

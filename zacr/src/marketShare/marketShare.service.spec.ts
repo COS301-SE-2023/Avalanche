@@ -62,7 +62,8 @@ describe('MarketShareService', () => {
       expect(result).toEqual({
         status: 'success',
         data: {
-          graphName: 'Domain count marketshare across all registrars for all zones ',
+          graphName:
+            'Domain count marketshare across all registrars for all zones ',
           formatted: JSON.parse(mockFormattedData).formatted,
         },
         timestamp: expect.any(String),

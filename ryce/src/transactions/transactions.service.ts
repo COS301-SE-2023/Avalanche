@@ -14,9 +14,9 @@ export class TransactionService {
     private readonly snowflakeService: SnowflakeService,
     private readonly statisticalAnalysisService: AnalysisService,
     private readonly graphFormattingService: GraphFormatService,
-  ) { }
+  ) {}
 
-  async transactions(filters: string, graphName: string): Promise<any> {
+  async transactions(filters: any, graphName: string): Promise<any> {
     try {
       graphName = this.transactionsGraphName(filters, false);
 
@@ -74,7 +74,7 @@ export class TransactionService {
     }
   }
 
-  async transactionsRanking(filters: string, graphName: string): Promise<any> {
+  async transactionsRanking(filters: any, graphName: string): Promise<any> {
     try {
       graphName = this.transactionsGraphName(filters, true);
       const filterObj = JSON.parse(JSON.stringify(filters));
@@ -130,7 +130,7 @@ export class TransactionService {
     }
   }
 
-  transactionsGraphName(filters: string, perReg: boolean): string {
+  transactionsGraphName(filters: any, perReg: boolean): string {
     let dateFrom;
     if (filters['dateFrom'] === undefined) {
       dateFrom = new Date();
@@ -179,13 +179,13 @@ export class TransactionService {
 
     let reg = '';
     if (perReg) {
-      reg = ' per registrar ';
+      reg = 'per registrar ';
     }
     return (
       granularity +
-      ' Transactions ' +
+      'Transactions ' +
       reg +
-      ' from ' +
+      'from ' +
       dateFrom +
       ' to ' +
       dateTo +

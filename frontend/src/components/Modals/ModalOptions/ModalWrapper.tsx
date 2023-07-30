@@ -1,4 +1,4 @@
-import { setAnimateManagerState, clearCurrentOpenState } from '@/store/Slices/modalManagerSlice';
+import { setAnimateManagerState, clearCurrentOpenState, clearZoomData } from '@/store/Slices/modalManagerSlice';
 import { useDispatch } from 'react-redux';
 
 interface IModalWrapper {
@@ -20,6 +20,7 @@ export default function ModalWrapper({ children, title, large }: IModalWrapper) 
     const close = () => {
         dispatch(clearCurrentOpenState());
         dispatch(setAnimateManagerState(false));
+        dispatch(clearZoomData());
         document.body.style.overflow = "visible";
     }
 

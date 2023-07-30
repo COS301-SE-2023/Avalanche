@@ -35,7 +35,7 @@ export class AgeService {
           return {
             status: 500,
             error: true,
-            message: 'Data Warehouse Error',
+            message: `${e.message}`,
             timestamp: new Date().toISOString(),
           };
         }
@@ -54,7 +54,12 @@ export class AgeService {
 
       return {
         status: 'success',
-        data: { graphName: graphName, ...JSON.parse(formattedData) },
+        data: {
+          graphName: graphName,
+          ...JSON.parse(formattedData),
+          warehouse: 'zacr',
+          graphType: 'age',
+        },
         timestamp: new Date().toISOString(),
       };
     } catch (e) {

@@ -23,7 +23,7 @@ export class AppController {
   @MessagePattern({ cmd: 'transactions' })
   async transactions(data: any) {
     console.log('Transactions: ', data);
-    const result =  await this.transactionsService.transactions(
+    const result = await this.transactionsService.transactions(
       data.filters,
       data.graphName,
     );
@@ -137,12 +137,30 @@ export class AppController {
 
   @MessagePattern({ cmd: 'domainWatchPassive' })
   async domainWatchPassive() {
-    return await this.domainWatchService.passive();
+    const result = await this.domainWatchService.passive();
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
   }
 
   @MessagePattern({ cmd: 'loadDomains' })
   async loadDomains() {
-    return await this.domainWatchService.loadDomains();
+    const result = await this.domainWatchService.loadDomains();
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
   }
 
   @MessagePattern({ cmd: 'registrarName' })

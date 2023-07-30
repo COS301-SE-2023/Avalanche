@@ -21,6 +21,7 @@ USER node
 WORKDIR /home/node
 
 COPY package*.json ./
+COPY ./src ./
 RUN yarn
 
 COPY --chown=node:node . .
@@ -36,7 +37,9 @@ USER node
 WORKDIR /home/node
 
 COPY --from=builder --chown=node:node /home/node/package*.json ./
+COPY --from=builder --chown=node:node /home/node/tsconfig.json ./tsconfig.json
 COPY --from=builder --chown=node:node /home/node/node_modules/ ./node_modules/
 COPY --from=builder --chown=node:node /home/node/dist/ ./dist/
+COPY --from=builder --chown=node:node /home/node/src/ ./src/
 
 CMD ["yarn", "start:prod"]

@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
-import { AlternativeButton, DeleteButton, SubmitButton, TableIconButton, WarningAlert } from "../Util";
+import { AlternativeButton, DeleteButton, ErrorToast, SubmitButton, SuccessToast, TableIconButton, WarningAlert } from "../Util";
 import { TrashIcon } from '@heroicons/react/24/solid';
 import NoFind from '../CustomSVG/NoFind';
 import { ConfirmModal, CreateGroupModal, OrgnizationCreateModal } from '../Modals';
 import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
-import { getLatestOrganisation, userState } from "@/store/Slices/userSlice";
+import { clearError, getLatestOrganisation, userState, getUserGroups, setCreateGroupSuccess, setAddUserGroupSuccess } from "@/store/Slices/userSlice";
 import { useDispatch, useSelector } from 'react-redux';
-import { getUserGroups, setCreateGroupSuccess, setAddUserGroupSuccess } from "@/store/Slices/userSlice";
 import AddUserToGroup from "../Modals/AddUserToGroup";
 
 function classNames(...classes: any[]) {
@@ -30,6 +29,21 @@ export default function OrganizationSettings({ }: IOrganizationSettings) {
         dispatch(getLatestOrganisation({}));
         dispatch(getUserGroups({}))
     }, [])
+
+    // useEffect(() => {
+    //     if (stateUser.requests.error) {
+    //         ErrorToast({ text: `${stateUser.requests.error}` });
+    //         console.log("ogo");
+    //         dispatch(clearError());
+    //     }
+    // }, [stateUser.requests]);
+
+    // useEffect(() => {
+    //     if (stateUser.addUserGroupSuccess) {
+    //         SuccessToast({ text: "Successfully added user to group" });
+    //         dispatch(clearError());
+    //     }
+    // }, [stateUser.addUserGroupSuccess]);
 
 
     /**
@@ -179,12 +193,6 @@ export default function OrganizationSettings({ }: IOrganizationSettings) {
                             activeGroupIndex !== -1 && groupTab !== "" && stateUser.userGroups[activeGroupIndex].groupMembers.length > 0 && <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 rounded-lg">
                                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
-                                        <th scope="col" className="p-4">
-                                            {/* <div className="flex items-center">
-                                                <input id="checkbox-all-search" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
-                                                <label htmlFor="checkbox-all-search" className="sr-only">checkbox</label>
-                                            </div> */}
-                                        </th>
                                         <th scope="col" className="px-6 py-3">
                                             Name
                                         </th>
@@ -200,12 +208,6 @@ export default function OrganizationSettings({ }: IOrganizationSettings) {
                                     {
                                         activeGroupIndex !== -1 && stateUser.userGroups[activeGroupIndex].groupMembers.map((item: any, index: any) => {
                                             return <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900" key={index}>
-                                                <td className="w-4 p-4">
-                                                    {/* <div className="flex items-center">
-                                                        <input id="checkbox-table-search-1" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
-                                                        <label htmlFor="checkbox-table-search-1" className="sr-only">checkbox</label>
-                                                    </div> */}
-                                                </td>
                                                 <th scope="row" className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
                                                     <img className="w-10 h-10 rounded-full" src="https://github.com/michaelrosstarr.png" alt="Jese image" />
                                                     <div className="pl-3">
@@ -218,7 +220,7 @@ export default function OrganizationSettings({ }: IOrganizationSettings) {
                                                         Sometime in the past
                                                     </div>
                                                 </td>
-                                                {isAdmin() && item.email !== stateUser.user.email && !stateUser.userGroups[activeGroupIndex].groupName.startsWith("admin-") && <td className="float-right mr-2">
+                                                {isAdmin() && item.email !== stateUser.user.email && !stateUser?.userGroups[activeGroupIndex]?.groupName?.startsWith("admin-") && <td className="float-right mr-2">
                                                     <TableIconButton icon={<TrashIcon className="h-5 w-5 text-red-500 cursor-pointer" />} colour="red" handleModal={(value) => {
                                                         dispatch(setCurrentOpenState("ORG.RemoveUser"))
                                                     }} />

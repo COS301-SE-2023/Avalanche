@@ -100,7 +100,7 @@ export default function Settings() {
                         <a href="?tab=general" className={tab === "general" ? tabOptions.active : tabOptions.inactive}>General Settings</a>
                     </li>
                     <li className="mr-2" onClick={(e) => tabClick(e, "organizations")}>
-                        <a href="?tab=subusers" className={tab === "organizations" ? tabOptions.active : tabOptions.inactive}>Organizations</a>
+                        <a href="?tab=organizations" className={tab === "organizations" ? tabOptions.active : tabOptions.inactive}>Organizations</a>
                     </li>
                     <li className="mr-2" onClick={(e) => tabClick(e, "integrations")}>
                         <a href="?tab=integrations" className={tab === "integrations" ? tabOptions.active : tabOptions.inactive}>Data Products</a>

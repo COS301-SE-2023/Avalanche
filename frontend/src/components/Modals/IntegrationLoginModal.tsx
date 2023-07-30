@@ -1,9 +1,11 @@
 import { IIntergrationLoginData as IData } from "@/interfaces";
-import { Input, InputLabel, SubmitButton, AlternativeButton } from "../Util";
+import { Input, InputLabel, SubmitButton, AlternativeButton, ErrorToast } from "../Util";
 import React, { useState } from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
 import 'animate.css';
 import { ModalWrapper } from "./ModalOptions";
+import ky, { HTTPError } from "ky";
+import { getCookie } from "cookies-next";
 
 interface IIntegrationLoginModal {
 
@@ -46,13 +48,38 @@ export default function IntegrationLoginModal({ }: IIntegrationLoginModal) {
      * This should call Redux to call the backend to do its logic
      * @param event is the event from the forms onSubmit action
      */
-    const formSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+    const formSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setLoading(true);
         setTimeout(() => {
             setLoading(false);
         }, 3000);
+
+        // user-management/integrateWithWExternalAPI
+
+        try {
+            const res = await ky.post(`${process.env.NEXT_PUBLIC_API}/user-management/integrateWithWExternalAPI`, {
+                json: {
+                    type: integration.name,
+                    username: email,
+                    password: password,
+                    peronal: true
+                },
+                headers: {
+                    "Authorization": `Bearer ${getCookie("jwt")}`
+                }
+            }).json();
+            // SuccessToast({ text: "Successfully created API Key." })
+        } catch (e) {
+            let error = e as HTTPError;
+            if (error.name === 'HTTPError') {
+                const errorJson = await error.response.json();
+                return ErrorToast({ text: errorJson.message });
+            }
+        }
+
     }
+
 
     /**
      * This function renders the html to the DOM.

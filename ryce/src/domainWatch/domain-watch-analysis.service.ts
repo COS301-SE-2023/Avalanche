@@ -1,8 +1,8 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { lastValueFrom } from 'rxjs';
-import { SnowflakeService } from 'src/snowflake/snowflake.service';
-import { GraphFormatService } from 'src/graph-format/graph-format.service';
+import { SnowflakeService } from '../snowflake/snowflake.service';
+import { GraphFormatService } from '../graph-format/graph-format.service';
 
 @Injectable()
 export class DomainWatchService {
