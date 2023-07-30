@@ -118,6 +118,7 @@ export const userSlice = createSlice({
         },
         updateAPI(state, action) {
             state.api = action.payload;
+            state.user.checkApi = action.payload;
         },
         clearLoading(state) {
             state.requests.loading = false;
