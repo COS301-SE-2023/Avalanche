@@ -127,7 +127,7 @@
                 ]
             },
             {
-                "name": "marketshare",
+                "name": "marketShare",
                 "filters": [
                     {
                         "name": "zone",
@@ -399,7 +399,7 @@
                 ]
             },
             {
-                "name": "marketshare",
+                "name": "marketShare",
                 "filters": [
                     {
                         "name": "zone",
@@ -703,7 +703,7 @@
                 ]
             },
             {
-                "name": "marketshare",
+                "name": "marketShare",
                 "filters": [
                     {
                         "name": "zone",
