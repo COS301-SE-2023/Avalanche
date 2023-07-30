@@ -7,7 +7,7 @@ import { SubmitButton, DangerAlert, Input, InputLabel, Anchor, ErrorToast } from
 import tempLogo from '../assets/logo.png';
 import { Toaster } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
-import { userState, login, clearError } from '@/store/Slices/userSlice';
+import { userState, login, clearError, clearLoading } from '@/store/Slices/userSlice';
 import { ILoginRequest } from '@/interfaces/requests';
 import { useRouter } from 'next/router';
 import LoadingPage from '@/components/Util/Loading';
@@ -44,12 +44,16 @@ export default function Home() {
   }
 
   useEffect(() => {
-    if(stateUser.requests.error) {
-      ErrorToast({text: `${stateUser.requests.error}`});
+    dispatch(clearLoading());
+  }, [])
+
+  useEffect(() => {
+    if (stateUser.requests.error) {
+      ErrorToast({ text: `${stateUser.requests.error}` });
       dispatch(clearError());
     }
-      
-  }, [stateUser.requests.error]);
+
+  }, [stateUser.requests]);
 
   const validate = (): boolean => {
     if (!email || !password) {
@@ -88,8 +92,8 @@ export default function Home() {
                 </h1>
                 <form className="space-y-4 md:space-y-6" onSubmit={(event) => formSubmit(event)}>
                   <div>
-                    <InputLabel htmlFor="email" text="Your email" />
-                    <Input type="email" name="email" id="email" placeholder="name@company.com" required={true} value={email} onChange={(event: React.FormEvent<HTMLInputElement>) => setEmail(event.currentTarget.value)} />
+                    <InputLabel htmlFor="email" text="Email" />
+                    <Input type="email" name="email" id="email" placeholder="michael@dundermifflin.com" required={true} value={email} onChange={(event: React.FormEvent<HTMLInputElement>) => setEmail(event.currentTarget.value)} />
                     {emailError && <DangerAlert title="Invalid Email!" text="This email is invalid." />}
                   </div>
                   <div>
