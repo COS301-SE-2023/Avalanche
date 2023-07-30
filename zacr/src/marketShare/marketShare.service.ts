@@ -51,6 +51,8 @@ export class MarketShareService {
         data: {
           graphName: graphName,
           ...JSON.parse(formattedData),
+          warehouse: 'zacr',
+          graphType: 'marketshare',
         },
         timestamp: new Date().toISOString(),
       };

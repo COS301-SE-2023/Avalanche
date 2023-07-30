@@ -36,7 +36,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
     it('should perform transactions for a granularity of a month', () => {
       const data = {
         zone : ["WIEN"], dateFrom : dateFrom, dateTo: dateTo, graphName: `Monthly, from ${dateFrom} to ${dateTo}`, granularity: "month"
-      }; // Replace this with actual data
+      }; 
       
       return request(app.getHttpServer())
         .post('/ryce/transactions')

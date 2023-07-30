@@ -24,7 +24,7 @@ export class MovementService {
       console.log(filters);
       const sqlQuery = `call nettVerticalMovement('${filters}')`;
 
-      let formattedData = await this.redis.get(`ryce` + sqlQuery);
+      let formattedData = await this.redis.get(`africa` + sqlQuery);
 
       if (!formattedData) {
         let queryData;
@@ -44,7 +44,7 @@ export class MovementService {
         );
 
         await this.redis.set(
-          `ryce` + sqlQuery,
+          `africa` + sqlQuery,
           formattedData,
           'EX',
           24 * 60 * 60,
@@ -57,7 +57,7 @@ export class MovementService {
         status: 'success',
         data: {
           graphName: graphName,
-          warehouse: 'ryce',
+          warehouse: 'africa',
           graphType: 'movement',
           ...JSON.parse(formattedData),
         },
