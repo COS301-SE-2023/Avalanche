@@ -1,11 +1,11 @@
 import { getCookie } from "cookies-next";
-import { Anchor, ErrorToast, SubmitButton, WarningAlert } from "../Util"
+import { Anchor, ErrorToast, Input, SubmitButton, SuccessToast, WarningAlert } from "../Util"
 import ky, { HTTPError } from "ky";
 import { useDispatch } from "react-redux";
 import { updateAPI } from "@/store/Slices/userSlice";
 import { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { QuestionMarkCircleIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { QuestionMarkCircleIcon, ClipboardIcon } from "@heroicons/react/24/solid";
 
 interface IGeneralSettings {
     user: any
@@ -30,10 +30,9 @@ export default function GeneralSettings({ user }: IGeneralSettings) {
 
     const dispatch = useDispatch<any>();
     const [passive, setPassive] = useState<PassiveEntry[]>([]);
-    const [lev, setLev] = useState<number>(0);
-    const [sound, setSound] = useState<number>(0);
     const [activeHelp, setActiveHelp] = useState<string[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
+    const [apiKey, setAPIKey] = useState<string>("");
 
     const [types, setTypes] = useState<PassiveTypes[]>([]);
 
@@ -49,9 +48,6 @@ export default function GeneralSettings({ user }: IGeneralSettings) {
                 }
             }).json();
             const data = res as any;
-            // console.log(data.message.watched);
-
-            // populate types
             for (let type in data.message.watched.types) {
                 checkType(data.message.watched.types[type].type);
             }
@@ -119,10 +115,6 @@ export default function GeneralSettings({ user }: IGeneralSettings) {
         }
     }
 
-    useEffect(() => {
-        // console.log(types);
-    }, [types])
-
     const checkType = (typeName: string) => {
         const temp = [...types];
         const index = temp.findIndex((type: PassiveTypes) => type.type === typeName);
@@ -158,6 +150,9 @@ export default function GeneralSettings({ user }: IGeneralSettings) {
                 }
             }).json();
             dispatch(updateAPI(true));
+            const data = res as any;
+            setAPIKey(data.message);
+            SuccessToast({ text: "Successfully created API Key." })
         } catch (e) {
             let error = e as HTTPError;
             if (error.name === 'HTTPError') {
@@ -175,7 +170,10 @@ export default function GeneralSettings({ user }: IGeneralSettings) {
                     "Authorization": `Bearer ${getCookie("jwt")}`
                 }
             }).json();
+            const data = res as any;
+            setAPIKey(data.message);
             dispatch(updateAPI(true));
+            SuccessToast({ text: "Successfully rerolled API Key." })
         } catch (e) {
             let error = e as HTTPError;
             if (error.name === 'HTTPError') {
@@ -224,10 +222,20 @@ export default function GeneralSettings({ user }: IGeneralSettings) {
                     {/* API Keys */}
                     <h4 className="text-2xl font-bold text-gray-700 dark:text-white mb-2">API Key</h4>
                     <div className="flex gap-5 justify-between items-center">
-                        <WarningAlert title="No API Key" text={user.api ? "You already have an API Key" : "You have no API key registered."} className="flex-auto" />
-                        <SubmitButton text="Create API Key" onClick={() => {
-                            rerollAPIKey();
-                        }} className="h-full" />
+                        {!apiKey ? <WarningAlert title="API Key." text={user.user.apiCheck ? "You already have an API Key" : "You have no API key registered."} className="flex-auto" /> : <div className="relative flex-auto">
+                            <input type="text" className="block w-full p-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="dunder mifflin" value={apiKey} />
+                            <button className="text-white absolute right-2.5 bottom-2.5 bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm p-2 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800"><ClipboardIcon className="w-4 h-4" onClick={() => {
+                                navigator.clipboard.writeText(apiKey);
+                                SuccessToast({ text: "Copied API Key to clipboard." })
+                            }} /></button>
+                        </div>}
+                        <SubmitButton text={user.user.apiCheck ? "Reroll API Key" : "Create an API Key"} onClick={() => {
+                            if (!user.user.apiCheck) {
+                                createAPIKey();
+                            } else {
+                                rerollAPIKey();
+                            }
+                        }} className="h-full flex-nowrap" />
                     </div>
                 </div>
                 <div className="flex flex-col">
@@ -237,7 +245,7 @@ export default function GeneralSettings({ user }: IGeneralSettings) {
                         <div className="w-full p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                             <div className="flex items-start gap-2 items-center">
                                 <div className="flex items-center h-5">
-                                    <input type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" checked={getIndexByType("Soundex") !== -1} onClick={() => checkType("Soundex")} />
+                                    <input type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" checked={getIndexByType("Soundex") !== -1} onClick={() => checkType("Soundex")} onChange={() => { }} />
                                 </div>
                                 <h3 className="block text-sm font-medium text-gray-900 dark:text-white">Soundex</h3>
                                 <QuestionMarkCircleIcon className="h-5 w-5 hover:text-avalancheBlue cursor-pointer" onClick={() => onHelpClick("Soundex")} />
@@ -258,7 +266,7 @@ export default function GeneralSettings({ user }: IGeneralSettings) {
                         <div className="w-full p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                             <div className="flex items-start gap-2 items-center">
                                 <div className="flex items-center h-5">
-                                    <input type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" checked={getIndexByType("Levenshtein") !== -1} onClick={() => checkType("Levenshtein")} />
+                                    <input type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" checked={getIndexByType("Levenshtein") !== -1} onClick={() => checkType("Levenshtein")} onChange={() => { }} />
                                 </div>
                                 <h3 className="block text-sm font-medium text-gray-900 dark:text-white">Levenshtein</h3>
                                 <QuestionMarkCircleIcon className="h-5 w-5 hover:text-avalancheBlue cursor-pointer" onClick={() => onHelpClick("Levenshtein")} />

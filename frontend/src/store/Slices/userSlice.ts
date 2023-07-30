@@ -10,6 +10,7 @@ import { ISettings, IOrganisation, IDataProduct, IUserGroups } from "@/interface
 const url = `${process.env.NEXT_PUBLIC_API}/user-management`;
 
 export interface IUserState {
+    [x: string]: any;
     id: string | null,
     email: string | null,
     firstName: string | null,
