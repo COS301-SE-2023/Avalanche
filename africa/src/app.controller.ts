@@ -105,20 +105,6 @@ export class AppController {
     return result;
   }
 
-  @MessagePattern({ cmd: 'domainWatchPassive' })
-  async domainWatchPassive() {
-    const result = await this.domainWatchService.passive();
-    if (result.error) {
-      throw new RpcException({
-        status: result.status,
-        message: result.message,
-        timestamp: result.timestamp,
-      });
-    }
-
-    return result;
-  }
-
   @MessagePattern({ cmd: 'movement/vertical' })
   async nettVerticalMovement(data: any) {
     const result =  await this.movementService.nettVeritical(
@@ -137,9 +123,32 @@ export class AppController {
     return result;
   }
 
+  @MessagePattern({ cmd: 'domainWatchPassive' })
+  async domainWatchPassive() {
+    const result = await this.domainWatchService.passive();
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
+
   @MessagePattern({ cmd: 'loadDomains' })
   async loadDomains() {
-    return await this.domainWatchService.loadDomains();
+    const result = await this.domainWatchService.loadDomains();
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
   }
 
   @MessagePattern({ cmd: 'registrarName' })
