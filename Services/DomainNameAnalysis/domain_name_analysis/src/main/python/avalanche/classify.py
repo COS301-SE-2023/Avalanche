@@ -7,10 +7,12 @@ def categorize(strings,Inputlabels,confidenceMin):
     data = []
     batch_size = 30
     all=strings.split(",")
-    classifier = pipeline(task = 'zero-shot-classification', model='./Models\distilbart', tokenizer='./Models\distilbart',device=0)
+    classifier = pipeline(task = 'zero-shot-classification', model='./Models/distilbart', tokenizer='./Models/distilbart',device=0)
+    
+    #classifier = pipeline("zero-shot-classification",model="valhalla/distilbart-mnli-12-3")
+    #classifier.save_pretrained("./Models/distilbart")
     labels=Inputlabels.split(",")
     for i in range (0,len(all),batch_size):
-        #classifier = pipeline("zero-shot-classification",model="valhalla/distilbart-mnli-12-3")
         instance=(classifier(all[i:i+batch_size],candidate_labels=labels,))
         print(instance)
         

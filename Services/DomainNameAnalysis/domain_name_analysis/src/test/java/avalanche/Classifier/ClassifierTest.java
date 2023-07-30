@@ -34,7 +34,10 @@ public class ClassifierTest {
                 "tohaveandtoholdsworth",
                 "smittieai", };
         Classifier classifier = new Classifier();
-        String[] labels = { "cool", "uncool" };
+        String[] labels = { "Technology", "Education", "Healthcare", "Entertainment", "Travel or Hospitality,Finance",
+                "Food or Beverage", "Real Estate", "Automotive", "Sports or Fitness", "Marketing or Advertising",
+                "Fashion or Beauty", "Art and Culture", "News or Media", "Social networking",
+                "Business and professional services" };
 
         System.out.println(classifier.classify(domains, labels, 0.08));
     }
