@@ -25,7 +25,7 @@ export class DomainWatchService {
         timestamp: new Date().toISOString(),
       };
     }
-    console.log(queryData);
+    //console.log(queryData);
     return { queryData };
   }
 
@@ -42,7 +42,7 @@ export class DomainWatchService {
         timestamp: new Date().toISOString(),
       };
     }
-    console.log(queryData);
+    //console.log(queryData);
     return { queryData };
   }
 }
