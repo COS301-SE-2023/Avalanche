@@ -3,7 +3,7 @@ describe("Settings", () => {
         cy.visit('http://localhost:3000');
         cy.get('input[name=email]').type('kihale5691@sportrid.com');
         cy.get('input[name=password]').type('12345');
-        cy.get('button[type=submit]').click(); // Please replace with the actual route of your Dashboard page.
+        cy.get('button[type=submit]').click();
         cy.get('a[data-tooltip-target="tooltip-settings"]').click();
     });
 
