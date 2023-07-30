@@ -33,8 +33,11 @@ export default function CreateDashboardModal({ }: ICreateDashboardModal) {
         dispatch(clearCurrentOpenState());
         router.push({
             pathname: `/custom/${uuidv4()}`,
-            query: { name: name }
-        });
+            query: { name: name },
+
+        }, undefined, {
+            shallow: false
+        }).then(() => router.reload());
     }
 
     return (

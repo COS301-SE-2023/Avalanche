@@ -5,16 +5,13 @@ import Head from "next/head"
 import { ChartCard } from "@/components/Graphs"
 import { ChartType } from "@/Enums";
 import { useDispatch, useSelector } from "react-redux";
-import { graphState, getGraphData, getGraphDataRanking } from "@/store/Slices/graphSlice"
+import { graphState, getGraphData } from "@/store/Slices/graphSlice"
 import { useState, useEffect } from "react";
 import { ITransactionGraphRequest } from "@/interfaces/requests";
 import { selectModalManagerState } from "@/store/Slices/modalManagerSlice"
 import GraphZoomModal from "@/components/Modals/GraphZoomModal"
-import { Popover, Transition } from "@headlessui/react"
-import { Fragment, useRef } from "react"
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
-import { Document, Page, Image, View } from '@react-pdf/renderer';
 
 export default function Dashboard() {
 
