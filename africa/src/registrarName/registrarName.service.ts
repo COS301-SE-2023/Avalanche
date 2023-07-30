@@ -5,7 +5,7 @@ import { SnowflakeService } from '../snowflake/snowflake.service';
 export class RegistrarNameService {
   constructor(private readonly snowflakeService: SnowflakeService) {}
 
-  async registrarName(json: string): Promise<any> {
+  async registrarName(json: any): Promise<any> {
     try {
       const sqlQuery = `SELECT distinct(drr."Trading Name")
       FROM DATA_WAREHOUSE.REGISTRY."Dim Registry Registrar" drr
