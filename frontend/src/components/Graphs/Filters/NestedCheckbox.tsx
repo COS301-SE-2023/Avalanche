@@ -1,5 +1,6 @@
 import { Dropdown } from "@/components/Util";
 import { useState } from "react";
+import {CheckboxFilter} from "./";
 
 export default function NestedCheckbox({ data, request, update }: any) {
 
@@ -14,7 +15,9 @@ export default function NestedCheckbox({ data, request, update }: any) {
 
     return (
         <div>
-
+            {/* <CheckboxFilter /> */}
+            <Dropdown items={zones} option={selectedZone} set={(value: any) => setSelectedZone(value)} />
+            {selectedZone && <CheckboxFilter request={request} update={update} />}
         </div>
     )
 }
