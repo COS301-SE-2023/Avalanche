@@ -7,7 +7,7 @@ import { Fragment } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import "animate.css";
 import { useDispatch } from "react-redux";
-import { setCurrentOpenState, setData } from "@/store/Slices/modalManagerSlice";
+import { setCurrentOpenState, setData, setZoomData } from "@/store/Slices/modalManagerSlice";
 import { CheckboxFilter, DatePickerFilter, RadioboxFilter, ToggleFilter } from "./Filters";
 import { Disclosure } from '@headlessui/react'
 import { ErrorToast, SubmitButton } from "../Util";
@@ -19,9 +19,10 @@ interface IChartCard {
     data: any,
     defaultGraph: ChartType,
     state: any,
+    id?: string
 }
 
-export default function CustomChartCard({ title, data, defaultGraph, state }: IChartCard) {
+export default function CustomChartCard({ title, data, defaultGraph, state, id }: IChartCard) {
 
     const dispatch = useDispatch();
 
@@ -104,6 +105,14 @@ export default function CustomChartCard({ title, data, defaultGraph, state }: IC
         }
         dispatch(setCurrentOpenState("GRAPH.Modal"))
         dispatch(setData(modal));
+
+        console.log(data.graphName);
+
+        dispatch(setZoomData({
+            graphName: data.graphName,
+            dashboardID: id
+        }));
+
     }
 
     const filterGraphs = () => {
@@ -167,7 +176,7 @@ export default function CustomChartCard({ title, data, defaultGraph, state }: IC
     return (<>
         <div className="block p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-primaryBackground dark:border-primaryBackground w-full animate__animated animate__fadeIn animate__slow">
             <div className="flex justify-between mb-5 text-black dark:text-white">
-                <h1 className="p-1.5">{title || data.graphName}</h1>
+                <h1 className="p-1.5">{data.graphName || title}</h1>
                 <div className="flex flex-row gap-1">
                     <div className="relative">
                         <div className="inline-flex justify-center p-1.5 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-lightHover dark:hover:bg-gray-600" onClick={() => setFilterDropdown(!filterDropdown)}>

@@ -1334,4 +1334,19 @@ export class UserManagementController {
       throw error;
     }
   }
+  @Post('getDomainWatchPassiveUser')
+  async getDomainWatchPassiveUser(@Body() data: any) {
+    const pattern = { cmd: 'getDomainWatchPassiveUser' };
+    const payload = data;
+    try {
+      const result = await lastValueFrom(this.client.send(pattern, payload));
+      return result;
+    } catch (error) {
+      const rpcError = error
+      if (typeof rpcError === 'object') {
+        throw new HttpException(rpcError.message || 'An unexpected error occurred', rpcError.status || 500);
+      }
+      throw error;
+    }
+  }
 }

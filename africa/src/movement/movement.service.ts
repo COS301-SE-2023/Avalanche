@@ -24,7 +24,7 @@ export class MovementService {
       console.log(filters);
       const sqlQuery = `call nettVerticalMovement('${filters}')`;
 
-      let formattedData = await this.redis.get(`zacr` + sqlQuery);
+      let formattedData = await this.redis.get(`africa` + sqlQuery);
 
       if (!formattedData) {
         let queryData;
@@ -44,7 +44,7 @@ export class MovementService {
         );
 
         await this.redis.set(
-          `zacr` + sqlQuery,
+          `africa` + sqlQuery,
           formattedData,
           'EX',
           24 * 60 * 60,
@@ -57,9 +57,9 @@ export class MovementService {
         status: 'success',
         data: {
           graphName: graphName,
+          warehouse: 'africa',
+          graphType: 'movement',
           ...JSON.parse(formattedData),
-          warehouse: 'zacr',
-          graphType: 'movement/vertical',
         },
         timestamp: new Date().toISOString(),
       };
@@ -81,10 +81,10 @@ export class MovementService {
         for (const r of registrar) {
           regArr.push(r);
         }
-        registrar = ' ' + regArr.join(', ');
+        registrar = regArr.join(', ');
       }
     } else {
-      registrar = ' all registrars';
+      registrar = 'all registrars';
     }
 
     let zone = filters['zone'];
@@ -146,7 +146,7 @@ export class MovementService {
       dateFrom +
       ' to ' +
       dateTo +
-      ' for' +
+      ' for ' +
       registrar +
       zone
     );

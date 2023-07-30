@@ -54,7 +54,12 @@ export class AgeService {
 
       return {
         status: 'success',
-        data: { graphName: graphName, ...JSON.parse(formattedData) },
+        data: {
+          graphName: graphName,
+          ...JSON.parse(formattedData),
+          warehouse: 'africa',
+          graphType: 'age',
+        },
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
@@ -67,12 +72,12 @@ export class AgeService {
     }
   }
 
-  ageGraphName(filters: string): string {
+  ageGraphName(filters: any): string {
     let rank = filters['rank'];
     if (rank) {
-      rank = ' the ' + rank + ' registrars in terms of domain count ';
+      rank = 'the ' + rank + ' registrars in terms of domain count ';
     } else {
-      rank = ' all registrars ';
+      rank = 'all registrars ';
     }
     const overall = filters['overall'];
     const average = filters['average'];

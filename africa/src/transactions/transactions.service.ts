@@ -53,7 +53,12 @@ export class TransactionService {
 
       return {
         status: 'success',
-        data: { graphName: graphName, ...JSON.parse(formattedData) },
+        data: {
+          graphName: graphName,
+          ...JSON.parse(formattedData),
+          warehouse: 'africa',
+          graphType: 'transactions',
+        },
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
@@ -66,7 +71,7 @@ export class TransactionService {
     }
   }
 
-  async transactionsRanking(filters: string, graphName: string): Promise<any> {
+  async transactionsRanking(filters: any, graphName: string): Promise<any> {
     try {
       graphName = this.transactionsGraphName(filters, true);
       const filterObj = JSON.parse(JSON.stringify(filters));
@@ -103,7 +108,12 @@ export class TransactionService {
       }
       return {
         status: 'success',
-        data: { graphName: graphName, ...JSON.parse(formattedData) },
+        data: {
+          graphName: graphName,
+          ...JSON.parse(formattedData),
+          warehouse: 'africa',
+          graphType: 'transactions-ranking',
+        },
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
@@ -116,7 +126,7 @@ export class TransactionService {
     }
   }
 
-  transactionsGraphName(filters: string, perReg: boolean): string {
+  transactionsGraphName(filters: any, perReg: boolean): string {
     let dateFrom;
     if (filters['dateFrom'] === undefined) {
       dateFrom = new Date();
@@ -158,13 +168,6 @@ export class TransactionService {
 
     let zone = filters['zone'];
     if (zone) {
-      if (zone.length > 0) {
-        const zoneArr = [];
-        for (const r of zone) {
-          zoneArr.push(r);
-        }
-        zone += zoneArr.join(', ');
-      }
       zone = ' for ' + zone;
     } else {
       zone = ' for all zones in registry';
@@ -172,13 +175,13 @@ export class TransactionService {
 
     let reg = '';
     if (perReg) {
-      reg = ' per registrar ';
+      reg = 'per registrar ';
     }
     return (
       granularity +
-      ' Transactions ' +
+      'Transactions ' +
       reg +
-      ' from ' +
+      'from ' +
       dateFrom +
       ' to ' +
       dateTo +

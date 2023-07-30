@@ -86,4 +86,7 @@ export class UserManagementService {
   async getDomainWatchPassive(data: any) {
     return this.client.send({ cmd: 'getDomainWatchPassive' }, data).toPromise();
   }
+  async getDomainWatchPassiveUser(data: any) {
+    return this.client.send({ cmd: 'getDomainWatchPassiveUser' }, data).toPromise();
+  }
 }

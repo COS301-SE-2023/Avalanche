@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
-import { AlternativeButton, DeleteButton, SubmitButton, TableIconButton, WarningAlert } from "../Util";
+import { AlternativeButton, DeleteButton, ErrorToast, SubmitButton, SuccessToast, TableIconButton, WarningAlert } from "../Util";
 import { TrashIcon } from '@heroicons/react/24/solid';
 import NoFind from '../CustomSVG/NoFind';
 import { ConfirmModal, CreateGroupModal, OrgnizationCreateModal } from '../Modals';
 import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
-import { getLatestOrganisation, userState } from "@/store/Slices/userSlice";
+import { clearError, getLatestOrganisation, userState, getUserGroups, setCreateGroupSuccess, setAddUserGroupSuccess } from "@/store/Slices/userSlice";
 import { useDispatch, useSelector } from 'react-redux';
-import { getUserGroups, setCreateGroupSuccess, setAddUserGroupSuccess } from "@/store/Slices/userSlice";
 import AddUserToGroup from "../Modals/AddUserToGroup";
 
 function classNames(...classes: any[]) {
@@ -30,6 +29,21 @@ export default function OrganizationSettings({ }: IOrganizationSettings) {
         dispatch(getLatestOrganisation({}));
         dispatch(getUserGroups({}))
     }, [])
+
+    // useEffect(() => {
+    //     if (stateUser.requests.error) {
+    //         ErrorToast({ text: `${stateUser.requests.error}` });
+    //         console.log("ogo");
+    //         dispatch(clearError());
+    //     }
+    // }, [stateUser.requests]);
+
+    // useEffect(() => {
+    //     if (stateUser.addUserGroupSuccess) {
+    //         SuccessToast({ text: "Successfully added user to group" });
+    //         dispatch(clearError());
+    //     }
+    // }, [stateUser.addUserGroupSuccess]);
 
 
     /**
@@ -179,7 +193,6 @@ export default function OrganizationSettings({ }: IOrganizationSettings) {
                             activeGroupIndex !== -1 && groupTab !== "" && stateUser.userGroups[activeGroupIndex].groupMembers.length > 0 && <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 rounded-lg">
                                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
-                                        <th scope="col" className="p-4">
                                         <th scope="col" className="px-6 py-3">
                                             Name
                                         </th>
@@ -207,7 +220,7 @@ export default function OrganizationSettings({ }: IOrganizationSettings) {
                                                         Sometime in the past
                                                     </div>
                                                 </td>
-                                                {isAdmin() && item.email !== stateUser.user.email && !stateUser.userGroups[activeGroupIndex].groupName.startsWith("admin-") && <td className="float-right mr-2">
+                                                {isAdmin() && item.email !== stateUser.user.email && !stateUser?.userGroups[activeGroupIndex]?.groupName?.startsWith("admin-") && <td className="float-right mr-2">
                                                     <TableIconButton icon={<TrashIcon className="h-5 w-5 text-red-500 cursor-pointer" />} colour="red" handleModal={(value) => {
                                                         dispatch(setCurrentOpenState("ORG.RemoveUser"))
                                                     }} />

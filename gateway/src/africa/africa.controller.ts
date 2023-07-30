@@ -104,6 +104,22 @@ export class AfricaController {
     }
   }
 
+  @Post('movement/vertical')
+  async movementVertical(@Body() data: any) {
+    const pattern = { cmd: 'movement/vertical' };
+    const payload = data;
+    try {
+      const result = await lastValueFrom(this.client.send(pattern, payload));
+      return result;
+    } catch (error) {
+      const rpcError = error
+      if (typeof rpcError === 'object') {
+        throw new HttpException(rpcError.message || 'An unexpected error occurred', rpcError.status || 500);
+      }
+      throw error;
+    }
+  }
+
   @Post('domainWatchPassive')
   async domainWatchPassive(@Body() data: any) {
     const pattern = { cmd: 'domainWatchPassive' };
