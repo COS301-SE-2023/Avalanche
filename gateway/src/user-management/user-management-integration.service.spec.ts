@@ -117,8 +117,9 @@ describe('User Management Integration Tests From Gateway', () => {
  // This may change based on the structure of your response
     });
 
+    let orgName: string;
     describe('Create Organisation', () => {
-      let orgName: string;
+      
       it('should create a new organisation', () => {
         orgName = Random.word(8);
         const organisationDto = {
@@ -149,7 +150,7 @@ describe('User Management Integration Tests From Gateway', () => {
     describe('Exit Organisation', () => {
       it('should allow the user to exit  the organisation', () => {
         const organisationData = {
-          organisationName: `Random.word(8)`,
+          organisationName: orgName,
         };
         return request(app.getHttpServer())
           .post('/user-management/exitOrganisation')
