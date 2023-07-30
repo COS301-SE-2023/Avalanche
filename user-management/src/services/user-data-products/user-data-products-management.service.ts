@@ -62,23 +62,39 @@ export class UserDataProductMangementService {
                             timestamp: new Date().toISOString()
                         };
                     }
-                    const user = await this.userRepository.findOne({ where: { email: allocateToName }, relations: ['userGroups', 'organisation', 'dashboards'] });
-                    if (!user) {
+                    const userPayload = await this.redis.get(token);
+                    if (!userPayload) {
                         return {
-                            status: 400, error: true, message: 'User does not exist',
+                            status: 400, error: true, message: 'Invalid token.',
                             timestamp: new Date().toISOString()
                         };
                     }
-                    user.products += integrationString;
-                    await this.userRepository.save(user);
-                    delete user.password;
-                    delete user.salt;
-                    delete user.apiKey;
-                    await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60);
-                    return {
-                        status: 'success', message: 'User is integrated with DNS',
-                        timestamp: new Date().toISOString()
-                    };
+                    const { email: userEmail } = JSON.parse(userPayload);
+                    console.log(userEmail);
+                    if (allocateToName == userEmail) {
+                        const user = await this.userRepository.findOne({ where: { email: allocateToName }, relations: ['userGroups', 'organisation', 'dashboards'] });
+                        if (!user) {
+                            return {
+                                status: 400, error: true, message: 'User does not exist',
+                                timestamp: new Date().toISOString()
+                            };
+                        }
+                        user.products += integrationString;
+                        await this.userRepository.save(user);
+                        delete user.password;
+                        delete user.salt;
+                        delete user.apiKey;
+                        await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60);
+                        return {
+                            status: 'success', message: 'User is integrated with DNS',
+                            timestamp: new Date().toISOString()
+                        };
+                    } else {
+                        return {
+                            status: 400, error: true, message: "You are allocating this to another user",
+                            timestamp: new Date().toISOString()
+                        };
+                    }
                 } catch (error) {
                     console.error(error);
                     return {
@@ -139,19 +155,47 @@ export class UserDataProductMangementService {
                                 timestamp: new Date().toISOString()
                             };
                         }
-                        const userGroup = await this.userGroupRepository.findOne({ where: { name: allocateToName } });
-                        if (!userGroup) {
+                        const userPayload = await this.redis.get(token);
+                        if (!userPayload) {
                             return {
-                                status: 400, error: true, message: 'Cannot find user group with the given name',
+                                status: 400, error: true, message: 'Invalid token.',
+                                timestamp: new Date().toISOString()
+                            };
+                        }
+                        const { email: userEmail } = JSON.parse(userPayload);
+                        const user = await this.userRepository.findOne({ where: { email: userEmail }, relations: ['userGroups', 'organisation', 'dashboards'] });
+                        if (!user) {
+                            return {
+                                status: 400, error: true, message: 'User does not exist',
+                                timestamp: new Date().toISOString()
+                            };
+                        }
+                        let check = false;
+                        for (const userGroup of user.userGroups) {
+                            if (userGroup.name == allocateToName) {
+                                check = true;
+                            }
+                        }
+                        if (check == true) {
+                            const userGroup = await this.userGroupRepository.findOne({ where: { name: allocateToName } });
+                            if (!userGroup) {
+                                return {
+                                    status: 400, error: true, message: 'Cannot find user group with the given name',
+                                    timestamp: new Date().toISOString()
+                                }
+                            }
+                            userGroup.products += integrationString;
+                            await this.userRepository.save(userGroup);
+                            return {
+                                status: 'success', message: 'User is integrated with DNS',
+                                timestamp: new Date().toISOString()
+                            };
+                        } else {
+                            return {
+                                status: 400, error: true, message: 'User is not apart of this user group',
                                 timestamp: new Date().toISOString()
                             }
                         }
-                        userGroup.products += integrationString;
-                        await this.userRepository.save(userGroup);
-                        return {
-                            status: 'success', message: 'User is integrated with DNS',
-                            timestamp: new Date().toISOString()
-                        };
                     } catch (error) {
                         console.error(error);
                         return {
@@ -177,19 +221,35 @@ export class UserDataProductMangementService {
             if (type.length > 0) {
                 typeW += type + ',';
             }
-            const user = await this.userRepository.findOne({ where: { email: allocateToName } });
-            if (!user) {
+            const userPayload = await this.redis.get(token);
+            if (!userPayload) {
                 return {
-                    status: 400, error: true, message: 'User does not exist',
+                    status: 400, error: true, message: 'Invalid token.',
                     timestamp: new Date().toISOString()
                 };
             }
-            user.products += typeW;
-            await this.userRepository.save(user);
-            return {
-                status: 'success', message: user,
-                timestamp: new Date().toISOString()
-            };
+            const { email: userEmail } = JSON.parse(userPayload);
+            console.log(userEmail);
+            if (allocateToName == userEmail) {
+                const user = await this.userRepository.findOne({ where: { email: allocateToName }, relations: ['userGroups', 'organisation', 'dashboards'] });
+                if (!user) {
+                    return {
+                        status: 400, error: true, message: 'User does not exist',
+                        timestamp: new Date().toISOString()
+                    };
+                }
+                user.products += typeW;
+                await this.userRepository.save(user);
+                return {
+                    status: 'success', message: user,
+                    timestamp: new Date().toISOString()
+                };
+            } else {
+                return {
+                    status: 400, error: true, message: 'User does not have the same details as given',
+                    timestamp: new Date().toISOString()
+                };
+            }
         } else if (personal == false) {
             // Retrieve the user with their groups based on the token
             const userData = await this.redis.get(token);
@@ -200,19 +260,47 @@ export class UserDataProductMangementService {
                 if (type.length > 0) {
                     typeW += type + ',';
                 }
-                const userGroup = await this.userGroupRepository.findOne({ where: { name: allocateToName } });
-                if (!userGroup) {
+                const userPayload = await this.redis.get(token);
+                if (!userPayload) {
                     return {
-                        status: 400, error: true, message: 'Cannot find user group with given name',
+                        status: 400, error: true, message: 'Invalid token.',
                         timestamp: new Date().toISOString()
+                    };
+                }
+                const { email: userEmail } = JSON.parse(userPayload);
+                const user = await this.userRepository.findOne({ where: { email: userEmail }, relations: ['userGroups', 'organisation', 'dashboards'] });
+                if (!user) {
+                    return {
+                        status: 400, error: true, message: 'User does not exist',
+                        timestamp: new Date().toISOString()
+                    };
+                }
+                let check = false;
+                for (const userGroup of user.userGroups) {
+                    if (userGroup.name == allocateToName) {
+                        check = true;
                     }
                 }
-                userGroup.products += typeW;
-                await this.userGroupRepository.save(userGroup);
-                return {
-                    status: 'success', message: 'User group is integrated with ' + type,
-                    timestamp: new Date().toISOString()
-                };
+                if (check == true) {
+                    const userGroup = await this.userGroupRepository.findOne({ where: { name: allocateToName } });
+                    if (!userGroup) {
+                        return {
+                            status: 400, error: true, message: 'Cannot find user group with given name',
+                            timestamp: new Date().toISOString()
+                        }
+                    }
+                    userGroup.products += typeW;
+                    await this.userGroupRepository.save(userGroup);
+                    return {
+                        status: 'success', message: 'User group is integrated with ' + type,
+                        timestamp: new Date().toISOString()
+                    };
+                }else{
+                    return {
+                        status: 400, error: true, message: 'User is not apart of this user group',
+                        timestamp: new Date().toISOString()
+                    }; 
+                }
             } else {
                 return {
                     status: 400, error: true, message: 'User does not have the right permissions',
@@ -298,11 +386,11 @@ export class UserDataProductMangementService {
                 timestamp: new Date().toISOString()
             };
         }
-        const passiveData = await this.watchedUserRepository.findOne({where: {email: user.email},  select: ["person", "types", "domains"] });
-        const emailData = await this.watchedUserRepository.findOne({ where: {email: user.email}, select: ["person", "email", "domains"] });
+        const passiveData = await this.watchedUserRepository.findOne({ where: { email: user.email }, select: ["person", "types", "domains"] });
+        const emailData = await this.watchedUserRepository.findOne({ where: { email: user.email }, select: ["person", "email", "domains"] });
         console.log("here");
         if (passiveData && emailData) {
-            return { status: "success", message : {watched: passiveData, emailData: emailData}, timestamp: new Date().toISOString() };
+            return { status: "success", message: { watched: passiveData, emailData: emailData }, timestamp: new Date().toISOString() };
         }
         else {
             return {
