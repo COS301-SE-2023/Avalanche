@@ -27,6 +27,7 @@ export const domainWatchSlice = createSlice({
                 ...action,
             };
         })
+        // Get Domain Watch
         builder.addCase(getDomainWatch.pending, (state) => {
             state.loading = true;
             state.error = "";
@@ -40,7 +41,6 @@ export const domainWatchSlice = createSlice({
             state.loading = false;
             // state.error = payload.error;
         })
-        // Create Organisation
         builder.addCase(getDomainWatch.fulfilled, (state, action) => {
             const payload = action.payload as any;
             state.loading = false;

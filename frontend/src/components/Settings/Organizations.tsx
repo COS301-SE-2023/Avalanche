@@ -30,22 +30,6 @@ export default function OrganizationSettings({ }: IOrganizationSettings) {
         dispatch(getUserGroups({}))
     }, [])
 
-    // useEffect(() => {
-    //     if (stateUser.requests.error) {
-    //         ErrorToast({ text: `${stateUser.requests.error}` });
-    //         console.log("ogo");
-    //         dispatch(clearError());
-    //     }
-    // }, [stateUser.requests]);
-
-    // useEffect(() => {
-    //     if (stateUser.addUserGroupSuccess) {
-    //         SuccessToast({ text: "Successfully added user to group" });
-    //         dispatch(clearError());
-    //     }
-    // }, [stateUser.addUserGroupSuccess]);
-
-
     /**
      * This state variable holds the current active user group tab.
      */

@@ -9,6 +9,10 @@ import { domainWatchState, getDomainWatch, updateChanging } from "@/store/Slices
 import { IDomainWatchRequest } from "@/interfaces/requests";
 import { useDispatch, useSelector } from 'react-redux';
 import { IDomainWatchType } from "@/interfaces/requests/DomainWatch";
+import ky, { HTTPError } from "ky";
+import { getCookie } from "cookies-next";
+import WHOISModal from "@/components/Modals/WHOISModal";
+import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
 
 export default function Settings() {
 
@@ -18,6 +22,7 @@ export default function Settings() {
     const regex = /^(?!.*[.])(?!.*http:\/\/)(?!.*https:\/\/).*$/gm;
 
     const watchState = useSelector(domainWatchState);
+    const modalState = useSelector(selectModalManagerState);
     const dispatch = useDispatch<any>();
 
     const [data, setData] = useState<any>({
@@ -27,10 +32,14 @@ export default function Settings() {
     const [activeHelp, setActiveHelp] = useState<string[]>([]);
     const [sorting, setSorting] = useState<string>("");
     const [sortingType, setSortingType] = useState<string>("asc");
+    const [whois, setWhois] = useState<string>("");
 
+    /**
+     * This function watched the watchState for the variable to change.
+     */
     useEffect(() => {
         if (watchState.error) {
-            ErrorToast({ text: watchState.error });
+            return ErrorToast({ text: watchState.error });
         }
     }, [watchState.error])
 
@@ -209,7 +218,29 @@ export default function Settings() {
                 }
             }
         }
-    }, [sorting, sortingType])
+    }, [sorting, sortingType]);
+
+    const getWhoIS = async (domain: string) => {
+        try {
+            const res = await ky.post(`${process.env.NEXT_PUBLIC_API}/domain-watch/whoisyou`, {
+                json: {
+                    domain
+                },
+                headers: {
+                    "Authorization": `Bearer ${getCookie("jwt")}`
+                }
+            }).json();
+            const data = res as any;
+            setWhois(data.data);
+            dispatch(setCurrentOpenState("WATCH.WHOIS"));
+        } catch (e) {
+            let error = e as HTTPError;
+            if (error.name === 'HTTPError') {
+                const errorJson = await error.response.json();
+                return ErrorToast({ text: errorJson.message });
+            }
+        }
+    }
 
     /**
      * Renders out the HTML
@@ -371,9 +402,13 @@ export default function Settings() {
                                         <div className="flex gap-2 items-center">
                                             Similarity {sorting === "similarity" ? <ChevronUpIcon className={sortingType === "asc" ? "h-4 w-4" : "rotate-180 h-w w-4"} /> : <ChevronUpDownIcon className="h-4 w-4" />}
                                         </div>
-
                                     </th>
 
+                                    <th scope="col" className="px-6 py-3 cursor-pointer w-52">
+                                        <div className="flex gap-2 items-center">
+                                            WhoIS Search
+                                        </div>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -395,6 +430,9 @@ export default function Settings() {
                                                     {item.similarity}
                                                 </span>
                                             </td>
+                                            <td className="px-6 py-4 dark:text-white text-gray-900">
+                                                <SubmitButton text="WHOIS Search" onClick={() => getWhoIS(`${item.domainName}.${item.zone.toLowerCase()}`)} />
+                                            </td>
                                         </tr>
                                     })
                                 }
@@ -405,6 +443,6 @@ export default function Settings() {
                 </div>}
             </div >
         </div>
-
+        {modalState.currentOpen === "WATCH.WHOIS" && <WHOISModal data={whois} />}
     </>
 }
