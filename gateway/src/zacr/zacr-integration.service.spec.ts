@@ -10,7 +10,7 @@ describe('ZACR Service Integration Tests From Gateway', () => {
   let app: INestApplication;
   let configService: ConfigService;
   const accessToken = process.env.JWT_TOKEN_TO_TEST;
-  console.log(accessToken);
+  //console.log(accessToken);
 
 
   beforeAll(async () => {
@@ -42,7 +42,7 @@ describe('ZACR Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          ////console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -57,7 +57,7 @@ describe('ZACR Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          ////console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -77,7 +77,7 @@ describe('ZACR Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -92,7 +92,7 @@ describe('ZACR Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -107,7 +107,7 @@ describe('ZACR Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -125,7 +125,7 @@ describe('ZACR Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -138,7 +138,7 @@ describe('ZACR Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -151,7 +151,7 @@ describe('ZACR Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -169,7 +169,7 @@ describe('ZACR Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -182,7 +182,7 @@ describe('ZACR Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -195,7 +195,7 @@ describe('ZACR Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -213,7 +213,7 @@ describe('ZACR Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -226,7 +226,7 @@ describe('ZACR Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -239,7 +239,7 @@ describe('ZACR Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -254,7 +254,7 @@ describe('ZACR Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -267,7 +267,7 @@ describe('ZACR Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -280,7 +280,7 @@ describe('ZACR Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -295,7 +295,7 @@ describe('ZACR Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -308,7 +308,7 @@ describe('ZACR Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -321,7 +321,7 @@ describe('ZACR Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -337,7 +337,7 @@ describe('ZACR Service Integration Tests From Gateway', () => {
         .send(data)
         .expect(201) // Update status code based on your expectation
         .then((response) => {
-          console.log(response.body);
+          //console.log(response.body);
         });
     });
   });

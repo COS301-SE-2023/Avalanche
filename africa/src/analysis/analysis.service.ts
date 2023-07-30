@@ -50,7 +50,7 @@ export class AnalysisService {
       };
     }
 
-    console.log('stats:' + JSON.stringify(statistics));
+    //console.log('stats:' + JSON.stringify(statistics));
     return JSON.stringify(statistics);
   }
 

@@ -18,12 +18,12 @@ export class DomainNameAnalysisService {
     try {
       console.log(data);
       const filters = JSON.stringify(data.filters);
-      console.log(filters);
+      //console.log(filters);
       const num = data.filters.num;
       const granularity = data.filters.granularity;
 
       const sqlQuery = `call domainNameAnalysis('${filters}')`;
-      console.log(sqlQuery);
+      //console.log(sqlQuery);
       let formattedData = await this.redis.get(`africa` + sqlQuery);
 
       if (!formattedData) {
@@ -38,7 +38,7 @@ export class DomainNameAnalysisService {
             timestamp: new Date().toISOString(),
           };
         }
-        console.log(queryData[0]['DOMAINNAMEANALYSIS']);
+        //console.log(queryData[0]['DOMAINNAMEANALYSIS']);
         data.data = queryData[0]['DOMAINNAMEANALYSIS'];
         delete data.filters;
         const response = this.httpService.post(
@@ -46,7 +46,7 @@ export class DomainNameAnalysisService {
           data,
         );
         const responseData = await lastValueFrom(response);
-        console.log(responseData);
+        //console.log(responseData);
         formattedData =
           await this.graphFormattingService.formatDomainNameAnalysis(
             JSON.stringify(responseData.data),
