@@ -1,13 +1,13 @@
 describe('Registrar Transaction Dashboard', () => {
     beforeEach(() => {
-        cy.visit('http://localhost:3000');
+        cy.visit(Cypress.env('baseURL') + ':' + Cypress.env('basePort'));
         cy.get('input[name=email]').type(Cypress.env('username'));
         cy.get('input[name=password]').type(Cypress.env('password'));
         cy.get('button[type=submit]').click();
-        cy.url().should('eq', 'http://localhost:3000/dashboard');
+        cy.url().should('eq', Cypress.env('baseURL') + '/dashboard');
         cy.get('#default-sidebar a[href="/marketShare"]').click();
         cy.wait(4000);
-        cy.url().should('contain', 'http://localhost:3000/marketShare');
+        cy.url().should('contain', Cypress.env('baseURL') + '/marketShare');
 
     });
 
