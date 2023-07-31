@@ -189,7 +189,7 @@ jobs:
           echo REDIS_PORT=${{ secrets.REDIS_PORT }} >> user-management/.env
           echo REDIS_PASSWORD='${{ secrets.REDIS_PASSWORD }}' >> user-management/.env
           echo REDIS_USER='${{ secrets.REDIS_USER }}' >> user-management/.env
-          echo POSTGRES_USERNAME='${{ secrets.POSTGRES_USERNAME }}' >> user-management/.env
+          echo POSTGRES_USER='${{ secrets.POSTGRES_USER }}' >> user-management/.env
           echo POSTGRES_DB='${{ secrets.POSTGRES_DB }}' >> user-management/.env
           echo POSTGRES_HOST='${{ secrets.POSTGRES_HOST }}' >> user-management/.env
           echo POSTGRES_PASSWORD='${{ secrets.POSTGRES_PASSWORD }}' >> user-management/.env
