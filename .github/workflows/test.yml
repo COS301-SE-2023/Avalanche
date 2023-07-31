@@ -102,14 +102,18 @@ jobs:
       - name: Start zacr
         run: |
           cd zacr
-          yarn start &
+          yarn start > zacr.log 2>&1 &
 
-      - name: Wait for ZACR service
+      - name: Wait for zacr service
         run: |
           while ! nc -z localhost 4002; do   
           sleep 1
-          echo "Waiting for ZACR service..."
-          done  
+          echo "Waiting for zacr service..."
+          done
+
+      - name: Print ZACR logs
+        run: |
+          cat zacr/zacr.log
 
       - name: Install dependencies for ryce
         run: |
