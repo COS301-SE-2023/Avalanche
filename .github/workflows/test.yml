@@ -84,6 +84,18 @@ jobs:
           cd zacr
           yarn install
 
+      - name: Print environment variables
+        run: |
+          echo "REDIS_HOST=${{ secrets.REDIS_HOST }}"
+          echo "REDIS_PORT=${{ secrets.REDIS_PORT }}"
+          echo "REDIS_USER=${{ secrets.REDIS_USER }}"
+          echo "SNOWFLAKE_USERNAME=${{ secrets.SNOWFLAKE_USERNAME_1 }}"
+          echo "SNOWFLAKE_SCHEMA=${{ secrets.SNOWFLAKE_SCHEMA_1 }}"
+          echo "SNOWFLAKE_ROLE=${{ secrets.SNOWFLAKE_ROLE_1 }}"
+          echo "SNOWFLAKE_DATABASE=${{ secrets.SNOWFLAKE_DATABASE_1 }}"
+          echo "SNOWFLAKE_WAREHOUSE=${{ secrets.SNOWFLAKE_WAREHOUSE_1 }}"
+          echo "SNOWFLAKE_ACCOUNT=${{ secrets.ZACR_SNOWFLAKE_ACCOUNT }}"
+
       - name: Create .env file for zacr service
         run: |
           echo REDIS_HOST='${{ secrets.REDIS_HOST }}' >> zacr/.env
