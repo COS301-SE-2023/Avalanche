@@ -110,6 +110,7 @@ jobs:
           sleep 2  
           echo "Waiting for zacr service..."
           done
+          sleep 7
 
       - name: Print ZACR logs
         run: |
@@ -209,17 +210,33 @@ jobs:
       - name: Start user-management
         run: |
           cd user-management
-          yarn start | tee yarn_start.log &
+          yarn start > user-management.log 2>&1 &
 
 
       - name: Wait for user-management service
         run: |
           while ! nc -z localhost 4001; do   
-          sleep 1
+          sleep 7
           echo "Waiting for user-management service..."
-          done        
+          done   
+          sleep 7 
+
+      - name: Print USER logs
+        run: |
+          cat user-management/user-management.log           
+
+      - name: Run integration tests for zacr service
+        run: |
+          cd zacr
+          yarn test 
+
+      - name: Run integration tests for ryce service
+        run: |
+          cd ryce
+          yarn test  
 
       - name: Run integration tests for gateway service
         run: |
           cd gateway
-          yarn test 
+          yarn test   
+                       
