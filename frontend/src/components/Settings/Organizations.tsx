@@ -81,7 +81,7 @@ export default function OrganizationSettings({ }: IOrganizationSettings) {
                 const name = `${data.userGroupName}-${data.userGroupID}`;
                 const displayName = data.userGroupName.startsWith("admin-") ? "Administrators" : data.userGroupName;
                 return <li className="mr-2 cursor-pointer w-full" onClick={() => tabClick(name, index)} key={index}>
-                    <span className={groupTab === name ? tabOptions.active : tabOptions.inactive}><span className={`flex w-3 h-3 bg-green-500 rounded-full ${isInGroup(data.userGroupID) ? "bg-green-500" : "bg-gray-900 dark:bg-gray-700"}`} /> {displayName}</span>
+                    <span className={groupTab === name ? tabOptions.active : tabOptions.inactive}><span className={`flex w-3 h-3 rounded-full ${isInGroup(data.userGroupID) ? "bg-green-500 dark:bg-green-500" : "bg-gray-900 dark:bg-gray-700"}`} /> {displayName}</span>
                 </li>
             })
         }

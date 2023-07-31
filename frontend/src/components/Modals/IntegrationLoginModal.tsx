@@ -59,12 +59,13 @@ export default function IntegrationLoginModal({ }: IIntegrationLoginModal) {
 
         try {
             const res = await ky.post(`${process.env.NEXT_PUBLIC_API}/user-management/integrateUserWithWExternalAPI`, {
+                timeout: false,
                 json: {
                     type: integration.name,
                     allocateToName: email,
                     username: email,
                     password: password,
-                    peronal: true
+                    personal: true
                 },
                 headers: {
                     "Authorization": `Bearer ${getCookie("jwt")}`
@@ -98,10 +99,10 @@ export default function IntegrationLoginModal({ }: IIntegrationLoginModal) {
                 <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
                     <li>
                         <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white flex gap-3 items-center cursor-pointer" onClick={() => {
-                            setIntegration({ name: "ZARC", image: "https://registry.net.za/favicon.ico" });
+                            setIntegration({ name: "ZACR", image: "https://registry.net.za/favicon.ico" });
                             setValid(true);
                             setDropdown(false);
-                        }}><img className="h-6" src="https://registry.net.za/favicon.ico" /> ZARC | Registrary Operator for ZA</span>
+                        }}><img className="h-6" src="https://registry.net.za/favicon.ico" /> ZACR | Registrary Operator for ZA</span>
                     </li>
                 </ul>
             </div>}

@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,6 +28,15 @@ public class HandleActive extends Running {
         String domain = (obj.getString("domain"));
 
         int numCalcs = (obj.getJSONArray("types").length());
+        Set<String> zones = new HashSet<>();
+        try {
+            JSONArray registries = obj.getJSONArray("registries");
+            for (int i = 0; i < registries.length(); i++) {
+                zones.add(registries.getString(i));
+            }
+        } catch (JSONException jsonException) {
+
+        }
 
         for (int j = 0; j < numCalcs; j++) {
             String type = obj.getJSONArray("types").getJSONObject(j).getString("type");
@@ -35,7 +45,7 @@ public class HandleActive extends Running {
                 case "Levenshtein":
                     if (j == 0) {
                         hits = similarityChecker.threadedFindAllWithinSimliarityThreshold(domain,
-                                threshold);
+                                threshold, zones);
                     } else {
                         hits = similarityChecker.findAllWithinSimliarityThreshold(domain,
                                 threshold, hits);
@@ -44,7 +54,7 @@ public class HandleActive extends Running {
                 case "Soundex":
                     if (j == 0) {
                         hits = similarityChecker.threadedfindAllSoundsAboveSimliarityThreshold(domain,
-                                threshold);
+                                threshold, zones);
                     } else {
                         hits = similarityChecker.findAllSoundsAboveSimliarityThreshold(domain,
                                 threshold, hits);
@@ -78,6 +88,10 @@ public class HandleActive extends Running {
     }
 
     public static String validateRequest(String body) {
+        String validation = validateJSON(body);
+        if (!validation.equals("")) {
+            return validation;
+        }
         int errorIndex = -1;
         Set<String> allowedMetrics = new HashSet<>();
         allowedMetrics.add("Levenshtein");

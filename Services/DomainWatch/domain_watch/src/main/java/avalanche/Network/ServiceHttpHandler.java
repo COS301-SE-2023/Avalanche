@@ -27,8 +27,10 @@ class ServiceHttpHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
         System.out.println("received request");
-        if ("POST".equals(httpExchange.getRequestMethod())) {
-            System.out.println("received post");
+        if ("POST".equals(httpExchange.getRequestMethod())
+                || ("GET".equals(httpExchange.getRequestMethod())
+                        && httpExchange.getHttpContext().getPath().contains("list"))) {
+            System.out.println("received " + httpExchange.getRequestMethod());
             InputStream inputStream = httpExchange.getRequestBody();
             java.util.Scanner scanner = new java.util.Scanner(inputStream).useDelimiter("\\A");
             String body = scanner.hasNext() ? scanner.next() : "";
