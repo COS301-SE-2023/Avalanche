@@ -15,4 +15,11 @@ export default defineConfig({
       bundler: "webpack",
     },
   },
+
+  env:{
+    username: "ingeodendaal5@gmail.com",
+    password: "password",
+    baseURL: "http://nginx",
+    basePort: "80"
+}
 });

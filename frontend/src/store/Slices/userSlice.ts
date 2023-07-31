@@ -235,10 +235,8 @@ export const userSlice = createSlice({
             state.addUserGroupSuccess = false;
         })
         builder.addCase(addUserToGroup.rejected, (state, action) => {
-            console.log(action);
             state.addUserGroupSuccess = false;
             state.loading = false;
-            console.log(action.payload);
             state.requests.error = action.payload as string;
         })
         // Remove User
@@ -310,12 +308,15 @@ export const otpVerify = createAsyncThunk("AUTH.OTPVerify", async (object: IOTPV
  * This action handles calling the login api call
  */
 export const login = createAsyncThunk("AUTH.Login", async (object: ILoginRequest, { rejectWithValue }) => {
-    // console.log(process.env);
     try {
         const response = await ky.post(`${url}/login`, {
             json: object
-        }).json();
-        console.log(response);
+        }).json() as any;
+
+        if (!response || !response.ok) {
+            return rejectWithValue("There was an issue. We don't know what happened, and we sure you don't either. So just try again ^_^.");
+        }
+
         return response;
     } catch (e) {
         let error = e as HTTPError;

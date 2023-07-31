@@ -1,5 +1,5 @@
 import { IIntergrationLoginData as IData } from "@/interfaces";
-import { Input, InputLabel, SubmitButton, AlternativeButton, ErrorToast } from "../Util";
+import { Input, InputLabel, SubmitButton, AlternativeButton, ErrorToast, SuccessToast } from "../Util";
 import React, { useState } from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
 import 'animate.css';
@@ -58,9 +58,10 @@ export default function IntegrationLoginModal({ }: IIntegrationLoginModal) {
         // user-management/integrateWithWExternalAPI
 
         try {
-            const res = await ky.post(`${process.env.NEXT_PUBLIC_API}/user-management/integrateWithWExternalAPI`, {
+            const res = await ky.post(`${process.env.NEXT_PUBLIC_API}/user-management/integrateUserWithWExternalAPI`, {
                 json: {
                     type: integration.name,
+                    allocateToName: email,
                     username: email,
                     password: password,
                     peronal: true
@@ -69,7 +70,7 @@ export default function IntegrationLoginModal({ }: IIntegrationLoginModal) {
                     "Authorization": `Bearer ${getCookie("jwt")}`
                 }
             }).json();
-            // SuccessToast({ text: "Successfully created API Key." })
+            SuccessToast({ text: "Successfully added integration." })
         } catch (e) {
             let error = e as HTTPError;
             if (error.name === 'HTTPError') {

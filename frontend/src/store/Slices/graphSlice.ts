@@ -83,7 +83,6 @@ export const graphSlice = createSlice({
         })
         builder.addCase(getMarketShareData.fulfilled, (state, action) => {
             const payload = action.payload as any;
-            console.log(payload.data.labels);
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
@@ -94,7 +93,6 @@ export const graphSlice = createSlice({
         })
         builder.addCase(getAgeAnalysisData.fulfilled, (state, action) => {
             const payload = action.payload as any;
-            console.log(payload.data.labels);
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
@@ -105,7 +103,6 @@ export const graphSlice = createSlice({
         })
         builder.addCase(getDomainNameAnalysisData.fulfilled, (state, action) => {
             const payload = action.payload as any;
-            console.log(payload.data.labels);
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
@@ -116,7 +113,6 @@ export const graphSlice = createSlice({
         })
         builder.addCase(getDomainLengthData.fulfilled, (state, action) => {
             const payload = action.payload as any;
-            console.log(payload.data.labels);
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
@@ -127,7 +123,6 @@ export const graphSlice = createSlice({
         })
         builder.addCase(getMovementVerticalData.fulfilled, (state, action) => {
             const payload = action.payload as any;
-            console.log(payload.data.labels);
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;

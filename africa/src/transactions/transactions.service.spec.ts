@@ -70,7 +70,7 @@ describe('TransactionService', () => {
         `africa${sqlQuery}`,
         'formattedData',
         'EX',
-        24 * 60 * 60,
+        72 * 60 * 60,
       );
 
       // Expect the result to be the final formatted data

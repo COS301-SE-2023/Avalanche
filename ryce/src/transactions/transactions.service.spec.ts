@@ -58,7 +58,7 @@ describe('TransactionService', () => {
       expect(mockRedis.get).toHaveBeenCalledWith(`ryce${sqlQuery}`);
       expect(mockSnowflakeService.execute).toHaveBeenCalledWith(sqlQuery);
       expect(mockGraphFormatService.formatTransactions).toHaveBeenCalledWith(JSON.stringify('queryData'));
-      expect(mockRedis.set).toHaveBeenCalledWith(`ryce${sqlQuery}`, 'formattedData', 'EX', 24 * 60 * 60);
+      expect(mockRedis.set).toHaveBeenCalledWith(`ryce${sqlQuery}`, 'formattedData', 'EX', 3 * 24 * 60 * 60);
 
       // Expect the result to be the final formatted data
       expect(result.status).toBe(500);
@@ -152,7 +152,7 @@ describe('TransactionService', () => {
       expect(mockRedis.get).toHaveBeenCalledWith(`ryce${sqlQuery}`);
       expect(mockSnowflakeService.execute).toHaveBeenCalledWith(sqlQuery);
       expect(mockGraphFormatService.formatTransactionsRanking).toHaveBeenCalledWith(JSON.stringify('queryData'));
-      expect(mockRedis.set).toHaveBeenCalledWith(`ryce${sqlQuery}`, JSON.stringify({formattedData: 'formattedData'}), 'EX', 24 * 60 * 60);
+      expect(mockRedis.set).toHaveBeenCalledWith(`ryce${sqlQuery}`, JSON.stringify({formattedData: 'formattedData'}), 'EX', 3 * 24 * 60 * 60);
   
       // Expect the result to be the final formatted data
       expect(result.status).toBe("success");

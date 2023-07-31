@@ -8,7 +8,7 @@ import { Menu, Transition } from '@headlessui/react'
 import "animate.css";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentOpenState, setData, clearCurrentOpenState } from "@/store/Slices/modalManagerSlice";
-import { CheckboxFilter, DatePickerFilter, RadioboxFilter, ToggleFilter } from "./Filters";
+import { CheckboxFilter, DatePickerFilter, NestedCheckbox, RadioboxFilter, ToggleFilter } from "./Filters";
 import { Disclosure } from '@headlessui/react'
 import { ErrorToast, SubmitButton } from "../Util";
 import { getFilters, graphState } from "@/store/Slices/graphSlice";
@@ -23,15 +23,13 @@ interface IChartCard {
 
 export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
 
-    console.log(data);
-
     const dispatch = useDispatch<any>();
     const stateGraph = useSelector(graphState);
     const filters = stateGraph.filters;
 
     useEffect(() => {
         dispatch(clearCurrentOpenState)
-        if (!filters) dispatch(getFilters({}));
+        if (filters.length === 0) dispatch(getFilters({}));
     }, [])
 
     const [type, setType] = useState<ChartType>(defaultGraph);
@@ -67,6 +65,9 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
             case "radiobox": {
                 return "";
             }
+            case "nestedCheckbox": {
+                return [];
+            }
         }
     }
 
@@ -97,12 +98,16 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
 
 
     const renderFilters = () => {
-        return filterGraphs().map((element: any, index: number) => (
+        return filterGraphs()?.filters?.map((element: any, index: number) => (
             <Disclosure key={index}>
                 {({ open, close }) => (
                     <>
                         <Disclosure.Button className="flex w-full justify-between rounded-lg px-4 py-2 text-left text-sm font-medium hover:bg-gray-300 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75" onClick={() => {
-                            addRequestObject(element.name, element);
+                            if (element.input === "nestedCheckbox") {
+                                addRequestObject("transactions", element)
+                            } else {
+                                addRequestObject(element.name, element);
+                            }
                         }}>
                             <div className="flex gap-4 items-center">
                                 {camelCaseRenderer(element.name)}
@@ -114,6 +119,7 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
                             {element.input === "date-picker" && <DatePickerFilter data={element} request={request[element.name]} update={updateRequestObject} />}
                             {element.input === "radiobox" && <RadioboxFilter data={element} request={request[element.name]} update={updateRequestObject} camelCase={camelCaseRenderer} />}
                             {element.input === "togglebox" && <ToggleFilter data={element} request={request[element.name]} update={updateRequestObject} />}
+                            {element.input === "nestedCheckbox" && <NestedCheckbox data={element} request={request["transactions"]} update={updateRequestObject} />}
                         </Disclosure.Panel>
                         <hr />
                     </>
@@ -137,14 +143,6 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
 
     const fetchGraphData = async (filters: any) => {
         setLoading(true);
-        if (data.endpointName) {
-            const d = data.endpointName.split("/");
-            setWarehouse(d[0]);
-            setGType(d[1]);
-        } else {
-            setWarehouse(data.warehouse);
-            setGType(data.type);
-        }
         try {
             const jwt = getCookie("jwt");
             const url = data.endpointName ? `${process.env.NEXT_PUBLIC_API}/${data.endpointName}` : `${process.env.NEXT_PUBLIC_API}/${warehouse || data.warehouse}/${gType || data.type}`;
@@ -160,7 +158,6 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
         } catch (e) {
             if (e instanceof Error) return ErrorToast({ text: e.message })
         }
-
     }
 
     const camelCaseRenderer = (value: string) => {
@@ -234,12 +231,15 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
                     </Menu>
                 </div>
             </div>
-            {type === ChartType.Bar && <BarChart data={graphData} />}
-            {type === ChartType.Pie && <PieChart data={graphData} />}
-            {type === ChartType.Line && <LineChart data={graphData} addClass="h-96" />}
-            {type === ChartType.Bubble && <BubbleChart data={graphData} />}
-            {type === ChartType.PolarArea && <PolarAreaChart data={graphData} />}
-            {type === ChartType.Radar && <RadarChart data={graphData} />}
+            {!loading ? <div>
+                {type === ChartType.Bar && <BarChart data={graphData} />}
+                {type === ChartType.Pie && <PieChart data={graphData} />}
+                {type === ChartType.Line && <LineChart data={graphData} addClass="h-96" />}
+                {type === ChartType.Bubble && <BubbleChart data={graphData} />}
+                {type === ChartType.PolarArea && <PolarAreaChart data={graphData} />}
+                {type === ChartType.Radar && <RadarChart data={graphData} />}
+            </div> : <div role="status" className="flex justify-between h-64 w-full bg-gray-300 rounded-lg animate-customPulse dark:bg-gray-700 p-6" />}
+
         </div >
     </>)
 }

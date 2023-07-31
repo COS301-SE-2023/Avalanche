@@ -35,12 +35,10 @@ export const modalManagerSlice = createSlice({
         },
         // Set the current open modal
         setCurrentOpenState(state, action) {
-            console.log("open", action.payload);
             state.currentOpen = action.payload
         },
         // Clear the current open modal
         clearCurrentOpenState(state) {
-            console.log("close");
             state.currentOpen = "";
             state.data = null;
         },

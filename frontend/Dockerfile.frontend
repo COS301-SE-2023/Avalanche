@@ -1,5 +1,5 @@
 # Base on offical Node.js Alpine image
-FROM cypress/included:latest
+FROM node:alpine
 
 # Set working directory
 WORKDIR /usr/app

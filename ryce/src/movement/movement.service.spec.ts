@@ -71,7 +71,7 @@ describe('MovementService', () => {
         expect.any(String),
         JSON.stringify({ data: 'formattedData' }),
         'EX',
-        24 * 60 * 60,
+        72 * 60 * 60,
       );
       expect(result.data).toEqual({
         graphName:
