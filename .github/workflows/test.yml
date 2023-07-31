@@ -66,7 +66,6 @@ jobs:
           echo MOCK_PASSWORD='${{ secrets.MOCK_PASSWORD }}' >> gateway/.env
           echo JWT_TOKEN_TO_TEST='${{ secrets.JWT_TOKEN_TO_TEST }}' >> gateway/.env
 
-
       - name: Start gateway
         run: |
           cd gateway
