@@ -43,7 +43,7 @@ describe('Sign in Page', () => {
 
       beforeEach(() => {
           // Visiting the register page before each test
-          cy.visit('http://localhost:3000/register');
+          cy.visit(Cypress.env('baseURL') + ":" + Cypress.env('basePort')+'/register');
       });
     
       it('Should display validation error if emails do not match', () => {
@@ -92,7 +92,7 @@ describe('Sign in Page', () => {
     })
     });
 
-  const baseURL = 'http://localhost:3000/';
+  const baseURL = cy.visit(Cypress.env('baseURL') + ":" + Cypress.env('basePort'));
   const server = 'http://localhost:4000/'
 
   //require('cypress-dotenv')();
@@ -105,11 +105,11 @@ describe('Sign in Page', () => {
 
   describe('Home page test', () => {
     beforeEach(() => {
-      cy.visit(baseURL);
+      cy.visit(Cypress.env('baseURL') + ":" + Cypress.env('basePort'));
     })
 
     it('should return a successful response', () => {
-      cy.request(baseURL).its("status")
+      cy.request(Cypress.env('baseURL') + ":" + Cypress.env('basePort')).its("status")
         .should('equal', 200);
     });
 
@@ -121,7 +121,7 @@ describe('Sign in Page', () => {
     });
 
     it('should have specific headers', () => {
-      cy.request(baseURL)
+      cy.request(Cypress.env('baseURL') + ":" + Cypress.env('basePort'))
         .its('headers')
         .should('include', {
           'content-type': 'text/html; charset=utf-8',
