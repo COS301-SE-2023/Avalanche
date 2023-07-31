@@ -85,23 +85,20 @@ jobs:
           yarn install
 
       - name: Create .env file for zacr service
-        uses: SpicyPizza/create-envfile@v1.3
-        with:
-          envkey_REDIS_HOST: '${{ secrets.REDIS_HOST }}'
-          envkey_REDIS_PORT: ${{ secrets.REDIS_PORT }}
-          envkey_REDIS_PASSWORD : '${{ secrets.REDIS_PASSWORD }}'
-          envkey_REDIS_USER : '${{ secrets.REDIS_USER }}'
-          envkey_SNOWFLAKE_USERNAME : '${{ secrets.SNOWFLAKE_USERNAME }}'
-          envkey_SNOWFLAKE_SCHEMA : '${{ secrets.SNOWFLAKE_SCHEMA }}'
-          envkey_SNOWFLAKE_ROLE : '${{ secrets.SNOWFLAKE_ROLE }}'
-          envkey_SNOWFLAKE_DATABASE : '${{ secrets.SNOWFLAKE_DATABASE }}'
-          envkey_SNOWFLAKE_WAREHOUSE : '${{ secrets.SNOWFLAKE_WAREHOUSE }}'
-          envkey_SNOWFLAKE_PASSWORD : '${{ secrets.ZACR_PASSWORD }}'
-          envkey_SNOWFLAKE_ACCOUNT : '${{ secrets.ZACR_SNOWFLAKE_ACCOUNT }}'
-          envkey_JWT_SECRET : '${{ secrets.JWT_SECRET }}'
-        directory: ./zacr
-        file_name: .env
-        fail_on_empty: false 
+        run: |
+          echo REDIS_HOST='${{ secrets.REDIS_HOST }}' >> zacr/.env
+          echo REDIS_PORT=${{ secrets.REDIS_PORT }} >> zacr/.env
+          echo REDIS_PASSWORD='${{ secrets.REDIS_PASSWORD }}' >> zacr/.env
+          echo REDIS_USER='${{ secrets.REDIS_USER }}' >> zacr/.env
+          echo SNOWFLAKE_USERNAME='${{ secrets.SNOWFLAKE_USERNAME }}' >> zacr/.env
+          echo SNOWFLAKE_SCHEMA='${{ secrets.SNOWFLAKE_SCHEMA }}' >> zacr/.env
+          echo SNOWFLAKE_ROLE='${{ secrets.SNOWFLAKE_ROLE }}' >> zacr/.env
+          echo SNOWFLAKE_DATABASE='${{ secrets.SNOWFLAKE_DATABASE }}' >> zacr/.env
+          echo SNOWFLAKE_WAREHOUSE='${{ secrets.SNOWFLAKE_WAREHOUSE }}' >> zacr/.env
+          echo SNOWFLAKE_PASSWORD='${{ secrets.ZACR_PASSWORD }}' >> zacr/.env
+          echo SNOWFLAKE_ACCOUNT='${{ secrets.ZACR_SNOWFLAKE_ACCOUNT }}' >> zacr/.env
+          echo JWT_SECRET='${{ secrets.JWT_SECRET }}' >> zacr/.env
+
 
       - name: Start zacr
         run: |
@@ -121,23 +118,20 @@ jobs:
           yarn install
 
       - name: Create .env file for ryce service
-        uses: SpicyPizza/create-envfile@v1.3
-        with:
-          envkey_REDIS_HOST: '${{ secrets.REDIS_HOST }}'
-          envkey_REDIS_PORT: ${{ secrets.REDIS_PORT }}
-          envkey_REDIS_PASSWORD : '${{ secrets.REDIS_PASSWORD }}'
-          envkey_REDIS_USER : '${{ secrets.REDIS_USER }}'
-          envkey_SNOWFLAKE_USERNAME : '${{ secrets.SNOWFLAKE_USERNAME }}'
-          envkey_SNOWFLAKE_SCHEMA : '${{ secrets.SNOWFLAKE_SCHEMA }}'
-          envkey_SNOWFLAKE_ROLE : '${{ secrets.SNOWFLAKE_ROLE }}'
-          envkey_SNOWFLAKE_DATABASE : '${{ secrets.SNOWFLAKE_DATABASE }}'
-          envkey_SNOWFLAKE_WAREHOUSE : '${{ secrets.SNOWFLAKE_WAREHOUSE }}'
-          envkey_SNOWFLAKE_PASSWORD : '${{ secrets.RYCE_PASSWORD }}'
-          envkey_SNOWFLAKE_ACCOUNT : '${{ secrets.RYCE_SNOWFLAKE_ACCOUNT }}'
-          envkey_JWT_SECRET : '${{ secrets.JWT_SECRET }}'
-        directory: ./ryce
-        file_name: .env
-        fail_on_empty: false 
+        run: |
+          echo REDIS_HOST='${{ secrets.REDIS_HOST }}' >> ryce/.env
+          echo REDIS_PORT=${{ secrets.REDIS_PORT }} >> ryce/.env
+          echo REDIS_PASSWORD='${{ secrets.REDIS_PASSWORD }}' >> ryce/.env
+          echo REDIS_USER='${{ secrets.REDIS_USER }}' >> ryce/.env
+          echo SNOWFLAKE_USERNAME='${{ secrets.SNOWFLAKE_USERNAME }}' >> ryce/.env
+          echo SNOWFLAKE_SCHEMA='${{ secrets.SNOWFLAKE_SCHEMA }}' >> ryce/.env
+          echo SNOWFLAKE_ROLE='${{ secrets.SNOWFLAKE_ROLE }}' >> ryce/.env
+          echo SNOWFLAKE_DATABASE='${{ secrets.SNOWFLAKE_DATABASE }}' >> ryce/.env
+          echo SNOWFLAKE_WAREHOUSE='${{ secrets.SNOWFLAKE_WAREHOUSE }}' >> ryce/.env
+          echo SNOWFLAKE_PASSWORD='${{ secrets.RYCE_PASSWORD }}' >> ryce/.env
+          echo SNOWFLAKE_ACCOUNT='${{ secrets.RYCE_SNOWFLAKE_ACCOUNT }}' >> ryce/.env
+          echo JWT_SECRET='${{ secrets.JWT_SECRET }}' >> ryce/.env
+
 
       - name: Start ryce
         run: |
@@ -157,23 +151,20 @@ jobs:
           yarn install
 
       - name: Create .env file for africa service
-        uses: SpicyPizza/create-envfile@v1.3
-        with:
-          envkey_REDIS_HOST: '${{ secrets.REDIS_HOST }}'
-          envkey_REDIS_PORT: ${{ secrets.REDIS_PORT }}
-          envkey_REDIS_PASSWORD : '${{ secrets.REDIS_PASSWORD }}'
-          envkey_REDIS_USER : '${{ secrets.REDIS_USER }}'
-          envkey_SNOWFLAKE_USERNAME : '${{ secrets.SNOWFLAKE_USERNAME }}'
-          envkey_SNOWFLAKE_SCHEMA : '${{ secrets.SNOWFLAKE_SCHEMA }}'
-          envkey_SNOWFLAKE_ROLE : '${{ secrets.SNOWFLAKE_ROLE }}'
-          envkey_SNOWFLAKE_DATABASE : '${{ secrets.SNOWFLAKE_DATABASE }}'
-          envkey_SNOWFLAKE_WAREHOUSE : '${{ secrets.SNOWFLAKE_WAREHOUSE }}'
-          envkey_SNOWFLAKE_PASSWORD : '${{ secrets.AFRICA_PASSWORD }}'
-          envkey_SNOWFLAKE_ACCOUNT : '${{ secrets.AFRICA_SNOWFLAKE_ACCOUNT }}'
-          envkey_JWT_SECRET : '${{ secrets.JWT_SECRET }}'
-        directory: ./africa
-        file_name: .env
-        fail_on_empty: false 
+        run: |
+          echo REDIS_HOST='${{ secrets.REDIS_HOST }}' >> africa/.env
+          echo REDIS_PORT=${{ secrets.REDIS_PORT }} >> africa/.env
+          echo REDIS_PASSWORD='${{ secrets.REDIS_PASSWORD }}' >> africa/.env
+          echo REDIS_USER='${{ secrets.REDIS_USER }}' >> africa/.env
+          echo SNOWFLAKE_USERNAME='${{ secrets.SNOWFLAKE_USERNAME }}' >> africa/.env
+          echo SNOWFLAKE_SCHEMA='${{ secrets.SNOWFLAKE_SCHEMA }}' >> africa/.env
+          echo SNOWFLAKE_ROLE='${{ secrets.SNOWFLAKE_ROLE }}' >> africa/.env
+          echo SNOWFLAKE_DATABASE='${{ secrets.SNOWFLAKE_DATABASE }}' >> africa/.env
+          echo SNOWFLAKE_WAREHOUSE='${{ secrets.SNOWFLAKE_WAREHOUSE }}' >> africa/.env
+          echo SNOWFLAKE_PASSWORD='${{ secrets.AFRICA_PASSWORD }}' >> africa/.env
+          echo SNOWFLAKE_ACCOUNT='${{ secrets.AFRICA_SNOWFLAKE_ACCOUNT }}' >> africa/.env
+          echo JWT_SECRET='${{ secrets.JWT_SECRET }}' >> africa/.env
+ 
 
       - name: Start africa
         run: |
@@ -193,22 +184,19 @@ jobs:
           yarn install
 
       - name: Create .env file for user-management service
-        uses: SpicyPizza/create-envfile@v1.3
-        with:
-          envkey_REDIS_HOST: '${{ secrets.REDIS_HOST }}'
-          envkey_REDIS_PORT: ${{ secrets.REDIS_PORT }}
-          envkey_REDIS_PASSWORD : '${{ secrets.REDIS_PASSWORD }}'
-          envkey_REDIS_USER : '${{ secrets.REDIS_USER }}'
-          envkey_POSTGRES_USERNAME : '${{ secrets.POSTGRES_USERNAME }}'
-          envkey_POSTGRES_DB : '${{ secrets.POSTGRES_DB }}'
-          envkey_POSTGRES_HOST : '${{ secrets.POSTGRES_HOST }}'
-          envkey_POSTGRES_PASSWORD : '${{ secrets.POSTGRES_PASSWORD }}'
-          envkey_POSTGRES_PORT : ${{ secrets.POSTGRES_PORT }}
-          envkey_GOOGLE_PASSWORD : '${{ secrets.GOOGLE_PASSWORD }}'
-          envkey_JWT_SECRET : '${{ secrets.JWT_SECRET }}'
-        directory: ./user-management
-        file_name: .env
-        fail_on_empty: false 
+        run: |
+          echo REDIS_HOST='${{ secrets.REDIS_HOST }}' >> user-management/.env
+          echo REDIS_PORT=${{ secrets.REDIS_PORT }} >> user-management/.env
+          echo REDIS_PASSWORD='${{ secrets.REDIS_PASSWORD }}' >> user-management/.env
+          echo REDIS_USER='${{ secrets.REDIS_USER }}' >> user-management/.env
+          echo POSTGRES_USERNAME='${{ secrets.POSTGRES_USERNAME }}' >> user-management/.env
+          echo POSTGRES_DB='${{ secrets.POSTGRES_DB }}' >> user-management/.env
+          echo POSTGRES_HOST='${{ secrets.POSTGRES_HOST }}' >> user-management/.env
+          echo POSTGRES_PASSWORD='${{ secrets.POSTGRES_PASSWORD }}' >> user-management/.env
+          echo POSTGRES_PORT=${{ secrets.POSTGRES_PORT }} >> user-management/.env
+          echo GOOGLE_PASSWORD='${{ secrets.GOOGLE_PASSWORD }}' >> user-management/.env
+          echo JWT_SECRET='${{ secrets.JWT_SECRET }}' >> user-management/.env
+ 
 
       - name: Start user-management
         run: |
