@@ -125,7 +125,7 @@ describe('ZACR Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          //console.log(response.body);
+          console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);

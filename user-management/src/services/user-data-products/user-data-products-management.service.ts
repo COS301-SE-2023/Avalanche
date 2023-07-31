@@ -28,6 +28,7 @@ export class UserDataProductMangementService {
             };
         }
         if (personal == true) {
+            try{
             let url = 'https://srs-epp.dns.net.za:8282/portal/auth-jwt/';
             const payload = {
                 username: username,
@@ -71,8 +72,8 @@ export class UserDataProductMangementService {
                     }
                     const { email: userEmail } = JSON.parse(userPayload);
                     console.log(userEmail);
-                    if (allocateToName == userEmail) {
-                        const user = await this.userRepository.findOne({ where: { email: allocateToName }, relations: ['userGroups', 'organisation', 'dashboards'] });
+                    if (userEmail) {
+                        const user = await this.userRepository.findOne({ where: { email: userEmail }, relations: ['userGroups', 'organisation', 'dashboards'] });
                         if (!user) {
                             return {
                                 status: 400, error: true, message: 'User does not exist',
@@ -105,10 +106,16 @@ export class UserDataProductMangementService {
             } catch (error) {
                 console.error(error);
                 return {
-                    status: 400, error: true, message: error,
+                    status: 400, error: true, message: "User details are incorrect for API",
                     timestamp: new Date().toISOString()
                 };
             }
+        }catch(e){
+            return {
+                status: 400, error: true, message: "User details are incorrect for API",
+                timestamp: new Date().toISOString()
+            };
+        }
         } else {
             // Retrieve the user with their groups based on the token
             const userData = await this.redis.get(token);

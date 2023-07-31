@@ -10,14 +10,11 @@ export class JwtMiddleware implements NestMiddleware {
   async use(req: Request, res: Response, next: NextFunction) {
     try {
       // Get token from header
-      console.log(req.headers.authorization);
       const token = req.headers.authorization?.split(' ')[1];
-      console.log(token);
       // Get user's information from Redis by token
       let userInfo: any;
       try {
         userInfo = await this.redis.get(token);
-        console.log(userInfo);
       } catch (e) {
         res.status(401).json({ status: 'failure', message: e.message, timestamp: new Date().toISOString() });
       }
@@ -38,17 +35,14 @@ export class JwtMiddleware implements NestMiddleware {
             req.body = { filters: req.body };
             req.body.graphName = graphName1;
             req.body.minimumAppearances = minNum;
-            console.log(req.body);
             next();
           } else {
             req.body.graphName = graphName1;
             req.body.minimumAppearances = minNum;
-            console.log(req.body);
             next();
           }
         } else {
           req.body.token = token;
-          console.log(req.body);
           next();
         }
       }

@@ -84,4 +84,3 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             docker compose up --build --detach
-
