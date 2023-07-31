@@ -1,19 +1,21 @@
-describe('Dashboard', () => {
+describe("Domain Length", () => {
     beforeEach(() => {
         cy.visit(Cypress.env('baseURL') + ":" + Cypress.env('basePort'));
         cy.get('input[name=email]').type(Cypress.env('username'));
         cy.get('input[name=password]').type(Cypress.env('password'));
-        cy.get('button[type=submit]').click(); // Please replace with the actual route of your Dashboard page.
+        cy.get('button[type=submit]').click();
+        cy.get('a[id="domainLength"]').click();
+
     });
 
-    it('renders Sidebar with links', () => {
+    it("Navbar still visible", ()=> {
         function navBarChecks(href, contain){
             cy.get('#default-sidebar a[href="'+href+'"]')
                 .should('be.visible')
                 .and('contain', contain);
         }
 
-        cy.url().should("include", "/dashboard")
+        cy.url().should("include", "/domainLength")
 
         cy.get('#default-sidebar')
             .should('be.visible');
@@ -27,23 +29,18 @@ describe('Dashboard', () => {
         navBarChecks("/ageAnalysis", "Registrar Age Analysis")
         navBarChecks("/domainNameAnalysis", "Domain Name Analysis")
         navBarChecks("/watch", "Domain Watch")
-        
-        it('The navigation should be visible', () => {
-            cy.get('#default-sidebar')
-                .should('be.visible');
-        });
+    })
 
-        it('Home link is visible', () => {
-            cy.get('#default-sidebar a[href="/dashboard"]')
-                .should('be.visible')
-                .and('contain', 'Home');
-        });
-    });
+    it.only('everything loads on DNAL', ()=> {
+        cy.contains('Domain Name Analysis Length').should('be.visible')
+        cy.contains('p', 'Insights at your fingertips').should('be.visible');
+        cy.get('canvas[role="img"]').should('be.visible'); //graph itself
+        cy.get('h1').should(($h1Elements) => { //headings
+            expect($h1Elements).to.have.length.above(1);
+            expect($h1Elements).to.be.visible;
+          });
+    })
 
-    it('renders page header', () => {
-        cy.get('h1') // Assuming the PageHeader component renders a <header> element.
-            .should('be.visible');
 
-    });
-    
-});
+
+})
