@@ -1,8 +1,9 @@
 describe('Domain Length', () => {
     beforeEach(() => {
         cy.setCookie('jwt', Cypress.env('jwt'));
-        cy.visit(Cypress.env('baseURL') + ':' + Cypress.env('basePort') + '/domainLength');
+        cy.visit(Cypress.env('baseURL')+ Cypress.env('basePort') + '/domainLength');
         cy.wait(5000);
+        cy.url().should('eq', Cypress.env('baseURL')+ Cypress.env('basePort') + '/domainLength')
     });
 
     it('renders Sidebar with links', () => {
