@@ -156,8 +156,8 @@ Services/DomainWatch/domain_watch/domain_watch.rar
 ryce/.env
 africa/.env
 *.old
+*.class
+*.zip
 docker-compose.yml
 Services/DomainWatch/domain_watch/target/test-classes/avalanche/Network/HandlerStrategy/RunningStrategies/HandlePassiveTest.class
-*.class
-*.class
 frontend/cypress.env.json

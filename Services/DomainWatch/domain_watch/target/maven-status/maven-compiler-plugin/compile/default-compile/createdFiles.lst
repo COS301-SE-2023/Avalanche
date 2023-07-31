@@ -15,6 +15,5 @@ avalanche\Network\HandlerStrategy\Running.class
 avalanche\Network\HandlerStrategy\Closed.class
 avalanche\Core\SimilarityChecker.class
 avalanche\DistanceCalculators\SoundexCalculator.class
-avalanche\Network\ServerState\ServerState.class
 avalanche\DistanceCalculators\LevenshteinDistanceCalculator.class
 avalanche\Settings\DomainWatchSettings.class
