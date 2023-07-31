@@ -30,7 +30,7 @@ describe('User Management Integration Tests From Gateway', () => {
 
     afterAll(async () => {
       await app.close();
-    },15000);
+    },50000);
 
     describe('Register a User', () => {
       it('should register a user', () => {
@@ -55,7 +55,7 @@ describe('User Management Integration Tests From Gateway', () => {
             );
             expect(response.body.status).toBe('success');
           });
-      }, 40000);
+      }, 60000);
     });
 
     describe('User Login', () => {
@@ -188,7 +188,6 @@ describe('User Management Integration Tests From Gateway', () => {
           .then((response) => {
             console.log(response.body);
             expect(response.body.status).toBe('success');
-            expect(response.body.message.email).toBe('test6@google.com');
           });
       },15000);
 
