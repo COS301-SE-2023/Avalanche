@@ -33,7 +33,7 @@ describe('Sign in Page', () => {
 
 describe.only('login', () =>{
     beforeEach(() =>{
-      cy.visit(Cypress.env('baseURL') + ":" + Cypress.env('basePort'));
+      cy.visit(Cypress.env('baseURL') + ":" + Cypress.env('basePort')+"/");
       cy.url().should('eq', Cypress.env('baseURL'));
     })
 
