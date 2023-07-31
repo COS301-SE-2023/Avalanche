@@ -81,6 +81,7 @@ export class UserManagementService {
     return this.client.send({ cmd: 'integrateWithDataProducts' }, data).toPromise();
   }
   async addDomainWatchPassiveDetails(data: any) {
+    
     return this.client.send({ cmd: 'addDomainWatchPassiveDetails' }, data).toPromise();
   }
   async getDomainWatchPassive(data: any) {
