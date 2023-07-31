@@ -50,7 +50,7 @@ export default function GraphZoomModal({ custom }: IGraphZoomModal) {
 
     const renderComments = () => {
         const dash = stateUser.user.dashboards?.find((item: any) => item.dashboardID == state.zoomedData?.dashboardID);
-        const graph = dash.graphs?.find((item: any) => item.graphName === state.zoomedData?.graphName);
+        const graph = dash?.graphs?.find((item: any) => item.graphName === state.zoomedData?.graphName);
         return graph?.comments?.map((item: any, index: number) => (<div key={index} className="w-full p-4 text-gray-500 bg-white rounded-lg shadow dark:bg-gray-800 dark:text-gray-400" role="alert">
             <div className="flex">
                 <img className="w-8 h-8 rounded-full shadow-lg" src="https://github.com/michaelrosstarr.png" alt="Jese Leos image" />
