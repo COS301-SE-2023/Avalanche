@@ -156,4 +156,6 @@ Services/DomainWatch/domain_watch/domain_watch.rar
 ryce/.env
 africa/.env
 *.old
+*.class
+*.zip
 docker-compose.yml
