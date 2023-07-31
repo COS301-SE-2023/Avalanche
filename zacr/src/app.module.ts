@@ -19,31 +19,6 @@ import { MovementService } from './movement/movement.service';
 import { RegistrarNameService } from './registrarName/registrarName.service';
 
 @Module({
-  imports: [
-    HttpModule,
-    ClientsModule.register([
-      {
-        name: 'ZACR_SERVICE',
-        transport: Transport.TCP,
-        options: {
-          host: process.env.HOST || 'localhost',
-          port: 4002,
-        },
-      },
-    ]),
-    JwtModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => {
-        return {
-          secret: configService.get<string>('JWT_SECRET'),
-          signOptions: { expiresIn: '24h' },
-        } as JwtModuleOptions;
-      },
-      inject: [ConfigService],
-    }),
-    ConfigModule.forRoot({ isGlobal: true }),
-  ],
-  controllers: [AppController],
   providers: [
     RedisProvider,
     {
@@ -95,5 +70,31 @@ import { RegistrarNameService } from './registrarName/registrarName.service';
     DomainWatchService,
     RegistrarNameService,
   ],
+  imports: [
+    HttpModule,
+    ClientsModule.register([
+      {
+        name: 'ZACR_SERVICE',
+        transport: Transport.TCP,
+        options: {
+          host: process.env.HOST || 'localhost',
+          port: 4002,
+        },
+      },
+    ]),
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => {
+        return {
+          secret: configService.get<string>('JWT_SECRET'),
+          signOptions: { expiresIn: '24h' },
+        } as JwtModuleOptions;
+      },
+      inject: [ConfigService],
+    }),
+    ConfigModule.forRoot({ isGlobal: true }),
+  ],
+  controllers: [AppController],
+  
 })
 export class AppModule { }
