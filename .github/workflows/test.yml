@@ -205,7 +205,7 @@ jobs:
           echo POSTGRES_PASSWORD='${{ secrets.POSTGRES_PASSWORD }}' >> user-management/.env
           echo POSTGRES_PORT=${{ secrets.POSTGRES_PORT }} >> user-management/.env
           echo GOOGLE_PASSWORD='${{ secrets.GOOGLE_PASSWORD }}' >> user-management/.env
-          echo 'JWT_SECRET=`'"${{ secrets.JWT_SECRET }}"'`' >> user-management/.env
+          echo 'JWT_SECRET=`'"'${{ secrets.JWT_SECRET }}'"'`' >> user-management/.env
  
 
       - name: Start user-management
