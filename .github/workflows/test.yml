@@ -95,7 +95,7 @@ jobs:
           echo SNOWFLAKE_ROLE='${{ secrets.SNOWFLAKE_ROLE_1 }}' >> zacr/.env
           echo SNOWFLAKE_DATABASE='${{ secrets.SNOWFLAKE_DATABASE_1 }}' >> zacr/.env
           echo SNOWFLAKE_WAREHOUSE='${{ secrets.SNOWFLAKE_WAREHOUSE_1 }}' >> zacr/.env
-          echo SNOWFLAKE_PASSWORD='${{ secrets.ZACR_PASSWORD }}' >> zacr/.env
+          echo SNOWFLAKE_PASSWORD=${{ secrets.ZACR_PASSWORD }} >> zacr/.env
           echo SNOWFLAKE_ACCOUNT='${{ secrets.ZACR_SNOWFLAKE_ACCOUNT }}' >> zacr/.env
           echo JWT_SECRET='${{ secrets.JWT_SECRET }}' >> zacr/.env
 
