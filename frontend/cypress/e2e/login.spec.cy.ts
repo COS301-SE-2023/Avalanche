@@ -34,7 +34,7 @@ describe('Sign in Page', () => {
 describe.only('login', () =>{
     beforeEach(() =>{
       cy.visit(Cypress.env('baseURL') + ":" + Cypress.env('basePort')+"/");
-      cy.url().should('eq', Cypress.env('baseURL'));
+      cy.url().should('eq', Cypress.env('baseURL')+"/");
     })
 
     /*it('Signin with nothing completed', () => {
@@ -88,7 +88,7 @@ describe.only('login', () =>{
             expect(result.statusCode).to.equal(201)
         })
 
-        cy.url().should("include", "/dashboard")
+        cy.url().should("eq", Cypress.env("baseURL")+"/dashboard")
     })
 
 
