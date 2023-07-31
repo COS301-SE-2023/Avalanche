@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HandleActive.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">domain_watch</a> &gt; <a href="index.source.html" class="el_package">avalanche.Network.HandlerStrategy.RunningStrategies</a> &gt; <span class="el_source">HandleActive.java</span></div><h1>HandleActive.java</h1><pre class="source lang-java linenums">package avalanche.Network.HandlerStrategy.RunningStrategies;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import avalanche.Core.SimilarityChecker;
+import avalanche.DataClasses.Domain;
+import avalanche.Network.HandlerStrategy.Running;
+
+<span class="fc" id="L17">public class HandleActive extends Running {</span>
+    public String getResponse(String body, long st) {
+<span class="fc" id="L19">        System.out.println(&quot;Working on domain watch active request&quot;);</span>
+<span class="fc" id="L20">        SimilarityChecker similarityChecker = new SimilarityChecker();</span>
+<span class="fc" id="L21">        String resp = &quot;{  \&quot;status\&quot;:\&quot;success\&quot;,  \&quot;data\&quot;:[&quot;;</span>
+<span class="fc" id="L22">        ConcurrentLinkedQueue&lt;Domain&gt; hits = new ConcurrentLinkedQueue&lt;&gt;();</span>
+<span class="fc" id="L23">        String validation = validateRequest(body);</span>
+<span class="fc bfc" id="L24" title="All 2 branches covered.">        if (!validation.equals(&quot;&quot;)) {</span>
+<span class="fc" id="L25">            return validation;</span>
+        }
+<span class="fc" id="L27">        JSONObject obj = new JSONObject(body);</span>
+<span class="fc" id="L28">        String domain = (obj.getString(&quot;domain&quot;));</span>
+
+<span class="fc" id="L30">        int numCalcs = (obj.getJSONArray(&quot;types&quot;).length());</span>
+<span class="fc" id="L31">        Set&lt;String&gt; zones = new HashSet&lt;&gt;();</span>
+        try {
+<span class="nc" id="L33">            JSONArray registries = obj.getJSONArray(&quot;registries&quot;);</span>
+<span class="nc bnc" id="L34" title="All 2 branches missed.">            for (int i = 0; i &lt; registries.length(); i++) {</span>
+<span class="nc" id="L35">                zones.add(registries.getString(i));</span>
+            }
+<span class="fc" id="L37">        } catch (JSONException jsonException) {</span>
+
+<span class="nc" id="L39">        }</span>
+
+<span class="fc bfc" id="L41" title="All 2 branches covered.">        for (int j = 0; j &lt; numCalcs; j++) {</span>
+<span class="fc" id="L42">            String type = obj.getJSONArray(&quot;types&quot;).getJSONObject(j).getString(&quot;type&quot;);</span>
+<span class="fc" id="L43">            double threshold = (obj.getJSONArray(&quot;types&quot;).getJSONObject(j).getDouble(&quot;threshold&quot;));</span>
+<span class="pc bpc" id="L44" title="1 of 3 branches missed.">            switch (type) {</span>
+                case &quot;Levenshtein&quot;:
+<span class="fc bfc" id="L46" title="All 2 branches covered.">                    if (j == 0) {</span>
+<span class="fc" id="L47">                        hits = similarityChecker.threadedFindAllWithinSimliarityThreshold(domain,</span>
+                                threshold, zones);
+                    } else {
+<span class="fc" id="L50">                        hits = similarityChecker.findAllWithinSimliarityThreshold(domain,</span>
+                                threshold, hits);
+                    }
+<span class="fc" id="L53">                    break;</span>
+                case &quot;Soundex&quot;:
+<span class="fc bfc" id="L55" title="All 2 branches covered.">                    if (j == 0) {</span>
+<span class="fc" id="L56">                        hits = similarityChecker.threadedfindAllSoundsAboveSimliarityThreshold(domain,</span>
+                                threshold, zones);
+                    } else {
+<span class="fc" id="L59">                        hits = similarityChecker.findAllSoundsAboveSimliarityThreshold(domain,</span>
+                                threshold, hits);
+                    }
+                    break;
+            }
+        }
+<span class="fc" id="L65">        Domain[] hitsArr = new Domain[hits.size()];</span>
+<span class="fc" id="L66">        hits.toArray(hitsArr);</span>
+<span class="fc" id="L67">        Arrays.sort(hitsArr, Collections.reverseOrder());</span>
+<span class="fc" id="L68">        int initSize = hits.size();</span>
+<span class="fc" id="L69">        int totalTodo = Math.min(initSize, 500);</span>
+<span class="fc" id="L70">        System.out.println(&quot;\nFound &quot; + initSize + &quot; matches\nBuilding response\n&quot;);</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        for (int k = 0; k &lt; totalTodo; k++) {</span>
+<span class="fc" id="L72">            resp += &quot;    &quot; + hitsArr[k].toJSON();</span>
+<span class="fc bfc" id="L73" title="All 2 branches covered.">            if (k != totalTodo - 1) {</span>
+<span class="fc" id="L74">                resp += &quot;,&quot;;</span>
+            }
+
+        }
+<span class="fc bfc" id="L78" title="All 2 branches covered.">        if (st == 0) {</span>
+<span class="fc" id="L79">            resp += &quot;]}&quot;;</span>
+        } else {
+<span class="fc" id="L81">            resp += &quot;],\&quot;searchTime(ms)\&quot;:&quot; + (System.currentTimeMillis() - st) + &quot;}&quot;;</span>
+        }
+
+        // System.out.println(resp);
+<span class="fc" id="L85">        System.out.println(&quot;Done&quot;);</span>
+<span class="fc" id="L86">        System.gc();</span>
+<span class="fc" id="L87">        return resp;</span>
+    }
+
+    public static String validateRequest(String body) {
+<span class="fc" id="L91">        String validation = validateJSON(body);</span>
+<span class="fc bfc" id="L92" title="All 2 branches covered.">        if (!validation.equals(&quot;&quot;)) {</span>
+<span class="fc" id="L93">            return validation;</span>
+        }
+<span class="fc" id="L95">        int errorIndex = -1;</span>
+<span class="fc" id="L96">        Set&lt;String&gt; allowedMetrics = new HashSet&lt;&gt;();</span>
+<span class="fc" id="L97">        allowedMetrics.add(&quot;Levenshtein&quot;);</span>
+<span class="fc" id="L98">        allowedMetrics.add(&quot;Soundex&quot;);</span>
+        try {
+<span class="fc" id="L100">            JSONObject jsonObject = new JSONObject(body);</span>
+<span class="fc" id="L101">            String domain = (jsonObject.getString(&quot;domain&quot;));</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">            if (domain.length() &lt; 1) {</span>
+<span class="fc" id="L103">                return &quot;{\&quot;status\&quot;:\&quot;failure\&quot;,\&quot;request-error\&quot;:\&quot;The domain name must be longer than 0 characters\&quot;}&quot;;</span>
+            }
+<span class="fc" id="L105">            int numCalcs = (jsonObject.getJSONArray(&quot;types&quot;).length());</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">            if (numCalcs &lt; 1) {</span>
+<span class="fc" id="L107">                return &quot;{\&quot;status\&quot;:\&quot;failure\&quot;,\&quot;request-error\&quot;:\&quot;At least one distance metric must be listed\&quot;}&quot;;</span>
+            }
+<span class="fc bfc" id="L109" title="All 2 branches covered.">            for (int i = 0; i &lt; numCalcs; i++) {</span>
+<span class="fc" id="L110">                errorIndex = i;</span>
+<span class="fc" id="L111">                String type = jsonObject.getJSONArray(&quot;types&quot;).getJSONObject(i).getString(&quot;type&quot;);</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">                if (!allowedMetrics.contains(type)) {</span>
+<span class="fc" id="L113">                    return &quot;{\&quot;status\&quot;:\&quot;failure\&quot;,\&quot;request-error\&quot;:\&quot;Type:&quot; + type + &quot; is not a valid metric&quot;</span>
+                            + &quot;\&quot;}&quot;;
+                }
+<span class="fc" id="L116">                double threshold = (jsonObject.getJSONArray(&quot;types&quot;).getJSONObject(i).getDouble(&quot;threshold&quot;));</span>
+<span class="pc bpc" id="L117" title="1 of 6 branches missed.">                if (type.equals(&quot;Levenshtein&quot;) &amp;&amp; (threshold &gt; domain.length() - 1 || threshold &lt; 1)) {</span>
+<span class="fc" id="L118">                    return &quot;{\&quot;status\&quot;:\&quot;failure\&quot;,\&quot;request-error\&quot;:\&quot;The threshold for Levenshtein distance must be greater than 0 and less than the length of the search domain\&quot;}&quot;;</span>
+                }
+<span class="pc bpc" id="L120" title="1 of 6 branches missed.">                if (type.equals(&quot;Soundex&quot;) &amp;&amp; (threshold &gt; 4 || threshold &lt; 1)) {</span>
+<span class="fc" id="L121">                    return &quot;{\&quot;status\&quot;:\&quot;failure\&quot;,\&quot;request-error\&quot;:\&quot;The threshold for Soundex distance must be in the range [1,4]\&quot;}&quot;;</span>
+                }
+            }
+<span class="fc" id="L124">            return &quot;&quot;;</span>
+<span class="fc" id="L125">        } catch (JSONException jsonException) {</span>
+<span class="pc bpc" id="L126" title="1 of 2 branches missed.">            if (errorIndex != -1) {</span>
+<span class="fc" id="L127">                return &quot;{\&quot;status\&quot;:\&quot;failure\&quot;,\&quot;request-error\&quot;:\&quot;&quot;</span>
+<span class="fc" id="L128">                        + jsonException.getMessage().substring(0, jsonException.getMessage().length() - 1)</span>
+                        + &quot; in metric number &quot;
+                        + (errorIndex + 1) + &quot;\&quot;}&quot;;
+            }
+<span class="nc" id="L132">            return &quot;{\&quot;status\&quot;:\&quot;failure\&quot;,\&quot;request-error\&quot;:\&quot;&quot; + jsonException.getMessage() + &quot;\&quot;}&quot;;</span>
+        }
+
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
