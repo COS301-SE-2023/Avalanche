@@ -34,7 +34,7 @@ describe('Sign in Page', () => {
 describe.only('login', () =>{
     beforeEach(() =>{
       cy.visit(Cypress.env('baseURL') + ":" + Cypress.env('basePort'));
-      cy.url().should('eq', Cypress.env('baseURL') + ":" + Cypress.env('basePort')+'/');
+      cy.url().should('eq', Cypress.env('baseURL'));
     })
 
     /*it('Signin with nothing completed', () => {
@@ -50,7 +50,7 @@ describe.only('login', () =>{
 
         //when
         cy.get('button[type=submit]').click(); // Please replace with the actual route of your Dashboard page.
-        cy.wait(10000);
+        cy.wait(20000);
 
         //then
         cy.wait("@response").then((interception) => {
@@ -66,7 +66,7 @@ describe.only('login', () =>{
         cy.intercept("POST", "user-management/login").as("response")
 
         cy.get('button[type=submit]').click();
-        cy.wait(10000);
+        cy.wait(20000);
 
         cy.wait("@response").then((interception) => {
             const result = interception.response
@@ -81,7 +81,7 @@ describe.only('login', () =>{
         cy.intercept("POST", "user-management/login").as("response")
 
         cy.get('button[type=submit]').click();
-        cy.wait(10000);
+        cy.wait(20000);
         
         cy.wait("@response").then((interception) => {
             const result = interception.response

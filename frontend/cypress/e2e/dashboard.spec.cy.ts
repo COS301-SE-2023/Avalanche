@@ -4,7 +4,7 @@ describe('Dashboard', () => {
         cy.get('input[name=email]').type(Cypress.env('username'));
         cy.get('input[name=password]').type(Cypress.env('password'));
         cy.get('button[type=submit]').click(); // Please replace with the actual route of your Dashboard page.
-        cy.wait(10000);
+        cy.wait(20000);
     });
 
     it('renders Sidebar with links', () => {

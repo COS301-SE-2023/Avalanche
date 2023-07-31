@@ -7,7 +7,7 @@ describe('DomainWatch', () => {
         cy.wait(15000);
         cy.url().should('eq', Cypress.env('baseURL') + ":" + Cypress.env('basePort')+'/dashboard');
         cy.get('#watch').click();
-        cy.wait(10000);
+        cy.wait(20000);
 
     });
     

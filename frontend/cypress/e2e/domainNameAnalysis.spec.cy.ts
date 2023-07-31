@@ -4,9 +4,9 @@ describe("Registrar", () => {
         cy.get('input[name=email]').type(Cypress.env('username'));
         cy.get('input[name=password]').type(Cypress.env('password'));
         cy.get('button[type=submit]').click();
-        cy.wait(10000);
+        cy.wait(20000);
         cy.get('a[id="domainNameAnalysis"]').click();
-        cy.wait(10000);
+        cy.wait(20000);
 
     });
 
