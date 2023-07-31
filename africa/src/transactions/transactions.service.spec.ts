@@ -185,7 +185,7 @@ describe('TransactionService', () => {
         `africa${sqlQuery}`,
         JSON.stringify({ formattedData: 'formattedData' }),
         'EX',
-        24 * 60 * 60,
+        72 * 60 * 60,
       );
 
       // Expect the result to be the final formatted data
