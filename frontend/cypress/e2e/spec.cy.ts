@@ -1,6 +1,6 @@
 describe('Sign in Page', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:3000') ;
+    cy.visit(Cypress.env('baseURL') + ":" + Cypress.env('basePort'));
   });
 
   it('successfully loads', () => {

@@ -1,6 +1,6 @@
 export default interface IButton {
     text: string,
-    onClick: any,
+    onClick?: any,
     loading?: boolean,
     className?: string,
     icon?: any,

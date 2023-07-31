@@ -111,14 +111,15 @@ describe('User Management Integration Tests From Gateway', () => {
         .post('/user-management/login')
         .send(user);
       console.log(response.body.userWithToken);
-      if(response.body.userWithToken.token){
+      if(response.body.userWithToken?.token){
         accessToken = response.body.userWithToken.token;
       }
  // This may change based on the structure of your response
     });
 
+    let orgName: string;
     describe('Create Organisation', () => {
-      let orgName: string;
+      
       it('should create a new organisation', () => {
         orgName = Random.word(8);
         const organisationDto = {
@@ -149,7 +150,7 @@ describe('User Management Integration Tests From Gateway', () => {
     describe('Exit Organisation', () => {
       it('should allow the user to exit  the organisation', () => {
         const organisationData = {
-          organisationName: `Random.word(8)`,
+          organisationName: orgName,
         };
         return request(app.getHttpServer())
           .post('/user-management/exitOrganisation')
@@ -187,7 +188,7 @@ describe('User Management Integration Tests From Gateway', () => {
           .then((response) => {
             console.log(response.body);
             expect(response.body.status).toBe('success');
-            expect(response.body.message.email).toBe('test@test.com');
+            expect(response.body.message.email).toBe('test6@google.com');
           });
       });
 

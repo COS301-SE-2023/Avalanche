@@ -1,13 +1,13 @@
 import Image from 'next/image'
 import Link from 'next/link';
 import Head from 'next/head'
-import { useState, } from 'react';
+import { useState, useEffect } from 'react';
 import React from 'react';
-import { SubmitButton, DangerAlert, Input, InputLabel, Anchor } from '@/components/Util';
+import { SubmitButton, DangerAlert, Input, InputLabel, Anchor, ErrorToast } from '@/components/Util';
 import tempLogo from '../assets/logo.png';
 import { Toaster } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
-import { userState, login } from '@/store/Slices/userSlice';
+import { userState, login, clearError, clearLoading } from '@/store/Slices/userSlice';
 import { ILoginRequest } from '@/interfaces/requests';
 import { useRouter } from 'next/router';
 import LoadingPage from '@/components/Util/Loading';
@@ -42,6 +42,18 @@ export default function Home() {
     } as ILoginRequest));
 
   }
+
+  useEffect(() => {
+    dispatch(clearLoading());
+  }, [])
+
+  useEffect(() => {
+    if (stateUser.requests.error) {
+      ErrorToast({ text: `${stateUser.requests.error}` });
+      dispatch(clearError());
+    }
+
+  }, [stateUser.requests]);
 
   const validate = (): boolean => {
     if (!email || !password) {
@@ -80,8 +92,8 @@ export default function Home() {
                 </h1>
                 <form className="space-y-4 md:space-y-6" onSubmit={(event) => formSubmit(event)}>
                   <div>
-                    <InputLabel htmlFor="email" text="Your email" />
-                    <Input type="email" name="email" id="email" placeholder="name@company.com" required={true} value={email} onChange={(event: React.FormEvent<HTMLInputElement>) => setEmail(event.currentTarget.value)} />
+                    <InputLabel htmlFor="email" text="Email" />
+                    <Input type="email" name="email" id="email" placeholder="michael@dundermifflin.com" required={true} value={email} onChange={(event: React.FormEvent<HTMLInputElement>) => setEmail(event.currentTarget.value)} />
                     {emailError && <DangerAlert title="Invalid Email!" text="This email is invalid." />}
                   </div>
                   <div>
@@ -90,15 +102,6 @@ export default function Home() {
                     {passwordError && <DangerAlert title="Invalid Password!" text="This password is invalid." />}
                   </div>
                   <div className="flex items-center justify-between">
-                    {/* <div className="flex items-start">
-                      <div className="flex items-center h-5">
-                        <input id="remember" aria-describedby="remember" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" />
-                      </div>
-                      <div className="ml-3 text-sm">
-                        <label htmlFor="remember" className="text-gray-500 dark:text-gray-300">Remember me</label>
-                      </div>
-                    </div> */}
-                    {/* <a href="#" className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot password?</a> */}
                     <Anchor href="/forgot" text="Forgot password" customFont="text-sm" />
                   </div>
                   <SubmitButton text="Sign in" onClick={() => null} loading={stateUser.loading} disabled={stateUser.loading} className="w-full" />

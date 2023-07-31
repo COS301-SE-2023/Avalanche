@@ -1,5 +1,5 @@
 # Base on offical Node.js Alpine image
-FROM node:alpine
+FROM cypress/included:latest
 
 # Set working directory
 WORKDIR /usr/app
@@ -7,6 +7,7 @@ WORKDIR /usr/app
 # Copy package.json and package-lock.json before other files
 # Utilise Docker cache to save re-installing dependencies if unchanged
 COPY ./package*.json ./
+COPY .env.local ./
 
 # Install dependencies
 RUN yarn

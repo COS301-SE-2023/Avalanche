@@ -1,9 +1,0 @@
-version: '3'
-name: avalanche-frontend
-services:
-  nextjs:
-    build: ./
-  nginx:
-    build: ./nginx
-    ports:
-      - 80:80
