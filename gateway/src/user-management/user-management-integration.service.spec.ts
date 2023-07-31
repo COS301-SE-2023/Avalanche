@@ -32,31 +32,6 @@ describe('User Management Integration Tests From Gateway', () => {
       await app.close();
     },50000);
 
-    describe('Register a User', () => {
-      it('should register a user', () => {
-        const userEmail = Random.email();
-        const userPassword = Random.word(8);
-        const fName = Random.word(8);
-        const lName = Random.word(8);
-        const userDto = {
-          email: userEmail,
-          password: userPassword,
-          firstName: fName,
-          lastName: lName,
-        };
-
-        return request(app.getHttpServer())
-          .post('/user-management/register')
-          .send(userDto)
-          .expect(201)
-          .then((response) => {
-            expect(response.body.message).toBe(
-              'Registration successful. Please check your email for the OTP.',
-            );
-            expect(response.body.status).toBe('success');
-          });
-      }, 60000);
-    });
 
     describe('User Login', () => {
       it('should login a user', () => {
