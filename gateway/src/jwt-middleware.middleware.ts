@@ -15,7 +15,6 @@ export class JwtMiddleware implements NestMiddleware {
       let userInfo: any;
       try {
         userInfo = await this.redis.get(token);
-        console.log(userInfo);
       } catch (e) {
         res.status(401).json({ status: 'failure', message: e.message, timestamp: new Date().toISOString() });
       }
@@ -46,7 +45,6 @@ export class JwtMiddleware implements NestMiddleware {
           }
         } else {
           req.body.token = token;
-          console.log(req.body);
           next();
         }
       }
