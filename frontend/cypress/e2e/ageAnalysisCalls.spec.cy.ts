@@ -1,13 +1,15 @@
 describe('Registrar Transaction Dashboard', () => {
     beforeEach(() => {
-        cy.visit(Cypress.env('baseURL') + ":" + Cypress.env('basePort'));
-        cy.get('input[name=email]').type(Cypress.env('username'));
-        cy.get('input[name=password]').type(Cypress.env('password'));
-        cy.get('button[type=submit]').click();
-        cy.url().should('eq', Cypress.env('baseURL') + ':' + Cypress.env('basePort') + '/dashboard');
-        cy.get('#default-sidebar a[href="/ageAnalysis"]').click();
+        // cy.visit(Cypress.env('baseURL') + ":" + Cypress.env('basePort'));
+        // cy.get('input[name=email]').type(Cypress.env('username'));
+        // cy.get('input[name=password]').type(Cypress.env('password'));
+        // cy.get('button[type=submit]').click();
+        // cy.url().should('eq', Cypress.env('baseURL') + ':' + Cypress.env('basePort') + '/dashboard');
+        // cy.get('#default-sidebar a[href="/ageAnalysis"]').click();
+        // cy.wait(5000);
+        cy.setCookie('jwt', Cypress.env('jwt'));
+        cy.visit(Cypress.env('baseURL') + ':' + Cypress.env('basePort') + '/ageAnalysis');
         cy.wait(5000);
-        cy.url().should('contain', Cypress.env('baseURL') + ':' + Cypress.env('password') + '/ageAnalysis');
 
     });
 

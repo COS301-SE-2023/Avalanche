@@ -4,9 +4,9 @@ describe('Dashboard', () => {
         // cy.get('input[name=email]').type(Cypress.env('username'));
         // cy.get('input[name=password]').type(Cypress.env('password'));
         // cy.get('button[type=submit]').click(); // Please replace with the actual route of your Dashboard page.
-        cy.setCookie('jwt', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3QzQGdtYWlsLmNvbSIsImlhdCI6MTY5MDQ3NzU2MCwiZXhwIjoxNjkwNTYzOTYwfQ.3iHbfNq3HjLmDYu49wzsvryciHyiOgvTrL67Bcr6yWM');
+        cy.setCookie('jwt', Cypress.env('jwt'));
         cy.visit(Cypress.env('baseURL') + ":" + Cypress.env('basePort') + '/dashboard');
-        cy.wait(20000);
+        cy.wait(5000);
     });
 
     it('renders Sidebar with links', () => {
