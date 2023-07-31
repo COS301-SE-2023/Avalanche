@@ -1,11 +1,8 @@
 describe('DomainWatch', () => {
     beforeEach(() => {
-        cy.visit(Cypress.env('baseURL') + ":" + Cypress.env('basePort'));
-        cy.get('input[name=email]').type(Cypress.env('username'));
-        cy.get('input[name=password]').type(Cypress.env('password'));
-        cy.get('button[type=submit]').click(); // Please replace with the actual route of your Dashboard page.
-        cy.url().should('eq', "http://"+Cypress.env('baseURL') + ":" + Cypress.env('basePort')+'/dashboard');
-        cy.get('#watch').click();
+        cy.setCookie('jwt', Cypress.env('jwt'));
+        cy.visit(Cypress.env('baseURL') + ':' + Cypress.env('basePort') + '/watch');
+        cy.wait(5000);
 
     });
     

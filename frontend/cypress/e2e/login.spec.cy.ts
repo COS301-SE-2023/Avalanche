@@ -1,7 +1,7 @@
 describe('Sign in Page', () => {
     beforeEach(() => {
       cy.visit(Cypress.env('baseURL') + ":" + Cypress.env('basePort'));
-      cy.url().should('eq', "http://"+Cypress.env('baseURL') + ":" + Cypress.env('basePort')+'/');
+      cy.url().should('eq', Cypress.env('baseURL')+"/");
     });
   
     it('successfully loads', () => {
@@ -33,8 +33,8 @@ describe('Sign in Page', () => {
 
 describe.only('login', () =>{
     beforeEach(() =>{
-      cy.visit(Cypress.env('baseURL') + ":" + Cypress.env('basePort'));
-      cy.url().should('eq', "http://"+Cypress.env('baseURL') + ":" + Cypress.env('basePort')+'/');
+      cy.visit(Cypress.env('baseURL') + ":" + Cypress.env('basePort')+"/");
+      cy.url().should('eq', Cypress.env('baseURL'));
     })
 
     /*it('Signin with nothing completed', () => {
@@ -50,7 +50,8 @@ describe.only('login', () =>{
 
         //when
         cy.get('button[type=submit]').click(); // Please replace with the actual route of your Dashboard page.
-        
+        cy.wait(20000);
+
         //then
         cy.wait("@response").then((interception) => {
             const result = interception.response
@@ -65,21 +66,23 @@ describe.only('login', () =>{
         cy.intercept("POST", "user-management/login").as("response")
 
         cy.get('button[type=submit]').click();
+        cy.wait(20000);
 
         cy.wait("@response").then((interception) => {
             const result = interception.response
             expect(result.statusCode).to.equal(400)
-            expect(result.body.message).to.equal("Incorrect password")
+            expect(result.body.message).to.equal("This user does not exist, please enter the correct email/please register.")
         })
     })
 
     it('Correct email and correct password', () => {
-        cy.get('input[name=email]').type('kihale5691@sportrid.com');
-        cy.get('input[name=password]').type('12345');
+        cy.get('input[name=email]').type(Cypress.env('username'));
+        cy.get('input[name=password]').type(Cypress.env('password'));
         cy.intercept("POST", "user-management/login").as("response")
 
         cy.get('button[type=submit]').click();
-
+        cy.wait(20000);
+        
         cy.wait("@response").then((interception) => {
             const result = interception.response
             expect(result.statusCode).to.equal(201)

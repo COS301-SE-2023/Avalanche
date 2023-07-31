@@ -16,10 +16,10 @@ export default defineConfig({
     },
   },
 
-  env: {
-    baseURL : "127.0.0.1",
-    basePort : "3000",
-    username : "kihale5691@sportrid.com",
-    password : "12345"
-  }
+  env:{
+    username: "ingeodendaal5@gmail.com",
+    password: "password",
+    baseURL: "http://nginx",
+    basePort: "80"
+}
 });
