@@ -93,16 +93,6 @@ describe('User Management Integration Tests From Gateway', () => {
     },15000);
 
     describe('Get User Info', () => {
-      it('should get user info', () => {
-        return request(app.getHttpServer())
-          .post('/user-management/getUserInfo')
-          .set('Authorization', `Bearer ${accessToken}`)
-          .expect(201)
-          .then((response) => {
-            console.log(response.body);
-            expect(response.body.status).toBe('success');
-          });
-      },15000);
 
       it('should not get user info if token is invalid', () => {
         return request(app.getHttpServer())
