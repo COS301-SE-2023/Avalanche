@@ -118,7 +118,7 @@ export default function Sidebar() {
                                 </li>
                                 <ul className="overflow-y-scroll overflow-x-hidden flex-auto">
                                     {
-                                        stateUser.user.dashboards.map((option: any, index: number) => {
+                                        stateUser.user?.dashboards?.map((option: any, index: number) => {
                                             return <SideBarItem text={option.name} icon={<PencilIcon className="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />} page={`custom/${option.dashboardID}`} key={index} />
                                         })
                                     }

@@ -26,7 +26,7 @@ import { DomainWatchService } from './domainWatch/domain-watch-analysis.service'
         name: 'RyCE_SERVICE',
         transport: Transport.TCP,
         options: {
-          host: 'localhost',
+          host: process.env.HOST || 'localhost',
           port: 4004,
         },
       },
