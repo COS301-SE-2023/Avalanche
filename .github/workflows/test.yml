@@ -106,14 +106,14 @@ jobs:
 
       - name: Wait for zacr service
         run: |
-          while ! nc -z localhost 4002; do   
-          sleep 7
+          while ! nc -z localhost 4002; do 
+          sleep 2  
           echo "Waiting for zacr service..."
           done
+          sleep 7
 
       - name: Print ZACR logs
         run: |
-          sleep 7
           cat zacr/zacr.log
 
       - name: Install dependencies for ryce
@@ -177,7 +177,6 @@ jobs:
 
       - name: Wait for AFRICA service
         run: |
-          sleep 7
           while ! nc -z localhost 4005; do   
           sleep 7
           echo "Waiting for AFRICA service..."
@@ -185,7 +184,6 @@ jobs:
 
         - name: Print AFRICA logs
           run: |
-            sleep 7
             cat africa/africa.log      
 
       - name: Install dependencies for user-management
