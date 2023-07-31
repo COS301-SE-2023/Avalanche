@@ -90,11 +90,11 @@ jobs:
           echo REDIS_PORT=${{ secrets.REDIS_PORT }} >> zacr/.env
           echo REDIS_PASSWORD='${{ secrets.REDIS_PASSWORD }}' >> zacr/.env
           echo REDIS_USER='${{ secrets.REDIS_USER }}' >> zacr/.env
-          echo SNOWFLAKE_USERNAME='${{ secrets.SNOWFLAKE_USERNAME }}' >> zacr/.env
-          echo SNOWFLAKE_SCHEMA='${{ secrets.SNOWFLAKE_SCHEMA }}' >> zacr/.env
-          echo SNOWFLAKE_ROLE='${{ secrets.SNOWFLAKE_ROLE }}' >> zacr/.env
-          echo SNOWFLAKE_DATABASE='${{ secrets.SNOWFLAKE_DATABASE }}' >> zacr/.env
-          echo SNOWFLAKE_WAREHOUSE='${{ secrets.SNOWFLAKE_WAREHOUSE }}' >> zacr/.env
+          echo SNOWFLAKE_USERNAME='${{ secrets.SNOWFLAKE_USERNAME_1 }}' >> zacr/.env
+          echo SNOWFLAKE_SCHEMA='${{ secrets.SNOWFLAKE_SCHEMA_1 }}' >> zacr/.env
+          echo SNOWFLAKE_ROLE='${{ secrets.SNOWFLAKE_ROLE_1 }}' >> zacr/.env
+          echo SNOWFLAKE_DATABASE='${{ secrets.SNOWFLAKE_DATABASE_1 }}' >> zacr/.env
+          echo SNOWFLAKE_WAREHOUSE='${{ secrets.SNOWFLAKE_WAREHOUSE_1 }}' >> zacr/.env
           echo SNOWFLAKE_PASSWORD='${{ secrets.ZACR_PASSWORD }}' >> zacr/.env
           echo SNOWFLAKE_ACCOUNT='${{ secrets.ZACR_SNOWFLAKE_ACCOUNT }}' >> zacr/.env
           echo JWT_SECRET='${{ secrets.JWT_SECRET }}' >> zacr/.env
@@ -102,7 +102,7 @@ jobs:
       - name: Start zacr
         run: |
           cd zacr
-          yarn start &
+          yarn start > zacr.log 2>&1 &
 
       - name: Wait for zacr service
         run: |
@@ -110,6 +110,10 @@ jobs:
           sleep 2  
           echo "Waiting for zacr service..."
           done
+
+      - name: Print ZACR logs
+        run: |
+          cat zacr/zacr.log 
 
       - name: Install dependencies for ryce
         run: |
