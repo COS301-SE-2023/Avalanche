@@ -5,8 +5,9 @@ describe('Dashboard', () => {
         // cy.get('input[name=password]').type(Cypress.env('password'));
         // cy.get('button[type=submit]').click(); // Please replace with the actual route of your Dashboard page.
         cy.setCookie('jwt', Cypress.env('jwt'));
-        cy.visit(Cypress.env('baseURL') + ":" + Cypress.env('basePort') + '/dashboard');
+        cy.visit(Cypress.env('baseURL')  + Cypress.env('basePort') + '/dashboard');
         cy.wait(5000);
+        cy.url().should(Cypress.env('baseURL')  + Cypress.env('basePort') + '/dashboard')
     });
 
     it('renders Sidebar with links', () => {
