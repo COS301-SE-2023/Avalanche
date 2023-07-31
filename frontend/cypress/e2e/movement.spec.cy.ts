@@ -2,8 +2,9 @@ describe("Movement", () => {
     beforeEach(() => {
 
         cy.setCookie('jwt', Cypress.env('jwt'));
-        cy.visit(Cypress.env('baseURL') + ':' + Cypress.env('basePort') + '/movement');
+        cy.visit(Cypress.env('baseURL') +  Cypress.env('basePort') + '/movement');
         cy.wait(5000);
+        cy.url().should('eq', Cypress.env('baseURL') +  Cypress.env('basePort') + '/movement')
 
     });
 

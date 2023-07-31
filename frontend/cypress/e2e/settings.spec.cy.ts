@@ -1,10 +1,11 @@
 describe("Settings", () => {
     beforeEach(() => {
-        cy.visit(Cypress.env('baseURL') + ":" + Cypress.env('basePort'));
-        cy.get('input[name=email]').type('kihale5691@sportrid.com');
-        cy.get('input[name=password]').type('12345');
-        cy.get('button[type=submit]').click();
-        cy.get('a[data-tooltip-target="tooltip-settings"]').click();
+
+        cy.setCookie('jwt', Cypress.env('jwt'));
+        cy.visit(Cypress.env('baseURL') + Cypress.env('basePort') + '/settings');
+        cy.wait(5000);
+        cy.url().should('eq', Cypress.env('baseURL') + Cypress.env('basePort') + '/settings');
+        
     });
 
     it("Navbar still visible", ()=> {
