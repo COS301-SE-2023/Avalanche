@@ -66,11 +66,11 @@ jobs:
           cd frontend
           yarn dev &
 
-      - name: Wait for Gateway service
+      - name: Wait for frontend service
         run: |
-          while ! nc -z localhost 4000; do   
+          while ! nc -z localhost 3000; do   
           sleep 1
-          echo "Waiting for Gateway service..."
+          echo "Waiting for frontend service..."
           done    
 
       - name: Install dependencies for gateway
