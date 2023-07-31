@@ -29,7 +29,7 @@ describe('Default Dashboard', () => {
     it('check requests received and graphs load ', () => {
 
         // Check that all requests for graphs have status code 201
-        cy.intercept('POST', Cypress.env('baseURL')+':4000/ryce/transactions*').as('postCheck');
+        cy.intercept('POST', 'http://gateway:4000/ryce/transactions*').as('postCheck');
 
         // Wait for 5 POST requests to complete
         for (let i = 0; i < 5; i++) {
@@ -57,7 +57,7 @@ describe('Default Dashboard', () => {
 
     it('checks requests responses', () => {
         // Check that all requests for graphs have status code 201
-        cy.intercept('POST', Cypress.env('baseURL')+':4000/ryce/transactions*').as('postCheck');
+        cy.intercept('POST', 'http://gateway:4000/ryce/transactions*').as('postCheck');
     
         // Array of request processing promises
         const requestPromises = [];

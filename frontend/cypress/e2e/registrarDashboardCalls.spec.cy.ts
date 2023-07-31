@@ -1,6 +1,6 @@
 describe('Registrar Transaction Dashboard', () => {
     beforeEach(() => {
-        cy.visit('http://localhost:3000');
+        cy.visit(Cypress.env('baseURL') + ':' + Cypress.env('password'));
         cy.get('input[name=email]').type(Cypress.env('username'));
         cy.get('input[name=password]').type(Cypress.env('password'));
         cy.get('button[type=submit]').click();
@@ -29,7 +29,7 @@ describe('Registrar Transaction Dashboard', () => {
     it('check requests received and graphs load ', () => {
 
         // Check that all requests for graphs have status code 201
-        cy.intercept('POST', 'http://127.0.0.1:4000/ryce/transactions*').as('postCheck');
+        cy.intercept('POST', 'http://gateway:4000/ryce/transactions*').as('postCheck');
 
         // Wait for 5 POST requests to complete
         for (let i = 0; i < 5; i++) {
@@ -57,7 +57,7 @@ describe('Registrar Transaction Dashboard', () => {
 
     it('checks requests responses', () => {
         // Check that all requests for graphs have status code 201
-        cy.intercept('POST', 'http://127.0.0.1:4000/ryce/transactions*').as('postCheck');
+        cy.intercept('POST', 'http://gateway:4000/ryce/transactions*').as('postCheck');
     
         // Array of request processing promises
         const requestPromises = [];

@@ -32,7 +32,7 @@ describe('Registrar Transaction Dashboard', () => {
     it('check requests received and graphs load ', () => {
 
         // Check that all requests for graphs have status code 201
-        cy.intercept('POST', 'http://127.0.0.1:4000/ryce/marketShare').as('postCheck');
+        cy.intercept('POST', 'http://gateway:4000/ryce/marketShare').as('postCheck');
 
         // Wait for 5 POST requests to complete
         for (let i = 0; i < 4; i++) {
@@ -56,7 +56,7 @@ describe('Registrar Transaction Dashboard', () => {
 
     it('checks requests responses', () => {
         // Check that all requests for graphs have status code 201
-        cy.intercept('POST', 'http://127.0.0.1:4000/ryce/marketShare*').as('postCheck');
+        cy.intercept('POST', 'http://gateway:4000/ryce/marketShare*').as('postCheck');
     
         // Array of request processing promises
         const requestPromises = [];

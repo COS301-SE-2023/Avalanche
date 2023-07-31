@@ -1,11 +1,14 @@
 describe('Registrar Transaction Dashboard', () => {
     beforeEach(() => {
-        cy.visit('http://localhost:3000');
+        cy.visit(Cypress.env('baseURL') + ':' + Cypress.env('password'));
         cy.get('input[name=email]').type(Cypress.env('username'));
         cy.get('input[name=password]').type(Cypress.env('password'));
         cy.get('button[type=submit]').click();
+        cy.url().should('eq', Cypress.env('baseURL') + ':' + Cypress.env('password') + '/dashboard');
+        cy.get('#default-sidebar a[href="/ageAnalysis"]').click();
         cy.wait(5000);
-        cy.get('#default-sidebar a[href="/registrarMarketComparison"]').click();
+        cy.url().should('contain', Cypress.env('baseURL') + ':' + Cypress.env('password') + '/ageAnalysis');
+
     });
 
     it('renders Sidebar with links', () => {
@@ -13,9 +16,9 @@ describe('Registrar Transaction Dashboard', () => {
         cy.get('#default-sidebar')
             .should('be.visible');
 
-        cy.get('#default-sidebar a[href="/registrarMarketComparison"]')
+        cy.get('#default-sidebar a[href="/ageAnalysis"]')
             .should('be.visible')
-            .and('contain', 'Registrar Market Comparison');
+            .and('contain', 'Age Analysis');
 
     });
 
@@ -29,32 +32,35 @@ describe('Registrar Transaction Dashboard', () => {
     it('check requests received and graphs load ', () => {
 
         // Check that all requests for graphs have status code 201
-        cy.intercept('POST', 'http://127.0.0.1:4000/ryce/transactions-ranking*').as('postCheck');
+        cy.intercept('POST', 'http://gateway:4000/ryce/age').as('postCheck');
 
         // Wait for 5 POST requests to complete
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 4; i++) {
             cy.wait('@postCheck').then((interception) => {
                 expect(interception.response.statusCode).to.eq(201);
             });
         }
 
         // Check the heading of each graph
-        // Check that the word 'Monthly' appears on the page
-        cy.contains('Monthly create').should('be.visible', 2);
-        cy.contains('Monthly renew').should('be.visible', 2);
-        cy.contains('Monthly transfer').should('be.visible');
+        cy.contains('Age Analysis of domains for the top5 registrars in terms of domain count , showing the average age per registrar').should('be.visible');
+
+        cy.contains('Age Analysis of domains for the top5 registrars in terms of domain count , showing the number of domains per age per registrar').should('be.visible');
+
+        cy.contains('Age Analysis of domains for the top20 registrars in terms of domain count , showing the average age per registrar').should('be.visible');
+
+        cy.contains('Age Analysis of domains for the top10 registrars in terms of domain count , showing the average age per registrar').should('be.visible');
 
         // Check for the existence of canvas in each graph
-        cy.get('.block.p-6 .h-96 canvas').should('have.length', 5);
+        cy.get('.block.p-6 .h-96 canvas').should('have.length', 4);
     });
 
     it('checks requests responses', () => {
         // Check that all requests for graphs have status code 201
-        cy.intercept('POST', 'http://127.0.0.1:4000/ryce/transactions-ranking*').as('postCheck');
+        cy.intercept('POST', 'http://gateway:4000/ryce/age*').as('postCheck');
     
         // Array of request processing promises
         const requestPromises = [];
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 4; i++) {
 
             requestPromises.push(
 
@@ -80,28 +86,37 @@ describe('Registrar Transaction Dashboard', () => {
 
             interactions.forEach(({ request, response }) => {
                 // Perform your checks using request and response...
-                console.log("WEEEE");
-                console.log(request);
 
                 const responseData = response.body;
                 const requestData = request.body;
                 console.log(requestData);
     
                 cy.wrap(responseData.status).should('eq', 'success');
-                const transType = requestData.transactions[0];
     
-                if (request.granularity === 'month') {
+                if (requestData.average == 'true') {
 
                     // Check graphName, warehouse, and graphType
-                    cy.wrap(responseData.data.graphName).should('include', 'Monthly ' + transType +' per registrar');
+                    cy.wrap(responseData.data.graphName).should('include', 'average age');
 
                     cy.wrap(responseData.data.warehouse).should('eq', 'ryce');
 
-                    cy.wrap(responseData.data.graphType).should('eq', 'transactions');
+                    cy.wrap(responseData.data.graphType).should('eq', 'age');
     
-                    // Check the existence and length of labels and datasets arrays
-                    expect(responseData.data).to.have.property('labels');
+                } else {
+
+                    // Check graphName, warehouse, and graphType
+                    cy.wrap(responseData.data.graphName).should('include', 'number of domains');
+
+                    cy.wrap(responseData.data.warehouse).should('eq', 'ryce');
+
+                    cy.wrap(responseData.data.graphType).should('eq', 'age');
+
                 } 
+                if(requestData.overall == 'false')  {
+
+                    // Check graphName, warehouse, and graphType
+                    cy.wrap(responseData.data.graphName).should('include', 'per registrar');
+                }
     
                 // Check each dataset to see if it contains a label and data
                 responseData.data.datasets.forEach(dataset => {

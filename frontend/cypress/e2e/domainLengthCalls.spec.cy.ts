@@ -1,11 +1,11 @@
-describe('Registrar Transaction Dashboard', () => {
+describe('Domain Length', () => {
     beforeEach(() => {
         cy.visit('http://localhost:3000');
         cy.get('input[name=email]').type(Cypress.env('username'));
         cy.get('input[name=password]').type(Cypress.env('password'));
         cy.get('button[type=submit]').click();
-        cy.wait(5000);
-        cy.get('#default-sidebar a[href="/movement"]').click();
+        cy.wait(10000);
+        cy.get('#default-sidebar a[href="/domainLength"]').click();
     });
 
     it('renders Sidebar with links', () => {
@@ -13,9 +13,9 @@ describe('Registrar Transaction Dashboard', () => {
         cy.get('#default-sidebar')
             .should('be.visible');
 
-        cy.get('#default-sidebar a[href="/movement"]')
+        cy.get('#default-sidebar a[href="/domainLength"]')
             .should('be.visible')
-            .and('contain', 'Movement');
+            .and('contain', 'Domain Length');
 
     });
 
@@ -29,7 +29,7 @@ describe('Registrar Transaction Dashboard', () => {
     it('check requests received and graphs load ', () => {
 
         // Check that all requests for graphs have status code 201
-        cy.intercept('POST', 'http://127.0.0.1:4000/ryce/movement/vertical').as('postCheck');
+        cy.intercept('POST', 'http://gateway:4000/ryce/domainNameAnalysis/length').as('postCheck');
 
         // Wait for 5 POST requests to complete
         for (let i = 0; i < 2; i++) {
@@ -40,10 +40,10 @@ describe('Registrar Transaction Dashboard', () => {
 
         // Check the heading of each graph
         // Check that the word 'Monthly' appears on the page
-        cy.contains('Monthly Nett Vertical Movement (Creates-Deletes) from 2022-01-01 to 2022-12-31 for 1und1, registrygate, internetx for WIEN').should('be.visible');
+        cy.contains('Length of newly created domains from 2022-01-01 to 2022-12-31 across all registrars for all zones').should('be.visible');
 
         // Check that the word 'Yearly' appears on the page
-        cy.contains('Monthly Nett Vertical Movement (Creates-Deletes) from 2022-01-01 to 2022-12-31 for all registrars for WIEN').should('be.visible');
+        cy.contains('Length of newly created domains from 2022-05-08 to 2022-12-31 across all registrars for all zones').should('be.visible');
 
 
         // Check for the existence of canvas in each graph
@@ -52,7 +52,7 @@ describe('Registrar Transaction Dashboard', () => {
 
     it('checks requests responses', () => {
         // Check that all requests for graphs have status code 201
-        cy.intercept('POST', 'http://127.0.0.1:4000/ryce/movement/vertical*').as('postCheck');
+        cy.intercept('POST', 'http://127.0.0.1:4000/ryce/domainNameAnalysis/length*').as('postCheck');
     
         // Array of request processing promises
         const requestPromises = [];
@@ -91,28 +91,29 @@ describe('Registrar Transaction Dashboard', () => {
     
                 cy.wrap(responseData.status).should('eq', 'success');
     
-                if (requestData.registrar != undefined) {
-
+                if (requestData.dateFrom!= undefined) {
+                    console.log("here");
+                    console.log(requestData);
+                    console.log(responseData.data.graphName);
                     // Check graphName, warehouse, and graphType
-                    cy.wrap(responseData.data.graphName).should('include', 'Monthly Nett Vertical Movement (Creates-Deletes) from 2022-01-01 to 2022-12-31 for 1und1, registrygate, internetx for WIEN');
+                    cy.wrap(responseData.data.graphName).should('include', 'Length of newly created domains from ');
 
                     cy.wrap(responseData.data.warehouse).should('eq', 'ryce');
 
-                    cy.wrap(responseData.data.graphType).should('eq', 'movement/vertical');
+                    cy.wrap(responseData.data.graphType).should('eq', 'domainNameAnalysis/length');
     
-                    // Check the existence and length of labels and datasets arrays
-                    cy.wrap(responseData.data.labels).should('have.length', 12);
                 } else  {
+                    console.log("here2");
+                    console.log(requestData);
+                    console.log(responseData.data.graphName);
 
                     // Check graphName, warehouse, and graphType
-                    cy.wrap(responseData.data.graphName).should('include', 'Monthly Nett Vertical Movement (Creates-Deletes) from 2022-01-01 to 2022-12-31 for all registrars for WIEN');
+                    cy.wrap(responseData.data.graphName).should('include', 'Length of newly created domains from ');
 
                     cy.wrap(responseData.data.warehouse).should('eq', 'ryce');
 
-                    cy.wrap(responseData.data.graphType).should('eq', 'movement/vertical');
+                    cy.wrap(responseData.data.graphType).should('eq', 'domainNameAnalysis/length');
     
-                    // Check the existence and length of labels and datasets arrays
-                    cy.wrap(responseData.data.labels).should('have.length', 12);
                 }
     
                 // Check each dataset to see if it contains a label and data
