@@ -1,0 +1,234 @@
+name: 🖥️ Tests
+
+on:
+  push:
+    branches:
+      - working
+      - stable
+      - integration_dev
+  pull_request:
+    branches:
+      - working
+      - stable
+      - integration_dev
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checking out the repo
+      - name: 🛏️ Setup repo
+        uses: actions/checkout@v3
+
+      # Runs a single command using the runners shell
+      - name: 🔐 Install wireguard
+        run: sudo apt-get install wireguard
+        
+      # Creating the wireguard configuration 
+      - name: 🔐 Create WG Config
+        run: |
+          sed -i -e "s@{{WG_PRIVATEKEY}}@${{ secrets.WG_PRIVATEKEY }}@" $GITHUB_WORKSPACE/tunnel.conf
+          sed -i -e "s@{{WG_ADDRESS}}@${{ secrets.WG_ADDRESS }}@" $GITHUB_WORKSPACE/tunnel.conf
+          sed -i -e "s@{{WG_DNS}}@${{ secrets.WG_DNS }}@" $GITHUB_WORKSPACE/tunnel.conf
+          sed -i -e "s@{{WG_PUBLICKEY}}@${{ secrets.WG_PUBLICKEY }}@" $GITHUB_WORKSPACE/tunnel.conf
+          sed -i -e "s@{{WG_ALLOWEDIPS}}@${{ secrets.WG_ALLOWEDIPS }}@" $GITHUB_WORKSPACE/tunnel.conf
+          sed -i -e "s@{{WG_ENDPOINT}}@${{ secrets.WG_ENDPOINT }}@" $GITHUB_WORKSPACE/tunnel.conf
+
+          sudo cp $GITHUB_WORKSPACE/tunnel.conf /etc/wireguard/
+          
+      # Initilizing the tunnel so we can connect to the server
+      - name: 🔐 WG Creating Tunnel
+        run: |
+          sudo apt install resolvconf
+          wg-quick up $GITHUB_WORKSPACE/tunnel.conf
+          
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Install dependencies for gateway
+        run: |
+          cd gateway
+          yarn install
+
+      - name: Create .env file for gateway service
+        uses: SpicyPizza/create-envfile@v1.3
+        with:
+        envkey_REDIS_HOST: '${{ secrets.REDIS_HOST }}'
+        envkey_REDIS_PORT: ${{ secrets.REDIS_PORT }}
+        envkey_REDIS_PASSWORD : '${{ secrets.REDIS_PASSWORD }}'
+        envkey_REDIS_USER : '${{ secrets.REDIS_USER }}'
+        envkey_MOCK_EMAIL : '${{ secrets.MOCK_EMAIL }}'
+        envkey_MOCK_PASSWORD : '${{ secrets.MOCK_PASSWORD }}'
+        envkey_JWT_TOKEN_TO_TEST : '${{ secrets.JWT_TOKEN_TO_TEST }}'
+        directory: ./gateway 
+        file_name: .env
+        fail_on_empty: false 
+
+      - name: Start gateway
+        run: |
+          cd gateway
+          yarn start &
+
+      - name: Wait for Gateway service
+        run: |
+        while ! nc -z localhost 4000; do   
+        sleep 1
+        echo "Waiting for Gateway service..."
+        done
+
+      - name: Install dependencies for zacr
+        run: |
+          cd zacr
+          yarn install
+
+      - name: Create .env file for zacr service
+        uses: SpicyPizza/create-envfile@v1.3
+        with:
+        envkey_REDIS_HOST: '${{ secrets.REDIS_HOST }}'
+        envkey_REDIS_PORT: ${{ secrets.REDIS_PORT }}
+        envkey_REDIS_PASSWORD : '${{ secrets.REDIS_PASSWORD }}'
+        envkey_REDIS_USER : '${{ secrets.REDIS_USER }}'
+        envkey_SNOWFLAKE_USERNAME : '${{ secrets.SNOWFLAKE_USERNAME }}'
+        envkey_SNOWFLAKE_SCHEMA : '${{ secrets.SNOWFLAKE_SCHEMA }}'
+        envkey_SNOWFLAKE_ROLE : '${{ secrets.SNOWFLAKE_ROLE }}'
+        envkey_SNOWFLAKE_DATABASE : '${{ secrets.SNOWFLAKE_DATABASE }}'
+        envkey_SNOWFLAKE_WAREHOUSE : '${{ secrets.SNOWFLAKE_WAREHOUSE }}'
+        envkey_SNOWFLAKE_PASSWORD : '${{ secrets.ZACR_PASSWORD }}'
+        envkey_SNOWFLAKE_ACCOUNT : '${{ secrets.ZACR_SNOWFLAKE_ACCOUNT }}'
+        envkey_JWT_SECRET : '${{ secrets.JWT_SECRET }}'
+        directory: ./zacr
+        file_name: .env
+        fail_on_empty: false 
+
+      - name: Start zacr
+        run: |
+          cd zacr
+          yarn start &
+
+      - name: Wait for ZACR service
+        run: |
+        while ! nc -z localhost 4002; do   
+        sleep 1
+        echo "Waiting for ZACR service..."
+        done  
+
+      - name: Install dependencies for ryce
+        run: |
+          cd ryce
+          yarn install
+
+      - name: Create .env file for ryce service
+        uses: SpicyPizza/create-envfile@v1.3
+        with:
+        envkey_REDIS_HOST: '${{ secrets.REDIS_HOST }}'
+        envkey_REDIS_PORT: ${{ secrets.REDIS_PORT }}
+        envkey_REDIS_PASSWORD : '${{ secrets.REDIS_PASSWORD }}'
+        envkey_REDIS_USER : '${{ secrets.REDIS_USER }}'
+        envkey_SNOWFLAKE_USERNAME : '${{ secrets.SNOWFLAKE_USERNAME }}'
+        envkey_SNOWFLAKE_SCHEMA : '${{ secrets.SNOWFLAKE_SCHEMA }}'
+        envkey_SNOWFLAKE_ROLE : '${{ secrets.SNOWFLAKE_ROLE }}'
+        envkey_SNOWFLAKE_DATABASE : '${{ secrets.SNOWFLAKE_DATABASE }}'
+        envkey_SNOWFLAKE_WAREHOUSE : '${{ secrets.SNOWFLAKE_WAREHOUSE }}'
+        envkey_SNOWFLAKE_PASSWORD : '${{ secrets.RYCE_PASSWORD }}'
+        envkey_SNOWFLAKE_ACCOUNT : '${{ secrets.RYCE_SNOWFLAKE_ACCOUNT }}'
+        envkey_JWT_SECRET : '${{ secrets.JWT_SECRET }}'
+        directory: ./ryce
+        file_name: .env
+        fail_on_empty: false 
+
+      - name: Start ryce
+        run: |
+          cd ryce
+          yarn start &
+
+      - name: Wait for RYCE service
+        run: |
+        while ! nc -z localhost 4004; do   
+        sleep 1
+        echo "Waiting for RYCE service..."
+        done    
+
+      - name: Install dependencies for africa
+        run: |
+          cd africa
+          yarn install
+
+      - name: Create .env file for africa service
+        uses: SpicyPizza/create-envfile@v1.3
+        with:
+        envkey_REDIS_HOST: '${{ secrets.REDIS_HOST }}'
+        envkey_REDIS_PORT: ${{ secrets.REDIS_PORT }}
+        envkey_REDIS_PASSWORD : '${{ secrets.REDIS_PASSWORD }}'
+        envkey_REDIS_USER : '${{ secrets.REDIS_USER }}'
+        envkey_SNOWFLAKE_USERNAME : '${{ secrets.SNOWFLAKE_USERNAME }}'
+        envkey_SNOWFLAKE_SCHEMA : '${{ secrets.SNOWFLAKE_SCHEMA }}'
+        envkey_SNOWFLAKE_ROLE : '${{ secrets.SNOWFLAKE_ROLE }}'
+        envkey_SNOWFLAKE_DATABASE : '${{ secrets.SNOWFLAKE_DATABASE }}'
+        envkey_SNOWFLAKE_WAREHOUSE : '${{ secrets.SNOWFLAKE_WAREHOUSE }}'
+        envkey_SNOWFLAKE_PASSWORD : '${{ secrets.AFRICA_PASSWORD }}'
+        envkey_SNOWFLAKE_ACCOUNT : '${{ secrets.AFRICA_SNOWFLAKE_ACCOUNT }}'
+        envkey_JWT_SECRET : '${{ secrets.JWT_SECRET }}'
+        directory: ./africa
+        file_name: .env
+        fail_on_empty: false 
+
+      - name: Start africa
+        run: |
+          cd africa
+          yarn start &
+
+      - name: Wait for AFRICA service
+        run: |
+        while ! nc -z localhost 4005; do   
+        sleep 1
+        echo "Waiting for AFRICA service..."
+        done      
+
+      - name: Install dependencies for user-management
+        run: |
+          cd user-management
+          yarn install
+
+      - name: Create .env file for user-management service
+        uses: SpicyPizza/create-envfile@v1.3
+        with:
+        envkey_REDIS_HOST: '${{ secrets.REDIS_HOST }}'
+        envkey_REDIS_PORT: ${{ secrets.REDIS_PORT }}
+        envkey_REDIS_PASSWORD : '${{ secrets.REDIS_PASSWORD }}'
+        envkey_REDIS_USER : '${{ secrets.REDIS_USER }}'
+        envkey_POSTGRES_USERNAME : '${{ secrets.POSTGRES_USERNAME }}'
+        envkey_POSTGRES_DB : '${{ secrets.POSTGRES_DB }}'
+        envkey_POSTGRES_HOST : '${{ secrets.POSTGRES_HOST }}'
+        envkey_POSTGRES_PASSWORD : '${{ secrets.POSTGRES_PASSWORD }}'
+        envkey_POSTGRES_PORT : ${{ secrets.POSTGRES_PORT }}
+        envkey_GOOGLE_PASSWORD : '${{ secrets.GOOGLE_PASSWORD }}'
+        envkey_JWT_SECRET : '${{ secrets.JWT_SECRET }}'
+        directory: ./user-management
+        file_name: .env
+        fail_on_empty: false 
+
+      - name: Start user-management
+        run: |
+          cd user-management
+          yarn start &
+
+      - name: Wait for user-management service
+        run: |
+        while ! nc -z localhost 4001; do   
+        sleep 1
+        echo "Waiting for user-management service..."
+        done        
+
+      - name: Run integration tests for gateway service
+        run: |
+          cd gateway
+          yarn test 

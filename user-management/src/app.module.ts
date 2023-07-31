@@ -24,7 +24,7 @@ import { WatchedUser } from './entity/watch.entity';
         name: 'USER_MANAGEMENT_SERVICE',
         transport: Transport.TCP,
         options: {
-          host: process.env.HOST || 'localhost',
+          host: 'localhost',
           port: 4001,
         },
       },

@@ -26,7 +26,7 @@ import { RegistrarNameService } from './registrarName/registrarName.service';
         name: 'ZACR_SERVICE',
         transport: Transport.TCP,
         options: {
-          host: process.env.HOST || 'localhost',
+          host: 'localhost',
           port: 4002,
         },
       },
