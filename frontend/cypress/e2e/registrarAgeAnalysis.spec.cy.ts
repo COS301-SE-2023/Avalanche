@@ -4,6 +4,7 @@ describe("Resgistrar Age Analysis", () => {
         cy.get('input[name=email]').type(Cypress.env('username'));
         cy.get('input[name=password]').type(Cypress.env('password'));
         cy.get('button[type=submit]').click();
+        cy.wait(8000);
         cy.get('a[id="ageAnalysis"]').click();
 
     });
@@ -14,7 +15,7 @@ describe("Resgistrar Age Analysis", () => {
                 .should('be.visible')
                 .and('contain', contain);
         }
-
+        cy.wait(8000);
         cy.url().should("include", "/ageAnalysis")
 
         cy.get('#default-sidebar')
@@ -32,6 +33,7 @@ describe("Resgistrar Age Analysis", () => {
     })
 
     it('loads everything on Age Analysis page', ()=>{
+        cy.wait(8000);
         cy.contains('Registrar').should('be.visible')
         cy.contains('p', 'Insights at your fingertips').should('be.visible');
         cy.get('canvas[role="img"]').should('be.visible'); //graph itself
