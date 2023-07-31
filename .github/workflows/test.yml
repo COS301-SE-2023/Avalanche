@@ -57,18 +57,15 @@ jobs:
           yarn install
 
       - name: Create .env file for gateway service
-        uses: SpicyPizza/create-envfile@v1.3
-        with:
-          envkey_REDIS_HOST: '${{ secrets.REDIS_HOST }}'
-          envkey_REDIS_PORT: ${{ secrets.REDIS_PORT }}
-          envkey_REDIS_PASSWORD : '${{ secrets.REDIS_PASSWORD }}'
-          envkey_REDIS_USER : '${{ secrets.REDIS_USER }}'
-          envkey_MOCK_EMAIL : '${{ secrets.MOCK_EMAIL }}'
-          envkey_MOCK_PASSWORD : '${{ secrets.MOCK_PASSWORD }}'
-          envkey_JWT_TOKEN_TO_TEST : '${{ secrets.JWT_TOKEN_TO_TEST }}'
-        directory: ./gateway 
-        file_name: .env
-        fail_on_empty: false 
+        run: |
+          echo REDIS_HOST='${{ secrets.REDIS_HOST }}' >> gateway/.env
+          echo REDIS_PORT=${{ secrets.REDIS_PORT }} >> gateway/.env
+          echo REDIS_PASSWORD='${{ secrets.REDIS_PASSWORD }}' >> gateway/.env
+          echo REDIS_USER='${{ secrets.REDIS_USER }}' >> gateway/.env
+          echo MOCK_EMAIL='${{ secrets.MOCK_EMAIL }}' >> gateway/.env
+          echo MOCK_PASSWORD='${{ secrets.MOCK_PASSWORD }}' >> gateway/.env
+          echo JWT_TOKEN_TO_TEST='${{ secrets.JWT_TOKEN_TO_TEST }}' >> gateway/.env
+
 
       - name: Start gateway
         run: |
