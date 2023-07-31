@@ -78,7 +78,6 @@ export default function Register() {
         const obj = { ...registerObject };
         obj[key] = value;
         setRegisterObject(obj);
-        console.log(key, value);
     }
 
     /**

@@ -10,13 +10,13 @@ import { useState, useEffect } from "react";
 import { ITransactionGraphRequest } from "@/interfaces/requests";
 import { selectModalManagerState, setCurrentOpenState } from "@/store/Slices/modalManagerSlice"
 import GraphZoomModal from "@/components/Modals/GraphZoomModal"
-import { ErrorToast, SubmitButton } from "@/components/Util"
+import { ErrorToast, SubmitButton, SuccessToast } from "@/components/Util"
 import GraphCreateModal from "@/components/Modals/GraphCreateModal";
 import { getFilters } from "@/store/Slices/graphSlice"
 import { userState } from "@/store/Slices/userSlice"
 import { Toaster } from "react-hot-toast"
 import { useRouter } from "next/router"
-import ky from "ky"
+import ky, { HTTPError } from "ky"
 import { getCookie } from "cookies-next"
 import { updateDashboards } from "@/store/Slices/userSlice"
 
@@ -30,8 +30,6 @@ export default function CreateCustomDashboard() {
     const [name, setName] = useState<string>(router.query.name as string || "");
     const [id, setID] = useState<string>(router.query.id as string || document.location.pathname.split("/")[2]);
     const [newDash, setND] = useState<boolean>(true);
-
-    // console.log(document.location.pathname.split("/")[2]);
 
     const [graphs, setGraphs] = useState<any>([]);
 
@@ -69,7 +67,6 @@ export default function CreateCustomDashboard() {
         const dataaaaaaaaa = [] as any;
 
         graphs.forEach((g: any) => {
-            console.log(g.endpointName);
             const d = g.endpointName?.split("/");
             const warehouse = g.warehouse || d[0];
             const type = g.type || d[1];
@@ -87,14 +84,23 @@ export default function CreateCustomDashboard() {
             graphs: dataaaaaaaaa
         }
 
-        const res = await ky.post(`${process.env.NEXT_PUBLIC_API}/user-management/${newDash ? "saveDashboard" : "editDashboard"}`, {
-            json: boo,
-            headers: {
-                "Authorization": `Bearer ${getCookie("jwt")}`
+        try {
+            const res = await ky.post(`${process.env.NEXT_PUBLIC_API}/user-management/${newDash ? "saveDashboard" : "editDashboard"}`, {
+                json: boo,
+                headers: {
+                    "Authorization": `Bearer ${getCookie("jwt")}`
+                }
+            }).json() as any;
+            dispatch(updateDashboards(res.message));
+            return SuccessToast({ text: `Successfully ${newDash ? "saved" : "updated"} dashboard.` })
+        } catch (e) {
+            let error = e as HTTPError;
+            if (error.name === 'HTTPError') {
+                const errorJson = await error.response.json();
+                return ErrorToast({ text: errorJson.message });
             }
-        }).json() as any;
+        }
 
-        dispatch(updateDashboards(res.message));
     }
 
     return (<>

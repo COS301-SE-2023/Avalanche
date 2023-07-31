@@ -8,10 +8,12 @@ import { Menu, Transition } from '@headlessui/react'
 import "animate.css";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentOpenState, setData, clearCurrentOpenState } from "@/store/Slices/modalManagerSlice";
-import { CheckboxFilter, DatePickerFilter, RadioboxFilter, ToggleFilter } from "./Filters";
+import { CheckboxFilter, DatePickerFilter, NestedCheckbox, RadioboxFilter, ToggleFilter } from "./Filters";
 import { Disclosure } from '@headlessui/react'
-import { SubmitButton } from "../Util";
-import { graphState } from "@/store/Slices/graphSlice";
+import { ErrorToast, SubmitButton } from "../Util";
+import { getFilters, graphState } from "@/store/Slices/graphSlice";
+import { getCookie } from "cookies-next";
+import ky from "ky";
 
 interface IChartCard {
     title: string,
@@ -21,17 +23,21 @@ interface IChartCard {
 
 export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
 
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<any>();
     const stateGraph = useSelector(graphState);
     const filters = stateGraph.filters;
 
     useEffect(() => {
         dispatch(clearCurrentOpenState)
+        if (filters.length === 0) dispatch(getFilters({}));
     }, [])
 
     const [type, setType] = useState<ChartType>(defaultGraph);
     const [filterDropdown, setFilterDropdown] = useState<boolean>(false);
     const [graphData, setGraphData] = useState<any>(data);
+    const [warehouse, setWarehouse] = useState<string>(data.warehouse);
+    const [gType, setGType] = useState<string>(data.graphType);
+    const [loading, setLoading] = useState<boolean>(false);
 
     const [request, setRequest] = useState<any>({});
 
@@ -59,6 +65,9 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
             case "radiobox": {
                 return "";
             }
+            case "nestedCheckbox": {
+                return [];
+            }
         }
     }
 
@@ -78,60 +87,27 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
         dispatch(setData(modal));
     }
 
-    const renderFilters = () => {
-        // problem is, i dont know what warehouse or type of graph is on the predefined ones
-        const tempFilters = [
-            {
-                "name": "zone",
-                "type": "string[]",
-                "values": [
-                    "CO.ZA",
-                    "ORG.ZA",
-                    "NET.ZA"
-                ],
-                "input": "checkbox"
-            },
-            {
-                "name": "dateFrom",
-                "type": "string",
-                "input": "date-picker"
-            },
-            {
-                "name": "dateTo",
-                "type": "string",
-                "input": "date-picker"
-            },
-            {
-                "name": "transactions",
-                "type": "string",
-                "values": [
-                    "create",
-                    "grace",
-                    "redeem",
-                    "transfer",
-                    "renew"
-                ],
-                "input": "checkbox"
-            },
-            {
-                "name": "granularity",
-                "type": "string",
-                "values": [
-                    "day",
-                    "week",
-                    "month",
-                    "year"
-                ],
-                "input": "radiobox"
-            }
-        ]
+    const filterGraphs = () => {
+        if (warehouse) {
+            const ep = filters.find((item: any) => item.endpoint === warehouse);
+            if (!ep) return [];
+            return ep.graphs.find((item: any) => item.name === gType);
+        }
+        return [];
+    }
 
-        return tempFilters.map((element: any, index: number) => (
+
+    const renderFilters = () => {
+        return filterGraphs()?.filters?.map((element: any, index: number) => (
             <Disclosure key={index}>
                 {({ open, close }) => (
                     <>
                         <Disclosure.Button className="flex w-full justify-between rounded-lg px-4 py-2 text-left text-sm font-medium hover:bg-gray-300 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75" onClick={() => {
-                            addRequestObject(element.name, element);
+                            if (element.input === "nestedCheckbox") {
+                                addRequestObject("transactions", element)
+                            } else {
+                                addRequestObject(element.name, element);
+                            }
                         }}>
                             <div className="flex gap-4 items-center">
                                 {camelCaseRenderer(element.name)}
@@ -143,6 +119,7 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
                             {element.input === "date-picker" && <DatePickerFilter data={element} request={request[element.name]} update={updateRequestObject} />}
                             {element.input === "radiobox" && <RadioboxFilter data={element} request={request[element.name]} update={updateRequestObject} camelCase={camelCaseRenderer} />}
                             {element.input === "togglebox" && <ToggleFilter data={element} request={request[element.name]} update={updateRequestObject} />}
+                            {element.input === "nestedCheckbox" && <NestedCheckbox data={element} request={request["transactions"]} update={updateRequestObject} />}
                         </Disclosure.Panel>
                         <hr />
                     </>
@@ -159,6 +136,28 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
         keys.forEach((key, index) => {
             requestObject[key] = request[key].value;
         });
+
+        setFilterDropdown(!filterDropdown)
+        fetchGraphData(requestObject);
+    }
+
+    const fetchGraphData = async (filters: any) => {
+        setLoading(true);
+        try {
+            const jwt = getCookie("jwt");
+            const url = data.endpointName ? `${process.env.NEXT_PUBLIC_API}/${data.endpointName}` : `${process.env.NEXT_PUBLIC_API}/${warehouse || data.warehouse}/${gType || data.type}`;
+            const res = await ky.post(url, {
+                json: filters,
+                headers: {
+                    "Authorization": `Bearer ${jwt}`
+                }
+            }).json();
+            const d = res as any;
+            setGraphData(d.data);
+            setLoading(false);
+        } catch (e) {
+            if (e instanceof Error) return ErrorToast({ text: e.message })
+        }
     }
 
     const camelCaseRenderer = (value: string) => {
@@ -232,12 +231,15 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
                     </Menu>
                 </div>
             </div>
-            {type === ChartType.Bar && <BarChart data={graphData} />}
-            {type === ChartType.Pie && <PieChart data={graphData} />}
-            {type === ChartType.Line && <LineChart data={graphData} addClass="h-96" />}
-            {type === ChartType.Bubble && <BubbleChart data={graphData} />}
-            {type === ChartType.PolarArea && <PolarAreaChart data={graphData} />}
-            {type === ChartType.Radar && <RadarChart data={graphData} />}
+            {!loading ? <div>
+                {type === ChartType.Bar && <BarChart data={graphData} />}
+                {type === ChartType.Pie && <PieChart data={graphData} />}
+                {type === ChartType.Line && <LineChart data={graphData} addClass="h-96" />}
+                {type === ChartType.Bubble && <BubbleChart data={graphData} />}
+                {type === ChartType.PolarArea && <PolarAreaChart data={graphData} />}
+                {type === ChartType.Radar && <RadarChart data={graphData} />}
+            </div> : <div role="status" className="flex justify-between h-64 w-full bg-gray-300 rounded-lg animate-customPulse dark:bg-gray-700 p-6" />}
+
         </div >
     </>)
 }

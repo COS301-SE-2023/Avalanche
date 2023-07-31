@@ -1,20 +1,18 @@
 import Sidebar from "@/components/Navigation/SideBar"
 import PageHeader from "@/components/Util/PageHeader"
-import { ChevronDownIcon, HomeIcon } from "@heroicons/react/24/solid"
+import { HomeIcon } from "@heroicons/react/24/solid"
 import Head from "next/head"
 import { ChartCard } from "@/components/Graphs"
 import { ChartType } from "@/Enums";
 import { useDispatch, useSelector } from "react-redux";
-import { graphState, getGraphData, getGraphDataRanking } from "@/store/Slices/graphSlice"
-import { useState, useEffect } from "react";
+import { graphState, getGraphData } from "@/store/Slices/graphSlice"
+import { useEffect, useRef } from "react";
 import { ITransactionGraphRequest } from "@/interfaces/requests";
 import { selectModalManagerState } from "@/store/Slices/modalManagerSlice"
 import GraphZoomModal from "@/components/Modals/GraphZoomModal"
-import { Popover, Transition } from "@headlessui/react"
-import { Fragment, useRef } from "react"
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
-import { Document, Page, Image, View } from '@react-pdf/renderer';
+import { SubmitButton } from "@/components/Util"
 
 export default function Dashboard() {
 
@@ -27,7 +25,6 @@ export default function Dashboard() {
     }
 
     useEffect(() => {
-        // const data: ITransactionGraphRequest = { zone: "CO.ZA", granularity: "week", group: "registrar", dateFrom: "2023-01-02", graphName: "Your mom" };
 
         const array: ITransactionGraphRequest[] = [];
         const currentDate = new Date();
@@ -71,56 +68,44 @@ export default function Dashboard() {
             dispatch(getGraphData(data));
         })
 
-        // dispatch(getGraphDataArray(array));
     }, [])
 
-    function wrap() {
-        return new Promise((resolve) => setTimeout(resolve, 500));
-    }
+    const captureCanvasElements = async () => {
+        const canvasElements = Array.from(document.querySelectorAll('.graphChart'));
+        const canvasImages = [];
 
-    async function logging(pdf: any, canva: any, width: any, height: any) {
-        await wrap();
-        if (typeof canva === 'object') {
-            // console.log(canva);
-            html2canvas(canva as any).then(async (caravan) => {
-                const imgData = caravan.toDataURL('image/png');
-                // console.log(imgData);
-                // const imgData = caravan.getContext("2d", { willReadFrequently: true })?.getImageData();
-                pdf.addImage(imgData, 'JPEG', 0, 0, width, height, "woooo", "FAST", 0);
-                pdf.addPage();
-                // console.log(caravan);
-            })
-        }
-    }
-
-    const downloadPDF = async () => {
-        // console.log(s)
-        const input = document.getElementById('pageData');
-        const canvas = document.getElementsByClassName('graphChart');
-        console.log(canvas);
-
-        var doc = new jsPDF("l", "mm", "a10");
-        var width = doc.internal.pageSize.getWidth();
-        var height = doc.internal.pageSize.getHeight();
-
-        for (let c in canvas) {
-            const canva = canvas[c];
-            await logging(doc, canva, width, height);
+        for (const canvas of canvasElements) {
+            try {
+                const dataUrl = await html2canvas(canvas as any, {
+                    allowTaint: true,
+                    useCORS: true,
+                }).then((canvas) => canvas.toDataURL('image/png'));
+                canvasImages.push(dataUrl);
+            } catch (error) {
+                console.error('Error capturing canvas:', error);
+            }
         }
 
-        doc.save(`home.pdf`);
+        return canvasImages;
+    };
 
-        // html2canvas(input as any)
-        //     .then((canvas) => {
-        //         const imgData = canvas.toDataURL('image/png');
-        //         const pdf = new jsPDF('p', 'pt', 'a4');
-        //         console.log(pdf.canvas.height)
+    const generatePDF = async () => {
+        const canvasImages = await captureCanvasElements();
 
-        //         pdf.addImage(imgData, 'JPEG', 0, 0, pdf.canvas.width, pdf.canvas.height, "woooo", "FAST", 0);
-        //         pdf.addPage();
-        //         pdf.save(`home.pdf`);
-        //     });
-    }
+        const pdf = new jsPDF("l", "mm", "a1");
+
+        var width = pdf.internal.pageSize.getWidth();
+        var height = pdf.internal.pageSize.getHeight();
+
+        canvasImages.forEach((imageDataUrl) => {
+            pdf.addImage(imageDataUrl, 'PNG', 0, 0, width, height);
+            pdf.addPage();
+        });
+
+        pdf.save('report.pdf');
+    };
+
+    const containerRef = useRef(null);
 
     return (<>
         {
@@ -131,10 +116,10 @@ export default function Dashboard() {
         </Head>
         <Sidebar />
 
-        <div className="p-4 sm:ml-64 bg-gray-100 dark:bg-secondaryBackground min-h-screen">
+        <div className="p-4 sm:ml-64 bg-gray-100 dark:bg-secondaryBackground min-h-screen" ref={containerRef}>
             <div className="flex justify-between items-center">
                 <PageHeader title="Home" subtitle="Insights at your fingertips" icon={<HomeIcon className="h-16 w-16 text-black dark:text-white" />} />
-                <button onClick={() => downloadPDF()}>Download</button>
+                <SubmitButton text="Download Report" onClick={() => generatePDF()} />
             </div>
             <div className="p-0 pt-4 md:p-4" id="pageData">
                 <div className="grid lg:grid-cols-2 sm:grid-cols-1 md:grid-cols-2 gap-4 mb-4 grid-rows-2">

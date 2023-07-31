@@ -47,7 +47,7 @@ export class TransactionService {
           `africa` + sqlQuery,
           formattedData,
           'EX',
-          24 * 60 * 60,
+          72 * 60 * 60,
         );
       }
 
@@ -103,7 +103,7 @@ export class TransactionService {
           `africa` + sqlQuery,
           formattedData,
           'EX',
-          24 * 60 * 60,
+          72 * 60 * 60,
         );
       }
       return {

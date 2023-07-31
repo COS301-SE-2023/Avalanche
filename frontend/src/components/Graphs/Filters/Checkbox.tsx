@@ -1,5 +1,4 @@
 export default function CheckboxFilter({ data, request, update }: any) {
-
     const mapCheckbox = () => {
         return data.values?.map((element: any, index: number) => (
             <div className="flex items-center mb-1" key={index}>
@@ -8,14 +7,12 @@ export default function CheckboxFilter({ data, request, update }: any) {
 
                     if (!copy.includes(element)) {
                         copy.push(element);
-                        console.log(copy);
                     } else {
                         copy.splice(copy.indexOf(element), 1);
-                        console.log(copy);
                     }
 
                     update(data.name, copy);
-                }} checked={request.value.includes(element)} onChange={() => {
+                }} checked={request?.value?.includes(element)} onChange={() => {
 
                 }} />
                 <label htmlFor={`${data.name}-${element}`} className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{element}</label>

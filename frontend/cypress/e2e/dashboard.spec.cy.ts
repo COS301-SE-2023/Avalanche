@@ -7,6 +7,27 @@ describe('Dashboard', () => {
     });
 
     it('renders Sidebar with links', () => {
+        function navBarChecks(href, contain){
+            cy.get('#default-sidebar a[href="'+href+'"]')
+                .should('be.visible')
+                .and('contain', contain);
+        }
+
+        cy.url().should("include", "/dashboard")
+
+        cy.get('#default-sidebar')
+            .should('be.visible');
+
+        navBarChecks("/dashboard", "Home")
+        navBarChecks("/registrar", "Registrar")
+        navBarChecks("/registrarMarketComparison", "Registrar Market Comparison")
+        navBarChecks("/movement", "Movement")
+        navBarChecks("/domainLength", "Domain Length")
+        navBarChecks("/marketShare", "Market Share")
+        navBarChecks("/ageAnalysis", "Registrar Age Analysis")
+        navBarChecks("/domainNameAnalysis", "Domain Name Analysis")
+        navBarChecks("/watch", "Domain Watch")
+        
         it('The navigation should be visible', () => {
             cy.get('#default-sidebar')
                 .should('be.visible');
@@ -24,5 +45,5 @@ describe('Dashboard', () => {
             .should('be.visible');
 
     });
-
+    
 });
