@@ -77,10 +77,10 @@ jobs:
 
       - name: Wait for Gateway service
         run: |
-        while ! nc -z localhost 4000; do   
-        sleep 1
-        echo "Waiting for Gateway service..."
-        done
+          while ! nc -z localhost 4000; do   
+          sleep 1
+          echo "Waiting for Gateway service..."
+          done
 
       - name: Install dependencies for zacr
         run: |
@@ -113,10 +113,10 @@ jobs:
 
       - name: Wait for ZACR service
         run: |
-        while ! nc -z localhost 4002; do   
-        sleep 1
-        echo "Waiting for ZACR service..."
-        done  
+          while ! nc -z localhost 4002; do   
+          sleep 1
+          echo "Waiting for ZACR service..."
+          done  
 
       - name: Install dependencies for ryce
         run: |
@@ -149,10 +149,10 @@ jobs:
 
       - name: Wait for RYCE service
         run: |
-        while ! nc -z localhost 4004; do   
-        sleep 1
-        echo "Waiting for RYCE service..."
-        done    
+          while ! nc -z localhost 4004; do   
+          sleep 1
+          echo "Waiting for RYCE service..."
+          done    
 
       - name: Install dependencies for africa
         run: |
@@ -185,10 +185,10 @@ jobs:
 
       - name: Wait for AFRICA service
         run: |
-        while ! nc -z localhost 4005; do   
-        sleep 1
-        echo "Waiting for AFRICA service..."
-        done      
+          while ! nc -z localhost 4005; do   
+          sleep 1
+          echo "Waiting for AFRICA service..."
+          done      
 
       - name: Install dependencies for user-management
         run: |
@@ -220,10 +220,10 @@ jobs:
 
       - name: Wait for user-management service
         run: |
-        while ! nc -z localhost 4001; do   
-        sleep 1
-        echo "Waiting for user-management service..."
-        done        
+          while ! nc -z localhost 4001; do   
+          sleep 1
+          echo "Waiting for user-management service..."
+          done        
 
       - name: Run integration tests for gateway service
         run: |
