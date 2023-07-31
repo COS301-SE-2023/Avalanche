@@ -1,6 +1,6 @@
 describe("Settings", () => {
     beforeEach(() => {
-        cy.visit('http://localhost:3000');
+        cy.visit(Cypress.env('baseURL') + ":" + Cypress.env('basePort'));
         cy.get('input[name=email]').type('kihale5691@sportrid.com');
         cy.get('input[name=password]').type('12345');
         cy.get('button[type=submit]').click();
@@ -73,7 +73,7 @@ describe("Settings", () => {
 
 describe('Settings with another user', () => {
     beforeEach(() => {
-        cy.visit('http://localhost:3000');
+        cy.visit(Cypress.env('baseURL') + ":" + Cypress.env('basePort'));
         cy.get('input[name=email]').type('u21804312@tuks.co.za');
         cy.get('input[name=password]').type('12345');
         cy.get('button[type=submit]').click(); // Please replace with the actual route of your Dashboard page.

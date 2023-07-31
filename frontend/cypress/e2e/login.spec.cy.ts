@@ -1,7 +1,7 @@
 describe('Sign in Page', () => {
     beforeEach(() => {
       cy.visit(Cypress.env('baseURL') + ":" + Cypress.env('basePort'));
-      cy.url().should('eq', Cypress.env('baseURL') + ":" + Cypress.env('basePort')+'/');
+      cy.url().should('eq', Cypress.env('baseURL'));
     });
   
     it('successfully loads', () => {

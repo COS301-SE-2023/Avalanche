@@ -311,7 +311,12 @@ export const login = createAsyncThunk("AUTH.Login", async (object: ILoginRequest
     try {
         const response = await ky.post(`${url}/login`, {
             json: object
-        }).json();
+        }).json() as any;
+
+        if (!response || !response.ok) {
+            return rejectWithValue("There was an issue. We don't know what happened, and we sure you don't either. So just try again ^_^.");
+        }
+
         return response;
     } catch (e) {
         let error = e as HTTPError;
