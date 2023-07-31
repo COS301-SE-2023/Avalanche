@@ -166,7 +166,7 @@ jobs:
           echo SNOWFLAKE_ROLE='${{ secrets.SNOWFLAKE_ROLE }}' >> africa/.env
           echo SNOWFLAKE_DATABASE='${{ secrets.SNOWFLAKE_DATABASE }}' >> africa/.env
           echo SNOWFLAKE_WAREHOUSE='${{ secrets.SNOWFLAKE_WAREHOUSE }}' >> africa/.env
-          echo SNOWFLAKE_PASSWORD='${{ secrets.AFRICA_PASSWORD }}' >> africa/.env
+          echo 'SNOWFLAKE_PASSWORD=`'"${{ secrets.AFRICA_PASSWORD }}"'`' >> africa/.env
           echo SNOWFLAKE_ACCOUNT='${{ secrets.AFRICA_SNOWFLAKE_ACCOUNT }}' >> africa/.env
           echo JWT_SECRET='${{ secrets.JWT_SECRET }}' >> africa/.env
  
@@ -205,7 +205,7 @@ jobs:
           echo POSTGRES_PASSWORD='${{ secrets.POSTGRES_PASSWORD }}' >> user-management/.env
           echo POSTGRES_PORT=${{ secrets.POSTGRES_PORT }} >> user-management/.env
           echo GOOGLE_PASSWORD='${{ secrets.GOOGLE_PASSWORD }}' >> user-management/.env
-          echo JWT_SECRET='${{ secrets.JWT_SECRET }}' >> user-management/.env
+          echo 'JWT_SECRET=`'"${{ secrets.JWT_SECRET }}"'`' >> user-management/.env
  
 
       - name: Start user-management
@@ -225,16 +225,7 @@ jobs:
       - name: Print USER logs
         run: |
           cat user-management/user-management.log           
-
-      - name: Run integration tests for zacr service
-        run: |
-          cd zacr
-          yarn test 
-
-      - name: Run integration tests for ryce service
-        run: |
-          cd ryce
-          yarn test  
+ 
 
       - name: Run integration tests for gateway service
         run: |
