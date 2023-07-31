@@ -4,7 +4,9 @@ describe('DomainWatch', () => {
         cy.get('input[name=email]').type(Cypress.env('username'));
         cy.get('input[name=password]').type(Cypress.env('password'));
         cy.get('button[type=submit]').click(); // Please replace with the actual route of your Dashboard page.
+        cy.wait(8000);
         cy.get('#default-sidebar a[href="/watch"]').click();
+        cy.wait(8000);
     });
 
     it('renders page header', () => {
