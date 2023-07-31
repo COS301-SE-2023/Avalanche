@@ -102,7 +102,7 @@ jobs:
       - name: Start zacr
         run: |
           cd zacr
-          yarn start > zacr.log 2>&1 &
+          yarn start &
 
       - name: Wait for zacr service
         run: |
@@ -110,11 +110,6 @@ jobs:
           sleep 2  
           echo "Waiting for zacr service..."
           done
-          sleep 7
-
-      - name: Print ZACR logs
-        run: |
-          cat zacr/zacr.log
 
       - name: Install dependencies for ryce
         run: |
@@ -173,14 +168,19 @@ jobs:
       - name: Start africa
         run: |
           cd africa
-          yarn start &
+          yarn start > africa.log 2>&1 &
 
       - name: Wait for AFRICA service
         run: |
           while ! nc -z localhost 4005; do   
           sleep 7
           echo "Waiting for AFRICA service..."
-          done    
+          done 
+          sleep 7 
+
+      - name: Print AFRICA logs
+        run: |
+          cat africa/africa.log     
 
       - name: Install dependencies for user-management
         run: |
