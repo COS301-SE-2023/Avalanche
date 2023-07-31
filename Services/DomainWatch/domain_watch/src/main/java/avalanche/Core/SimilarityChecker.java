@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import avalanche.DataClasses.Domain;
@@ -118,18 +119,30 @@ public class SimilarityChecker {
         }
     }
 
-    public ConcurrentLinkedQueue<Domain> findAllWithinSimliarityThreshold(String search, double threshold) {
+    public ConcurrentLinkedQueue<Domain> findAllWithinSimliarityThreshold(String search, double threshold,
+            Set<String> zones) {
         ConcurrentLinkedQueue<Domain> hits = new ConcurrentLinkedQueue<>();
         LevenshteinDistanceCalculator calc = new LevenshteinDistanceCalculator();
-        if (DomainWatchSettings.getInstace().defaultZone.equals("all")) {
-            for (HashSet<Domain> zoneDomains : allDomainsMap.values()) {
-                for (Domain domain : zoneDomains) {
+        if (zones.size() == 0) {
+            if (DomainWatchSettings.getInstace().defaultZone.equals("all")) {
+                for (HashSet<Domain> zoneDomains : allDomainsMap.values()) {
+                    for (Domain domain : zoneDomains) {
+                        addIfBelowLevenshteinThreshold(calc, threshold, search, domain, hits);
+                    }
+                }
+            } else {
+                for (Domain domain : allDomainsMap.get(DomainWatchSettings.getInstace().defaultZone)) {
                     addIfBelowLevenshteinThreshold(calc, threshold, search, domain, hits);
                 }
             }
         } else {
-            for (Domain domain : allDomainsMap.get(DomainWatchSettings.getInstace().defaultZone)) {
-                addIfBelowLevenshteinThreshold(calc, threshold, search, domain, hits);
+            for (String zone : allDomainsMap.keySet()) {
+                if (zones.contains(zone)) {
+                    HashSet<Domain> zoneDomains = allDomainsMap.get(zone);
+                    for (Domain domain : zoneDomains) {
+                        addIfBelowLevenshteinThreshold(calc, threshold, search, domain, hits);
+                    }
+                }
             }
         }
 
@@ -151,19 +164,31 @@ public class SimilarityChecker {
         return hits;
     }
 
-    public ConcurrentLinkedQueue<Domain> findAllSoundsAboveSimliarityThreshold(String search, double threshold)
+    public ConcurrentLinkedQueue<Domain> findAllSoundsAboveSimliarityThreshold(String search, double threshold,
+            Set<String> zones)
             throws FileNotFoundException {
         ConcurrentLinkedQueue<Domain> hits = new ConcurrentLinkedQueue<>();
         SoundexCalculator calc = new SoundexCalculator();
-        if (DomainWatchSettings.getInstace().defaultZone.equals("all")) {
-            for (HashSet<Domain> zoneDomains : allDomainsMap.values()) {
-                for (Domain domain : zoneDomains) {
+        if (zones.size() == 0) {
+            if (DomainWatchSettings.getInstace().defaultZone.equals("all")) {
+                for (HashSet<Domain> zoneDomains : allDomainsMap.values()) {
+                    for (Domain domain : zoneDomains) {
+                        addIfAboveSoundexThreshold(calc, threshold, search, domain, hits);
+                    }
+                }
+            } else {
+                for (Domain domain : allDomainsMap.get(DomainWatchSettings.getInstace().defaultZone)) {
                     addIfAboveSoundexThreshold(calc, threshold, search, domain, hits);
                 }
             }
         } else {
-            for (Domain domain : allDomainsMap.get(DomainWatchSettings.getInstace().defaultZone)) {
-                addIfAboveSoundexThreshold(calc, threshold, search, domain, hits);
+            for (String zone : allDomainsMap.keySet()) {
+                if (zones.contains(zone)) {
+                    HashSet<Domain> zoneDomains = allDomainsMap.get(zone);
+                    for (Domain domain : zoneDomains) {
+                        addIfAboveSoundexThreshold(calc, threshold, search, domain, hits);
+                    }
+                }
             }
         }
 
@@ -186,14 +211,35 @@ public class SimilarityChecker {
     }
 
     public ConcurrentLinkedQueue<Domain> threadedfindAllSoundsAboveSimliarityThreshold(String search,
-            double threshold) {
+            double threshold, Set<String> zones) {
         ConcurrentLinkedQueue<Domain> hits = new ConcurrentLinkedQueue<>();
         SoundexThread[] threads = new SoundexThread[threadCount];
-        if (DomainWatchSettings.getInstace().getInstace().defaultZone.equals("all")) {
-            for (ArrayList<Queue<Domain>> zoneDomainList : splitDoms.values()) {
+        if (zones.size() == 0) {
+            if (DomainWatchSettings.getInstace().getInstace().defaultZone.equals("all")) {
+                for (ArrayList<Queue<Domain>> zoneDomainList : splitDoms.values()) {
+                    for (int i = 0; i < threads.length; i++) {
+                        threads[i] = new SoundexThread(search, threshold, hits,
+                                zoneDomainList.get(i));
+                    }
+                    for (int i = 0; i < threads.length; i++) {
+                        threads[i].start();
+                    }
+                    spinThreads(0, threads);
+                    for (int i = 0; i < threads.length; i++) {
+                        try {
+                            threads[i].join();
+                        } catch (InterruptedException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+
+                        }
+                    }
+                    spinThreads(0, threads);
+                }
+            } else {
                 for (int i = 0; i < threads.length; i++) {
                     threads[i] = new SoundexThread(search, threshold, hits,
-                            zoneDomainList.get(i));
+                            splitDoms.get(DomainWatchSettings.getInstace().defaultZone).get(i));
                 }
                 for (int i = 0; i < threads.length; i++) {
                     threads[i].start();
@@ -211,36 +257,63 @@ public class SimilarityChecker {
                 spinThreads(0, threads);
             }
         } else {
-            for (int i = 0; i < threads.length; i++) {
-                threads[i] = new SoundexThread(search, threshold, hits,
-                        splitDoms.get(DomainWatchSettings.getInstace().defaultZone).get(i));
-            }
-            for (int i = 0; i < threads.length; i++) {
-                threads[i].start();
-            }
-            spinThreads(0, threads);
-            for (int i = 0; i < threads.length; i++) {
-                try {
-                    threads[i].join();
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+            for (String zone : splitDoms.keySet()) {
+                if (zones.contains(zone)) {
+                    ArrayList<Queue<Domain>> zoneDomainList = splitDoms.get(zone);
+                    for (int i = 0; i < threads.length; i++) {
+                        threads[i] = new SoundexThread(search, threshold, hits,
+                                zoneDomainList.get(i));
+                    }
+                    for (int i = 0; i < threads.length; i++) {
+                        threads[i].start();
+                    }
+                    spinThreads(0, threads);
+                    for (int i = 0; i < threads.length; i++) {
+                        try {
+                            threads[i].join();
+                        } catch (InterruptedException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
 
+                        }
+                    }
+                    spinThreads(0, threads);
                 }
             }
-            spinThreads(0, threads);
         }
 
         return hits;
     }
 
-    public ConcurrentLinkedQueue<Domain> threadedFindAllWithinSimliarityThreshold(String search, double threshold) {
+    public ConcurrentLinkedQueue<Domain> threadedFindAllWithinSimliarityThreshold(String search, double threshold,
+            Set<String> zones) {
         ConcurrentLinkedQueue<Domain> hits = new ConcurrentLinkedQueue<>();
         LevenshteinThread[] threads = new LevenshteinThread[threadCount];
-        if (DomainWatchSettings.getInstace().defaultZone.equals("all")) {
-            for (ArrayList<Queue<Domain>> zoneDomains : splitDoms.values()) {
+        if (zones.size() == 0) {
+            if (DomainWatchSettings.getInstace().defaultZone.equals("all")) {
+                for (ArrayList<Queue<Domain>> zoneDomains : splitDoms.values()) {
+                    for (int i = 0; i < threads.length; i++) {
+                        threads[i] = new LevenshteinThread(search, threshold, hits, zoneDomains.get(i));
+                    }
+                    for (int i = 0; i < threads.length; i++) {
+                        threads[i].start();
+                    }
+
+                    spinThreads(0, threads);
+                    for (int i = 0; i < threads.length; i++) {
+                        try {
+                            threads[i].join();
+                        } catch (InterruptedException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                    }
+                    spinThreads(0, threads);
+                }
+            } else {
                 for (int i = 0; i < threads.length; i++) {
-                    threads[i] = new LevenshteinThread(search, threshold, hits, zoneDomains.get(i));
+                    threads[i] = new LevenshteinThread(search, threshold, hits,
+                            splitDoms.get(DomainWatchSettings.getInstace().defaultZone).get(i));
                 }
                 for (int i = 0; i < threads.length; i++) {
                     threads[i].start();
@@ -258,24 +331,28 @@ public class SimilarityChecker {
                 spinThreads(0, threads);
             }
         } else {
-            for (int i = 0; i < threads.length; i++) {
-                threads[i] = new LevenshteinThread(search, threshold, hits,
-                        splitDoms.get(DomainWatchSettings.getInstace().defaultZone).get(i));
-            }
-            for (int i = 0; i < threads.length; i++) {
-                threads[i].start();
-            }
+            for (String zone : splitDoms.keySet()) {
+                if (zones.contains(zone)) {
+                    ArrayList<Queue<Domain>> zoneDomains = splitDoms.get(zone);
+                    for (int i = 0; i < threads.length; i++) {
+                        threads[i] = new LevenshteinThread(search, threshold, hits, zoneDomains.get(i));
+                    }
+                    for (int i = 0; i < threads.length; i++) {
+                        threads[i].start();
+                    }
 
-            spinThreads(0, threads);
-            for (int i = 0; i < threads.length; i++) {
-                try {
-                    threads[i].join();
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    spinThreads(0, threads);
+                    for (int i = 0; i < threads.length; i++) {
+                        try {
+                            threads[i].join();
+                        } catch (InterruptedException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                    }
+                    spinThreads(0, threads);
                 }
             }
-            spinThreads(0, threads);
         }
 
         return hits;

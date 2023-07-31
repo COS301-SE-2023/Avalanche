@@ -1,9 +1,9 @@
 describe("Registrar", () => {
     beforeEach(() => {
         cy.setCookie('jwt', Cypress.env('jwt'));
-        cy.visit(Cypress.env('baseURL') + ':' + Cypress.env('basePort') + '/domainNameAnalysis');
-        cy.wait(5000);
-
+        cy.visit(Cypress.env('baseURL')  + Cypress.env('basePort') + '/domainNameAnalysis');
+        cy.wait(10000);
+        cy.url().should('eq', Cypress.env('baseURL')  + Cypress.env('basePort') + '/domainNameAnalysis')
     });
 
     it("Navbar still visible", ()=> {

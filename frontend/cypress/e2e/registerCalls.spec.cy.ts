@@ -2,7 +2,7 @@ describe('Register Test', () => {
 
     beforeEach(() => {
         // Visiting the register page before each test
-        cy.visit(Cypress.env('baseURL') + ":" + Cypress.env('basePort') + '/register');
+        cy.visit(Cypress.env('baseURL') +  Cypress.env('basePort') + '/register');
     });
   
     it('Should display validation error if emails do not match', () => {

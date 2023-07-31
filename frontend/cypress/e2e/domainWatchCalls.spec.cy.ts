@@ -1,9 +1,9 @@
 describe('DomainWatch', () => {
     beforeEach(() => {
         cy.setCookie('jwt', Cypress.env('jwt'));
-        cy.visit(Cypress.env('baseURL') + ':' + Cypress.env('basePort') + '/watch');
-        cy.wait(5000);
-
+        cy.visit(Cypress.env('baseURL')  + Cypress.env('basePort') + '/watch');
+        cy.wait(10000);
+        cy.url().should('eq', Cypress.env('baseURL')  + Cypress.env('basePort') + '/watch')
     });
     
 

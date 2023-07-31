@@ -2,8 +2,9 @@ describe("Resgistrar Age Analysis", () => {
     beforeEach(() => {
 
         cy.setCookie('jwt', Cypress.env('jwt'));
-        cy.visit(Cypress.env('baseURL') + ':' + Cypress.env('basePort') + '/ageAnalysis');
+        cy.visit(Cypress.env('baseURL') +  Cypress.env('basePort') + '/ageAnalysis');
         cy.wait(5000);
+        cy.url().should(Cypress.env('baseURL') +  Cypress.env('basePort') + '/ageAnalysis')
 
     });
 
