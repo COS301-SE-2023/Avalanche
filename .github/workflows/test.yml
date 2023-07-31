@@ -51,6 +51,28 @@ jobs:
         with:
           node-version: '16'
 
+      - name: Install dependencies for frontend
+        run: |
+          cd frontend
+          yarn install
+
+      - name: Create .env file for gateway service
+        run: |
+          echo NEXT_PUBLIC_API = 'http://127.0.0.1:4000' >> frontend/.env.local
+
+
+      - name: Start frontend
+        run: |
+          cd frontend
+          yarn dev &
+
+      - name: Wait for frontend service
+        run: |
+          while ! nc -z localhost 3000; do   
+          sleep 1
+          echo "Waiting for frontend service..."
+          done    
+
       - name: Install dependencies for gateway
         run: |
           cd gateway
@@ -84,18 +106,19 @@ jobs:
           cd zacr
           yarn install
 
+
       - name: Create .env file for zacr service
         run: |
           echo REDIS_HOST='${{ secrets.REDIS_HOST }}' >> zacr/.env
           echo REDIS_PORT=${{ secrets.REDIS_PORT }} >> zacr/.env
           echo REDIS_PASSWORD='${{ secrets.REDIS_PASSWORD }}' >> zacr/.env
           echo REDIS_USER='${{ secrets.REDIS_USER }}' >> zacr/.env
-          echo SNOWFLAKE_USERNAME='${{ secrets.SNOWFLAKE_USERNAME }}' >> zacr/.env
-          echo SNOWFLAKE_SCHEMA='${{ secrets.SNOWFLAKE_SCHEMA }}' >> zacr/.env
-          echo SNOWFLAKE_ROLE='${{ secrets.SNOWFLAKE_ROLE }}' >> zacr/.env
-          echo SNOWFLAKE_DATABASE='${{ secrets.SNOWFLAKE_DATABASE }}' >> zacr/.env
-          echo SNOWFLAKE_WAREHOUSE='${{ secrets.SNOWFLAKE_WAREHOUSE }}' >> zacr/.env
-          echo SNOWFLAKE_PASSWORD='${{ secrets.ZACR_PASSWORD }}' >> zacr/.env
+          echo SNOWFLAKE_USERNAME='${{ secrets.SNOWFLAKE_USERNAME_1 }}' >> zacr/.env
+          echo SNOWFLAKE_SCHEMA='${{ secrets.SNOWFLAKE_SCHEMA_1 }}' >> zacr/.env
+          echo SNOWFLAKE_ROLE='${{ secrets.SNOWFLAKE_ROLE_1 }}' >> zacr/.env
+          echo SNOWFLAKE_DATABASE='${{ secrets.SNOWFLAKE_DATABASE_1 }}' >> zacr/.env
+          echo SNOWFLAKE_WAREHOUSE='${{ secrets.SNOWFLAKE_WAREHOUSE_1 }}' >> zacr/.env
+          echo 'SNOWFLAKE_PASSWORD=`'"${{ secrets.ZACR_PASSWORD }}"'`' >> zacr/.env
           echo SNOWFLAKE_ACCOUNT='${{ secrets.ZACR_SNOWFLAKE_ACCOUNT }}' >> zacr/.env
           echo JWT_SECRET='${{ secrets.JWT_SECRET }}' >> zacr/.env
 
@@ -114,7 +137,7 @@ jobs:
 
       - name: Print ZACR logs
         run: |
-          cat zacr/zacr.log
+          cat zacr/zacr.log 
 
       - name: Install dependencies for ryce
         run: |
@@ -165,7 +188,7 @@ jobs:
           echo SNOWFLAKE_ROLE='${{ secrets.SNOWFLAKE_ROLE }}' >> africa/.env
           echo SNOWFLAKE_DATABASE='${{ secrets.SNOWFLAKE_DATABASE }}' >> africa/.env
           echo SNOWFLAKE_WAREHOUSE='${{ secrets.SNOWFLAKE_WAREHOUSE }}' >> africa/.env
-          echo SNOWFLAKE_PASSWORD='${{ secrets.AFRICA_PASSWORD }}' >> africa/.env
+          echo 'SNOWFLAKE_PASSWORD=`'"${{ secrets.AFRICA_PASSWORD }}"'`' >> africa/.env
           echo SNOWFLAKE_ACCOUNT='${{ secrets.AFRICA_SNOWFLAKE_ACCOUNT }}' >> africa/.env
           echo JWT_SECRET='${{ secrets.JWT_SECRET }}' >> africa/.env
  
@@ -181,10 +204,11 @@ jobs:
           sleep 7
           echo "Waiting for AFRICA service..."
           done 
+          sleep 7 
 
-        - name: Print AFRICA logs
-          run: |
-            cat africa/africa.log      
+      - name: Print AFRICA logs
+        run: |
+          cat africa/africa.log     
 
       - name: Install dependencies for user-management
         run: |
@@ -203,23 +227,30 @@ jobs:
           echo POSTGRES_PASSWORD='${{ secrets.POSTGRES_PASSWORD }}' >> user-management/.env
           echo POSTGRES_PORT=${{ secrets.POSTGRES_PORT }} >> user-management/.env
           echo GOOGLE_PASSWORD='${{ secrets.GOOGLE_PASSWORD }}' >> user-management/.env
-          echo JWT_SECRET='${{ secrets.JWT_SECRET }}' >> user-management/.env
+          echo 'JWT_SECRET=`'"${{ secrets.JWT_SECRET }}"'`' >> user-management/.env
  
 
       - name: Start user-management
         run: |
           cd user-management
-          yarn start | tee yarn_start.log &
+          yarn start > user-management.log 2>&1 &
 
 
       - name: Wait for user-management service
         run: |
           while ! nc -z localhost 4001; do   
-          sleep 1
+          sleep 7
           echo "Waiting for user-management service..."
-          done        
+          done   
+          sleep 7 
+
+      - name: Print USER logs
+        run: |
+          cat user-management/user-management.log           
+ 
 
       - name: Run integration tests for gateway service
         run: |
           cd gateway
-          yarn test 
+          yarn test --forceExit  
+                       
