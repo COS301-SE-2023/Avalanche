@@ -59,13 +59,13 @@ jobs:
       - name: Create .env file for gateway service
         uses: SpicyPizza/create-envfile@v1.3
         with:
-        envkey_REDIS_HOST: '${{ secrets.REDIS_HOST }}'
-        envkey_REDIS_PORT: ${{ secrets.REDIS_PORT }}
-        envkey_REDIS_PASSWORD : '${{ secrets.REDIS_PASSWORD }}'
-        envkey_REDIS_USER : '${{ secrets.REDIS_USER }}'
-        envkey_MOCK_EMAIL : '${{ secrets.MOCK_EMAIL }}'
-        envkey_MOCK_PASSWORD : '${{ secrets.MOCK_PASSWORD }}'
-        envkey_JWT_TOKEN_TO_TEST : '${{ secrets.JWT_TOKEN_TO_TEST }}'
+          envkey_REDIS_HOST: '${{ secrets.REDIS_HOST }}'
+          envkey_REDIS_PORT: ${{ secrets.REDIS_PORT }}
+          envkey_REDIS_PASSWORD : '${{ secrets.REDIS_PASSWORD }}'
+          envkey_REDIS_USER : '${{ secrets.REDIS_USER }}'
+          envkey_MOCK_EMAIL : '${{ secrets.MOCK_EMAIL }}'
+          envkey_MOCK_PASSWORD : '${{ secrets.MOCK_PASSWORD }}'
+          envkey_JWT_TOKEN_TO_TEST : '${{ secrets.JWT_TOKEN_TO_TEST }}'
         directory: ./gateway 
         file_name: .env
         fail_on_empty: false 
@@ -90,18 +90,18 @@ jobs:
       - name: Create .env file for zacr service
         uses: SpicyPizza/create-envfile@v1.3
         with:
-        envkey_REDIS_HOST: '${{ secrets.REDIS_HOST }}'
-        envkey_REDIS_PORT: ${{ secrets.REDIS_PORT }}
-        envkey_REDIS_PASSWORD : '${{ secrets.REDIS_PASSWORD }}'
-        envkey_REDIS_USER : '${{ secrets.REDIS_USER }}'
-        envkey_SNOWFLAKE_USERNAME : '${{ secrets.SNOWFLAKE_USERNAME }}'
-        envkey_SNOWFLAKE_SCHEMA : '${{ secrets.SNOWFLAKE_SCHEMA }}'
-        envkey_SNOWFLAKE_ROLE : '${{ secrets.SNOWFLAKE_ROLE }}'
-        envkey_SNOWFLAKE_DATABASE : '${{ secrets.SNOWFLAKE_DATABASE }}'
-        envkey_SNOWFLAKE_WAREHOUSE : '${{ secrets.SNOWFLAKE_WAREHOUSE }}'
-        envkey_SNOWFLAKE_PASSWORD : '${{ secrets.ZACR_PASSWORD }}'
-        envkey_SNOWFLAKE_ACCOUNT : '${{ secrets.ZACR_SNOWFLAKE_ACCOUNT }}'
-        envkey_JWT_SECRET : '${{ secrets.JWT_SECRET }}'
+          envkey_REDIS_HOST: '${{ secrets.REDIS_HOST }}'
+          envkey_REDIS_PORT: ${{ secrets.REDIS_PORT }}
+          envkey_REDIS_PASSWORD : '${{ secrets.REDIS_PASSWORD }}'
+          envkey_REDIS_USER : '${{ secrets.REDIS_USER }}'
+          envkey_SNOWFLAKE_USERNAME : '${{ secrets.SNOWFLAKE_USERNAME }}'
+          envkey_SNOWFLAKE_SCHEMA : '${{ secrets.SNOWFLAKE_SCHEMA }}'
+          envkey_SNOWFLAKE_ROLE : '${{ secrets.SNOWFLAKE_ROLE }}'
+          envkey_SNOWFLAKE_DATABASE : '${{ secrets.SNOWFLAKE_DATABASE }}'
+          envkey_SNOWFLAKE_WAREHOUSE : '${{ secrets.SNOWFLAKE_WAREHOUSE }}'
+          envkey_SNOWFLAKE_PASSWORD : '${{ secrets.ZACR_PASSWORD }}'
+          envkey_SNOWFLAKE_ACCOUNT : '${{ secrets.ZACR_SNOWFLAKE_ACCOUNT }}'
+          envkey_JWT_SECRET : '${{ secrets.JWT_SECRET }}'
         directory: ./zacr
         file_name: .env
         fail_on_empty: false 
@@ -126,18 +126,18 @@ jobs:
       - name: Create .env file for ryce service
         uses: SpicyPizza/create-envfile@v1.3
         with:
-        envkey_REDIS_HOST: '${{ secrets.REDIS_HOST }}'
-        envkey_REDIS_PORT: ${{ secrets.REDIS_PORT }}
-        envkey_REDIS_PASSWORD : '${{ secrets.REDIS_PASSWORD }}'
-        envkey_REDIS_USER : '${{ secrets.REDIS_USER }}'
-        envkey_SNOWFLAKE_USERNAME : '${{ secrets.SNOWFLAKE_USERNAME }}'
-        envkey_SNOWFLAKE_SCHEMA : '${{ secrets.SNOWFLAKE_SCHEMA }}'
-        envkey_SNOWFLAKE_ROLE : '${{ secrets.SNOWFLAKE_ROLE }}'
-        envkey_SNOWFLAKE_DATABASE : '${{ secrets.SNOWFLAKE_DATABASE }}'
-        envkey_SNOWFLAKE_WAREHOUSE : '${{ secrets.SNOWFLAKE_WAREHOUSE }}'
-        envkey_SNOWFLAKE_PASSWORD : '${{ secrets.RYCE_PASSWORD }}'
-        envkey_SNOWFLAKE_ACCOUNT : '${{ secrets.RYCE_SNOWFLAKE_ACCOUNT }}'
-        envkey_JWT_SECRET : '${{ secrets.JWT_SECRET }}'
+          envkey_REDIS_HOST: '${{ secrets.REDIS_HOST }}'
+          envkey_REDIS_PORT: ${{ secrets.REDIS_PORT }}
+          envkey_REDIS_PASSWORD : '${{ secrets.REDIS_PASSWORD }}'
+          envkey_REDIS_USER : '${{ secrets.REDIS_USER }}'
+          envkey_SNOWFLAKE_USERNAME : '${{ secrets.SNOWFLAKE_USERNAME }}'
+          envkey_SNOWFLAKE_SCHEMA : '${{ secrets.SNOWFLAKE_SCHEMA }}'
+          envkey_SNOWFLAKE_ROLE : '${{ secrets.SNOWFLAKE_ROLE }}'
+          envkey_SNOWFLAKE_DATABASE : '${{ secrets.SNOWFLAKE_DATABASE }}'
+          envkey_SNOWFLAKE_WAREHOUSE : '${{ secrets.SNOWFLAKE_WAREHOUSE }}'
+          envkey_SNOWFLAKE_PASSWORD : '${{ secrets.RYCE_PASSWORD }}'
+          envkey_SNOWFLAKE_ACCOUNT : '${{ secrets.RYCE_SNOWFLAKE_ACCOUNT }}'
+          envkey_JWT_SECRET : '${{ secrets.JWT_SECRET }}'
         directory: ./ryce
         file_name: .env
         fail_on_empty: false 
@@ -162,18 +162,18 @@ jobs:
       - name: Create .env file for africa service
         uses: SpicyPizza/create-envfile@v1.3
         with:
-        envkey_REDIS_HOST: '${{ secrets.REDIS_HOST }}'
-        envkey_REDIS_PORT: ${{ secrets.REDIS_PORT }}
-        envkey_REDIS_PASSWORD : '${{ secrets.REDIS_PASSWORD }}'
-        envkey_REDIS_USER : '${{ secrets.REDIS_USER }}'
-        envkey_SNOWFLAKE_USERNAME : '${{ secrets.SNOWFLAKE_USERNAME }}'
-        envkey_SNOWFLAKE_SCHEMA : '${{ secrets.SNOWFLAKE_SCHEMA }}'
-        envkey_SNOWFLAKE_ROLE : '${{ secrets.SNOWFLAKE_ROLE }}'
-        envkey_SNOWFLAKE_DATABASE : '${{ secrets.SNOWFLAKE_DATABASE }}'
-        envkey_SNOWFLAKE_WAREHOUSE : '${{ secrets.SNOWFLAKE_WAREHOUSE }}'
-        envkey_SNOWFLAKE_PASSWORD : '${{ secrets.AFRICA_PASSWORD }}'
-        envkey_SNOWFLAKE_ACCOUNT : '${{ secrets.AFRICA_SNOWFLAKE_ACCOUNT }}'
-        envkey_JWT_SECRET : '${{ secrets.JWT_SECRET }}'
+          envkey_REDIS_HOST: '${{ secrets.REDIS_HOST }}'
+          envkey_REDIS_PORT: ${{ secrets.REDIS_PORT }}
+          envkey_REDIS_PASSWORD : '${{ secrets.REDIS_PASSWORD }}'
+          envkey_REDIS_USER : '${{ secrets.REDIS_USER }}'
+          envkey_SNOWFLAKE_USERNAME : '${{ secrets.SNOWFLAKE_USERNAME }}'
+          envkey_SNOWFLAKE_SCHEMA : '${{ secrets.SNOWFLAKE_SCHEMA }}'
+          envkey_SNOWFLAKE_ROLE : '${{ secrets.SNOWFLAKE_ROLE }}'
+          envkey_SNOWFLAKE_DATABASE : '${{ secrets.SNOWFLAKE_DATABASE }}'
+          envkey_SNOWFLAKE_WAREHOUSE : '${{ secrets.SNOWFLAKE_WAREHOUSE }}'
+          envkey_SNOWFLAKE_PASSWORD : '${{ secrets.AFRICA_PASSWORD }}'
+          envkey_SNOWFLAKE_ACCOUNT : '${{ secrets.AFRICA_SNOWFLAKE_ACCOUNT }}'
+          envkey_JWT_SECRET : '${{ secrets.JWT_SECRET }}'
         directory: ./africa
         file_name: .env
         fail_on_empty: false 
@@ -198,17 +198,17 @@ jobs:
       - name: Create .env file for user-management service
         uses: SpicyPizza/create-envfile@v1.3
         with:
-        envkey_REDIS_HOST: '${{ secrets.REDIS_HOST }}'
-        envkey_REDIS_PORT: ${{ secrets.REDIS_PORT }}
-        envkey_REDIS_PASSWORD : '${{ secrets.REDIS_PASSWORD }}'
-        envkey_REDIS_USER : '${{ secrets.REDIS_USER }}'
-        envkey_POSTGRES_USERNAME : '${{ secrets.POSTGRES_USERNAME }}'
-        envkey_POSTGRES_DB : '${{ secrets.POSTGRES_DB }}'
-        envkey_POSTGRES_HOST : '${{ secrets.POSTGRES_HOST }}'
-        envkey_POSTGRES_PASSWORD : '${{ secrets.POSTGRES_PASSWORD }}'
-        envkey_POSTGRES_PORT : ${{ secrets.POSTGRES_PORT }}
-        envkey_GOOGLE_PASSWORD : '${{ secrets.GOOGLE_PASSWORD }}'
-        envkey_JWT_SECRET : '${{ secrets.JWT_SECRET }}'
+          envkey_REDIS_HOST: '${{ secrets.REDIS_HOST }}'
+          envkey_REDIS_PORT: ${{ secrets.REDIS_PORT }}
+          envkey_REDIS_PASSWORD : '${{ secrets.REDIS_PASSWORD }}'
+          envkey_REDIS_USER : '${{ secrets.REDIS_USER }}'
+          envkey_POSTGRES_USERNAME : '${{ secrets.POSTGRES_USERNAME }}'
+          envkey_POSTGRES_DB : '${{ secrets.POSTGRES_DB }}'
+          envkey_POSTGRES_HOST : '${{ secrets.POSTGRES_HOST }}'
+          envkey_POSTGRES_PASSWORD : '${{ secrets.POSTGRES_PASSWORD }}'
+          envkey_POSTGRES_PORT : ${{ secrets.POSTGRES_PORT }}
+          envkey_GOOGLE_PASSWORD : '${{ secrets.GOOGLE_PASSWORD }}'
+          envkey_JWT_SECRET : '${{ secrets.JWT_SECRET }}'
         directory: ./user-management
         file_name: .env
         fail_on_empty: false 
