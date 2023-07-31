@@ -4,10 +4,11 @@ import { DomainWatchService } from './domain-watch.service';
 
 @Controller('domain-watch')
 export class DomainWatchController {
-  constructor(private readonly domainWatchService: DomainWatchService) {}
+  constructor(private readonly domainWatchService: DomainWatchService) { }
 
   @Post('list')
   async sendData(@Body() data: any) {
+    console.log("bindo");
     const result = await this.domainWatchService.sendData(data);
     return result;
   }
