@@ -252,5 +252,5 @@ jobs:
       - name: Run integration tests for gateway service
         run: |
           cd gateway
-          yarn test   
+          yarn test --forceExit  
                        
