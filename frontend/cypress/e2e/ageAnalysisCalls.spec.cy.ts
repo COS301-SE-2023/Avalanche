@@ -1,4 +1,4 @@
-describe('Registrar Transaction Dashboard', () => {
+describe('Age Analysis', () => {
     beforeEach(() => {
         // cy.visit(Cypress.env('baseURL') + ":" + Cypress.env('basePort'));
         // cy.get('input[name=email]').type(Cypress.env('username'));

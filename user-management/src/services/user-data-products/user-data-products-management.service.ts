@@ -73,7 +73,7 @@ export class UserDataProductMangementService {
                     const { email: userEmail } = JSON.parse(userPayload);
                     console.log(userEmail);
                     if (userEmail) {
-                        const user = await this.userRepository.findOne({ where: { email: allocateToName }, relations: ['userGroups', 'organisation', 'dashboards'] });
+                        const user = await this.userRepository.findOne({ where: { email: userEmail }, relations: ['userGroups', 'organisation', 'dashboards'] });
                         if (!user) {
                             return {
                                 status: 400, error: true, message: 'User does not exist',
