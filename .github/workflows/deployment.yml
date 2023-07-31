@@ -41,7 +41,7 @@ jobs:
         uses: SpicyPizza/create-envfile@v1.3
         with:
            envkey_NODE_ENV: production
-           envkey_NEXT_PUBLIC_API: 'http://gateway:4000'
+           envkey_NEXT_PUBLIC_API: 'http://zanet.cloud:4000'
            directory: frontend
            file_name: .env.local # optional (default: .env)
            fail_on_empty: false # optional (default: false)
@@ -53,7 +53,7 @@ jobs:
           wg-quick up $GITHUB_WORKSPACE/tunnel.conf
           
       # SSH Into Server
-      - name: 🔒 Upload to server
+      - name: 🔒 Removing olf files
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -61,7 +61,7 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            rm -r Services frontend gateway user-management zacr africa ryce
+            rm -r -f Services frontend gateway user-management zacr africa ryce
           
       # Uploading files to server via SCP
       - name: ☝️ Upload to server
