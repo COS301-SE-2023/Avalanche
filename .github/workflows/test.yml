@@ -99,7 +99,6 @@ jobs:
           echo SNOWFLAKE_ACCOUNT='${{ secrets.ZACR_SNOWFLAKE_ACCOUNT }}' >> zacr/.env
           echo JWT_SECRET='${{ secrets.JWT_SECRET }}' >> zacr/.env
 
-
       - name: Start zacr
         run: |
           cd zacr
