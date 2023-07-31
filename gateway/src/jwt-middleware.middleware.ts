@@ -35,12 +35,10 @@ export class JwtMiddleware implements NestMiddleware {
             req.body = { filters: req.body };
             req.body.graphName = graphName1;
             req.body.minimumAppearances = minNum;
-            console.log(req.body);
             next();
           } else {
             req.body.graphName = graphName1;
             req.body.minimumAppearances = minNum;
-            console.log(req.body);
             next();
           }
         } else {

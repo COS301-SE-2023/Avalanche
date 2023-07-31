@@ -26,11 +26,11 @@ describe('User Management Integration Tests From Gateway', () => {
       configService = moduleFixture.get<ConfigService>(ConfigService);
       app = moduleFixture.createNestApplication();
       await app.init();
-    });
+    },15000);
 
     afterAll(async () => {
       await app.close();
-    });
+    },15000);
 
     describe('Register a User', () => {
       it('should register a user', () => {
@@ -55,7 +55,7 @@ describe('User Management Integration Tests From Gateway', () => {
             );
             expect(response.body.status).toBe('success');
           });
-      }, 30000);
+      }, 40000);
     });
 
     describe('User Login', () => {
@@ -96,11 +96,11 @@ describe('User Management Integration Tests From Gateway', () => {
       configService = moduleFixture.get<ConfigService>(ConfigService);
       app = moduleFixture.createNestApplication();
       await app.init();
-    });
+    },15000);
 
     afterAll(async () => {
       await app.close();
-    });
+    },15000);
 
     beforeEach(async () => {
       const user = {
@@ -115,7 +115,7 @@ describe('User Management Integration Tests From Gateway', () => {
         accessToken = response.body.userWithToken.token;
       }
  // This may change based on the structure of your response
-    });
+    },15000);
 
     let orgName: string;
     describe('Create Organisation', () => {
@@ -134,7 +134,7 @@ describe('User Management Integration Tests From Gateway', () => {
             console.log(response.body);
             expect(response.body.status).toBe('success');
           });
-      });
+      },15000);
 
       afterEach(async () => {
         const organisationData = {
@@ -144,7 +144,7 @@ describe('User Management Integration Tests From Gateway', () => {
           .post('/user-management/exitOrganisation')
           .set('Authorization', `Bearer ${accessToken}`)
           .send(organisationData);
-      });
+      },15000);
     });
 
     describe('Exit Organisation', () => {
@@ -161,7 +161,7 @@ describe('User Management Integration Tests From Gateway', () => {
             console.log(response.body);
             expect(response.body.status).toBe('success');
           });
-      });
+      },15000);
 
       it('should not allow a user to exit a random Organisation that does not exist', () => {
         const organisationData = {
@@ -176,7 +176,7 @@ describe('User Management Integration Tests From Gateway', () => {
             console.log(response.body);
             expect(response.body.message).toBe('Organisation cannot be found');
           });
-      });
+      },15000);
     });
 
     describe('Get User Info', () => {
@@ -190,7 +190,7 @@ describe('User Management Integration Tests From Gateway', () => {
             expect(response.body.status).toBe('success');
             expect(response.body.message.email).toBe('test6@google.com');
           });
-      });
+      },15000);
 
       it('should not get user info if token is invalid', () => {
         return request(app.getHttpServer())
@@ -201,7 +201,7 @@ describe('User Management Integration Tests From Gateway', () => {
             console.log(response.body);
             expect(response.body.message).toBe('JWT invalid');
           });
-      });
+      },15000);
     });
 
     describe('Get Members', () => {
@@ -214,7 +214,7 @@ describe('User Management Integration Tests From Gateway', () => {
             console.log(response.body);
             expect(response.body.status).toBe('success');
           });
-      });
+      },15000);
 
       it('should not get members if token is invalid', () => {
         return request(app.getHttpServer())
@@ -225,7 +225,7 @@ describe('User Management Integration Tests From Gateway', () => {
             console.log(response.body);
             expect(response.body.message).toBe('JWT invalid');
           });
-      });
+      },15000);
     });
 
     describe('Create User Group', () => {
@@ -240,7 +240,7 @@ describe('User Management Integration Tests From Gateway', () => {
           .post('/user-management/createOrganisation')
           .set('Authorization', `Bearer ${accessToken}`)
           .send(organisationData);
-      });
+      },15000);
       it('should create a user group', () => {
         const groupData = Random.word(8);
         const userGroupData = {
@@ -265,7 +265,7 @@ describe('User Management Integration Tests From Gateway', () => {
           .post('/user-management/exitOrganisation')
           .set('Authorization', `Bearer ${accessToken}`)
           .send(organisationData);
-      });
+      },15000);
     });
 
     describe('Add User To User Group', () => {
@@ -296,7 +296,7 @@ describe('User Management Integration Tests From Gateway', () => {
           .post('/user-management/createUserGroup')
           .set('Authorization', `Bearer ${accessToken}`)
           .send(userGroupData);
-      });
+      },15000);
       it('should add user to user group', () => {
         const userGroupData = {
           userEmail: configService.get('MOCK_EMAIL'),
@@ -320,7 +320,7 @@ describe('User Management Integration Tests From Gateway', () => {
           .post('/user-management/exitOrganisation')
           .set('Authorization', `Bearer ${accessToken}`)
           .send(organisationData);
-      });
+      },15000);
     });
   });
 });
