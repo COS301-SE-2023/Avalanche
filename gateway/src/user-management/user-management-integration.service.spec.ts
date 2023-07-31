@@ -54,7 +54,7 @@ describe('User Management Integration Tests From Gateway', () => {
   describe('User Management Organisation Management Integration From Gateway', () => {
     let app: INestApplication;
     let configService: ConfigService;
-    let accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3QzQGdtYWlsLmNvbSIsImlhdCI6MTY5MDQ3NzU2MCwiZXhwIjoxNjkwNTYzOTYwfQ.3iHbfNq3HjLmDYu49wzsvryciHyiOgvTrL67Bcr6yWM";
+    let accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3QzQGdtYWlsLmNvbSIsImlhdCI6MTY5MDQ3NzU2MCwiZXhwIjoxNjkwNTYzOTYwfQ.3iHbfNq3HjLmDYu49wzsvryciHyiOgvTrL67Bcr6yWM";
 
     /*
       In order to run most of these tests one neeeds to be logged in (happens in before each)

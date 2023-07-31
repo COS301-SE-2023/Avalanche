@@ -51,6 +51,28 @@ jobs:
         with:
           node-version: '16'
 
+      - name: Install dependencies for frontend
+        run: |
+          cd frontend
+          yarn install
+
+      - name: Create .env file for gateway service
+        run: |
+          echo NEXT_PUBLIC_API = 'http://127.0.0.1:4000' >> frontend/.env.local
+
+
+      - name: Start frontend
+        run: |
+          cd frontend
+          yarn dev &
+
+      - name: Wait for Gateway service
+        run: |
+          while ! nc -z localhost 4000; do   
+          sleep 1
+          echo "Waiting for Gateway service..."
+          done    
+
       - name: Install dependencies for gateway
         run: |
           cd gateway
