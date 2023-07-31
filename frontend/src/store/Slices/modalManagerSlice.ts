@@ -53,7 +53,7 @@ export const modalManagerSlice = createSlice({
         },
         // Clear Zoomed Data
         clearZoomData(state) {
-            state.zoomedData = {};
+            // state.zoomedData = {};
         }
     },
     extraReducers: (builder) => {
