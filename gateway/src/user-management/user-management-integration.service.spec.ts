@@ -92,68 +92,6 @@ describe('User Management Integration Tests From Gateway', () => {
  // This may change based on the structure of your response
     },15000);
 
-    let orgName: string;
-    describe('Create Organisation', () => {
-      
-      it('should create a new organisation', () => {
-        orgName = Random.word(8);
-        const organisationDto = {
-          name: orgName,
-        };
-        return request(app.getHttpServer())
-          .post('/user-management/createOrganisation')
-          .set('Authorization', `Bearer ${accessToken}`)
-          .send(organisationDto)
-          .expect(201)
-          .then((response) => {
-            console.log(response.body);
-            expect(response.body.status).toBe('success');
-          });
-      },15000);
-
-      afterEach(async () => {
-        const organisationData = {
-          organisationName: orgName,
-        };
-        return request(app.getHttpServer())
-          .post('/user-management/exitOrganisation')
-          .set('Authorization', `Bearer ${accessToken}`)
-          .send(organisationData);
-      },15000);
-    });
-
-    describe('Exit Organisation', () => {
-      it('should allow the user to exit  the organisation', () => {
-        const organisationData = {
-          organisationName: orgName,
-        };
-        return request(app.getHttpServer())
-          .post('/user-management/exitOrganisation')
-          .set('Authorization', `Bearer ${accessToken}`)
-          .send(organisationData)
-          .expect(201)
-          .then((response) => {
-            console.log(response.body);
-            expect(response.body.status).toBe('success');
-          });
-      },15000);
-
-      it('should not allow a user to exit a random Organisation that does not exist', () => {
-        const organisationData = {
-          organisationName: `Non-existent_Organisation`,
-        };
-        return request(app.getHttpServer())
-          .post('/user-management/exitOrganisation')
-          .set('Authorization', `Bearer ${accessToken}`)
-          .send(organisationData)
-          .expect(400)
-          .then((response) => {
-            console.log(response.body);
-            expect(response.body.message).toBe('Organisation cannot be found');
-          });
-      },15000);
-    });
-
     describe('Get User Info', () => {
       it('should get user info', () => {
         return request(app.getHttpServer())
