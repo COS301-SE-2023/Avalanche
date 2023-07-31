@@ -7,7 +7,7 @@ describe('Dashboard', () => {
         cy.setCookie('jwt', Cypress.env('jwt'));
         cy.visit(Cypress.env('baseURL')  + Cypress.env('basePort') + '/dashboard');
         cy.wait(5000);
-        cy.url().should(Cypress.env('baseURL')  + Cypress.env('basePort') + '/dashboard')
+        cy.url().should('eq', Cypress.env('baseURL')  + Cypress.env('basePort') + '/dashboard')
     });
 
     it('renders Sidebar with links', () => {

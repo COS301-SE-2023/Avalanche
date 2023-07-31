@@ -288,7 +288,7 @@ export const getMovementVerticalData = createAsyncThunk("GRAPH.GetMovementVertic
 export const getDomainNameAnalysisData = createAsyncThunk("GRAPH.GetDomainNameAnalysisData", async (object: IDomainNameAnalysisGraphRequest, { rejectWithValue }) => {
     try {
         const jwt = getCookie("jwt");
-        const response = await ky.post(`http://localhost:4000/zacr/domainNameAnalysis/count`, {
+        const response = await ky.post(`${process.env.NEXT_PUBLIC_API}/zacr/domainNameAnalysis/count`, {
             json: object,
             headers: {
                 "Authorization": `Bearer ${jwt}`
@@ -462,7 +462,7 @@ export const getDomainNameAnalysisDataArray = createAsyncThunk("GRAPH.GetDomainN
         const jwt = getCookie("jwt");
         for (let i = 0; i < object.length; i++) {
             const graph = object[i];
-            const res: any = await ky.post(`http://localhost:4000/zacr/domainNameAnalysis/count`, {
+            const res: any = await ky.post(`${process.env.NEXT_PUBLIC_API}/zacr/domainNameAnalysis/count`, {
                 json: graph,
                 headers: {
                     "Authorization": `Bearer ${jwt}`

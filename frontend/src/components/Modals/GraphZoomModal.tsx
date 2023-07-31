@@ -49,8 +49,8 @@ export default function GraphZoomModal({ custom }: IGraphZoomModal) {
     }
 
     const renderComments = () => {
-        const dash = stateUser.user.dashboards.find((item: any) => item.dashboardID == state.zoomedData?.dashboardID);
-        const graph = dash.graphs.find((item: any) => item.graphName === state.zoomedData?.graphName);
+        const dash = stateUser.user.dashboards?.find((item: any) => item.dashboardID == state.zoomedData?.dashboardID);
+        const graph = dash.graphs?.find((item: any) => item.graphName === state.zoomedData?.graphName);
         return graph?.comments?.map((item: any, index: number) => (<div key={index} className="w-full p-4 text-gray-500 bg-white rounded-lg shadow dark:bg-gray-800 dark:text-gray-400" role="alert">
             <div className="flex">
                 <img className="w-8 h-8 rounded-full shadow-lg" src="https://github.com/michaelrosstarr.png" alt="Jese Leos image" />
@@ -62,16 +62,24 @@ export default function GraphZoomModal({ custom }: IGraphZoomModal) {
         </div>))
     }
 
+    if (!state.data) {
+        return (
+            <ModalWrapper title={state.zoomedData?.graphName || state.data?.data?.graphName} large={true}>
+                <div role="status" className="flex justify-between h-64 w-full bg-gray-300 rounded-lg animate-customPulse dark:bg-gray-700 p-6" />
+            </ModalWrapper>
+        )
+    }
+
     return (
         <ModalWrapper title={state.zoomedData?.graphName || state.data?.data?.graphName} large={true}>
             <div className="flex h-full">
                 <div className="relative p-6 space-y-6 flex-auto">
-                    {state.data.type === ChartType.Bar && <BarChart data={state.data.data} />}
-                    {state.data.type === ChartType.Pie && <PieChart data={state.data.data} />}
-                    {state.data.type === ChartType.Line && <LineChart data={state.data.data} addClass="h-full" />}
-                    {state.data.type === ChartType.Bubble && <BubbleChart data={state.data.data} />}
-                    {state.data.type === ChartType.PolarArea && <PolarAreaChart data={state.data.data} />}
-                    {state.data.type === ChartType.Radar && <RadarChart data={state.data.data} />}
+                    {state.data?.type === ChartType.Bar && <BarChart data={state.data.data} />}
+                    {state.data?.type === ChartType.Pie && <PieChart data={state.data.data} />}
+                    {state.data?.type === ChartType.Line && <LineChart data={state.data.data} addClass="h-full" />}
+                    {state.data?.type === ChartType.Bubble && <BubbleChart data={state.data.data} />}
+                    {state.data?.type === ChartType.PolarArea && <PolarAreaChart data={state.data.data} />}
+                    {state.data?.type === ChartType.Radar && <RadarChart data={state.data.data} />}
                 </div>
                 {custom && <div className="flex flex-col gap-5 flex-auto">
                     <form onSubmit={(e) => uploadComment(e)}>
