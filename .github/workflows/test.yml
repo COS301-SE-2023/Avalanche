@@ -201,7 +201,8 @@ jobs:
       - name: Start user-management
         run: |
           cd user-management
-          yarn start &
+          yarn start | tee yarn_start.log &
+
 
       - name: Wait for user-management service
         run: |
