@@ -1,11 +1,9 @@
 describe("Market Share", () => {
     beforeEach(() => {
-        cy.visit(Cypress.env('baseURL') + ":" + Cypress.env('basePort'));
-        cy.get('input[name=email]').type(Cypress.env('username'));
-        cy.get('input[name=password]').type(Cypress.env('password'));
-        cy.get('button[type=submit]').click();
-        cy.get('a[id="registrarMarketComparison"]').click();
-
+        cy.setCookie('jwt', Cypress.env('jwt'));
+        cy.visit(Cypress.env('baseURL') +  Cypress.env('basePort') + '/registrarMarketComparison');
+        cy.wait(5000);
+        cy.url().should('eq', Cypress.env('baseURL') +  Cypress.env('basePort') + '/registrarMarketComparison')
     });
 
     it("Navbar still visible", ()=> {

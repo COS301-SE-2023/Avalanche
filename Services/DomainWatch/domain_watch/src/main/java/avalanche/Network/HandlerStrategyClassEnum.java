@@ -3,11 +3,15 @@ package avalanche.Network;
 import avalanche.Network.HandlerStrategy.Closed;
 import avalanche.Network.HandlerStrategy.HandlerStrategy;
 import avalanche.Network.HandlerStrategy.RunningStrategies.HandleActive;
+import avalanche.Network.HandlerStrategy.RunningStrategies.HandleListZones;
+import avalanche.Network.HandlerStrategy.RunningStrategies.HandleLoadDomains;
 import avalanche.Network.HandlerStrategy.RunningStrategies.HandlePassive;
 
 public enum HandlerStrategyClassEnum {
     COUNT("active", new HandleActive()),
-    CLASSIFY("passive", new HandlePassive());
+    CLASSIFY("passive", new HandlePassive()),
+    LOADDOMAINS("loadDomains", new HandleLoadDomains()),
+    LISTDOMAINS("listZones", new HandleListZones());
 
     private final HandlerStrategy handlerClass;
     private final String endPoint;

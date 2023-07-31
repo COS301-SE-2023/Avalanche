@@ -44,12 +44,12 @@ public class ServiceHttpServer {
     }
 
     private void createContexts() {
-        ServiceHttpHandler active = new ServiceHttpHandler(new Closed());
-        ServiceHttpHandler passive = new ServiceHttpHandler(new Closed());
-        httpHandlers.put("active", active);
-        httpHandlers.put("passive", passive);
-        httpServer.createContext("/domainWatch/active", active);
-        httpServer.createContext("/domainWatch/passive", passive);
+        for (HandlerStrategyClassEnum endPoint : HandlerStrategyClassEnum.values()) {
+            ServiceHttpHandler endPointHandler = new ServiceHttpHandler(new Closed());
+            httpHandlers.put(endPoint.getEndPointName(), endPointHandler);
+            httpServer.createContext("/domainWatch/" + endPoint.getEndPointName(), endPointHandler);
+            System.out.println(endPoint.getEndPointName() + " created");
+        }
     }
 
     public void start() throws IOException, InstantiationException {

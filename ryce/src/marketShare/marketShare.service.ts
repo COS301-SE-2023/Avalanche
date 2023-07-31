@@ -45,6 +45,8 @@ export class MarketShareService {
           'EX',
           72 * 60 * 60,
         );
+      }else{
+        console.log('Retrieved from cache');
       }
       return {
         status: 'success',

@@ -10,8 +10,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import avalanche.Network.ServerState.ServerState;
-
 public abstract class Running extends HandlerStrategy {
 
     public static String validateJSON(String body) {
