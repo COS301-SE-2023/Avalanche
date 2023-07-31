@@ -24,7 +24,7 @@ export class AgeService {
       console.log(filters);
       const sqlQuery = `call ageAnalysis('${filters}')`;
 
-      let formattedData = await this.redis.get(sqlQuery);
+      let formattedData = await this.redis.get(`zacr` + sqlQuery);
 
       if (!formattedData) {
         let queryData: any;
@@ -35,7 +35,7 @@ export class AgeService {
           return {
             status: 500,
             error: true,
-            message: 'Data Warehouse Error',
+            message: `${e.message}`,
             timestamp: new Date().toISOString(),
           };
         }
@@ -44,25 +44,35 @@ export class AgeService {
           JSON.stringify(queryData),
         );
 
-        await this.redis.set(sqlQuery, formattedData, 'EX', 24 * 60 * 60);
+        await this.redis.set(
+          `zacr` + sqlQuery,
+          formattedData,
+          'EX',
+          72 * 60 * 60,
+        );
       }
 
       return {
         status: 'success',
-        data: { graphName: graphName, ...JSON.parse(formattedData) },
+        data: {
+          graphName: graphName,
+          ...JSON.parse(formattedData),
+          warehouse: 'zacr',
+          graphType: 'age',
+        },
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
       return {
         status: 500,
         error: true,
-        message: e,
+        message: `${e.message}`,
         timestamp: new Date().toISOString(),
       };
     }
   }
 
-  ageGraphName(filters: string): string {
+  ageGraphName(filters: any): string {
     let rank = filters['rank'];
     if (rank) {
       rank = ' the ' + rank + ' registrars in terms of domain count ';
@@ -81,6 +91,6 @@ export class AgeService {
     } else if (overall === false && average === false) {
       filter = ', showing the number of domains per age per registrar';
     }
-    return 'Age Analysis of domains for ' + rank + filter;
+    return 'Age Analysis of domains for' + rank + filter;
   }
 }

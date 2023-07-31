@@ -24,7 +24,7 @@ export class MovementService {
       console.log(filters);
       const sqlQuery = `call nettVerticalMovement('${filters}')`;
 
-      let formattedData = await this.redis.get(sqlQuery);
+      let formattedData = await this.redis.get(`zacr` + sqlQuery);
 
       if (!formattedData) {
         let queryData;
@@ -43,27 +43,37 @@ export class MovementService {
           JSON.stringify(queryData),
         );
 
-        await this.redis.set(sqlQuery, formattedData, 'EX', 24 * 60 * 60);
+        await this.redis.set(
+          `zacr` + sqlQuery,
+          formattedData,
+          'EX',
+          72 * 60 * 60,
+        );
       }
 
       filters = JSON.parse(filters);
 
       return {
         status: 'success',
-        data: { graphName: graphName, ...JSON.parse(formattedData) },
+        data: {
+          graphName: graphName,
+          ...JSON.parse(formattedData),
+          warehouse: 'zacr',
+          graphType: 'movement/vertical',
+        },
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
       return {
         status: 500,
         error: true,
-        message: e,
+        message: `${e.message}`,
         timestamp: new Date().toISOString(),
       };
     }
   }
 
-  netVerticalGraphName(filters: string): string {
+  netVerticalGraphName(filters: any): string {
     let registrar = filters['registrar'];
     if (registrar) {
       if (registrar.length > 0) {
@@ -71,10 +81,10 @@ export class MovementService {
         for (const r of registrar) {
           regArr.push(r);
         }
-        registrar += regArr.join(', ');
+        registrar = ' ' + regArr.join(', ');
       }
     } else {
-      registrar = ' all registrars ';
+      registrar = ' all registrars';
     }
 
     let zone = filters['zone'];
@@ -84,11 +94,11 @@ export class MovementService {
         for (const r of zone) {
           zoneArr.push(r);
         }
-        zone += zoneArr.join(', ');
+        zone = zoneArr.join(', ');
       }
       zone = ' for ' + zone;
     } else {
-      zone = ' all zones in registry';
+      zone = ' for all zones in registry';
     }
 
     let dateFrom;
@@ -132,11 +142,11 @@ export class MovementService {
 
     return (
       granularity +
-      ' Nett Vertical Movement (Creates-Deletes) from ' +
+      'Nett Vertical Movement (Creates-Deletes) from ' +
       dateFrom +
       ' to ' +
       dateTo +
-      ' for ' +
+      ' for' +
       registrar +
       zone
     );

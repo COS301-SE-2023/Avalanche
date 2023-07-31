@@ -1,4 +1,4 @@
 export default interface IMovementGraphRequest {
-    zone? : string,
-    registrar? : string[]
+    zone?: string[],
+    registrar?: string[]
 }

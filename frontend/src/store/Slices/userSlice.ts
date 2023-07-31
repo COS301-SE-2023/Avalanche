@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { AppState } from "../store";
 import { HYDRATE } from "next-redux-wrapper";
-import ky from "ky";
+import ky, { HTTPError } from "ky";
 import { ILoginRequest, IOTPVerifyRequest, IRegisterRequest, ICreateOrganisationRequest, ICreateUserGroupRequest } from "@/interfaces/requests";
 import { IOTPVerifyResponse, IRegisterResponse, ILoginResponse, ICreateOrgnisationResponse, ICreateUserGroupResponse } from "@/interfaces/responses";
 import { setCookie, getCookie, deleteCookie } from 'cookies-next';
@@ -10,17 +10,18 @@ import { ISettings, IOrganisation, IDataProduct, IUserGroups } from "@/interface
 const url = `${process.env.NEXT_PUBLIC_API}/user-management`;
 
 export interface IUserState {
+    [x: string]: any;
     id: string | null,
     email: string | null,
     firstName: string | null,
     lastName: string | null
     settings: ISettings | null,
     profilePicture: string | null,
-    // favourites: IDashBoard[] | null,
     dataProducts: IDataProduct[] | null,
     organisation: IOrganisation | null,
     userGroups: IUserGroups[] | null,
-    token?: string | null
+    token?: string | null,
+    dashboards?: any[] | null,
 }
 
 export interface IUser {
@@ -30,11 +31,10 @@ export interface IUser {
     lastName: string | null
     settings: ISettings | null,
     profilePicture: string | null,
-    // favourites: IDashBoard[] | null,
     dataProducts: IDataProduct[] | null,
     organisation: IOrganisation | null,
     userGroups: IUserGroups[] | null,
-    token?: string | null
+    token?: string | null,
 }
 
 export interface IAuth {
@@ -50,7 +50,8 @@ const initialState: IUserState = {
     profilePicture: null,
     dataProducts: null,
     organisation: null,
-    userGroups: null
+    userGroups: null,
+    dashboards: null
 }
 
 export const userSlice = createSlice({
@@ -76,6 +77,7 @@ export const userSlice = createSlice({
         removeUserGroupSuccess: false,
         error: "",
         userGroups: [],
+        api: false,
     },
     reducers: {
         setAuth(state) {
@@ -107,6 +109,20 @@ export const userSlice = createSlice({
         },
         clearError(state) {
             state.error = "";
+            state.requests.error = "";
+            state.login.error = false;
+            state.login.message = "";
+        },
+        updateDashboards(state, action) {
+            state.user.dashboards = action.payload;
+        },
+        updateAPI(state, action) {
+            state.api = action.payload;
+            state.user.checkApi = action.payload;
+        },
+        clearLoading(state) {
+            state.requests.loading = false;
+            state.loading = false;
         }
     },
     extraReducers: (builder) => {
@@ -157,19 +173,18 @@ export const userSlice = createSlice({
             let d = new Date();
             d.setTime(d.getTime() + (1440 * 60 * 1000));
             setCookie('jwt', payload.userWithToken.token, { expires: d });
-
             const userObj: IUserState = { ...payload.userWithToken };
             delete userObj.token;
             state.user = userObj;
             state.loading = false;
             state.login.success = true;
-
         })
         builder.addCase(login.pending, (state) => {
             state.loading = true;
         })
         builder.addCase(login.rejected, (state, action) => {
             state.loading = false;
+            state.requests.error = action.payload as any;
         })
         // Create Organisation
         builder.addCase(createOrganisation.fulfilled, (state, action) => {
@@ -217,16 +232,17 @@ export const userSlice = createSlice({
         })
         builder.addCase(addUserToGroup.pending, (state) => {
             state.loading = true;
+            state.addUserGroupSuccess = false;
         })
         builder.addCase(addUserToGroup.rejected, (state, action) => {
             state.addUserGroupSuccess = false;
             state.loading = false;
-            state.error = "";
+            state.requests.error = action.payload as string;
         })
         // Remove User
         builder.addCase(removeUserFromGroup.fulfilled, (state, action) => {
             state.removeUserGroupSuccess = true;
-            state.error = "";
+            state.requests.error = "";
             state.loading = false;
             // remove the user from the userGroups
             const payload = action.payload as any;
@@ -236,12 +252,12 @@ export const userSlice = createSlice({
         builder.addCase(removeUserFromGroup.pending, (state) => {
             state.loading = true;
             state.removeUserGroupSuccess = false;
-            state.error = "";
+            state.requests.error = "";
         })
         builder.addCase(removeUserFromGroup.rejected, (state, action) => {
             state.removeUserGroupSuccess = false;
             state.loading = false;
-            state.error = action.payload as string;
+            state.requests.error = action.payload as string;
         })
         // Get Latest Org
         builder.addCase(getLatestOrganisation.fulfilled, (state, action) => {
@@ -292,14 +308,17 @@ export const otpVerify = createAsyncThunk("AUTH.OTPVerify", async (object: IOTPV
  * This action handles calling the login api call
  */
 export const login = createAsyncThunk("AUTH.Login", async (object: ILoginRequest, { rejectWithValue }) => {
-    console.log(process.env);
     try {
         const response = await ky.post(`${url}/login`, {
             json: object
         }).json();
         return response;
     } catch (e) {
-        if (e instanceof Error) return rejectWithValue(e.message);
+        let error = e as HTTPError;
+        if (error.name === 'HTTPError') {
+            const newError = await error.response.json();
+            return rejectWithValue(newError.message);
+        }
     }
 })
 
@@ -370,7 +389,11 @@ export const addUserToGroup = createAsyncThunk("ORG.AddUserToGroup", async (obje
         }).json();
         return response as any;
     } catch (e) {
-        if (e instanceof Error) return rejectWithValue(e.message);
+        let error = e as HTTPError;
+        if (error.name === 'HTTPError') {
+            const newError = await error.response.json();
+            return rejectWithValue(newError.message);
+        }
     }
 })
 
@@ -388,7 +411,11 @@ export const removeUserFromGroup = createAsyncThunk("ORG.RemoveUserFromGroup", a
         }).json();
         return { data: response, request: object } as any;
     } catch (e) {
-        if (e instanceof Error) return rejectWithValue(e.message);
+        let error = e as HTTPError;
+        if (error.name === 'HTTPError') {
+            const newError = await error.response.json();
+            return rejectWithValue(newError.message);
+        }
     }
 })
 
@@ -405,10 +432,14 @@ export const getLatestOrganisation = createAsyncThunk("ORG.GetLatestOrganisation
         }).json();
         return response.message as any;
     } catch (e) {
-        if (e instanceof Error) return rejectWithValue(e.message);
+        let error = e as HTTPError;
+        if (error.name === 'HTTPError') {
+            const newError = await error.response.json();
+            return rejectWithValue(newError.message);
+        }
     }
 })
 
-export const { setAuth, getAuth, resetRequest, logout, setCreateGroupSuccess, setAddUserGroupSuccess, clearError } = userSlice.actions;
+export const { setAuth, getAuth, resetRequest, logout, setCreateGroupSuccess, setAddUserGroupSuccess, clearError, updateDashboards, updateAPI, clearLoading } = userSlice.actions;
 export const userState = (state: AppState) => state.user;
 export default userSlice.reducer;

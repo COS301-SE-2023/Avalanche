@@ -22,17 +22,46 @@ export class UserManagementController {
           "endpoint": "zacr",
           "graphs": [
             {
-              "name": "transaction",
+              "name": "transactions",
               "filters": [
                 {
                   "name": "zone",
                   "type": "string[]",
                   "values": [
-                    "CO.ZA",
-                    "ORG.ZA",
-                    "NET.ZA"
+                    {
+                      "name": "CO.ZA", "filters": [{
+                        "name": "transactions",
+                        "type": "string[]",
+                        "values": ["cozaAccredited", "cozaCreate", "cozaGrace", "cozaRedeem", "cozaTransfer", "cozaRenew"],
+                        "input": "checkbox"
+                      }]
+                    },
+                    {
+                      "name": "ORG.ZA", "filters": [{
+                        "name": "transactions",
+                        "type": "string[]",
+                        "values": ["orgzaRedeem", "orgzaGrace", "orgzaLandrush", "orgzaLandrushPremium", "orgzaLegacyTransfer", "orgzaCreate", "orgzaPremium", "orgzaRenew", "orgzaSunrise", "orgzaPremium", "orgzaTransfer"],
+                        "input": "checkbox"
+                      }]
+                    },
+                    {
+                      "name": "NET.ZA", "filters": [{
+                        "name": "transactions",
+                        "type": "string[]",
+                        "values": ["netzaRedeem", "netzaGrace", "netzaLandrush", "netzaLandrushPremium", "netzaLegacyTransfer", "netzaCreate", "netzaPremium", "netzaRenew", "netzaSunrise", "netzaSunrisePremium", "netzaTrnasfer"],
+                        "input": "checkbox"
+                      }]
+                    },
+                    {
+                      "name": "WEB.ZA", "filters": [{
+                        "name": "transactions",
+                        "type": "string[]",
+                        "values": ["webzaRedeem", "webzaGrace", "webzaLandrush", "webzaLandrushPremium", "webzaCreate", "webzaCreateVT", "webzaPremium", "webzaRenew", "webzaSunrise", "webzaSunrisePremium", "webzaTransfer"],
+                        "input": "checkbox"
+                      }]
+                    }
                   ],
-                  "input": "checkbox"
+                  "input": "nestedCheckbox"
                 },
                 {
                   "name": "dateFrom",
@@ -43,18 +72,6 @@ export class UserManagementController {
                   "name": "dateTo",
                   "type": "string",
                   "input": "date-picker"
-                },
-                {
-                  "name": "transactions",
-                  "type": "string",
-                  "values": [
-                    "create",
-                    "grace",
-                    "redeem",
-                    "transfer",
-                    "renew"
-                  ],
-                  "input": "checkbox"
                 },
                 {
                   "name": "granularity",
@@ -76,18 +93,48 @@ export class UserManagementController {
                   "name": "zone",
                   "type": "string[]",
                   "values": [
-                    "CO.ZA",
-                    "ORG.ZA",
-                    "NET.ZA"
+                    {
+                      "name": "CO.ZA", "filters": [{
+                        "name": "transactions",
+                        "type": "string[]",
+                        "values": ["cozaAccredited", "cozaCreate", "cozaGrace", "cozaRedeem", "cozaTransfer", "cozaRenew"],
+                        "input": "checkbox"
+                      }]
+                    },
+                    {
+                      "name": "ORG.ZA", "filters": [{
+                        "name": "transactions",
+                        "type": "string[]",
+                        "values": ["orgzaRedeem", "orgzaGrace", "orgzaLandrush", "orgzaLandrushPremium", "orgzaLegacyTransfer", "orgzaCreate", "orgzaPremium", "orgzaRenew", "orgzaSunrise", "orgzaPremium", "orgzaTransfer"],
+                        "input": "checkbox"
+                      }]
+                    },
+                    {
+                      "name": "NET.ZA", "filters": [{
+                        "name": "transactions",
+                        "type": "string[]",
+                        "values": ["netzaRedeem", "netzaGrace", "netzaLandrush", "netzaLandrushPremium", "netzaLegacyTransfer", "netzaCreate", "netzaPremium", "netzaRenew", "netzaSunrise", "netzaSunrisePremium", "netzaTrnasfer"],
+                        "input": "checkbox"
+                      }]
+                    },
+                    {
+                      "name": "WEB.ZA", "filters": [{
+                        "name": "transactions",
+                        "type": "string[]",
+                        "values": ["webzaRedeem", "webzaGrace", "webzaLandrush", "webzaLandrushPremium", "webzaCreate", "webzaCreateVT", "webzaPremium", "webzaRenew", "webzaSunrise", "webzaSunrisePremium", "webzaTransfer"],
+                        "input": "checkbox"
+                      }]
+                    }
                   ],
-                  "input": "checkbox"
+                  "input": "nestedCheckbox"
                 },
                 {
                   "name": "registrar",
                   "type": "string",
                   "values": [
-                    "boi",
-                    "boi2"
+                    "afrihost",
+                    "hetzner",
+                    "diamatrix"
                   ],
                   "input": "checkbox"
                 },
@@ -100,18 +147,6 @@ export class UserManagementController {
                   "name": "dateTo",
                   "type": "string",
                   "input": "date-picker"
-                },
-                {
-                  "name": "transactions",
-                  "type": "string",
-                  "values": [
-                    "create",
-                    "grace",
-                    "redeem",
-                    "transfer",
-                    "renew"
-                  ],
-                  "input": "checkbox"
                 },
                 {
                   "name": "granularity",
@@ -127,7 +162,7 @@ export class UserManagementController {
               ]
             },
             {
-              "name": "marketshare",
+              "name": "marketShare",
               "filters": [
                 {
                   "name": "zone",
@@ -135,13 +170,19 @@ export class UserManagementController {
                   "values": [
                     "CO.ZA",
                     "NET.ZA",
-                    "ORG.ZA"
+                    "ORG.ZA",
+                    "WEB.ZA"
                   ],
                   "input": "checkbox"
                 },
                 {
                   "name": "registrar",
                   "type": "string",
+                  "values": [
+                    "afrihost",
+                    "hetzner",
+                    "diamatrix"
+                  ],
                   "input": "checkbox"
                 },
                 {
@@ -168,13 +209,19 @@ export class UserManagementController {
                   "values": [
                     "CO.ZA",
                     "NET.ZA",
-                    "ORG.ZA"
+                    "ORG.ZA",
+                    "WEB.ZA"
                   ],
                   "input": "checkbox"
                 },
                 {
                   "name": "registrar",
                   "type": "string",
+                  "values": [
+                    "afrihost",
+                    "hetzner",
+                    "diamatrix"
+                  ],
                   "input": "checkbox"
                 },
                 {
@@ -226,6 +273,69 @@ export class UserManagementController {
                   "type": "number",
                   "input": "inputbox"
                 }
+              ]
+            },
+            {
+              "name": "domainNameAnalysis/length",
+              "filters": [
+                {
+                  "name": "zone",
+                  "type": "string[]",
+                  "values": [
+                    "CO.ZA",
+                    "NET.ZA",
+                    "ORG.ZA",
+                    "WEB.ZA"
+                  ],
+                  "input": "checkbox"
+                },
+                {
+                  "name": "registrar",
+                  "type": "string",
+                  "values": [
+                    "afrihost",
+                    "hetzner",
+                    "diamatrix"
+                  ],
+                  "input": "checkbox"
+                },
+                {
+                  "name": "dateFrom",
+                  "type": "string",
+                  "input": "date-picker"
+                },
+                {
+                  "name": "dateTo",
+                  "type": "string",
+                  "input": "date-picker"
+                },
+
+              ]
+            },
+            {
+              "name": "movement",
+              "filters": [
+                {
+                  "name": "zone",
+                  "type": "string[]",
+                  "values": [
+                    "CO.ZA",
+                    "NET.ZA",
+                    "ORG.ZA",
+                    "WEB.ZA"
+                  ],
+                  "input": "checkbox"
+                },
+                {
+                  "name": "registrar",
+                  "type": "string",
+                  "values": [
+                    "afrihost",
+                    "hetzner",
+                    "diamatrix"
+                  ],
+                  "input": "checkbox"
+                },
               ]
             }
           ]
@@ -234,15 +344,22 @@ export class UserManagementController {
           "endpoint": "africa",
           "graphs": [
             {
-              "name": "transaction",
+              "name": "transactions",
               "filters": [
                 {
                   "name": "zone",
                   "type": "string[]",
                   "values": [
-                    "AFRICA"
+                    {
+                      "name": "AFRICA", "filters": [{
+                        "name": "transactions",
+                        "type": "string[]",
+                        "values": ["create", "grace", "redeem", "transfer", "renew", "genesis", "sunrisePremium", "sunrise", "landrush1", "landrush2", "landrush3", "landrush4", "premium",],
+                        "input": "checkbox"
+                      }]
+                    }
                   ],
-                  "input": "checkbox"
+                  "input": "nestedCheckbox"
                 },
                 {
                   "name": "dateFrom",
@@ -253,18 +370,6 @@ export class UserManagementController {
                   "name": "dateTo",
                   "type": "string",
                   "input": "date-picker"
-                },
-                {
-                  "name": "transactions",
-                  "type": "string",
-                  "values": [
-                    "create",
-                    "grace",
-                    "redeem",
-                    "transfer",
-                    "renew"
-                  ],
-                  "input": "checkbox"
                 },
                 {
                   "name": "granularity",
@@ -286,16 +391,26 @@ export class UserManagementController {
                   "name": "zone",
                   "type": "string[]",
                   "values": [
-                    "AFRICA"
+                    {
+                      "name": "AFRICA", "filters": [{
+                        "name": "transactions",
+                        "type": "string[]",
+                        "values": ["create", "grace", "redeem", "transfer", "renew", "genesis", "sunrisePremium", "sunrise", "landrush1", "landrush2", "landrush3", "landrush4", "premium",],
+                        "input": "checkbox"
+                      }]
+                    }
                   ],
-                  "input": "checkbox"
+                  "input": "nestedCheckbox"
                 },
                 {
                   "name": "registrar",
                   "type": "string",
                   "values": [
-                    "boi",
-                    "boi2"
+                    "dnsafric6lc9ke",
+                    "tucowsdominc",
+                    "namecheap4ch",
+                    "diamatrix",
+                    "101domain"
                   ],
                   "input": "checkbox"
                 },
@@ -308,18 +423,6 @@ export class UserManagementController {
                   "name": "dateTo",
                   "type": "string",
                   "input": "date-picker"
-                },
-                {
-                  "name": "transactions",
-                  "type": "string",
-                  "values": [
-                    "create",
-                    "grace",
-                    "redeem",
-                    "transfer",
-                    "renew"
-                  ],
-                  "input": "checkbox"
                 },
                 {
                   "name": "granularity",
@@ -335,7 +438,7 @@ export class UserManagementController {
               ]
             },
             {
-              "name": "marketshare",
+              "name": "marketShare",
               "filters": [
                 {
                   "name": "zone",
@@ -348,6 +451,13 @@ export class UserManagementController {
                 {
                   "name": "registrar",
                   "type": "string",
+                  "values": [
+                    "dnsafric6lc9ke",
+                    "tucowsdominc",
+                    "namecheap4ch",
+                    "diamatrix",
+                    "101domain"
+                  ],
                   "input": "checkbox"
                 },
                 {
@@ -379,6 +489,13 @@ export class UserManagementController {
                 {
                   "name": "registrar",
                   "type": "string",
+                  "values": [
+                    "dnsafric6lc9ke",
+                    "tucowsdominc",
+                    "namecheap4ch",
+                    "diamatrix",
+                    "101domain"
+                  ],
                   "input": "checkbox"
                 },
                 {
@@ -430,6 +547,67 @@ export class UserManagementController {
                   "type": "number",
                   "input": "inputbox"
                 }
+              ]
+            },
+            {
+              "name": "domainNameAnalysis/length",
+              "filters": [
+                {
+                  "name": "zone",
+                  "type": "string[]",
+                  "values": [
+                    "AFRICA"
+                  ],
+                  "input": "checkbox"
+                },
+                {
+                  "name": "registrar",
+                  "type": "string",
+                  "values": [
+                    "dnsafric6lc9ke",
+                    "tucowsdominc",
+                    "namecheap4ch",
+                    "diamatrix",
+                    "101domain"
+                  ],
+                  "input": "checkbox"
+                },
+                {
+                  "name": "dateFrom",
+                  "type": "string",
+                  "input": "date-picker"
+                },
+                {
+                  "name": "dateTo",
+                  "type": "string",
+                  "input": "date-picker"
+                },
+
+              ]
+            },
+            {
+              "name": "movement",
+              "filters": [
+                {
+                  "name": "zone",
+                  "type": "string[]",
+                  "values": [
+                    "AFRICA"
+                  ],
+                  "input": "checkbox"
+                },
+                {
+                  "name": "registrar",
+                  "type": "string",
+                  "values": [
+                    "dnsafric6lc9ke",
+                    "tucowsdominc",
+                    "namecheap4ch",
+                    "diamatrix",
+                    "101domain"
+                  ],
+                  "input": "checkbox"
+                },
               ]
             }
           ]
@@ -438,18 +616,46 @@ export class UserManagementController {
           "endpoint": "ryce",
           "graphs": [
             {
-              "name": "transaction",
+              "name": "transactions",
               "filters": [
                 {
                   "name": "zone",
                   "type": "string[]",
                   "values": [
-                    "WIEN",
-                    "COLOGNE",
-                    "KOELN",
-                    "TIROL"
+                    {
+                      "name": "WIEN", "filters": [{
+                        "name": "transactions",
+                        "type": "string[]",
+                        "values": ["wienGrace", "wienCreate", "wienPremiumA", "wienPremiumB", "wienPremiumC", "wienPremiumD", "wienPremiumE", "wienPremiumF", "wienPremiumG", "wienPremiumH", "wienRenew", "wienRenewPremiumA", "wienRenewPremiumB", "wienRenewPremiumC", "wienRenewPremiumD", "wienRenewPremiumE", "wienRenewPremiumG", "wienRenewPremiumH", "wienRestore", "wienTransfer", "wienTransferNull", "wienTransferPremiumA", "wienTransferPremiumB", "wienTransferPremiumC", "wienTransferPremiumD", "wienTransferPremiumE", "wienTransferPremiumG", "wienTransferPremiumH"],
+                        "input": "checkbox"
+                      }]
+                    },
+                    {
+                      "name": "COLOGNE", "filters": [{
+                        "name": "transactions",
+                        "type": "string[]",
+                        "values": ["cologneAutoRenew", "cologneCreate", "colognePremiumD", "colognePremiumI", "cologneRenew", "cologneRenewPremiumD", "cologneRenewPremiumI", "cologneRestore", "cologneTransfer", "cologneTransferPremiumD", "cologneTransferPremiumI"],
+                        "input": "checkbox"
+                      }]
+                    },
+                    {
+                      "name": "KOELN", "filters": [{
+                        "name": "transactions",
+                        "type": "string[]",
+                        "values": ["koelnAutoRenew", "koelnCreate", "koelnPremiumD", "koelnPremiumI", "koelnRenew", "koelnRenewPremiumD", "koelnRenewPremiumI", "koelnRestore", "koelnTransfer", "koelnTransferPremiumD", "koelnTransferPremiumI"],
+                        "input": "checkbox"
+                      }]
+                    },
+                    {
+                      "name": "TIROL", "filters": [{
+                        "name": "transactions",
+                        "type": "string[]",
+                        "values": ["tirolGrace", "tirolCreate", "tirolRenew", "tirolRestore", "tirolTransfer", "tirolTransferNull",],
+                        "input": "checkbox"
+                      }]
+                    },
                   ],
-                  "input": "checkbox"
+                  "input": "nestedCheckbox"
                 },
                 {
                   "name": "dateFrom",
@@ -460,18 +666,6 @@ export class UserManagementController {
                   "name": "dateTo",
                   "type": "string",
                   "input": "date-picker"
-                },
-                {
-                  "name": "transactions",
-                  "type": "string",
-                  "values": [
-                    "create",
-                    "grace",
-                    "redeem",
-                    "transfer",
-                    "renew"
-                  ],
-                  "input": "checkbox"
                 },
                 {
                   "name": "granularity",
@@ -493,19 +687,50 @@ export class UserManagementController {
                   "name": "zone",
                   "type": "string[]",
                   "values": [
-                    "WIEN",
-                    "COLOGNE",
-                    "KOELN",
-                    "TIROL"
+                    {
+                      "name": "WIEN", "filters": [{
+                        "name": "transactions",
+                        "type": "string[]",
+                        "values": ["wienGrace", "wienCreate", "wienPremiumA", "wienPremiumB", "wienPremiumC", "wienPremiumD", "wienPremiumE", "wienPremiumF", "wienPremiumG", "wienPremiumH", "wienRenew", "wienRenewPremiumA", "wienRenewPremiumB", "wienRenewPremiumC", "wienRenewPremiumD", "wienRenewPremiumE", "wienRenewPremiumG", "wienRenewPremiumH", "wienRestore", "wienTransfer", "wienTransferNull", "wienTransferPremiumA", "wienTransferPremiumB", "wienTransferPremiumC", "wienTransferPremiumD", "wienTransferPremiumE", "wienTransferPremiumG", "wienTransferPremiumH"],
+                        "input": "checkbox"
+                      }]
+                    },
+                    {
+                      "name": "COLOGNE", "filters": [{
+                        "name": "transactions",
+                        "type": "string[]",
+                        "values": ["cologneAutoRenew", "cologneCreate", "colognePremiumD", "colognePremiumI", "cologneRenew", "cologneRenewPremiumD", "cologneRenewPremiumI", "cologneRestore", "cologneTransfer", "cologneTransferPremiumD", "cologneTransferPremiumI"],
+                        "input": "checkbox"
+                      }]
+                    },
+                    {
+                      "name": "KOELN", "filters": [{
+                        "name": "transactions",
+                        "type": "string[]",
+                        "values": ["koelnAutoRenew", "koelnCreate", "koelnPremiumD", "koelnPremiumI", "koelnRenew", "koelnRenewPremiumD", "koelnRenewPremiumI", "koelnRestore", "koelnTransfer", "koelnTransferPremiumD", "koelnTransferPremiumI"],
+                        "input": "checkbox"
+                      }]
+                    },
+                    {
+                      "name": "TIROL", "filters": [{
+                        "name": "transactions",
+                        "type": "string[]",
+                        "values": ["tirolGrace", "tirolCreate", "tirolRenew", "tirolRestore", "tirolTransfer", "tirolTransferNull",],
+                        "input": "checkbox"
+                      }]
+                    },
                   ],
-                  "input": "checkbox"
+                  "input": "nestedCheckbox"
                 },
                 {
                   "name": "registrar",
                   "type": "string",
                   "values": [
-                    "boi",
-                    "boi2"
+                    "1und1",
+                    "registrygate",
+                    "internetx",
+                    "uniteddomains",
+                    "keysystems"
                   ],
                   "input": "checkbox"
                 },
@@ -518,18 +743,6 @@ export class UserManagementController {
                   "name": "dateTo",
                   "type": "string",
                   "input": "date-picker"
-                },
-                {
-                  "name": "transactions",
-                  "type": "string",
-                  "values": [
-                    "create",
-                    "grace",
-                    "redeem",
-                    "transfer",
-                    "renew"
-                  ],
-                  "input": "checkbox"
                 },
                 {
                   "name": "granularity",
@@ -545,7 +758,7 @@ export class UserManagementController {
               ]
             },
             {
-              "name": "marketshare",
+              "name": "marketShare",
               "filters": [
                 {
                   "name": "zone",
@@ -561,6 +774,13 @@ export class UserManagementController {
                 {
                   "name": "registrar",
                   "type": "string",
+                  "values": [
+                    "1und1",
+                    "registrygate",
+                    "internetx",
+                    "uniteddomains",
+                    "keysystems"
+                  ],
                   "input": "checkbox"
                 },
                 {
@@ -595,6 +815,13 @@ export class UserManagementController {
                 {
                   "name": "registrar",
                   "type": "string",
+                  "values": [
+                    "1und1",
+                    "registrygate",
+                    "internetx",
+                    "uniteddomains",
+                    "keysystems"
+                  ],
                   "input": "checkbox"
                 },
                 {
@@ -646,6 +873,73 @@ export class UserManagementController {
                   "type": "number",
                   "input": "inputbox"
                 }
+              ]
+            },
+            {
+              "name": "domainNameAnalysis/length",
+              "filters": [
+                {
+                  "name": "zone",
+                  "type": "string[]",
+                  "values": [
+                    "WIEN",
+                    "COLOGNE",
+                    "KOELN",
+                    "TIROL"
+                  ],
+                  "input": "checkbox"
+                },
+                {
+                  "name": "registrar",
+                  "type": "string",
+                  "values": [
+                    "1und1",
+                    "registrygate",
+                    "internetx",
+                    "uniteddomains",
+                    "keysystems"
+                  ],
+                  "input": "checkbox"
+                },
+                {
+                  "name": "dateFrom",
+                  "type": "string",
+                  "input": "date-picker"
+                },
+                {
+                  "name": "dateTo",
+                  "type": "string",
+                  "input": "date-picker"
+                },
+
+              ]
+            },
+            {
+              "name": "movement",
+              "filters": [
+                {
+                  "name": "zone",
+                  "type": "string[]",
+                  "values": [
+                    "WIEN",
+                    "COLOGNE",
+                    "KOELN",
+                    "TIROL"
+                  ],
+                  "input": "checkbox"
+                },
+                {
+                  "name": "registrar",
+                  "type": "string",
+                  "values": [
+                    "1und1",
+                    "registrygate",
+                    "internetx",
+                    "uniteddomains",
+                    "keysystems"
+                  ],
+                  "input": "checkbox"
+                },
               ]
             }
           ]
@@ -722,6 +1016,23 @@ export class UserManagementController {
   }
   @Post('createAPIKey')
   async createAPIKey(@Body() data: any) {
+    console.log("12pi4jl");
+    const pattern = { cmd: 'createAPIKey' };
+    const payload = data;
+    try {
+      const result = await lastValueFrom(this.client.send(pattern, payload));
+      return result;
+    } catch (error) {
+      const rpcError = error
+      if (typeof rpcError === 'object') {
+        throw new HttpException(rpcError.message || 'An unexpected error occurred', rpcError.status || 500);
+      }
+      throw error;
+    }
+  }
+
+  @Post('checkUserAPIKey')
+  async checkUserAPIKey(@Body() data: any) {
     const pattern = { cmd: 'createAPIKey' };
     const payload = data;
     try {
@@ -737,6 +1048,7 @@ export class UserManagementController {
   }
   @Post('rerollAPIKey')
   async rerollAPIKey(@Body() data: any) {
+    console.log("rust can go fuck off");
     const pattern = { cmd: 'rerollAPIKey' };
     const payload = data;
     try {
@@ -1010,6 +1322,21 @@ export class UserManagementController {
   @Post('getDomainWatchPassive')
   async getDomainWatchPassive(@Body() data: any) {
     const pattern = { cmd: 'getDomainWatchPassive' };
+    const payload = data;
+    try {
+      const result = await lastValueFrom(this.client.send(pattern, payload));
+      return result;
+    } catch (error) {
+      const rpcError = error
+      if (typeof rpcError === 'object') {
+        throw new HttpException(rpcError.message || 'An unexpected error occurred', rpcError.status || 500);
+      }
+      throw error;
+    }
+  }
+  @Post('getDomainWatchPassiveUser')
+  async getDomainWatchPassiveUser(@Body() data: any) {
+    const pattern = { cmd: 'getDomainWatchPassiveUser' };
     const payload = data;
     try {
       const result = await lastValueFrom(this.client.send(pattern, payload));

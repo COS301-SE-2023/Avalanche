@@ -8,10 +8,10 @@ import { IntegrationLoginModal } from "@/components/Modals";
 import { SubmitButton, WarningAlert } from "@/components/Util";
 import { Toaster } from 'react-hot-toast';
 import OrganizationSettings from "@/components/Settings/Organizations";
-import API from "@/components/Settings/API";
 import { userState } from "@/store/Slices/userSlice";
 import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import GeneralSettings from "@/components/Settings/General";
 
 export default function Settings() {
 
@@ -100,22 +100,19 @@ export default function Settings() {
                         <a href="?tab=general" className={tab === "general" ? tabOptions.active : tabOptions.inactive}>General Settings</a>
                     </li>
                     <li className="mr-2" onClick={(e) => tabClick(e, "organizations")}>
-                        <a href="?tab=subusers" className={tab === "organizations" ? tabOptions.active : tabOptions.inactive}>Organizations</a>
+                        <a href="?tab=organizations" className={tab === "organizations" ? tabOptions.active : tabOptions.inactive}>Organizations</a>
                     </li>
                     <li className="mr-2" onClick={(e) => tabClick(e, "integrations")}>
                         <a href="?tab=integrations" className={tab === "integrations" ? tabOptions.active : tabOptions.inactive}>Data Products</a>
-                    </li>
-                    <li className="mr-2" onClick={(e) => tabClick(e, "apikeys")}>
-                        <a href="?tab=apikeys" className={tab === "apikeys" ? tabOptions.active : tabOptions.inactive}>API Keys</a>
                     </li>
                 </ul>
             </div>
 
             {tab === "general" && <>
-                <WarningAlert title="Cannot Create!" text="Nothing to see here" />
+                <GeneralSettings user={user} />
             </>}
             {tab === "organizations" &&
-                <OrganizationSettings demo={false} />
+                <OrganizationSettings />
             }
             {tab === "integrations" && <>
                 <div className="flex justify-between items-center gap-10 mb-4">
@@ -123,7 +120,6 @@ export default function Settings() {
                     <SubmitButton text="Add a new Data Product" onClick={() => dispatch(setCurrentOpenState("INTE.CreateIntegration"))} />
                 </div>
             </>}
-            {tab === "apikeys" && <API demo={false} />}
         </div>
 
         {/* Models go here */}

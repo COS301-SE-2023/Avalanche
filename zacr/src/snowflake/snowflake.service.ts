@@ -24,9 +24,9 @@ export class SnowflakeService {
         sqlText: query,
         complete: (err, stmt, rows) => {
           if (err) {
-            console.error(
-              `Failed to execute statement due to the following error: ${err.message}`,
-            );
+            // console.error(
+            //   `Failed to execute statement due to the following error: ${err.message}`,
+            // );
             reject(err);
           } else {
             console.log('Successfully executed statement.');

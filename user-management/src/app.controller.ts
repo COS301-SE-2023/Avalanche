@@ -78,6 +78,22 @@ export class AppController {
 
     return result;
   }
+
+  @MessagePattern({ cmd: 'checkUserAPIKey' })
+  async checkUserAPIKey(data: any) {
+    console.log("Creating key: ", data);
+    const result = await this.authService.checkUserAPIKey(data.token);
+
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
   @MessagePattern({ cmd: 'rerollAPIKey' })
   async rerollAPIKey(data: any) {
     console.log("Rerolling key: ", data);
@@ -95,7 +111,7 @@ export class AppController {
   }
   @MessagePattern({ cmd: 'saveDashboard' })
   async saveDashboard(data: any) {
-    const result = await this.userDashboardManService.saveDashbaord(data.token, data.name, data.graphs);
+    const result = await this.userDashboardManService.saveDashbaord(data.token, data.dashboardID, data.name, data.graphs);
     if (result.error) {
       throw new RpcException({
         status: result.status,
@@ -108,7 +124,7 @@ export class AppController {
   }
   @MessagePattern({ cmd: 'editDashboard' })
   async editDashboard(data: any) {
-    const result = await this.userDashboardManService.editDashbaord(data.token, data.name, data.graphs);
+    const result = await this.userDashboardManService.editDashbaord(data.token, data.dashboardID, data.name, data.graphs);
     if (result.error) {
       throw new RpcException({
         status: result.status,
@@ -121,7 +137,7 @@ export class AppController {
   }
   @MessagePattern({ cmd: 'shareDashboards' })
   async shareDashboards(data: any) {
-    const result = await this.userDashboardManService.shareDashboards(data.token, data.userGroupName, data.dashboardName);
+    const result = await this.userDashboardManService.shareDashboards(data.token, data.userGroupName, data.dashboardID);
     if (result.error) {
       throw new RpcException({
         status: result.status,
@@ -134,7 +150,7 @@ export class AppController {
   }
   @MessagePattern({ cmd: 'addCommentToGraph' })
   async addCommentToGraph(data: any) {
-    const result = await this.userDashboardManService.addCommentToGraph(data.token, data.name, data.graphName, data.comment);
+    const result = await this.userDashboardManService.addCommentToGraph(data.token, data.dashboardID, data.graphName, data.comment);
     if (result.error) {
       throw new RpcException({
         status: result.status,
@@ -331,6 +347,20 @@ export class AppController {
   async getDomainWatchPassive(data: any) {
     console.log("Domain Watch Passive Active", data);
     const result = await this.userDataProductManService.getDomainWatchPassive();
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
+  @MessagePattern({ cmd: 'getDomainWatchPassiveUser' })
+  async getDomainWatchPassiveUser(data: any) {
+    console.log("Domain Watch Passive Active", data);
+    const result = await this.userDataProductManService.getDomainWatchPassiveUser(data.token);
     if (result.error) {
       throw new RpcException({
         status: result.status,

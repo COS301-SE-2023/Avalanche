@@ -7,6 +7,7 @@ import { AgeService } from './age/age.service';
 import { DomainNameAnalysisService } from './domainNameAnalysis/domain-name-analysis.service';
 import { MovementService } from './movement/movement.service';
 import { DomainWatchService } from './domainWatch/domain-watch-analysis.service';
+import { RegistrarNameService } from './registrarName/registrarName.service';
 @Controller('zacr')
 export class AppController {
   constructor(private readonly transactionsService: TransactionService, 
@@ -14,7 +15,8 @@ export class AppController {
     private readonly ageService : AgeService,
     private readonly domainNameAnalysisService : DomainNameAnalysisService,
     private readonly movementService: MovementService,
-    private readonly domainWatchService : DomainWatchService) {}
+    private readonly domainWatchService : DomainWatchService,
+    private readonly registrarNameService: RegistrarNameService) {}
 
   @MessagePattern({ cmd: 'transactions' })
   async transactions(data: any) {
@@ -81,7 +83,7 @@ export class AppController {
       throw new RpcException({
         status: result.status,
         message: result.message,
-        timestamp: result.timestamp,
+        timestamp: result['timestamp'],
       });
     }
 
@@ -90,7 +92,10 @@ export class AppController {
 
   @MessagePattern({ cmd: 'domainNameAnalysis/length' })
   async domainNameAnalysisLength(data: any) {
-    const result = await this.domainNameAnalysisService.sendData(data);
+    const result = await this.domainNameAnalysisService.domainLength(
+      data.filters,
+      data.graphName,
+    );
     if (result.error) {
       throw new RpcException({
         status: result.status,
@@ -104,14 +109,61 @@ export class AppController {
 
   @MessagePattern({ cmd: 'movement/vertical' })
   async nettVerticalMovement(data: any) {
-    return await this.movementService.nettVeritical(
+    const result =  await this.movementService.nettVeritical(
       data.filters,
       data.graphName,
     );
+
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
   }
 
   @MessagePattern({ cmd: 'domainWatchPassive' })
   async domainWatchPassive() {
-    return await this.domainWatchService.passive();
+    const result = await this.domainWatchService.passive();
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
+
+  @MessagePattern({ cmd: 'loadDomains' })
+  async loadDomains() {
+    const result =  await this.domainWatchService.loadDomains();
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
+
+  @MessagePattern({ cmd: 'registrarName' })
+  async registarName(data: any) {
+    const result = await this.registrarNameService.registrarName(data);
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
   }
 }

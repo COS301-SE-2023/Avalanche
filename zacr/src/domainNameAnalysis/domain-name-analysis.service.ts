@@ -2,8 +2,8 @@ import { HttpService } from '@nestjs/axios';
 import Redis from 'ioredis';
 import { Injectable, Inject } from '@nestjs/common';
 import { lastValueFrom } from 'rxjs';
-import { SnowflakeService } from 'src/snowflake/snowflake.service';
-import { GraphFormatService } from 'src/graph-format/graph-format.service';
+import { SnowflakeService } from '../snowflake/snowflake.service';
+import { GraphFormatService } from '../graph-format/graph-format.service';
 
 @Injectable()
 export class DomainNameAnalysisService {
@@ -24,7 +24,7 @@ export class DomainNameAnalysisService {
 
       const sqlQuery = `call domainNameAnalysis('${filters}')`;
       console.log(sqlQuery);
-      let formattedData = await this.redis.get(sqlQuery);
+      let formattedData = await this.redis.get(`zacr` + sqlQuery);
 
       if (!formattedData) {
         let queryData;
@@ -51,7 +51,12 @@ export class DomainNameAnalysisService {
           await this.graphFormattingService.formatDomainNameAnalysis(
             JSON.stringify(responseData.data),
           );
-        await this.redis.set(sqlQuery, formattedData, 'EX', 24 * 60 * 60);
+        await this.redis.set(
+          `zacr` + sqlQuery,
+          formattedData,
+          'EX',
+          72 * 60 * 60,
+        );
       }
 
       return {
@@ -64,6 +69,8 @@ export class DomainNameAnalysisService {
             granularity +
             '(s)',
           ...JSON.parse(formattedData),
+          warehouse: 'zacr',
+          graphType: 'domainNameAnalysis/count',
         },
         timestamp: new Date().toISOString(),
       };
@@ -71,7 +78,7 @@ export class DomainNameAnalysisService {
       return {
         status: 500,
         error: true,
-        message: e,
+        message: `${e.message}`,
         timestamp: new Date().toISOString(),
       };
     }
@@ -85,7 +92,7 @@ export class DomainNameAnalysisService {
       console.log(filters);
       const sqlQuery = `CALL SKUNKWORKS_DB.public.domainLengthAnalysis('${filters}')`;
 
-      let formattedData = await this.redis.get(sqlQuery);
+      let formattedData = await this.redis.get(`zacr` + sqlQuery);
 
       if (!formattedData) {
         let queryData;
@@ -107,24 +114,34 @@ export class DomainNameAnalysisService {
           await this.graphFormattingService.formatDomainLengthAnalysis(
             JSON.stringify(queryData),
           );
-        await this.redis.set(sqlQuery, formattedData, 'EX', 24 * 60 * 60);
+        await this.redis.set(
+          `zacr` + sqlQuery,
+          formattedData,
+          'EX',
+          72 * 60 * 60,
+        );
       }
       return {
         status: 'success',
-        data: { graphName: graphName, ...JSON.parse(formattedData) },
+        data: {
+          graphName: graphName,
+          ...JSON.parse(formattedData),
+          warehouse: 'zacr',
+          graphType: 'domainNameAnalysis/length',
+        },
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
       return {
         status: 500,
         error: true,
-        message: e,
+        message: `${e.message}`,
         timestamp: new Date().toISOString(),
       };
     }
   }
 
-  domainLengthGraphName(filters: string): string {
+  domainLengthGraphName(filters: any): string {
     let registrar = filters['registrar'];
     if (registrar) {
       if (registrar.length > 0) {
@@ -132,11 +149,11 @@ export class DomainNameAnalysisService {
         for (const r of registrar) {
           regArr.push(r);
         }
-        registrar += regArr.join(', ');
+        registrar = regArr.join(', ');
         registrar = ' for ' + registrar;
       }
     } else {
-      registrar = ' across all registrars ';
+      registrar = ' across all registrars';
     }
 
     let zone = filters['zone'];
@@ -146,11 +163,11 @@ export class DomainNameAnalysisService {
         for (const r of zone) {
           zoneArr.push(r);
         }
-        zone += zoneArr.join(', ');
+        zone = zoneArr.join(', ');
       }
       zone = ' for ' + zone;
     } else {
-      zone = ' for all zones ';
+      zone = ' for all zones';
     }
 
     let dateFrom;
@@ -189,38 +206,5 @@ export class DomainNameAnalysisService {
       registrar +
       zone
     );
-  }
-
-  normaliseData(data: string): string {
-    const dataArr = JSON.parse(data)['data'];
-    const minFrequency = Math.min(...dataArr.map((item) => item.frequency));
-    const maxFrequency = Math.max(...dataArr.map((item) => item.frequency));
-
-    const newMin = 10;
-    const newMax = 60;
-
-    // Normalize each frequency, scaling it to be within [newMin, newMax]
-    const normalizedData = dataArr.map((item) => ({
-      ...item,
-      normalisedFrequency: this.normalize(
-        item.frequency,
-        minFrequency,
-        maxFrequency,
-        newMin,
-        newMax,
-      ),
-    }));
-
-    return JSON.stringify(normalizedData);
-  }
-
-  normalize(
-    value: number,
-    min: number,
-    max: number,
-    newMin: number,
-    newMax: number,
-  ): number {
-    return ((value - min) / (max - min)) * (newMax - newMin) + newMin;
   }
 }

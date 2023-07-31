@@ -1,15 +1,19 @@
 import { ChartBarIcon, FunnelIcon, MagnifyingGlassPlusIcon, ChevronDownIcon } from "@heroicons/react/24/solid";
 import { BarChart, BubbleChart, LineChart, PieChart, PolarAreaChart, RadarChart } from "@/components/Graphs";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ChartType, ChartTypeArray } from "@/Enums";
 import { ChartCardButton } from "./ChartCardHeader";
 import { Fragment } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import "animate.css";
-import { useDispatch } from "react-redux";
-import { setCurrentOpenState, setData } from "@/store/Slices/modalManagerSlice";
-import { CheckboxFilter, DatePickerFilter, RadioboxFilter } from "./Filters";
+import { useDispatch, useSelector } from "react-redux";
+import { setCurrentOpenState, setData, clearCurrentOpenState } from "@/store/Slices/modalManagerSlice";
+import { CheckboxFilter, DatePickerFilter, NestedCheckbox, RadioboxFilter, ToggleFilter } from "./Filters";
 import { Disclosure } from '@headlessui/react'
+import { ErrorToast, SubmitButton } from "../Util";
+import { getFilters, graphState } from "@/store/Slices/graphSlice";
+import { getCookie } from "cookies-next";
+import ky from "ky";
 
 interface IChartCard {
     title: string,
@@ -19,78 +23,103 @@ interface IChartCard {
 
 export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
 
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<any>();
+    const stateGraph = useSelector(graphState);
+    const filters = stateGraph.filters;
+
+    useEffect(() => {
+        dispatch(clearCurrentOpenState)
+        if (filters.length === 0) dispatch(getFilters({}));
+    }, [])
 
     const [type, setType] = useState<ChartType>(defaultGraph);
     const [filterDropdown, setFilterDropdown] = useState<boolean>(false);
+    const [graphData, setGraphData] = useState<any>(data);
+    const [warehouse, setWarehouse] = useState<string>(data.warehouse);
+    const [gType, setGType] = useState<string>(data.graphType);
+    const [loading, setLoading] = useState<boolean>(false);
 
-    const handleMagnifyModal = (value: boolean): void => {
+    const [request, setRequest] = useState<any>({});
+
+    const addRequestObject = (key: string, value: any) => {
+        if (!request[key]) {
+            const temp = { ...request };
+            let object = { ...value };
+            object.value = generateDefaultValue(value.input);
+            temp[key] = object;
+            setRequest(temp);
+        }
+    }
+
+    const generateDefaultValue = (type: string) => {
+        switch (type) {
+            case "togglebox": {
+                return false;
+            }
+            case "string": {
+                return "";
+            }
+            case "checkbox": {
+                return [];
+            }
+            case "radiobox": {
+                return "";
+            }
+            case "nestedCheckbox": {
+                return [];
+            }
+        }
+    }
+
+    const updateRequestObject = (key: string, value: any) => {
+        if (request[key]) {
+            const temp = { ...request };
+            temp[key].value = value;
+            setRequest(temp);
+        }
+    }
+
+    const handleMagnifyModal = (): void => {
         const modal: any = {
-            type, data
+            type, data: graphData
         }
         dispatch(setCurrentOpenState("GRAPH.Modal"))
         dispatch(setData(modal));
     }
 
-    const renderFilters = () => {
-        const tempFilters = [
-            {
-                "name": "zone",
-                "type": "string[]",
-                "values": [
-                    "CO.ZA",
-                    "ORG.ZA",
-                    "NET.ZA"
-                ],
-                "input": "checkbox"
-            },
-            {
-                "name": "dateFrom",
-                "type": "string",
-                "input": "date-picker"
-            },
-            {
-                "name": "dateTo",
-                "type": "string",
-                "input": "date-picker"
-            },
-            {
-                "name": "transactions",
-                "type": "string",
-                "values": [
-                    "create",
-                    "grace",
-                    "redeem",
-                    "transfer",
-                    "renew"
-                ],
-                "input": "checkbox"
-            },
-            {
-                "name": "granularity",
-                "type": "string",
-                "values": [
-                    "day",
-                    "week",
-                    "month",
-                    "year"
-                ],
-                "input": "radiobox"
-            }
-        ]
+    const filterGraphs = () => {
+        if (warehouse) {
+            const ep = filters.find((item: any) => item.endpoint === warehouse);
+            if (!ep) return [];
+            return ep.graphs.find((item: any) => item.name === gType);
+        }
+        return [];
+    }
 
-        return tempFilters.map((element: any, index: number) => (
+
+    const renderFilters = () => {
+        return filterGraphs()?.filters?.map((element: any, index: number) => (
             <Disclosure key={index}>
-                {({ open }) => (
+                {({ open, close }) => (
                     <>
-                        <Disclosure.Button className="flex w-full justify-between rounded-lg px-4 py-2 text-left text-sm font-medium hover:bg-gray-300 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75">
-                            {camelCaseRenderer(element.name)}
+                        <Disclosure.Button className="flex w-full justify-between rounded-lg px-4 py-2 text-left text-sm font-medium hover:bg-gray-300 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75" onClick={() => {
+                            if (element.input === "nestedCheckbox") {
+                                addRequestObject("transactions", element)
+                            } else {
+                                addRequestObject(element.name, element);
+                            }
+                        }}>
+                            <div className="flex gap-4 items-center">
+                                {camelCaseRenderer(element.name)}
+                            </div>
                             <ChevronDownIcon className={`w-6 h-6 ${open && "rotate-180"}`} />
                         </Disclosure.Button>
                         <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
-                            {element.input === "checkbox" && <CheckboxFilter data={element} />}
-                            {element.input === "date-picker" && <DatePickerFilter data={element} />}
-                            {element.input === "radiobox" && <RadioboxFilter data={element} />}
+                            {element.input === "checkbox" && <CheckboxFilter data={element} request={request[element.name]} update={updateRequestObject} />}
+                            {element.input === "date-picker" && <DatePickerFilter data={element} request={request[element.name]} update={updateRequestObject} />}
+                            {element.input === "radiobox" && <RadioboxFilter data={element} request={request[element.name]} update={updateRequestObject} camelCase={camelCaseRenderer} />}
+                            {element.input === "togglebox" && <ToggleFilter data={element} request={request[element.name]} update={updateRequestObject} />}
+                            {element.input === "nestedCheckbox" && <NestedCheckbox data={element} request={request["transactions"]} update={updateRequestObject} />}
                         </Disclosure.Panel>
                         <hr />
                     </>
@@ -99,12 +128,44 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
         ))
     }
 
+    const filterSubmit = () => {
+        const keys = Object.keys(request);
+
+        const requestObject: any = {};
+
+        keys.forEach((key, index) => {
+            requestObject[key] = request[key].value;
+        });
+
+        setFilterDropdown(!filterDropdown)
+        fetchGraphData(requestObject);
+    }
+
+    const fetchGraphData = async (filters: any) => {
+        setLoading(true);
+        try {
+            const jwt = getCookie("jwt");
+            const url = data.endpointName ? `${process.env.NEXT_PUBLIC_API}/${data.endpointName}` : `${process.env.NEXT_PUBLIC_API}/${warehouse || data.warehouse}/${gType || data.type}`;
+            const res = await ky.post(url, {
+                json: filters,
+                headers: {
+                    "Authorization": `Bearer ${jwt}`
+                }
+            }).json();
+            const d = res as any;
+            setGraphData(d.data);
+            setLoading(false);
+        } catch (e) {
+            if (e instanceof Error) return ErrorToast({ text: e.message })
+        }
+    }
+
     const camelCaseRenderer = (value: string) => {
         return value.replace(/([A-Z])/g, ' $1').replace(/^./, function (str) { return str.toUpperCase(); })
     }
 
     return (<>
-        <div className="block p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-primaryBackground dark:border-primaryBackground w-full animate__animated animate__fadeIn animate__slow">
+        <div className="block p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-primaryBackground dark:border-primaryBackground w-full animate__animated animate__fadeIn animate__slow z-10 graphChart">
             <div className="flex justify-between mb-5 text-black dark:text-white">
                 <h1 className="p-1.5">{title}</h1>
                 <div className="flex flex-row gap-1">
@@ -126,12 +187,13 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
                             <div className="absolute right-0 z-20 w-96 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none p-2 dark:bg-gray-700 max-h-72 overflow-y-scroll">
                                 <h1 className="text-xl underline font-semibold">Filters</h1>
                                 {renderFilters()}
+                                <SubmitButton text="Get Results" className="mt-4 w-full" onClick={() => filterSubmit()} />
                             </div>
                         </Transition>
 
                     </div>
-                    <ChartCardButton onClick={(value: boolean) => {
-                        handleMagnifyModal(value);
+                    <ChartCardButton onClick={() => {
+                        handleMagnifyModal();
                     }}>
                         <MagnifyingGlassPlusIcon className="w-6 h-6" />
                     </ChartCardButton>
@@ -169,12 +231,15 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
                     </Menu>
                 </div>
             </div>
-            {type === ChartType.Bar && <BarChart data={data} />}
-            {type === ChartType.Pie && <PieChart data={data} />}
-            {type === ChartType.Line && <LineChart data={data} addClass="h-96" />}
-            {type === ChartType.Bubble && <BubbleChart data={data} />}
-            {type === ChartType.PolarArea && <PolarAreaChart data={data} />}
-            {type === ChartType.Radar && <RadarChart data={data} />}
+            {!loading ? <div>
+                {type === ChartType.Bar && <BarChart data={graphData} />}
+                {type === ChartType.Pie && <PieChart data={graphData} />}
+                {type === ChartType.Line && <LineChart data={graphData} addClass="h-96" />}
+                {type === ChartType.Bubble && <BubbleChart data={graphData} />}
+                {type === ChartType.PolarArea && <PolarAreaChart data={graphData} />}
+                {type === ChartType.Radar && <RadarChart data={graphData} />}
+            </div> : <div role="status" className="flex justify-between h-64 w-full bg-gray-300 rounded-lg animate-customPulse dark:bg-gray-700 p-6" />}
+
         </div >
     </>)
 }

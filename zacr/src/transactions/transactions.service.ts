@@ -24,7 +24,7 @@ export class TransactionService {
       console.log(filters);
       const sqlQuery = `call transactionsByRegistrar('${filters}')`;
 
-      let formattedData = await this.redis.get(sqlQuery);
+      let formattedData = await this.redis.get(`zacr` + sqlQuery);
 
       if (!formattedData) {
         let queryData;
@@ -43,33 +43,44 @@ export class TransactionService {
         formattedData = await this.graphFormattingService.formatTransactions(
           JSON.stringify(queryData),
         );
-        await this.redis.set(sqlQuery, formattedData, 'EX', 24 * 60 * 60);
+        await this.redis.set(
+          `zacr` + sqlQuery,
+          formattedData,
+          'EX',
+          72 * 60 * 60,
+        );
       }
 
       return {
         status: 'success',
-        data: { graphName: graphName, ...JSON.parse(formattedData) },
+        data: {
+          graphName: graphName,
+          warehouse: 'zacr',
+          graphType: 'transactions',
+          ...JSON.parse(formattedData),
+        },
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
       return {
         status: 500,
         error: true,
-        message: e,
+        message: `${e.message}`,
         timestamp: new Date().toISOString(),
       };
     }
   }
 
-  async transactionsRanking(filters: string, graphName: string): Promise<any> {
+  async transactionsRanking(filters: any, graphName: string): Promise<any> {
     try {
       graphName = this.transactionsGraphName(filters, true);
-
-      filters = JSON.stringify(filters);
+      const filterObj = JSON.parse(JSON.stringify(filters));
+      filterObj.isRanking = true;
+      filters = JSON.stringify(filterObj);
       console.log(filters);
       const sqlQuery = `call transactionsByRegistrar('${filters}')`;
 
-      let formattedData = await this.redis.get(sqlQuery);
+      let formattedData = await this.redis.get(`zacr` + sqlQuery);
 
       if (!formattedData) {
         let queryData;
@@ -83,29 +94,40 @@ export class TransactionService {
             timestamp: new Date().toISOString(),
           };
         }
+        //console.log(queryData);
         formattedData =
           await this.graphFormattingService.formatTransactionsRanking(
             JSON.stringify(queryData),
           );
 
-        await this.redis.set(sqlQuery, formattedData, 'EX', 24 * 60 * 60);
+        await this.redis.set(
+          `zacr` + sqlQuery,
+          formattedData,
+          'EX',
+          72 * 60 * 60,
+        );
       }
       return {
         status: 'success',
-        data: { graphName: graphName, ...JSON.parse(formattedData) },
+        data: {
+          graphName: graphName,
+          warehouse: 'zacr',
+          graphType: 'transactions-ranking',
+          ...JSON.parse(formattedData),
+        },
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
       return {
         status: 500,
         error: true,
-        message: e,
+        message: `${e.message}`,
         timestamp: new Date().toISOString(),
       };
     }
   }
 
-  transactionsGraphName(filters: string, perReg: boolean): string {
+  transactionsGraphName(filters: any, perReg: boolean): string {
     let dateFrom;
     if (filters['dateFrom'] === undefined) {
       dateFrom = new Date();
@@ -134,26 +156,19 @@ export class TransactionService {
       dateTo = dateTo.getUTCFullYear() + '-' + month + '-' + day;
     }
 
-    let granularity = 'Monthly ';
+    let granularity = 'Monthly';
     const gCheck = filters['granularity'];
 
     if (gCheck == 'year') {
-      granularity = 'Yearly ';
+      granularity = 'Yearly';
     } else if (gCheck == 'week') {
-      granularity = 'Weekly ';
+      granularity = 'Weekly';
     } else if (gCheck == 'day') {
-      granularity = 'Daily ';
+      granularity = 'Daily';
     }
 
     let zone = filters['zone'];
     if (zone) {
-      if (zone.length > 0) {
-        const zoneArr = [];
-        for (const r of zone) {
-          zoneArr.push(r);
-        }
-        zone += zoneArr.join(', ');
-      }
       zone = ' for ' + zone;
     } else {
       zone = ' for all zones in registry';
@@ -161,7 +176,7 @@ export class TransactionService {
 
     let reg = '';
     if (perReg) {
-      reg = ' per registrar ';
+      reg = 'per registrar ';
     }
     return (
       granularity +

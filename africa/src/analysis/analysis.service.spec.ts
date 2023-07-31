@@ -36,7 +36,7 @@ describe('AnalysisService', () => {
       },
     ];
     const result = await service.analyze(data);
-    console.log(result);
+    //console.log(result);
     expect(typeof result).toBe('string');
   });
 

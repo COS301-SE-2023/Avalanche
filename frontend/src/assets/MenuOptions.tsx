@@ -64,12 +64,6 @@ const MenuOptions: IMenu = {
             role: ""
         },
         {
-            text: "Reports",
-            icon: <ArchiveBoxIcon className={holder} />,
-            page: "reports",
-            role: "",
-        },
-        {
             text: "Domain Watch",
             icon: <DocumentMagnifyingGlassIcon className={holder} />,
             page: "watch",

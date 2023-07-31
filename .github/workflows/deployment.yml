@@ -1,0 +1,64 @@
+name: 🖥️ Deployment
+
+on:
+  push:
+    branches: ["working"]
+  pull_request:
+    branches: ["working"]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checking out the repo
+      - name: 🛏️ Setup repo
+        uses: actions/checkout@v3
+
+      # Runs a single command using the runners shell
+      - name: 🔐 Install wireguard
+        run: sudo apt-get install wireguard
+        
+      # Creating the wireguard configuration 
+      - name: 🔐 Create WG Config
+        run: |
+          sed -i -e "s@{{WG_PRIVATEKEY}}@${{ secrets.WG_PRIVATEKEY }}@" $GITHUB_WORKSPACE/tunnel.conf
+          sed -i -e "s@{{WG_ADDRESS}}@${{ secrets.WG_ADDRESS }}@" $GITHUB_WORKSPACE/tunnel.conf
+          sed -i -e "s@{{WG_DNS}}@${{ secrets.WG_DNS }}@" $GITHUB_WORKSPACE/tunnel.conf
+          sed -i -e "s@{{WG_PUBLICKEY}}@${{ secrets.WG_PUBLICKEY }}@" $GITHUB_WORKSPACE/tunnel.conf
+          sed -i -e "s@{{WG_ALLOWEDIPS}}@${{ secrets.WG_ALLOWEDIPS }}@" $GITHUB_WORKSPACE/tunnel.conf
+          sed -i -e "s@{{WG_ENDPOINT}}@${{ secrets.WG_ENDPOINT }}@" $GITHUB_WORKSPACE/tunnel.conf
+
+          sudo cp $GITHUB_WORKSPACE/tunnel.conf /etc/wireguard/
+          
+      # Initilizing the tunnel so we can connect to the server
+      - name: 🔐 WG Creating Tunnel
+        run: |
+          sudo apt install resolvconf
+          wg-quick up $GITHUB_WORKSPACE/tunnel.conf
+          
+      # Uploading files to server via SCP
+      - name: ☝️ Upload to server
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT }}
+          source: "frontend,gateway,user-management,zacr,africa,ryce"
+          target: ./
+      
+      # SSH Into Server
+      - name: 🔒 Upload to server
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            docker compose up --build --detach
+

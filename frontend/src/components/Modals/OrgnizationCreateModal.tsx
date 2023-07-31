@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Input, InputLabel, SubmitButton, ErrorToast } from '../Util';
-import { ModalContent, ModalHeader, ModalWrapper } from './ModalOptions';
+import { ModalWrapper } from './ModalOptions';
 import { userState, createOrganisation } from '@/store/Slices/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { ICreateOrganisationRequest } from '@/interfaces/requests';
+import { setAnimateManagerState, clearCurrentOpenState } from '@/store/Slices/modalManagerSlice';
 
 interface IOrgnizationCreateModal {
 
@@ -15,7 +16,7 @@ export default function OrgnizationCreateModal({ }: IOrgnizationCreateModal) {
     const stateUser = useSelector(userState);
 
     useEffect(() => {
-
+        dispatch(clearCurrentOpenState());
     }, [stateUser.user.organization])
 
     /**
@@ -60,21 +61,18 @@ export default function OrgnizationCreateModal({ }: IOrgnizationCreateModal) {
      * This return renders out the HTML for the modal.
      */
     return (
-        <ModalWrapper>
-            <ModalHeader title="Create a new Organization" />
-            <ModalContent>
-                <form className="space-y-6" onSubmit={(event) => formSubmit(event)}>
-                    <div>
-                        <InputLabel htmlFor="name" text="Orgnization Name" />
-                        <Input type="text" name="name" id="name" placeholder="Michael's Domains" required={true} disabled={loading} value={name} onChange={(event: React.FormEvent<HTMLInputElement>) => {
-                            setName(event.currentTarget.value);
-                        }} maxLength={nameLength} />
-                    </div>
-                    <SubmitButton text="Create orgnization" onClick={(event: React.FormEvent<HTMLFormElement>) => {
-                        formSubmit(event);
-                    }} className="w-full" loading={loading} />
-                </form>
-            </ModalContent>
+        <ModalWrapper title="Create a new Organization">
+            <form className="space-y-6" onSubmit={(event) => formSubmit(event)}>
+                <div>
+                    <InputLabel htmlFor="name" text="Orgnization Name" />
+                    <Input type="text" name="name" id="name" placeholder="Michael's Domains" required={true} disabled={loading} value={name} onChange={(event: React.FormEvent<HTMLInputElement>) => {
+                        setName(event.currentTarget.value);
+                    }} maxLength={nameLength} />
+                </div>
+                <SubmitButton text="Create orgnization" onClick={(event: React.FormEvent<HTMLFormElement>) => {
+                    formSubmit(event);
+                }} className="w-full" loading={loading} />
+            </form>
         </ModalWrapper>
     )
 }

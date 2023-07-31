@@ -1,17 +1,18 @@
 import Sidebar from "@/components/Navigation/SideBar"
 import PageHeader from "@/components/Util/PageHeader"
-import { HomeIcon } from "@heroicons/react/24/solid"
+import { HeartIcon } from "@heroicons/react/24/solid"
 import Head from "next/head"
 import { ChartCard } from "@/components/Graphs"
 import { ChartType } from "@/Enums";
 import { useDispatch, useSelector } from "react-redux";
 import { graphState, getAgeAnalysisData } from "@/store/Slices/graphSlice"
-import { useState, useEffect } from "react";
-import { ITransactionGraphRequest } from "@/interfaces/requests";
+import { useEffect } from "react";
 import { selectModalManagerState } from "@/store/Slices/modalManagerSlice"
 import GraphZoomModal from "@/components/Modals/GraphZoomModal"
 import IAgeAnalysisGraphRequest from "@/interfaces/requests/AgeAnalysisGraph"
-import { stubFalse } from "cypress/types/lodash"
+import jsPDF from "jspdf"
+import html2canvas from "html2canvas"
+import { SubmitButton } from "@/components/Util"
 
 export default function AgeAnalysis() {
 
@@ -19,25 +20,20 @@ export default function AgeAnalysis() {
     const stateGraph = useSelector(graphState);
     const modalState = useSelector(selectModalManagerState);
 
-    const pad = (d: number) => {
-        return (d < 10) ? '0' + d.toString() : d.toString();
-    }
-
     useEffect(() => {
-        // const data: ITransactionGraphRequest = { zone: "CO.ZA", granularity: "week", group: "registrar", dateFrom: "2023-01-02", graphName: "Your mom" };
 
         const arrayAgeAnalysisShare: IAgeAnalysisGraphRequest[] = [];
 
-        const ageAnalysisAverageTop5: IAgeAnalysisGraphRequest = { rank : 'top5', average : true, overall: false, zone: 'WIEN' };
+        const ageAnalysisAverageTop5: IAgeAnalysisGraphRequest = { rank: 'top5', average: true, overall: false, zone: ['WIEN'] };
         arrayAgeAnalysisShare.push(ageAnalysisAverageTop5);
 
-        const ageAnalysisTop5: IAgeAnalysisGraphRequest = {rank : 'top5', overall: false, average: false, zone: 'WIEN'};
+        const ageAnalysisTop5: IAgeAnalysisGraphRequest = { rank: 'top5', overall: false, average: false, zone: ['WIEN'] };
         arrayAgeAnalysisShare.push(ageAnalysisTop5);
 
-        const marketShareTop20: IAgeAnalysisGraphRequest = {rank : 'top20', overall: false, average: true, zone: 'WIEN'};
+        const marketShareTop20: IAgeAnalysisGraphRequest = { rank: 'top20', overall: false, average: true, zone: ['WIEN'] };
         arrayAgeAnalysisShare.push(marketShareTop20);
 
-        const ageAnalysisTop10: IAgeAnalysisGraphRequest = {rank : 'top10', overall: false, average: true, zone: 'WIEN'};
+        const ageAnalysisTop10: IAgeAnalysisGraphRequest = { rank: 'top10', overall: false, average: true, zone: ['WIEN'] };
         arrayAgeAnalysisShare.push(ageAnalysisTop10);
 
         arrayAgeAnalysisShare.forEach(data => {
@@ -45,8 +41,43 @@ export default function AgeAnalysis() {
         })
 
 
-        // dispatch(getGraphDataArray(array));
     }, [])
+
+    const captureCanvasElements = async () => {
+        const canvasElements = Array.from(document.querySelectorAll('.graphChart'));
+        const canvasImages = [];
+
+        for (const canvas of canvasElements) {
+            try {
+                const dataUrl = await html2canvas(canvas as any, {
+                    allowTaint: true,
+                    useCORS: true,
+                }).then((canvas) => canvas.toDataURL('image/png'));
+
+                canvasImages.push(dataUrl);
+            } catch (error) {
+                console.error('Error capturing canvas:', error);
+            }
+        }
+
+        return canvasImages;
+    };
+
+    const generatePDF = async () => {
+        const canvasImages = await captureCanvasElements();
+
+        const pdf = new jsPDF("l", "mm", "a1");
+
+        var width = pdf.internal.pageSize.getWidth();
+        var height = pdf.internal.pageSize.getHeight();
+
+        canvasImages.forEach((imageDataUrl) => {
+            pdf.addImage(imageDataUrl, 'PNG', 0, 0, width, height);
+            pdf.addPage();
+        });
+
+        pdf.save('report.pdf');
+    };
 
     return (<>
         <Head>
@@ -56,7 +87,8 @@ export default function AgeAnalysis() {
 
         <div className="p-4 sm:ml-64 bg-gray-100 dark:bg-secondaryBackground min-h-screen">
             <div className="flex justify-between items-center">
-                <PageHeader title="Registrar Age Analysis" subtitle="Insights at your fingertips" icon={<HomeIcon className="h-16 w-16 text-black dark:text-white" />} />
+                <PageHeader title="Registrar Age Analysis" subtitle="Insights at your fingertips" icon={<HeartIcon className="h-16 w-16 text-black dark:text-white" />} />
+                <SubmitButton text="Download Report" onClick={() => generatePDF()} />
             </div>
             <div className="p-0 pt-4 md:p-4">
                 <div className="grid lg:grid-cols-2 sm:grid-cols-1 md:grid-cols-2 gap-4 mb-4 grid-rows-2">
@@ -95,14 +127,9 @@ export default function AgeAnalysis() {
                                     <div className="h-6 w-6 bg-gray-200 rounded dark:bg-gray-800 w-32"></div>
                                 </div>
                             </div>
-                        
+
                         </>
                     }
-                    {/* <ChartCard title="A ChartJS Chart 1" data={chartData} defaultGraph={ChartType.Pie} />
-                    <ChartCard title="A ChartJS Chart 2" data={chartData} defaultGraph={ChartType.Bar} />
-                    <ChartCard title="A ChartJS Chart 3" data={chartData} defaultGraph={ChartType.Line} />
-                    <ChartCard title="A ChartJS Chart 4" data={chartData} defaultGraph={ChartType.Radar} />
-                    <ChartCard title="A ChartJS Chart 5" data={chartData} defaultGraph={ChartType.PolarArea} /> */}
                 </div>
             </div>
         </div>

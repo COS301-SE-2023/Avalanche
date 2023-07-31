@@ -15,6 +15,8 @@ import { AgeService } from './age/age.service';
 import { DomainNameAnalysisService } from './domainNameAnalysis/domain-name-analysis.service';
 import { HttpModule } from '@nestjs/axios';
 import { MovementService } from './movement/movement.service';
+import { RegistrarNameService } from './registrarName/registrarName.service';
+import { DomainWatchService } from './domainWatch/domain-watch-analysis.service';
 
 @Module({
   imports: [
@@ -24,7 +26,7 @@ import { MovementService } from './movement/movement.service';
         name: 'RyCE_SERVICE',
         transport: Transport.TCP,
         options: {
-          host: process.env.HOST,
+          host: process.env.HOST || 'localhost',
           port: 4004,
         },
       },
@@ -76,8 +78,10 @@ import { MovementService } from './movement/movement.service';
     AnalysisService,
     GraphFormatService,
     SnowflakeService,
-    MovementService
+    MovementService,
+    RegistrarNameService,
+    DomainWatchService
   ],
-  exports: [TransactionService, MarketShareService, AgeService, DomainNameAnalysisService, AnalysisService, GraphFormatService, SnowflakeService, MovementService],
+  exports: [TransactionService, MarketShareService, AgeService, DomainNameAnalysisService, AnalysisService, GraphFormatService, SnowflakeService, MovementService, RegistrarNameService, DomainWatchService],
 })
 export class AppModule { }

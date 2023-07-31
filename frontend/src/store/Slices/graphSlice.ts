@@ -15,13 +15,17 @@ const url = `${process.env.NEXT_PUBLIC_API}/ryce`;
 interface IGraphState {
     graphs: any[],
     loading: boolean
-    latestAdd: number
+    latestAdd: number,
+    filters: any[],
+    error: string,
 }
 
 const initialState: IGraphState = {
     graphs: [],
     loading: false,
     latestAdd: -1,
+    filters: [],
+    error: ""
 }
 
 export const graphSlice = createSlice({
@@ -33,6 +37,9 @@ export const graphSlice = createSlice({
             const temp = [...state.graphs];
             temp.push(payload);
             state.graphs = temp;
+        },
+        setLoading(state, action) {
+            state.loading = action.payload as any;
         }
     },
     extraReducers: (builder) => {
@@ -76,7 +83,6 @@ export const graphSlice = createSlice({
         })
         builder.addCase(getMarketShareData.fulfilled, (state, action) => {
             const payload = action.payload as any;
-            console.log(payload.data.labels);
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
@@ -87,7 +93,6 @@ export const graphSlice = createSlice({
         })
         builder.addCase(getAgeAnalysisData.fulfilled, (state, action) => {
             const payload = action.payload as any;
-            console.log(payload.data.labels);
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
@@ -98,7 +103,6 @@ export const graphSlice = createSlice({
         })
         builder.addCase(getDomainNameAnalysisData.fulfilled, (state, action) => {
             const payload = action.payload as any;
-            console.log(payload.data.labels);
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
@@ -109,7 +113,6 @@ export const graphSlice = createSlice({
         })
         builder.addCase(getDomainLengthData.fulfilled, (state, action) => {
             const payload = action.payload as any;
-            console.log(payload.data.labels);
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
@@ -120,7 +123,6 @@ export const graphSlice = createSlice({
         })
         builder.addCase(getMovementVerticalData.fulfilled, (state, action) => {
             const payload = action.payload as any;
-            console.log(payload.data.labels);
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
@@ -173,6 +175,22 @@ export const graphSlice = createSlice({
         builder.addCase(getDomainNameAnalysisDataArray.pending, (state, action) => {
             state.loading = true;
             state.graphs = [];
+        })
+        builder.addCase(getFilters.fulfilled, (state, action) => {
+            const payload = action.payload as any;
+            state.loading = false;
+            state.filters = payload;
+            state.error = "";
+        })
+        builder.addCase(getFilters.pending, (state) => {
+            state.filters = [];
+            state.loading = true;
+            state.error = "";
+        })
+        builder.addCase(getFilters.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload as any;
+            state.filters = [];
         })
     }
 })
@@ -464,6 +482,14 @@ export const getDomainNameAnalysisDataArray = createAsyncThunk("GRAPH.GetDomainN
     }
 })
 
-export const { addToGraphs } = graphSlice.actions;
+export const getFilters = createAsyncThunk("GRAPH.GetFilters", async (object: any, { rejectWithValue }) => {
+    try {
+        return await ky.get(`${process.env.NEXT_PUBLIC_API}/user-management/graphFilters`).json();
+    } catch (e) {
+        if (e instanceof Error) return rejectWithValue(e.message);
+    }
+})
+
+export const { addToGraphs, setLoading } = graphSlice.actions;
 export const graphState = (state: AppState) => state.graph;
 export default graphSlice.reducer;

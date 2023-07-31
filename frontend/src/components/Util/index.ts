@@ -10,6 +10,7 @@ import ErrorToast from './ErrorToast';
 import DeleteButton from './DeleteButton';
 import TableIconButton from './TableIconButton';
 import SuccessToast from './SuccessToast';
+import Dropdown from './Dropdown';
 
 export {
     DangerAlert,
@@ -23,5 +24,6 @@ export {
     ErrorToast,
     DeleteButton,
     TableIconButton,
-    SuccessToast
+    SuccessToast,
+    Dropdown
 };

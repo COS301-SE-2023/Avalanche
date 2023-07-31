@@ -14,64 +14,123 @@ export class TransactionService {
     private readonly snowflakeService: SnowflakeService,
     private readonly statisticalAnalysisService: AnalysisService,
     private readonly graphFormattingService: GraphFormatService,
-  ) { }
+  ) {}
 
-  async transactions(filters: string, graphName: string): Promise<any> {
-    graphName = this.transactionsGraphName(filters, false);
+  async transactions(filters: any, graphName: string): Promise<any> {
+    try {
+      graphName = this.transactionsGraphName(filters, false);
 
-    filters = JSON.stringify(filters);
-    console.log(filters);
-    const sqlQuery = `call transactionsByRegistrar('${filters}')`;
+      filters = JSON.stringify(filters);
+      console.log(filters);
+      const sqlQuery = `call transactionsByRegistrar('${filters}')`;
 
-    let formattedData = await this.redis.get(sqlQuery);
+      let formattedData = await this.redis.get(`ryce` + sqlQuery);
 
-    if (!formattedData) {
-      const queryData = await this.snowflakeService.execute(sqlQuery);
-      // const analyzedData = await this.statisticalAnalysisService.analyze(
-      //   queryData,
-      // );
-      formattedData = await this.graphFormattingService.formatTransactions(
-        JSON.stringify(queryData),
-      );
-      await this.redis.set(sqlQuery, formattedData, 'EX', 24 * 60 * 60);
-    }
+      if (!formattedData) {
+        let queryData;
 
-    return {
-      status: 'success',
-      data: { graphName: graphName, ...JSON.parse(formattedData) },
-      timestamp: new Date().toISOString(),
-    };
-  }
+        try {
+          queryData = await this.snowflakeService.execute(sqlQuery);
+        } catch (e) {
+          return {
+            status: 500,
+            error: true,
+            message: 'Data Warehouse Error',
+            timestamp: new Date().toISOString(),
+          };
+        }
 
-  async transactionsRanking(filters: string, graphName: string): Promise<any> {
-    graphName = this.transactionsGraphName(filters, true);
-
-    filters = JSON.stringify(filters);
-    console.log(filters);
-    const sqlQuery = `call transactionsByRegistrar('${filters}')`;
-
-    let formattedData = await this.redis.get(sqlQuery);
-
-    if (!formattedData) {
-      const queryData = await this.snowflakeService.execute(sqlQuery);
-      // const analyzedData = await this.statisticalAnalysisService.analyze(
-      //   queryData,
-      // );
-      formattedData =
-        await this.graphFormattingService.formatTransactionsRanking(
+        formattedData = await this.graphFormattingService.formatTransactions(
           JSON.stringify(queryData),
         );
+        await this.redis.set(
+          `ryce` + sqlQuery,
+          formattedData,
+          'EX',
+          72 * 60 * 60,
+        );
+      }
 
-      await this.redis.set(sqlQuery, formattedData, 'EX', 24 * 60 * 60);
+      console.log(formattedData);
+
+      return {
+        status: 'success',
+        data: {
+          graphName: graphName,
+          warehouse: 'ryce',
+          graphType: 'transactions',
+          ...JSON.parse(formattedData),
+        },
+        timestamp: new Date().toISOString(),
+      };
+    } catch (e) {
+      console.log(e.message);
+      return {
+        status: 500,
+        error: true,
+        message: `${e.message}`,
+        timestamp: new Date().toISOString(),
+      };
     }
-    return {
-      status: 'success',
-      data: { graphName: graphName, ...JSON.parse(formattedData) },
-      timestamp: new Date().toISOString(),
-    };
   }
 
-  transactionsGraphName(filters: string, perReg: boolean): string {
+  async transactionsRanking(filters: any, graphName: string): Promise<any> {
+    try {
+      graphName = this.transactionsGraphName(filters, true);
+      const filterObj = JSON.parse(JSON.stringify(filters));
+      filterObj.isRanking = true;
+      filters = JSON.stringify(filterObj);
+      console.log(filters);
+      const sqlQuery = `call transactionsByRegistrar('${filters}')`;
+
+      let formattedData = await this.redis.get(`ryce` + sqlQuery);
+
+      if (!formattedData) {
+        let queryData;
+        try {
+          queryData = await this.snowflakeService.execute(sqlQuery);
+        } catch (e) {
+          return {
+            status: 500,
+            error: true,
+            message: 'Data Warehouse Error',
+            timestamp: new Date().toISOString(),
+          };
+        }
+        //console.log(queryData);
+        formattedData =
+          await this.graphFormattingService.formatTransactionsRanking(
+            JSON.stringify(queryData),
+          );
+
+        await this.redis.set(
+          `ryce` + sqlQuery,
+          formattedData,
+          'EX',
+          72 * 60 * 60,
+        );
+      }
+      return {
+        status: 'success',
+        data: {
+          graphName: graphName,
+          warehouse: 'ryce',
+          graphType: 'transactions-ranking',
+          ...JSON.parse(formattedData),
+        },
+        timestamp: new Date().toISOString(),
+      };
+    } catch (e) {
+      return {
+        status: 500,
+        error: true,
+        message: `${e.message}`,
+        timestamp: new Date().toISOString(),
+      };
+    }
+  }
+
+  transactionsGraphName(filters: any, perReg: boolean): string {
     let dateFrom;
     if (filters['dateFrom'] === undefined) {
       dateFrom = new Date();
@@ -119,18 +178,22 @@ export class TransactionService {
     }
 
     let reg = '';
+    let trans = 'Transactions ';
     if (perReg) {
-      reg = ' per registrar ';
+      reg = 'per registrar ';
+      console.log(filters['transactions']);
+      if (filters['transactions']?.length > 0) {
+        trans = '';
+        for (let i = 0; i < filters['transactions']?.length - 1; i++) {
+          trans += filters['transactions'][i] + ', ';
+        }
+        trans +=
+          filters['transactions'][filters['transactions']?.length - 1] + ' ';
+      }
     }
+
     return (
-      granularity +
-      ' Transactions ' +
-      reg +
-      ' from ' +
-      dateFrom +
-      ' to ' +
-      dateTo +
-      zone
+      granularity + trans + reg + 'from ' + dateFrom + ' to ' + dateTo + zone
     );
   }
 }
