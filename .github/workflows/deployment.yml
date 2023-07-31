@@ -2,9 +2,13 @@ name: 🖥️ Deployment
 
 on:
   push:
-    branches: ["working"]
+    branches:
+      - working
+      - stable
   pull_request:
-    branches: ["working"]
+    branches:
+      - working
+      - stable
 
 permissions:
   contents: read
