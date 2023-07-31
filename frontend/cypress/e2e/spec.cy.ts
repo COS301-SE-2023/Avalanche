@@ -46,7 +46,7 @@ describe('Register Test', () => {
 
     beforeEach(() => {
         // Visiting the register page before each test
-        cy.visit('http://localhost:3000/register');
+        cy.visit(Cypress.env('baseURL') + ":" + Cypress.env('basePort')+"/register"); 
     });
   
     it('Should display validation error if emails do not match', () => {
