@@ -99,18 +99,22 @@ jobs:
           echo SNOWFLAKE_ACCOUNT='${{ secrets.ZACR_SNOWFLAKE_ACCOUNT }}' >> zacr/.env
           echo JWT_SECRET='${{ secrets.JWT_SECRET }}' >> zacr/.env
 
-
       - name: Start zacr
         run: |
           cd zacr
-          yarn start &
+          yarn start > zacr.log 2>&1 &
 
-      - name: Wait for ZACR service
+      - name: Wait for zacr service
         run: |
           while ! nc -z localhost 4002; do   
-          sleep 1
-          echo "Waiting for ZACR service..."
-          done  
+          sleep 7
+          echo "Waiting for zacr service..."
+          done
+
+      - name: Print ZACR logs
+        run: |
+          sleep 7
+          cat zacr/zacr.log
 
       - name: Install dependencies for ryce
         run: |
@@ -169,14 +173,20 @@ jobs:
       - name: Start africa
         run: |
           cd africa
-          yarn start &
+          yarn start > africa.log 2>&1 &
 
       - name: Wait for AFRICA service
         run: |
+          sleep 7
           while ! nc -z localhost 4005; do   
-          sleep 1
+          sleep 7
           echo "Waiting for AFRICA service..."
-          done      
+          done 
+
+        - name: Print AFRICA logs
+          run: |
+            sleep 7
+            cat africa/africa.log      
 
       - name: Install dependencies for user-management
         run: |
