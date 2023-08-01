@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HandleLoadDomains.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">domain_watch</a> &gt; <a href="index.source.html" class="el_package">avalanche.Network.HandlerStrategy.RunningStrategies</a> &gt; <span class="el_source">HandleLoadDomains.java</span></div><h1>HandleLoadDomains.java</h1><pre class="source lang-java linenums">package avalanche.Network.HandlerStrategy.RunningStrategies;
+
+import java.io.FileWriter;
+import java.io.IOException;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import avalanche.Network.HandlerStrategy.Running;
+import avalanche.Settings.DomainWatchSettings;
+
+<span class="fc" id="L13">public class HandleLoadDomains extends Running {</span>
+
+    @Override
+    public String getResponse(String body, long startTime) {
+        // Enter
+<span class="fc" id="L18">        System.out.println(&quot;Working on domain watch load domains&quot;);</span>
+<span class="fc" id="L19">        String resp = &quot;{  \&quot;status\&quot;:\&quot;success\&quot;,  \&quot;data\&quot;:[&quot;;</span>
+
+        // Validate
+<span class="fc" id="L22">        String validation = validateRequest(body);</span>
+<span class="fc bfc" id="L23" title="All 2 branches covered.">        if (!validation.equals(&quot;&quot;)) {</span>
+<span class="fc" id="L24">            return validation;</span>
+        }
+
+        // Process
+<span class="fc" id="L28">        JSONObject obj = new JSONObject(body);</span>
+<span class="fc" id="L29">        JSONArray registryDomains = obj.getJSONArray(&quot;registryDomains&quot;);</span>
+<span class="fc bfc" id="L30" title="All 2 branches covered.">        for (int i = 0; i &lt; registryDomains.length(); i++) {</span>
+<span class="fc" id="L31">            String registryName = registryDomains.getJSONObject(i).getString(&quot;registryName&quot;);</span>
+<span class="fc" id="L32">            String domains = registryDomains.getJSONObject(i).getString(&quot;domains&quot;);</span>
+            try {
+<span class="fc" id="L34">                String path = &quot;data/&quot; + registryName + &quot;_mock.csv&quot;;</span>
+<span class="fc" id="L35">                FileWriter writer = new FileWriter(path, false);</span>
+<span class="fc" id="L36">                DomainWatchSettings settings = DomainWatchSettings.getInstace();</span>
+<span class="fc" id="L37">                settings.addDomainFile(registryName, path);</span>
+<span class="fc" id="L38">                writer.write(domains);</span>
+<span class="fc" id="L39">                writer.close();</span>
+<span class="nc" id="L40">            } catch (IOException e) {</span>
+<span class="nc" id="L41">                e.printStackTrace();</span>
+<span class="nc" id="L42">                return &quot;{\&quot;status\&quot;:\&quot;failure\&quot;,\&quot;request-error\&quot;:\&quot;&quot; + e.getMessage() + &quot;\&quot;}&quot;;</span>
+
+<span class="fc" id="L44">            }</span>
+        }
+<span class="fc" id="L46">        DomainWatchSettings.getInstace().saveSettings();</span>
+<span class="pc bpc" id="L47" title="1 of 2 branches missed.">        if (startTime == 0) {</span>
+<span class="nc" id="L48">            resp += &quot;]}&quot;;</span>
+        } else {
+<span class="fc" id="L50">            resp += &quot;],\&quot;searchTime(ms)\&quot;:&quot; + (System.currentTimeMillis() - startTime) + &quot;}&quot;;</span>
+        }
+
+        // System.out.println(resp);
+<span class="fc" id="L54">        System.out.println(&quot;Done&quot;);</span>
+<span class="fc" id="L55">        System.gc();</span>
+<span class="fc" id="L56">        return resp;</span>
+    }
+
+    public static String validateRequest(String body) {
+<span class="fc" id="L60">        String validation = validateJSON(body);</span>
+<span class="fc bfc" id="L61" title="All 2 branches covered.">        if (!validation.equals(&quot;&quot;)) {</span>
+<span class="fc" id="L62">            return validation;</span>
+        }
+<span class="fc" id="L64">        int errorIndex = -1;</span>
+<span class="fc" id="L65">        String errorAttribute = &quot;&quot;;</span>
+        try {
+<span class="fc" id="L67">            JSONObject jsonObject = new JSONObject(body);</span>
+<span class="fc" id="L68">            JSONArray registryDomains = jsonObject.getJSONArray(&quot;registryDomains&quot;);</span>
+<span class="pc bpc" id="L69" title="1 of 2 branches missed.">            if (registryDomains.length() == 0) {</span>
+<span class="nc" id="L70">                return &quot;{\&quot;status\&quot;:\&quot;failure\&quot;,\&quot;request-error\&quot;:\&quot;Registry domains list should not be empty. What must I do with this?\&quot;}&quot;;</span>
+            }
+<span class="fc bfc" id="L72" title="All 2 branches covered.">            for (int i = 0; i &lt; registryDomains.length(); i++) {</span>
+<span class="fc" id="L73">                errorIndex = i + 1;</span>
+<span class="fc" id="L74">                errorAttribute = &quot;registryName&quot;;</span>
+<span class="fc" id="L75">                String registryName = registryDomains.getJSONObject(i).getString(&quot;registryName&quot;);</span>
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">                if (registryName.equals(&quot;&quot;)) {</span>
+<span class="nc" id="L77">                    return &quot;{\&quot;status\&quot;:\&quot;failure\&quot;,\&quot;request-error\&quot;:\&quot;Registry name cannot be blank. Please be better.\&quot;}&quot;;</span>
+                }
+<span class="fc" id="L79">                errorAttribute = &quot;domains&quot;;</span>
+<span class="fc" id="L80">                String domains = registryDomains.getJSONObject(i).getString(&quot;domains&quot;);</span>
+<span class="fc" id="L81">                errorAttribute = &quot;&quot;;</span>
+            }
+<span class="fc" id="L83">        } catch (JSONException jsonException) {</span>
+
+            // JSON error found
+<span class="fc bfc" id="L86" title="All 2 branches covered.">            if (errorIndex != -1) {</span>
+<span class="fc" id="L87">                return &quot;{\&quot;status\&quot;:\&quot;failure\&quot;,\&quot;request-error\&quot;:\&quot;&quot;</span>
+<span class="fc" id="L88">                        + jsonException.getMessage().substring(0, jsonException.getMessage().length() - 1)</span>
+                        + &quot;&quot; + errorAttribute + &quot; in object number &quot; + (errorIndex) + &quot;\&quot;}&quot;;
+            }
+<span class="fc" id="L91">            return &quot;{\&quot;status\&quot;:\&quot;failure\&quot;,\&quot;request-error\&quot;:\&quot;&quot; + jsonException.getMessage() + &quot;\&quot;}&quot;;</span>
+<span class="fc" id="L92">        }</span>
+<span class="fc" id="L93">        return &quot;&quot;;</span>
+    }
+
+    /*
+     * {
+     * registryDomains: [
+     * { registryName: 'AFRICA_Domains', domains:
+     * &quot;Domain,Zone\nmycooldomain,AFRICA&quot;},
+     * { registryName: 'ZACR_Domains', domains: &quot;Domain,Zone\nmycooldomain,CO.ZA&quot; },
+     * { registryName: 'RYCE_Domains', domains: &quot;Domain,Zone\nmycooldomain,WIEN&quot; },
+     * ],
+     * }
+     */
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

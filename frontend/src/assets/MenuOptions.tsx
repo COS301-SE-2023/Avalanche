@@ -1,4 +1,4 @@
-import { HomeIcon, DocumentIcon, HeartIcon, ArchiveBoxIcon, DocumentMagnifyingGlassIcon } from '@heroicons/react/24/solid';
+import { HomeIcon, DocumentIcon, HeartIcon, ArchiveBoxIcon, DocumentMagnifyingGlassIcon, TvIcon, ChartBarIcon, StarIcon, EyeIcon, MapIcon, BoltIcon, ClipboardIcon } from '@heroicons/react/24/solid';
 
 interface IMenuItem {
     text: string,
@@ -22,10 +22,46 @@ const MenuOptions: IMenu = {
             role: ""
         },
         {
-            text: "Reports",
-            icon: <ArchiveBoxIcon className={holder} />,
-            page: "reports",
-            role: "",
+            text: "Registrar",
+            icon: <TvIcon className={holder} />,
+            page: "registrar",
+            role: ""
+        },
+        {
+            text: "Registrar Market Comparison",
+            icon: <MapIcon className={holder} />,
+            page: "registrarMarketComparison",
+            role: ""
+        },
+        {
+            text: "Movement",
+            icon: <BoltIcon className={holder} />,
+            page: "movement",
+            role: ""
+        },
+        {
+            text: "Domain Length",
+            icon: <ClipboardIcon className={holder} />,
+            page: "domainLength",
+            role: ""
+        },
+        {
+            text: "Market Share",
+            icon: <ChartBarIcon className={holder} />,
+            page: "marketShare",
+            role: ""
+        },
+        {
+            text: "Registrar Age Analysis",
+            icon: <HeartIcon className={holder} />,
+            page: "ageAnalysis",
+            role: ""
+        },
+        {
+            text: "Domain Name Analysis",
+            icon: <EyeIcon className={holder} />,
+            page: "domainNameAnalysis",
+            role: ""
         },
         {
             text: "Domain Watch",

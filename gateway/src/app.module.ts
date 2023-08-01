@@ -12,16 +12,22 @@ import { ZacrService } from './zacr/zacr.service';
 import { DomainWatchController } from './domain-watch/domain-watch.controller';
 import { DomainWatchService } from './domain-watch/domain-watch.service';
 import { HttpModule } from '@nestjs/axios';
+import { RyceController } from './ryce/ryce.controller';
+import { RyceService } from './ryce/ryce.service';
+import { AfricaController } from './africa/africa.controller';
+import { AfricaService } from './africa/africa.service';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     HttpModule,
     ClientsModule.register([
       {
         name: 'USER_MANAGEMENT_SERVICE',
         transport: Transport.TCP,
         options: {
-          host: 'localhost',
+          host: process.env.UM_HOST || 'localhost',
           port: 4001,
         },
       },
@@ -29,15 +35,31 @@ import { HttpModule } from '@nestjs/axios';
         name: 'ZACR_SERVICE',
         transport: Transport.TCP,
         options: {
-          host: 'localhost',
+          host: process.env.ZACR_HOST || 'localhost',
           port: 4002,
+        },
+      },
+      {
+        name: 'RyCE_SERVICE',
+        transport: Transport.TCP,
+        options: {
+          host: process.env.RYCE_HOST || 'localhost',
+          port: 4004,
+        },
+      },
+      {
+        name: 'AFRICA_SERVICE',
+        transport: Transport.TCP,
+        options: {
+          host: process.env.AFRICA_HOST || 'localhost',
+          port: 4005,
         },
       },
     ]),
     ConfigModule.forRoot({ isGlobal: true }),
   ],
-  controllers: [UserManagementController, ZacrController, DomainWatchController],
-  providers: [UserManagementService, ZacrService, RedisProvider, DomainWatchService],
+  controllers: [UserManagementController, ZacrController, RyceController, AfricaController, DomainWatchController],
+  providers: [UserManagementService, ZacrService, RyceService, AfricaService, RedisProvider, DomainWatchService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
@@ -48,7 +70,14 @@ export class AppModule implements NestModule {
         { path: 'user-management/verify', method: RequestMethod.POST },
         { path: 'user-management/login', method: RequestMethod.POST },
         { path: 'user-management/resendOTP', method: RequestMethod.POST },
-        { path: 'domain-watch/list', method: RequestMethod.POST }
+        { path: 'domain-watch/list', method: RequestMethod.POST },
+        { path: 'domain-watch/passive', method: RequestMethod.GET },
+        { path: 'domain-watch/loadDomains', method: RequestMethod.GET },
+        { path: 'domain-watch/whoisyou', method: RequestMethod.POST },
+        { path: 'user-management/graphFilters', method: RequestMethod.GET },
+        { path: 'user-management/getDomainWatchPassive', method: RequestMethod.POST },
+        { path: 'africa/domainWatchPassive', method: RequestMethod.POST },
+        { path: 'ryce/domainWatchPassive', method: RequestMethod.POST }
       )
       .forRoutes('*');
   }

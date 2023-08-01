@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
-import { AuthService } from './services/auth.service';
+import { AuthService } from './services/auth/auth.service';
 import { RedisProvider } from './redis.provider';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
@@ -10,8 +10,12 @@ import { User } from './entity/user.entity';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { UserGroup } from './entity/userGroup.entity';
 import { Organisation } from './entity/organisation.entity';
-import { UserOrganisationMangementService } from './services/user-organisation-mangement.service';
-import { UserDataProductMangementService } from './services/user-data-products-management.service';
+import { UserOrganisationMangementService } from './services/user-organisation/user-organisation-mangement.service';
+import { UserDataProductMangementService } from './services//user-data-products/user-data-products-management.service';
+import { UserUserGroupMangementService } from './services/user-userGroup/user-userGroup-management.service';
+import { UserDashboardMangementService } from './services/user-dashboard/user-dashboard-management.service';
+import { Dashboard } from './entity/dashboard.entity';
+import { WatchedUser } from './entity/watch.entity';
 
 @Module({
   imports: [
@@ -20,16 +24,16 @@ import { UserDataProductMangementService } from './services/user-data-products-m
         name: 'USER_MANAGEMENT_SERVICE',
         transport: Transport.TCP,
         options: {
-          host: 'localhost',
-          port: 3001,
+          host: process.env.HOST || 'localhost',
+          port: 4001,
         },
       },
     ]),
     JwtModule.registerAsync({
-      imports: [ConfigModule], 
+      imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => {
         return {
-          secret: configService.get<string>('JWT_SECRET'), 
+          secret: configService.get<string>('JWT_SECRET'),
           signOptions: { expiresIn: '24h' },
         } as JwtModuleOptions;
       },
@@ -45,16 +49,16 @@ import { UserDataProductMangementService } from './services/user-data-products-m
         username: configService.get('POSTGRES_USER'),
         password: configService.get('POSTGRES_PASSWORD'),
         database: configService.get('POSTGRES_DB'),
-        entities: [User, UserGroup, Organisation], // We change entities to an array that includes the User entity. 
+        entities: [User, UserGroup, Organisation, Dashboard, WatchedUser], // We change entities to an array that includes the User entity. 
         synchronize: true,
       }),
       inject: [ConfigService],
-    }), 
-    TypeOrmModule.forFeature([User, UserGroup, Organisation]),
+    }),
+    TypeOrmModule.forFeature([User, UserGroup, Organisation, Dashboard, WatchedUser]),
   ],
   controllers: [AppController],
-  providers: [AuthService, RedisProvider, UserOrganisationMangementService, UserDataProductMangementService],
-  exports: [AuthService, UserOrganisationMangementService, UserDataProductMangementService],
+  providers: [AuthService, RedisProvider, UserOrganisationMangementService, UserDataProductMangementService, UserUserGroupMangementService, UserDashboardMangementService],
+  exports: [AuthService, UserOrganisationMangementService, UserDataProductMangementService, UserUserGroupMangementService, UserDashboardMangementService],
 })
-export class AppModule {}
+export class AppModule { }
 

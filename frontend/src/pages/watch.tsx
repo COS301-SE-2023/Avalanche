@@ -9,6 +9,10 @@ import { domainWatchState, getDomainWatch, updateChanging } from "@/store/Slices
 import { IDomainWatchRequest } from "@/interfaces/requests";
 import { useDispatch, useSelector } from 'react-redux';
 import { IDomainWatchType } from "@/interfaces/requests/DomainWatch";
+import ky, { HTTPError } from "ky";
+import { getCookie } from "cookies-next";
+import WHOISModal from "@/components/Modals/WHOISModal";
+import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
 
 export default function Settings() {
 
@@ -18,6 +22,7 @@ export default function Settings() {
     const regex = /^(?!.*[.])(?!.*http:\/\/)(?!.*https:\/\/).*$/gm;
 
     const watchState = useSelector(domainWatchState);
+    const modalState = useSelector(selectModalManagerState);
     const dispatch = useDispatch<any>();
 
     const [data, setData] = useState<any>({
@@ -27,10 +32,14 @@ export default function Settings() {
     const [activeHelp, setActiveHelp] = useState<string[]>([]);
     const [sorting, setSorting] = useState<string>("");
     const [sortingType, setSortingType] = useState<string>("asc");
+    const [whois, setWhois] = useState<string>("");
 
+    /**
+     * This function watched the watchState for the variable to change.
+     */
     useEffect(() => {
         if (watchState.error) {
-            ErrorToast({ text: watchState.error });
+            return ErrorToast({ text: watchState.error });
         }
     }, [watchState.error])
 
@@ -209,7 +218,29 @@ export default function Settings() {
                 }
             }
         }
-    }, [sorting, sortingType])
+    }, [sorting, sortingType]);
+
+    const getWhoIS = async (domain: string) => {
+        try {
+            const res = await ky.post(`${process.env.NEXT_PUBLIC_API}/domain-watch/whoisyou`, {
+                json: {
+                    domain
+                },
+                headers: {
+                    "Authorization": `Bearer ${getCookie("jwt")}`
+                }
+            }).json();
+            const data = res as any;
+            setWhois(data.data);
+            dispatch(setCurrentOpenState("WATCH.WHOIS"));
+        } catch (e) {
+            let error = e as HTTPError;
+            if (error.name === 'HTTPError') {
+                const errorJson = await error.response.json();
+                return ErrorToast({ text: errorJson.message });
+            }
+        }
+    }
 
     /**
      * Renders out the HTML
@@ -248,7 +279,7 @@ export default function Settings() {
                                     <input id="remember" aria-describedby="remember" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" onClick={() => checkType("Soundex")} disabled={watchState.loading} />
                                 </div>
                                 <h3 className="block text-sm font-medium text-gray-900 dark:text-white">Soundex</h3>
-                                <QuestionMarkCircleIcon className="h-5 w-5 hover:text-avalancheBlue cursor-pointer" onClick={() => onHelpClick("Soundex")} />
+                                <QuestionMarkCircleIcon className="h-5 w-5 text-gray-500 hover:text-avalancheBlue cursor-pointer" onClick={() => onHelpClick("Soundex")} />
                             </div>
                             {helpHelper("Soundex") && <p className="text-sm font-light text-gray-500 dark:text-gray-400 mb-2">
                                 Soundex is a method used to simplify and <span className="font-semibold">standardize the representation of names based on their sound</span>. It assigns a code to each name so that similar-sounding names have the same code. This helps in grouping and matching names with <span className="font-semibold">similar pronunciations, even if they are spelled differently</span>. It&apos;s often used for tasks like searching databases or linking records where the <span className="font-semibold">pronunciation matters more than the exact spelling</span>. <Anchor href="https://en.wikipedia.org/wiki/Soundex" text="Wikipedia" /><br /><br />The higher the percentage, the higher Soundex match you want.
@@ -269,7 +300,7 @@ export default function Settings() {
                                     <input id="remember" aria-describedby="remember" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" onClick={() => checkType("Levenshtein")} disabled={watchState.loading} />
                                 </div>
                                 <h3 className="block text-sm font-medium text-gray-900 dark:text-white">Levenshtein</h3>
-                                <QuestionMarkCircleIcon className="h-5 w-5 hover:text-avalancheBlue cursor-pointer" onClick={() => onHelpClick("Levenshtein")} />
+                                <QuestionMarkCircleIcon className="h-5 w-5 text-gray-500 hover:text-avalancheBlue cursor-pointer" onClick={() => onHelpClick("Levenshtein")} />
                             </div>
 
                             {helpHelper("Levenshtein") && <p className="text-sm font-light text-gray-500 dark:text-gray-400 mb-2">
@@ -371,9 +402,13 @@ export default function Settings() {
                                         <div className="flex gap-2 items-center">
                                             Similarity {sorting === "similarity" ? <ChevronUpIcon className={sortingType === "asc" ? "h-4 w-4" : "rotate-180 h-w w-4"} /> : <ChevronUpDownIcon className="h-4 w-4" />}
                                         </div>
-
                                     </th>
 
+                                    <th scope="col" className="px-6 py-3 cursor-pointer w-52">
+                                        <div className="flex gap-2 items-center">
+                                            WhoIS Search
+                                        </div>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -395,6 +430,9 @@ export default function Settings() {
                                                     {item.similarity}
                                                 </span>
                                             </td>
+                                            <td className="px-6 py-4 dark:text-white text-gray-900">
+                                                <SubmitButton text="WHOIS Search" onClick={() => getWhoIS(`${item.domainName}.${item.zone.toLowerCase()}`)} />
+                                            </td>
                                         </tr>
                                     })
                                 }
@@ -405,6 +443,6 @@ export default function Settings() {
                 </div>}
             </div >
         </div>
-
+        {modalState.currentOpen === "WATCH.WHOIS" && <WHOISModal data={whois} />}
     </>
 }

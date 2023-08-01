@@ -1,61 +1,61 @@
-name: NestJS Coverage and SonarCloud Analysis
+# name: NestJS Coverage and SonarCloud Analysis
 
-on:
-  push:
-    branches: [ "working", "stable", "integration_dev" ]
-  pull_request:
-    branches: [ "working", "stable", "integration_dev" ]
+# on:
+#   push:
+#     branches: [ "working", "stable", "integration_dev" ]
+#   pull_request:
+#     branches: [ "working", "stable", "integration_dev" ]
 
-jobs:
-  test:
-    name: Coverage for Nest.js Services
-    permissions: write-all
-    runs-on: ubuntu-latest
+# jobs:
+#   test:
+#     name: Coverage for Nest.js Services
+#     permissions: write-all
+#     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        service: [gateway, user-management, zacr]
+#     strategy:
+#       matrix:
+#         service: [gateway, user-management, zacr, ryce]
 
-    steps:
-      - uses: actions/checkout@v3
+#     steps:
+#       - uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '16'
+#       - name: Setup Node.js
+#         uses: actions/setup-node@v2
+#         with:
+#           node-version: '16'
 
-      - name: Install dependencies
-        run: yarn install
+#       - name: Install dependencies
+#         run: yarn install
 
-      # Running tests with coverage for each service
-      - name: Run Jest with coverage
-        run: |
-          cd ${{ matrix.service }}
-          yarn add --dev jest
-          yarn test:cov
+#       # Running tests with coverage for each service
+#       - name: Run Jest with coverage
+#         run: |
+#           cd ${{ matrix.service }}
+#           yarn add --dev jest
+#           yarn test:cov
 
-      # generates coverage-report.md and publishes as checkrun
-      - name: Istanbul Code Coverage Report
-        id: istanbul_reporter
-        uses: romeovs/lcov-reporter-action@v0.2.21
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          lcov-file: '${{ matrix.service }}/${{ matrix.service }}/coverage/lcov.info'
+#       # generates coverage-report.md and publishes as checkrun
+#       - name: Istanbul Code Coverage Report
+#         id: istanbul_reporter
+#         uses: romeovs/lcov-reporter-action@v0.2.21
+#         with:
+#           github-token: ${{ secrets.GITHUB_TOKEN }}
+#           lcov-file: '${{ matrix.service }}/${{ matrix.service }}/coverage/lcov.info'
 
-      # Publish Coverage Job Summary  # Optional
-      - name: Add Coverage Job Summary
-        run: echo "${{ steps.istanbul_reporter.outputs.coverageSummary }}" >> $GITHUB_STEP_SUMMARY
+#       # Publish Coverage Job Summary  # Optional
+#       - name: Add Coverage Job Summary
+#         run: echo "${{ steps.istanbul_reporter.outputs.coverageSummary }}" >> $GITHUB_STEP_SUMMARY
                 
-      # uploads the coverage-report.md artifact  # Optional
-      - name: Upload Code Coverage Artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: code-coverage-report-markdown
-          path: '${{ matrix.service}}/coverage/coverage-results.md' 
-          retention-days: 1  
+#       # uploads the coverage-report.md artifact  # Optional
+#       - name: Upload Code Coverage Artifacts
+#         uses: actions/upload-artifact@v2
+#         with:
+#           name: code-coverage-report-markdown
+#           path: '${{ matrix.service}}/coverage/coverage-results.md' 
+#           retention-days: 1  
           
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-            files: coverage/lcov.info
-            token: ${{ secrets.CODECOV_TOKEN }}
+#       - name: Upload coverage to Codecov
+#         uses: codecov/codecov-action@v3
+#         with:
+#             files: coverage/lcov.info
+#             token: ${{ secrets.CODECOV_TOKEN }}

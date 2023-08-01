@@ -1,3 +1,10 @@
 {
-    "java.configuration.updateBuildConfiguration": "interactive"
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "java.test.config": [
+        {
+            "name": "jmockitConfig",
+            "vmArgs": [ "-javaagent:/Users/gteuw/.m2/repository/org/jmockit/jmockit/1.49/jmockit-1.49.jar" ]
+        }
+    ],
+    "java.test.defaultConfig": "jmockitConfig"
 }

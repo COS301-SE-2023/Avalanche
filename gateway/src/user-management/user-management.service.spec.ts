@@ -46,6 +46,15 @@ describe('UserManagementService', () => {
     { method: 'addUserToUserGroupWithKey', cmd: 'addUserToUserGroupWithKey' },
     { method: 'integrateUserWithWExternalAPI', cmd: 'integrateUserWithWExternalAPI' },
     { method: 'integrateWithDataProducts', cmd: 'integrateWithDataProducts' },
+    { method: 'createAPIKey', cmd: 'createAPIKey'},
+    { method: 'checkUserAPIKey', cmd: 'checkUserAPIKey'},
+    { method: 'rerollAPIKey', cmd: 'rerollAPIKey'},
+    { method: 'saveDashboard', cmd: 'saveDashboard'},
+    { method: 'editDashboard', cmd: 'editDashboard'},
+    { method: 'shareDashboards', cmd: 'shareDashboards'},
+    { method: 'addCommentToGraph', cmd: 'addCommentToGraph'},
+    { method: 'addDomainWatchPassiveDetails', cmd: 'addDomainWatchPassiveDetails'},
+    { method: 'getDomainWatchPassive', cmd: 'getDomainWatchPassive'}
   ];
 
   testCases.forEach(({ method, cmd }) => {
