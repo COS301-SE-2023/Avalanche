@@ -32,7 +32,7 @@ export class DomainWatchService {
     const africaInfo = africaData.data.queryData[0]['DOMAINWATCHPASSIVE'];
     const check = { watched: userInfo, 'recently-created': africaInfo };
     const response = await this.httpService
-      .post('http://zanet.cloud:4100/domainWatch/passive', check)
+      .post('http://DomainWatch:4100/domainWatch/passive', check)
       .toPromise();
     return JSON.stringify(response.data);
   }
@@ -60,7 +60,7 @@ export class DomainWatchService {
       ],
     };
     const response = await this.httpService
-      .post('http://zanet.cloud:4100/domainWatch/loadDomains', check)
+      .post('http://DomainWatch:4100/domainWatch/loadDomains', check)
       .toPromise();
     return JSON.stringify(response.data);
   }
