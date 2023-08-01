@@ -2,6 +2,8 @@
 <h1 align="center">Avalanche</h1>
 <div align="center">
   <img src="https://github.com/COS301-SE-2023/Avalanche/actions/workflows/tests.yml/badge.svg">
+  <img src="https://github.com/COS301-SE-2023/Avalanche/actions/workflows/test.yml/badge.svg">
+  <img src="https://github.com/COS301-SE-2023/Avalanche/actions/workflows/deployment.yml/badge.svg">
   <a href="https://codecov.io/github/COS301-SE-2023/Avalanche" > 
  <img src="https://codecov.io/github/COS301-SE-2023/Avalanche/branch/working/graph/badge.svg?token=Q021VJLYQ8"/> 
  </a>
