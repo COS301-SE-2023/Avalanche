@@ -60,7 +60,7 @@ public class ServiceHttpServer {
         }
         System.out.println("Starting server");
         this.state = "initialising";
-        this.httpServer = HttpServer.create(InetSocketAddress.createUnresolved("domain-name-analysis", port), 0);
+        this.httpServer = HttpServer.create(new InetSocketAddress("localhost", port), 0);
         this.createContexts();
 
         httpServer.setExecutor(java.util.concurrent.Executors.newCachedThreadPool()); // creates a default
