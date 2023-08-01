@@ -20,6 +20,7 @@ export class UserManagementService {
     return this.client.send({ cmd: 'resendOTP' }, data).toPromise();
   }
   async login(data: any) {
+    console.log("login data:",data);
     return this.client.send({ cmd: 'login' }, data).toPromise();
   }
   async createAPIKey(data: any) {
