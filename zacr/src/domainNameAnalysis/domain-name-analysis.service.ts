@@ -42,7 +42,7 @@ export class DomainNameAnalysisService {
         data.data = queryData[0]['DOMAINNAMEANALYSIS'];
         delete data.filters;
         const response = this.httpService.post(
-          'http://domain-name-analysis/domainNameAnalysis/count',
+          'http://domain-name-analysis:4101/domainNameAnalysis/count',
           data,
         );
         const responseData = await lastValueFrom(response);
