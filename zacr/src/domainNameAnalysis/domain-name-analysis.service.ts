@@ -12,7 +12,7 @@ export class DomainNameAnalysisService {
     @Inject('REDIS') private readonly redis: Redis,
     private readonly snowflakeService: SnowflakeService,
     private readonly graphFormattingService: GraphFormatService,
-  ) {}
+  ) { }
 
   async sendData(data: any): Promise<any> {
     try {
@@ -42,7 +42,7 @@ export class DomainNameAnalysisService {
         data.data = queryData[0]['DOMAINNAMEANALYSIS'];
         delete data.filters;
         const response = this.httpService.post(
-          'http://zanet.cloud:4005/domainNameAnalysis/list',
+          'http://localhost:4101/domainNameAnalysis/count',
           data,
         );
         const responseData = await lastValueFrom(response);

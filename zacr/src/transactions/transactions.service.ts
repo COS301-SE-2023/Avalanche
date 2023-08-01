@@ -182,7 +182,7 @@ export class TransactionService {
       console.log('WEEEEEEE');
       console.log(filters['transactions']);
       if (filters['transactions']?.length > 0) {
-        trans = ' ' + filters['transaction'].join(', ') + ' ';
+        trans = ' ' + filters['transactions'].join(', ') + ' ';
       }
     }
     return (

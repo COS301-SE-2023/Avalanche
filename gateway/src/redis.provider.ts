@@ -10,13 +10,21 @@ export const RedisProvider: Provider = {
     if (!redisPort) {
       throw new Error('Environment variable REDIS_PORT not found');
     }
-    return new Redis({
+
+    let redisConfig = {
       host: configService.get('REDIS_HOST'),
       port: redisPort,
-      username : configService.get('REDIS_USER'),
-      password : configService.get('REDIS_PASSWORD'),
-      connectTimeout: 100000
-    });
+    }
+
+    if (configService.get('REDIS_USER')) {
+      redisConfig["username"] = configService.get('REDIS_USER');
+    }
+
+    if (configService.get('REDIS_PASSWORD')) {
+      redisConfig["password"] = configService.get('REDIS_PASSWORD');
+    }
+
+    return new Redis(redisConfig);
   },
   inject: [ConfigService], // <-- don't forget to inject ConfigService
 };

@@ -1,0 +1,277 @@
+name: 🖥️ Tests
+
+on:
+  push:
+    branches: [ "working", "stable", "integration_dev" ]
+  pull_request:
+    branches:
+      - working
+      - stable
+      - integration_dev
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checking out the repo
+      - name: 🛏️ Setup repo
+        uses: actions/checkout@v3
+
+      # Runs a single command using the runners shell
+      - name: 🔐 Install wireguard
+        run: sudo apt-get install wireguard
+        
+      # Creating the wireguard configuration 
+      - name: 🔐 Create WG Config
+        run: |
+          sed -i -e "s@{{WG_PRIVATEKEY}}@${{ secrets.WG_PRIVATEKEY }}@" $GITHUB_WORKSPACE/tunnel.conf
+          sed -i -e "s@{{WG_ADDRESS}}@${{ secrets.WG_ADDRESS }}@" $GITHUB_WORKSPACE/tunnel.conf
+          sed -i -e "s@{{WG_DNS}}@${{ secrets.WG_DNS }}@" $GITHUB_WORKSPACE/tunnel.conf
+          sed -i -e "s@{{WG_PUBLICKEY}}@${{ secrets.WG_PUBLICKEY }}@" $GITHUB_WORKSPACE/tunnel.conf
+          sed -i -e "s@{{WG_ALLOWEDIPS}}@${{ secrets.WG_ALLOWEDIPS }}@" $GITHUB_WORKSPACE/tunnel.conf
+          sed -i -e "s@{{WG_ENDPOINT}}@${{ secrets.WG_ENDPOINT }}@" $GITHUB_WORKSPACE/tunnel.conf
+
+          sudo cp $GITHUB_WORKSPACE/tunnel.conf /etc/wireguard/
+          
+      # Initilizing the tunnel so we can connect to the server
+      - name: 🔐 WG Creating Tunnel
+        run: |
+          sudo apt install resolvconf
+          wg-quick up $GITHUB_WORKSPACE/tunnel.conf
+          
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Install dependencies for frontend
+        run: |
+          cd frontend
+          yarn install
+
+      - name: Create .env file for gateway service
+        run: |
+          echo NEXT_PUBLIC_API = 'http://127.0.0.1:4000' >> frontend/.env.local
+
+
+      - name: Start frontend
+        run: |
+          cd frontend
+          yarn dev &
+
+      - name: Wait for frontend service
+        run: |
+          while ! nc -z localhost 3000; do   
+          sleep 1
+          echo "Waiting for frontend service..."
+          done    
+
+      - name: Install dependencies for gateway
+        run: |
+          cd gateway
+          yarn install
+
+      - name: Create .env file for gateway service
+        run: |
+          echo REDIS_HOST='${{ secrets.REDIS_HOST }}' >> gateway/.env
+          echo REDIS_PORT=${{ secrets.REDIS_PORT }} >> gateway/.env
+          echo REDIS_PASSWORD='${{ secrets.REDIS_PASSWORD }}' >> gateway/.env
+          echo REDIS_USER='${{ secrets.REDIS_USER }}' >> gateway/.env
+          echo MOCK_EMAIL='${{ secrets.MOCK_EMAIL }}' >> gateway/.env
+          echo MOCK_PASSWORD='${{ secrets.MOCK_PASSWORD }}' >> gateway/.env
+          echo JWT_TOKEN_TO_TEST='${{ secrets.JWT_TOKEN_TO_TEST }}' >> gateway/.env
+
+
+      - name: Start gateway
+        run: |
+          cd gateway
+          yarn start &
+
+      - name: Wait for Gateway service
+        run: |
+          while ! nc -z localhost 4000; do   
+          sleep 1
+          echo "Waiting for Gateway service..."
+          done
+
+      - name: Install dependencies for zacr
+        run: |
+          cd zacr
+          yarn install
+
+
+      - name: Create .env file for zacr service
+        run: |
+          echo REDIS_HOST='${{ secrets.REDIS_HOST }}' >> zacr/.env
+          echo REDIS_PORT=${{ secrets.REDIS_PORT }} >> zacr/.env
+          echo REDIS_PASSWORD='${{ secrets.REDIS_PASSWORD }}' >> zacr/.env
+          echo REDIS_USER='${{ secrets.REDIS_USER }}' >> zacr/.env
+          echo SNOWFLAKE_USERNAME='${{ secrets.SNOWFLAKE_USERNAME_1 }}' >> zacr/.env
+          echo SNOWFLAKE_SCHEMA='${{ secrets.SNOWFLAKE_SCHEMA_1 }}' >> zacr/.env
+          echo SNOWFLAKE_ROLE='${{ secrets.SNOWFLAKE_ROLE_1 }}' >> zacr/.env
+          echo SNOWFLAKE_DATABASE='${{ secrets.SNOWFLAKE_DATABASE_1 }}' >> zacr/.env
+          echo SNOWFLAKE_WAREHOUSE='${{ secrets.SNOWFLAKE_WAREHOUSE_1 }}' >> zacr/.env
+          echo 'SNOWFLAKE_PASSWORD=`'"${{ secrets.ZACR_PASSWORD }}"'`' >> zacr/.env
+          echo SNOWFLAKE_ACCOUNT='${{ secrets.ZACR_SNOWFLAKE_ACCOUNT }}' >> zacr/.env
+          echo JWT_SECRET='${{ secrets.JWT_SECRET }}' >> zacr/.env
+
+      - name: Start zacr
+        run: |
+          cd zacr
+          yarn start > zacr.log 2>&1 &
+
+      - name: Wait for zacr service
+        run: |
+          while ! nc -z localhost 4002; do 
+          sleep 2  
+          echo "Waiting for zacr service..."
+          done
+          sleep 7
+
+      - name: Print ZACR logs
+        run: |
+          cat zacr/zacr.log 
+
+      - name: Install dependencies for ryce
+        run: |
+          cd ryce
+          yarn install
+
+      - name: Create .env file for ryce service
+        run: |
+          echo REDIS_HOST='${{ secrets.REDIS_HOST }}' >> ryce/.env
+          echo REDIS_PORT=${{ secrets.REDIS_PORT }} >> ryce/.env
+          echo REDIS_PASSWORD='${{ secrets.REDIS_PASSWORD }}' >> ryce/.env
+          echo REDIS_USER='${{ secrets.REDIS_USER }}' >> ryce/.env
+          echo SNOWFLAKE_USERNAME='${{ secrets.SNOWFLAKE_USERNAME }}' >> ryce/.env
+          echo SNOWFLAKE_SCHEMA='${{ secrets.SNOWFLAKE_SCHEMA }}' >> ryce/.env
+          echo SNOWFLAKE_ROLE='${{ secrets.SNOWFLAKE_ROLE }}' >> ryce/.env
+          echo SNOWFLAKE_DATABASE='${{ secrets.SNOWFLAKE_DATABASE }}' >> ryce/.env
+          echo SNOWFLAKE_WAREHOUSE='${{ secrets.SNOWFLAKE_WAREHOUSE }}' >> ryce/.env
+          echo SNOWFLAKE_PASSWORD='${{ secrets.RYCE_PASSWORD }}' >> ryce/.env
+          echo SNOWFLAKE_ACCOUNT='${{ secrets.RYCE_SNOWFLAKE_ACCOUNT }}' >> ryce/.env
+          echo JWT_SECRET='${{ secrets.JWT_SECRET }}' >> ryce/.env
+
+
+      - name: Start ryce
+        run: |
+          cd ryce
+          yarn start &
+
+      - name: Wait for RYCE service
+        run: |
+          while ! nc -z localhost 4004; do   
+          sleep 1
+          echo "Waiting for RYCE service..."
+          done    
+
+      - name: Install dependencies for africa
+        run: |
+          cd africa
+          yarn install
+
+      - name: Create .env file for africa service
+        run: |
+          echo REDIS_HOST='${{ secrets.REDIS_HOST }}' >> africa/.env
+          echo REDIS_PORT=${{ secrets.REDIS_PORT }} >> africa/.env
+          echo REDIS_PASSWORD='${{ secrets.REDIS_PASSWORD }}' >> africa/.env
+          echo REDIS_USER='${{ secrets.REDIS_USER }}' >> africa/.env
+          echo SNOWFLAKE_USERNAME='${{ secrets.SNOWFLAKE_USERNAME }}' >> africa/.env
+          echo SNOWFLAKE_SCHEMA='${{ secrets.SNOWFLAKE_SCHEMA }}' >> africa/.env
+          echo SNOWFLAKE_ROLE='${{ secrets.SNOWFLAKE_ROLE }}' >> africa/.env
+          echo SNOWFLAKE_DATABASE='${{ secrets.SNOWFLAKE_DATABASE }}' >> africa/.env
+          echo SNOWFLAKE_WAREHOUSE='${{ secrets.SNOWFLAKE_WAREHOUSE }}' >> africa/.env
+          echo 'SNOWFLAKE_PASSWORD=`'"${{ secrets.AFRICA_PASSWORD }}"'`' >> africa/.env
+          echo SNOWFLAKE_ACCOUNT='${{ secrets.AFRICA_SNOWFLAKE_ACCOUNT }}' >> africa/.env
+          echo JWT_SECRET='${{ secrets.JWT_SECRET }}' >> africa/.env
+ 
+
+      - name: Start africa
+        run: |
+          cd africa
+          yarn start > africa.log 2>&1 &
+
+      - name: Wait for AFRICA service
+        run: |
+          while ! nc -z localhost 4005; do   
+          sleep 7
+          echo "Waiting for AFRICA service..."
+          done 
+          sleep 7 
+
+      - name: Print AFRICA logs
+        run: |
+          cat africa/africa.log     
+
+      - name: Install dependencies for user-management
+        run: |
+          cd user-management
+          yarn install
+
+      - name: Create .env file for user-management service
+        run: |
+          echo REDIS_HOST='${{ secrets.REDIS_HOST }}' >> user-management/.env
+          echo REDIS_PORT=${{ secrets.REDIS_PORT }} >> user-management/.env
+          echo REDIS_PASSWORD='${{ secrets.REDIS_PASSWORD }}' >> user-management/.env
+          echo REDIS_USER='${{ secrets.REDIS_USER }}' >> user-management/.env
+          echo POSTGRES_USER='${{ secrets.POSTGRES_USER }}' >> user-management/.env
+          echo POSTGRES_DB='${{ secrets.POSTGRES_DB }}' >> user-management/.env
+          echo POSTGRES_HOST='${{ secrets.POSTGRES_HOST }}' >> user-management/.env
+          echo POSTGRES_PASSWORD='${{ secrets.POSTGRES_PASSWORD }}' >> user-management/.env
+          echo POSTGRES_PORT=${{ secrets.POSTGRES_PORT }} >> user-management/.env
+          echo GOOGLE_PASSWORD='${{ secrets.GOOGLE_PASSWORD }}' >> user-management/.env
+          echo 'JWT_SECRET=`'"${{ secrets.JWT_SECRET }}"'`' >> user-management/.env
+ 
+
+      - name: Start user-management
+        run: |
+          cd user-management
+          yarn start > user-management.log 2>&1 &
+
+
+      - name: Wait for user-management service
+        run: |
+          while ! nc -z localhost 4001; do   
+          sleep 7
+          echo "Waiting for user-management service..."
+          done   
+          sleep 7 
+
+      - name: Print USER logs
+        run: |
+          cat user-management/user-management.log           
+ 
+
+      # - name: Run integration tests for gateway service
+      #   run: |
+      #     cd gateway
+      #     yarn test --forceExit  
+
+      - name: Run integration tests for zacr service
+        run: |
+          cd zacr
+          yarn test:cov --forceExit
+
+      - name: Run integration tests for africa service
+        run: |
+          cd africa
+          yarn test:cov --forceExit
+
+      - name: Run integration tests for ryce service
+        run: |
+          cd ryce
+          yarn test:cov --forceExit 
+
+      - name: Run integration tests for user-management service
+        run: |
+          cd user-management
+          yarn test:cov --forceExit             
+          
+                       

@@ -26,7 +26,7 @@ import { MovementService } from './movement/movement.service';
         name: 'AFRICA_SERVICE',
         transport: Transport.TCP,
         options: {
-          host: process.env.AFRICA || 'localhost',
+          host: process.env.HOST || 'localhost',
           port: 4005,
         },
       },
