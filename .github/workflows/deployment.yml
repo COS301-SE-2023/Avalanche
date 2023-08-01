@@ -64,6 +64,7 @@ jobs:
       - name: ☝️ Upload to server
         uses: appleboy/scp-action@v0.1.4
         with:
+          overwrite: true
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
