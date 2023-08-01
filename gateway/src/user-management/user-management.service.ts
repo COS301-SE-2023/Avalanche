@@ -29,7 +29,6 @@ export class UserManagementService {
     return this.client.send({ cmd: 'checkUserAPIKey' }, data).toPromise();
   }
   async rerollAPIKey(data: any) {
-    console.log("yeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
     return this.client.send({ cmd: 'rerollAPIKey' }, data).toPromise();
   }
   async saveDashboard(data: any) {
@@ -81,7 +80,7 @@ export class UserManagementService {
     return this.client.send({ cmd: 'integrateWithDataProducts' }, data).toPromise();
   }
   async addDomainWatchPassiveDetails(data: any) {
-    
+
     return this.client.send({ cmd: 'addDomainWatchPassiveDetails' }, data).toPromise();
   }
   async getDomainWatchPassive(data: any) {

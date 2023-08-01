@@ -249,8 +249,29 @@ jobs:
           cat user-management/user-management.log           
  
 
-      - name: Run integration tests for gateway service
+      # - name: Run integration tests for gateway service
+      #   run: |
+      #     cd gateway
+      #     yarn test --forceExit  
+
+      - name: Run integration tests for zacr service
         run: |
-          cd gateway
-          yarn test --forceExit  
+          cd zacr
+          yarn test:cov --forceExit
+
+      - name: Run integration tests for africa service
+        run: |
+          cd africa
+          yarn test:cov --forceExit
+
+      - name: Run integration tests for ryce service
+        run: |
+          cd ryce
+          yarn test:cov --forceExit 
+
+      - name: Run integration tests for user-management service
+        run: |
+          cd user-management
+          yarn test:cov --forceExit             
+          
                        
