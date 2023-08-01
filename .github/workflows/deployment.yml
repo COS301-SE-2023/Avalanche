@@ -9,6 +9,10 @@ on:
     branches:
       - working
       - stable
+  workflow_run:
+    workflows: ["🖥️ Tests"]
+    types:
+      - completed
 
 permissions:
   contents: read
@@ -53,15 +57,15 @@ jobs:
           wg-quick up $GITHUB_WORKSPACE/tunnel.conf
           
       # SSH Into Server
-#       - name: 🔒 Removing olf files
-#         uses: appleboy/ssh-action@v1.0.0
-#         with:
-#           host: ${{ secrets.SSH_HOST }}
-#           username: ${{ secrets.SSH_USERNAME }}
-#           password: ${{ secrets.SSH_PASSWORD }}
-#           port: ${{ secrets.SSH_PORT }}
-#           script: |
-#             rm -r -Services frontend gateway user-management zacr africa ryce
+      - name: 🔒 Removing olf files
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            rm -r -Services frontend gateway user-management zacr africa ryce
           
       # Uploading files to server via SCP
       - name: ☝️ Upload to server
