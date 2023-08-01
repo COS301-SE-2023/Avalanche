@@ -103,19 +103,15 @@ jobs:
       - name: Start zacr
         run: |
           cd zacr
-          yarn start > zacr.log 2>&1 &
+          yarn start &
 
       - name: Wait for zacr service
         run: |
           while ! nc -z localhost 4002; do 
-          sleep 2  
+          sleep 1  
           echo "Waiting for zacr service..."
           done
-          sleep 7
 
-      - name: Print ZACR logs
-        run: |
-          cat zacr/zacr.log 
 
       - name: Install dependencies for ryce
         run: |
@@ -174,19 +170,15 @@ jobs:
       - name: Start africa
         run: |
           cd africa
-          yarn start > africa.log 2>&1 &
+          yarn start &
 
       - name: Wait for AFRICA service
         run: |
           while ! nc -z localhost 4005; do   
-          sleep 7
+          sleep 1
           echo "Waiting for AFRICA service..."
           done 
-          sleep 7 
-
-      - name: Print AFRICA logs
-        run: |
-          cat africa/africa.log     
+    
 
       - name: Install dependencies for user-management
         run: |
@@ -211,20 +203,16 @@ jobs:
       - name: Start user-management
         run: |
           cd user-management
-          yarn start > user-management.log 2>&1 &
+          yarn start &
 
 
       - name: Wait for user-management service
         run: |
           while ! nc -z localhost 4001; do   
-          sleep 7
+          sleep 1
           echo "Waiting for user-management service..."
           done   
-          sleep 7 
-
-      - name: Print USER logs
-        run: |
-          cat user-management/user-management.log           
+        
  
 
       - name: Run integration tests for gateway service
