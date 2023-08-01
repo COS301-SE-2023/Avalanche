@@ -5,10 +5,6 @@ on:
     branches:
       - working
       - stable
-  pull_request:
-    branches:
-      - working
-      - stable
 
 permissions:
   contents: read
@@ -41,7 +37,7 @@ jobs:
         uses: SpicyPizza/create-envfile@v1.3
         with:
            envkey_NODE_ENV: production
-           envkey_NEXT_PUBLIC_API: 'http://gateway:4000'
+           envkey_NEXT_PUBLIC_API: 'http://zanet.cloud:4000'
            directory: frontend
            file_name: .env.local # optional (default: .env)
            fail_on_empty: false # optional (default: false)
@@ -52,26 +48,27 @@ jobs:
           sudo apt install resolvconf
           wg-quick up $GITHUB_WORKSPACE/tunnel.conf
           
-      # SSH Into Server
-      - name: 🔒 Upload to server
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          password: ${{ secrets.SSH_PASSWORD }}
-          port: ${{ secrets.SSH_PORT }}
-          script: |
-            rm -r Services frontend gateway user-management zacr africa ryce
+#       # SSH Into Server
+#       - name: 🔒 Removing olf files
+#         uses: appleboy/ssh-action@v1.0.0
+#         with:
+#           host: ${{ secrets.SSH_HOST }}
+#           username: ${{ secrets.SSH_USERNAME }}
+#           password: ${{ secrets.SSH_PASSWORD }}
+#           port: ${{ secrets.SSH_PORT }}
+#           script: |
+#             rm -r Services frontend gateway user-management zacr africa ryce
           
       # Uploading files to server via SCP
       - name: ☝️ Upload to server
         uses: appleboy/scp-action@v0.1.4
         with:
+          overwrite: true
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
-          source: "frontend,gateway,user-management,zacr,africa,ryce, Services"
+          source: "frontend,gateway,user-management,zacr,africa,ryce,Services"
           target: ./
       
       # SSH Into Server

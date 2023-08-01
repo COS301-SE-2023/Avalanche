@@ -1,6 +1,7 @@
 avalanche\Network\ServiceHttpServer.class
 avalanche\Network\HandlerStrategy\RunningStrategies\HandleActive.class
 avalanche\DataClasses\Domain.class
+avalanche\Network\HandlerStrategy\RunningStrategies\HandleListZones.class
 avalanche\Utility\DomainTokeniser.class
 avalanche\Network\HandlerStrategy\RunningStrategies\HandlePassive.class
 avalanche\Network\HandlerStrategyClassEnum.class
@@ -16,4 +17,5 @@ avalanche\Network\HandlerStrategy\Closed.class
 avalanche\Core\SimilarityChecker.class
 avalanche\DistanceCalculators\SoundexCalculator.class
 avalanche\DistanceCalculators\LevenshteinDistanceCalculator.class
+avalanche\Network\HandlerStrategy\RunningStrategies\HandleLoadDomains.class
 avalanche\Settings\DomainWatchSettings.class
