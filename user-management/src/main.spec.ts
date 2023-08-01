@@ -19,7 +19,7 @@ describe('main', () => {
     expect(NestFactory.createMicroservice).toHaveBeenCalledWith(AppModule, {
       transport: Transport.TCP,
       options: {
-        host: 'usermanagement',
+        host: 'usermanagement' || 'localhost',
         port: 4001,
       },
     });
