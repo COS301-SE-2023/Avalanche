@@ -257,16 +257,21 @@ jobs:
       - name: Run integration tests for zacr service
         run: |
           cd zacr
-          yarn test --forceExit
+          yarn test:cov --forceExit
 
       - name: Run integration tests for africa service
         run: |
           cd africa
-          yarn test --forceExit
+          yarn test:cov --forceExit
 
       - name: Run integration tests for ryce service
         run: |
           cd ryce
-          yarn test --forceExit        
+          yarn test:cov --forceExit 
+
+      - name: Run integration tests for user-management service
+        run: |
+          cd user-management
+          yarn test:cov --forceExit             
           
                        
