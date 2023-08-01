@@ -1,0 +1,1 @@
+START /B /wait docker run -p 4005:4005 domain_name_analysis

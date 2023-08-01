@@ -1,0 +1,1 @@
+START /B docker build -t domain_name_analysis .

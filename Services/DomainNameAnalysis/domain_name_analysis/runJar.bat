@@ -1,0 +1,1 @@
+START /B /wait java -jar target/domain_name_analysis-1.0-SNAPSHOT-jar-with-dependencies.jar
