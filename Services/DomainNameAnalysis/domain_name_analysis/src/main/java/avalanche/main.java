@@ -11,7 +11,7 @@ import avalanche.Network.ServiceHttpServer;
 public class main {
     public static void main(String[] args) throws Exception {
         try {
-            ServiceHttpServer server = new ServiceHttpServer(4005);
+            ServiceHttpServer server = new ServiceHttpServer(4101);
             server.start();
             server.handleDummyRequest("classify");
         } catch (IOException e) {
