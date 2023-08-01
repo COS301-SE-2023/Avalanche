@@ -42,7 +42,7 @@ export class DomainNameAnalysisService {
         data.data = queryData[0]['DOMAINNAMEANALYSIS'];
         delete data.filters;
         const response = this.httpService.post(
-          'http://zanet.cloud:4101/domainNameAnalysis/count',
+          'http://localhost:4101/domainNameAnalysis/count',
           data,
         );
         const responseData = await lastValueFrom(response);
