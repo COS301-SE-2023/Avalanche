@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: avalanche.Network.ServiceHttpServerTest
--------------------------------------------------------------------------------
-Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 13.417 s - in avalanche.Network.ServiceHttpServerTest
