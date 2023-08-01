@@ -12,7 +12,7 @@ export class DomainWatchService {
     console.log(data);
     console.log("elo");
     const response = this.httpService.post(
-      'http://localhost:4100/domainWatch/active',
+      'http://DomainWatch:4100/domainWatch/active',
       data,
     );
     const responseData = await lastValueFrom(response);

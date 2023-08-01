@@ -8,7 +8,6 @@ export class DomainWatchController {
 
   @Post('list')
   async sendData(@Body() data: any) {
-    console.log("bindo");
     const result = await this.domainWatchService.sendData(data);
     return result;
   }
