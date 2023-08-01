@@ -10,8 +10,9 @@ export class DomainWatchService {
 
   async sendData(data: any): Promise<any> {
     console.log(data);
+    console.log("elo");
     const response = this.httpService.post(
-      'http://zanet.cloud:4100/domainWatch/active',
+      'http://localhost:4100/domainWatch/active',
       data,
     );
     const responseData = await lastValueFrom(response);
