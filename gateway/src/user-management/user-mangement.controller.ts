@@ -12,7 +12,7 @@ export class UserManagementController {
   @Get('graphFilters')
   getFromFile(): any {
     try {
-      const filePath = resolve("./src/user-management", 'filters.txt');
+      const filePath = resolve("./src/user-management", 'filters.json');
 
       // read the file and convert it to a string
       // const fileContent = readFileSync(filePath, 'utf-8');
