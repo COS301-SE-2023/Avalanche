@@ -70,7 +70,7 @@ export default function Home() {
     return true;
   }
   if (getCookie("jwt")) {
-    router.push("/dashboard");
+    router.push("/home");
     return <LoadingPage />
   } else
     return (
