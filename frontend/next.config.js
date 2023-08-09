@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: false,
   experimental: {
-    outputStandalone: true,
+    standalone: true,
   },
 }
 
