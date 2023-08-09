@@ -20,10 +20,11 @@ interface IChartCard {
     data: any,
     defaultGraph: ChartType,
     state: any,
-    id?: string
+    id?: string,
+    updateGraph?: any
 }
 
-export default function CustomChartCard({ title, data, defaultGraph, state, id }: IChartCard) {
+export default function CustomChartCard({ title, data, defaultGraph, state, id, updateGraph }: IChartCard) {
 
     const dispatch = useDispatch();
 
@@ -180,6 +181,7 @@ export default function CustomChartCard({ title, data, defaultGraph, state, id }
         });
 
         setFilterDropdown(!filterDropdown)
+        updateGraph(data.graphName, data.endpointName, requestObject);
         fetchGraphData(requestObject);
     }
 

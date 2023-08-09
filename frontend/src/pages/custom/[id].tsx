@@ -41,20 +41,37 @@ export default function CreateCustomDashboard() {
     }
 
     useEffect(() => {
+        dispatch(getFilters({}));
         setGraphs([]);
         const dash = stateUser.user.dashboards?.find((item: any) => item.dashboardID == id);
-        console.log(dash);
         if (!dash) {
             setGraphs([]);
             setNewDash(true);
             return;
         };
+        setName(dash.name);
         setGraphs([...dash.graphs]);
         setNewDash(false);
     }, [id])
 
+    const updateGraph = (graphName: string, endpoint: string, requestObject: any) => {
+
+        let temp = [...graphs] as any[];
+
+        const t = temp.findIndex((item: any) => item.graphName === graphName && item.endpointName === endpoint);
+
+        if (t === -1) return;
+
+        let d = { ...temp[t] };
+        d["filters"] = requestObject;
+        temp[t] = d;
+
+        setGraphs(temp);
+
+    }
+
     const renderGraphs = () => {
-        return graphs.map((graph: any, index: number) => <CustomChartCard title={graph.name} defaultGraph={ChartType.Pie} data={graph} key={index} state={stateGraph} id={id} />);
+        return graphs.map((graph: any, index: number) => <CustomChartCard title={graph.name} defaultGraph={ChartType.Pie} data={graph} key={index} state={stateGraph} id={id} updateGraph={updateGraph} />);
     }
 
     const updateDashboard = async () => {
@@ -152,8 +169,7 @@ export default function CreateCustomDashboard() {
         <Toaster />
 
         <div className="p-4 sm:ml-64 bg-gray-100 dark:bg-secondaryBackground min-h-screen">
-            <div className="flex justify-between items-center">
-                {/* <PageHeader title="Custom Dashboard" subtitle={id} icon={<PencilSquareIcon className="h-16 w-16 text-black dark:text-white" />} /> */}
+            <div className="flex justify-between items-center flex-col lg:flex-row">
                 <div className="flex flex-row gap-2 items-center">
                     <CpuChipIcon className="h-16 w-16 text-black dark:text-white" />
                     <div>
@@ -161,13 +177,13 @@ export default function CreateCustomDashboard() {
                         {editName && <div className="flex gap-4">
                             <Input placeholder="Custom Dashboard" type="text" name="dashboard-name" id="dashboard-name" value={name} required={false} onChange={(event: React.FormEvent<HTMLInputElement>) => setName(event.currentTarget.value)} />
                             <div className="flex flex-col gap-2">
-                                <CheckIcon className="w-4 h-4 right-0 top-0 hover:cursor-pointer hover:text-green-500 duration-75 hover:scale-125" onClick={() => {
+                                <CheckIcon className="w-4 h-4 right-0 top-0 text-gray-800 dark:text-gray-200 hover:cursor-pointer hover:text-green-500 hover:dark:text-green-500 duration-75 hover:scale-125" onClick={() => {
                                     if (!name) {
                                         return ErrorToast({ text: "You need to specify a name." });
                                     }
                                     setEditName(false);
                                 }} />
-                                <XMarkIcon className="w-4 h-4 right-0 top-0 hover:cursor-pointer hover:text-red-500 duration-75 hover:scale-125" onClick={() => {
+                                <XMarkIcon className="w-4 h-4 right-0 top-0 text-gray-800 dark:text-gray-200 hover:cursor-pointer hover:text-red-500 hover:dark:text-red-500 duration-75 hover:scale-125" onClick={() => {
                                     setEditName(false);
                                     setName("");
                                 }} />
@@ -176,11 +192,11 @@ export default function CreateCustomDashboard() {
                         <p className="text-lg text-gray-400">{id}</p>
                     </div>
                 </div>
-                <div className="flex gap-5">
-                    {graphs.length > 0 && !newDash && <SubmitButton text="Update Dashboard" onClick={() => {
+                <div className="flex gap-5 w-full lg:w-max">
+                    {graphs.length > 0 && !newDash && <SubmitButton text="Update Dashboard" className="flex-auto" onClick={() => {
                         updateDashboard();
                     }} />}
-                    {graphs.length > 0 && newDash && <SubmitButton text="Create Dashboard" onClick={() => {
+                    {graphs.length > 0 && newDash && <SubmitButton text="Create Dashboard" className="flex-auto" onClick={() => {
                         createDashboard();
                     }} />}
                     <SubmitButton text="Add a Graph" onClick={() => {
