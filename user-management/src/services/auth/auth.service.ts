@@ -15,7 +15,7 @@ import { Response, response } from 'express';
 @Injectable()
 export class AuthService {
   constructor(@Inject('REDIS') private readonly redis: Redis, private readonly configService: ConfigService,
-    @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(User, 'user') private userRepository: Repository<User>,
     private jwtService: JwtService) { }
 
   async register(email: string, password: string, firstName: string, lastName: string) {

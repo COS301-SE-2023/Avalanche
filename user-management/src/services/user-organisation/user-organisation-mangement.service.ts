@@ -10,9 +10,9 @@ import { Organisation } from '../../entity/organisation.entity';
 @Injectable()
 export class UserOrganisationMangementService {
     constructor(@Inject('REDIS') private readonly redis: Redis, private readonly configService: ConfigService,
-        @InjectRepository(User) private userRepository: Repository<User>,
-        @InjectRepository(UserGroup) private userGroupRepository: Repository<UserGroup>,
-        @InjectRepository(Organisation) private organisationRepository: Repository<Organisation>) { }
+        @InjectRepository(User, 'user') private userRepository: Repository<User>,
+        @InjectRepository(UserGroup, 'user') private userGroupRepository: Repository<UserGroup>,
+        @InjectRepository(Organisation, 'user') private organisationRepository: Repository<Organisation>) { }
 
     async getMembers(token: string) {
         const userPayload = await this.redis.get(token);

@@ -2,7 +2,7 @@ name: 🖥️ Tests
 
 on:
   push:
-    branches: [ "working", "stable", "integration_dev" ]
+    branches: [ "working", "stable" ]
   pull_request:
     branches:
       - working
