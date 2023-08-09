@@ -147,7 +147,7 @@
                             "afrihost",
                             "hetzner",
                             "diamatrix"
-                        ]
+                        ],
                         "input": "checkbox"
                     },
                     {
@@ -186,7 +186,7 @@
                             "afrihost",
                             "hetzner",
                             "diamatrix"
-                        ]
+                        ],
                         "input": "checkbox"
                     },
                     {
@@ -273,7 +273,7 @@
                         "name": "dateTo",
                         "type": "string",
                         "input": "date-picker"
-                    },
+                    }
                     
                 ]
             },
@@ -298,9 +298,9 @@
                             "afrihost",
                             "hetzner",
                             "diamatrix"
-                        ]
+                        ],
                         "input": "checkbox"
-                    },
+                    }
                 ]
             }
         ]
@@ -318,7 +318,7 @@
                             {"name" :"AFRICA", "filters" : [{
                                 "name": "transactions",
                                  "type": "string[]",
-                                 "values": ["create","grace","redeem","transfer","renew","genesis","sunrisePremium","sunrise","landrush1","landrush2","landrush3","landrush4","premium",],
+                                 "values": ["create","grace","redeem","transfer","renew","genesis","sunrisePremium","sunrise","landrush1","landrush2","landrush3","landrush4","premium"],
                                  "input" : "checkbox"
                             }]}
                         ],
@@ -357,7 +357,7 @@
                             {"name" :"AFRICA", "filters" : [{
                                 "name": "transactions",
                                  "type": "string[]",
-                                 "values": ["create","grace","redeem","transfer","renew","genesis","sunrisePremium","sunrise","landrush1","landrush2","landrush3","landrush4","premium",],
+                                 "values": ["create","grace","redeem","transfer","renew","genesis","sunrisePremium","sunrise","landrush1","landrush2","landrush3","landrush4","premium"],
                                  "input" : "checkbox"
                             }]}
                         ],
@@ -418,7 +418,7 @@
                             "namecheap4ch",
                             "diamatrix",
                             "101domain"
-                        ]
+                        ],
                         "input": "checkbox"
                     },
                     {
@@ -456,7 +456,7 @@
                             "namecheap4ch",
                             "diamatrix",
                             "101domain"
-                        ]
+                        ],
                         "input": "checkbox"
                     },
                     {
@@ -542,7 +542,7 @@
                         "name": "dateTo",
                         "type": "string",
                         "input": "date-picker"
-                    },
+                    }
                     
                 ]
             },
@@ -566,9 +566,9 @@
                             "namecheap4ch",
                             "diamatrix",
                             "101domain"
-                        ]
+                        ],
                         "input": "checkbox"
-                    },
+                    }
                 ]
             }
         ]
@@ -604,9 +604,9 @@
                             {"name" :"TIROL", "filters" : [{
                                 "name": "transactions",
                                  "type": "string[]",
-                                 "values": ["tirolGrace","tirolCreate","tirolRenew","tirolRestore","tirolTransfer","tirolTransferNull",],
+                                 "values": ["tirolGrace","tirolCreate","tirolRenew","tirolRestore","tirolTransfer","tirolTransferNull"],
                                  "input" : "checkbox"
-                            }]},
+                            }]}
                         ],
                         "input": "nestedCheckbox"
                     },
@@ -661,9 +661,9 @@
                             {"name" :"TIROL", "filters" : [{
                                 "name": "transactions",
                                  "type": "string[]",
-                                 "values": ["tirolGrace","tirolCreate","tirolRenew","tirolRestore","tirolTransfer","tirolTransferNull",],
+                                 "values": ["tirolGrace","tirolCreate","tirolRenew","tirolRestore","tirolTransfer","tirolTransferNull"],
                                  "input" : "checkbox"
-                            }]},
+                            }]}
                         ],
                         "input": "nestedCheckbox"
                     },
@@ -855,7 +855,7 @@
                         "name": "dateTo",
                         "type": "string",
                         "input": "date-picker"
-                    },
+                    }
                     
                 ]
             },
@@ -884,7 +884,7 @@
                             "keysystems"
                         ],
                         "input": "checkbox"
-                    },
+                    }
                 ]
             }
         ]

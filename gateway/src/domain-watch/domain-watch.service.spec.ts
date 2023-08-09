@@ -18,7 +18,7 @@ describe('DomainWatchService', () => {
 
   describe('sendData', () => {
     const data = { test: 'test' };
-    const endpoint = 'http://zanet.cloud:4100/domainWatch/active';
+    const endpoint = 'http://DomainWatch:4100/domainWatch/active';
 
     it('should return the response data', async () => {
       const mockResponse = 'Post response data';
