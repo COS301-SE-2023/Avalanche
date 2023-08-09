@@ -1,4 +1,4 @@
-import { HomeIcon, DocumentIcon, HeartIcon, ArchiveBoxIcon, DocumentMagnifyingGlassIcon, TvIcon, ChartBarIcon, StarIcon, EyeIcon, MapIcon, BoltIcon, ClipboardIcon } from '@heroicons/react/24/solid';
+import { HomeIcon, DocumentIcon, HeartIcon, ArchiveBoxIcon, DocumentMagnifyingGlassIcon, TvIcon, ChartBarIcon, StarIcon, EyeIcon, MapIcon, BoltIcon, ClipboardIcon, ChartBarSquareIcon } from '@heroicons/react/24/solid';
 
 interface IMenuItem {
     text: string,
@@ -13,11 +13,22 @@ interface IMenu {
 
 const holder = "w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white";
 
+const NotDropdown: IMenu = {
+    items: [
+        {
+            text: "Domain Watch",
+            icon: <DocumentMagnifyingGlassIcon className={holder} />,
+            page: "watch",
+            role: ""
+        },
+    ]
+}
+
 const MenuOptions: IMenu = {
     items: [
         {
-            text: "Home",
-            icon: <HomeIcon className={holder} />,
+            text: "Transactions",
+            icon: <ChartBarSquareIcon className={holder} />,
             page: "dashboard",
             role: ""
         },
@@ -62,14 +73,8 @@ const MenuOptions: IMenu = {
             icon: <EyeIcon className={holder} />,
             page: "domainNameAnalysis",
             role: ""
-        },
-        {
-            text: "Domain Watch",
-            icon: <DocumentMagnifyingGlassIcon className={holder} />,
-            page: "watch",
-            role: ""
-        },
+        }
     ]
 }
 
-export default MenuOptions;
+export { MenuOptions, NotDropdown };
