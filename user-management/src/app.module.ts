@@ -16,6 +16,10 @@ import { UserUserGroupMangementService } from './services/user-userGroup/user-us
 import { UserDashboardMangementService } from './services/user-dashboard/user-dashboard-management.service';
 import { Dashboard } from './entity/dashboard.entity';
 import { WatchedUser } from './entity/watch.entity';
+import { Value } from './entity/value.entity';
+import { Filter } from './entity/filter.entity';
+import { Endpoint } from './entity/endpoint.entity';
+import { Graph } from './entity/graph.entity';
 
 @Module({
   imports: [
@@ -41,6 +45,7 @@ import { WatchedUser } from './entity/watch.entity';
     }),
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
+      name: 'user',
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
@@ -49,12 +54,31 @@ import { WatchedUser } from './entity/watch.entity';
         username: configService.get('POSTGRES_USER'),
         password: configService.get('POSTGRES_PASSWORD'),
         database: configService.get('POSTGRES_DB'),
+        schema: configService.get('POSTGRES_SCHEMA1'),
         entities: [User, UserGroup, Organisation, Dashboard, WatchedUser], // We change entities to an array that includes the User entity. 
         synchronize: true,
       }),
       inject: [ConfigService],
     }),
-    TypeOrmModule.forFeature([User, UserGroup, Organisation, Dashboard, WatchedUser]),
+    TypeOrmModule.forRootAsync({
+      name: 'filters',
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get('POSTGRES_HOST'),
+        port: +configService.get<number>('POSTGRES_PORT'),
+        username: configService.get('POSTGRES_USER'),
+        password: configService.get('POSTGRES_PASSWORD'),
+        database: configService.get('POSTGRES_DB'),
+        schema: configService.get('POSTGRES_SCHEMA2'),
+        entities: [Value, Filter, Endpoint, Graph], // We change entities to an array that includes the User entity. 
+        synchronize: true,
+      }),
+      inject: [ConfigService],
+    }),
+    TypeOrmModule.forFeature([User, UserGroup, Organisation, Dashboard, WatchedUser], 'user'),
+    TypeOrmModule.forFeature([Value, Filter, Endpoint, Graph], 'filters'),
+
   ],
   controllers: [AppController],
   providers: [AuthService, RedisProvider, UserOrganisationMangementService, UserDataProductMangementService, UserUserGroupMangementService, UserDashboardMangementService],

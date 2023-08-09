@@ -9,14 +9,15 @@ import { UserGroup } from '../../entity/userGroup.entity';
 import { Organisation } from '../../entity/organisation.entity';
 import axios from 'axios';
 import { WatchedUser } from '../../entity/watch.entity';
+import { Endpoint } from 'src/entity/endpoint.entity';
 
 @Injectable()
 export class UserDataProductMangementService {
     constructor(@Inject('REDIS') private readonly redis: Redis,
-        @InjectRepository(User) private userRepository: Repository<User>,
-        @InjectRepository(UserGroup) private userGroupRepository: Repository<UserGroup>,
-        @InjectRepository(Organisation) private organisationRepository: Repository<Organisation>,
-        @InjectRepository(WatchedUser) private watchedUserRepository: Repository<WatchedUser>) { }
+        @InjectRepository(User, 'user') private userRepository: Repository<User>,
+        @InjectRepository(UserGroup, 'user') private userGroupRepository: Repository<UserGroup>,
+        @InjectRepository(WatchedUser, 'user') private watchedUserRepository: Repository<WatchedUser>,
+        @InjectRepository(Endpoint, 'filters') private endpointRepository: Repository<Endpoint>) { }
 
     async integrateUserWithWExternalAPI(token: string, type: string, allocateToName: string, username: string, password: string, personal: boolean) {
         if (!username || !password) {
@@ -421,4 +422,10 @@ export class UserDataProductMangementService {
             };
         }
     }
+
+    async getFilters(): Promise<Endpoint[]> {
+        return await this.endpointRepository.find({
+          relations: ['graphs', 'graphs.filters', 'graphs.filters.values'], // Include necessary relations
+        });
+      }
 }

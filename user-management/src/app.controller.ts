@@ -357,6 +357,11 @@ export class AppController {
 
     return result;
   }
+  @MessagePattern({ cmd: 'getFilters' })
+  async getFilters(data: any) {
+    const result = await this.userDataProductManService.getFilters();
+    return result;
+  }
   @MessagePattern({ cmd: 'getDomainWatchPassiveUser' })
   async getDomainWatchPassiveUser(data: any) {
     console.log("Domain Watch Passive Active", data);
