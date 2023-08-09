@@ -16,7 +16,7 @@ export default function Home() {
                 <PageHeader title="Home" subtitle="Welcome Home" icon={<HomeIcon className="h-16 w-16 text-black dark:text-white" />} />
             </div>
             <div className="p-0 pt-4 md:p-4" id="pageData">
-                <div className="grid lg:grid-cols-3 sm:grid-cols-1 md:grid-cols-2 gap-5 mb-4 grid-rows-2">
+                <div className="grid lg:grid-cols-4 sm:grid-cols-1 md:grid-cols-2 gap-5 mb-4 grid-rows-2">
                     <Link className="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 hover:shadow-2xl duration-75" href="/custom/create">
                         <div className="flex flex-col items-center justify-between h-full pt-10 pb-10" >
                             <img className="w-64 mb-3" src="https://astonmartin.sloththe.dev/isawesome/custom-dashboards.svg" alt="Bonnie image" />

@@ -13,14 +13,19 @@ interface IMenu {
 
 const holder = "w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white";
 
-const MenuOptions: IMenu = {
+const NotDropdown: IMenu = {
     items: [
         {
-            text: "Home",
-            icon: <HomeIcon className={holder} />,
-            page: "home",
+            text: "Domain Watch",
+            icon: <DocumentMagnifyingGlassIcon className={holder} />,
+            page: "watch",
             role: ""
         },
+    ]
+}
+
+const MenuOptions: IMenu = {
+    items: [
         {
             text: "Transactions",
             icon: <ChartBarSquareIcon className={holder} />,
@@ -68,14 +73,8 @@ const MenuOptions: IMenu = {
             icon: <EyeIcon className={holder} />,
             page: "domainNameAnalysis",
             role: ""
-        },
-        {
-            text: "Domain Watch",
-            icon: <DocumentMagnifyingGlassIcon className={holder} />,
-            page: "watch",
-            role: ""
-        },
+        }
     ]
 }
 
-export default MenuOptions;
+export { MenuOptions, NotDropdown };
