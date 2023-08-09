@@ -4,6 +4,7 @@ import { ModalWrapper } from './ModalOptions';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearCurrentOpenState, setAnimateManagerState } from '@/store/Slices/modalManagerSlice';
 import { userState } from '@/store/Slices/userSlice';
+import { Transition } from '@headlessui/react';
 
 interface ICreateGroupModal {
     state: any,
@@ -79,25 +80,42 @@ export default function GraphCreateModal({ state, add }: ICreateGroupModal) {
      */
     return (
         <ModalWrapper title="Add a Graph">
-            <form className="space-y-6" onSubmit={(event) => formSubmit(event)}>
+            <form className="space-y-6 duration-75" onSubmit={(event) => formSubmit(event)}>
                 <div>
                     <InputLabel htmlFor='endpointDropdown' text='Warehouses' />
                     <Dropdown id='endpointDropdown' items={state.filters.map((item: any) => item.endpoint)} option={endpoint} set={setEndpoint} text="Select a warehouse" />
                 </div>
 
-                {endpoint && <div>
+                <Transition
+                    show={endpoint ? true : false}
+                    enter="transition-opacity duration-200"
+                    enterFrom="opacity-0"
+                    enterTo="opacity-100"
+                    leave="transition-opacity duration-200"
+                    leaveFrom="opacity-100"
+                    leaveTo="opacity-0"
+                >
+
                     <InputLabel htmlFor='graphType' text='Graph Type' />
                     <Dropdown id='graphType' items={filterGraphs()} option={graph} set={setGraph} text="Select a graph type" />
-                </div>}
+                </Transition>
 
-                {endpoint && graph && <div>
+                <Transition
+                    show={endpoint && graph ? true : false}
+                    enter="transition-opacity duration-200"
+                    enterFrom="opacity-0"
+                    enterTo="opacity-100"
+                    leave="transition-opacity duration-200"
+                    leaveFrom="opacity-100"
+                    leaveTo="opacity-0"
+                >
                     <InputLabel htmlFor="name" text="Graph Name" />
                     <Input type="text" name="name" id="name" placeholder="Domain sales over time" required={true} disabled={state.loading} value={name} onChange={(event: React.FormEvent<HTMLInputElement>) => {
                         nameError && setNameError(false);
                         setName(event.currentTarget.value);
                     }} maxLength={20} error={nameError} />
-                </div>
-                }
+                </Transition>
+
 
                 <SubmitButton text="Create Graph" onClick={(event: React.FormEvent<HTMLFormElement>) => {
                     formSubmit(event);

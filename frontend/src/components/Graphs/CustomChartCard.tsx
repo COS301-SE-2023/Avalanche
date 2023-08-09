@@ -90,6 +90,10 @@ export default function CustomChartCard({ title, data, defaultGraph, state, id }
         fetchGraphData({})
     }, [])
 
+    useEffect(() => {
+        fetchGraphData({})
+    }, [id])
+
     const fetchGraphData = async (filters: any) => {
         setLoading(true);
         if (data.endpointName) {

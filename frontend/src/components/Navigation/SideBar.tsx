@@ -3,8 +3,8 @@ import SideBarItem from "./SidebarItem"
 import Link from "next/link"
 import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
-import { MoonIcon, SunIcon, Cog6ToothIcon, Bars4Icon, ArrowLeftOnRectangleIcon, PencilIcon, HomeIcon, Bars3Icon, ChevronDownIcon, ChartPieIcon } from "@heroicons/react/24/solid";
-import { selectModalManagerState, setCurrentOpenState } from "@/store/Slices/modalManagerSlice";
+import { MoonIcon, SunIcon, Cog6ToothIcon, Bars4Icon, ArrowLeftOnRectangleIcon, PencilIcon, HomeIcon, ChevronDownIcon, ChartPieIcon } from "@heroicons/react/24/solid";
+import { selectModalManagerState } from "@/store/Slices/modalManagerSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { userState, logout } from "@/store/Slices/userSlice";
 import { useRouter } from "next/router";
@@ -14,6 +14,8 @@ import ky from "ky";
 import { ErrorToast, SubmitButton, SuccessToast } from "../Util";
 import CreateDashboardModal from "../Modals/CreateDashboardModal";
 import { Transition } from '@headlessui/react'
+import { v4 as uuidv4 } from 'uuid';
+import md5 from 'md5';
 
 export default function Sidebar() {
     const { theme, setTheme } = useTheme();
@@ -105,7 +107,7 @@ export default function Sidebar() {
                         <div className="flex flex-col overflow-y-auto py-5 px-3 h-full border-r border-gray-200 bg-gray-200 dark:bg-primaryBackground dark:border-secondaryBackground">
                             {/* top list */}
                             <ul className="space-y-2">
-                                <SideBarItem text="Home" icon={<HomeIcon className="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />} page="/home" />
+                                <SideBarItem text="Home" icon={<HomeIcon className="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />} page="home" />
 
                                 <li>
                                     <span className="flex items-center justify-between p-2 text-gray-900 rounded-lg dark:text-white hover:bg-lightHover dark:hover:bg-gray-700 hover:cursor-pointer" onClick={() => setDF(!df)}>
@@ -118,10 +120,10 @@ export default function Sidebar() {
                                 </li>
                                 <Transition
                                     show={df}
-                                    enter="transition-opacity duration-75"
+                                    enter="transition-opacity duration-200"
                                     enterFrom="opacity-0"
                                     enterTo="opacity-100"
-                                    leave="transition-opacity duration-150"
+                                    leave="transition-opacity duration-200"
                                     leaveFrom="opacity-100"
                                     leaveTo="opacity-0"
                                 >
@@ -142,7 +144,15 @@ export default function Sidebar() {
                             {/* bottom list */}
                             <ul className="pt-4 mt-4 space-y-2 font-medium border-t border-gray-700 dark:border-gray-700 flex flex-col gap-2">
                                 <li>
-                                    <SideBarItem text="Create a Dashboard" icon={<PencilIcon className="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />} page="/custom/create" />
+                                    <li>
+                                        <SubmitButton text="Create a Dashboard" className="w-full" onClick={() => {
+                                            router.push({
+                                                pathname: `/custom/${uuidv4()}`
+                                            }, undefined, {
+                                                shallow: false
+                                            })
+                                        }} />
+                                    </li>
                                 </li>
                                 <ul className="overflow-y-scroll overflow-x-hidden flex-auto">
                                     {
@@ -156,7 +166,7 @@ export default function Sidebar() {
                         <div className="absolute bottom-0 left-0 justify-center p-4 w-full lg:flex flex-col gap-2 bg-gray-200 dark:bg-primaryBackground z-20 border-r border-gray-200 dark:border-secondaryBackground">
                             <div>
                                 <div className="flex items-center space-x-4">
-                                    <img className="w-10 h-10 rounded-full" src="https://github.com/michaelrosstarr.png" alt="" />
+                                    <img className="w-10 h-10 rounded-full" src={`https://www.gravatar.com/avatar/${md5(stateUser.user.email)}`} alt="" />
                                     <div className="font-medium dark:text-white text-black">
                                         <div>{stateUser.user.firstName} {stateUser.user.lastName}</div>
                                     </div>

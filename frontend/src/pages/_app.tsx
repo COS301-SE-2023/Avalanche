@@ -4,7 +4,7 @@ import { ThemeProvider } from 'next-themes'
 import { wrapper } from '../store/store';
 import { Provider, } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-import { Karla } from 'next/font/google';
+import { Karla, Outfit } from 'next/font/google';
 import 'animate.css';
 import '../assets/global.scss';
 
@@ -13,12 +13,17 @@ const karla = Karla({
   variable: '--font-karla'
 });
 
+const outfit = Outfit({
+  subsets: ['latin'],
+  variable: '--font-outfit'
+})
+
 function App({ Component, ...rest }: AppProps) {
   const { store, props } = wrapper.useWrappedStore(rest);
   return <ThemeProvider attribute="class">
     <Provider store={store}>
       <PersistGate loading={null} persistor={store.__persistor}>
-        <main className={`${karla.variable} font-sans`}>
+        <main>
           <Component {...props.pageProps} />
         </main>
       </PersistGate>
