@@ -169,7 +169,7 @@ export class UserUserGroupMangementService {
   </div>
             `;
         let registrationHtml = registrationHtmlTemplate.replace('{UserGroup}', userGroupName);
-        registrationHtml = registrationHtml.replace('{url}', `http://localhost:3000/invitation?key=${token}&type=group`);
+        registrationHtml = registrationHtml.replace('{url}', `http://zanet.cloud/invitation?key=${token}&type=group`);
         // Email options
         const mailOptions = {
             from: 'theskunkworks301@gmail.com',
@@ -178,7 +178,7 @@ export class UserUserGroupMangementService {
             html: registrationHtml,
             text: `You have been invited to join "${UserGroup}" on Avalanche Analytics.\n
                 To accept the invitation please follow the link to register on our platform: 
-                \nhttp://localhost:3000/invitation?key=${token}&type=group`
+                \nhttp://zanet.cloud/invitation?key=${token}&type=group`
         };
 
         // Sending the email
@@ -222,7 +222,7 @@ export class UserUserGroupMangementService {
       </div>`;
 
         let invitationHtml = invitationHtmlTemplate.replace('{UserGroup}', userGroupName);
-        invitationHtml = invitationHtml.replace('{url}', `http://localhost:3000/invitation?key=${token}&type=group`);
+        invitationHtml = invitationHtml.replace('{url}', `http://zanet.cloud/invitation?key=${token}&type=group`);
         // Email options
 
         const mailOptions = {
@@ -237,7 +237,7 @@ export class UserUserGroupMangementService {
                         <p style="font-size:1.1em">Hi,</p>
                         <p>You have been invited to join ${userGroupName} on Avalanche Analytics. <br> 
                             To accept the invitation please follow the link: </p>
-                        <a href="http://localhost:3000/invitation?key=${token}&type=group" style="text-decoration:none"> <h2 style="background: #007aff;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;">
+                        <a href="http://zanet.cloud/invitation?key=${token}&type=group" style="text-decoration:none"> <h2 style="background: #007aff;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;">
                             Accept
                         </h2></a>
                         <p style="font-size:0.9em;">Regards,<br />Avalanche Team</p>
@@ -251,7 +251,7 @@ export class UserUserGroupMangementService {
                     </div>`,
             text: `You have been invited to join "${userGroupName}" on Avalanche Analytics.\n
                 To accept the invitation please follow the link: 
-                \nhttp://localhost:3000/invitation?key=${token}&type=group`
+                \nhttp://zanet.cloud/invitation?key=${token}&type=group`
         };
 
 

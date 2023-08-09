@@ -1,8 +1,18 @@
 describe('DomainWatch', () => {
+
+    before(()=>{
+        
+    });
     beforeEach(() => {
-        cy.setCookie('jwt', Cypress.env('jwt'));
-        cy.visit(Cypress.env('baseURL')  + Cypress.env('basePort') + '/watch');
-        cy.wait(10000);
+        cy.visit(Cypress.env('baseURL') + Cypress.env('basePort')+"/");
+        cy.url().should('eq', Cypress.env('baseURL')+"/");
+        cy.get('input[name=email]').type(Cypress.env('username'));
+        cy.get('input[name=password]').type(Cypress.env('password'));
+        cy.get('button[type=submit]').click();  
+        cy.wait(4000);
+        cy.wait(1000);
+        cy.get("a[href='/watch']",{timeout:10000}).click();
+        cy.wait(3000);
         cy.url().should('eq', Cypress.env('baseURL')  + Cypress.env('basePort') + '/watch')
     });
     

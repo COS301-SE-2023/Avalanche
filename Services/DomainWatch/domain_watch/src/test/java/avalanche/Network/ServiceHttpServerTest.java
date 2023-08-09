@@ -91,7 +91,7 @@ public class ServiceHttpServerTest {
     @Test
     public void postWithNoBodyShouldReturnError() throws IOException, InstantiationException {
 
-        URL url = new URL("http://localhost:4004/domainWatch/active");
+        URL url = new URL("http://localhost:4100/domainWatch/active");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("POST");
         con.setRequestProperty("Content-Type", "application/json");

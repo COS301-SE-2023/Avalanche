@@ -10,6 +10,7 @@ export class DomainWatchService {
 
   async sendData(data: any): Promise<any> {
     console.log(data);
+    console.log("elo");
     const response = this.httpService.post(
       'http://DomainWatch:4100/domainWatch/active',
       data,
@@ -59,7 +60,7 @@ export class DomainWatchService {
       ],
     };
     const response = await this.httpService
-      .post('http://zanet.cloud:4100/domainWatch/loadDomains', check)
+      .post('http://DomainWatch:4100/domainWatch/loadDomains', check)
       .toPromise();
     return JSON.stringify(response.data);
   }

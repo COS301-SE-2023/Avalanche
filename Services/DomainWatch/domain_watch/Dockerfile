@@ -2,7 +2,7 @@ FROM eclipse-temurin:8
 
 WORKDIR /domain_watch
 
-EXPOSE 4004
+EXPOSE 4100
 
 # COPY .mvn/ .mvn
 # COPY mvnw pom.xml ./
