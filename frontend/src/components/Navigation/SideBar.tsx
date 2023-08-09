@@ -13,6 +13,7 @@ import LoadingPage from "../Util/Loading";
 import ky from "ky";
 import { ErrorToast, SubmitButton, SuccessToast } from "../Util";
 import CreateDashboardModal from "../Modals/CreateDashboardModal";
+import { Transition } from '@headlessui/react'
 
 export default function Sidebar() {
     const { theme, setTheme } = useTheme();
@@ -102,19 +103,27 @@ export default function Sidebar() {
                     >
                         <div className="flex flex-col overflow-y-auto py-5 px-3 h-full border-r border-gray-200 bg-gray-200 dark:bg-primaryBackground dark:border-secondaryBackground">
                             {/* top list */}
-                            <ul className="space-y-2">
-                                {
-                                    MenuOptions.items.map((option, index) => {
-                                        return <SideBarItem text={option.text} icon={option.icon} page={option.page} key={index} />
-                                    })
-                                }
-                            </ul>
+                            <Transition
+                                show={true}
+                                enter="transition-opacity duration-75"
+                                enterFrom="opacity-0"
+                                enterTo="opacity-100"
+                                leave="transition-opacity duration-150"
+                                leaveFrom="opacity-100"
+                                leaveTo="opacity-0"
+                            >
+                                <ul className="space-y-2">
+                                    {
+                                        MenuOptions.items.map((option, index) => {
+                                            return <SideBarItem text={option.text} icon={option.icon} page={option.page} key={index} />
+                                        })
+                                    }
+                                </ul>
+                            </Transition>
                             {/* bottom list */}
                             <ul className="pt-4 mt-4 space-y-2 font-medium border-t border-gray-700 dark:border-gray-700 flex flex-col gap-2">
                                 <li>
-                                    <SubmitButton text="Create a Dashboard" className="w-full" onClick={() => {
-                                        dispatch(setCurrentOpenState("GRAPH.CreateDashboard"))
-                                    }} />
+                                    <SideBarItem text="Create a Dashboard" icon={<PencilIcon className="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />} page="/custom/create" />
                                 </li>
                                 <ul className="overflow-y-scroll overflow-x-hidden flex-auto">
                                     {

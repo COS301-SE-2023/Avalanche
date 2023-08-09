@@ -1,4 +1,4 @@
-import { HomeIcon, DocumentIcon, HeartIcon, ArchiveBoxIcon, DocumentMagnifyingGlassIcon, TvIcon, ChartBarIcon, StarIcon, EyeIcon, MapIcon, BoltIcon, ClipboardIcon } from '@heroicons/react/24/solid';
+import { HomeIcon, DocumentIcon, HeartIcon, ArchiveBoxIcon, DocumentMagnifyingGlassIcon, TvIcon, ChartBarIcon, StarIcon, EyeIcon, MapIcon, BoltIcon, ClipboardIcon, ChartBarSquareIcon } from '@heroicons/react/24/solid';
 
 interface IMenuItem {
     text: string,
@@ -18,6 +18,12 @@ const MenuOptions: IMenu = {
         {
             text: "Home",
             icon: <HomeIcon className={holder} />,
+            page: "home",
+            role: ""
+        },
+        {
+            text: "Transactions",
+            icon: <ChartBarSquareIcon className={holder} />,
             page: "dashboard",
             role: ""
         },
