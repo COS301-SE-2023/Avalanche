@@ -18,7 +18,9 @@ import { Toaster } from "react-hot-toast"
 import { useRouter } from "next/router"
 import ky, { HTTPError } from "ky"
 import { getCookie } from "cookies-next"
-import { updateDashboards } from "@/store/Slices/userSlice"
+import { updateDashboards } from "@/store/Slices/userSlice";
+import Script from "next/script"
+
 
 export default function CreateCustomDashboard() {
     const dispatch = useDispatch<any>();
@@ -214,5 +216,6 @@ export default function CreateCustomDashboard() {
         {/* Modals */}
         {modalState.currentOpen === "GRAPH.AddGraph" && <GraphCreateModal state={stateGraph} add={addToGraphs} />}
         {modalState.currentOpen === "GRAPH.Modal" && <GraphZoomModal custom={true} />}
+
     </>)
 }

@@ -144,15 +144,13 @@ export default function Sidebar() {
                             {/* bottom list */}
                             <ul className="pt-4 mt-4 space-y-2 font-medium border-t border-gray-700 dark:border-gray-700 flex flex-col gap-2">
                                 <li>
-                                    <li>
-                                        <SubmitButton text="Create a Dashboard" className="w-full" onClick={() => {
-                                            router.push({
-                                                pathname: `/custom/${uuidv4()}`
-                                            }, undefined, {
-                                                shallow: false
-                                            })
-                                        }} />
-                                    </li>
+                                    <SubmitButton text="Create a Dashboard" className="w-full" onClick={() => {
+                                        router.push({
+                                            pathname: `/custom/${uuidv4()}`
+                                        }, undefined, {
+                                            shallow: false
+                                        })
+                                    }} />
                                 </li>
                                 <ul className="overflow-y-scroll overflow-x-hidden flex-auto">
                                     {
