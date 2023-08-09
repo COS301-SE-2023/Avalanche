@@ -12,10 +12,10 @@ import { time, timeStamp } from 'console';
 @Injectable()
 export class UserDashboardMangementService {
     constructor(@Inject('REDIS') private readonly redis: Redis,
-        @InjectRepository(User) private userRepository: Repository<User>,
-        @InjectRepository(UserGroup) private userGroupRepository: Repository<UserGroup>,
-        @InjectRepository(Organisation) private organisationRepository: Repository<Organisation>,
-        @InjectRepository(Dashboard) private dashboardRepository: Repository<Dashboard>) { }
+        @InjectRepository(User, 'user') private userRepository: Repository<User>,
+        @InjectRepository(UserGroup, 'user') private userGroupRepository: Repository<UserGroup>,
+        @InjectRepository(Organisation, 'user') private organisationRepository: Repository<Organisation>,
+        @InjectRepository(Dashboard, 'user') private dashboardRepository: Repository<Dashboard>) { }
 
     async saveDashbaord(token: string, dashboardID: string, name: string, graphs: { graphName: string, endpointName: string, filters: string[], comments: [{ userName: string; comment: string; }] }[]) {
         const userPayload = await this.redis.get(token);
@@ -108,6 +108,7 @@ export class UserDashboardMangementService {
         if (check == true) {
             for (const dashboards of user.dashboards) {
                 if (dashboards.dashboardID == dashboardID) {
+                    dashboards.name = name;
                     dashboards.graphs = graphs;
                     await this.dashboardRepository.save(dashboards);
                     await this.redis.set(token, JSON.stringify(user))

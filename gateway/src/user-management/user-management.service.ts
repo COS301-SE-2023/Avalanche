@@ -90,4 +90,7 @@ export class UserManagementService {
   async getDomainWatchPassiveUser(data: any) {
     return this.client.send({ cmd: 'getDomainWatchPassiveUser' }, data).toPromise();
   }
+  async getFilters(data: any) {
+    return this.client.send({ cmd: 'getFilters' }, data).toPromise();
+  }
 }

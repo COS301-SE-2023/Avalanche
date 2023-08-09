@@ -14,9 +14,9 @@ import { join } from 'path';
 @Injectable()
 export class UserUserGroupMangementService {
     constructor(@Inject('REDIS') private readonly redis: Redis, private readonly configService: ConfigService,
-        @InjectRepository(User) private userRepository: Repository<User>,
-        @InjectRepository(UserGroup) private userGroupRepository: Repository<UserGroup>,
-        @InjectRepository(Organisation) private organisationRepository: Repository<Organisation>) { }
+        @InjectRepository(User, 'user') private userRepository: Repository<User>,
+        @InjectRepository(UserGroup, 'user') private userGroupRepository: Repository<UserGroup>,
+        @InjectRepository(Organisation, 'user') private organisationRepository: Repository<Organisation>) { }
 
     async createUserGroup(token: string, name: string, permission: number) {
         // Get organizationId and the userPermission from Redis using token
