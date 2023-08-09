@@ -108,6 +108,7 @@ export class UserDashboardMangementService {
         if (check == true) {
             for (const dashboards of user.dashboards) {
                 if (dashboards.dashboardID == dashboardID) {
+                    dashboards.name = name;
                     dashboards.graphs = graphs;
                     await this.dashboardRepository.save(dashboards);
                     await this.redis.set(token, JSON.stringify(user))
