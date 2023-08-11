@@ -61,10 +61,10 @@ export default function Movement() {
 
         const arrayMovementVerticalShare: IMovementGraphRequest[] = [];
 
-        const movementVertical: IMovementGraphRequest = { zone: ["WIEN"], };
+        const movementVertical: IMovementGraphRequest = { zone: ["CO.ZA"], };
         arrayMovementVerticalShare.push(movementVertical);
 
-        const movementVerticalRegistrar: IMovementGraphRequest = { zone: ["WIEN"], registrar: ["1und1", "registrygate", "internetx"] };
+        const movementVerticalRegistrar: IMovementGraphRequest = { zone: ["CO.ZA"], registrar: ["hetzner", "afrihost", "diamatrix"] };
         arrayMovementVerticalShare.push(movementVerticalRegistrar);
 
 

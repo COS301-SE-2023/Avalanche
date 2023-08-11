@@ -10,7 +10,7 @@ import IDomainNameAnalysisGraphRequest from "@/interfaces/requests/DomainNameAna
 import IAgeAnalysisGraphRequest from "@/interfaces/requests/AgeAnalysisGraph";
 import IMovementGraphRequest from "@/interfaces/requests/Movement";
 
-const url = `${process.env.NEXT_PUBLIC_API}/ryce`;
+const url = `${process.env.NEXT_PUBLIC_API}/zacr`;
 
 interface IGraphState {
     graphs: any[],

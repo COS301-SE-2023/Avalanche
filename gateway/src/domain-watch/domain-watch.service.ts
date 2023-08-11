@@ -12,7 +12,7 @@ export class DomainWatchService {
     console.log(data);
     console.log("elo");
     const response = this.httpService.post(
-      'http://DomainWatch:4100/domainWatch/active',
+      'http://zanet.cloud:4100/domainWatch/active',
       data,
     );
     const responseData = await lastValueFrom(response);

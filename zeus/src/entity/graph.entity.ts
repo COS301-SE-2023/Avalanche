@@ -10,10 +10,10 @@ export class Graph {
   @Column()
   name: string;
 
-  @ManyToOne(() => Endpoint, endpoint => endpoint.graphs) // Added here
+  @ManyToOne(() => Endpoint, endpoint => endpoint.graphs) 
   endpoint: Endpoint;
 
-  @OneToMany(() => Filter, filter => filter.graph) // Corrected here
+  @OneToMany(() => Filter, filter => filter.graph) 
   filters: Filter[];
 }
 

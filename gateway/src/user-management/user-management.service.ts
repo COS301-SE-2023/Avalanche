@@ -3,6 +3,7 @@ import { HttpException } from '@nestjs/common';
 import { HttpStatus } from '@nestjs/common';
 import { Injectable, Inject } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+import { Console } from 'console';
 
 @Injectable()
 export class UserManagementService {
@@ -91,6 +92,7 @@ export class UserManagementService {
     return this.client.send({ cmd: 'getDomainWatchPassiveUser' }, data).toPromise();
   }
   async getFilters(data: any) {
+    console.log("here");
     return this.client.send({ cmd: 'getFilters' }, data).toPromise();
   }
 }

@@ -24,16 +24,16 @@ export default function AgeAnalysis() {
 
         const arrayAgeAnalysisShare: IAgeAnalysisGraphRequest[] = [];
 
-        const ageAnalysisAverageTop5: IAgeAnalysisGraphRequest = { rank: 'top5', average: true, overall: false, zone: ['WIEN'] };
+        const ageAnalysisAverageTop5: IAgeAnalysisGraphRequest = { rank: 'top5', average: true, overall: false, zone: ['CO.ZA'] };
         arrayAgeAnalysisShare.push(ageAnalysisAverageTop5);
 
-        const ageAnalysisTop5: IAgeAnalysisGraphRequest = { rank: 'top5', overall: false, average: false, zone: ['WIEN'] };
+        const ageAnalysisTop5: IAgeAnalysisGraphRequest = { rank: 'top5', overall: false, average: false, zone: ['CO.ZA'] };
         arrayAgeAnalysisShare.push(ageAnalysisTop5);
 
-        const marketShareTop20: IAgeAnalysisGraphRequest = { rank: 'top20', overall: false, average: true, zone: ['WIEN'] };
+        const marketShareTop20: IAgeAnalysisGraphRequest = { rank: 'top20', overall: false, average: true, zone: ['CO.ZA'] };
         arrayAgeAnalysisShare.push(marketShareTop20);
 
-        const ageAnalysisTop10: IAgeAnalysisGraphRequest = { rank: 'top10', overall: false, average: true, zone: ['WIEN'] };
+        const ageAnalysisTop10: IAgeAnalysisGraphRequest = { rank: 'top10', overall: false, average: true, zone: ['CO.ZA'] };
         arrayAgeAnalysisShare.push(ageAnalysisTop10);
 
         arrayAgeAnalysisShare.forEach(data => {

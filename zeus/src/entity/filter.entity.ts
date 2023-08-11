@@ -13,7 +13,7 @@ export class Filter {
   @Column()
   type: string;
 
-  @ManyToOne(() => Graph, graph => graph.filters) // Added here
+  @ManyToOne(() => Graph, graph => graph.filters) 
   graph: Graph;
 
   @OneToMany(() => Value, value => value.filter)

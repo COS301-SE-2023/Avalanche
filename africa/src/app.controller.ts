@@ -123,6 +123,7 @@ export class AppController {
     return result;
   }
 
+  //internal
   @MessagePattern({ cmd: 'domainWatchPassive' })
   async domainWatchPassive() {
     const result = await this.domainWatchService.passive();
@@ -137,6 +138,7 @@ export class AppController {
     return result;
   }
 
+  //internal
   @MessagePattern({ cmd: 'loadDomains' })
   async loadDomains() {
     const result = await this.domainWatchService.loadDomains();
@@ -151,6 +153,7 @@ export class AppController {
     return result;
   }
 
+  //internal
   @MessagePattern({ cmd: 'registrarName' })
   async registarName(data: any) {
     const result = await this.registrarNameService.registrarName(data);

@@ -9,7 +9,7 @@ export class Endpoint {
   @Column()
   endpoint: string;
 
-  @OneToMany(() => Graph, graph => graph.endpoint) // Corrected here
+  @OneToMany(() => Graph, graph => graph.endpoint) 
   graphs: Graph[];
 }
 
