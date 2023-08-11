@@ -41,6 +41,7 @@ export const modalManagerSlice = createSlice({
         clearCurrentOpenState(state) {
             state.currentOpen = "";
             state.data = null;
+            state.zoomedData = null;
         },
         // Set data
         setData(state, action) {

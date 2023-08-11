@@ -9,7 +9,6 @@ interface IModalWrapper {
 
 import { Fragment, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
-import ModalFooter from './ModalFooter';
 import { XMarkIcon } from '@heroicons/react/24/solid';
 
 export default function ModalWrapper({ children, title, large }: IModalWrapper) {
