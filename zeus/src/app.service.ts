@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { EntityManager, Repository } from 'typeorm';
 import { NestedValue } from './entity/valueTypes';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -14,9 +14,9 @@ export class AppService {
     private endpointRepository: Repository<Endpoint>,
     ) { }
 
-  async seedEndpointData(): Promise<Object> {
+  async seedEndpointData(data : any): Promise<Object> {
     // JSON data
-    const endpoints = [
+    /*[
       {
         "endpoint": "zacr",
         "graphs": [
@@ -944,7 +944,8 @@ export class AppService {
         ]
       }
       // ... other endpoints
-    ];
+    ]; */
+    const endpoints = data.endpoints;
 
     // Iterate through the JSON data and insert into the respective tables
     await this.entityManager.transaction(async manager => {
@@ -994,6 +995,32 @@ export class AppService {
       "success": "true"
     }
   }
+
+  async editEndpointData(data: any): Promise<Object[]> {
+    // Retrieve all existing data
+    const existingData = await this.endpointRepository.find({
+      relations: ['graphs', 'graphs.filters', 'graphs.filters.values'],
+    });
+  
+    if (!existingData || existingData.length === 0) {
+      throw new NotFoundException('Data not found');
+    }
+  
+    // Update the existing data with the new data
+    const updatedData = existingData.map((existingEndpoint) => {
+      const newEndpoint = data.endpoints; // Adjust the matching condition as needed
+      if (newEndpoint) {
+        return Object.assign(existingEndpoint, newEndpoint);
+      }
+      return existingEndpoint;
+    });
+  
+    // Save the updated data
+    const savedData = await this.endpointRepository.save(updatedData);
+  
+    return savedData;
+  }
+  
 
   async getAllData(): Promise<Endpoint[]> {
     return await this.endpointRepository.find({
