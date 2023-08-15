@@ -1,0 +1,396 @@
+[
+    {
+        "tableName": "Transaction Details",
+        "table": "Fact Sales",
+        "columns": [
+            {
+                "name": "Line Price",
+                "type": "number",
+                "comparison": [
+                    "=",
+                    "<",
+                    ">"
+                ],
+                "filter": true
+            },
+            {
+                "name": "Nett. Amount",
+                "type": "number",
+                "comparison": [
+                    "=",
+                    "<",
+                    ">"
+                ],
+                "filter": true
+            },
+            {
+                "name": "Quantity",
+                "type": "number",
+                "comparison": [
+                    "=",
+                    "<",
+                    ">"
+                ],
+                "filter": true
+            },
+            {
+                "name": "Registry Code",
+                "type": "string[]",
+                "values": [
+                    "DOTKOELN GMBH",
+                    "PUNKT.WIEN GMBH",
+                    "PUNKT TIROL GMBH"
+                ],
+                "comparison": [
+                    "=",
+                    "LIKE"
+                ],
+                "filter": true
+            }
+        ],
+        "joins": [
+            {
+                "table": "Dim Date",
+                "from": "Dim Date Key",
+                "to": "Dim Date Key",
+                "columns": [
+                    {
+                        "name": "Date",
+                        "type": "date",
+                        "filter": true
+                    },
+                    {
+                        "name": "Day Of Week",
+                        "type": "number",
+                        "comparison": [
+                            "=",
+                            "<",
+                            ">"
+                        ],
+                        "filter": true
+                    },
+                    {
+                        "name": "Day Name",
+                        "type": "string[]",
+                        "values": [
+                            "Monday",
+                            "Tuesday",
+                            "Wednesday",
+                            "Thursday",
+                            "Friday",
+                            "Saturday",
+                            "Sunday"
+                        ],
+                        "comparison": [
+                            "=",
+                            "LIKE"
+                        ],
+                        "filter": true
+                    },
+                    {
+                        "name": "Is Weekday?",
+                        "type": "boolean",
+                        "comparison": [
+                            "="
+                        ],
+                        "filter": true
+                    },
+                    {
+                        "name": "Month",
+                        "type": "number",
+                        "comparison": [
+                            "=",
+                            "<",
+                            ">"
+                        ],
+                        "filter": true
+                    },
+                    {
+                        "name": "Month Year",
+                        "type": "text",
+                        "comparison": [
+                            "=",
+                            "LIKE"
+                        ],
+                        "filter": true
+                    },
+                    {
+                        "name": "Month Name",
+                        "type": "text",
+                        "comparison": [
+                            "=",
+                            "LIKE"
+                        ],
+                        "filter": true
+                    },
+                    {
+                        "name": "Year Name",
+                        "type": "text",
+                        "comparison": [
+                            "=",
+                            "LIKE"
+                        ],
+                        "filter": true
+                    }
+                ]
+            },
+            {
+                "table": "Dim Registry Product",
+                "from": "Dim Product Key",
+                "to": "Dim Product Key",
+                "columns": [
+                    {
+                        "name": "Code",
+                        "type": "string",
+                        "values": [
+                            "WIEN_TRANSFER",
+                            "WIEN_RENEW_PREMIUM_G",
+                            "WIEN_RENEW_PREMIUM_C",
+                            "KOELN_AUTORENEW",
+                            "TIROL_NEW",
+                            "WIEN_TRANSFER_PREMIUM_G",
+                            "KOELN_TRANSFER_PREMIUM_I",
+                            "WIEN_RENEW_PREMIUM_B",
+                            "KOELN_NEW",
+                            "WIEN_PREMIUM_D",
+                            "KOELN_RENEW_PREMIUM_D",
+                            "TIROL_TRANSFER",
+                            "COLOGNE_RENEW_PREMIUM_I",
+                            "KOELN_TRANSFER",
+                            "WIEN_TRANSFER_PREMIUM_C",
+                            "WIEN_RENEW_PREMIUM_H",
+                            "WIEN_RENEW_PREMIUM_D",
+                            "KOELN_RENEW",
+                            "KOELN_PREMIUM_I",
+                            "COLOGNE_PREMIUM_I",
+                            "WIEN_PREMIUM_A",
+                            "WIEN_RENEW",
+                            "COLOGNE_PREMIUM_D",
+                            "TIROL_RESTORE",
+                            "COLOGNE_RENEW_PREMIUM_D",
+                            "TIROL_GRACE",
+                            "KOELN_RESTORE",
+                            "WIEN_TRANSFER_PREMIUM_E",
+                            "WIEN_TRANSFER_PREMIUM_D",
+                            "WIEN_GRACE",
+                            "WIEN_PREMIUM_F",
+                            "WIEN_RENEW_PREMIUM_A",
+                            "WIEN_PREMIUM_H",
+                            "COLOGNE_TRANSFER_PREMIUM_D",
+                            "WIEN_PREMIUM_B",
+                            "WIEN_TRANSFER_PREMIUM_A",
+                            "WIEN_TRANSFER_NULL",
+                            "COLOGNE_RESTORE",
+                            "COLOGNE_NEW",
+                            "COLOGNE_RENEW",
+                            "WIEN_TRANSFER_PREMIUM_B",
+                            "COLOGNE_AUTORENEW",
+                            "KOELN_TRANSFER_PREMIUM_D",
+                            "COLOGNE_TRANSFER",
+                            "WIEN_TRANSFER_PREMIUM_H",
+                            "TIROL_TRANSFER_NULL",
+                            "WIEN_NEW",
+                            "WIEN_RENEW_PREMIUM_E",
+                            "WIEN_PREMIUM_C",
+                            "KOELN_PREMIUM_D",
+                            "WIEN_PREMIUM_E",
+                            "KOELN_RENEW_PREMIUM_I",
+                            "TIROL_RENEW",
+                            "WIEN_RESTORE",
+                            "WIEN_PREMIUM_G",
+                            "COLOGNE_TRANSFER_PREMIUM_I"
+                        ],
+                        "comparison": [
+                            "=",
+                            "LIKE"
+                        ],
+                        "filter": true
+                    }
+                ]
+            },
+            {
+                "table": "Dim Registry Domain",
+                "from": "Dim Domain Key",
+                "to": "Dim Domain Key",
+                "columns": [
+                    {
+                        "name": "Created Date",
+                        "type": "date",
+                        "comparison": [
+                            "=",
+                            "<",
+                            ">"
+                        ],
+                        "filter": true
+                    },
+                    {
+                        "name": "Expiry Date",
+                        "type": "date",
+                        "comparison": [
+                            "=",
+                            ">",
+                            "<"
+                        ],
+                        "filter": true
+                    },
+                    {
+                        "name": "Exists In Registry?",
+                        "type": "boolean",
+                        "filter": true
+                    },
+                    {
+                        "name": "Auto-Renew",
+                        "type": "boolean",
+                        "filter": true
+                    },
+                    {
+                        "name": "Status",
+                        "type": "text",
+                        "values": [
+                            "inactive",
+                            "I",
+                            "U"
+                        ],
+                        "filter": true
+                    }
+                ]
+            },
+            {
+                "table": "Dim Registry Registrar",
+                "from": "Dim Registrar Key",
+                "to": "Dim Registrar Key",
+                "columns": [
+                    {
+                        "name": "Code",
+                        "type": "string",
+                        "comparison": [
+                            "=",
+                            "LIKE"
+                        ],
+                        "filter": true
+                    },
+                    {
+                        "name": "Name",
+                        "type": "string",
+                        "comparison": [
+                            "=",
+                            "LIKE"
+                        ],
+                        "filter": true
+                    },
+                    {
+                        "name": "Company Name",
+                        "type": "string",
+                        "comparison": [
+                            "=",
+                            "LIKE"
+                        ],
+                        "filter": true
+                    },
+                    {
+                        "name": "Trading Name",
+                        "type": "string",
+                        "comparison": [
+                            "=",
+                            "LIKE"
+                        ],
+                        "filter": true
+                    }
+                ]
+            },
+            {
+                "table": "Dim Sales Detail",
+                "from": "Dim Sales Detail Key",
+                "to": "Dim Sales Detail Key",
+                "columns": [
+                    {
+                        "name": "System",
+                        "type": "string",
+                        "comparison": [
+                            "=",
+                            "LIKE"
+                        ],
+                        "filter": true
+                    },
+                    {
+                        "name": "Type",
+                        "type": "string[]",
+                        "values": [
+                            "Credit Note",
+                            "Invoice",
+                            null
+                        ],
+                        "comparison": [
+                            "=",
+                            "LIKE"
+                        ],
+                        "filter": true
+                    },
+                    {
+                        "name": "Source",
+                        "type": "string[]",
+                        "comparison": [
+                            "=",
+                            "LIKE"
+                        ],
+                        "values": [
+                            "rengine",
+                            "rest api",
+                            "registrypanel: admin",
+                            null
+                        ],
+                        "filter": true
+                    }
+                ]
+            },
+            {
+                "table": "Dim Registry Zone",
+                "from": "Dim Zone Key",
+                "to": "Dim Zone Key",
+                "columns": [
+                    {
+                        "name": "Zone",
+                        "type": "string[]",
+                        "comparison": [
+                            "="
+                        ],
+                        "values": [
+                            "TIROL",
+                            "WIEN",
+                            "KOELN",
+                            "COLOGNE"
+                        ],
+                        "filter": true
+                    },
+                    {
+                        "name": "Name",
+                        "type": "string[]",
+                        "values": [
+                            "cologne",
+                            "wien",
+                            "tirol",
+                            "koeln"
+                        ],
+                        "comparison": [
+                            "="
+                        ],
+                        "filter": true
+                    },
+                    {
+                        "name": "Operator",
+                        "type": "string[]",
+                        "values": [
+                            "punkt.wien GmbH",
+                            "punkt Tirol GmbH",
+                            "dotKoeln GmbH"
+                        ],
+                        "comparison": [
+                            "="
+                        ],
+                        "filter": true
+                    }
+                ]
+            }
+        ]
+    }
+]
