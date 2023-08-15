@@ -12,9 +12,9 @@ export class AppService {
   constructor(private readonly entityManager: EntityManager,
     @InjectRepository(Endpoint)
     private endpointRepository: Repository<Endpoint>,
-    ) { }
+  ) { }
 
-  async seedEndpointData(data : any): Promise<Object> {
+  async seedEndpointData(data: any): Promise<Object> {
     // JSON data
     /*[
       {
@@ -953,13 +953,13 @@ export class AppService {
         const endpointEntity = new Endpoint();
         endpointEntity.endpoint = endpoint.endpoint;
         const endpointResult = await manager.save(endpointEntity);
-    
+
         for (const graph of endpoint.graphs) {
           const graphEntity = new Graph();
           graphEntity.name = graph.name;
           graphEntity.endpoint = endpointResult; // Correcting the relationship
           const graphResult = await manager.save(graphEntity);
-    
+
           for (const filter of graph.filters) {
             const filterEntity = new Filter();
             filterEntity.name = filter.name;
@@ -967,7 +967,7 @@ export class AppService {
             filterEntity.input = filter.input;
             filterEntity.graph = graphResult; // Correcting the relationship
             const filterResult = await manager.save(filterEntity);
-    
+
             if (Array.isArray(filter.values) && typeof filter.values[0] === 'string') {
               for (const valueItem of filter.values) {
                 const valueEntity = new Value();
@@ -989,7 +989,7 @@ export class AppService {
         }
       }
     });
-    
+
 
     return {
       "success": "true"
@@ -1001,26 +1001,41 @@ export class AppService {
     const existingData = await this.endpointRepository.find({
       relations: ['graphs', 'graphs.filters', 'graphs.filters.values'],
     });
-  
+
     if (!existingData || existingData.length === 0) {
       throw new NotFoundException('Data not found');
     }
-  
+    let count = 0;
+    const newEndpoint = data.endpoints;
+    const countNewEndpoint = newEndpoint.length;
     // Update the existing data with the new data
-    const updatedData = existingData.map((existingEndpoint) => {
-      const newEndpoint = data.endpoints; // Adjust the matching condition as needed
-      if (newEndpoint) {
-        return Object.assign(existingEndpoint, newEndpoint);
-      }
-      return existingEndpoint;
-    });
-  
+    let updatedData = null;
+    if (count != countNewEndpoint) {
+      updatedData = existingData.map((existingEndpoint) => {
+        console.log('Existing Endpoint:', existingEndpoint.endpoint); // Debugging
+
+
+        console.log('New Endpoint:', newEndpoint ? newEndpoint.endpoint : 'Not Found'); // Debugging
+
+
+        if (newEndpoint[count]) {
+          Object.assign(existingEndpoint, newEndpoint[count]);
+        }
+        count++;
+        return existingEndpoint;
+      });
+    }
+
+    console.log('Updated Data:', updatedData); // Debugging
+
+
+
     // Save the updated data
     const savedData = await this.endpointRepository.save(updatedData);
-  
+
     return savedData;
   }
-  
+
 
   async getAllData(): Promise<Endpoint[]> {
     return await this.endpointRepository.find({
