@@ -16,8 +16,18 @@ export class AppController {
     return await this.appService.getAllData();
   }
 
-  @Post('editData')
-  editEndPointData(@Body() data: any): Object {
+  @Post('editFilter')
+  editFilterData(@Body() data: any): Object {
+    return this.appService.editFilterData(data);
+  }
+
+  @Post('editGraph')
+  editGraphData(@Body() data: any): Object {
+    return this.appService.editGraphData(data);
+  }
+
+  @Post('editEndpoint')
+  editEndpointData(@Body() data: any): Object {
     return this.appService.editEndpointData(data);
   }
 }
