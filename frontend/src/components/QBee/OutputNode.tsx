@@ -85,7 +85,6 @@ export default function CustomNode({ data }: NodeProps<NodeData>) {
                     </tbody>
                 </table>
             </div>
-
         </div>
     </div>
 }
