@@ -7,7 +7,6 @@ import { SubmitButton, DangerAlert, Input, InputLabel, Anchor, ErrorToast } from
 import tempLogo from '../assets/logo.png';
 import { Toaster } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
-import { userState, login, clearError, clearLoading } from '@/store/Slices/userSlice';
 import { ILoginRequest } from '@/interfaces/requests';
 import { useRouter } from 'next/router';
 import LoadingPage from '@/components/Util/Loading';
@@ -18,7 +17,6 @@ export default function Home() {
   const passwordRegex: RegExp = /"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,24}$"/;
 
   const dispatch = useDispatch<any>();
-  const stateUser = useSelector(userState);
   const router = useRouter();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -37,23 +35,11 @@ export default function Home() {
       email, password
     }
 
-    dispatch(login({
-      email, password,
-    } as ILoginRequest));
+  
 
   }
 
-  useEffect(() => {
-    dispatch(clearLoading());
-  }, [])
 
-  useEffect(() => {
-    if (stateUser.requests.error) {
-      ErrorToast({ text: `${stateUser.requests.error}` });
-      dispatch(clearError());
-    }
-
-  }, [stateUser.requests]);
 
   const validate = (): boolean => {
     if (!email || !password) {
