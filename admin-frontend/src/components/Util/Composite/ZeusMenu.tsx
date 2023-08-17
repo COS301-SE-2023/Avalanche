@@ -2,17 +2,16 @@ import Dropdown from "../Dropdown";
 import { useState } from "react";
 import SubmitButton from "../SubmitButton";
 import { useDispatch, useSelector } from "react-redux";
-import { zeusState, IZeusState, updateFilters, IFilterData } from "@/store/Slices/ZeusSlice";
+import { zeusState, IZeusState, updateFilters, IFilterData, updateDataSource, updateEndpoint, updateTypeOfUser } from "@/store/Slices/ZeusSlice";
 
 
 export default function Zeusmenu() {
     const dispatch = useDispatch();
     const stateZeus = useSelector(zeusState);
     const ITEMS_PER_PAGE: number = 5;
-    const [dataSource, setDataSource] = useState<string>("");
-    const [endpoint, setEndpoint] = useState<string>("");
-    const [typeOfUser, setTypeOfUser] = useState<string>("");
     const [page, setPage] = useState<number>(1);
+
+  
 
     const incrementPage = () => {
         if (page < Math.floor(((stateZeus.zeus.filters.length) / ITEMS_PER_PAGE) + 1)) {
@@ -59,6 +58,18 @@ export default function Zeusmenu() {
         dispatch(updateFilters(newArr));
     }
 
+    const reduceDataSource=(dataSource:string)=>{   
+        dispatch(updateDataSource(dataSource));
+    }
+
+    const reduceEndpoint=(endpoint:string)=>{   
+        dispatch(updateEndpoint(endpoint));
+    }
+
+    const reduceTypeOfUser=(typeOfUser:string)=>{   
+        dispatch(updateTypeOfUser(typeOfUser));
+    }
+
     const makeRow = () => {
         const zeus: IZeusState = stateZeus.zeus;
         console.log(zeus.filters)
@@ -79,13 +90,13 @@ export default function Zeusmenu() {
         <div>
             <div>
                 <div className="p-2">
-                    <Dropdown id='chooseSource' items={["ZACR", "AFRICA", "RYCE"]} option={dataSource} set={setDataSource} text="Select a Data Source" />
+                    <Dropdown id='chooseSource' items={["ZACR", "AFRICA", "RYCE"]} option={stateZeus.zeus.fetchParams.dataSource} set={reduceDataSource} text="Select a Data Source" />
                 </div>
                 <div className="p-2">
-                    <Dropdown id='chooseEndpoint' items={["Transactions", "Transaction-ranking"]} option={endpoint} set={setEndpoint} text="Select an Endpoint" />
+                    <Dropdown id='chooseEndpoint' items={["transactions", "transactions-ranking","marketShare","age","domainNameAnalysis/count","domainNameAnalysis/length","movement/vertical"]} option={stateZeus.zeus.fetchParams.endpoint} set={reduceEndpoint} text="Select an Endpoint" />
                 </div>
                 <div className="p-2">
-                    <Dropdown id='chooseTypeOfUser' items={["Public", "Rar", "Ry"]} option={typeOfUser} set={setTypeOfUser} text="Select a Type of User" />
+                    <Dropdown id='chooseTypeOfUser' items={["Public", "Registrar", "Registry"]} option={stateZeus.zeus.fetchParams.typeOfUser} set={reduceTypeOfUser} text="Select a Type of User" />
                 </div>
                 <div className="p-2 ">
                     <SubmitButton className=" w-full" text={"Fetch"}></SubmitButton>

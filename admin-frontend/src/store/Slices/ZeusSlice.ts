@@ -12,25 +12,38 @@ export interface IFilterData {
     opened: boolean
 }
 
+export interface IFetchParams {
+    dataSource: string,
+    endpoint: string,
+    typeOfUser: string
+}
+
 export interface IZeusState {
     filters: IFilterData[],
+    fetchParams: IFetchParams
+
 }
 
 const initialState: IZeusState = {
     filters: [{
-        data: {data:"d"},
+        data: { data: "d" },
         name: "Name_1",
         opened: false
     }, {
-        data: {maap:"map"},
+        data: { maap: "map" },
         name: "Name_2",
         opened: false
     }, {
-        data: {hello:"hello"},
+        data: { hello: "hello" },
         name: "Name_3",
         opened: false
     }
     ],
+    fetchParams: {
+        dataSource: "",
+        endpoint: "",
+        typeOfUser: ""
+    }
 }
 
 export const zeusSlice = createSlice({
@@ -45,19 +58,28 @@ export const zeusSlice = createSlice({
         updateFilterData(state, action) {
             const name = action.payload.name;
             const newData = action.payload.data;
-            console.log("newData is",newData)
+            console.log("newData is", newData)
             const filterToUpdate = state.zeus.filters.find(filter => filter.name == name);
             if (filterToUpdate) {
-              filterToUpdate.data = newData;
+                filterToUpdate.data = newData;
             }
-          },
-        
+        },
+        updateDataSource(state,action){
+            state.zeus.fetchParams.dataSource=action.payload;
+        },
+        updateEndpoint(state,action){
+            state.zeus.fetchParams.endpoint=action.payload;
+        },
+        updateTypeOfUser(state,action){
+            state.zeus.fetchParams.typeOfUser=action.payload;
+        }
+
     },
     extraReducers: (builder) => {
 
     }
 });
 
-export const { updateFilters,updateFilterData } = zeusSlice.actions;
+export const { updateFilters, updateFilterData,updateDataSource,updateEndpoint,updateTypeOfUser } = zeusSlice.actions;
 export const zeusState = (state: AppState) => state.zeus;
 export default zeusSlice.reducer;
