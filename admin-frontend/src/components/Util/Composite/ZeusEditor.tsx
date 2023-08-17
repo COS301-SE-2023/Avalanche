@@ -33,6 +33,7 @@ export default function ZeusEditor() {
 
         // options with default values
         const options: TabsOptions = {
+            defaultTabId:"settings",
             activeClasses: 'text-blue-600 hover:text-blue-600 dark:text-blue-500 dark:hover:text-blue-400 border-blue-600 dark:border-blue-500',
             inactiveClasses: 'text-gray-500 hover:text-gray-600 dark:text-gray-400 border-gray-100 hover:border-gray-300 dark:border-gray-700 dark:hover:text-gray-300',
             onShow: () => {
@@ -79,7 +80,7 @@ export default function ZeusEditor() {
     const makeTabContent = () => {
         return stateZeus.zeus.filters.map((item: IFilterData, index: number) => {
             if (item.opened) {
-                return <div className="p-4 rounded-lg bg-gray-50 dark:bg-primaryBackground overflow-x-scroll overflow-y-scoll max-h-[calc(100vh-11rem)] " id={item.name.replaceAll(" ", "-") + ""} role="tabpanel" aria-labelledby={item.name.replaceAll(" ", "-") + "-tab"}>
+                return <div className="hidden p-4 rounded-lg bg-gray-50 dark:bg-primaryBackground overflow-x-scroll overflow-y-scoll max-h-[calc(100vh-11rem)] " id={item.name.replaceAll(" ", "-") + ""} role="tabpanel" aria-labelledby={item.name.replaceAll(" ", "-") + "-tab"}>
                     <ZeusTab filterData={item}></ZeusTab> 
                 </div>
             } else return null;

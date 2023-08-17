@@ -8,11 +8,11 @@ import { getCookie } from "cookies-next";
 import { IFetchFiltersRequest } from "@/interfaces/requests/FetchFilterRequest";
 
 export interface IFilterData {
-    id:number,
+    id: number,
     name: string,
     type: string,
-    values: {}|null,
-    input:string,
+    values: {} | null,
+    input: string,
     opened: boolean
 }
 
@@ -30,6 +30,21 @@ export interface IZeusState {
 
 const initialState: IZeusState = {
     filters: [
+        {
+            id: 1,
+            name: "N1",
+            type: "Beep",
+            values: { v1: 1, v2: 2 },
+            input: "chk",
+            opened: false
+        }, {
+            id: 1,
+            name: "N2",
+            type: "Beepbop",
+            values: { v1: 2, v2: 4 },
+            input: "chk",
+            opened: false
+        }
     ],
     fetchParams: {
         dataSource: "",
@@ -56,34 +71,34 @@ export const zeusSlice = createSlice({
                 filterToUpdate.values = newData;
             }
         },
-        updateDataSource(state,action){
-            state.zeus.fetchParams.dataSource=action.payload;
+        updateDataSource(state, action) {
+            state.zeus.fetchParams.dataSource = action.payload;
         },
-        updateEndpoint(state,action){
-            state.zeus.fetchParams.endpoint=action.payload;
+        updateEndpoint(state, action) {
+            state.zeus.fetchParams.endpoint = action.payload;
         },
-        updateTypeOfUser(state,action){
-            state.zeus.fetchParams.typeOfUser=action.payload;
+        updateTypeOfUser(state, action) {
+            state.zeus.fetchParams.typeOfUser = action.payload;
         }
 
     },
     extraReducers: (builder) => {
         builder.addCase(getFilters.pending, (state) => {
-            
+
         })
         builder.addCase(getFilters.rejected, (state, action) => {
-            
+
         })
         builder.addCase(getFilters.fulfilled, (state, action) => {
             const response = action.payload as any;
-            let newArr:any[]=[];
-            const filters=response.filters.filter((e:any) => {
+            let newArr: any[] = [];
+            const filters = response.filters.filter((e: any) => {
                 let copied = { ...e };
-                copied.opened=false;
+                copied.opened = false;
                 newArr.push(copied);
-                
+
             })
-            state.zeus.filters=newArr;
+            state.zeus.filters = newArr;
         })
     }
 });
@@ -103,6 +118,6 @@ export const getFilters = createAsyncThunk("FILTERS.Get", async (object: IFetchF
     }
 })
 
-export const { updateFilters, updateFilterData,updateDataSource,updateEndpoint,updateTypeOfUser } = zeusSlice.actions;
+export const { updateFilters, updateFilterData, updateDataSource, updateEndpoint, updateTypeOfUser } = zeusSlice.actions;
 export const zeusState = (state: AppState) => state.zeus;
 export default zeusSlice.reducer;
