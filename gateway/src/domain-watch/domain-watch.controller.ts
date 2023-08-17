@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Post, Get } from '@nestjs/common';
+import { Body, Controller, Post, Get, HttpCode } from '@nestjs/common';
 import { DomainWatchService } from './domain-watch.service';
 
 @Controller('domain-watch')
@@ -7,12 +7,14 @@ export class DomainWatchController {
   constructor(private readonly domainWatchService: DomainWatchService) { }
 
   @Post('list')
+  @HttpCode(200)
   async sendData(@Body() data: any) {
     const result = await this.domainWatchService.sendData(data);
     return result;
   }
 
   @Post('whoisyou')
+  @HttpCode(200)
   async whoisyou(@Body() data: any) {
     const result = await this.domainWatchService.whoisyou(data);
     return result;
