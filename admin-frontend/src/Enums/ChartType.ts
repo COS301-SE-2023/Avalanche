@@ -33,3 +33,12 @@ export const ChartTypeArray: any[] = [
         type: ChartType.Radar
     }
 ]
+
+export const getFilteredChartTypes = (datasetSize: number) => {
+    if (datasetSize > 1) {
+      return ChartTypeArray.filter(chart => 
+        [ChartType.Line, ChartType.Bar, ChartType.Bubble].includes(chart.type)
+      );
+    }
+    return ChartTypeArray;
+};

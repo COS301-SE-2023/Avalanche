@@ -28,11 +28,14 @@ export const options = {
         },
         title: {
             display: true,
-            text: 'Chart.js Bar Chart',
+        },
+        y: {
+            beginAtZero: true,
         },
     },
 };
 
 export function BarChart({ data }: IChart) {
-    return <Bar options={options} data={data} />;
+    console.log(data.chartData)
+    return <Bar options={options} data={data.chartData} />;
 }

@@ -46,7 +46,8 @@ export function LineChart({ data, addClass }: IChart) {
                 },
                 grid: {
                     color: theme === "dark" ? "rgba(49, 54, 56, 0.7)" : "rgba(49, 54, 56, 0.2)"
-                }
+                },
+                beginAtZero: true,
             },
             x: {
                 ticks: {
@@ -62,5 +63,5 @@ export function LineChart({ data, addClass }: IChart) {
 
         }
     };
-    return <div className={`${addClass}`}><Line options={options} data={data} /></div >;
+    return <div className={`${addClass}`}><Line options={options} data={data.chartData} /></div >;
 }

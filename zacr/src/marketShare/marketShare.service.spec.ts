@@ -41,7 +41,7 @@ describe('MarketShareService', () => {
         data: {
           graphName:
             'Domain count marketshare across all registrars for all zones ',
-          ...mockData,
+          data: mockData,
           warehouse: 'zacr',
           graphType: 'marketShare',
         },
@@ -66,7 +66,10 @@ describe('MarketShareService', () => {
         data: {
           graphName:
             'Domain count marketshare across all registrars for all zones ',
-          formatted: JSON.parse(mockFormattedData).formatted,
+          data: {
+            chartData: '{"formatted":"test"}',
+            jsonData: undefined,
+          },
           warehouse: 'zacr',
           graphType: 'marketShare',
         },

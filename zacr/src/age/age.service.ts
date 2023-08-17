@@ -6,6 +6,7 @@ import { DataFormatService } from '../data-format/data-format.service';
 import { AnalysisService } from '../analysis/analysis.service';
 import { GraphFormatService } from '../graph-format/graph-format.service';
 import { json } from 'stream/consumers';
+import { DataInterface } from '../interfaces/interfaces';
 
 @Injectable()
 export class AgeService {
@@ -21,12 +22,12 @@ export class AgeService {
     try {
       graphName = this.ageGraphName(filters);
       filters = JSON.stringify(filters);
-      console.log(filters);
       const sqlQuery = `call ageAnalysis('${filters}')`;
 
-      let data = await this.redis.get(`zacr` + sqlQuery);
-      let formattedData = "";
-      if (!data) {
+      const dataR = await this.redis.get(`zacr` + sqlQuery);
+      let data: DataInterface;
+      let formattedData = '';
+      if (!dataR) {
         let queryData: any;
 
         try {
@@ -43,20 +44,28 @@ export class AgeService {
         formattedData = await this.graphFormattingService.formatAgeAnalysis(
           JSON.stringify(queryData),
         );
-        data = JSON.stringify([formattedData, queryData[0]['AGEANLYSIS']]);  
+
+        data = {
+          chartData: JSON.parse(formattedData),
+          jsonData: JSON.parse(queryData[0]['AGEANALYSIS']),
+        };
+
+        //data = JSON.stringify([formattedData, queryData[0]['AGEANLYSIS']]);
         await this.redis.set(
           `zacr` + sqlQuery,
-          data,
+          JSON.stringify(data),
           'EX',
           72 * 60 * 60,
         );
+      } else {
+        data = JSON.parse(dataR);
       }
 
       return {
         status: 'success',
         data: {
           graphName: graphName,
-          ...JSON.parse(data),
+          data: data,
           warehouse: 'zacr',
           graphType: 'age',
         },

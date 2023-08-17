@@ -20,5 +20,5 @@ export const options = {
 };
 
 export function BubbleChart({ data }: IChart) {
-    return <Bubble options={options} data={data} />;
+    return <Bubble options={options} data={data.chartData} />;
 }

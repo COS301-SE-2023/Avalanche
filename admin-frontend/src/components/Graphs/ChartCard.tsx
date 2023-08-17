@@ -1,7 +1,7 @@
 import { ChartBarIcon, FunnelIcon, MagnifyingGlassPlusIcon, ChevronDownIcon } from "@heroicons/react/24/solid";
 import { BarChart, BubbleChart, LineChart, PieChart, PolarAreaChart, RadarChart } from "@/components/Graphs";
 import { useState, useEffect } from 'react';
-import { ChartType, ChartTypeArray } from "@/Enums";
+import { ChartType, ChartTypeArray} from "@/Enums";
 import { ChartCardButton } from "./ChartCardHeader";
 import { Fragment } from 'react'
 import { Menu, Transition } from '@headlessui/react'
@@ -20,6 +20,15 @@ interface IChartCard {
     data: any,
     defaultGraph: ChartType
 }
+
+const getFilteredChartTypes = (datasetSize: number) => {
+    if (datasetSize > 1) {
+      return ChartTypeArray.filter(chart => 
+        [ChartType.Line, ChartType.Bar, ChartType.Bubble].includes(chart.type)
+      );
+    }
+    return ChartTypeArray;
+};
 
 export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
 
@@ -217,7 +226,7 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
                             <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-700">
                                 <div className="py-1">
                                     {
-                                        ChartTypeArray.map((item, index) => {
+                                        getFilteredChartTypes(graphData.chartData.dataset.length).map((item, index) => {
                                             return (<Menu.Item key={index}>
                                                 <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer" key={index} onClick={() => {
                                                     setType(item.type);

@@ -12,5 +12,5 @@ import { IChart } from '@/interfaces';
 ChartJS.register(RadialLinearScale, ArcElement, Tooltip, Legend);
 
 export function PolarAreaChart({ data }: IChart) {
-    return <PolarArea data={data} />;
+    return <PolarArea data={data.chartData} />;
 }

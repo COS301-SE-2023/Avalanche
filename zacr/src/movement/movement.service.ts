@@ -5,6 +5,7 @@ import { SnowflakeService } from '../snowflake/snowflake.service';
 import { DataFormatService } from '../data-format/data-format.service';
 import { AnalysisService } from '../analysis/analysis.service';
 import { GraphFormatService } from '../graph-format/graph-format.service';
+import { DataInterface } from '../interfaces/interfaces';
 
 @Injectable()
 export class MovementService {
@@ -21,12 +22,12 @@ export class MovementService {
       graphName = this.netVerticalGraphName(filters);
 
       filters = JSON.stringify(filters);
-      console.log(filters);
       const sqlQuery = `call nettVerticalMovement('${filters}')`;
 
-      let data = await this.redis.get(`zacr` + sqlQuery);
-      let formattedData = "";
-      if (!data) {
+      const dataR = await this.redis.get(`zacr` + sqlQuery);
+      let data: DataInterface;
+      let formattedData = '';
+      if (!dataR) {
         let queryData;
         try {
           queryData = await this.snowflakeService.execute(sqlQuery);
@@ -42,14 +43,20 @@ export class MovementService {
         formattedData = await this.graphFormattingService.formatNettVertical(
           JSON.stringify(queryData),
         );
-        data = JSON.stringify([formattedData, queryData[0]['NETTVERTICALMOVEMENT']]);
+
+        data = {
+          chartData: JSON.parse(formattedData),
+          jsonData: JSON.parse(queryData[0]['NETTVERTICALMOVEMENT']),
+        };
 
         await this.redis.set(
           `zacr` + sqlQuery,
-          data,
+          JSON.stringify(data),
           'EX',
           72 * 60 * 60,
         );
+      } else {
+        data = JSON.parse(dataR);
       }
 
       filters = JSON.parse(filters);
@@ -57,7 +64,7 @@ export class MovementService {
         status: 'success',
         data: {
           graphName: graphName,
-          ...JSON.parse(data),
+          data: data,
           warehouse: 'zacr',
           graphType: 'movement/vertical',
         },

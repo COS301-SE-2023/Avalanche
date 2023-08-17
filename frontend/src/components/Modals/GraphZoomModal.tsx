@@ -1,6 +1,6 @@
 import { ModalWrapper } from './ModalOptions';
 import { useState } from 'react';
-import { BarChart, BubbleChart, LineChart, PieChart, PolarAreaChart, RadarChart } from "@/components/Graphs";
+import { BarChart, BubbleChart, LineChart, PieChart, PolarAreaChart, RadarChart, TableChart } from "@/components/Graphs";
 import { selectModalManagerState, setZoomData, clearZoomData } from '@/store/Slices/modalManagerSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { ChartType } from '@/Enums';
@@ -69,7 +69,7 @@ export default function GraphZoomModal({ custom }: IGraphZoomModal) {
             </ModalWrapper>
         )
     }
-
+    
     return (
         <ModalWrapper title={state.zoomedData?.graphName || state.data?.data?.graphName} large={true}>
             <div className="flex h-full">
@@ -80,6 +80,7 @@ export default function GraphZoomModal({ custom }: IGraphZoomModal) {
                     {state.data?.type === ChartType.Bubble && <BubbleChart data={state.data.data} />}
                     {state.data?.type === ChartType.PolarArea && <PolarAreaChart data={state.data.data} />}
                     {state.data?.type === ChartType.Radar && <RadarChart data={state.data.data} />}
+                    {state.data?.type === ChartType.Table && <TableChart data={state.data.data} />}
                 </div>
                 {custom && <div className="flex flex-col gap-5 flex-auto">
                     <form onSubmit={(e) => uploadComment(e)}>
