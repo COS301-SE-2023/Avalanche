@@ -16,6 +16,12 @@ export class AppController {
     return await this.appService.getAllData();
   }
 
+
+  @Post('getFilters')
+  async getFiltersData(@Body() data: any) {
+    return this.appService.getFiltersData(data);
+  }
+
   @Post('editFilter')
   editFilterData(@Body() data: any): Object {
     return this.appService.editFilterData(data);
