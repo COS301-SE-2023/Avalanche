@@ -26,7 +26,7 @@ export class AppService {
 
         for (const graph of endpoint.graphs) {
           const graphEntity = new Graph();
-          graphEntity.graphName = graph.graphName;
+          graphEntity.graphName = graph.name;
           graphEntity.user = graph.user;
           graphEntity.endpoint = endpointResult; // Correcting the relationship
           const graphResult = await manager.save(graphEntity);
@@ -163,8 +163,30 @@ export class AppService {
 
   async getAllData(): Promise<Endpoint[]> {
     return await this.endpointRepository.find({
-      relations: ['graphs', 'graphs.filters', 'graphs.filters.values'], // Include necessary relations
+      relations: ['graphs', 'graphs.filters', 'graphs.filters'], // Include necessary relations
     });
+  }
+
+
+  async getFiltersData(data: any): Promise<Object> {
+    const existingData = await this.endpointRepository.find({ where : {endpoint : data.dataSource},
+      relations: ['graphs', 'graphs.filters'],
+    });
+
+    if (!existingData || existingData.length === 0) {
+      throw new NotFoundException('Data not found');
+    }
+
+    if (data.dataSource && data.endPoint != null && data.typeOfUser ){
+      const endpoint = existingData.at(0);
+      const graph = await this.graphRepository.find({ where: { graphName : data.endPoint, user : data.typeOfUser}, relations: ["filters","endpoint"] });
+      for(let count = 0; count<graph.length; count++){
+        if(graph.at(count).endpoint.endpoint == endpoint.endpoint){
+          return {"status" : "success", "filters" : graph.at(count).filters};
+        }
+      }
+      return {"status" : "failure"};
+    }
   }
 }
 

@@ -1,5 +1,5 @@
-import { ChartBarIcon, FunnelIcon, MagnifyingGlassPlusIcon, ChevronDownIcon, DocumentIcon, ShareIcon } from "@heroicons/react/24/solid";
-import { BarChart, BubbleChart, LineChart, PieChart, PolarAreaChart, RadarChart } from "@/components/Graphs";
+import { ChartBarIcon, FunnelIcon, MagnifyingGlassPlusIcon, ChevronDownIcon, DocumentIcon, ShareIcon, ArrowDownTrayIcon} from "@heroicons/react/24/solid";
+import { BarChart, BubbleChart, LineChart, PieChart, PolarAreaChart, RadarChart, TableChart } from "@/components/Graphs";
 import { useState, useEffect } from 'react';
 import { ChartType, ChartTypeArray } from "@/Enums";
 import { ChartCardButton } from "./ChartCardHeader";
@@ -21,6 +21,8 @@ interface IChartCard {
     defaultGraph: ChartType
 }
 
+
+
 export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
 
     const dispatch = useDispatch<any>();
@@ -34,7 +36,7 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
 
     const [type, setType] = useState<ChartType>(defaultGraph);
     const [filterDropdown, setFilterDropdown] = useState<boolean>(false);
-    const [graphData, setGraphData] = useState<any>(data);
+    const [graphData, setGraphData] = useState<any>(data.data);
     const [warehouse, setWarehouse] = useState<string>(data.warehouse);
     const [gType, setGType] = useState<string>(data.graphType);
     const [loading, setLoading] = useState<boolean>(false);
@@ -236,7 +238,7 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
                     <Menu as="div" className="relative inline-block text-left">
                         <div>
                             <Menu.Button className="inline-flex justify-center p-1.5 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-lightHover dark:hover:bg-gray-600">
-                                <ShareIcon className="w-6 h-6" /> {/* Use an appropriate download icon */}
+                                <ArrowDownTrayIcon className="w-6 h-6" /> {/* Use an appropriate download icon */}
                             </Menu.Button>
                         </div>
                         <Transition
@@ -252,13 +254,13 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
                                 <div className="py-1">
                                     <Menu.Item>
                                         <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer" onClick={() => {
-                                            const csv = convertToCSV(graphData);
+                                            const csv = convertToCSV(graphData.jsonData);
                                             downloadCSV(csv, 'data.csv');
                                         }}>Download CSV</span>
                                     </Menu.Item>
                                     <Menu.Item>
                                         <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer" onClick={() => {
-                                            const json = JSON.stringify(graphData);
+                                            const json = JSON.stringify(graphData.jsonData);
                                             downloadJSON(json, 'data.json');
                                         }}>Download JSON</span>
                                     </Menu.Item>
@@ -287,7 +289,14 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
                             <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-700">
                                 <div className="py-1">
                                     {
-                                        ChartTypeArray.map((item, index) => {
+                                        ChartTypeArray.filter(item => {
+                                            // If the dataset size is more than 1, only allow Line, Bar, and Scatter.
+                                            if (graphData?.chartData?.datasets?.length > 1) {
+                                                return [ChartType.Line, ChartType.Bar, ChartType.Bubble, ChartType.Table].includes(item.type);
+                                            }
+                                            // Otherwise, show all chart types.
+                                            return true;
+                                        }).map((item, index) => {
                                             return (<Menu.Item key={index}>
                                                 <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer" key={index} onClick={() => {
                                                     setType(item.type);
@@ -308,6 +317,7 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
                 {type === ChartType.Bubble && <BubbleChart data={graphData} />}
                 {type === ChartType.PolarArea && <PolarAreaChart data={graphData} />}
                 {type === ChartType.Radar && <RadarChart data={graphData} />}
+                {type === ChartType.Table && <TableChart data={graphData} />}
             </div> : <div role="status" className="flex justify-between h-64 w-full bg-gray-300 rounded-lg animate-customPulse dark:bg-gray-700 p-6" />}
 
         </div >
