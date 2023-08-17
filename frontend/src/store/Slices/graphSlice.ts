@@ -105,6 +105,13 @@ export const graphSlice = createSlice({
         builder.addCase(getAgeAnalysisData.fulfilled, (state, action) => {
             const payload = action.payload as any;
             state.graphs.push(payload.data);
+            payload.data.data.chartData.datasets.forEach((set: any, index: number) => {
+                set.backgroundColor = chartColours[index];
+                set.borderColor = chartColours[index];
+                set.pointRadius = 4;
+                set.pointHoverRadius = 5;
+            })
+            state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
         })
@@ -114,6 +121,13 @@ export const graphSlice = createSlice({
         })
         builder.addCase(getDomainNameAnalysisData.fulfilled, (state, action) => {
             const payload = action.payload as any;
+            state.graphs.push(payload.data);
+            payload.data.data.chartData.datasets.forEach((set: any, index: number) => {
+                set.backgroundColor = chartColours[index];
+                set.borderColor = chartColours[index];
+                set.pointRadius = 4;
+                set.pointHoverRadius = 5;
+            })
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
@@ -125,6 +139,13 @@ export const graphSlice = createSlice({
         builder.addCase(getDomainLengthData.fulfilled, (state, action) => {
             const payload = action.payload as any;
             state.graphs.push(payload.data);
+            payload.data.data.chartData.datasets.forEach((set: any, index: number) => {
+                set.backgroundColor = chartColours[index];
+                set.borderColor = chartColours[index];
+                set.pointRadius = 4;
+                set.pointHoverRadius = 5;
+            })
+            state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
         })
@@ -134,6 +155,13 @@ export const graphSlice = createSlice({
         })
         builder.addCase(getMovementVerticalData.fulfilled, (state, action) => {
             const payload = action.payload as any;
+            state.graphs.push(payload.data);
+            payload.data.data.chartData.datasets.forEach((set: any, index: number) => {
+                set.backgroundColor = chartColours[index];
+                set.borderColor = chartColours[index];
+                set.pointRadius = 4;
+                set.pointHoverRadius = 5;
+            })
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
