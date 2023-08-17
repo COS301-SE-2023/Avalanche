@@ -74,7 +74,7 @@ export default function Zeusmenu() {
         console.log("meep")
         dispatch(getFilters(
             {dataSource: stateZeus.zeus.fetchParams.dataSource,
-            endpoint: stateZeus.zeus.fetchParams.endPoint,
+            endpoint: stateZeus.zeus.fetchParams.endpoint,
             typeOfUser: stateZeus.zeus.fetchParams.typeOfUser} as IFetchFiltersRequest))
 
     }
