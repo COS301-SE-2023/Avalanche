@@ -34,5 +34,5 @@ export const options = {
 };
 
 export function BarChart({ data }: IChart) {
-    return <Bar options={options} data={data} />;
+    return <Bar options={options} data={data.chartData} />;
 }

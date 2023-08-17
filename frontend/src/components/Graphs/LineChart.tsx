@@ -62,5 +62,5 @@ export function LineChart({ data, addClass }: IChart) {
 
         }
     };
-    return <div className={`${addClass}`}><Line options={options} data={data} /></div >;
+    return <div className={`${addClass}`}><Line options={options} data={data.chartData} /></div >;
 }

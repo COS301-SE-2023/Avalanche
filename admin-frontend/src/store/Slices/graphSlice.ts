@@ -67,6 +67,7 @@ export const graphSlice = createSlice({
         })
         builder.addCase(getGraphDataRanking.fulfilled, (state, action) => {
             const payload = action.payload as any;
+            console.log(payload.data)
             payload.data.datasets.forEach((set: any, index: number) => {
                 set.backgroundColor = chartColours[index];
                 set.borderColor = chartColours[index];
@@ -219,6 +220,7 @@ export const getGraphDataRanking = createAsyncThunk("GRAPH.GetGraphDataRanking",
                 "Authorization": `Bearer ${jwt}`
             }
         }).json();
+        console.log(response);
         return response;
     } catch (e) {
         if (e instanceof Error) return rejectWithValue(e.message);

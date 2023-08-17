@@ -34,10 +34,12 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
 
     const [type, setType] = useState<ChartType>(defaultGraph);
     const [filterDropdown, setFilterDropdown] = useState<boolean>(false);
-    const [graphData, setGraphData] = useState<any>(data);
+    const [graphData, setGraphData] = useState<any>(data.data);
     const [warehouse, setWarehouse] = useState<string>(data.warehouse);
     const [gType, setGType] = useState<string>(data.graphType);
     const [loading, setLoading] = useState<boolean>(false);
+    console.log('data');
+    console.log(data);
 
     const [request, setRequest] = useState<any>({});
 
