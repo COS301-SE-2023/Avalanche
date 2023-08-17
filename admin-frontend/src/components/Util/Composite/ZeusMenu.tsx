@@ -29,12 +29,32 @@ export default function Zeusmenu() {
 
     const openTab = (name: string) => {
 
+        let newArr: IFilterData[] = [];
+        let selected: IFilterData = { data: {}, name: "placeholder", opened: false };
+        stateZeus.zeus.filters.filter((e: IFilterData) => {
+            let copied = { ...e };
+            console.log((copied.name == name));
+            if (copied.name == name) {
+                copied.opened = true; 
+            }
+            else {
+               
+            }
+ newArr.push(copied);
+        })
+
+        dispatch(updateFilters(newArr));
+    }
+
+    const removeFilter = (name: string) => {
         let newArr:IFilterData[]=[];
         stateZeus.zeus.filters.filter((e:IFilterData) => {
             let copied = { ...e };
             console.log((copied.name==name));
-            if (copied.name == name) { console.log(e);copied.opened = true }       
-            newArr.push(copied);
+            if (copied.name == name) { console.log(e);copied.opened = false }  else{
+                newArr.push(copied);
+            }     
+            
         })
         dispatch(updateFilters(newArr));
     }
@@ -43,6 +63,7 @@ export default function Zeusmenu() {
         const zeus: IZeusState = stateZeus.zeus;
         console.log(zeus.filters)
         const showRows: IFilterData[] = zeus.filters?.slice((page - 1) * ITEMS_PER_PAGE, (page * ITEMS_PER_PAGE));
+        showRows.sort((a,b) => (a.name > b.name) ? 1 : ((b.name> a.name) ? -1 : 0));
         return showRows.map((item: IFilterData, index: number) => <tr key={index} className="bg-white border-b dark:bg-secondaryBackground dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-thirdBackground">
 
             <th scope="row" className=" w-80 overflow-auto px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -50,7 +71,7 @@ export default function Zeusmenu() {
             </th>
             <td className="px-6 py-4">
                 <a onClick={() => { openTab(item.name.replaceAll(" ", "-")) }} href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit </a>
-                <a href="#" className="font-medium text-red-600 dark:text-red-500 hover:underline">Remove</a>
+                <a onClick={() => { removeFilter(item.name.replaceAll(" ", "-")) }}href="#" className="font-medium text-red-600 dark:text-red-500 hover:underline">Remove</a>
             </td>
         </tr>)
     }
