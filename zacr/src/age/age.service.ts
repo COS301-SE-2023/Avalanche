@@ -24,9 +24,9 @@ export class AgeService {
       console.log(filters);
       const sqlQuery = `call ageAnalysis('${filters}')`;
 
-      let formattedData = await this.redis.get(`zacr` + sqlQuery);
-
-      if (!formattedData) {
+      let data = await this.redis.get(`zacr` + sqlQuery);
+      let formattedData = "";
+      if (!data) {
         let queryData: any;
 
         try {
@@ -43,10 +43,10 @@ export class AgeService {
         formattedData = await this.graphFormattingService.formatAgeAnalysis(
           JSON.stringify(queryData),
         );
-
+        data = JSON.stringify([formattedData, queryData[0]['AGEANLYSIS']]);  
         await this.redis.set(
           `zacr` + sqlQuery,
-          formattedData,
+          data,
           'EX',
           72 * 60 * 60,
         );
@@ -56,7 +56,7 @@ export class AgeService {
         status: 'success',
         data: {
           graphName: graphName,
-          ...JSON.parse(formattedData),
+          ...JSON.parse(data),
           warehouse: 'zacr',
           graphType: 'age',
         },

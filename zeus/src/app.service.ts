@@ -26,7 +26,8 @@ export class AppService {
 
         for (const graph of endpoint.graphs) {
           const graphEntity = new Graph();
-          graphEntity.name = graph.name;
+          graphEntity.graphName = graph.graphName;
+          graphEntity.user = graph.user;
           graphEntity.endpoint = endpointResult; // Correcting the relationship
           const graphResult = await manager.save(graphEntity);
 
@@ -108,7 +109,8 @@ export class AppService {
       const graph = await this.graphRepository.findOne({ where: { id: graphIdGet.id }, relations: ["filters"] });
       if (graph) {
         const updateData = {
-          name: data.newData[0].name,
+          graphName: data.newData[0].graphName,
+          user: data.newData[0].user,
           filters: data.newData[0].filter,
         };
 
@@ -123,7 +125,8 @@ export class AppService {
       const endpointGet = existingData[data.endpointId];
       const endpoint = await this.endpointRepository.findOne({ where: { id: endpointGet.id }, relations: ["graphs"] });
       const graphEntity = new Graph();
-      graphEntity.name = data.newData[0].name;
+      graphEntity.graphName = data.newData[0].graphName;
+      graphEntity.user = data.newData[0].user;
       graphEntity.filters = data.newData[0].filters;
       graphEntity.endpoint = endpoint; // Correcting the relationship
       await this.filterRepository.save(graphEntity);

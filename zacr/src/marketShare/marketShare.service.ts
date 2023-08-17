@@ -21,9 +21,9 @@ export class MarketShareService {
       console.log(filters);
       const sqlQuery = `call marketShare('${filters}')`;
 
-      let formattedData = await this.redis.get(`zacr` + sqlQuery);
-
-      if (!formattedData) {
+      let data = await this.redis.get(`zacr` + sqlQuery);
+      let formattedData = '';
+      if (!data) {
         let queryData;
         try {
           queryData = await this.snowflakeService.execute(sqlQuery);

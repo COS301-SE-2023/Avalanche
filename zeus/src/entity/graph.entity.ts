@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, PrimaryColumn } from 'typeorm';
 import { Filter } from './filter.entity';
 import { Endpoint } from './endpoint.entity';
 
@@ -7,8 +7,10 @@ export class Graph {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  name: string;
+  @PrimaryColumn()
+  graphName: string;
+  @PrimaryColumn()
+  user: string;
 
   @ManyToOne(() => Endpoint, endpoint => endpoint.graphs) 
   endpoint: Endpoint;
