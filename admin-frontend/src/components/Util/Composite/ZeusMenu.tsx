@@ -71,7 +71,7 @@ export default function Zeusmenu() {
     }
 
     const fetchFilters=()=>{
-
+        console.log("meep")
         dispatch(getFilters(
             {dataSource: stateZeus.zeus.fetchParams.dataSource,
             endpoint: stateZeus.zeus.fetchParams.endPoint,
@@ -99,13 +99,13 @@ export default function Zeusmenu() {
         <div>
             <div>
                 <div className="p-2">
-                    <Dropdown id='chooseSource' items={["ZACR", "AFRICA", "RYCE"]} option={stateZeus.zeus.fetchParams.dataSource} set={reduceDataSource} text="Select a Data Source" />
+                    <Dropdown id='chooseSource' items={["zacr", "africa", "ryce"]} option={stateZeus.zeus.fetchParams.dataSource} set={reduceDataSource} text="Select a Data Source" />
                 </div>
                 <div className="p-2">
                     <Dropdown id='chooseEndpoint' items={["transactions", "transactions-ranking","marketShare","age","domainNameAnalysis/count","domainNameAnalysis/length","movement/vertical"]} option={stateZeus.zeus.fetchParams.endpoint} set={reduceEndpoint} text="Select an Endpoint" />
                 </div>
                 <div className="p-2">
-                    <Dropdown id='chooseTypeOfUser' items={["Public", "Registrar", "Registry"]} option={stateZeus.zeus.fetchParams.typeOfUser} set={reduceTypeOfUser} text="Select a Type of User" />
+                    <Dropdown id='chooseTypeOfUser' items={["public", "registrar", "registry"]} option={stateZeus.zeus.fetchParams.typeOfUser} set={reduceTypeOfUser} text="Select a Type of User" />
                 </div>
                 <div className="p-2 ">
                     <SubmitButton onClick={fetchFilters} className=" w-full" text={"Fetch"}></SubmitButton>

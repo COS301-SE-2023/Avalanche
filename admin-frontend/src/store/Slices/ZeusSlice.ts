@@ -90,7 +90,7 @@ export const zeusSlice = createSlice({
 
 export const getFilters = createAsyncThunk("FILTERS.Get", async (object: IFetchFiltersRequest, { rejectWithValue }) => {
     try {
-        const response = ky.post(`localhost:3998/getFilters`, {
+        const response = ky.post(`http://localhost:3998/getFilters`, {
             json: object, timeout: false, headers: {
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
