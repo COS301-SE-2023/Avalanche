@@ -26,7 +26,7 @@ export default function ZeusTab({filterData}: ITransferFilterData) {
     useEffect(() => {
         // Code to run when the component is initialized
         console.log(filterData)
-        const copy = JSON.parse(JSON.stringify(filterData.values)) as typeof filterData.values;
+        const copy = JSON.parse(JSON.stringify(filterData.filter)) as typeof filterData.filter;
         setData(copy);
     }, []); // Empty dependency array means the effect runs once after initial render
 

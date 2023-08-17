@@ -8,11 +8,14 @@ import { getCookie } from "cookies-next";
 import { IFetchFiltersRequest } from "@/interfaces/requests/FetchFilterRequest";
 
 export interface IFilterData {
-    id: number,
-    name: string,
-    type: string,
-    values: {} | null,
-    input: string,
+    name:string,
+    filter: {
+        id: number,
+        name: string,
+        type: string,
+        values: {} | null,
+        input: string
+    },
     opened: boolean
 }
 
@@ -31,18 +34,24 @@ export interface IZeusState {
 const initialState: IZeusState = {
     filters: [
         {
-            id: 1,
-            name: "N1",
-            type: "Beep",
-            values: { v1: 1, v2: 2 },
-            input: "chk",
+            name:"N1",
+            filter: {
+                id: 1,
+                name: "N1",
+                type: "Beep",
+                values: { v1: 1, v2: 2 },
+                input: "chk"
+            },
             opened: false
         }, {
-            id: 1,
-            name: "N2",
-            type: "Beepbop",
-            values: { v1: 2, v2: 4 },
-            input: "chk",
+            name:"N2",
+            filter: {
+                id: 1,
+                name: "N2",
+                type: "Beepbop",
+                values: { v1: 2, v2: 4 },
+                input: "chk"
+            },
             opened: false
         }
     ],
@@ -68,7 +77,7 @@ export const zeusSlice = createSlice({
             console.log("newData is", newData)
             const filterToUpdate = state.zeus.filters.find(filter => filter.name == name);
             if (filterToUpdate) {
-                filterToUpdate.values = newData;
+                filterToUpdate.filter = newData;
             }
         },
         updateDataSource(state, action) {
@@ -94,8 +103,8 @@ export const zeusSlice = createSlice({
             let newArr: any[] = [];
             const filters = response.filters.filter((e: any) => {
                 let copied = { ...e };
-                copied.opened = false;
-                newArr.push(copied);
+                const obj={name:copied.name,filter:copied,opened:false};
+                newArr.push(obj);
 
             })
             state.zeus.filters = newArr;
