@@ -4,9 +4,7 @@ import Link from "next/link"
 import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import { MoonIcon, SunIcon, Cog6ToothIcon, Bars4Icon, ArrowLeftOnRectangleIcon, PencilIcon, HomeIcon, ChevronDownIcon, ChartPieIcon,BoltIcon } from "@heroicons/react/24/solid";
-import { selectModalManagerState } from "@/store/Slices/modalManagerSlice";
 import { useSelector, useDispatch } from "react-redux";
-import { userState, logout } from "@/store/Slices/userSlice";
 import { useRouter } from "next/router";
 import { getCookie, deleteCookie } from "cookies-next";
 import LoadingPage from "../Util/Loading";
@@ -21,9 +19,7 @@ export default function Sidebar() {
     const { theme, setTheme } = useTheme();
     const [menu, setMenu] = useState<boolean>(false);
     const [df, setDF] = useState<boolean>(false);
-    const stateUser = useSelector(userState);
     const dispatch = useDispatch();
-    const modalState = useSelector(selectModalManagerState);
     const router = useRouter();
 
     const jwt = getCookie("jwt");
@@ -70,10 +66,6 @@ export default function Sidebar() {
     /**
      * Handles if the user is not logged in, or the jwt token does not exist
      */
-    useEffect(() => {
-        if (!stateUser.user.id) {
-        }
-    }, [stateUser]);
 
     /**
      * Handles dark and light mode toggles
@@ -85,7 +77,7 @@ export default function Sidebar() {
     
         return (
             <>
-                <button data-drawer-target="default-sidebar" data-drawer-toggle="default-sidebar" aria-controls="default-sidebar" type="button" className={`fixed top-2 right-2 z-20 inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600 bg-gray-700 animate__animated ${!modalState.currentOpen ? "animate__fadeIn animate__faster" : "hidden animate__fadeOut animate__faster"}`} onClick={() => setMenu(true)}>
+                <button data-drawer-target="default-sidebar" data-drawer-toggle="default-sidebar" aria-controls="default-sidebar" type="button" className={`fixed top-2 right-2 z-20 inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600 bg-gray-700 animate__animated`} onClick={() => setMenu(true)}>
                     <Bars4Icon className="h-8 w-8" />
                 </button>
                 <div onClick={() => {
@@ -104,29 +96,14 @@ export default function Sidebar() {
                             </ul>
                             {/* bottom list */}
                             <ul className="pt-4 mt-4 space-y-2 font-medium border-t border-gray-700 dark:border-gray-700 flex flex-col gap-2">
-                                <li>
-                                    <SubmitButton text="Create a Dashboard" className="w-full" onClick={() => {
-                                        router.push({
-                                            pathname: `/custom/${uuidv4()}`
-                                        }, undefined, {
-                                            shallow: false
-                                        })
-                                    }} />
-                                </li>
-                                <ul className="overflow-y-auto overflow-x-hidden flex-auto">
-                                    {
-                                        stateUser.user?.dashboards?.map((option: any, index: number) => {
-                                            return <SideBarItem text={option.name} icon={<PencilIcon className="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />} page={`custom/${option.dashboardID}`} key={index} />
-                                        })
-                                    }
-                                </ul>
+                                
                             </ul>
                         </div>
                         <div className="absolute bottom-0 left-0 justify-center p-4 w-full lg:flex flex-col gap-2 bg-gray-200 dark:bg-primaryBackground z-20 border-r border-gray-200 dark:border-secondaryBackground">
                             <div>
                                 <div className="flex items-center space-x-4">
                                     <div className="font-medium dark:text-white text-black">
-                                        <div>{stateUser.user.firstName} {stateUser.user.lastName}</div>
+                                        <div></div>
                                     </div>
                                 </div>
                             </div>
@@ -138,7 +115,7 @@ export default function Sidebar() {
                                     {theme === "dark" ? <SunIcon className="w-6 h-6" /> : <MoonIcon className="w-6 h-6" />}
                                     <span className="sr-only">Theme toggle</span>
                                 </button>
-                                <button type="button" className="inline-flex justify-center p-2 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-600" onClick={() => dispatch(logout())}>
+                                <button type="button" className="inline-flex justify-center p-2 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-600" >
                                     <ArrowLeftOnRectangleIcon className="w-6 h-6" />
                                     <span className="sr-only">Logout</span>
                                 </button>
@@ -146,7 +123,6 @@ export default function Sidebar() {
                         </div>
                     </aside>
                 </div>
-                {modalState.currentOpen === "GRAPH.CreateDashboard" && <CreateDashboardModal />}
             </>
         )
 }

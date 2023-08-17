@@ -5,15 +5,14 @@ import { useEffect, useState } from "react";
 import PageHeader from "@/components/Util/PageHeader";
 import { SubmitButton, WarningAlert, ErrorToast, InputLabel, Input, AlternativeButton, Anchor } from "@/components/Util";
 import { Toaster } from 'react-hot-toast';
-import { domainWatchState, getDomainWatch, updateChanging } from "@/store/Slices/domainWatchSlice";
 import { IDomainWatchRequest } from "@/interfaces/requests";
 import { useDispatch, useSelector } from 'react-redux';
 import { IDomainWatchType } from "@/interfaces/requests/DomainWatch";
 import ky, { HTTPError } from "ky";
 import { getCookie } from "cookies-next";
 import WHOISModal from "@/components/Modals/WHOISModal";
-import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
 import Zeusmenu from "@/components/Util/Composite/ZeusMenu";
+import ZeusEditor from "@/components/Util/Composite/ZeusEditor";
 
 export default function Settings() {
 
@@ -22,8 +21,6 @@ export default function Settings() {
      */
     const regex = /^(?!.*[.])(?!.*http:\/\/)(?!.*https:\/\/).*$/gm;
 
-    const watchState = useSelector(domainWatchState);
-    const modalState = useSelector(selectModalManagerState);
     const dispatch = useDispatch<any>();
 
     const [data, setData] = useState<any>({
@@ -38,11 +35,7 @@ export default function Settings() {
     /**
      * This function watched the watchState for the variable to change.
      */
-    useEffect(() => {
-        if (watchState.error) {
-            return ErrorToast({ text: watchState.error });
-        }
-    }, [watchState.error])
+  
 
     /**
      * This is only used to update the data state object, and more specifially the domain attribute in the object.
@@ -108,10 +101,6 @@ export default function Settings() {
             }
         }
 
-        dispatch(getDomainWatch({
-            domain: data.domain,
-            types: data.types
-        } as IDomainWatchRequest))
 
     }
 
@@ -186,40 +175,7 @@ export default function Settings() {
         return `bg-indicator-${Math.floor((value / 10) + 1)}`;
     }
 
-    useEffect(() => {
-        if (!sorting) {
-            dispatch(updateChanging(watchState.data));
-        } else {
-            if (sorting === "similarity") {
-                let temp = [...watchState.changingData];
-                if (sortingType === "asc") {
-                    temp = temp.sort((a: any, b: any) => parseFloat(a.similarity) - parseFloat(b.similarity));
-                    dispatch(updateChanging(temp));
-                } else {
-                    temp = temp.sort((a: any, b: any) => parseFloat(b.similarity) - parseFloat(a.similarity));
-                    dispatch(updateChanging(temp));
-                }
-            } else if (sorting === "zone") {
-                let temp = [...watchState.changingData];
-                if (sortingType === "asc") {
-                    temp = temp.sort((a, b) => { return (a.zone > b.zone) ? 1 : ((b.zone > a.zone) ? -1 : 0); });
-                    dispatch(updateChanging(temp));
-                } else {
-                    temp = temp.sort((a, b) => { return (a.zone < b.zone) ? 1 : ((b.zone < a.zone) ? -1 : 0); });
-                    dispatch(updateChanging(temp));
-                }
-            } else if (sorting === "domainName") {
-                let temp = [...watchState.changingData];
-                if (sortingType === "asc") {
-                    temp = temp.sort((a, b) => { return (a.domainName > b.domainName) ? 1 : ((b.domainName > a.domainName) ? -1 : 0); });
-                    dispatch(updateChanging(temp));
-                } else {
-                    temp = temp.sort((a, b) => { return (a.domainName < b.domainName) ? 1 : ((b.domainName < a.domainName) ? -1 : 0); });
-                    dispatch(updateChanging(temp));
-                }
-            }
-        }
-    }, [sorting, sortingType]);
+    
 
     const getWhoIS = async (domain: string) => {
         try {
@@ -233,7 +189,7 @@ export default function Settings() {
             }).json();
             const data = res as any;
             setWhois(data.data);
-            dispatch(setCurrentOpenState("WATCH.WHOIS"));
+            
         } catch (e) {
             let error = e as HTTPError;
             if (error.name === 'HTTPError') {
@@ -258,7 +214,7 @@ export default function Settings() {
                 <PageHeader title="Zeus" subtitle="" icon={<BoltIcon className="h-16 w-16 text-black dark:text-white" />} />
             </div>
             <div className="grid grid-cols-4 h-full">
-                <div className="col-span-3"> Meep</div>
+                <div className="col-span-3 "> <ZeusEditor/></div>
                 <div className="col-span-1"> 
                     <Zeusmenu></Zeusmenu>
                 </div>

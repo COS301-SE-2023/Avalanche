@@ -1,4 +1,4 @@
-import { ChartBarIcon, FunnelIcon, MagnifyingGlassPlusIcon, ChevronDownIcon } from "@heroicons/react/24/solid";
+import { ChartBarIcon, FunnelIcon, MagnifyingGlassPlusIcon, ChevronDownIcon, DocumentIcon, ShareIcon } from "@heroicons/react/24/solid";
 import { BarChart, BubbleChart, LineChart, PieChart, PolarAreaChart, RadarChart } from "@/components/Graphs";
 import { useState, useEffect } from 'react';
 import { ChartType, ChartTypeArray } from "@/Enums";
@@ -164,6 +164,42 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
         }
     }
 
+    const convertToCSV = (data: any[]) => {
+        const replacer = (key: any, value: null) => value === null ? '' : value;
+        const header = Object.keys(data[0]);
+        const csv = [
+            header.join(','), // column headers
+            ...data.map(row => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join(','))
+        ].join('\r\n');
+
+        return csv;
+    }
+
+    const downloadCSV = (csv: BlobPart, filename: string) => {
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', filename);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    const downloadJSON = (json: BlobPart, filename: string) => {
+        const blob = new Blob([json], { type: 'application/json;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', filename);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+    
+
     const camelCaseRenderer = (value: string) => {
         return value.replace(/([A-Z])/g, ' $1').replace(/^./, function (str) { return str.toUpperCase(); })
     }
@@ -201,6 +237,40 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
                     }}>
                         <MagnifyingGlassPlusIcon className="w-6 h-6" />
                     </ChartCardButton>
+                    <Menu as="div" className="relative inline-block text-left">
+                        <div>
+                            <Menu.Button className="inline-flex justify-center p-1.5 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-lightHover dark:hover:bg-gray-600">
+                                <ShareIcon className="w-6 h-6" /> {/* Use an appropriate download icon */}
+                            </Menu.Button>
+                        </div>
+                        <Transition
+                            as={Fragment}
+                            enter="transition ease-out duration-100"
+                            enterFrom="transform opacity-0 scale-95"
+                            enterTo="transform opacity-100 scale-100"
+                            leave="transition ease-in duration-75"
+                            leaveFrom="transform opacity-100 scale-100"
+                            leaveTo="transform opacity-0 scale-95"
+                        >
+                            <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-700">
+                                <div className="py-1">
+                                    <Menu.Item>
+                                        <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer" onClick={() => {
+                                            const csv = convertToCSV(graphData);
+                                            downloadCSV(csv, 'data.csv');
+                                        }}>Download CSV</span>
+                                    </Menu.Item>
+                                    <Menu.Item>
+                                        <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer" onClick={() => {
+                                            const json = JSON.stringify(graphData);
+                                            downloadJSON(json, 'data.json');
+                                        }}>Download JSON</span>
+                                    </Menu.Item>
+                                </div>
+                            </Menu.Items>
+                        </Transition>
+                    </Menu>
+
                     {/* Change bar type */}
                     <Menu as="div" className="relative inline-block text-left -z-5">
                         <div>
@@ -256,4 +326,6 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
 
         </div >
     </>)
+
+
 }

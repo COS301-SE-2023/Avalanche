@@ -1,10 +1,6 @@
 import { configureStore, ThunkAction, Action, combineReducers } from "@reduxjs/toolkit";
-import { modalManagerSlice } from "./Slices/modalManagerSlice";
-import { userSlice } from "./Slices/userSlice";
-import { domainWatchSlice } from "./Slices/domainWatchSlice";
-import { settingsSlice } from "./Slices/settingsSlice";
-import { graphSlice } from "./Slices/graphSlice";
 import { createWrapper } from "next-redux-wrapper";
+import { zeusSlice } from "./Slices/ZeusSlice";
 import thunk from "redux-thunk";
 import { persistReducer, persistStore } from "redux-persist";
 import createWebStorage from "redux-persist/lib/storage/createWebStorage";
@@ -26,11 +22,7 @@ const createNoopStorage = () => {
 const storage = typeof window !== "undefined" ? createWebStorage("local") : createNoopStorage();
 
 const rootReducer = combineReducers({
-    [modalManagerSlice.name]: modalManagerSlice.reducer,
-    [userSlice.name]: userSlice.reducer,
-    [settingsSlice.name]: settingsSlice.reducer,
-    [domainWatchSlice.name]: domainWatchSlice.reducer,
-    [graphSlice.name]: graphSlice.reducer,
+    [zeusSlice.name]: zeusSlice.reducer,
 });
 
 const makeConfiguredStore = () =>

@@ -26,6 +26,7 @@ body {
 /* width */
 ::-webkit-scrollbar {
   width: 5px;
+  height:3px;
 }
 
 /* Track */
@@ -51,3 +52,18 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+
+.rejt-tree{
+  font-size: larger;
+  font-family: "Roboto";
+}
+
+.rejt-name{
+  
+}
+
+.rejt-value{
+  color: orange !important;
+}
+
