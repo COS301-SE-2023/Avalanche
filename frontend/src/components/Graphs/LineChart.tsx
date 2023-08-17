@@ -46,7 +46,8 @@ export function LineChart({ data, addClass }: IChart) {
                 },
                 grid: {
                     color: theme === "dark" ? "rgba(49, 54, 56, 0.7)" : "rgba(49, 54, 56, 0.2)"
-                }
+                },
+                beginAtZero: true,
             },
             x: {
                 ticks: {

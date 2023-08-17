@@ -21,6 +21,8 @@ interface IChartCard {
     defaultGraph: ChartType
 }
 
+
+
 export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
 
     const dispatch = useDispatch<any>();
@@ -219,7 +221,17 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
                             <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-700">
                                 <div className="py-1">
                                     {
-                                        ChartTypeArray.map((item, index) => {
+                                        ChartTypeArray.filter(item => {
+                                            console.log('me here')
+                                            console.log(graphData)
+                                            // If the dataset size is more than 1, only allow Line, Bar, and Scatter.
+                                            if (graphData?.chartData?.datasets?.length > 1) {
+                                                console.log('should be here')
+                                                return [ChartType.Line, ChartType.Bar, ChartType.Bubble].includes(item.type);
+                                            }
+                                            // Otherwise, show all chart types.
+                                            return true;
+                                        }).map((item, index) => {
                                             return (<Menu.Item key={index}>
                                                 <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer" key={index} onClick={() => {
                                                     setType(item.type);
