@@ -5,10 +5,14 @@ import ky from "ky";
 import { IDomainWatchRequest } from "@/interfaces/requests";
 import { IDomainWatchResponse } from "@/interfaces/responses";
 import { getCookie } from "cookies-next";
+import { IFetchFiltersRequest } from "@/interfaces/requests/FetchFilterRequest";
 
 export interface IFilterData {
-    data: {}
-    name: string
+    id:number,
+    name: string,
+    type: string,
+    values: {}|null,
+    input:string,
     opened: boolean
 }
 
@@ -25,19 +29,7 @@ export interface IZeusState {
 }
 
 const initialState: IZeusState = {
-    filters: [{
-        data: { data: "d" },
-        name: "Name_1",
-        opened: false
-    }, {
-        data: { maap: "map" },
-        name: "Name_2",
-        opened: false
-    }, {
-        data: { hello: "hello" },
-        name: "Name_3",
-        opened: false
-    }
+    filters: [
     ],
     fetchParams: {
         dataSource: "",
@@ -61,7 +53,7 @@ export const zeusSlice = createSlice({
             console.log("newData is", newData)
             const filterToUpdate = state.zeus.filters.find(filter => filter.name == name);
             if (filterToUpdate) {
-                filterToUpdate.data = newData;
+                filterToUpdate.values = newData;
             }
         },
         updateDataSource(state,action){
@@ -76,9 +68,40 @@ export const zeusSlice = createSlice({
 
     },
     extraReducers: (builder) => {
-
+        builder.addCase(getFilters.pending, (state) => {
+            
+        })
+        builder.addCase(getFilters.rejected, (state, action) => {
+            
+        })
+        builder.addCase(getFilters.fulfilled, (state, action) => {
+            const response = action.payload as any;
+            let newArr:any[]=[];
+            const filters=response.filters.filter((e:any) => {
+                let copied = { ...e };
+                copied.opened=false;
+                newArr.push(copied);
+                
+            })
+            state.zeus.filters=newArr;
+        })
     }
 });
+
+export const getFilters = createAsyncThunk("FILTERS.Get", async (object: IFetchFiltersRequest, { rejectWithValue }) => {
+    try {
+        const response = ky.post(`localhost:3998/getFilters`, {
+            json: object, timeout: false, headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
+                "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token"
+            }
+        }).json();
+        return response;
+    } catch (e) {
+        if (e instanceof Error) return rejectWithValue(e.message);
+    }
+})
 
 export const { updateFilters, updateFilterData,updateDataSource,updateEndpoint,updateTypeOfUser } = zeusSlice.actions;
 export const zeusState = (state: AppState) => state.zeus;

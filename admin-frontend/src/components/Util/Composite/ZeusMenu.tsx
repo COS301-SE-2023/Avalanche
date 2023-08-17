@@ -2,11 +2,12 @@ import Dropdown from "../Dropdown";
 import { useState } from "react";
 import SubmitButton from "../SubmitButton";
 import { useDispatch, useSelector } from "react-redux";
-import { zeusState, IZeusState, updateFilters, IFilterData, updateDataSource, updateEndpoint, updateTypeOfUser } from "@/store/Slices/ZeusSlice";
+import { zeusState, IZeusState, updateFilters, IFilterData, updateDataSource, updateEndpoint, updateTypeOfUser, getFilters } from "@/store/Slices/ZeusSlice";
+import { IFetchFiltersRequest } from "@/interfaces/requests/FetchFilterRequest";
 
 
 export default function Zeusmenu() {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<any>();
     const stateZeus = useSelector(zeusState);
     const ITEMS_PER_PAGE: number = 5;
     const [page, setPage] = useState<number>(1);
@@ -29,7 +30,6 @@ export default function Zeusmenu() {
     const openTab = (name: string) => {
 
         let newArr: IFilterData[] = [];
-        let selected: IFilterData = { data: {}, name: "placeholder", opened: false };
         stateZeus.zeus.filters.filter((e: IFilterData) => {
             let copied = { ...e };
             console.log((copied.name == name));
@@ -39,7 +39,7 @@ export default function Zeusmenu() {
             else {
                
             }
- newArr.push(copied);
+            newArr.push(copied);
         })
 
         dispatch(updateFilters(newArr));
@@ -68,6 +68,15 @@ export default function Zeusmenu() {
 
     const reduceTypeOfUser=(typeOfUser:string)=>{   
         dispatch(updateTypeOfUser(typeOfUser));
+    }
+
+    const fetchFilters=()=>{
+
+        dispatch(getFilters(
+            {dataSource: stateZeus.zeus.fetchParams.dataSource,
+            endpoint: stateZeus.zeus.fetchParams.endPoint,
+            typeOfUser: stateZeus.zeus.fetchParams.typeOfUser} as IFetchFiltersRequest))
+
     }
 
     const makeRow = () => {
@@ -99,7 +108,7 @@ export default function Zeusmenu() {
                     <Dropdown id='chooseTypeOfUser' items={["Public", "Registrar", "Registry"]} option={stateZeus.zeus.fetchParams.typeOfUser} set={reduceTypeOfUser} text="Select a Type of User" />
                 </div>
                 <div className="p-2 ">
-                    <SubmitButton className=" w-full" text={"Fetch"}></SubmitButton>
+                    <SubmitButton onClick={fetchFilters} className=" w-full" text={"Fetch"}></SubmitButton>
                 </div>
             </div>
             <div className="pt-4 mt-2 space-y-2 font-medium border-t border-gray-700 dark:border-gray-700 flex flex-col gap-2">
