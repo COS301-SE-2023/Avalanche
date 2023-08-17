@@ -24,9 +24,9 @@ export class TransactionService {
       console.log(filters);
       const sqlQuery = `call transactionsByRegistrar('${filters}')`;
 
-      let formattedData = await this.redis.get(`zacr` + sqlQuery);
-
-      if (!formattedData) {
+      let data = await this.redis.get(`zacr` + sqlQuery);
+      let formattedData = "";
+      if (!data) {
         let queryData;
 
         try {
@@ -43,9 +43,10 @@ export class TransactionService {
         formattedData = await this.graphFormattingService.formatTransactions(
           JSON.stringify(queryData),
         );
+        data = JSON.stringify([formattedData, queryData[0]['TRANSACTIONSBYREGISTRAR']]);
         await this.redis.set(
           `zacr` + sqlQuery,
-          formattedData,
+          data,
           'EX',
           72 * 60 * 60,
         );
@@ -57,7 +58,7 @@ export class TransactionService {
           graphName: graphName,
           warehouse: 'zacr',
           graphType: 'transactions',
-          ...JSON.parse(formattedData),
+          ...JSON.parse(data),
         },
         timestamp: new Date().toISOString(),
       };
@@ -81,9 +82,9 @@ export class TransactionService {
       console.log(filters);
       const sqlQuery = `call transactionsByRegistrar('${filters}')`;
 
-      let formattedData = await this.redis.get(`zacr` + sqlQuery);
-
-      if (!formattedData) {
+      let data = await this.redis.get(`zacr` + sqlQuery);
+      let formattedData = "";
+      if (!data) {
         let queryData;
         try {
           queryData = await this.snowflakeService.execute(sqlQuery);
@@ -95,15 +96,14 @@ export class TransactionService {
             timestamp: new Date().toISOString(),
           };
         }
-        //console.log(queryData);
         formattedData =
           await this.graphFormattingService.formatTransactionsRanking(
             JSON.stringify(queryData),
           );
-
+        data = JSON.stringify([formattedData, queryData[0]['TRANSACTIONSBYREGISTRAR']]);
         await this.redis.set(
           `zacr` + sqlQuery,
-          formattedData,
+            data,
           'EX',
           72 * 60 * 60,
         );
@@ -114,7 +114,7 @@ export class TransactionService {
           graphName: graphName,
           warehouse: 'zacr',
           graphType: 'transactions-ranking',
-          ...JSON.parse(formattedData),
+          ...JSON.parse(data),
         },
         timestamp: new Date().toISOString(),
       };
@@ -179,8 +179,6 @@ export class TransactionService {
     let trans = ' Transactions ';
     if (perReg) {
       reg = 'per registrar ';
-      console.log('WEEEEEEE');
-      console.log(filters['transactions']);
       if (filters['transactions']?.length > 0) {
         trans = ' ' + filters['transactions'].join(', ') + ' ';
       }

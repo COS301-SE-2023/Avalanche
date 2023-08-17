@@ -24,9 +24,9 @@ export class MovementService {
       console.log(filters);
       const sqlQuery = `call nettVerticalMovement('${filters}')`;
 
-      let formattedData = await this.redis.get(`zacr` + sqlQuery);
-
-      if (!formattedData) {
+      let data = await this.redis.get(`zacr` + sqlQuery);
+      let formattedData = "";
+      if (!data) {
         let queryData;
         try {
           queryData = await this.snowflakeService.execute(sqlQuery);
@@ -42,22 +42,22 @@ export class MovementService {
         formattedData = await this.graphFormattingService.formatNettVertical(
           JSON.stringify(queryData),
         );
+        data = JSON.stringify([formattedData, queryData[0]['NETTVERTICALMOVEMENT']]);
 
         await this.redis.set(
           `zacr` + sqlQuery,
-          formattedData,
+          data,
           'EX',
           72 * 60 * 60,
         );
       }
 
       filters = JSON.parse(filters);
-
       return {
         status: 'success',
         data: {
           graphName: graphName,
-          ...JSON.parse(formattedData),
+          ...JSON.parse(data),
           warehouse: 'zacr',
           graphType: 'movement/vertical',
         },
