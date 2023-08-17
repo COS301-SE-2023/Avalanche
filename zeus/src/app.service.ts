@@ -172,16 +172,17 @@ export class AppService {
     const existingData = await this.endpointRepository.find({ where : {endpoint : data.dataSource},
       relations: ['graphs', 'graphs.filters'],
     });
-
+    console.log("hello");
     if (!existingData || existingData.length === 0) {
       throw new NotFoundException('Data not found');
     }
 
-    if (data.dataSource && data.endPoint != null && data.typeOfUser ){
+    if (data.dataSource && data.endpoint != null && data.typeOfUser ){
       const endpoint = existingData.at(0);
-      const graph = await this.graphRepository.find({ where: { graphName : data.endPoint, user : data.typeOfUser}, relations: ["filters","endpoint"] });
+      const graph = await this.graphRepository.find({ where: { graphName : data.endpoint, user : data.typeOfUser}, relations: ["filters","endpoint"] });
       for(let count = 0; count<graph.length; count++){
         if(graph.at(count).endpoint.endpoint == endpoint.endpoint){
+          console.log("boi");
           return {"status" : "success", "filters" : graph.at(count).filters};
         }
       }
