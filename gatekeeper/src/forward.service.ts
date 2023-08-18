@@ -9,7 +9,6 @@ export class ForwardService {
   constructor(private httpService: HttpService) { }
 
   async forwardRequest(method: string, url: string, body?: any, headers?: any, params?: any) {
-    console.log('Forwarding headers:', headers);
   if (headers && headers.authorization) {
     body.token = headers.authorization;
   }

@@ -1,0 +1,22 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "graphName" : {
+            "type" : "string"
+        },
+        "registrars": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "zone": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        }
+    },
+    "additionalProperties": false
+}
