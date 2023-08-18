@@ -28,6 +28,12 @@ const initialState: IGraphState = {
     error: ""
 }
 
+const assignColours = (payload: any) => {
+    const datasets = payload.data.data.chartData.datasets;
+
+    
+};
+
 export const graphSlice = createSlice({
     name: "graph",
     initialState,
@@ -51,14 +57,7 @@ export const graphSlice = createSlice({
         })
         builder.addCase(getGraphData.fulfilled, (state, action) => {
             const payload = action.payload as any;
-            console.log('88888888')
-            console.log(payload.data)
-            payload.data.data.chartData.datasets.forEach((set: any, index: number) => {
-                set.backgroundColor = chartColours[index];
-                set.borderColor = chartColours[index];
-                set.pointRadius = 4;
-                set.pointHoverRadius = 5;
-            })
+            assignColours(payload)
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
@@ -69,14 +68,7 @@ export const graphSlice = createSlice({
         })
         builder.addCase(getGraphDataRanking.fulfilled, (state, action) => {
             const payload = action.payload as any;
-            console.log('88888888')
-            console.log(payload.data)
-            payload.data.data.chartData.datasets.forEach((set: any, index: number) => {
-                set.backgroundColor = chartColours[index];
-                set.borderColor = chartColours[index];
-                set.pointRadius = 4;
-                set.pointHoverRadius = 5;
-            })
+            assignColours(payload)
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
@@ -87,13 +79,7 @@ export const graphSlice = createSlice({
         })
         builder.addCase(getMarketShareData.fulfilled, (state, action) => {
             const payload = action.payload as any;
-            state.graphs.push(payload.data);
-            payload.data.data.chartData.datasets.forEach((set: any, index: number) => {
-                set.backgroundColor = chartColours[index];
-                set.borderColor = chartColours[index];
-                set.pointRadius = 4;
-                set.pointHoverRadius = 5;
-            })
+            assignColours(payload)
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
@@ -104,13 +90,8 @@ export const graphSlice = createSlice({
         })
         builder.addCase(getAgeAnalysisData.fulfilled, (state, action) => {
             const payload = action.payload as any;
-            state.graphs.push(payload.data);
-            payload.data.data.chartData.datasets.forEach((set: any, index: number) => {
-                set.backgroundColor = chartColours[index];
-                set.borderColor = chartColours[index];
-                set.pointRadius = 4;
-                set.pointHoverRadius = 5;
-            })
+            // state.graphs.push(payload.data);
+            assignColours(payload)
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
@@ -121,13 +102,8 @@ export const graphSlice = createSlice({
         })
         builder.addCase(getDomainNameAnalysisData.fulfilled, (state, action) => {
             const payload = action.payload as any;
-            state.graphs.push(payload.data);
-            payload.data.data.chartData.datasets.forEach((set: any, index: number) => {
-                set.backgroundColor = chartColours[index];
-                set.borderColor = chartColours[index];
-                set.pointRadius = 4;
-                set.pointHoverRadius = 5;
-            })
+            // state.graphs.push(payload.data);
+            assignColours(payload)
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
@@ -138,13 +114,8 @@ export const graphSlice = createSlice({
         })
         builder.addCase(getDomainLengthData.fulfilled, (state, action) => {
             const payload = action.payload as any;
-            state.graphs.push(payload.data);
-            payload.data.data.chartData.datasets.forEach((set: any, index: number) => {
-                set.backgroundColor = chartColours[index];
-                set.borderColor = chartColours[index];
-                set.pointRadius = 4;
-                set.pointHoverRadius = 5;
-            })
+            //state.graphs.push(payload.data);
+            assignColours(payload)
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
@@ -155,13 +126,8 @@ export const graphSlice = createSlice({
         })
         builder.addCase(getMovementVerticalData.fulfilled, (state, action) => {
             const payload = action.payload as any;
-            state.graphs.push(payload.data);
-            payload.data.data.chartData.datasets.forEach((set: any, index: number) => {
-                set.backgroundColor = chartColours[index];
-                set.borderColor = chartColours[index];
-                set.pointRadius = 4;
-                set.pointHoverRadius = 5;
-            })
+            //state.graphs.push(payload.data);
+            assignColours(payload)
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
