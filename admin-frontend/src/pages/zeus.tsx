@@ -10,8 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { IDomainWatchType } from "@/interfaces/requests/DomainWatch";
 import ky, { HTTPError } from "ky";
 import { getCookie } from "cookies-next";
-import WHOISModal from "@/components/Modals/WHOISModal";
-import Zeusmenu from "@/components/Util/Composite/ZeusMenu";
+import ZeusMenu from "@/components/Util/Composite/ZeusMenu";
 import ZeusEditor from "@/components/Util/Composite/ZeusEditor";
 
 export default function Settings() {
@@ -216,7 +215,7 @@ export default function Settings() {
             <div className="grid grid-cols-4 h-full">
                 <div className="col-span-3 "> <ZeusEditor/></div>
                 <div className="col-span-1"> 
-                    <Zeusmenu></Zeusmenu>
+                    <ZeusMenu></ZeusMenu>
                 </div>
             </div >
         </div>
