@@ -5,7 +5,7 @@
         "graphName" : {
             "type" : "string"
         },
-        "registrars": {
+        "registrar": {
             "type": "array",
             "items": {
                 "type": "string"
