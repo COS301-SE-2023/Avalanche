@@ -17,6 +17,7 @@ export interface IFilterData {
         input: string
     },
     opened: boolean
+    selected:boolean
 }
 
 export interface IFetchParams {
@@ -42,9 +43,10 @@ const initialState: IZeusState = {
                 values: { v1: 1, v2: 2 },
                 input: "chk"
             },
-            opened: false
+            opened: false,
+            selected:false
         }, {
-            name:"N2",
+            name:"This-is-a-really-long-filter-name-to-prove-a-point",
             filter: {
                 id: 1,
                 name: "N2",
@@ -52,8 +54,21 @@ const initialState: IZeusState = {
                 values: { v1: 2, v2: 4 },
                 input: "chk"
             },
-            opened: false
+            opened: false,
+            selected:false
+        }, {
+            name:"N3",
+            filter: {
+                id: 3,
+                name: "N3",
+                type: "Beepbopbip",
+                values: { v1: 6, v2: 9 },
+                input: "text"
+            },
+            opened: false,
+            selected:false
         }
+
     ],
     fetchParams: {
         dataSource: "",
@@ -74,9 +89,9 @@ export const zeusSlice = createSlice({
         updateFilterData(state, action) {
             const name = action.payload.name;
             const newData = action.payload.data;
-            console.log("newData is", newData)
             const filterToUpdate = state.zeus.filters.find(filter => filter.name == name);
             if (filterToUpdate) {
+                filterToUpdate.name=newData.name;
                 filterToUpdate.filter = newData;
             }
         },
@@ -103,7 +118,7 @@ export const zeusSlice = createSlice({
             let newArr: any[] = [];
             const filters = response.filters.filter((e: any) => {
                 let copied = { ...e };
-                const obj={name:copied.name,filter:copied,opened:false};
+                const obj={name:copied.name,filter:copied,opened:false,selected:false};
                 newArr.push(obj);
 
             })
