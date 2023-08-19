@@ -109,19 +109,8 @@ export default function ZeusTab({ filterData }: ITransferFilterData) {
     }
 
 
-    const [menuButtons, setMenuButtons] = useState<IMenuButton[]>([{
-        buttonName: "killMe",
-        func: killMe,
-        svg: "M 12 4.5 a 7.5 7.5 90 1 1 -6.819 4.371 a 0.75 0.75 90 0 0 -1.362 -0.6255 A 9 9 90 1 0 12 3 v 1.5 z M 12 6.699 V 0.801 a 0.375 0.375 90 0 0 -0.615 -0.288 L 7.845 3.462 a 0.375 0.375 90 0 0 0 0.576 l 3.54 2.949 A 0.375 0.375 90 0 0 12 6.699 z"
-    },{
-        buttonName: "killMe",
-        func: killMe,
-        svg: "M 12 4.5 a 7.5 7.5 90 1 1 -6.819 4.371 a 0.75 0.75 90 0 0 -1.362 -0.6255 A 9 9 90 1 0 12 3 v 1.5 z M 12 6.699 V 0.801 a 0.375 0.375 90 0 0 -0.615 -0.288 L 7.845 3.462 a 0.375 0.375 90 0 0 0 0.576 l 3.54 2.949 A 0.375 0.375 90 0 0 12 6.699 z"
-    },{
-        buttonName: "killMe",
-        func: killMe,
-        svg: "M 12 4.5 a 7.5 7.5 90 1 1 -6.819 4.371 a 0.75 0.75 90 0 0 -1.362 -0.6255 A 9 9 90 1 0 12 3 v 1.5 z M 12 6.699 V 0.801 a 0.375 0.375 90 0 0 -0.615 -0.288 L 7.845 3.462 a 0.375 0.375 90 0 0 0 0.576 l 3.54 2.949 A 0.375 0.375 90 0 0 12 6.699 z"
-    },{
+    const [menuButtons, setMenuButtons] = useState<IMenuButton[]>([
+    {
         buttonName: "undo",
         func: handleUndo,
         svg: "M 12 4.5 a 7.5 7.5 90 1 1 -6.819 4.371 a 0.75 0.75 90 0 0 -1.362 -0.6255 A 9 9 90 1 0 12 3 v 1.5 z M 12 6.699 V 0.801 a 0.375 0.375 90 0 0 -0.615 -0.288 L 7.845 3.462 a 0.375 0.375 90 0 0 0 0.576 l 3.54 2.949 A 0.375 0.375 90 0 0 12 6.699 z"
