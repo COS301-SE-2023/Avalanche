@@ -82,6 +82,10 @@ export default function ZeusTab({ filterData }: ITransferFilterData) {
           }
     };
 
+    const killMe = () => {
+        console.log("data");
+    }
+
     useEffect(() => {
         console.log('Updated undoStack:', undoStack);
         undoStackRef.current = undoStack; // Update the ref with the latest undoStack value
@@ -106,6 +110,18 @@ export default function ZeusTab({ filterData }: ITransferFilterData) {
 
 
     const [menuButtons, setMenuButtons] = useState<IMenuButton[]>([{
+        buttonName: "killMe",
+        func: killMe,
+        svg: "M 12 4.5 a 7.5 7.5 90 1 1 -6.819 4.371 a 0.75 0.75 90 0 0 -1.362 -0.6255 A 9 9 90 1 0 12 3 v 1.5 z M 12 6.699 V 0.801 a 0.375 0.375 90 0 0 -0.615 -0.288 L 7.845 3.462 a 0.375 0.375 90 0 0 0 0.576 l 3.54 2.949 A 0.375 0.375 90 0 0 12 6.699 z"
+    },{
+        buttonName: "killMe",
+        func: killMe,
+        svg: "M 12 4.5 a 7.5 7.5 90 1 1 -6.819 4.371 a 0.75 0.75 90 0 0 -1.362 -0.6255 A 9 9 90 1 0 12 3 v 1.5 z M 12 6.699 V 0.801 a 0.375 0.375 90 0 0 -0.615 -0.288 L 7.845 3.462 a 0.375 0.375 90 0 0 0 0.576 l 3.54 2.949 A 0.375 0.375 90 0 0 12 6.699 z"
+    },{
+        buttonName: "killMe",
+        func: killMe,
+        svg: "M 12 4.5 a 7.5 7.5 90 1 1 -6.819 4.371 a 0.75 0.75 90 0 0 -1.362 -0.6255 A 9 9 90 1 0 12 3 v 1.5 z M 12 6.699 V 0.801 a 0.375 0.375 90 0 0 -0.615 -0.288 L 7.845 3.462 a 0.375 0.375 90 0 0 0 0.576 l 3.54 2.949 A 0.375 0.375 90 0 0 12 6.699 z"
+    },{
         buttonName: "undo",
         func: handleUndo,
         svg: "M 12 4.5 a 7.5 7.5 90 1 1 -6.819 4.371 a 0.75 0.75 90 0 0 -1.362 -0.6255 A 9 9 90 1 0 12 3 v 1.5 z M 12 6.699 V 0.801 a 0.375 0.375 90 0 0 -0.615 -0.288 L 7.845 3.462 a 0.375 0.375 90 0 0 0 0.576 l 3.54 2.949 A 0.375 0.375 90 0 0 12 6.699 z"
@@ -119,9 +135,11 @@ export default function ZeusTab({ filterData }: ITransferFilterData) {
     const makeMenuButtons = () => {
 
         return menuButtons.map((item: IMenuButton, index: number) => {
-            let num = (((menuButtons.length - index) * 3.7) + 0.7);
-            const openStyle = "transition-transform duration-200 translate-x-0 flex justify-center items-center w-[52px] h-[52px] text-gray-500 hover:text-gray-900 bg-white rounded-lg  dark:hover:text-white dark:text-gray-400 dark:bg-secondaryBackground dark:hover:bg-thirdBackground focus:ring-2 focus:ring-gray-300 focus:outline-none dark:focus:ring-gray-400";
-            const closedStyle = `transition-transform translate-x-[${num}rem] flex justify-center items-center w-[52px] h-[52px] text-gray-500 hover:text-gray-900 bg-white rounded-lg  dark:hover:text-white dark:text-gray-400 dark:bg-secondaryBackground dark:hover:bg-thirdBackground focus:ring-2 focus:ring-gray-300 focus:outline-none dark:focus:ring-gray-400`;
+            let num = (((menuButtons.length - index) * 4));
+            num= Math.floor(num * 10) / 10;
+            console.log(num)
+            const openStyle =  "transition-transform delay-75 duration-200 translate-x-0 flex justify-center items-center w-[52px] h-[52px] text-gray-500 hover:text-gray-900 bg-white rounded-lg  dark:hover:text-white dark:text-gray-400 dark:bg-secondaryBackground dark:hover:bg-thirdBackground focus:ring-2 focus:ring-gray-300 focus:outline-none dark:focus:ring-gray-400";
+            const closedStyle = `invisible transition-transform delay-100 translate-x-[${num}rem]  flex justify-center items-center w-[52px] h-[52px] text-gray-500 hover:text-gray-900 bg-white rounded-lg  dark:hover:text-white dark:text-gray-400 dark:bg-secondaryBackground dark:hover:bg-thirdBackground focus:ring-2 focus:ring-gray-300 focus:outline-none dark:focus:ring-gray-400 z-0`;
             return <><button onClick={item.func} type="button" data-tooltip-target="tooltip-share" data-tooltip-placement="left"
                 className=
                 {menuExpanded ? openStyle :
@@ -139,7 +157,7 @@ export default function ZeusTab({ filterData }: ITransferFilterData) {
     }
 
     return <>
-        <div >
+        <div>
             <div data-dial-init className="relative inset-0 ml-[50%] flex flex-row-reverse m z-10 group">
                 <button onClick={toggleCheck} type="button" data-dial-toggle="speed-dial-menu-square-click" aria-controls="speed-dial-menu-square" aria-expanded="false" className="z-20 flex items-center justify-center text-white bg-blue-700 rounded-lg w-14 h-14 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 focus:ring-2 focus:ring-blue-300 focus:outline-none dark:focus:ring-blue-300">
                     <svg className={menuExpanded ? " w-7 h-7 transition-transform rotate-45" : "w-7 h-7 transition-transform rotate-0"} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 17">
