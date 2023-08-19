@@ -16,7 +16,7 @@ export interface IFilterData {
         values: {} | null,
         input: string
     },
-    opened: boolean
+    opened: boolean,
     selected:boolean
 }
 
@@ -44,7 +44,8 @@ const initialState: IZeusState = {
                 input: "chk"
             },
             opened: false,
-            selected:false
+            selected:false,
+            
         }, {
             name:"This-is-a-really-long-filter-name-to-prove-a-point",
             filter: {
@@ -68,7 +69,6 @@ const initialState: IZeusState = {
             opened: false,
             selected:false
         }
-
     ],
     fetchParams: {
         dataSource: "",
@@ -82,17 +82,29 @@ export const zeusSlice = createSlice({
     initialState: {
         zeus: initialState,
     },
+
+    
     reducers: {
         updateFilters(state, action) {
             state.zeus.filters = action.payload;
         },
         updateFilterData(state, action) {
             const name = action.payload.name;
-            const newData = action.payload.data;
+            const newData = action.payload.saveData;
             const filterToUpdate = state.zeus.filters.find(filter => filter.name == name);
             if (filterToUpdate) {
-                filterToUpdate.name=newData.name;
+                
+                filterToUpdate.name=tryName(filterToUpdate,newData.name);
                 filterToUpdate.filter = newData;
+            }
+            function tryName(filterToUpdate:IFilterData,newName:string){
+                const filterWithAttemptedName = state.zeus.filters.find(filter => filter.name == newName);
+                
+                if(!filterWithAttemptedName||filterWithAttemptedName.name==filterToUpdate.name){
+                    return newName.replaceAll(" ","-");
+                }else{
+                    return tryName(filterToUpdate,newName+"_copy");
+                }
             }
         },
         updateDataSource(state, action) {
@@ -127,6 +139,8 @@ export const zeusSlice = createSlice({
     }
 });
 
+
+
 export const getFilters = createAsyncThunk("FILTERS.Get", async (object: IFetchFiltersRequest, { rejectWithValue }) => {
     try {
         const response = ky.post(`http://localhost:3998/getFilters`, {
@@ -142,6 +156,6 @@ export const getFilters = createAsyncThunk("FILTERS.Get", async (object: IFetchF
     }
 })
 
-export const { updateFilters, updateFilterData, updateDataSource, updateEndpoint, updateTypeOfUser } = zeusSlice.actions;
+export const { updateFilters, updateFilterData, updateDataSource, updateEndpoint, updateTypeOfUser,updateFilterStack } = zeusSlice.actions;
 export const zeusState = (state: AppState) => state.zeus;
 export default zeusSlice.reducer;
