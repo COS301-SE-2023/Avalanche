@@ -423,9 +423,9 @@ export class UserDataProductMangementService {
         }
     }
 
-    async getFilters(): Promise<Endpoint[]> {
-        return await this.endpointRepository.find({
+    async getFilters(){
+        return await JSON.stringify(this.endpointRepository.find({
           relations: ['graphs', 'graphs.filters', 'graphs.filters.values'], // Include necessary relations
-        });
+        }));
       }
 }

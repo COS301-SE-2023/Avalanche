@@ -139,6 +139,7 @@ export class AppService {
     const existingData = await this.endpointRepository.find({
       relations: ['graphs', 'graphs.filters'],
     });
+    
 
     if (!existingData || existingData.length === 0) {
       throw new NotFoundException('Data not found');

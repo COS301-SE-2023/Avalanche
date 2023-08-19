@@ -10,7 +10,7 @@ export class JwtMiddleware implements NestMiddleware {
   async use(req: Request, res: Response, next: NextFunction) {
     try {
       // Get token from header
-      const token = req.headers.authorization?.split(' ')[1];
+      const token = req.body.token?.split(' ')[1];
       // Get user's information from Redis by token
       let userInfo: any;
       try {
@@ -24,9 +24,11 @@ export class JwtMiddleware implements NestMiddleware {
       } else {
         // Add token to the request body
         if (req.baseUrl.startsWith("/domain-watch") || req.baseUrl.startsWith("/domain-name-analysis")) {
+          delete req.body.token;
           next();
         }
         if (req.baseUrl.startsWith("/zacr") || req.baseUrl.startsWith('/africa') || req.baseUrl.startsWith('/ryce')) {
+          delete req.body.token;
           const graphName1 = req.body.graphName;
           const minNum = req.body.minimumAppearances;
           delete req.body.minimumAppearances;
@@ -42,7 +44,6 @@ export class JwtMiddleware implements NestMiddleware {
             next();
           }
         } else {
-          req.body.token = token;
           next();
         }
       }
