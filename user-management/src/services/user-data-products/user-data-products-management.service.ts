@@ -19,7 +19,7 @@ export class UserDataProductMangementService {
         @InjectRepository(WatchedUser, 'user') private watchedUserRepository: Repository<WatchedUser>,
         @InjectRepository(Endpoint, 'filters') private endpointRepository: Repository<Endpoint>) { }
 
-    async integrateUserWithWExternalAPI(token: string, type: string, allocateToName: string, username: string, password: string, personal: boolean) {
+    async integrateUserWithAfricaExternalAPI(token: string, type: string, allocateToName: string, username: string, password: string, personal: boolean) {
         if (!username || !password) {
             return {
                 status: 400,
@@ -50,20 +50,8 @@ export class UserDataProductMangementService {
                         }
                     });
 
-                    console.log(responseGET.data);
-                    let integrationString = responseGET.data.epp_username;
-                    if (type === "AFRICA") {
-                        integrationString += "-" + type + ",";
-                    } else if (type === "ZACR") {
-                        integrationString += "-" + type + ",";
-                    } else if (type === "RyCE") {
-                        integrationString += "-" + type + ",";
-                    } else {
-                        return {
-                            status: 400, error: true, message: 'Please enter a zone that is from the given choices - AFRICA, RyCE, ZACR',
-                            timestamp: new Date().toISOString()
-                        };
-                    }
+                    let key = responseGET.data.epp_username;
+                    const type = "registrar"
                     const userPayload = await this.redis.get(token);
                     if (!userPayload) {
                         return {
@@ -81,7 +69,12 @@ export class UserDataProductMangementService {
                                 timestamp: new Date().toISOString()
                             };
                         }
-                        user.products += integrationString;
+                        for(const products of user.products){
+                            if(products.dataSource == "africa"){
+                                products.key = key;
+                                products.tou = type
+                            }
+                        }
                         await this.userRepository.save(user);
                         delete user.password;
                         delete user.salt;
@@ -150,19 +143,8 @@ export class UserDataProductMangementService {
                         });
 
                         console.log(responseGET.data);
-                        let integrationString = responseGET.data.epp_username;
-                        if (type === "AFRICA") {
-                            integrationString += "-" + type + ",";
-                        } else if (type === "ZACR") {
-                            integrationString += "-" + type + ",";
-                        } else if (type === "RyCE") {
-                            integrationString += "-" + type + ",";
-                        } else {
-                            return {
-                                status: 400, error: true, message: 'Please enter a zone that is from the given choices - AFRICA, RyCE, ZACR',
-                                timestamp: new Date().toISOString()
-                            };
-                        }
+                        const key = responseGET.data.epp_username;
+                        const type = "registrar"
                         const userPayload = await this.redis.get(token);
                         if (!userPayload) {
                             return {
@@ -192,7 +174,202 @@ export class UserDataProductMangementService {
                                     timestamp: new Date().toISOString()
                                 }
                             }
-                            userGroup.products += integrationString;
+                            for(const products of userGroup.products){
+                                if(products.dataSource == "africa"){
+                                    products.key = key;
+                                    products.tou = type
+                                }
+                            }
+                            await this.userRepository.save(userGroup);
+                            return {
+                                status: 'success', message: 'User is integrated with DNS',
+                                timestamp: new Date().toISOString()
+                            };
+                        } else {
+                            return {
+                                status: 400, error: true, message: 'User is not apart of this user group',
+                                timestamp: new Date().toISOString()
+                            }
+                        }
+                    } catch (error) {
+                        console.error(error);
+                        return {
+                            status: 400, error: true, message: error,
+                            timestamp: new Date().toISOString()
+                        };
+                    }
+                } catch (error) {
+                    console.error(error);
+                    return {
+                        status: 400, error: true, message: error,
+                        timestamp: new Date().toISOString()
+                    };
+                }
+            }
+        }
+        return null;
+    }
+
+    async integrateUserWithZARCExternalAPI(token: string, type: string, allocateToName: string, username: string, password: string, personal: boolean) {
+        if (!username || !password) {
+            return {
+                status: 400,
+                error: true,
+                message: 'Please enter all account details',
+                timestamp: new Date().toISOString()
+            };
+        }
+        if (personal == true) {
+            try{
+            let url = 'https://epp.zarc.net.za:8282/portal/auth-jwt/';
+            const payload = {
+                username: username,
+                password: password
+            };
+
+            try {
+                const response = await axios.post(url, payload, {
+                });
+
+                const tokenFromDNS = response.data.token;
+                url = 'https://epp.zarc.net.za:8282/portal/auth-epp-username/'
+                try {
+                    const responseGET = await axios.get(url, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${tokenFromDNS}`
+                        }
+                    });
+
+                    let key = responseGET.data.epp_username;
+                    const type = "registrar"
+                    const userPayload = await this.redis.get(token);
+                    if (!userPayload) {
+                        return {
+                            status: 400, error: true, message: 'Invalid token.',
+                            timestamp: new Date().toISOString()
+                        };
+                    }
+                    const { email: userEmail } = JSON.parse(userPayload);
+                    if (userEmail) {
+                        const user = await this.userRepository.findOne({ where: { email: userEmail }, relations: ['userGroups', 'organisation', 'dashboards'] });
+                        if (!user) {
+                            return {
+                                status: 400, error: true, message: 'User does not exist',
+                                timestamp: new Date().toISOString()
+                            };
+                        }
+                        for(const products of user.products){
+                            if(products.dataSource == "africa"){
+                                products.key = key;
+                                products.tou = type
+                            }
+                        }
+                        await this.userRepository.save(user);
+                        delete user.password;
+                        delete user.salt;
+                        delete user.apiKey;
+                        await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60);
+                        return {
+                            status: 'success', message: 'User is integrated with DNS',
+                            timestamp: new Date().toISOString()
+                        };
+                    } else {
+                        return {
+                            status: 400, error: true, message: "You are allocating this to another user",
+                            timestamp: new Date().toISOString()
+                        };
+                    }
+                } catch (error) {
+                    console.error(error);
+                    return {
+                        status: 400, error: true, message: error,
+                        timestamp: new Date().toISOString()
+                    };
+                }
+            } catch (error) {
+                console.error(error);
+                return {
+                    status: 400, error: true, message: "User details are incorrect for API",
+                    timestamp: new Date().toISOString()
+                };
+            }
+        }catch(e){
+            return {
+                status: 400, error: true, message: "User details are incorrect for API",
+                timestamp: new Date().toISOString()
+            };
+        }
+        } else {
+            // Retrieve the user with their groups based on the token
+            const userData = await this.redis.get(token);
+            if (!userData) {
+                return {
+                    status: 400, error: true, message: 'Invalid token',
+                    timestamp: new Date().toISOString()
+                };
+            }
+            const userDetails = JSON.parse(userData);
+            const permission = userDetails.userGroups[0].permission;
+            if (permission == 1) {
+                let url = 'https://srs-epp.dns.net.za:8282/portal/auth-jwt/';
+                const payload = {
+                    username: username,
+                    password: password
+                };
+
+                try {
+                    const response = await axios.post(url, payload, {
+                    });
+
+                    const tokenFromDNS = response.data.token;
+                    url = 'https://srs-epp.dns.net.za:8282/portal/auth-epp-username/'
+                    try {
+                        const responseGET = await axios.get(url, {
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${tokenFromDNS}`
+                            }
+                        });
+
+                        console.log(responseGET.data);
+                        const key = responseGET.data.epp_username;
+                        const type = "registrar"
+                        const userPayload = await this.redis.get(token);
+                        if (!userPayload) {
+                            return {
+                                status: 400, error: true, message: 'Invalid token.',
+                                timestamp: new Date().toISOString()
+                            };
+                        }
+                        const { email: userEmail } = JSON.parse(userPayload);
+                        const user = await this.userRepository.findOne({ where: { email: userEmail }, relations: ['userGroups', 'organisation', 'dashboards'] });
+                        if (!user) {
+                            return {
+                                status: 400, error: true, message: 'User does not exist',
+                                timestamp: new Date().toISOString()
+                            };
+                        }
+                        let check = false;
+                        for (const userGroup of user.userGroups) {
+                            if (userGroup.name == allocateToName) {
+                                check = true;
+                            }
+                        }
+                        if (check == true) {
+                            const userGroup = await this.userGroupRepository.findOne({ where: { name: allocateToName } });
+                            if (!userGroup) {
+                                return {
+                                    status: 400, error: true, message: 'Cannot find user group with the given name',
+                                    timestamp: new Date().toISOString()
+                                }
+                            }
+                            for(const products of userGroup.products){
+                                if(products.dataSource == "africa"){
+                                    products.key = key;
+                                    products.tou = type
+                                }
+                            }
                             await this.userRepository.save(userGroup);
                             return {
                                 status: 'success', message: 'User is integrated with DNS',

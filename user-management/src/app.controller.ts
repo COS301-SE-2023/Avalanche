@@ -301,10 +301,22 @@ export class AppController {
 
     return result;
   }
-  @MessagePattern({ cmd: 'integrateUserWithWExternalAPI' })
-  async integrateUserWithWExternalAPI(data: any) {
-    console.log("Integrating with DNS: ", data);
-    const result = await this.userDataProductManService.integrateUserWithWExternalAPI(data.token, data.type, data.allocateToName, data.username, data.password, data.personal);
+  @MessagePattern({ cmd: 'integrateUserWithAfricaExternalAPI' })
+  async integrateUserWithAfricaExternalAPI(data: any) {
+    const result = await this.userDataProductManService.integrateUserWithAfricaExternalAPI(data.token, data.type, data.allocateToName, data.username, data.password, data.personal);
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
+  @MessagePattern({ cmd: 'integrateUserWithZARCExternalAPI' })
+  async integrateUserWithZARCExternalAPI(data: any) {
+    const result = await this.userDataProductManService.integrateUserWithZARCExternalAPI(data.token, data.type, data.allocateToName, data.username, data.password, data.personal);
     if (result.error) {
       throw new RpcException({
         status: result.status,

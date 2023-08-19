@@ -344,9 +344,24 @@ export class UserManagementController {
       throw error;
     }
   }
-  @Post('integrateUserWithWExternalAPI')
-  async integrateUserWithWExternalAPI(@Body() data: any) {
-    const pattern = { cmd: 'integrateUserWithWExternalAPI' };
+  @Post('integrateUserWithAfricaExternalAPI')
+  async integrateUserWithAfricaExternalAPI(@Body() data: any) {
+    const pattern = { cmd: 'integrateUserWithAfricaExternalAPI' };
+    const payload = data;
+    try {
+      const result = await lastValueFrom(this.client.send(pattern, payload));
+      return result;
+    } catch (error) {
+      const rpcError = error
+      if (typeof rpcError === 'object') {
+        throw new HttpException(rpcError.message || 'An unexpected error occurred', rpcError.status || 500);
+      }
+      throw error;
+    }
+  }
+  @Post('integrateUserWithZARCExternalAPI')
+  async integrateUserWithZARCExternalAPI(@Body() data: any) {
+    const pattern = { cmd: 'integrateUserWithZARCExternalAPI' };
     const payload = data;
     try {
       const result = await lastValueFrom(this.client.send(pattern, payload));

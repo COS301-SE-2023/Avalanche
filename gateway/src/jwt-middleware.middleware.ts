@@ -11,6 +11,7 @@ export class JwtMiddleware implements NestMiddleware {
     try {
       // Get token from header
       const token = req.body.token?.split(' ')[1];
+      req.body.token = token;
       // Get user's information from Redis by token
       let userInfo: any;
       try {
@@ -18,6 +19,7 @@ export class JwtMiddleware implements NestMiddleware {
       } catch (e) {
         res.status(401).json({ status: 'failure', message: e.message, timestamp: new Date().toISOString() });
       }
+      const userDetails = JSON.parse(userInfo);
 
       if (!userInfo) {
         res.status(401).json({ status: 'failure', message: 'JWT invalid', timestamp: new Date().toISOString() });
