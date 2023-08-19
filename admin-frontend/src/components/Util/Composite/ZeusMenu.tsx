@@ -1,5 +1,5 @@
 import Dropdown from "../Dropdown";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SubmitButton from "../SubmitButton";
 import { useDispatch, useSelector } from "react-redux";
 import { zeusState, IZeusState, updateFilters, IFilterData, updateDataSource, updateEndpoint, updateTypeOfUser, getFilters } from "@/store/Slices/ZeusSlice";
@@ -11,8 +11,13 @@ export default function ZeusMenu() {
     const stateZeus = useSelector(zeusState);
     const ITEMS_PER_PAGE: number = 5;
     const [page, setPage] = useState<number>(1);
+    const [search, setSearch] = useState<string>("");
 
+    useEffect(() => {
+        if (search !== "") {
 
+        }
+    }, [search]);
 
     const incrementPage = () => {
         if (page < Math.floor(((stateZeus.zeus.filters.length) / ITEMS_PER_PAGE) + 1)) {
@@ -61,10 +66,11 @@ export default function ZeusMenu() {
             let copied = { ...e };
             newArr.push(copied);
             if (copied.name == name) {
-                let duplicated= JSON.parse(JSON.stringify(copied)) as typeof copied;
-                duplicated.name+="_copy";
-                duplicated.filter.id=-1;
-                duplicated.filter.name+="_copy";
+                let duplicated = JSON.parse(JSON.stringify(copied)) as typeof copied;
+                duplicated.name += "_copy";
+                duplicated.filter.id = -1;
+                duplicated.filter.name += "_copy";
+                copied.selected = false;
                 newArr.push(duplicated)
             }
 
@@ -94,9 +100,10 @@ export default function ZeusMenu() {
 
     }
 
-    const makeRow = () => {
+    const makeRow = (searchString: string) => {
         const zeus: IZeusState = stateZeus.zeus;
-        const showRows: IFilterData[] = zeus.filters?.slice((page - 1) * ITEMS_PER_PAGE, (page * ITEMS_PER_PAGE));
+        const rowsWithSearch: IFilterData[] = zeus.filters.filter((el: IFilterData) => { return el.name.toLowerCase().includes(searchString.toLowerCase()) })
+        const showRows: IFilterData[] = rowsWithSearch.slice((page - 1) * ITEMS_PER_PAGE, (page * ITEMS_PER_PAGE));
         showRows.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
         return showRows.map((item: IFilterData, index: number) => <tr key={index} className="bg-white border-b dark:bg-secondaryBackground dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-thirdBackground">
 
@@ -137,7 +144,7 @@ export default function ZeusMenu() {
                                     <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                                 </svg>
                             </div>
-                            <input type="text" id="table-search" className="block p-2 pl-10 text-sm text-gray-900 border border-thirdBackground rounded-lg w-full bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-thirdBackground dark:border-thirdBackground dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for items" />
+                            <input onChange={event => {setSearch(event.target.value);}} type="text" id="table-search" className="block p-2 pl-10 text-sm text-gray-900 border border-thirdBackground rounded-lg w-full bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-thirdBackground dark:border-thirdBackground dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for items" />
                         </div>
                     </div>
                     <table className="table-fixed w-full text-sm text-left text-gray-500 dark:text-gray-400 h-40">
@@ -153,7 +160,7 @@ export default function ZeusMenu() {
                             </tr>
                         </thead>
                         <tbody>
-                            {makeRow()}
+                            {makeRow(search)}
                         </tbody>
                     </table>
                     <div className="flex flex-col items-center pt-4 grow h-full">
