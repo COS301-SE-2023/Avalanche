@@ -23,7 +23,7 @@ const assignColours = (payload: any) => {
   datasets.forEach((set: any) => {
     set.backgroundColor = set.backgroundColor = set.data.map(
       (_: any, dataIndex: number) =>
-        hexToRgba(chartColours[dataIndex % chartColours.length], 0.6)
+        hexToRgba(chartColours[dataIndex % chartColours.length], 0.8)
     );
     set.borderColor = set.data.map(
       (_: any, dataIndex: number) =>
