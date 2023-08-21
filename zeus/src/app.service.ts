@@ -52,7 +52,7 @@ export class AppService {
   }
 
   async editFilterData(data: any) {
-    const existingData = await this.endpointRepository.find({
+    const existingData = await this.endpointRepository.find({ where: {endpoint : data.dataSource},
       relations: ['graphs', 'graphs.filters'],
     });
 
@@ -60,15 +60,15 @@ export class AppService {
       throw new NotFoundException('Data not found');
     }
 
-    if (data.endpointId && data.graphId != null && data.filterId != null && data.newData && data.add == false) {
-      const filterIdGet = existingData[data.endpointId].graphs[data.graphId].filters[data.filterId];
+    if (data.endpoint != null && data.typeOfUser && (data.filterId != null && data.filterId != -1) && data.data) {
+      const filterIdGet = existingData[0].graphs.find(graph => graph.graphName === data.endpoint && graph.user === data.typeOfUser).filters.find(filter => filter.name === data.data[0].name);
       const filter = await this.filterRepository.findOne({ where: { id: filterIdGet.id } });
       if (filter) {
         const updateData = {
-          input: data.newData[0].input,
-          name: data.newData[0].name,
-          type: data.newData[0].type,
-          values: data.newData[0].values || filter.values // Keep existing values if new values are not provided
+          input: data.data[0].input,
+          name: data.data[0].name,
+          type: data.data[0].type,
+          values: data.data[0].values || filter.values // Keep existing values if new values are not provided
         };
 
         await this.filterRepository.update(filter.id, updateData);
@@ -78,15 +78,15 @@ export class AppService {
       throw new NotFoundException('Filter not found');
     }
     // 6. Add Filter to Graph
-    if (data.endpointId && data.graphId != null && data.newData && data.add == true) {
-      const graphGet = existingData[data.endpointId].graphs[data.graphId];
+    if (data.endpoint != null && data.typeOfUser && data.data && (data.filterId != null && data.filterId == -1)) {
+      const graphGet = existingData[0].graphs.find(graph => graph.graphName === data.endpoint && graph.user === data.typeOfUser);
       const graph = await this.graphRepository.findOne({ where: { id: graphGet.id }, relations: ["filters"] });
       const filterEntity = new Filter();
-      filterEntity.name = data.newData[0].name;
-      filterEntity.type = data.newData[0].type;
-      filterEntity.input = data.newData[0].input;
-      if (data.newData[0].values) {
-        filterEntity.values = data.newData[0].values;
+      filterEntity.name = data.data[0].name;
+      filterEntity.type = data.data[0].type;
+      filterEntity.input = data.data[0].input;
+      if (data.data[0].values) {
+        filterEntity.values = data.data[0].values;
       }
       filterEntity.graph = graph; // Correcting the relationship
       await this.filterRepository.save(filterEntity);
