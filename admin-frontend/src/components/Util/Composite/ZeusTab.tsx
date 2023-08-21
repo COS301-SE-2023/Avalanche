@@ -13,9 +13,11 @@ import {
 import { useEffect, useState, useRef } from "react";
 import SubmitButton from '../SubmitButton';
 import { useDispatch, useSelector } from "react-redux";
-import { zeusState, updateFilters, IFilterData, updateFilterData, updateFilterStack } from '@/store/Slices/ZeusSlice';
+import { zeusState, updateFilters, IFilterData, updateFilterData } from '@/store/Slices/ZeusSlice';
 import SuccessToast from '../SuccessToast';
 import ErrorToast from '../ErrorToast';
+import ky, { HTTPError } from "ky"
+import ISaveFilters from '@/interfaces/requests/SaveFilters';
 
 interface ITransferFilterData {
     filterData: IFilterData
@@ -27,6 +29,8 @@ interface IMenuButton {
     svg: string
 }
 
+
+
 export default function ZeusTab({ filterData }: ITransferFilterData) {
 
 
@@ -35,7 +39,7 @@ export default function ZeusTab({ filterData }: ITransferFilterData) {
     let [data, setData] = useState<any>(JSON.parse(JSON.stringify(filterData.filter)) as typeof filterData.filter);
     let [menuExpanded, setMenuExpanded] = useState<boolean>(false);
     const dispatch = useDispatch();
-    const [filterName,setFilterName]=useState<string>(filterData.name);
+    const [filterName, setFilterName] = useState<string>(filterData.name);
     const [undoStack, setUndoStack] = useState<any[]>([JSON.parse(JSON.stringify(filterData.filter)) as typeof filterData.filter]);
     const undoStackRef = useRef(undoStack);
     const dataRef = useRef(data);
@@ -45,11 +49,11 @@ export default function ZeusTab({ filterData }: ITransferFilterData) {
         console.log(undoStack);
     }, [undoStack]);
 
-   
+
 
     function saveFilter() {
         const name = nameRef.current;
-        const saveData=dataRef.current;
+        const saveData = dataRef.current;
         console.log("data", dataRef.current);
         dispatch(updateFilterData({ name, saveData }));
         SuccessToast({ text: "Did the save, boss" });
@@ -61,9 +65,9 @@ export default function ZeusTab({ filterData }: ITransferFilterData) {
 
     const handleFilterChange = (newFilters: any) => {
         // Save the previous filters to the undo stack
-        
-        const thing={...data};
-        console.log(thing,"thing");
+
+        const thing = { ...data };
+        console.log(thing, "thing");
         setData(newFilters);
         console.log(newFilters);
         setUndoStack(prevUndoStack => [...prevUndoStack, { ...data }]);
@@ -77,10 +81,51 @@ export default function ZeusTab({ filterData }: ITransferFilterData) {
             const previousData = undoStackRef.current[undoStackRef.current.length - 2];
             setData(previousData);
             setUndoStack(prevUndoStack => prevUndoStack.slice(0, prevUndoStack.length - 1));
-          }else{
-            ErrorToast({text:"Can't undo any further, stack is empty"});
-          }
+        } else {
+            ErrorToast({ text: "Can't undo any further, stack is empty" });
+        }
     };
+
+    const updateDashboard = async () => {
+        const name = nameRef.current;
+        const saveData = dataRef.current;
+        console.log("data", dataRef.current);
+        dispatch(updateFilterData({ name, saveData }));
+        //SuccessToast({ text: "Did the save, boss" });
+        const copy = JSON.parse(JSON.stringify(saveData)) as typeof saveData;
+        console.log("copy", copy);
+        setData(copy);
+        setFilterName(dataRef.current.name);
+        console.log("making data")
+        const updateData:ISaveFilters={
+            dataSource:stateZeus.zeus.fetchParams.dataSource,
+            endpoint:stateZeus.zeus.fetchParams.endpoint,
+            typeOfUser:stateZeus.zeus.fetchParams.typeOfUser,
+            filterId:saveData.id,
+            data:saveData
+        };
+        try {
+           
+            console.log("send req")
+            const res =  await ky.post("http://localhost:3998/editFilter", {
+                json: updateData, timeout: false, headers: {
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
+                    "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token"
+                }
+            }).json() as any;
+            console.log("done")
+            console.log(res);
+            return SuccessToast({ text: `Successfully updated ${name}` })
+        } catch (e) {
+            let error = e as HTTPError;
+            if (error.name === 'HTTPError') {
+                const errorJson = await error.response.json();
+                return ErrorToast({ text: "iProblem"});
+            }
+        }
+
+    }
 
     const killMe = () => {
         console.log("data");
@@ -89,18 +134,18 @@ export default function ZeusTab({ filterData }: ITransferFilterData) {
     useEffect(() => {
         console.log('Updated undoStack:', undoStack);
         undoStackRef.current = undoStack; // Update the ref with the latest undoStack value
-      }, [undoStack]);
-      
-      useEffect(() => {
-        console.log('Updated data:', data);
-        console.log("before",dataRef.current);
-        dataRef.current = data; // Update the ref with the latest undoStack value
-        console.log("after",dataRef.current)
-      }, [data]);
+    }, [undoStack]);
 
-      useEffect(() => {
-        nameRef.current=filterName.replaceAll(" ","-");
-      }, [filterName]);
+    useEffect(() => {
+        console.log('Updated data:', data);
+        console.log("before", dataRef.current);
+        dataRef.current = data; // Update the ref with the latest undoStack value
+        console.log("after", dataRef.current)
+    }, [data]);
+
+    useEffect(() => {
+        nameRef.current = filterName.replaceAll(" ", "-");
+    }, [filterName]);
 
 
 
@@ -110,24 +155,24 @@ export default function ZeusTab({ filterData }: ITransferFilterData) {
 
 
     const [menuButtons, setMenuButtons] = useState<IMenuButton[]>([
-    {
-        buttonName: "undo",
-        func: handleUndo,
-        svg: "M 12 4.5 a 7.5 7.5 90 1 1 -6.819 4.371 a 0.75 0.75 90 0 0 -1.362 -0.6255 A 9 9 90 1 0 12 3 v 1.5 z M 12 6.699 V 0.801 a 0.375 0.375 90 0 0 -0.615 -0.288 L 7.845 3.462 a 0.375 0.375 90 0 0 0 0.576 l 3.54 2.949 A 0.375 0.375 90 0 0 12 6.699 z"
-    },
-    {
-        buttonName: "save",
-        func: saveFilter,
-        svg: "M4 3h13l3.707 3.707a1 1 0 0 1 .293.707V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm8 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM5 5v4h10V5H5z"
-    },
+        {
+            buttonName: "undo",
+            func: handleUndo,
+            svg: "M 12 4.5 a 7.5 7.5 90 1 1 -6.819 4.371 a 0.75 0.75 90 0 0 -1.362 -0.6255 A 9 9 90 1 0 12 3 v 1.5 z M 12 6.699 V 0.801 a 0.375 0.375 90 0 0 -0.615 -0.288 L 7.845 3.462 a 0.375 0.375 90 0 0 0 0.576 l 3.54 2.949 A 0.375 0.375 90 0 0 12 6.699 z"
+        },
+        {
+            buttonName: "save",
+            func: updateDashboard,
+            svg: "M4 3h13l3.707 3.707a1 1 0 0 1 .293.707V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm8 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM5 5v4h10V5H5z"
+        },
     ]);
     const makeMenuButtons = () => {
 
         return menuButtons.map((item: IMenuButton, index: number) => {
             let num = (((menuButtons.length - index) * 4));
-            num= Math.floor(num * 10) / 10;
+            num = Math.floor(num * 10) / 10;
             console.log(num)
-            const openStyle =  "transition-transform delay-75 duration-200 translate-x-0 flex justify-center items-center w-[52px] h-[52px] text-gray-500 hover:text-gray-900 bg-white rounded-lg  dark:hover:text-white dark:text-gray-400 dark:bg-secondaryBackground dark:hover:bg-thirdBackground focus:ring-2 focus:ring-gray-300 focus:outline-none dark:focus:ring-gray-400";
+            const openStyle = "transition-transform delay-75 duration-200 translate-x-0 flex justify-center items-center w-[52px] h-[52px] text-gray-500 hover:text-gray-900 bg-white rounded-lg  dark:hover:text-white dark:text-gray-400 dark:bg-secondaryBackground dark:hover:bg-thirdBackground focus:ring-2 focus:ring-gray-300 focus:outline-none dark:focus:ring-gray-400";
             const closedStyle = `invisible transition-transform delay-100 translate-x-[${num}rem]  flex justify-center items-center w-[52px] h-[52px] text-gray-500 hover:text-gray-900 bg-white rounded-lg  dark:hover:text-white dark:text-gray-400 dark:bg-secondaryBackground dark:hover:bg-thirdBackground focus:ring-2 focus:ring-gray-300 focus:outline-none dark:focus:ring-gray-400 z-0`;
             return <><button onClick={item.func} type="button" data-tooltip-target="tooltip-share" data-tooltip-placement="left"
                 className=

@@ -6,6 +6,7 @@ import { IDomainWatchRequest } from "@/interfaces/requests";
 import { IDomainWatchResponse } from "@/interfaces/responses";
 import { getCookie } from "cookies-next";
 import { IFetchFiltersRequest } from "@/interfaces/requests/FetchFilterRequest";
+import { stat } from "fs";
 
 export interface IFilterData {
     name:string,
@@ -28,8 +29,8 @@ export interface IFetchParams {
 
 export interface IZeusState {
     filters: IFilterData[],
-    fetchParams: IFetchParams
-
+    fetchParams: IFetchParams,
+    needToFetch:boolean
 }
 
 const initialState: IZeusState = {
@@ -74,7 +75,8 @@ const initialState: IZeusState = {
         dataSource: "",
         endpoint: "",
         typeOfUser: ""
-    }
+    },
+    needToFetch:false
 }
 
 export const zeusSlice = createSlice({
@@ -96,6 +98,8 @@ export const zeusSlice = createSlice({
                 
                 filterToUpdate.name=tryName(filterToUpdate,newData.name);
                 filterToUpdate.filter = newData;
+                state.zeus.needToFetch=true;
+                
             }
             function tryName(filterToUpdate:IFilterData,newName:string){
                 const filterWithAttemptedName = state.zeus.filters.find(filter => filter.name == newName);
@@ -106,6 +110,9 @@ export const zeusSlice = createSlice({
                     return tryName(filterToUpdate,newName+"_copy");
                 }
             }
+        },
+        updateNeedToFetch(state,action){
+            state.zeus.needToFetch=action.payload;
         },
         updateDataSource(state, action) {
             state.zeus.fetchParams.dataSource = action.payload;
@@ -156,6 +163,6 @@ export const getFilters = createAsyncThunk("FILTERS.Get", async (object: IFetchF
     }
 })
 
-export const { updateFilters, updateFilterData, updateDataSource, updateEndpoint, updateTypeOfUser,updateFilterStack } = zeusSlice.actions;
+export const { updateFilters, updateFilterData, updateDataSource, updateEndpoint, updateTypeOfUser,updateNeedToFetch } = zeusSlice.actions;
 export const zeusState = (state: AppState) => state.zeus;
 export default zeusSlice.reducer;

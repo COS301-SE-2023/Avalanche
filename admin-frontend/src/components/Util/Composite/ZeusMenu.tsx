@@ -2,8 +2,9 @@ import Dropdown from "../Dropdown";
 import { useState, useEffect } from "react";
 import SubmitButton from "../SubmitButton";
 import { useDispatch, useSelector } from "react-redux";
-import { zeusState, IZeusState, updateFilters, IFilterData, updateDataSource, updateEndpoint, updateTypeOfUser, getFilters } from "@/store/Slices/ZeusSlice";
+import { zeusState, IZeusState, updateFilters, IFilterData, updateDataSource, updateEndpoint, updateTypeOfUser, getFilters, updateNeedToFetch } from "@/store/Slices/ZeusSlice";
 import { IFetchFiltersRequest } from "@/interfaces/requests/FetchFilterRequest";
+import SuccessToast from "../SuccessToast";
 
 
 export default function ZeusMenu() {
@@ -99,6 +100,17 @@ export default function ZeusMenu() {
             } as IFetchFiltersRequest))
 
     }
+
+    useEffect(() => {
+       
+        if(stateZeus.zeus.needToFetch){
+            setTimeout(() => {  fetchFilters();
+                dispatch(updateNeedToFetch(false))
+                SuccessToast({text:"Reloaded"}); }, 5000);
+            
+        } 
+        
+        }, [stateZeus.zeus.needToFetch])
 
     const makeRow = (searchString: string) => {
         const zeus: IZeusState = stateZeus.zeus;
