@@ -260,7 +260,7 @@ export class UserDataProductMangementService {
                             };
                         }
                         for(const products of user.products){
-                            if(products.dataSource == "africa"){
+                            if(products.dataSource == "zarc"){
                                 products.key = key;
                                 products.tou = type
                             }

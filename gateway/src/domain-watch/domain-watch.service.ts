@@ -11,12 +11,16 @@ export class DomainWatchService {
   async sendData(data: any): Promise<any> {
     console.log(data);
     console.log("elo");
+    try{
     const response = this.httpService.post(
       'http://zanet.cloud:4100/domainWatch/active',
       data,
     );
     const responseData = await lastValueFrom(response);
     return JSON.stringify(responseData.data);
+    }catch(error){
+      throw error;
+    }
   }
 
   @Cron(CronExpression.EVERY_DAY_AT_6AM)
