@@ -181,6 +181,9 @@ export class AppService {
     if (data.dataSource && data.endpoint != null && data.typeOfUser ){
       const endpoint = existingData.at(0);
       const graph = await this.graphRepository.find({ where: { graphName : data.endpoint, user : data.typeOfUser}, relations: ["filters","endpoint"] });
+      if(!graph){
+        return {"status" : "error", "message" : "This endpoint does not exist for this type of user"};
+      }
       for(let count = 0; count<graph.length; count++){
         if(graph.at(count).endpoint.endpoint == endpoint.endpoint){
           console.log("boi");
