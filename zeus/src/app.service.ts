@@ -162,9 +162,9 @@ export class AppService {
     }
   }
 
-  async getAllData(): Promise<Endpoint[]> {
+  async getAllData(): Promise<Object> {
     return await this.endpointRepository.find({
-      relations: ['graphs', 'graphs.filters', 'graphs.filters'], // Include necessary relations
+      relations: ['graphs'], // Include necessary relations
     });
   }
 
@@ -193,5 +193,6 @@ export class AppService {
       return {"status" : "failure"};
     }
   }
+
 }
 
