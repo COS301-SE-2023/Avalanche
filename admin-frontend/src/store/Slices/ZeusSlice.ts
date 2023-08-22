@@ -6,10 +6,27 @@ import { IDomainWatchRequest } from "@/interfaces/requests";
 import { IDomainWatchResponse } from "@/interfaces/responses";
 import { getCookie } from "cookies-next";
 import { IFetchFiltersRequest } from "@/interfaces/requests/FetchFilterRequest";
-import { stat } from "fs";
+
+export interface IDropdownData {
+    dataSources: IDataSource[]
+}
+
+export interface IDataSource {
+    dataSourceName: string,
+    endpoints: IEndpoint[]
+}
+
+export interface IEndpoint {
+    endpointName: string,
+    typesOfUsers: ITypeOfUser[]
+}
+
+export interface ITypeOfUser {
+    typeOfUser: string
+}
 
 export interface IFilterData {
-    name:string,
+    name: string,
     filter: {
         id: number,
         name: string,
@@ -18,7 +35,7 @@ export interface IFilterData {
         input: string
     },
     opened: boolean,
-    selected:boolean
+    selected: boolean
 }
 
 export interface IFetchParams {
@@ -30,13 +47,14 @@ export interface IFetchParams {
 export interface IZeusState {
     filters: IFilterData[],
     fetchParams: IFetchParams,
-    needToFetch:boolean
+    dropDownData: IDropdownData,
+    needToFetch: boolean
 }
 
 const initialState: IZeusState = {
     filters: [
         {
-            name:"N1",
+            name: "N1",
             filter: {
                 id: 1,
                 name: "N1",
@@ -45,10 +63,10 @@ const initialState: IZeusState = {
                 input: "chk"
             },
             opened: false,
-            selected:false,
-            
+            selected: false,
+
         }, {
-            name:"This-is-a-really-long-filter-name-to-prove-a-point",
+            name: "This-is-a-really-long-filter-name-to-prove-a-point",
             filter: {
                 id: 1,
                 name: "N2",
@@ -57,9 +75,9 @@ const initialState: IZeusState = {
                 input: "chk"
             },
             opened: false,
-            selected:false
+            selected: false
         }, {
-            name:"N3",
+            name: "N3",
             filter: {
                 id: 3,
                 name: "N3",
@@ -68,7 +86,7 @@ const initialState: IZeusState = {
                 input: "text"
             },
             opened: false,
-            selected:false
+            selected: false
         }
     ],
     fetchParams: {
@@ -76,7 +94,37 @@ const initialState: IZeusState = {
         endpoint: "",
         typeOfUser: ""
     },
-    needToFetch:false
+    dropDownData: {
+        dataSources: [
+            {
+                dataSourceName: "zacr",
+                endpoints: [
+                    {
+                        endpointName: "transactions",
+                        typesOfUsers: [
+                            {
+                                typeOfUser: "private"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                dataSourceName: "ryce",
+                endpoints: [
+                    {
+                        endpointName: "transaction-ranking",
+                        typesOfUsers: [
+                            {
+                                typeOfUser: "private"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    needToFetch: false
 }
 
 export const zeusSlice = createSlice({
@@ -85,7 +133,7 @@ export const zeusSlice = createSlice({
         zeus: initialState,
     },
 
-    
+
     reducers: {
         updateFilters(state, action) {
             state.zeus.filters = action.payload;
@@ -95,24 +143,24 @@ export const zeusSlice = createSlice({
             const newData = action.payload.saveData;
             const filterToUpdate = state.zeus.filters.find(filter => filter.name == name);
             if (filterToUpdate) {
-                
-                filterToUpdate.name=tryName(filterToUpdate,newData.name);
+
+                filterToUpdate.name = tryName(filterToUpdate, newData.name);
                 filterToUpdate.filter = newData;
-                state.zeus.needToFetch=true;
-                
+                state.zeus.needToFetch = true;
+
             }
-            function tryName(filterToUpdate:IFilterData,newName:string){
+            function tryName(filterToUpdate: IFilterData, newName: string) {
                 const filterWithAttemptedName = state.zeus.filters.find(filter => filter.name == newName);
-                
-                if(!filterWithAttemptedName||filterWithAttemptedName.name==filterToUpdate.name){
-                    return newName.replaceAll(" ","-");
-                }else{
-                    return tryName(filterToUpdate,newName+"_copy");
+
+                if (!filterWithAttemptedName || filterWithAttemptedName.name == filterToUpdate.name) {
+                    return newName.replaceAll(" ", "-");
+                } else {
+                    return tryName(filterToUpdate, newName + "_copy");
                 }
             }
         },
-        updateNeedToFetch(state,action){
-            state.zeus.needToFetch=action.payload;
+        updateNeedToFetch(state, action) {
+            state.zeus.needToFetch = action.payload;
         },
         updateDataSource(state, action) {
             state.zeus.fetchParams.dataSource = action.payload;
@@ -122,6 +170,9 @@ export const zeusSlice = createSlice({
         },
         updateTypeOfUser(state, action) {
             state.zeus.fetchParams.typeOfUser = action.payload;
+        },
+        upadateDropdownData(state,action){
+            state.zeus.dropDownData = action.payload;
         }
 
     },
@@ -137,11 +188,21 @@ export const zeusSlice = createSlice({
             let newArr: any[] = [];
             const filters = response.filters.filter((e: any) => {
                 let copied = { ...e };
-                const obj={name:copied.name,filter:copied,opened:false,selected:false};
+                const obj = { name: copied.name, filter: copied, opened: false, selected: false };
                 newArr.push(obj);
 
             })
             state.zeus.filters = newArr;
+        }),
+        builder.addCase(getDropdownData.pending, (state) => {
+
+        })
+        builder.addCase(getDropdownData.rejected, (state, action) => {
+
+        })
+        builder.addCase(getDropdownData.fulfilled, (state, action) => {
+            const response = action.payload as any;
+            console.log("Look here! it's here",response)
         })
     }
 });
@@ -163,6 +224,21 @@ export const getFilters = createAsyncThunk("FILTERS.Get", async (object: IFetchF
     }
 })
 
-export const { updateFilters, updateFilterData, updateDataSource, updateEndpoint, updateTypeOfUser,updateNeedToFetch } = zeusSlice.actions;
+export const getDropdownData = createAsyncThunk("DROPDOWNDATA.Get", async (object, { rejectWithValue }) => {
+    try {
+        const response = ky.post(`http://localhost:3998/getData`, {
+            json: object, timeout: false, headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
+                "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token"
+            }
+        }).json();
+        return response;
+    } catch (e) {
+        if (e instanceof Error) return rejectWithValue(e.message);
+    }
+})
+
+export const { updateFilters, updateFilterData, updateDataSource, updateEndpoint, updateTypeOfUser, updateNeedToFetch, upadateDropdownData } = zeusSlice.actions;
 export const zeusState = (state: AppState) => state.zeus;
 export default zeusSlice.reducer;
