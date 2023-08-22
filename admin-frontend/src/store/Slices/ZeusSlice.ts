@@ -252,7 +252,8 @@ export const zeusSlice = createSlice({
                     }
                 });
             });
-            console.log("I changed it!",transformedData)
+            console.log("I changed it!",transformedData);
+            state.zeus.dropDownData=transformedData;
         })
     }
 });
