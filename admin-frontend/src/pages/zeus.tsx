@@ -12,6 +12,10 @@ import ky, { HTTPError } from "ky";
 import { getCookie } from "cookies-next";
 import ZeusMenu from "@/components/Util/Composite/ZeusMenu";
 import ZeusEditor from "@/components/Util/Composite/ZeusEditor";
+import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
+import AddUserToGroup from "@/components/Modals/AddUserToGroup";
+import GenericTextInput from "@/components/Modals/GenericTextInput";
+
 
 export default function Settings() {
 
@@ -30,6 +34,7 @@ export default function Settings() {
     const [sorting, setSorting] = useState<string>("");
     const [sortingType, setSortingType] = useState<string>("asc");
     const [whois, setWhois] = useState<string>("");
+    const modalState = useSelector(selectModalManagerState);
 
     /**
      * This function watched the watchState for the variable to change.
@@ -219,5 +224,8 @@ export default function Settings() {
                 </div>
             </div >
         </div>
+        {modalState && modalState.currentOpen === "ZEUS.addDataSource" && <GenericTextInput title="New Data Source"  fieldHeading="Data Source"  placeHolder="Data Source"  buttonText="Add" />}
+        {modalState && modalState.currentOpen === "ZEUS.addEndpoint"   && <GenericTextInput title="New Endpoint"     fieldHeading="Endpoint"     placeHolder="Endpoint"     buttonText="Add" />}
+        {modalState && modalState.currentOpen === "ZEUS.addTypeOfUser" && <GenericTextInput title="New Type of User" fieldHeading="Type of User" placeHolder="Type of User" buttonText="Add" />}
     </>
 }

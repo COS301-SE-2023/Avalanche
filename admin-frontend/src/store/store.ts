@@ -4,6 +4,7 @@ import { zeusSlice } from "./Slices/ZeusSlice";
 import thunk from "redux-thunk";
 import { persistReducer, persistStore } from "redux-persist";
 import createWebStorage from "redux-persist/lib/storage/createWebStorage";
+import {modalManagerSlice} from "./Slices/modalManagerSlice";
 
 const createNoopStorage = () => {
     return {
@@ -23,6 +24,7 @@ const storage = typeof window !== "undefined" ? createWebStorage("local") : crea
 
 const rootReducer = combineReducers({
     [zeusSlice.name]: zeusSlice.reducer,
+    [modalManagerSlice.name]:modalManagerSlice.reducer,
 });
 
 const makeConfiguredStore = () =>

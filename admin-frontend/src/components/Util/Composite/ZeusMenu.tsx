@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { zeusState, IZeusState, updateFilters, IFilterData, updateDataSource, updateEndpoint, updateTypeOfUser, getFilters, updateNeedToFetch } from "@/store/Slices/ZeusSlice";
 import { IFetchFiltersRequest } from "@/interfaces/requests/FetchFilterRequest";
 import SuccessToast from "../SuccessToast";
+import PlusDropdown from "./PlusDropdown";
 
 
 export default function ZeusMenu() {
@@ -125,22 +126,16 @@ export default function ZeusMenu() {
             <td className="px-6 py-4">
                 <a onClick={() => { openTab(item.name.replaceAll(" ", "-")) }} className="p-1 font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
                 <a onClick={() => { duplicateFilter(item.name.replaceAll(" ", "-")) }} className="p-1 font-medium text-blue-600 dark:text-green-500 hover:underline">Duplicate</a>
-                <a onClick={() => { removeFilter(item.name.replaceAll(" ", "-")) }} className="p-1 font-medium text-red-600 dark:text-red-500 hover:underline">Remove</a>
+                {/* <a onClick={() => { removeFilter(item.name.replaceAll(" ", "-")) }} className="p-1 font-medium text-red-600 dark:text-red-500 hover:underline">Remove</a> */}
             </td>
         </tr>)
     }
     return (<>
         <div>
             <div>
-                <div className="p-2">
-                    <Dropdown id='chooseSource' items={["zacr", "africa", "ryce"]} option={stateZeus.zeus.fetchParams.dataSource} set={reduceDataSource} text="Select a Data Source" />
-                </div>
-                <div className="p-2">
-                    <Dropdown id='chooseEndpoint' items={["transactions", "transactions-ranking", "marketShare", "age", "domainNameAnalysis/count", "domainNameAnalysis/length", "movement/vertical"]} option={stateZeus.zeus.fetchParams.endpoint} set={reduceEndpoint} text="Select an Endpoint" />
-                </div>
-                <div className="p-2">
-                    <Dropdown id='chooseTypeOfUser' items={["public", "registrar", "registry"]} option={stateZeus.zeus.fetchParams.typeOfUser} set={reduceTypeOfUser} text="Select a Type of User" />
-                </div>
+                <PlusDropdown  id='chooseSource' items={["zacr", "africa", "ryce"]} option={stateZeus.zeus.fetchParams.dataSource} set={reduceDataSource} text="Select a Data Source" action={"ZEUS.addDataSource"}></PlusDropdown>
+                <PlusDropdown  id='chooseEndpoint' items={["transactions", "transactions-ranking", "marketShare", "age", "domainNameAnalysis/count", "domainNameAnalysis/length", "movement/vertical"]} option={stateZeus.zeus.fetchParams.endpoint} set={reduceEndpoint} text="Select an Endpoint" action={"ZEUS.addEndpoint"}></PlusDropdown>
+                <PlusDropdown id='chooseTypeOfUser' items={["public", "registrar", "registry"]} option={stateZeus.zeus.fetchParams.typeOfUser} set={reduceTypeOfUser} text="Select a Type of User" action={"ZEUS.addTypeOfUser"}></PlusDropdown>
                 <div className="p-2 ">
                     <SubmitButton onClick={fetchFilters} className=" w-full" text={"Fetch"}></SubmitButton>
                 </div>
@@ -181,7 +176,7 @@ export default function ZeusMenu() {
                             Showing <span className="font-semibold text-gray-900 dark:text-white">{((page - 1) * ITEMS_PER_PAGE + 1)}</span> to <span className="font-semibold text-gray-900 dark:text-white">{Math.min(((page) * ITEMS_PER_PAGE), stateZeus.zeus.filters.length)}</span> of <span className="font-semibold text-gray-900 dark:text-white">{stateZeus.zeus.filters.length}</span> Entries
                         </span>
                         <div className="inline-flex mt-2 xs:mt-0 ">
-                            <button onClick={decrementPage} className="flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-gray-800 rounded-l hover:bg-gray-900 dark:bg-thirdBackground dark:border-gray-700 dark:text-gray-400 dark:hover:bg-avalancheBlue dark:hover:text-white">
+                            <button onClick={decrementPage} className="flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-gray-800  hover:bg-gray-900 dark:bg-thirdBackground dark:border-gray-700 dark:text-gray-400 dark:hover:bg-avalancheBlue dark:hover:text-white">
                                 <svg className="w-3.5 h-3.5 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                                     <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 5H1m0 0 4 4M1 5l4-4" />
                                 </svg>

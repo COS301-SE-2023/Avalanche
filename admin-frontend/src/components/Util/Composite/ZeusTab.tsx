@@ -19,6 +19,8 @@ import ErrorToast from '../ErrorToast';
 import ky, { HTTPError } from "ky"
 import ISaveFilters from '@/interfaces/requests/SaveFilters';
 
+import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
+
 interface ITransferFilterData {
     filterData: IFilterData
 }
