@@ -29,87 +29,87 @@ export class UserDataProductMangementService {
             };
         }
         if (personal == true) {
-            try{
-            let url = 'https://srs-epp.dns.net.za:8282/portal/auth-jwt/';
-            const payload = {
-                username: username,
-                password: password
-            };
-
             try {
-                const response = await axios.post(url, payload, {
-                });
+                let url = 'https://srs-epp.dns.net.za:8282/portal/auth-jwt/';
+                const payload = {
+                    username: username,
+                    password: password
+                };
 
-                const tokenFromDNS = response.data.token;
-                url = 'https://srs-epp.dns.net.za:8282/portal/auth-epp-username/'
                 try {
-                    const responseGET = await axios.get(url, {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${tokenFromDNS}`
-                        }
+                    const response = await axios.post(url, payload, {
                     });
 
-                    let key = responseGET.data.epp_username;
-                    const type = "registrar"
-                    const userPayload = await this.redis.get(token);
-                    if (!userPayload) {
-                        return {
-                            status: 400, error: true, message: 'Invalid token.',
-                            timestamp: new Date().toISOString()
-                        };
-                    }
-                    const { email: userEmail } = JSON.parse(userPayload);
-                    console.log(userEmail);
-                    if (userEmail) {
-                        const user = await this.userRepository.findOne({ where: { email: userEmail }, relations: ['userGroups', 'organisation', 'dashboards'] });
-                        if (!user) {
+                    const tokenFromDNS = response.data.token;
+                    url = 'https://srs-epp.dns.net.za:8282/portal/auth-epp-username/'
+                    try {
+                        const responseGET = await axios.get(url, {
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${tokenFromDNS}`
+                            }
+                        });
+
+                        let key = responseGET.data.epp_username;
+                        const type = "registrar"
+                        const userPayload = await this.redis.get(token);
+                        if (!userPayload) {
                             return {
-                                status: 400, error: true, message: 'User does not exist',
+                                status: 400, error: true, message: 'Invalid token.',
                                 timestamp: new Date().toISOString()
                             };
                         }
-                        for(const products of user.products){
-                            if(products.dataSource == "africa"){
-                                products.key = key;
-                                products.tou = type
+                        const { email: userEmail } = JSON.parse(userPayload);
+                        console.log(userEmail);
+                        if (userEmail) {
+                            const user = await this.userRepository.findOne({ where: { email: userEmail }, relations: ['userGroups', 'organisation', 'dashboards'] });
+                            if (!user) {
+                                return {
+                                    status: 400, error: true, message: 'User does not exist',
+                                    timestamp: new Date().toISOString()
+                                };
                             }
+                            for (const products of user.products) {
+                                if (products.dataSource == "africa") {
+                                    products.key = key;
+                                    products.tou = type
+                                }
+                            }
+                            await this.userRepository.save(user);
+                            delete user.password;
+                            delete user.salt;
+                            delete user.apiKey;
+                            await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60);
+                            return {
+                                status: 'success', message: 'User is integrated with DNS',
+                                timestamp: new Date().toISOString()
+                            };
+                        } else {
+                            return {
+                                status: 400, error: true, message: "You are allocating this to another user",
+                                timestamp: new Date().toISOString()
+                            };
                         }
-                        await this.userRepository.save(user);
-                        delete user.password;
-                        delete user.salt;
-                        delete user.apiKey;
-                        await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60);
+                    } catch (error) {
+                        console.error(error);
                         return {
-                            status: 'success', message: 'User is integrated with DNS',
-                            timestamp: new Date().toISOString()
-                        };
-                    } else {
-                        return {
-                            status: 400, error: true, message: "You are allocating this to another user",
+                            status: 400, error: true, message: error,
                             timestamp: new Date().toISOString()
                         };
                     }
                 } catch (error) {
                     console.error(error);
                     return {
-                        status: 400, error: true, message: error,
+                        status: 400, error: true, message: "User details are incorrect for API",
                         timestamp: new Date().toISOString()
                     };
                 }
-            } catch (error) {
-                console.error(error);
+            } catch (e) {
                 return {
                     status: 400, error: true, message: "User details are incorrect for API",
                     timestamp: new Date().toISOString()
                 };
             }
-        }catch(e){
-            return {
-                status: 400, error: true, message: "User details are incorrect for API",
-                timestamp: new Date().toISOString()
-            };
-        }
         } else {
             // Retrieve the user with their groups based on the token
             const userData = await this.redis.get(token);
@@ -174,8 +174,8 @@ export class UserDataProductMangementService {
                                     timestamp: new Date().toISOString()
                                 }
                             }
-                            for(const products of userGroup.products){
-                                if(products.dataSource == "africa"){
+                            for (const products of userGroup.products) {
+                                if (products.dataSource == "africa") {
                                     products.key = key;
                                     products.tou = type
                                 }
@@ -220,86 +220,86 @@ export class UserDataProductMangementService {
             };
         }
         if (personal == true) {
-            try{
-            let url = 'https://epp.zarc.net.za:8282/portal/auth-jwt/';
-            const payload = {
-                username: username,
-                password: password
-            };
-
             try {
-                const response = await axios.post(url, payload, {
-                });
+                let url = 'https://epp.zarc.net.za:8282/portal/auth-jwt/';
+                const payload = {
+                    username: username,
+                    password: password
+                };
 
-                const tokenFromDNS = response.data.token;
-                url = 'https://epp.zarc.net.za:8282/portal/auth-epp-username/'
                 try {
-                    const responseGET = await axios.get(url, {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${tokenFromDNS}`
-                        }
+                    const response = await axios.post(url, payload, {
                     });
 
-                    let key = responseGET.data.epp_username;
-                    const type = "registrar"
-                    const userPayload = await this.redis.get(token);
-                    if (!userPayload) {
-                        return {
-                            status: 400, error: true, message: 'Invalid token.',
-                            timestamp: new Date().toISOString()
-                        };
-                    }
-                    const { email: userEmail } = JSON.parse(userPayload);
-                    if (userEmail) {
-                        const user = await this.userRepository.findOne({ where: { email: userEmail }, relations: ['userGroups', 'organisation', 'dashboards'] });
-                        if (!user) {
+                    const tokenFromDNS = response.data.token;
+                    url = 'https://epp.zarc.net.za:8282/portal/auth-epp-username/'
+                    try {
+                        const responseGET = await axios.get(url, {
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${tokenFromDNS}`
+                            }
+                        });
+
+                        let key = responseGET.data.epp_username;
+                        const type = "registrar"
+                        const userPayload = await this.redis.get(token);
+                        if (!userPayload) {
                             return {
-                                status: 400, error: true, message: 'User does not exist',
+                                status: 400, error: true, message: 'Invalid token.',
                                 timestamp: new Date().toISOString()
                             };
                         }
-                        for(const products of user.products){
-                            if(products.dataSource == "zarc"){
-                                products.key = key;
-                                products.tou = type
+                        const { email: userEmail } = JSON.parse(userPayload);
+                        if (userEmail) {
+                            const user = await this.userRepository.findOne({ where: { email: userEmail }, relations: ['userGroups', 'organisation', 'dashboards'] });
+                            if (!user) {
+                                return {
+                                    status: 400, error: true, message: 'User does not exist',
+                                    timestamp: new Date().toISOString()
+                                };
                             }
+                            for (const products of user.products) {
+                                if (products.dataSource == "zarc") {
+                                    products.key = key;
+                                    products.tou = type
+                                }
+                            }
+                            await this.userRepository.save(user);
+                            delete user.password;
+                            delete user.salt;
+                            delete user.apiKey;
+                            await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60);
+                            return {
+                                status: 'success', message: 'User is integrated with DNS',
+                                timestamp: new Date().toISOString()
+                            };
+                        } else {
+                            return {
+                                status: 400, error: true, message: "You are allocating this to another user",
+                                timestamp: new Date().toISOString()
+                            };
                         }
-                        await this.userRepository.save(user);
-                        delete user.password;
-                        delete user.salt;
-                        delete user.apiKey;
-                        await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60);
+                    } catch (error) {
+                        console.error(error);
                         return {
-                            status: 'success', message: 'User is integrated with DNS',
-                            timestamp: new Date().toISOString()
-                        };
-                    } else {
-                        return {
-                            status: 400, error: true, message: "You are allocating this to another user",
+                            status: 400, error: true, message: error,
                             timestamp: new Date().toISOString()
                         };
                     }
                 } catch (error) {
                     console.error(error);
                     return {
-                        status: 400, error: true, message: error,
+                        status: 400, error: true, message: "User details are incorrect for API",
                         timestamp: new Date().toISOString()
                     };
                 }
-            } catch (error) {
-                console.error(error);
+            } catch (e) {
                 return {
                     status: 400, error: true, message: "User details are incorrect for API",
                     timestamp: new Date().toISOString()
                 };
             }
-        }catch(e){
-            return {
-                status: 400, error: true, message: "User details are incorrect for API",
-                timestamp: new Date().toISOString()
-            };
-        }
         } else {
             // Retrieve the user with their groups based on the token
             const userData = await this.redis.get(token);
@@ -364,8 +364,8 @@ export class UserDataProductMangementService {
                                     timestamp: new Date().toISOString()
                                 }
                             }
-                            for(const products of userGroup.products){
-                                if(products.dataSource == "africa"){
+                            for (const products of userGroup.products) {
+                                if (products.dataSource == "africa") {
                                     products.key = key;
                                     products.tou = type
                                 }
@@ -480,11 +480,11 @@ export class UserDataProductMangementService {
                         status: 'success', message: 'User group is integrated with ' + type,
                         timestamp: new Date().toISOString()
                     };
-                }else{
+                } else {
                     return {
                         status: 400, error: true, message: 'User is not apart of this user group',
                         timestamp: new Date().toISOString()
-                    }; 
+                    };
                 }
             } else {
                 return {
@@ -600,9 +600,56 @@ export class UserDataProductMangementService {
         }
     }
 
-    async getFilters(){
-        return await JSON.stringify(this.endpointRepository.find({
-          relations: ['graphs', 'graphs.filters', 'graphs.filters.values'], // Include necessary relations
-        }));
-      }
+    async getFilters(token: string) {
+        const userPayload = await this.redis.get(token);
+        if (!userPayload) {
+            return {
+                status: 400, error: true, message: 'Invalid token.',
+                timestamp: new Date().toISOString()
+            };
+        }
+        const { email: userEmail } = JSON.parse(userPayload);
+        console.log(userEmail);
+        const user = await this.userRepository.findOne({
+            where: { email: userEmail }, relations: ['userGroups', 'organisation', 'dashboards'],
+            select: ['id', 'email', 'firstName', 'lastName', 'organisationId', 'products', 'userGroups', 'organisation', 'dashboards']
+        });
+        if (!user) {
+            return {
+                status: 400, error: true, message: 'User does not exist.',
+                timestamp: new Date().toISOString()
+            };
+        }
+        
+        // Initialize an array to store the final result
+        const result = [];
+    
+        // Iterate through the user's products
+        for (const product of user.products) {
+            let dataSource = product.dataSource;
+            const tou = product.tou;
+            if(dataSource == 'zarc'){
+                dataSource = 'zacr';
+            }
+            // Find the endpoints related to the current data source
+            const endpoint = await this.endpointRepository.findOne({
+                where: { endpoint: dataSource }, // Match the endpoint with the dataSource
+                relations: ['graphs', 'graphs.filters']
+            });
+    
+            // Iterate through the endpoints and collect the endpoints, graphs, and filters based on TOU
+            
+                const graphsByTOU = endpoint.graphs.filter(graph => graph.user === tou);
+                
+                // If there are graphs that match the TOU, include the endpoint along with graphs and filters
+                if (graphsByTOU.length > 0) {
+                    result.push({
+                        endpoint : dataSource ,graphs: graphsByTOU
+                    });
+                }
+        }
+    
+        return result;
+    }
+       
 }
