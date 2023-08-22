@@ -371,7 +371,7 @@ export class AppController {
   }
   @MessagePattern({ cmd: 'getFilters' })
   async getFilters(data: any) {
-    const result = await this.userDataProductManService.getFilters();
+    const result = await this.userDataProductManService.getFilters(data.token);
     return result;
   }
   @MessagePattern({ cmd: 'getDomainWatchPassiveUser' })

@@ -9,7 +9,7 @@ import { resolve } from 'path';
 @Controller('user-management')
 export class UserManagementController {
   constructor(@Inject('USER_MANAGEMENT_SERVICE') private client: ClientProxy) { }
-  @Get('graphFilters')
+  @Post('getFilters')
     async getFromFile(@Body() data: any) {
       const pattern = { cmd: 'getFilters' };
       const payload = data;
