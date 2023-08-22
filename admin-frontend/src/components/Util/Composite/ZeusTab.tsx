@@ -35,8 +35,6 @@ interface IMenuButton {
 
 export default function ZeusTab({ filterData }: ITransferFilterData) {
 
-
-
     const stateZeus = useSelector(zeusState);
     let [data, setData] = useState<any>(JSON.parse(JSON.stringify(filterData.filter)) as typeof filterData.filter);
     let [menuExpanded, setMenuExpanded] = useState<boolean>(false);

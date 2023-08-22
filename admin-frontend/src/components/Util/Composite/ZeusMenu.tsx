@@ -2,7 +2,7 @@ import Dropdown from "../Dropdown";
 import { useState, useEffect } from "react";
 import SubmitButton from "../SubmitButton";
 import { useDispatch, useSelector } from "react-redux";
-import { zeusState, IZeusState, updateFilters, IFilterData, updateDataSource, updateEndpoint, updateTypeOfUser, getFilters, updateNeedToFetch } from "@/store/Slices/ZeusSlice";
+import { zeusState, IZeusState, updateFilters, IFilterData, updateDataSource, updateEndpoint, updateTypeOfUser, getFilters, updateNeedToFetch, IDataSource, IEndpoint, ITypeOfUser, getDropdownData } from "@/store/Slices/ZeusSlice";
 import { IFetchFiltersRequest } from "@/interfaces/requests/FetchFilterRequest";
 import SuccessToast from "../SuccessToast";
 import PlusDropdown from "./PlusDropdown";
@@ -102,16 +102,49 @@ export default function ZeusMenu() {
 
     }
 
+    function getDataSources(){
+        let sources:string[]=[];
+        stateZeus.zeus.dropDownData.dataSources.map((item:IDataSource)=>{sources.push(item.dataSourceName)});
+        return sources;
+    }
+
+    function getEndpoints(selectedDataSourceName:string){
+        let sources:string[]=[];
+        const selectedDataSource = stateZeus.zeus.dropDownData.dataSources.find((item:IDataSource)=>{return item.dataSourceName==selectedDataSourceName});
+        if(selectedDataSource){
+            selectedDataSource.endpoints.map((item:IEndpoint)=>{sources.push(item.endpointName)});
+        }
+        return sources;
+    }
+
+    function getTypesOfUsers(selectedDataSourceName:string,selectedEndpointName:string){
+        let sources:string[]=[];
+        const selectedDataSource = stateZeus.zeus.dropDownData.dataSources.find((item:IDataSource)=>{return item.dataSourceName==selectedDataSourceName});
+        if(selectedDataSource){
+            const selectedEndpoint:IEndpoint=selectedDataSource.endpoints.find((item:IEndpoint)=>{return item.endpointName==selectedEndpointName});
+            if(selectedEndpoint){
+                selectedEndpoint.typesOfUsers.map((item:ITypeOfUser)=>{sources.push(item.typeOfUser)});
+            }
+        }
+        return sources;
+    }
+
     useEffect(() => {
+        dispatch(getDropdownData());
+    }, []);
+
+    
+
+        useEffect(() => {
        
-        if(stateZeus.zeus.needToFetch){
-            setTimeout(() => {  fetchFilters();
-                dispatch(updateNeedToFetch(false))
-                SuccessToast({text:"Reloaded"}); }, 5000);
+            if(stateZeus.zeus.needToFetch){
+                setTimeout(() => {  fetchFilters();
+                    dispatch(updateNeedToFetch(false))
+                    SuccessToast({text:"Reloaded"}); }, 5000);
+                
+            } 
             
-        } 
-        
-        }, [stateZeus.zeus.needToFetch])
+            }, [stateZeus.zeus.fetchParams.dataSource])
 
     const makeRow = (searchString: string) => {
         const zeus: IZeusState = stateZeus.zeus;
@@ -133,9 +166,9 @@ export default function ZeusMenu() {
     return (<>
         <div>
             <div>
-                <PlusDropdown  id='chooseSource' items={["zacr", "africa", "ryce"]} option={stateZeus.zeus.fetchParams.dataSource} set={reduceDataSource} text="Select a Data Source" action={"ZEUS.addDataSource"}></PlusDropdown>
-                <PlusDropdown  id='chooseEndpoint' items={["transactions", "transactions-ranking", "marketShare", "age", "domainNameAnalysis/count", "domainNameAnalysis/length", "movement/vertical"]} option={stateZeus.zeus.fetchParams.endpoint} set={reduceEndpoint} text="Select an Endpoint" action={"ZEUS.addEndpoint"}></PlusDropdown>
-                <PlusDropdown id='chooseTypeOfUser' items={["public", "registrar", "registry"]} option={stateZeus.zeus.fetchParams.typeOfUser} set={reduceTypeOfUser} text="Select a Type of User" action={"ZEUS.addTypeOfUser"}></PlusDropdown>
+                <PlusDropdown  id='chooseSource' items={getDataSources()} option={stateZeus.zeus.fetchParams.dataSource} set={reduceDataSource} text="Select a Data Source" action={"ZEUS.addDataSource"}></PlusDropdown>
+                <PlusDropdown  id='chooseEndpoint' items={getEndpoints(stateZeus.zeus.fetchParams.dataSource)} option={stateZeus.zeus.fetchParams.endpoint} set={reduceEndpoint} text="Select an Endpoint" action={"ZEUS.addEndpoint"}></PlusDropdown>
+                <PlusDropdown id='chooseTypeOfUser' items={getTypesOfUsers(stateZeus.zeus.fetchParams.dataSource,stateZeus.zeus.fetchParams.endpoint)} option={stateZeus.zeus.fetchParams.typeOfUser} set={reduceTypeOfUser} text="Select a Type of User" action={"ZEUS.addTypeOfUser"}></PlusDropdown>
                 <div className="p-2 ">
                     <SubmitButton onClick={fetchFilters} className=" w-full" text={"Fetch"}></SubmitButton>
                 </div>
