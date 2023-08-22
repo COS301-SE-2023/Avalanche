@@ -95,44 +95,23 @@ export class AppService {
     throw new BadRequestException('Invalid request data');
   }
 
-  async editGraphData(data: any) {
-    const existingData = await this.endpointRepository.find({
-      relations: ['graphs', 'graphs.filters'],
+  async addGraph(data: any){
+    const existingData = await this.endpointRepository.findOne({ where : {endpoint : data.endpoint},
+      relations: ['graphs'],
     });
-
-    if (!existingData || existingData.length === 0) {
+    if (!existingData) {
       throw new NotFoundException('Data not found');
     }
-
-    if (data.endpointId && data.graphId != null && data.newData && data.add == false) {
-      const graphIdGet = existingData[data.endpointId].graphs[data.graphId];
-      const graph = await this.graphRepository.findOne({ where: { id: graphIdGet.id }, relations: ["filters"] });
-      if (graph) {
-        const updateData = {
-          graphName: data.newData[0].graphName,
-          user: data.newData[0].user,
-          filters: data.newData[0].filter,
-        };
-
-        await this.graphRepository.update(graph.id, updateData);
-        return { "status": "success" };
-      }
-
-      throw new NotFoundException('Filter not found');
-    }
-    // 6. Add Filter to Graph
-    if (data.endpointId && data.newData && data.add == true) {
-      const endpointGet = existingData[data.endpointId];
-      const endpoint = await this.endpointRepository.findOne({ where: { id: endpointGet.id }, relations: ["graphs"] });
+    for(const tou of data.graphData[0].tou){
       const graphEntity = new Graph();
-      graphEntity.graphName = data.newData[0].graphName;
-      graphEntity.user = data.newData[0].user;
-      graphEntity.filters = data.newData[0].filters;
-      graphEntity.endpoint = endpoint; // Correcting the relationship
-      await this.filterRepository.save(graphEntity);
+      graphEntity.graphName = data.graphData[0].graphName;
+      graphEntity.user = tou;
+      graphEntity.endpoint = existingData;
+      await this.graphRepository.save(graphEntity);
     }
 
-    throw new BadRequestException('Invalid request data');
+    return {'status' : 'success'};
+
   }
 
   async editEndpointData(data: any) {
