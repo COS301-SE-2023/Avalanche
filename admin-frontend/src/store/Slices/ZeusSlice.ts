@@ -13,7 +13,7 @@ export interface IDropdownData {
 
 export interface IDataSource {
     dataSourceName: string,
-    endpoints: IEndpoint[]
+    endpoints: IEndpoint[] 
 }
 
 export interface IEndpoint {
@@ -117,7 +117,21 @@ const initialState: IZeusState = {
                         typesOfUsers: [
                             {
                                 typeOfUser: "private"
-                            }
+                            },
+                            {
+                                typeOfUser: "public"
+                            },
+                        ]
+                    },
+                    {
+                        endpointName: "count",
+                        typesOfUsers: [
+                            {
+                                typeOfUser: "private"
+                            },
+                            {
+                                typeOfUser: "public"
+                            },
                         ]
                     }
                 ]
@@ -171,7 +185,7 @@ export const zeusSlice = createSlice({
         updateTypeOfUser(state, action) {
             state.zeus.fetchParams.typeOfUser = action.payload;
         },
-        upadateDropdownData(state,action){
+        upadateDropdownData(state, action) {
             state.zeus.dropDownData = action.payload;
         }
 
@@ -193,7 +207,8 @@ export const zeusSlice = createSlice({
 
             })
             state.zeus.filters = newArr;
-        }),
+        })
+
         builder.addCase(getDropdownData.pending, (state) => {
 
         })
@@ -202,7 +217,42 @@ export const zeusSlice = createSlice({
         })
         builder.addCase(getDropdownData.fulfilled, (state, action) => {
             const response = action.payload as any;
-            console.log("Look here! it's here",response)
+            let transformedData:IDropdownData = {
+                    dataSources: []
+            };
+            console.log("Look here! it's here", response);
+            const dataSourceMap = new Map();
+
+            response.forEach((item:any) => {
+                const dataSource = dataSourceMap.get(item.endpoint);
+                if (!dataSource) {
+                    let newDataSource:IDataSource = {
+                        dataSourceName: item.endpoint,
+                        endpoints: []
+                    };
+                    dataSourceMap.set(item.endpoint, newDataSource);
+                    transformedData.dataSources.push(newDataSource);
+                }
+
+                item.graphs.forEach((graph:any) => {
+                    const endpoint = dataSourceMap.get(item.endpoint).endpoints.find((ep:any) => ep.endpointName === graph.graphName);
+                    if (!endpoint) {
+                        const newEndpoint = {
+                            endpointName: graph.graphName,
+                            typesOfUsers: []
+                        };
+                        dataSourceMap.get(item.endpoint).endpoints.push(newEndpoint);
+                    }
+
+                    const typeOfUser = graph.user;
+                    if (!dataSourceMap.get(item.endpoint).endpoints.find((ep:any) => ep.endpointName === graph.graphName).typesOfUsers.some((user:any) => user.typeOfUser === typeOfUser)) {
+                        dataSourceMap.get(item.endpoint).endpoints.find((ep:any) => ep.endpointName === graph.graphName).typesOfUsers.push({
+                            typeOfUser: typeOfUser
+                        });
+                    }
+                });
+            });
+            console.log("I changed it!",transformedData)
         })
     }
 });
