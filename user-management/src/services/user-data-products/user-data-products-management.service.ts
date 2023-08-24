@@ -651,7 +651,7 @@ export class UserDataProductMangementService {
                 }
         }
     
-        return result;
+        return {"status" : "success", "message" : result};
     }
        
 }
