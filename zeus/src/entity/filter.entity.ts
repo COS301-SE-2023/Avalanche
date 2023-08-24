@@ -1,5 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from 'typeorm';
-import { Value } from './value.entity';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { Graph } from './graph.entity';
 
 @Entity()
@@ -13,11 +12,11 @@ export class Filter {
   @Column()
   type: string;
 
-  @ManyToOne(() => Graph, graph => graph.filters) 
+  @ManyToOne(() => Graph, graph => graph.filters)
   graph: Graph;
 
-  @OneToMany(() => Value, value => value.filter)
-  values: Value[];
+  @Column('json',{ nullable: true })
+  values: any[]; // Define the specific structure if needed
   
   @Column()
   input: string;

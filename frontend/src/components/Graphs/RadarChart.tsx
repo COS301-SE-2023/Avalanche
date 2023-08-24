@@ -21,5 +21,5 @@ ChartJS.register(
 );
 
 export function RadarChart({ data }: IChart) {
-    return <Radar data={data} />;
+    return <Radar data={data.chartData} />;
 }

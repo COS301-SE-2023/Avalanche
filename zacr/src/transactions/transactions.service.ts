@@ -5,6 +5,7 @@ import { SnowflakeService } from '../snowflake/snowflake.service';
 import { DataFormatService } from '../data-format/data-format.service';
 import { AnalysisService } from '../analysis/analysis.service';
 import { GraphFormatService } from '../graph-format/graph-format.service';
+import { DataInterface } from '../interfaces/interfaces';
 
 @Injectable()
 export class TransactionService {
@@ -21,12 +22,13 @@ export class TransactionService {
       graphName = this.transactionsGraphName(filters, false);
 
       filters = JSON.stringify(filters);
-      console.log(filters);
+
       const sqlQuery = `call transactionsByRegistrar('${filters}')`;
 
-      let formattedData = await this.redis.get(`zacr` + sqlQuery);
-
-      if (!formattedData) {
+      const dataR = await this.redis.get(`zacr` + sqlQuery);
+      let data: DataInterface;
+      let formattedData = '';
+      if (!dataR) {
         let queryData;
 
         try {
@@ -43,21 +45,27 @@ export class TransactionService {
         formattedData = await this.graphFormattingService.formatTransactions(
           JSON.stringify(queryData),
         );
+        data = {
+          chartData: JSON.parse(formattedData),
+          jsonData: JSON.parse(queryData[0]['TRANSACTIONSBYREGISTRAR']),
+        };
         await this.redis.set(
           `zacr` + sqlQuery,
-          formattedData,
+          JSON.stringify(data),
           'EX',
           72 * 60 * 60,
         );
+      } else {
+        data = JSON.parse(dataR);
       }
 
       return {
         status: 'success',
         data: {
           graphName: graphName,
+          data: data,
           warehouse: 'zacr',
           graphType: 'transactions',
-          ...JSON.parse(formattedData),
         },
         timestamp: new Date().toISOString(),
       };
@@ -74,16 +82,17 @@ export class TransactionService {
   async transactionsRanking(filters: any, graphName: string): Promise<any> {
     try {
       graphName = this.transactionsGraphName(filters, true);
-      console.log(graphName);
+
       const filterObj = JSON.parse(JSON.stringify(filters));
       filterObj.isRanking = true;
       filters = JSON.stringify(filterObj);
-      console.log(filters);
+
       const sqlQuery = `call transactionsByRegistrar('${filters}')`;
 
-      let formattedData = await this.redis.get(`zacr` + sqlQuery);
-
-      if (!formattedData) {
+      const dataR = await this.redis.get(`zacr` + sqlQuery);
+      let data: DataInterface;
+      let formattedData = '';
+      if (!dataR) {
         let queryData;
         try {
           queryData = await this.snowflakeService.execute(sqlQuery);
@@ -95,26 +104,32 @@ export class TransactionService {
             timestamp: new Date().toISOString(),
           };
         }
-        //console.log(queryData);
         formattedData =
           await this.graphFormattingService.formatTransactionsRanking(
             JSON.stringify(queryData),
           );
 
+        data = {
+          chartData: JSON.parse(formattedData),
+          jsonData: JSON.parse(queryData[0]['TRANSACTIONSBYREGISTRAR']),
+        };
+
         await this.redis.set(
           `zacr` + sqlQuery,
-          formattedData,
+          JSON.stringify(data),
           'EX',
           72 * 60 * 60,
         );
+      } else {
+        data = JSON.parse(dataR);
       }
       return {
         status: 'success',
         data: {
           graphName: graphName,
+          data: data,
           warehouse: 'zacr',
           graphType: 'transactions-ranking',
-          ...JSON.parse(formattedData),
         },
         timestamp: new Date().toISOString(),
       };
@@ -179,8 +194,6 @@ export class TransactionService {
     let trans = ' Transactions ';
     if (perReg) {
       reg = 'per registrar ';
-      console.log('WEEEEEEE');
-      console.log(filters['transactions']);
       if (filters['transactions']?.length > 0) {
         trans = ' ' + filters['transactions'].join(', ') + ' ';
       }

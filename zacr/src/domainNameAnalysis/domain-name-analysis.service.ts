@@ -4,6 +4,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { lastValueFrom } from 'rxjs';
 import { SnowflakeService } from '../snowflake/snowflake.service';
 import { GraphFormatService } from '../graph-format/graph-format.service';
+import { DataInterface } from 'src/interfaces/interfaces';
 
 @Injectable()
 export class DomainNameAnalysisService {
@@ -12,20 +13,17 @@ export class DomainNameAnalysisService {
     @Inject('REDIS') private readonly redis: Redis,
     private readonly snowflakeService: SnowflakeService,
     private readonly graphFormattingService: GraphFormatService,
-  ) { }
+  ) {}
 
   async sendData(data: any): Promise<any> {
     try {
-      console.log(data);
       const filters = JSON.stringify(data.filters);
-      console.log(filters);
       const num = data.filters.num;
       const granularity = data.filters.granularity;
 
       const sqlQuery = `call domainNameAnalysis('${filters}')`;
-      console.log(sqlQuery);
       let formattedData = await this.redis.get(`zacr` + sqlQuery);
-
+      let dataRet: DataInterface;
       if (!formattedData) {
         let queryData;
         try {
@@ -38,7 +36,6 @@ export class DomainNameAnalysisService {
             timestamp: new Date().toISOString(),
           };
         }
-        console.log(queryData[0]['DOMAINNAMEANALYSIS']);
         data.data = queryData[0]['DOMAINNAMEANALYSIS'];
         delete data.filters;
         const response = this.httpService.post(
@@ -46,17 +43,23 @@ export class DomainNameAnalysisService {
           data,
         );
         const responseData = await lastValueFrom(response);
-        console.log(responseData);
         formattedData =
           await this.graphFormattingService.formatDomainNameAnalysis(
             JSON.stringify(responseData.data),
           );
+
+        dataRet = {
+          chartData: JSON.parse(formattedData),
+          jsonData: JSON.parse(responseData.data),
+        };
         await this.redis.set(
           `zacr` + sqlQuery,
-          formattedData,
+          JSON.stringify({ data: dataRet }),
           'EX',
           72 * 60 * 60,
         );
+      } else {
+        dataRet = JSON.parse(formattedData);
       }
 
       return {
@@ -68,7 +71,7 @@ export class DomainNameAnalysisService {
             ' ' +
             granularity +
             '(s)',
-          ...JSON.parse(formattedData),
+          data: dataRet,
           warehouse: 'zacr',
           graphType: 'domainNameAnalysis/count',
         },
@@ -89,7 +92,6 @@ export class DomainNameAnalysisService {
       graphName = this.domainLengthGraphName(filters);
 
       filters = JSON.stringify(filters);
-      console.log(filters);
       const sqlQuery = `CALL SKUNKWORKS_DB.public.domainLengthAnalysis('${filters}')`;
 
       let formattedData = await this.redis.get(`zacr` + sqlQuery);

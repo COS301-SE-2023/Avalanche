@@ -59,11 +59,12 @@ export class UserUserGroupMangementService {
                     }
                 }
                 if (check == false) {
+                    const products = [{dataSource : "zarc", tou : "public", key : null}, {dataSource : "africa", tou : "public", key : null}, {dataSource : "ryce", tou : "public", key : null}];
                     const userGroup = new UserGroup();
                     userGroup.name = name;
                     userGroup.organisation = existingOrganisation;
                     userGroup.permission = permission;
-
+                    userGroup.products = products;
                     // Save the user group
                     await this.userGroupRepository.save(userGroup);
 

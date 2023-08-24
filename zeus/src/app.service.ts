@@ -1,950 +1,21 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { EntityManager, Repository } from 'typeorm';
-import { NestedValue } from './entity/valueTypes';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Endpoint } from './entity/endpoint.entity';
 import { Graph } from './entity/graph.entity';
 import { Filter } from './entity/filter.entity';
-import { NestedFilter, Value } from './entity/value.entity';
 
 @Injectable()
 export class AppService {
   constructor(private readonly entityManager: EntityManager,
-    @InjectRepository(Endpoint)
-    private endpointRepository: Repository<Endpoint>,
-    ) { }
+    @InjectRepository(Endpoint) private endpointRepository: Repository<Endpoint>,
+    @InjectRepository(Graph) private graphRepository: Repository<Graph>,
+    @InjectRepository(Filter) private filterRepository: Repository<Filter>,
+  ) { }
 
-  async seedEndpointData(): Promise<Object> {
+  async seedEndpointData(data: any): Promise<Object> {
     // JSON data
-    const endpoints = [
-      {
-        "endpoint": "zacr",
-        "graphs": [
-          {
-            "name": "transactions",
-            "filters": [
-              {
-                "name": "zone",
-                "type": "string[]",
-                "values": [
-                  {
-                    "name": "CO.ZA", "filters": [{
-                      "name": "transactions",
-                      "type": "string[]",
-                      "values": ["cozaAccredited", "cozaCreate", "cozaGrace", "cozaRedeem", "cozaTransfer", "cozaRenew"],
-                      "input": "checkbox"
-                    }]
-                  },
-                  {
-                    "name": "ORG.ZA", "filters": [{
-                      "name": "transactions",
-                      "type": "string[]",
-                      "values": ["orgzaRedeem", "orgzaGrace", "orgzaLandrush", "orgzaLandrushPremium", "orgzaLegacyTransfer", "orgzaCreate", "orgzaPremium", "orgzaRenew", "orgzaSunrise", "orgzaPremium", "orgzaTransfer"],
-                      "input": "checkbox"
-                    }]
-                  },
-                  {
-                    "name": "NET.ZA", "filters": [{
-                      "name": "transactions",
-                      "type": "string[]",
-                      "values": ["netzaRedeem", "netzaGrace", "netzaLandrush", "netzaLandrushPremium", "netzaLegacyTransfer", "netzaCreate", "netzaPremium", "netzaRenew", "netzaSunrise", "netzaSunrisePremium", "netzaTrnasfer"],
-                      "input": "checkbox"
-                    }]
-                  },
-                  {
-                    "name": "WEB.ZA", "filters": [{
-                      "name": "transactions",
-                      "type": "string[]",
-                      "values": ["webzaRedeem", "webzaGrace", "webzaLandrush", "webzaLandrushPremium", "webzaCreate", "webzaCreateVT", "webzaPremium", "webzaRenew", "webzaSunrise", "webzaSunrisePremium", "webzaTransfer"],
-                      "input": "checkbox"
-                    }]
-                  }
-                ],
-                "input": "nestedCheckbox"
-              },
-              {
-                "name": "dateFrom",
-                "type": "string",
-                "input": "date-picker"
-              },
-              {
-                "name": "dateTo",
-                "type": "string",
-                "input": "date-picker"
-              },
-              {
-                "name": "granularity",
-                "type": "string",
-                "values": [
-                  "day",
-                  "week",
-                  "month",
-                  "year"
-                ],
-                "input": "radiobox"
-              }
-            ]
-          },
-          {
-            "name": "transactions-ranking",
-            "filters": [
-              {
-                "name": "zone",
-                "type": "string[]",
-                "values": [
-                  {
-                    "name": "CO.ZA", "filters": [{
-                      "name": "transactions",
-                      "type": "string[]",
-                      "values": ["cozaAccredited", "cozaCreate", "cozaGrace", "cozaRedeem", "cozaTransfer", "cozaRenew"],
-                      "input": "checkbox"
-                    }]
-                  },
-                  {
-                    "name": "ORG.ZA", "filters": [{
-                      "name": "transactions",
-                      "type": "string[]",
-                      "values": ["orgzaRedeem", "orgzaGrace", "orgzaLandrush", "orgzaLandrushPremium", "orgzaLegacyTransfer", "orgzaCreate", "orgzaPremium", "orgzaRenew", "orgzaSunrise", "orgzaPremium", "orgzaTransfer"],
-                      "input": "checkbox"
-                    }]
-                  },
-                  {
-                    "name": "NET.ZA", "filters": [{
-                      "name": "transactions",
-                      "type": "string[]",
-                      "values": ["netzaRedeem", "netzaGrace", "netzaLandrush", "netzaLandrushPremium", "netzaLegacyTransfer", "netzaCreate", "netzaPremium", "netzaRenew", "netzaSunrise", "netzaSunrisePremium", "netzaTrnasfer"],
-                      "input": "checkbox"
-                    }]
-                  },
-                  {
-                    "name": "WEB.ZA", "filters": [{
-                      "name": "transactions",
-                      "type": "string[]",
-                      "values": ["webzaRedeem", "webzaGrace", "webzaLandrush", "webzaLandrushPremium", "webzaCreate", "webzaCreateVT", "webzaPremium", "webzaRenew", "webzaSunrise", "webzaSunrisePremium", "webzaTransfer"],
-                      "input": "checkbox"
-                    }]
-                  }
-                ],
-                "input": "nestedCheckbox"
-              },
-              {
-                "name": "registrar",
-                "type": "string",
-                "values": [
-                  "afrihost",
-                  "hetzner",
-                  "diamatrix"
-                ],
-                "input": "checkbox"
-              },
-              {
-                "name": "dateFrom",
-                "type": "string",
-                "input": "date-picker"
-              },
-              {
-                "name": "dateTo",
-                "type": "string",
-                "input": "date-picker"
-              },
-              {
-                "name": "granularity",
-                "type": "string",
-                "values": [
-                  "day",
-                  "week",
-                  "month",
-                  "year"
-                ],
-                "input": "radiobox"
-              }
-            ]
-          },
-          {
-            "name": "marketShare",
-            "filters": [
-              {
-                "name": "zone",
-                "type": "string[]",
-                "values": [
-                  "CO.ZA",
-                  "NET.ZA",
-                  "ORG.ZA",
-                  "WEB.ZA"
-                ],
-                "input": "checkbox"
-              },
-              {
-                "name": "registrar",
-                "type": "string",
-                "values": [
-                  "afrihost",
-                  "hetzner",
-                  "diamatrix"
-                ],
-                "input": "checkbox"
-              },
-              {
-                "name": "rank",
-                "type": "string",
-                "values": [
-                  "top5",
-                  "top10",
-                  "top20",
-                  "bottom5",
-                  "bottom10",
-                  "bottom15"
-                ],
-                "input": "radiobox"
-              }
-            ]
-          },
-          {
-            "name": "age",
-            "filters": [
-              {
-                "name": "zone",
-                "type": "string[]",
-                "values": [
-                  "CO.ZA",
-                  "NET.ZA",
-                  "ORG.ZA",
-                  "WEB.ZA"
-                ],
-                "input": "checkbox"
-              },
-              {
-                "name": "registrar",
-                "type": "string",
-                "values": [
-                  "afrihost",
-                  "hetzner",
-                  "diamatrix"
-                ],
-                "input": "checkbox"
-              },
-              {
-                "name": "rank",
-                "type": "string",
-                "values": [
-                  "top5",
-                  "top10",
-                  "top20",
-                  "bottom5",
-                  "bottom10",
-                  "bottom15"
-                ],
-                "input": "radiobox"
-              },
-              {
-                "name": "average",
-                "type": "boolean",
-                "input": "togglebox"
-              },
-              {
-                "name": "overall",
-                "type": "boolean",
-                "input": "togglebox"
-              }
-            ]
-          },
-          {
-            "name": "domainNameAnalysis/count",
-            "filters": [
-              {
-                "name": "granularity",
-                "type": "string",
-                "values": [
-                  "day",
-                  "week",
-                  "month",
-                  "year"
-                ],
-                "input": "radiobox"
-              },
-              {
-                "name": "num",
-                "type": "number",
-                "input": "inputbox"
-              },
-              {
-                "name": "minimumAppearances",
-                "type": "number",
-                "input": "inputbox"
-              }
-            ]
-          },
-          {
-            "name": "domainNameAnalysis/length",
-            "filters": [
-              {
-                "name": "zone",
-                "type": "string[]",
-                "values": [
-                  "CO.ZA",
-                  "NET.ZA",
-                  "ORG.ZA",
-                  "WEB.ZA"
-                ],
-                "input": "checkbox"
-              },
-              {
-                "name": "registrar",
-                "type": "string",
-                "values": [
-                  "afrihost",
-                  "hetzner",
-                  "diamatrix"
-                ],
-                "input": "checkbox"
-              },
-              {
-                "name": "dateFrom",
-                "type": "string",
-                "input": "date-picker"
-              },
-              {
-                "name": "dateTo",
-                "type": "string",
-                "input": "date-picker"
-              }
-
-            ]
-          },
-          {
-            "name": "movement/vertical",
-            "filters": [
-              {
-                "name": "zone",
-                "type": "string[]",
-                "values": [
-                  "CO.ZA",
-                  "NET.ZA",
-                  "ORG.ZA",
-                  "WEB.ZA"
-                ],
-                "input": "checkbox"
-              },
-              {
-                "name": "registrar",
-                "type": "string",
-                "values": [
-                  "afrihost",
-                  "hetzner",
-                  "diamatrix"
-                ],
-                "input": "checkbox"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "endpoint": "africa",
-        "graphs": [
-          {
-            "name": "transactions",
-            "filters": [
-              {
-                "name": "zone",
-                "type": "string[]",
-                "values": [
-                  {
-                    "name": "AFRICA", "filters": [{
-                      "name": "transactions",
-                      "type": "string[]",
-                      "values": ["create", "grace", "redeem", "transfer", "renew", "genesis", "sunrisePremium", "sunrise", "landrush1", "landrush2", "landrush3", "landrush4", "premium"],
-                      "input": "checkbox"
-                    }]
-                  }
-                ],
-                "input": "nestedCheckbox"
-              },
-              {
-                "name": "dateFrom",
-                "type": "string",
-                "input": "date-picker"
-              },
-              {
-                "name": "dateTo",
-                "type": "string",
-                "input": "date-picker"
-              },
-              {
-                "name": "granularity",
-                "type": "string",
-                "values": [
-                  "day",
-                  "week",
-                  "month",
-                  "year"
-                ],
-                "input": "radiobox"
-              }
-            ]
-          },
-          {
-            "name": "transactions-ranking",
-            "filters": [
-              {
-                "name": "zone",
-                "type": "string[]",
-                "values": [
-                  {
-                    "name": "AFRICA", "filters": [{
-                      "name": "transactions",
-                      "type": "string[]",
-                      "values": ["create", "grace", "redeem", "transfer", "renew", "genesis", "sunrisePremium", "sunrise", "landrush1", "landrush2", "landrush3", "landrush4", "premium"],
-                      "input": "checkbox"
-                    }]
-                  }
-                ],
-                "input": "nestedCheckbox"
-              },
-              {
-                "name": "registrar",
-                "type": "string",
-                "values": [
-                  "dnsafric6lc9ke",
-                  "tucowsdominc",
-                  "namecheap4ch",
-                  "diamatrix",
-                  "101domain"
-                ],
-                "input": "checkbox"
-              },
-              {
-                "name": "dateFrom",
-                "type": "string",
-                "input": "date-picker"
-              },
-              {
-                "name": "dateTo",
-                "type": "string",
-                "input": "date-picker"
-              },
-              {
-                "name": "granularity",
-                "type": "string",
-                "values": [
-                  "day",
-                  "week",
-                  "month",
-                  "year"
-                ],
-                "input": "radiobox"
-              }
-            ]
-          },
-          {
-            "name": "marketShare",
-            "filters": [
-              {
-                "name": "zone",
-                "type": "string[]",
-                "values": [
-                  "AFRICA"
-                ],
-                "input": "checkbox"
-              },
-              {
-                "name": "registrar",
-                "type": "string",
-                "values": [
-                  "dnsafric6lc9ke",
-                  "tucowsdominc",
-                  "namecheap4ch",
-                  "diamatrix",
-                  "101domain"
-                ],
-                "input": "checkbox"
-              },
-              {
-                "name": "rank",
-                "type": "string",
-                "values": [
-                  "top5",
-                  "top10",
-                  "top20",
-                  "bottom5",
-                  "bottom10",
-                  "bottom15"
-                ],
-                "input": "radiobox"
-              }
-            ]
-          },
-          {
-            "name": "age",
-            "filters": [
-              {
-                "name": "zone",
-                "type": "string[]",
-                "values": [
-                  "AFRICA"
-                ],
-                "input": "checkbox"
-              },
-              {
-                "name": "registrar",
-                "type": "string",
-                "values": [
-                  "dnsafric6lc9ke",
-                  "tucowsdominc",
-                  "namecheap4ch",
-                  "diamatrix",
-                  "101domain"
-                ],
-                "input": "checkbox"
-              },
-              {
-                "name": "rank",
-                "type": "string",
-                "values": [
-                  "top5",
-                  "top10",
-                  "top20",
-                  "bottom5",
-                  "bottom10",
-                  "bottom15"
-                ],
-                "input": "radiobox"
-              },
-              {
-                "name": "average",
-                "type": "boolean",
-                "input": "togglebox"
-              },
-              {
-                "name": "overall",
-                "type": "boolean",
-                "input": "togglebox"
-              }
-            ]
-          },
-          {
-            "name": "domainNameAnalysis/count",
-            "filters": [
-              {
-                "name": "granularity",
-                "type": "string",
-                "values": [
-                  "day",
-                  "week",
-                  "month",
-                  "year"
-                ],
-                "input": "radiobox"
-              },
-              {
-                "name": "num",
-                "type": "number",
-                "input": "inputbox"
-              },
-              {
-                "name": "minimumAppearances",
-                "type": "number",
-                "input": "inputbox"
-              }
-            ]
-          },
-          {
-            "name": "domainNameAnalysis/length",
-            "filters": [
-              {
-                "name": "zone",
-                "type": "string[]",
-                "values": [
-                  "AFRICA"
-                ],
-                "input": "checkbox"
-              },
-              {
-                "name": "registrar",
-                "type": "string",
-                "values": [
-                  "dnsafric6lc9ke",
-                  "tucowsdominc",
-                  "namecheap4ch",
-                  "diamatrix",
-                  "101domain"
-                ],
-                "input": "checkbox"
-              },
-              {
-                "name": "dateFrom",
-                "type": "string",
-                "input": "date-picker"
-              },
-              {
-                "name": "dateTo",
-                "type": "string",
-                "input": "date-picker"
-              }
-
-            ]
-          },
-          {
-            "name": "movement/vertical",
-            "filters": [
-              {
-                "name": "zone",
-                "type": "string[]",
-                "values": [
-                  "AFRICA"
-                ],
-                "input": "checkbox"
-              },
-              {
-                "name": "registrar",
-                "type": "string",
-                "values": [
-                  "dnsafric6lc9ke",
-                  "tucowsdominc",
-                  "namecheap4ch",
-                  "diamatrix",
-                  "101domain"
-                ],
-                "input": "checkbox"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "endpoint": "ryce",
-        "graphs": [
-          {
-            "name": "transactions",
-            "filters": [
-              {
-                "name": "zone",
-                "type": "string[]",
-                "values": [
-                  {
-                    "name": "WIEN", "filters": [{
-                      "name": "transactions",
-                      "type": "string[]",
-                      "values": ["wienGrace", "wienCreate", "wienPremiumA", "wienPremiumB", "wienPremiumC", "wienPremiumD", "wienPremiumE", "wienPremiumF", "wienPremiumG", "wienPremiumH", "wienRenew", "wienRenewPremiumA", "wienRenewPremiumB", "wienRenewPremiumC", "wienRenewPremiumD", "wienRenewPremiumE", "wienRenewPremiumG", "wienRenewPremiumH", "wienRestore", "wienTransfer", "wienTransferNull", "wienTransferPremiumA", "wienTransferPremiumB", "wienTransferPremiumC", "wienTransferPremiumD", "wienTransferPremiumE", "wienTransferPremiumG", "wienTransferPremiumH"],
-                      "input": "checkbox"
-                    }]
-                  },
-                  {
-                    "name": "COLOGNE", "filters": [{
-                      "name": "transactions",
-                      "type": "string[]",
-                      "values": ["cologneAutoRenew", "cologneCreate", "colognePremiumD", "colognePremiumI", "cologneRenew", "cologneRenewPremiumD", "cologneRenewPremiumI", "cologneRestore", "cologneTransfer", "cologneTransferPremiumD", "cologneTransferPremiumI"],
-                      "input": "checkbox"
-                    }]
-                  },
-                  {
-                    "name": "KOELN", "filters": [{
-                      "name": "transactions",
-                      "type": "string[]",
-                      "values": ["koelnAutoRenew", "koelnCreate", "koelnPremiumD", "koelnPremiumI", "koelnRenew", "koelnRenewPremiumD", "koelnRenewPremiumI", "koelnRestore", "koelnTransfer", "koelnTransferPremiumD", "koelnTransferPremiumI"],
-                      "input": "checkbox"
-                    }]
-                  },
-                  {
-                    "name": "TIROL", "filters": [{
-                      "name": "transactions",
-                      "type": "string[]",
-                      "values": ["tirolGrace", "tirolCreate", "tirolRenew", "tirolRestore", "tirolTransfer", "tirolTransferNull"],
-                      "input": "checkbox"
-                    }]
-                  }
-                ],
-                "input": "nestedCheckbox"
-              },
-              {
-                "name": "dateFrom",
-                "type": "string",
-                "input": "date-picker"
-              },
-              {
-                "name": "dateTo",
-                "type": "string",
-                "input": "date-picker"
-              },
-              {
-                "name": "granularity",
-                "type": "string",
-                "values": [
-                  "day",
-                  "week",
-                  "month",
-                  "year"
-                ],
-                "input": "radiobox"
-              }
-            ]
-          },
-          {
-            "name": "transactions-ranking",
-            "filters": [
-              {
-                "name": "zone",
-                "type": "string[]",
-                "values": [
-                  {
-                    "name": "WIEN", "filters": [{
-                      "name": "transactions",
-                      "type": "string[]",
-                      "values": ["wienGrace", "wienCreate", "wienPremiumA", "wienPremiumB", "wienPremiumC", "wienPremiumD", "wienPremiumE", "wienPremiumF", "wienPremiumG", "wienPremiumH", "wienRenew", "wienRenewPremiumA", "wienRenewPremiumB", "wienRenewPremiumC", "wienRenewPremiumD", "wienRenewPremiumE", "wienRenewPremiumG", "wienRenewPremiumH", "wienRestore", "wienTransfer", "wienTransferNull", "wienTransferPremiumA", "wienTransferPremiumB", "wienTransferPremiumC", "wienTransferPremiumD", "wienTransferPremiumE", "wienTransferPremiumG", "wienTransferPremiumH"],
-                      "input": "checkbox"
-                    }]
-                  },
-                  {
-                    "name": "COLOGNE", "filters": [{
-                      "name": "transactions",
-                      "type": "string[]",
-                      "values": ["cologneAutoRenew", "cologneCreate", "colognePremiumD", "colognePremiumI", "cologneRenew", "cologneRenewPremiumD", "cologneRenewPremiumI", "cologneRestore", "cologneTransfer", "cologneTransferPremiumD", "cologneTransferPremiumI"],
-                      "input": "checkbox"
-                    }]
-                  },
-                  {
-                    "name": "KOELN", "filters": [{
-                      "name": "transactions",
-                      "type": "string[]",
-                      "values": ["koelnAutoRenew", "koelnCreate", "koelnPremiumD", "koelnPremiumI", "koelnRenew", "koelnRenewPremiumD", "koelnRenewPremiumI", "koelnRestore", "koelnTransfer", "koelnTransferPremiumD", "koelnTransferPremiumI"],
-                      "input": "checkbox"
-                    }]
-                  },
-                  {
-                    "name": "TIROL", "filters": [{
-                      "name": "transactions",
-                      "type": "string[]",
-                      "values": ["tirolGrace", "tirolCreate", "tirolRenew", "tirolRestore", "tirolTransfer", "tirolTransferNull"],
-                      "input": "checkbox"
-                    }]
-                  }
-                ],
-                "input": "nestedCheckbox"
-              },
-              {
-                "name": "registrar",
-                "type": "string",
-                "values": [
-                  "1und1",
-                  "registrygate",
-                  "internetx",
-                  "uniteddomains",
-                  "keysystems"
-                ],
-                "input": "checkbox"
-              },
-              {
-                "name": "dateFrom",
-                "type": "string",
-                "input": "date-picker"
-              },
-              {
-                "name": "dateTo",
-                "type": "string",
-                "input": "date-picker"
-              },
-              {
-                "name": "granularity",
-                "type": "string",
-                "values": [
-                  "day",
-                  "week",
-                  "month",
-                  "year"
-                ],
-                "input": "radiobox"
-              }
-            ]
-          },
-          {
-            "name": "marketShare",
-            "filters": [
-              {
-                "name": "zone",
-                "type": "string[]",
-                "values": [
-                  "WIEN",
-                  "COLOGNE",
-                  "KOELN",
-                  "TIROL"
-                ],
-                "input": "checkbox"
-              },
-              {
-                "name": "registrar",
-                "type": "string",
-                "values": [
-                  "1und1",
-                  "registrygate",
-                  "internetx",
-                  "uniteddomains",
-                  "keysystems"
-                ],
-                "input": "checkbox"
-              },
-              {
-                "name": "rank",
-                "type": "string",
-                "values": [
-                  "top5",
-                  "top10",
-                  "top20",
-                  "bottom5",
-                  "bottom10",
-                  "bottom15"
-                ],
-                "input": "radiobox"
-              }
-            ]
-          },
-          {
-            "name": "age",
-            "filters": [
-              {
-                "name": "zone",
-                "type": "string[]",
-                "values": [
-                  "WIEN",
-                  "COLOGNE",
-                  "KOELN",
-                  "TIROL"
-                ],
-                "input": "checkbox"
-              },
-              {
-                "name": "registrar",
-                "type": "string",
-                "values": [
-                  "1und1",
-                  "registrygate",
-                  "internetx",
-                  "uniteddomains",
-                  "keysystems"
-                ],
-                "input": "checkbox"
-              },
-              {
-                "name": "rank",
-                "type": "string",
-                "values": [
-                  "top5",
-                  "top10",
-                  "top20",
-                  "bottom5",
-                  "bottom10",
-                  "bottom15"
-                ],
-                "input": "radiobox"
-              },
-              {
-                "name": "average",
-                "type": "boolean",
-                "input": "togglebox"
-              },
-              {
-                "name": "overall",
-                "type": "boolean",
-                "input": "togglebox"
-              }
-            ]
-          },
-          {
-            "name": "domainNameAnalysis/count",
-            "filters": [
-              {
-                "name": "granularity",
-                "type": "string",
-                "values": [
-                  "day",
-                  "week",
-                  "month",
-                  "year"
-                ],
-                "input": "radiobox"
-              },
-              {
-                "name": "num",
-                "type": "number",
-                "input": "inputbox"
-              },
-              {
-                "name": "minimumAppearances",
-                "type": "number",
-                "input": "inputbox"
-              }
-            ]
-          },
-          {
-            "name": "domainNameAnalysis/length",
-            "filters": [
-              {
-                "name": "zone",
-                "type": "string[]",
-                "values": [
-                  "WIEN",
-                  "COLOGNE",
-                  "KOELN",
-                  "TIROL"
-                ],
-                "input": "checkbox"
-              },
-              {
-                "name": "registrar",
-                "type": "string",
-                "values": [
-                  "1und1",
-                  "registrygate",
-                  "internetx",
-                  "uniteddomains",
-                  "keysystems"
-                ],
-                "input": "checkbox"
-              },
-              {
-                "name": "dateFrom",
-                "type": "string",
-                "input": "date-picker"
-              },
-              {
-                "name": "dateTo",
-                "type": "string",
-                "input": "date-picker"
-              }
-
-            ]
-          },
-          {
-            "name": "movement/vertical",
-            "filters": [
-              {
-                "name": "zone",
-                "type": "string[]",
-                "values": [
-                  "WIEN",
-                  "COLOGNE",
-                  "KOELN",
-                  "TIROL"
-                ],
-                "input": "checkbox"
-              },
-              {
-                "name": "registrar",
-                "type": "string",
-                "values": [
-                  "1und1",
-                  "registrygate",
-                  "internetx",
-                  "uniteddomains",
-                  "keysystems"
-                ],
-                "input": "checkbox"
-              }
-            ]
-          }
-        ]
-      }
-      // ... other endpoints
-    ];
+    const endpoints = data.endpoints;
 
     // Iterate through the JSON data and insert into the respective tables
     await this.entityManager.transaction(async manager => {
@@ -952,53 +23,155 @@ export class AppService {
         const endpointEntity = new Endpoint();
         endpointEntity.endpoint = endpoint.endpoint;
         const endpointResult = await manager.save(endpointEntity);
-    
+
         for (const graph of endpoint.graphs) {
           const graphEntity = new Graph();
-          graphEntity.name = graph.name;
+          graphEntity.graphName = graph.name;
+          graphEntity.user = graph.user;
           graphEntity.endpoint = endpointResult; // Correcting the relationship
           const graphResult = await manager.save(graphEntity);
-    
+
           for (const filter of graph.filters) {
             const filterEntity = new Filter();
             filterEntity.name = filter.name;
             filterEntity.type = filter.type;
             filterEntity.input = filter.input;
+            filterEntity.values = filter.values;
             filterEntity.graph = graphResult; // Correcting the relationship
             const filterResult = await manager.save(filterEntity);
-    
-            if (Array.isArray(filter.values) && typeof filter.values[0] === 'string') {
-              for (const valueItem of filter.values) {
-                const valueEntity = new Value();
-                valueEntity.name = filter.name; // Using filter name, since it's an array of strings
-                valueEntity.values = filter.values as string[]; // Assigning the string directly
-                valueEntity.input = filter.input;
-                valueEntity.filter = filterResult;
-                await manager.save(valueEntity);
-              }
-            } else if (Array.isArray(filter.values) && typeof filter.values[0] !== 'string') {
-              const valueEntity = new Value();
-              valueEntity.name = filter.name;
-              valueEntity.values = filter.values.map(item => item.filters) as NestedFilter[];// Assigning the array of NestedFilter objects directly
-              valueEntity.input = filter.input;
-              valueEntity.filter = filterResult;
-              await manager.save(valueEntity);
-            }
+
           }
         }
       }
     });
-    
+
 
     return {
       "success": "true"
     }
   }
 
-  async getAllData(): Promise<Endpoint[]> {
+  async editFilterData(data: any) {
+    const existingData = await this.endpointRepository.find({ where: {endpoint : data.dataSource},
+      relations: ['graphs', 'graphs.filters'],
+    });
+
+    if (!existingData || existingData.length === 0) {
+      throw new NotFoundException('Data not found');
+    }
+
+    if (data.endpoint != null && data.typeOfUser && (data.filterId != null && data.filterId != -1) && data.data) {
+      const filterIdGet = existingData[0].graphs.find(graph => graph.graphName === data.endpoint && graph.user === data.typeOfUser).filters.find(filter => filter.name === data.data.name);
+      const filter = await this.filterRepository.findOne({ where: { id: filterIdGet.id } });
+      if (filter) {
+        const updateData = {
+          input: data.data.input,
+          name: data.data.name,
+          type: data.data.type,
+          values: data.data.values || filter.values // Keep existing values if new values are not provided
+        };
+
+        await this.filterRepository.update(filter.id, updateData);
+        return { "status": "success" };
+      }
+
+      throw new NotFoundException('Filter not found');
+    }
+    // 6. Add Filter to Graph
+    if (data.endpoint != null && data.typeOfUser && data.data && (data.filterId != null && data.filterId == -1)) {
+      const graphGet = existingData[0].graphs.find(graph => graph.graphName === data.endpoint && graph.user === data.typeOfUser);
+      const graph = await this.graphRepository.findOne({ where: { id: graphGet.id }, relations: ["filters"] });
+      const filterEntity = new Filter();
+      filterEntity.name = data.data.name;
+      filterEntity.type = data.data.type;
+      filterEntity.input = data.data.input;
+      if (data.data.values) {
+        filterEntity.values = data.data.values;
+      }
+      filterEntity.graph = graph; // Correcting the relationship
+      await this.filterRepository.save(filterEntity);
+    }
+
+    throw new BadRequestException('Invalid request data');
+  }
+
+  async addGraph(data: any){
+    const existingData = await this.endpointRepository.findOne({ where : {endpoint : data.endpoint},
+      relations: ['graphs'],
+    });
+    if (!existingData) {
+      throw new NotFoundException('Data not found');
+    }
+    for(const tou of data.graphData[0].tou){
+      const graphEntity = new Graph();
+      graphEntity.graphName = data.graphData[0].graphName;
+      graphEntity.user = tou;
+      graphEntity.endpoint = existingData;
+      await this.graphRepository.save(graphEntity);
+    }
+
+    return {'status' : 'success'};
+
+  }
+
+  async editEndpointData(data: any) {
+    const existingData = await this.endpointRepository.find({
+      relations: ['graphs', 'graphs.filters'],
+    });
+    
+
+    if (!existingData || existingData.length === 0) {
+      throw new NotFoundException('Data not found');
+    }
+
+    if (data.endpointId) {
+      const endpointIdGet = existingData[data.endpointId]
+      const endpoint = await this.endpointRepository.findOne({ where: { id: endpointIdGet.id }, relations: ["graph", "graph.filters"] });
+      if (endpoint) {
+        const updateData = {
+          endpoint: data.newData[0].endpoint,
+          graphs: data.newData[0].graphs,
+        };
+
+        await this.graphRepository.update(endpoint.id, updateData);
+        return { "status": "success" };
+      }
+
+      throw new NotFoundException('Filter not found');
+    }
+  }
+
+  async getAllData(): Promise<Object> {
     return await this.endpointRepository.find({
-      relations: ['graphs', 'graphs.filters', 'graphs.filters.values'], // Include necessary relations
+      relations: ['graphs'], // Include necessary relations
     });
   }
+
+
+  async getFiltersData(data: any): Promise<Object> {
+    const existingData = await this.endpointRepository.find({ where : {endpoint : data.dataSource},
+      relations: ['graphs', 'graphs.filters'],
+    });
+    console.log("hello");
+    if (!existingData || existingData.length === 0) {
+      throw new NotFoundException('Data not found');
+    }
+
+    if (data.dataSource && data.endpoint != null && data.typeOfUser ){
+      const endpoint = existingData.at(0);
+      const graph = await this.graphRepository.find({ where: { graphName : data.endpoint, user : data.typeOfUser}, relations: ["filters","endpoint"] });
+      if(!graph){
+        return {"status" : "error", "message" : "This endpoint does not exist for this type of user"};
+      }
+      for(let count = 0; count<graph.length; count++){
+        if(graph.at(count).endpoint.endpoint == endpoint.endpoint){
+          console.log("boi");
+          return {"status" : "success", "filters" : graph.at(count).filters};
+        }
+      }
+      return {"status" : "failure"};
+    }
+  }
+
 }
 

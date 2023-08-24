@@ -15,5 +15,5 @@ export const options = {
 
 
 export function PieChart({ data }: IChart) {
-    return <Pie options={options} data={data} />;
+    return <Pie options={options} data={data.chartData} />;
 }

@@ -21,5 +21,5 @@ export const options = {
 };
 
 export function ScatterChart({ data }: IChart) {
-    return <Scatter options={options} data={data} />;
+    return <Scatter options={options} data={data.chartData} />;
 }
