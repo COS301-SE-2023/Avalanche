@@ -7,7 +7,6 @@ export class DomainWatchController {
   constructor(private readonly domainWatchService: DomainWatchService) { }
 
   @Post('list')
-  @HttpCode(200)
   async sendData(@Body() data: any) {
     try {
       const result = await this.domainWatchService.sendData(data);
@@ -22,7 +21,6 @@ export class DomainWatchController {
   }
 
   @Post('whoisyou')
-  @HttpCode(200)
   async whoisyou(@Body() data: any) {
     const result = await this.domainWatchService.whoisyou(data);
     return result;

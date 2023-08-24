@@ -11,14 +11,14 @@ export class DomainWatchService {
   async sendData(data: any): Promise<any> {
     console.log(data);
     console.log("elo");
-    try{
-    const response = this.httpService.post(
-      'http://zanet.cloud:4100/domainWatch/active',
-      data,
-    );
-    const responseData = await lastValueFrom(response);
-    return JSON.stringify(responseData.data);
-    }catch(error){
+    try {
+      const response = this.httpService.post(
+        'http://zanet.cloud:4100/domainWatch/active',
+        data,
+      );
+      const responseData = await lastValueFrom(response);
+      return JSON.stringify(responseData.data);
+    } catch (error) {
       throw error;
     }
   }
@@ -27,11 +27,11 @@ export class DomainWatchService {
   async passive() {
     console.log('Running every day at midnight');
     const userData = await this.httpService
-      .post('http://zanet.cloud:4000/user-management/getDomainWatchPassive')
+      .post('http://gateway:4000/user-management/getDomainWatchPassive')
       .toPromise();
     const userInfo = userData.data.watched;
     const africaData = await this.httpService
-      .post('http://zanet.cloud:4000/africa/domainWatchPassive')
+      .post('http://gateway:4000/africa/domainWatchPassive')
       .toPromise();
     const africaInfo = africaData.data.queryData[0]['DOMAINWATCHPASSIVE'];
     const check = { watched: userInfo, 'recently-created': africaInfo };
@@ -45,15 +45,15 @@ export class DomainWatchService {
   async loadDomains() {
     console.log('Running every day');
     const africaData = await this.httpService
-      .post('http://zanet.cloud:4000/africa/loadDomains')
+      .post('http://gateway:4000/africa/loadDomains')
       .toPromise();
     const africaInfo = africaData.data.queryData[0]['LOADDOMAINS'];
     const zacrData = await this.httpService
-      .post('http://zanet.cloud:4000/zacr/loadDomains')
+      .post('http://gateway:4000/zacr/loadDomains')
       .toPromise();
     const zacrInfo = zacrData.data.queryData[0]['LOADDOMAINS'];
     const ryceData = await this.httpService
-      .post('http://zanet.cloud:4000/africa/loadDomains')
+      .post('http://gateway:4000/africa/loadDomains')
       .toPromise();
     const ryceInfo = ryceData.data.queryData[0]['LOADDOMAINS'];
     const check = {

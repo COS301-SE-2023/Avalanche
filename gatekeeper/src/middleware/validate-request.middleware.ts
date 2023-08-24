@@ -8,14 +8,16 @@ import { HttpService } from '@nestjs/axios';
 export class ValidateRequestMiddleware implements NestMiddleware {
   private ajv = new Ajv();
 
-  constructor(private readonly httpService: HttpService) {}
+  constructor(private readonly httpService: HttpService) { }
 
   async use(req: Request, res: Response, next: NextFunction) {
     console.log(req.originalUrl);
 
     // Replace with the actual URL of the hades instance, appending the endpoint URL
-    const hadesUrl = `http://localhost:3997${req.originalUrl}`;
-    
+    console.log(process.env.HADES);
+    const hadesUrl = `${process.env.HADES ? `http://hades:3997` : "http://localhost:3997"}${req.originalUrl}`;
+    console.log(hadesUrl);
+
     try {
       const response = await this.httpService.get(hadesUrl).toPromise();
       const schema = response.data;
@@ -26,7 +28,7 @@ export class ValidateRequestMiddleware implements NestMiddleware {
         return res.status(400).send({ error: 'Invalid request body' });
       }
     } catch (error) {
-      console.error(`Failed to get schema for URL ${req.originalUrl}:`, error);
+      // console.error(`Failed to get schema for URL ${req.originalUrl}:`, error.message);
       return res.status(400).send({ error: `No schema found for path ${req.path}` });
     }
 

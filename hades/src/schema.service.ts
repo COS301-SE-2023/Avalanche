@@ -10,7 +10,9 @@ export class SchemaService {
 
   constructor() {
     const projectRoot = path.resolve(__dirname, '../');
+    console.log(projectRoot);
     const schemasDir = path.join(projectRoot, 'src/schemas'); // Adjust path as needed
+    console.log(schemasDir);
     this.loadSchemas(schemasDir, '');
   }
 
