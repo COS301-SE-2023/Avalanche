@@ -365,7 +365,7 @@ export class UserDataProductMangementService {
                                 }
                             }
                             for (const products of userGroup.products) {
-                                if (products.dataSource == "africa") {
+                                if (products.dataSource == "zarc") {
                                     products.key = key;
                                     products.tou = type
                                 }
@@ -625,7 +625,9 @@ export class UserDataProductMangementService {
         const result = [];
     
         // Iterate through the user's products
-        for (const product of user.products) {
+        const allProducts = [...user.products, ...user.userGroups.flatMap(ug => ug.products)];
+
+        for (const product of allProducts) {
             let dataSource = product.dataSource;
             const tou = product.tou;
             if(dataSource == 'zarc'){
