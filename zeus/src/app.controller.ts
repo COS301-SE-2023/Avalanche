@@ -27,9 +27,9 @@ export class AppController {
     return this.appService.editFilterData(data);
   }
 
-  @Post('editGraph')
+  @Post('addGraph')
   editGraphData(@Body() data: any): Object {
-    return this.appService.editGraphData(data);
+    return this.appService.addGraph(data);
   }
 
   @Post('editEndpoint')

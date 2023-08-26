@@ -27,8 +27,8 @@ export class User {
   @Column({ nullable: true })
   apiKey: string;
 
-  @Column("simple-array", { nullable: true })
-  products: string[];
+  @Column("json", { nullable: true })
+  products : {dataSource : string, tou : string, key : string}[];
 
   @ManyToMany(() => UserGroup, (userGroup) => userGroup.users, { nullable: true })
   @JoinTable()

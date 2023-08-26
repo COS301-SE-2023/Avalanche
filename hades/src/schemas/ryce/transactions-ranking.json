@@ -17,6 +17,12 @@
                 "type": "string"
             }
         },
+        "transactions": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
         "dateFrom": {
             "type": "string",
             "format": "date"

@@ -52,7 +52,7 @@ export class AppService {
   }
 
   async editFilterData(data: any) {
-    const existingData = await this.endpointRepository.find({
+    const existingData = await this.endpointRepository.find({ where: {endpoint : data.dataSource},
       relations: ['graphs', 'graphs.filters'],
     });
 
@@ -60,15 +60,15 @@ export class AppService {
       throw new NotFoundException('Data not found');
     }
 
-    if (data.endpointId && data.graphId != null && data.filterId != null && data.newData && data.add == false) {
-      const filterIdGet = existingData[data.endpointId].graphs[data.graphId].filters[data.filterId];
+    if (data.endpoint != null && data.typeOfUser && (data.filterId != null && data.filterId != -1) && data.data) {
+      const filterIdGet = existingData[0].graphs.find(graph => graph.graphName === data.endpoint && graph.user === data.typeOfUser).filters.find(filter => filter.name === data.data.name);
       const filter = await this.filterRepository.findOne({ where: { id: filterIdGet.id } });
       if (filter) {
         const updateData = {
-          input: data.newData[0].input,
-          name: data.newData[0].name,
-          type: data.newData[0].type,
-          values: data.newData[0].values || filter.values // Keep existing values if new values are not provided
+          input: data.data.input,
+          name: data.data.name,
+          type: data.data.type,
+          values: data.data.values || filter.values // Keep existing values if new values are not provided
         };
 
         await this.filterRepository.update(filter.id, updateData);
@@ -78,15 +78,15 @@ export class AppService {
       throw new NotFoundException('Filter not found');
     }
     // 6. Add Filter to Graph
-    if (data.endpointId && data.graphId != null && data.newData && data.add == true) {
-      const graphGet = existingData[data.endpointId].graphs[data.graphId];
+    if (data.endpoint != null && data.typeOfUser && data.data && (data.filterId != null && data.filterId == -1)) {
+      const graphGet = existingData[0].graphs.find(graph => graph.graphName === data.endpoint && graph.user === data.typeOfUser);
       const graph = await this.graphRepository.findOne({ where: { id: graphGet.id }, relations: ["filters"] });
       const filterEntity = new Filter();
-      filterEntity.name = data.newData[0].name;
-      filterEntity.type = data.newData[0].type;
-      filterEntity.input = data.newData[0].input;
-      if (data.newData[0].values) {
-        filterEntity.values = data.newData[0].values;
+      filterEntity.name = data.data.name;
+      filterEntity.type = data.data.type;
+      filterEntity.input = data.data.input;
+      if (data.data.values) {
+        filterEntity.values = data.data.values;
       }
       filterEntity.graph = graph; // Correcting the relationship
       await this.filterRepository.save(filterEntity);
@@ -95,44 +95,23 @@ export class AppService {
     throw new BadRequestException('Invalid request data');
   }
 
-  async editGraphData(data: any) {
-    const existingData = await this.endpointRepository.find({
-      relations: ['graphs', 'graphs.filters'],
+  async addGraph(data: any){
+    const existingData = await this.endpointRepository.findOne({ where : {endpoint : data.endpoint},
+      relations: ['graphs'],
     });
-
-    if (!existingData || existingData.length === 0) {
+    if (!existingData) {
       throw new NotFoundException('Data not found');
     }
-
-    if (data.endpointId && data.graphId != null && data.newData && data.add == false) {
-      const graphIdGet = existingData[data.endpointId].graphs[data.graphId];
-      const graph = await this.graphRepository.findOne({ where: { id: graphIdGet.id }, relations: ["filters"] });
-      if (graph) {
-        const updateData = {
-          graphName: data.newData[0].graphName,
-          user: data.newData[0].user,
-          filters: data.newData[0].filter,
-        };
-
-        await this.graphRepository.update(graph.id, updateData);
-        return { "status": "success" };
-      }
-
-      throw new NotFoundException('Filter not found');
-    }
-    // 6. Add Filter to Graph
-    if (data.endpointId && data.newData && data.add == true) {
-      const endpointGet = existingData[data.endpointId];
-      const endpoint = await this.endpointRepository.findOne({ where: { id: endpointGet.id }, relations: ["graphs"] });
+    for(const tou of data.graphData[0].tou){
       const graphEntity = new Graph();
-      graphEntity.graphName = data.newData[0].graphName;
-      graphEntity.user = data.newData[0].user;
-      graphEntity.filters = data.newData[0].filters;
-      graphEntity.endpoint = endpoint; // Correcting the relationship
-      await this.filterRepository.save(graphEntity);
+      graphEntity.graphName = data.graphData[0].graphName;
+      graphEntity.user = tou;
+      graphEntity.endpoint = existingData;
+      await this.graphRepository.save(graphEntity);
     }
 
-    throw new BadRequestException('Invalid request data');
+    return {'status' : 'success'};
+
   }
 
   async editEndpointData(data: any) {
@@ -162,9 +141,9 @@ export class AppService {
     }
   }
 
-  async getAllData(): Promise<Endpoint[]> {
+  async getAllData(): Promise<Object> {
     return await this.endpointRepository.find({
-      relations: ['graphs', 'graphs.filters', 'graphs.filters'], // Include necessary relations
+      relations: ['graphs'], // Include necessary relations
     });
   }
 
@@ -181,6 +160,9 @@ export class AppService {
     if (data.dataSource && data.endpoint != null && data.typeOfUser ){
       const endpoint = existingData.at(0);
       const graph = await this.graphRepository.find({ where: { graphName : data.endpoint, user : data.typeOfUser}, relations: ["filters","endpoint"] });
+      if(!graph){
+        return {"status" : "error", "message" : "This endpoint does not exist for this type of user"};
+      }
       for(let count = 0; count<graph.length; count++){
         if(graph.at(count).endpoint.endpoint == endpoint.endpoint){
           console.log("boi");
@@ -190,5 +172,6 @@ export class AppService {
       return {"status" : "failure"};
     }
   }
+
 }
 

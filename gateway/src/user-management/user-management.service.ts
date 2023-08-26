@@ -75,8 +75,11 @@ export class UserManagementService {
   async addUserToUserGroupWithKey(data: any) {
     return this.client.send({ cmd: 'addUserToUserGroupWithKey' }, data).toPromise();
   }
-  async integrateUserWithWExternalAPI(data: any) {
-    return this.client.send({ cmd: 'integrateUserWithWExternalAPI' }, data).toPromise();
+  async integrateUserWithAfricaExternalAPI(data: any) {
+    return this.client.send({ cmd: 'integrateUserWithAfricaExternalAPI' }, data).toPromise();
+  }
+  async integrateUserWithZARCExternalAPI(data: any) {
+    return this.client.send({ cmd: 'integrateUserWithZARCExternalAPI' }, data).toPromise();
   }
   async integrateWithDataProducts(data: any) {
     return this.client.send({ cmd: 'integrateWithDataProducts' }, data).toPromise();

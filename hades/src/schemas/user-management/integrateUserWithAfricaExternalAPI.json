@@ -19,5 +19,5 @@
       }
     },
     "additionalProperties": false,
-    "required": ["type", "allocateToName", "username", "password", "personal"]
+    "required": [ "allocateToName", "username", "password", "personal"]
   }

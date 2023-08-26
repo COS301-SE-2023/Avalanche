@@ -5,7 +5,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { clearCurrentOpenState } from '@/store/Slices/modalManagerSlice';
 import { ICreateUserGroupRequest } from '@/interfaces/requests';
 
-export default function AddUserToGroup() {
+interface IGenericTextInput {
+    title:string,
+    fieldHeading:string,
+    placeHolder:string,
+    buttonText:string
+}
+
+export default function GenericTextInput({title,fieldHeading,placeHolder,buttonText}:IGenericTextInput) {
 
     const dispatch = useDispatch<any>();
 
@@ -70,23 +77,16 @@ export default function AddUserToGroup() {
      * This function renders the component to the DOM
      */
     return (
-        <ModalWrapper title="Add a User to a Group">
+        <ModalWrapper title={title}>
             <form className="space-y-6" onSubmit={(event) => formSubmit(event)}>
                 <>
-                    <InputLabel htmlFor="name" text="Group Name" />
-                    <Input type="text" name="name" id="name" placeholder="Paper Sales" required={true} disabled={loading} value={name} onChange={(event: React.FormEvent<HTMLInputElement>) => {
+                    <InputLabel htmlFor="name" text={fieldHeading} />
+                    <Input type="text" name="name" id="name" placeholder={placeHolder} required={true} disabled={loading} value={name} onChange={(event: React.FormEvent<HTMLInputElement>) => {
                         nameError && setNameError(false);
                         setName(event.currentTarget.value);
-                    }} maxLength={20} error={nameError} />
+                    }} maxLength={40} error={nameError} />
                 </>
-                <>
-                    <InputLabel htmlFor="email" text="User Email" />
-                    <Input type="email" name="email" id="email" placeholder="john@example.com" required={true} disabled={loading} value={email} onChange={(event: React.FormEvent<HTMLInputElement>) => {
-                        emailError && setEmailError(false);
-                        setEmail(event.currentTarget.value);
-                    }} error={emailError} />
-                </>
-                <SubmitButton text="Add User to Group" onClick={(event: React.FormEvent<HTMLFormElement>) => {
+                <SubmitButton text={buttonText}onClick={(event: React.FormEvent<HTMLFormElement>) => {
                     formSubmit(event);
                 }} className="w-full" loading={loading} />
             </form>
