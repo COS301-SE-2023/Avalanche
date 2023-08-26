@@ -6,6 +6,7 @@ import { DataFormatService } from '../data-format/data-format.service';
 import { AnalysisService } from '../analysis/analysis.service';
 import { GraphFormatService } from '../graph-format/graph-format.service';
 import { json } from 'stream/consumers';
+import { DataInterface } from '../interfaces/interfaces';
 
 @Injectable()
 export class AgeService {
@@ -21,12 +22,14 @@ export class AgeService {
     try {
       graphName = this.ageGraphName(filters);
       filters = JSON.stringify(filters);
-      console.log(filters);
+
       const sqlQuery = `call ageAnalysis('${filters}')`;
 
-      let formattedData = await this.redis.get(`africa` + sqlQuery);
+      const dataR = await this.redis.get(`africa` + sqlQuery);
+      let data: DataInterface;
+      let formattedData = '';
 
-      if (!formattedData) {
+      if (!dataR) {
         let queryData: any;
 
         try {
@@ -43,12 +46,16 @@ export class AgeService {
         formattedData = await this.graphFormattingService.formatAgeAnalysis(
           JSON.stringify(queryData),
         );
+        data = {
+          chartData: JSON.parse(formattedData),
+          jsonData: JSON.parse(queryData[0]['AGEANALYSIS']),
+        };
 
         await this.redis.set(
           `africa` + sqlQuery,
-          formattedData,
+          JSON.stringify(data),
           'EX',
-          72 * 60 * 60,
+          24 * 60 * 60,
         );
       }
 
@@ -56,7 +63,7 @@ export class AgeService {
         status: 'success',
         data: {
           graphName: graphName,
-          ...JSON.parse(formattedData),
+          data: data,
           warehouse: 'africa',
           graphType: 'age',
         },
