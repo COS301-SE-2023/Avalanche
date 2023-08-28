@@ -13,6 +13,7 @@ export class JwtMiddleware implements NestMiddleware {
       // Get token from header
       const token = req.body.token?.split(' ')[1];
       req.body.token = token;
+      console.log(req.body);
       // Get user's information from Redis by token
       let userInfo: any;
       try {
@@ -52,7 +53,13 @@ export class JwtMiddleware implements NestMiddleware {
           const accessLevel = privileges[0]['zacr'];
           const privilegesForProductType = accessLevel.find((privilege) => privilege[productType]);
           const result = privilegesForProductType[productType];
-          if (!result.includes(req.baseUrl.split('/')[2])) {
+          let url = '';
+          if(req.baseUrl.split('/').length == 4){
+            url = req.baseUrl.split('/')[2] +"/"+ req.baseUrl.split('/')[3];
+          }else{
+            url = req.baseUrl.split('/')[2];
+          }
+          if (!result.includes(url)) {
             return res.status(403).json({ status: 403, message: 'Access Forbidden', timestamp: new Date().toISOString() });
           }
           if (productType == 'registrar') {
@@ -64,7 +71,7 @@ export class JwtMiddleware implements NestMiddleware {
               } else {
                 return res.status(403).json({ status: 403, message: 'Access Forbidden', timestamp: new Date().toISOString() });
               }
-            } else {
+            } else if(req.body.registrar && req.body.register.length != 1){
               return res.status(403).json({ status: 403, message: 'Access Forbidden', timestamp: new Date().toISOString() });
             }
           }
@@ -88,8 +95,14 @@ export class JwtMiddleware implements NestMiddleware {
           const accessLevel = privileges[1]['africa']
           const privilegesForProductType = accessLevel.find((privilege) => privilege[productType]);
           const result = privilegesForProductType[productType];
-          if (!result.includes(req.baseUrl.split('/')[2])) {
-            return res.status(403).json({ status: 'failure', message: 'Access Forbidden', timestamp: new Date().toISOString() });
+          let url = '';
+          if(req.baseUrl.split('/').length == 4){
+            url = req.baseUrl.split('/')[2] +"/"+ req.baseUrl.split('/')[3];
+          }else{
+            url = req.baseUrl.split('/')[2];
+          }
+          if (!result.includes(url)) {
+            return res.status(403).json({ status: 403, message: 'Access Forbidden', timestamp: new Date().toISOString() });
           }
           if (productType == 'registrar') {
             if (req.body.registrar && req.body.registrar.length === 1) {
@@ -100,7 +113,7 @@ export class JwtMiddleware implements NestMiddleware {
               } else {
                 return res.status(403).json({ status: 403, message: 'Access Forbidden', timestamp: new Date().toISOString() });
               }
-            } else {
+            } else if(req.body.registrar && req.body.register.length != 1) {
               return res.status(403).json({ status: 403, message: 'Access Forbidden', timestamp: new Date().toISOString() });
             }
           }
@@ -124,8 +137,14 @@ export class JwtMiddleware implements NestMiddleware {
           const accessLevel = privileges['ryce'];
           const privilegesForProductType = accessLevel.find((privilege) => privilege[productType]);
           const result = privilegesForProductType[productType];
-          if (!result.includes(req.baseUrl.split('/')[2])) {
-            return res.status(403).json({ status: 'failure', message: 'Access Forbidden', timestamp: new Date().toISOString() });
+          let url = '';
+          if(req.baseUrl.split('/').length == 4){
+            url = req.baseUrl.split('/')[2] +"/"+ req.baseUrl.split('/')[3];
+          }else{
+            url = req.baseUrl.split('/')[2];
+          }
+          if (!result.includes(url)) {
+            return res.status(403).json({ status: 403, message: 'Access Forbidden', timestamp: new Date().toISOString() });
           }
           if (productType == 'registrar') {
             if (req.body.registrar && req.body.registrar.length === 1) {
@@ -136,7 +155,7 @@ export class JwtMiddleware implements NestMiddleware {
               } else {
                 return res.status(403).json({ status: 403, message: 'Access Forbidden', timestamp: new Date().toISOString() });
               }
-            } else {
+            } else if(req.body.registrar && req.body.register.length != 1) {
               return res.status(403).json({ status: 403, message: 'Access Forbidden', timestamp: new Date().toISOString() });
             }
           }

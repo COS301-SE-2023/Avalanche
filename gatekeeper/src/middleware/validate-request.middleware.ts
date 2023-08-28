@@ -14,7 +14,6 @@ export class ValidateRequestMiddleware implements NestMiddleware {
     console.log(req.originalUrl);
 
     // Replace with the actual URL of the hades instance, appending the endpoint URL
-    console.log(process.env.HADES);
     const hadesUrl = `${process.env.HADES ? `http://hades:3997` : "http://localhost:3997"}${req.originalUrl}`;
     console.log(hadesUrl);
 

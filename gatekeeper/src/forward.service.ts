@@ -14,6 +14,8 @@ export class ForwardService {
       body.token = headers.authorization;
     }
     try {
+      console.log(url);
+      console.log(body);
       const response = await this.httpService.request({
         method: method as Method,
         url: `${process.env.GATEWAY ? `http://gateway:4000` : "http://localhost:4000"}${url}`,
