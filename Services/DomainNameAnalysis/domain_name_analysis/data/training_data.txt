@@ -1,0 +1,8 @@
+wellnessFirst.com,Health/Wellness
+lawFirmPro.net,Law
+scholarPlace.org,Education
+enterprize.co,Business
+fitTrack.com,Health/Wellness
+legalConsult.net,Law
+eduFacts.org,Education
+corpSuite.co,Business

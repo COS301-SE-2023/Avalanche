@@ -8,7 +8,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import avalanche.Classification.Classifier;
+import avalanche.Classification.PythonClassifier;
+import avalanche.Core.Classifier;
 import avalanche.Core.FrequencyCounter;
 import avalanche.DataClasses.WordFrequency;
 import avalanche.Network.HandlerStartegy.Running;
@@ -19,7 +20,7 @@ public class HandleClassify extends Running {
         System.out.println("Working on request");
 
         // Start building response
-        String resp = "{\"status\":\"success\",  \"data\":";
+        String resp = "{\"status\":\"success\",  \"data\":[";
 
         // Validate request
         String validation = validateRequest(body);
@@ -46,24 +47,25 @@ public class HandleClassify extends Running {
         } catch (JSONException jsonException) {
 
         }
-        String classified = "";
-        // Do processing here
-        Classifier classifier = new Classifier();
-        System.out.println("min c " + minimumConfidence);
-        try {
-            classified = classifier.classify(strings, labels, minimumConfidence);
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
 
-        // Build rest of response here
-        if (classified.equals("")) {
-            return "{\"status\":\"failure\",\"server-error\":\""
-                    + "No response received from the classifier. There may be an issue with the I/O"
-                    + "\"}";
+        // Do processing here
+        int i = 0;
+        Classifier classifier = new Classifier();
+        for (String str : strings) {
+            i++;
+            try {
+                resp += "{\"domain\":\"" + str + "\",\"classification\":\"";
+                resp += classifier.classify(str) + "\"}";
+                if (i < strings.length) {
+                    resp += ",";
+                } else {
+                    resp += "]";
+                }
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
-        resp += classified;
 
         long ttlTime = System.currentTimeMillis() - st;
         resp += ",\"searchTime(ms)\":" + ttlTime + "}";
