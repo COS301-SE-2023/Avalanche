@@ -1,4 +1,4 @@
-import { HomeIcon, DocumentIcon, HeartIcon, ArchiveBoxIcon, DocumentMagnifyingGlassIcon, TvIcon, ChartBarIcon, StarIcon, EyeIcon, MapIcon, BoltIcon, ClipboardIcon, ChartBarSquareIcon } from '@heroicons/react/24/solid';
+import { HomeIcon, DocumentIcon, HeartIcon, ArchiveBoxIcon, DocumentMagnifyingGlassIcon, TvIcon, ChartBarIcon, StarIcon, EyeIcon, MapIcon, BoltIcon, ClipboardIcon, ChartBarSquareIcon, Squares2X2Icon } from '@heroicons/react/24/solid';
 
 interface IMenuItem {
     text: string,
@@ -19,6 +19,12 @@ const NotDropdown: IMenu = {
             text: "Domain Watch",
             icon: <DocumentMagnifyingGlassIcon className={holder} />,
             page: "watch",
+            role: ""
+        },
+        {
+            text: "QBee",
+            icon: <Squares2X2Icon className={holder} />,
+            page: "qbee",
             role: ""
         },
     ]

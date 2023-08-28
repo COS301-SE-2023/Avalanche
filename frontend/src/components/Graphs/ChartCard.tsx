@@ -203,7 +203,7 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
     }
 
     return (<>
-        <div className="block p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-primaryBackground dark:border-primaryBackground w-full animate__animated animate__fadeIn animate__slow z-10 graphChart">
+        <div className="block p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-primaryBackground dark:border-primaryBackground w-full animate__animated animate__fadeIn animate__slow z-10 graphChart max-h-[80vh] md:max-h-[70vh] overflow-y-auto">
             <div className="flex justify-between mb-5 text-black dark:text-white">
                 <h1 className="p-1.5">{title}</h1>
                 <div className="flex flex-row gap-1">
@@ -292,7 +292,7 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
                                         ChartTypeArray.filter(item => {
                                             // If the dataset size is more than 1, only allow Line, Bar, and Scatter.
                                             if (graphData?.chartData?.datasets?.length > 1) {
-                                                return [ChartType.Line, ChartType.Bar, ChartType.Bubble, ChartType.Table].includes(item.type);
+                                                return [ChartType.Line, ChartType.Bar, ChartType.Radar, ChartType.Table].includes(item.type);
                                             }
                                             // Otherwise, show all chart types.
                                             return true;

@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, HttpException, Inject, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpException, Inject, Post } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { lastValueFrom } from 'rxjs';
 
@@ -8,6 +8,7 @@ export class ZacrController {
   constructor(@Inject('ZACR_SERVICE') private client: ClientProxy) {}
 
   @Post('transactions')
+  @HttpCode(200)
   async transactions(@Body() data: any) {
     const pattern = { cmd: 'transactions' };
     const payload = data;
@@ -24,6 +25,7 @@ export class ZacrController {
   }
 
   @Post('transactions-ranking')
+  @HttpCode(200)
   async transactionsRaking(@Body() data: any) {
     const pattern = { cmd: 'transactions-ranking' };
     const payload = data;
@@ -40,6 +42,7 @@ export class ZacrController {
   }
 
   @Post('marketShare')
+  @HttpCode(200)
   async marketShare(@Body() data: any) {
     const pattern = { cmd: 'marketShare' };
     const payload = data;
@@ -56,6 +59,7 @@ export class ZacrController {
   }
 
   @Post('age')
+  @HttpCode(200)
   async age(@Body() data: any) {
     const pattern = { cmd: 'age' };
     const payload = data;
@@ -72,6 +76,7 @@ export class ZacrController {
   }
 
   @Post('domainNameAnalysis/count')
+  @HttpCode(200)
   async domainNameAnalysisCount(@Body() data: any) {
     const pattern = { cmd: 'domainNameAnalysis/count' };
     const payload = data;
@@ -88,6 +93,7 @@ export class ZacrController {
   }
 
   @Post('domainNameAnalysis/length')
+  @HttpCode(200)
   async domainNameAnalysisLength(@Body() data: any) {
     const pattern = { cmd: 'domainNameAnalysis/length' };
     const payload = data;
@@ -104,6 +110,7 @@ export class ZacrController {
   }
 
   @Post('movement/vertical')
+  @HttpCode(200)
   async movementVertical(@Body() data: any) {
     const pattern = { cmd: 'movement/vertical' };
     const payload = data;
@@ -120,6 +127,7 @@ export class ZacrController {
   }
 
   @Post('domainWatchPassive')
+  @HttpCode(200)
   async domainWatchPassive(@Body() data: any) {
     const pattern = { cmd: 'domainWatchPassive' };
     const payload = data;

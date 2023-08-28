@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, HttpException, Inject, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpException, Inject, Post } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { lastValueFrom } from 'rxjs';
 
@@ -8,6 +8,7 @@ export class AfricaController {
   constructor(@Inject('AFRICA_SERVICE') private client: ClientProxy) {}
 
   @Post('transactions')
+  @HttpCode(200)
   async transactions(@Body() data: any) {
     const pattern = { cmd: 'transactions' };
     console.log("here")
@@ -25,6 +26,7 @@ export class AfricaController {
   }
 
   @Post('transactions-ranking')
+  @HttpCode(200)
   async transactionsRaking(@Body() data: any) {
     const pattern = { cmd: 'transactions-ranking' };
     const payload = data;
@@ -41,6 +43,7 @@ export class AfricaController {
   }
 
   @Post('marketShare')
+  @HttpCode(200)
   async marketShare(@Body() data: any) {
     const pattern = { cmd: 'marketShare' };
     const payload = data;
@@ -57,6 +60,7 @@ export class AfricaController {
   }
 
   @Post('age')
+  @HttpCode(200)
   async age(@Body() data: any) {
     const pattern = { cmd: 'age' };
     const payload = data;
@@ -73,6 +77,7 @@ export class AfricaController {
   }
 
   @Post('domainNameAnalysis/count')
+  @HttpCode(200)
   async domainNameAnalysisCount(@Body() data: any) {
     const pattern = { cmd: 'domainNameAnalysis/count' };
     const payload = data;
@@ -89,6 +94,7 @@ export class AfricaController {
   }
 
   @Post('domainNameAnalysis/length')
+  @HttpCode(200)
   async domainNameAnalysisLength(@Body() data: any) {
     const pattern = { cmd: 'domainNameAnalysis/length' };
     const payload = data;
@@ -105,6 +111,7 @@ export class AfricaController {
   }
 
   @Post('movement/vertical')
+  @HttpCode(200)
   async movementVertical(@Body() data: any) {
     const pattern = { cmd: 'movement/vertical' };
     const payload = data;
@@ -121,6 +128,7 @@ export class AfricaController {
   }
 
   @Post('domainWatchPassive')
+  @HttpCode(200)
   async domainWatchPassive(@Body() data: any) {
     const pattern = { cmd: 'domainWatchPassive' };
     const payload = data;

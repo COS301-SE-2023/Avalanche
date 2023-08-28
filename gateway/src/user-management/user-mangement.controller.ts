@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Get, HttpException, Inject, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpException, Inject, Post } from '@nestjs/common';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { timeStamp } from 'console';
 import { lastValueFrom } from 'rxjs';
@@ -40,6 +40,7 @@ export class UserManagementController {
     }
   }
   @Post('verify')
+  @HttpCode(200)
   async verify(@Body() data: any) {
     const pattern = { cmd: 'verify' };
     const payload = data;
@@ -55,6 +56,7 @@ export class UserManagementController {
     }
   }
   @Post('resendOTP')
+  @HttpCode(200)
   async resendOTP(@Body() data: any) {
     const pattern = { cmd: 'resendOTP' };
     const payload = data;
@@ -70,6 +72,7 @@ export class UserManagementController {
     }
   }
   @Post('login')
+  @HttpCode(200)
   async login(@Body() data: any) {
     const pattern = { cmd: 'login' };
     const payload = data;
@@ -85,6 +88,7 @@ export class UserManagementController {
     }
   }
   @Post('createAPIKey')
+  @HttpCode(200)
   async createAPIKey(@Body() data: any) {
     console.log("12pi4jl");
     const pattern = { cmd: 'createAPIKey' };
@@ -102,6 +106,7 @@ export class UserManagementController {
   }
 
   @Post('checkUserAPIKey')
+  @HttpCode(200)
   async checkUserAPIKey(@Body() data: any) {
     const pattern = { cmd: 'createAPIKey' };
     const payload = data;
@@ -117,6 +122,7 @@ export class UserManagementController {
     }
   }
   @Post('rerollAPIKey')
+  @HttpCode(200)
   async rerollAPIKey(@Body() data: any) {
     console.log("rust can go fuck off");
     const pattern = { cmd: 'rerollAPIKey' };
@@ -148,6 +154,7 @@ export class UserManagementController {
     }
   }
   @Post('shareDashboards')
+  @HttpCode(200)
   async shareDashboards(@Body() data: any) {
     const pattern = { cmd: 'shareDashboards' };
     const payload = data;
@@ -163,6 +170,7 @@ export class UserManagementController {
     }
   }
   @Post('editDashboard')
+  @HttpCode(200)
   async editDashboard(@Body() data: any) {
     const pattern = { cmd: 'editDashboard' };
     const payload = data;
@@ -178,6 +186,7 @@ export class UserManagementController {
     }
   }
   @Post('addCommentToGraph')
+  @HttpCode(200)
   async addCommentToGraph(@Body() data: any) {
     const pattern = { cmd: 'addCommentToGraph' };
     const payload = data;
@@ -193,6 +202,7 @@ export class UserManagementController {
     }
   }
   @Post('getUserInfo')
+  @HttpCode(200)
   async getUserInfo(@Body() data: any) {
     const pattern = { cmd: 'getUserInfo' };
     const payload = data;
@@ -208,6 +218,7 @@ export class UserManagementController {
     }
   }
   @Post('getMembers')
+  @HttpCode(200)
   async getMemebers(@Body() data: any) {
     const pattern = { cmd: 'getMembers' };
     const payload = data;
@@ -223,6 +234,7 @@ export class UserManagementController {
     }
   }
   @Post('createOrganisation')
+  @HttpCode(200)
   async createOrganisation(@Body() data: any) {
     const pattern = { cmd: 'createOrganisation' };
     const payload = data;
@@ -239,6 +251,7 @@ export class UserManagementController {
   }
 
   @Post('createUserGroup')
+  @HttpCode(200)
   async createUserGroup(@Body() data: any) {
     const pattern = { cmd: 'createUserGroup' };
     const payload = data;
@@ -254,6 +267,7 @@ export class UserManagementController {
     }
   }
   @Post('addUserToUserGroup')
+  @HttpCode(200)
   async addUserToUserGroup(@Body() data: any) {
     const pattern = { cmd: 'addUserToUserGroup' };
     const payload = data;
@@ -269,6 +283,7 @@ export class UserManagementController {
     }
   }
   @Post('exitUserGroup')
+  @HttpCode(200)
   async exitUserGroup(@Body() data: any) {
     const pattern = { cmd: 'exitUserGroup' };
     const payload = data;
@@ -284,6 +299,7 @@ export class UserManagementController {
     }
   }
   @Post('removeUserFromUserGroup')
+  @HttpCode(200)
   async removeUserFromUserGroup(@Body() data: any) {
     const pattern = { cmd: 'removeUserFromUserGroup' };
     const payload = data;
@@ -300,6 +316,7 @@ export class UserManagementController {
   }
 
   @Post('exitOrganisation')
+  @HttpCode(200)
   async exitOrganisation(@Body() data: any) {
     const pattern = { cmd: 'exitOrganisation' };
     const payload = data;
@@ -315,6 +332,7 @@ export class UserManagementController {
     }
   }
   @Post('removeUserFromOrganisation')
+  @HttpCode(200)
   async removeUserFromOrganisation(@Body() data: any) {
     const pattern = { cmd: 'removeUserFromOrganisation' };
     const payload = data;
@@ -330,6 +348,7 @@ export class UserManagementController {
     }
   }
   @Post('addUserToUserGroupWithKey')
+  @HttpCode(200)
   async addUserToUserGroupWithKey(@Body() data: any) {
     const pattern = { cmd: 'addUserToUserGroupWithKey' };
     const payload = data;
@@ -375,6 +394,7 @@ export class UserManagementController {
     }
   }
   @Post('integrateWithDataProducsts')
+  @HttpCode(200)
   async integrateWithDataProducts(@Body() data: any) {
     const pattern = { cmd: 'integrateWithDataProducts' };
     const payload = data;
@@ -390,6 +410,7 @@ export class UserManagementController {
     }
   }
   @Post('addDomainWatchPassiveDetails')
+  @HttpCode(200)
   async addDomainWatchPassiveDetails(@Body() data: any) {
     const pattern = { cmd: 'addDomainWatchPassiveDetails' };
     const payload = data;
@@ -405,6 +426,7 @@ export class UserManagementController {
     }
   }
   @Post('getDomainWatchPassive')
+  @HttpCode(200)
   async getDomainWatchPassive(@Body() data: any) {
     const pattern = { cmd: 'getDomainWatchPassive' };
     const payload = data;
@@ -420,6 +442,7 @@ export class UserManagementController {
     }
   }
   @Post('getDomainWatchPassiveUser')
+  @HttpCode(200)
   async getDomainWatchPassiveUser(@Body() data: any) {
     const pattern = { cmd: 'getDomainWatchPassiveUser' };
     const payload = data;

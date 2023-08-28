@@ -365,7 +365,7 @@ export class UserDataProductMangementService {
                                 }
                             }
                             for (const products of userGroup.products) {
-                                if (products.dataSource == "africa") {
+                                if (products.dataSource == "zarc") {
                                     products.key = key;
                                     products.tou = type
                                 }
@@ -620,15 +620,17 @@ export class UserDataProductMangementService {
                 timestamp: new Date().toISOString()
             };
         }
-        
+
         // Initialize an array to store the final result
         const result = [];
-    
+
         // Iterate through the user's products
-        for (const product of user.products) {
+        const allProducts = [...user.products, ...user.userGroups.flatMap(ug => ug.products)];
+
+        for (const product of allProducts) {
             let dataSource = product.dataSource;
             const tou = product.tou;
-            if(dataSource == 'zarc'){
+            if (dataSource == 'zarc') {
                 dataSource = 'zacr';
             }
             // Find the endpoints related to the current data source
@@ -636,20 +638,20 @@ export class UserDataProductMangementService {
                 where: { endpoint: dataSource }, // Match the endpoint with the dataSource
                 relations: ['graphs', 'graphs.filters']
             });
-    
+
             // Iterate through the endpoints and collect the endpoints, graphs, and filters based on TOU
-            
-                const graphsByTOU = endpoint.graphs.filter(graph => graph.user === tou);
-                
-                // If there are graphs that match the TOU, include the endpoint along with graphs and filters
-                if (graphsByTOU.length > 0) {
-                    result.push({
-                        endpoint : dataSource ,graphs: graphsByTOU
-                    });
-                }
+
+            const graphsByTOU = endpoint.graphs.filter(graph => graph.user === tou);
+
+            // If there are graphs that match the TOU, include the endpoint along with graphs and filters
+            if (graphsByTOU.length > 0) {
+                result.push({
+                    endpoint: dataSource, graphs: graphsByTOU
+                });
+            }
         }
-    
-        return result;
+
+        return { "status": "success", "message": result };
     }
-       
+
 }
