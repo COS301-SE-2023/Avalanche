@@ -18,6 +18,7 @@ export class TransactionService {
   ) {}
 
   async transactions(filters: string, graphName: string): Promise<any> {
+    console.log('transactions');
     try {
       graphName = this.transactionsGraphName(filters, false);
 
@@ -53,7 +54,7 @@ export class TransactionService {
           `zacr` + sqlQuery,
           JSON.stringify(data),
           'EX',
-          72 * 60 * 60,
+          24 * 60 * 60,
         );
       } else {
         data = JSON.parse(dataR);
@@ -80,6 +81,7 @@ export class TransactionService {
   }
 
   async transactionsRanking(filters: any, graphName: string): Promise<any> {
+    console.log('zacr/transactionRanking');
     try {
       graphName = this.transactionsGraphName(filters, true);
 
@@ -118,7 +120,7 @@ export class TransactionService {
           `zacr` + sqlQuery,
           JSON.stringify(data),
           'EX',
-          72 * 60 * 60,
+          24 * 60 * 60,
         );
       } else {
         data = JSON.parse(dataR);

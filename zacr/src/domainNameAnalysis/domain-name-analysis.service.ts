@@ -94,9 +94,10 @@ export class DomainNameAnalysisService {
       filters = JSON.stringify(filters);
       const sqlQuery = `CALL SKUNKWORKS_DB.public.domainLengthAnalysis('${filters}')`;
 
-      let formattedData = await this.redis.get(`zacr` + sqlQuery);
-
-      if (!formattedData) {
+      const dataR = await this.redis.get(`zacr` + sqlQuery);
+      let data: DataInterface;
+      let formattedData = '';
+      if (!dataR) {
         let queryData;
 
         try {
@@ -116,18 +117,27 @@ export class DomainNameAnalysisService {
           await this.graphFormattingService.formatDomainLengthAnalysis(
             JSON.stringify(queryData),
           );
+
+        data = {
+          chartData: JSON.parse(formattedData),
+          jsonData: JSON.parse(queryData[0]['DOMAINLENGTHANALYSIS']),
+        };
+
         await this.redis.set(
           `zacr` + sqlQuery,
-          formattedData,
+          JSON.stringify(data),
           'EX',
-          72 * 60 * 60,
+          24 * 60 * 60,
         );
+      } else {
+        data = JSON.parse(dataR);
       }
+
       return {
         status: 'success',
         data: {
           graphName: graphName,
-          ...JSON.parse(formattedData),
+          data: data,
           warehouse: 'zacr',
           graphType: 'domainNameAnalysis/length',
         },
