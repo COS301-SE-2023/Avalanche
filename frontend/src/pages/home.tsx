@@ -49,7 +49,7 @@ export default function Home() {
                             <StartOutlineIcon className="w-6 h-6 text-yellow-500 absolute top-5 right-5" />
                         </div>
                     </Link>
-                    <Link className="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 hover:shadow-2xl duration-75 " href="/domainLength">
+                    <Link className="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 hover:shadow-2xl duration-75 " href="/transactions">
                         <div className="flex flex-col items-center justify-between h-full pt-10 pb-10 relative" >
                             <img className="w-64 mb-3" src="https://user-images.githubusercontent.com/91600439/259405716-77c5ce66-7772-44ba-b85b-99505bba53a9.svg" alt="Bonnie image" />
                             <div className="flex flex-col items-center">
@@ -119,7 +119,7 @@ export default function Home() {
                             <StartOutlineIcon className="w-6 h-6 text-yellow-500 absolute top-5 right-5" />
                         </div>
                     </Link>
-                    <Link className="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 hover:shadow-2xl duration-75" href="/age">
+                    <Link className="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 hover:shadow-2xl duration-75" href="/domainNameAnalysis">
                         <div className="flex flex-col items-center justify-between h-full pt-10 pb-10 relative" >
                             <img className="w-64 mb-3" src="https://user-images.githubusercontent.com/91600439/259420794-18411706-c69d-4881-91b2-3924a3e66159.svg" alt="Bonnie image" />
                             <div className="flex flex-col items-center">
