@@ -20,7 +20,7 @@ public class Classifier {
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
                 if (parts.length == 2) {
-                    training_set.add(new String[] { parts[0].trim(), parts[1].trim() });
+                    training_set.add(new String[] { parts[1].trim(), parts[0].trim() });
                 }
             }
         } catch (IOException e) {
@@ -28,7 +28,7 @@ public class Classifier {
         }
     }
 
-    private static int k = 3;
+    private static int k = 7;
 
     public static String classify(String toClassify) throws IOException {
         String x1 = toClassify;

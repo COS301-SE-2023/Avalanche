@@ -36,23 +36,13 @@ public class HandleClassify extends Running {
         for (int i = 0; i < strings.length; i++) {
             strings[i] = data.getString(i);
         }
-        double minimumConfidence = obj.getDouble("minimumConfidence");
-        String[] labels = new String[0];
-        try {
-            JSONArray jsonLabels = obj.getJSONArray("labels");
-            labels = new String[jsonLabels.length()];
-            for (int i = 0; i < strings.length; i++) {
-                labels[i] = jsonLabels.getString(i);
-            }
-        } catch (JSONException jsonException) {
-
-        }
 
         // Do processing here
         int i = 0;
         Classifier classifier = new Classifier();
         for (String str : strings) {
             i++;
+            System.out.println(i);
             try {
                 resp += "{\"domain\":\"" + str + "\",\"classification\":\"";
                 resp += classifier.classify(str) + "\"}";
@@ -87,7 +77,6 @@ public class HandleClassify extends Running {
                 error = "{\"status\":\"failure\",\"request-error\":\"" + "Please supply at least 1 string in 'data' "
                         + "\"}";
             }
-            int minimumConfidence = jsonObject.getInt("minimumConfidence");
         } catch (JSONException jsonException) {
             error = "{\"status\":\"failure\",\"request-error\":\"" + jsonException.getMessage() + "\"}";
         }
