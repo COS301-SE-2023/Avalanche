@@ -17,6 +17,7 @@ import { RyceService } from './ryce/ryce.service';
 import { AfricaController } from './africa/africa.controller';
 import { AfricaService } from './africa/africa.service';
 import { ScheduleModule } from '@nestjs/schedule';
+import { MetricsController } from './metrics.controller';
 
 @Module({
   imports: [
@@ -58,7 +59,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     ]),
     ConfigModule.forRoot({ isGlobal: true }),
   ],
-  controllers: [UserManagementController, ZacrController, RyceController, AfricaController, DomainWatchController],
+  controllers: [MetricsController,UserManagementController, ZacrController, RyceController, AfricaController, DomainWatchController],
   providers: [UserManagementService, ZacrService, RyceService, AfricaService, RedisProvider, DomainWatchService],
 })
 export class AppModule implements NestModule {
@@ -77,7 +78,8 @@ export class AppModule implements NestModule {
         { path: 'user-management/graphFilters', method: RequestMethod.GET },
         { path: 'user-management/getDomainWatchPassive', method: RequestMethod.POST },
         { path: 'africa/domainWatchPassive', method: RequestMethod.POST },
-        { path: 'ryce/domainWatchPassive', method: RequestMethod.POST }
+        { path: 'ryce/domainWatchPassive', method: RequestMethod.POST },
+        { path: 'metrics', method: RequestMethod.GET },
       )
       .forRoutes('*');
   }
