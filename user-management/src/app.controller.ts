@@ -50,7 +50,6 @@ export class AppController {
   }
   @MessagePattern({ cmd: 'login' })
   async login(data: any) {
-    console.log("Logging in user: ", data);
     const result = await this.authService.login(data.email, data.password);
 
     if (result.error) {
