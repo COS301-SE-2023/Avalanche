@@ -95,7 +95,9 @@ export class UserManagementService {
     return this.client.send({ cmd: 'getDomainWatchPassiveUser' }, data).toPromise();
   }
   async getFilters(data: any) {
-    console.log("here");
     return this.client.send({ cmd: 'getFilters' }, data).toPromise();
+  }
+  async getEndpoints(data: any) {
+    return this.client.send({ cmd: 'getEndpoints' }, data).toPromise();
   }
 }

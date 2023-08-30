@@ -372,6 +372,27 @@ export class AppController {
   @MessagePattern({ cmd: 'getFilters' })
   async getFilters(data: any) {
     const result = await this.userDataProductManService.getFilters(data.token);
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
+  @MessagePattern({ cmd: 'getEndpoints' })
+  async getEndpoints(data: any) {
+    const result = await this.userDataProductManService.getEndpoints(data.token);
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
     return result;
   }
   @MessagePattern({ cmd: 'getDomainWatchPassiveUser' })

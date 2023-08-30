@@ -16,6 +16,10 @@ export class AppController {
     return await this.appService.getAllData();
   }
 
+  @Get('getPersephone')
+  async getPersephone() {
+    return await this.appService.getPersephone();
+  }
 
   @Post('getFilters')
   async getFiltersData(@Body() data: any) {
@@ -30,6 +34,16 @@ export class AppController {
   @Post('addGraph')
   editGraphData(@Body() data: any): Object {
     return this.appService.addGraph(data);
+  }
+
+  @Post('editPersephone')
+  editPersephone(@Body() data: any): Object {
+    return this.appService.editPersephone(data);
+  }
+
+  @Post('addPersephone')
+  addPersephone(@Body() data: any): Object {
+    return this.appService.addPersephone(data);
   }
 
   @Post('editEndpoint')

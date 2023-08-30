@@ -1,9 +1,10 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, Inject } from '@nestjs/common';
 import { EntityManager, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Endpoint } from './entity/endpoint.entity';
 import { Graph } from './entity/graph.entity';
 import { Filter } from './entity/filter.entity';
+import { Redis } from 'ioredis';
 
 @Injectable()
 export class AppService {
@@ -11,6 +12,7 @@ export class AppService {
     @InjectRepository(Endpoint) private endpointRepository: Repository<Endpoint>,
     @InjectRepository(Graph) private graphRepository: Repository<Graph>,
     @InjectRepository(Filter) private filterRepository: Repository<Filter>,
+    @Inject('REDIS') private readonly redis: Redis
   ) { }
 
   async seedEndpointData(data: any): Promise<Object> {
@@ -147,6 +149,31 @@ export class AppService {
     });
   }
 
+  async getPersephone(){
+    const results = await this.redis.get("persephone");
+    if(results){
+      return {"status" : "success", ...JSON.parse(results)};
+    }else{
+      return {"status" : "error", "message" : "Could not find Persphone, please contact The Skunkworks ASAP!!"}
+    }
+  }
+
+  async addPersephone(data:any){
+    if(!data.data){
+      return {"status" : "error", "message" : "Please enter data for Persephone"};
+    }
+    await this.redis.set("persephone", JSON.stringify(data));
+    return {"status" : "success", "message" : "Success, Persephone has been added"};
+  }
+
+  async editPersephone(data:any){
+    if(!data.data){
+      return {"status" : "error", "message" : "Please enter data for Persephone"};
+    }
+    await this.redis.del("persephone");
+    await this.redis.set("persephone", JSON.stringify(data));
+    return {"status" : "success", "message" : "Success, Persephone has been added"};
+  }
 
   async getFiltersData(data: any): Promise<Object> {
     const existingData = await this.endpointRepository.find({ where : {endpoint : data.dataSource},

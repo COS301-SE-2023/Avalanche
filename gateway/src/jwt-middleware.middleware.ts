@@ -27,29 +27,19 @@ export class JwtMiddleware implements NestMiddleware {
         res.status(401).json({ status: 'failure', message: 'JWT invalid', timestamp: new Date().toISOString() });
       } else {
         // Add token to the request body
-        const privilegesJson = [{
-          "zacr": [{ "public": ["age", "movement/vertical", "domainNameAnalysis/count", "domainNameAnalysis/length"] },
-          { "registrar": ["age", "movement/vertical", "domainNameAnalysis/count", "domainNameAnalysis/length", "transactions", "transactions-ranking"] },
-          { "registry": ["age", "movement/vertical", "domainNameAnalysis/count", "domainNameAnalysis/length", "transactions", "transactions-ranking"] }]
-        },
-        {
-          "africa": [{ "public": ["age", "movement/vertical", "domainNameAnalysis/count", "domainNameAnalysis/length"] },
-          { "registrar": ["age", "movement/vertical", "domainNameAnalysis/count", "domainNameAnalysis/length", "transactions", "transactions-ranking"] },
-          { "registry": ["age", "movement/vertical", "domainNameAnalysis/count", "domainNameAnalysis/length", "transactions", "transactions-ranking"] }]
-        },
-        {
-          "ryce": [{ "public": ["age", "movement/vertical", "domainNameAnalysis/count", "domainNameAnalysis/length"] },
-          { "registrar": ["age", "movement/vertical", "domainNameAnalysis/count", "domainNameAnalysis/length", "transactions", "transactions-ranking"] },
-          { "registry": ["age", "movement/vertical", "domainNameAnalysis/count", "domainNameAnalysis/length", "transactions", "transactions-ranking"] }]
-        }
-        ];
-        const privileges = privilegesJson;
+        const privilegesJson = JSON.parse(await this.redis.get("persephone"));
+        const privileges = privilegesJson.data;
         if (req.baseUrl.startsWith("/domain-watch") || req.baseUrl.startsWith("/domain-name-analysis")) {
           delete req.body.token;
           next();
         }
         if (req.baseUrl.startsWith("/zacr")) {
-          const productType = userDetails.products[0].tou; // assuming this is the user's level
+          const productType = userDetails.products[0].tou;
+          if(productType == 'public'){
+            if(req.body.registrar){
+              return res.status(403).json({ status: 403, message: 'Access Forbidden', timestamp: new Date().toISOString() });
+            }
+          }
           const accessLevel = privileges[0]['zacr'];
           const privilegesForProductType = accessLevel.find((privilege) => privilege[productType]);
           const result = privilegesForProductType[productType];
@@ -91,7 +81,12 @@ export class JwtMiddleware implements NestMiddleware {
             next();
           }
         } else if (req.baseUrl.startsWith('/africa')) {
-          const productType = userDetails.products[1].tou; // assuming this is the user's level
+          const productType = userDetails.products[1].tou;
+          if(productType == 'public'){
+            if(req.body.registrar){
+              return res.status(403).json({ status: 403, message: 'Access Forbidden', timestamp: new Date().toISOString() });
+            }
+          }
           const accessLevel = privileges[1]['africa']
           const privilegesForProductType = accessLevel.find((privilege) => privilege[productType]);
           const result = privilegesForProductType[productType];
@@ -133,7 +128,12 @@ export class JwtMiddleware implements NestMiddleware {
             next();
           }
         } else if (req.baseUrl.startsWith('/ryce')) {
-          const productType = userDetails.products[2].tou; // assuming this is the user's level
+          const productType = userDetails.products[2].tou; 
+          if(productType == 'public'){
+            if(req.body.registrar){
+              return res.status(403).json({ status: 403, message: 'Access Forbidden', timestamp: new Date().toISOString() });
+            }
+          }// assuming this is the user's level
           const accessLevel = privileges['ryce'];
           const privilegesForProductType = accessLevel.find((privilege) => privilege[productType]);
           const result = privilegesForProductType[productType];

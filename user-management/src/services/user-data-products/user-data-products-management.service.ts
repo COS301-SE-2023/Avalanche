@@ -81,7 +81,7 @@ export class UserDataProductMangementService {
                             delete user.apiKey;
                             await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60);
                             return {
-                                status: 'success', message: 'User is integrated with DNS',
+                                status: 'success', message: user,
                                 timestamp: new Date().toISOString()
                             };
                         } else {
@@ -181,8 +181,12 @@ export class UserDataProductMangementService {
                                 }
                             }
                             await this.userRepository.save(userGroup);
+                            delete user.apiKey;
+                            delete user.salt;
+                            delete user.password;
+                            await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60);
                             return {
-                                status: 'success', message: 'User is integrated with DNS',
+                                status: 'success', message: user,
                                 timestamp: new Date().toISOString()
                             };
                         } else {
@@ -271,7 +275,7 @@ export class UserDataProductMangementService {
                             delete user.apiKey;
                             await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60);
                             return {
-                                status: 'success', message: 'User is integrated with DNS',
+                                status: 'success', message: user,
                                 timestamp: new Date().toISOString()
                             };
                         } else {
@@ -371,8 +375,12 @@ export class UserDataProductMangementService {
                                 }
                             }
                             await this.userRepository.save(userGroup);
+                            delete user.apiKey;
+                            delete user.salt;
+                            delete user.password;
+                            await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60);
                             return {
-                                status: 'success', message: 'User is integrated with DNS',
+                                status: 'success', message: user,
                                 timestamp: new Date().toISOString()
                             };
                         } else {
@@ -654,4 +662,64 @@ export class UserDataProductMangementService {
         return { "status": "success", "message": result };
     }
 
+    async getEndpoints(token: string) {
+        const userPayload = await this.redis.get(token);
+        if (!userPayload) {
+            return {
+                status: 400, error: true, message: 'Invalid token.',
+                timestamp: new Date().toISOString()
+            };
+        }
+    
+        const { email: userEmail } = JSON.parse(userPayload);
+        const user = await this.userRepository.findOne({
+            where: { email: userEmail },
+            relations: ['userGroups', 'organisation', 'dashboards'],
+            select: ['id', 'email', 'firstName', 'lastName', 'organisationId', 'products', 'userGroups', 'organisation', 'dashboards']
+        });
+    
+        if (!user) {
+            return {
+                status: 400, error: true, message: 'User does not exist.',
+                timestamp: new Date().toISOString()
+            };
+        }
+    
+        const redisEndpoint = JSON.parse(await this.redis.get('persephone'));
+        
+        // Initialize an empty object to store the filtered endpoints
+        const filteredEndpoints: any = {};
+    
+        // Loop over the user's products to filter endpoints
+        for (const product of user.products) {
+            let dataSource = product.dataSource;
+            if(product.dataSource == 'zarc'){
+                dataSource = 'zacr'
+            }
+            const tou = product.tou;
+    
+            // Loop through the data from Redis to find matching dataSource and tou
+            for (const data of redisEndpoint.data) {
+                if (data[dataSource]) {
+                    for (const touData of data[dataSource]) {
+                        if (touData[tou]) {
+                            // Add to filteredEndpoints
+                            if (!filteredEndpoints[dataSource]) {
+                                filteredEndpoints[dataSource] = {};
+                            }
+                            filteredEndpoints[dataSource][tou] = touData[tou];
+                        }
+                    }
+                }
+            }
+        }
+    
+        return {
+            status: "success",
+            data: filteredEndpoints,
+            message: 'Filtered endpoints fetched successfully.',
+            timestamp: new Date().toISOString()
+        };
+    }
+    
 }

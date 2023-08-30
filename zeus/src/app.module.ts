@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Endpoint } from './entity/endpoint.entity';
 import { Filter } from './entity/filter.entity';
 import { Graph } from './entity/graph.entity';
+import { RedisProvider } from './redis.provider';
 
 @Module({
   imports: [
@@ -28,6 +29,6 @@ import { Graph } from './entity/graph.entity';
     TypeOrmModule.forFeature([Endpoint, Filter, Graph]),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,RedisProvider],
 })
 export class AppModule {}
