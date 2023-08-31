@@ -124,6 +124,8 @@ export class GraphFormatService {
 
   async formatDomainLengthAnalysis(data: string): Promise<string> {
     const dataArr = JSON.parse(JSON.parse(data)[0]['DOMAINLENGTHANALYSIS']);
+    console.log("Length")
+    console.log(dataArr)
     if (dataArr.length > 0) {
       const keys = Object.keys(dataArr[0]);
       if (keys.length === 2) {
