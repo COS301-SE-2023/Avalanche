@@ -296,7 +296,7 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
                                         ChartTypeArray.filter(item => {
                                             // If the dataset size is more than 1, only allow Line, Bar, and Scatter.
                                             if (graphData?.chartData?.datasets?.length > 1) {
-                                                return [ChartType.Line, ChartType.Bar, ChartType.Radar, ChartType.Table].includes(item.type);
+                                                return [ChartType.Line, ChartType.Bar, ChartType.Radar, ChartType.Table, ChartType.Bubble].includes(item.type);
                                             }
                                             // Otherwise, show all chart types.
                                             return true;
