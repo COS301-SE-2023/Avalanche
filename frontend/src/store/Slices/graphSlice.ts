@@ -522,11 +522,15 @@ export const getDomainNameAnalysisDataArray = createAsyncThunk("GRAPH.GetDomainN
 
 export const getFilters = createAsyncThunk("GRAPH.GetFilters", async (object: any, { rejectWithValue }) => {
     try {
-        
+
         const jwt = getCookie("jwt");
-        return await ky.post(`${process.env.NEXT_PUBLIC_API}/user-management/getFilters`,{headers: {
-            "Authorization": `Bearer ${jwt}`
-        }}).json();
+        const res: any = await ky.post(`${process.env.NEXT_PUBLIC_API}/user-management/getFilters`, {
+            headers: {
+                "Authorization": `Bearer ${jwt}`
+            }
+        }).json();
+        //console.log(res.message)
+        return res.message;
     } catch (e) {
         if (e instanceof Error) return rejectWithValue(e.message);
     }
