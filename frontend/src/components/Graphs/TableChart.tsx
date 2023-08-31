@@ -48,7 +48,7 @@ export function TableChart({ data }: any) {
                   <option value="">All</option>
                   {Array.from(new Set(data.map((row: any) => row[headers[activeFilter]]))).map((value, idx) => (
                     <option key={idx} value={String(value)}>
-                      {value}
+                      {String(value)}
                     </option>
                   ))}
                 </select>
