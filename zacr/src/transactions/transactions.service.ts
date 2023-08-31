@@ -18,7 +18,6 @@ export class TransactionService {
   ) {}
 
   async transactions(filters: string, graphName: string): Promise<any> {
-    console.log('transactions');
     try {
       graphName = this.transactionsGraphName(filters, false);
 

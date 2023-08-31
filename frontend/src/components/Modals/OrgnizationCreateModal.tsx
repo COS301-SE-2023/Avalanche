@@ -12,6 +12,8 @@ interface IOrgnizationCreateModal {
 
 export default function OrgnizationCreateModal({ }: IOrgnizationCreateModal) {
 
+    console.log("In org modal")
+
     const dispatch = useDispatch<any>();
     const stateUser = useSelector(userState);
 

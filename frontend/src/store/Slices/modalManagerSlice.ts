@@ -35,10 +35,13 @@ export const modalManagerSlice = createSlice({
         },
         // Set the current open modal
         setCurrentOpenState(state, action) {
+            console.log("DEBUG")
+            console.log(action.payload)
             state.currentOpen = action.payload
         },
         // Clear the current open modal
         clearCurrentOpenState(state) {
+
             state.currentOpen = "";
             state.data = null;
             state.zoomedData = null;

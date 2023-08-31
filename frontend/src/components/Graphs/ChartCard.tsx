@@ -90,12 +90,8 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
     }
 
     const filterGraphs = () => {
-        console.log('in filter graphs')
-        console.log(filters)
-        console.log(warehouse)
         if (warehouse) {
             const ep = filters.find((item: any) => item.endpoint === warehouse);
-            console.log(ep)
             if (!ep) return [];
             return ep.graphs.find((item: any) => item.graphName === gType);
         }
@@ -104,8 +100,6 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
 
 
     const renderFilters = () => {
-        console.log('in render filters')
-        console.log(filterGraphs()?.filters)
 
         return filterGraphs()?.filters?.map((element: any, index: number) => (
             <Disclosure key={index}>
@@ -151,6 +145,7 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
     }
 
     const fetchGraphData = async (filters: any) => {
+        //////
         setLoading(true);
         try {
             const jwt = getCookie("jwt");
@@ -162,7 +157,9 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
                 }
             }).json();
             const d = res as any;
-            setGraphData(d.data);
+            console.log("Before setGraphData")
+            console.log(d)
+            setGraphData(d.data.data);
             setLoading(false);
         } catch (e) {
             if (e instanceof Error) return ErrorToast({ text: e.message })
