@@ -688,7 +688,7 @@ export class UserDataProductMangementService {
         const redisEndpoint = JSON.parse(await this.redis.get('persephone'));
         
         // Initialize an empty object to store the filtered endpoints
-        const filteredEndpoints: any = {};
+        let filteredEndpoints = [];
     
         // Loop over the user's products to filter endpoints
         for (const product of user.products) {
@@ -703,11 +703,7 @@ export class UserDataProductMangementService {
                 if (data[dataSource]) {
                     for (const touData of data[dataSource]) {
                         if (touData[tou]) {
-                            // Add to filteredEndpoints
-                            if (!filteredEndpoints[dataSource]) {
-                                filteredEndpoints[dataSource] = {};
-                            }
-                            filteredEndpoints[dataSource] ={"tou": tou, "endpoints" : touData[tou]};
+                            filteredEndpoints.push({"dataSource" : dataSource, "tou": tou, "endpoints" : touData[tou]});
                         }
                     }
                 }
