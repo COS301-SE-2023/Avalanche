@@ -60,7 +60,7 @@ export default function RegistrarMarketComparison() {
         pdf.save('report.pdf');
     };
 
-    useEffect(() => {
+    function loadData(){
         // const data: ITransactionGraphRequest = { zone: "CO.ZA", granularity: "week", group: "registrar", dateFrom: "2023-01-02", graphName: "Your mom" };
         const arrayRanking: ITransactionGraphRequest[] = [];
         const currentDate = new Date();
@@ -92,7 +92,15 @@ export default function RegistrarMarketComparison() {
         })
 
         // dispatch(getGraphDataarrayRanking(arrayRanking));
+    }
+
+    useEffect(() => {
+        loadData();
     }, [])
+
+    useEffect(() => {
+        loadData();
+    }, [stateGraph.selectedDataSource])
 
     return (<>
         <Head>

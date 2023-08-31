@@ -24,8 +24,7 @@ export default function Dashboard() {
         return (d < 10) ? '0' + d.toString() : d.toString();
     }
 
-    useEffect(() => {
-
+    function loadData(){
         const array: ITransactionGraphRequest[] = [];
         const currentDate = new Date();
 
@@ -67,8 +66,15 @@ export default function Dashboard() {
         array.forEach(data => {
             dispatch(getGraphData(data));
         })
+    }
 
+    useEffect(() => {
+        loadData();
     }, [])
+
+    useEffect(() => {
+        loadData();
+    }, [stateGraph.selectedDataSource])
 
     const captureCanvasElements = async () => {
         const canvasElements = Array.from(document.querySelectorAll('.graphChart'));

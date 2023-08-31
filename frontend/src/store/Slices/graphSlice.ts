@@ -261,7 +261,7 @@ export const getAgeAnalysisData = createAsyncThunk("GRAPH.GetAgeAnalysisData", a
         const jwt = getCookie("jwt");
         const state = getState() as { graph: IGraphState }; // Replace 'graph' with the slice name if different
         const { selectedDataSource } = state.graph;
-        const response = await ky.post(`${url}/${selectedDataSource}//age`, {
+        const response = await ky.post(`${url}/${selectedDataSource}/age`, {
             json: object,
             headers: {
                 "Authorization": `Bearer ${jwt}`
@@ -522,7 +522,11 @@ export const getDomainNameAnalysisDataArray = createAsyncThunk("GRAPH.GetDomainN
 
 export const getFilters = createAsyncThunk("GRAPH.GetFilters", async (object: any, { rejectWithValue }) => {
     try {
-        return await ky.get(`${process.env.NEXT_PUBLIC_API}/user-management/graphFilters`).json();
+        
+        const jwt = getCookie("jwt");
+        return await ky.post(`${process.env.NEXT_PUBLIC_API}/user-management/getFilters`,{headers: {
+            "Authorization": `Bearer ${jwt}`
+        }}).json();
     } catch (e) {
         if (e instanceof Error) return rejectWithValue(e.message);
     }

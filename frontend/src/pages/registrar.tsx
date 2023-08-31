@@ -60,7 +60,7 @@ export default function Registrar() {
         pdf.save('report.pdf');
     };
 
-    useEffect(() => {
+    function loadData(){
         // const data: ITransactionGraphRequest = { zone: "CO.ZA", granularity: "week", group: "registrar", dateFrom: "2023-01-02", graphName: "Your mom" };
 
         const array: ITransactionGraphRequest[] = [];
@@ -105,7 +105,15 @@ export default function Registrar() {
             dispatch(getGraphData(data));
         })
 
+    }
+
+    useEffect(() => {
+        loadData();
     }, [])
+
+    useEffect(() => {
+        loadData();
+    }, [stateGraph.selectedDataSource])
 
     return (<>
         <Head>
