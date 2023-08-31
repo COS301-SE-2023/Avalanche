@@ -9,7 +9,7 @@ import { UserGroup } from '../../entity/userGroup.entity';
 import { Organisation } from '../../entity/organisation.entity';
 import axios from 'axios';
 import { WatchedUser } from '../../entity/watch.entity';
-import { Endpoint } from 'src/entity/endpoint.entity';
+import { Endpoint } from '../../entity/endpoint.entity';
 
 @Injectable()
 export class UserDataProductMangementService {
