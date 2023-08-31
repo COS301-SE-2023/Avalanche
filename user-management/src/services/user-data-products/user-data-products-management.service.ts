@@ -9,7 +9,7 @@ import { UserGroup } from '../../entity/userGroup.entity';
 import { Organisation } from '../../entity/organisation.entity';
 import axios from 'axios';
 import { WatchedUser } from '../../entity/watch.entity';
-import { Endpoint } from 'src/entity/endpoint.entity';
+import { Endpoint } from '../../entity/endpoint.entity';
 
 @Injectable()
 export class UserDataProductMangementService {
@@ -707,7 +707,7 @@ export class UserDataProductMangementService {
                             if (!filteredEndpoints[dataSource]) {
                                 filteredEndpoints[dataSource] = {};
                             }
-                            filteredEndpoints[dataSource][tou] = touData[tou];
+                            filteredEndpoints[dataSource] ={"tou": tou, "endpoints" : touData[tou]};
                         }
                     }
                 }

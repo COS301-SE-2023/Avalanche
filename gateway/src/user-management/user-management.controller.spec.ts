@@ -344,8 +344,8 @@ describe('UserManagementController', () => {
   
     jest.spyOn(client, 'send').mockImplementationOnce(() => of(expectedResponse));
   
-    expect(await controller.integrateUserWithWExternalAPI(payload)).toEqual(expectedResponse);
-    expect(client.send).toHaveBeenCalledWith({ cmd: 'integrateUserWithWExternalAPI' }, payload);
+    expect(await controller.integrateUserWithZARCExternalAPI(payload)).toEqual(expectedResponse);
+    expect(client.send).toHaveBeenCalledWith({ cmd: 'integrateUserWithZARCExternalAPI' }, payload);
   });
   
   it('should throw an exception when integrating with external', async () => {
@@ -354,10 +354,10 @@ describe('UserManagementController', () => {
   
     jest.spyOn(client, 'send').mockImplementationOnce(() => throwError(new Error(errorResponse.message)));
   
-    await expect(controller.integrateUserWithWExternalAPI(payload)).rejects.toThrow(
+    await expect(controller.integrateUserWithZARCExternalAPI(payload)).rejects.toThrow(
       new HttpException(errorResponse.message, errorResponse.status)
     );
-    expect(client.send).toHaveBeenCalledWith({ cmd: 'integrateUserWithWExternalAPI' }, payload);
+    expect(client.send).toHaveBeenCalledWith({ cmd: 'integrateUserWithZARCExternalAPI' }, payload);
   });
 
   it('integrating with data product', async () => {
