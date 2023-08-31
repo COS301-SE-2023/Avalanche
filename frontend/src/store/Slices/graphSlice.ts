@@ -19,6 +19,19 @@ interface IGraphState {
     filters: any[],
     selectedDataSource:string,
     error: string,
+    zones:string[]
+}
+
+interface IZoneArr {
+    africa: string[],
+    zacr: string[],
+    ryce: string[]
+}
+
+const zonesArr: IZoneArr = {
+    africa: ["AFRICA"],
+    zacr: ["CO.ZA", "ORG.ZA", "NET.ZA", "WEB.ZA" ],
+    ryce: ["WIEN", "TIROL", "KOELN", "COLOGNE"]
 }
 
 const initialState: IGraphState = {
@@ -27,7 +40,8 @@ const initialState: IGraphState = {
     latestAdd: -1,
     filters: [],
     selectedDataSource:"",
-    error: ""
+    error: "",
+    zones: zonesArr["zacr"]
 }
 
 const assignColours = (payload: any) => {
@@ -51,7 +65,8 @@ export const graphSlice = createSlice({
         },
         selectDataSource(state, action) {
             state.selectedDataSource = action.payload as any;
-        }
+            state.zones = zonesArr[state.selectedDataSource as keyof typeof zonesArr];
+        }          
     },
     extraReducers: (builder) => {
         builder.addCase(HYDRATE, (state, action) => {

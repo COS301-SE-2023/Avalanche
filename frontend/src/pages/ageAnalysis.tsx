@@ -24,16 +24,16 @@ export default function AgeAnalysis() {
         
         const arrayAgeAnalysisShare: IAgeAnalysisGraphRequest[] = [];
 
-        const ageAnalysisAverageTop5: IAgeAnalysisGraphRequest = { rank: 'top5', average: true, overall: false, zone: ['CO.ZA'] };
+        const ageAnalysisAverageTop5: IAgeAnalysisGraphRequest = { rank: 'top5', average: true, overall: false, zone: stateGraph.zones.slice(0,1) };
         arrayAgeAnalysisShare.push(ageAnalysisAverageTop5);
 
-        const ageAnalysisTop5: IAgeAnalysisGraphRequest = { rank: 'top5', overall: false, average: false, zone: ['CO.ZA'] };
+        const ageAnalysisTop5: IAgeAnalysisGraphRequest = { rank: 'top5', overall: false, average: false, zone: stateGraph.zones.slice(0,1) };
         arrayAgeAnalysisShare.push(ageAnalysisTop5);
 
-        const marketShareTop20: IAgeAnalysisGraphRequest = { rank: 'top20', overall: false, average: true, zone: ['CO.ZA'] };
+        const marketShareTop20: IAgeAnalysisGraphRequest = { rank: 'top20', overall: false, average: true, zone: stateGraph.zones.slice(0,1) };
         arrayAgeAnalysisShare.push(marketShareTop20);
 
-        const ageAnalysisTop10: IAgeAnalysisGraphRequest = { rank: 'top10', overall: false, average: true, zone: ['CO.ZA'] };
+        const ageAnalysisTop10: IAgeAnalysisGraphRequest = { rank: 'top10', overall: false, average: true, zone:  stateGraph.zones.slice(0,1) };
         arrayAgeAnalysisShare.push(ageAnalysisTop10);
 
         arrayAgeAnalysisShare.forEach(data => {

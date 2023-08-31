@@ -23,6 +23,7 @@ export class AppController {
   async transactions(data: any) {
     console.log('Transactions: ', data);
     const result = await this.transactionsService.transactions(data.filters,data.graphName);
+    console.log('Transactions result: ', result);
     if (result.error) {
       throw new RpcException({
         status: result.status,

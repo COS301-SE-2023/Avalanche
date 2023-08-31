@@ -47,7 +47,7 @@ export class TransactionService {
 
         data = {
           chartData: JSON.parse(formattedData),
-          jsonData: JSON.parse(queryData[0]['AGEANALYSIS']),
+          jsonData: JSON.parse(queryData[0]['TRANSACTIONSBYREGISTRAR']),
         };
 
         //set

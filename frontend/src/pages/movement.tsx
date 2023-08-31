@@ -61,10 +61,10 @@ export default function Movement() {
 
         const arrayMovementVerticalShare: IMovementGraphRequest[] = [];
 
-        const movementVertical: IMovementGraphRequest = { zone: ["CO.ZA"], };
+        const movementVertical: IMovementGraphRequest = { zone: stateGraph.zones.slice(0,1), };
         arrayMovementVerticalShare.push(movementVertical);
 
-        const movementVerticalRegistrar: IMovementGraphRequest = { zone: ["CO.ZA"], registrar: ["hetzner", "afrihost", "diamatrix"] };
+        const movementVerticalRegistrar: IMovementGraphRequest = { zone: stateGraph.zones.slice(0,1), registrar: ["hetzner", "afrihost", "diamatrix"] };
         arrayMovementVerticalShare.push(movementVerticalRegistrar);
 
 

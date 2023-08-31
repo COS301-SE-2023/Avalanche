@@ -102,7 +102,7 @@ export class JwtMiddleware implements NestMiddleware {
           if (productType == 'registrar') {
             if (req.body.registrar && req.body.registrar.length === 1) {
               if (req.body.registrar[0] === "Individual") {
-                req.body.registrar = [userDetails.products[0].key];
+                req.body.registrar = [userDetails.products[1].key];
               } else if (req.body.registrar[0] === "All") {
                 delete req.body.registrar;
               } else {
@@ -134,7 +134,7 @@ export class JwtMiddleware implements NestMiddleware {
               return res.status(403).json({ status: 403, message: 'Access Forbidden', timestamp: new Date().toISOString() });
             }
           }// assuming this is the user's level
-          const accessLevel = privileges['ryce'];
+          const accessLevel = privileges[2]['ryce'];
           const privilegesForProductType = accessLevel.find((privilege) => privilege[productType]);
           const result = privilegesForProductType[productType];
           let url = '';
@@ -149,7 +149,7 @@ export class JwtMiddleware implements NestMiddleware {
           if (productType == 'registrar') {
             if (req.body.registrar && req.body.registrar.length === 1) {
               if (req.body.registrar[0] === "Individual") {
-                req.body.registrar = [userDetails.products[0].key];
+                req.body.registrar = [userDetails.products[2].key];
               } else if (req.body.registrar[0] === "All") {
                 delete req.body.registrar;
               } else {
