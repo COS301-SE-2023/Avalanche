@@ -1,6 +1,6 @@
 import Sidebar from "@/components/Navigation/SideBar"
 import PageHeader from "@/components/Util/PageHeader"
-import { HomeIcon } from "@heroicons/react/24/solid"
+import { ChartBarSquareIcon } from "@heroicons/react/24/solid"
 import Head from "next/head"
 import { ChartCard } from "@/components/Graphs"
 import { ChartType } from "@/Enums";
@@ -24,8 +24,7 @@ export default function Dashboard() {
         return (d < 10) ? '0' + d.toString() : d.toString();
     }
 
-    useEffect(() => {
-
+    function loadData(){
         const array: ITransactionGraphRequest[] = [];
         const currentDate = new Date();
 
@@ -67,8 +66,15 @@ export default function Dashboard() {
         array.forEach(data => {
             dispatch(getGraphData(data));
         })
+    }
 
+    useEffect(() => {
+        loadData();
     }, [])
+
+    useEffect(() => {
+        loadData();
+    }, [stateGraph.selectedDataSource])
 
     const captureCanvasElements = async () => {
         const canvasElements = Array.from(document.querySelectorAll('.graphChart'));
@@ -118,7 +124,7 @@ export default function Dashboard() {
 
         <div className="p-4 sm:ml-64 bg-gray-100 dark:bg-secondaryBackground min-h-screen" ref={containerRef}>
             <div className="flex justify-between items-center">
-                <PageHeader title="Home" subtitle="Insights at your fingertips" icon={<HomeIcon className="h-16 w-16 text-black dark:text-white" />} />
+                <PageHeader title="Transactions" subtitle="Insights at your fingertips" icon={<ChartBarSquareIcon className="h-16 w-16 text-black dark:text-white" />} />
                 <SubmitButton text="Download Report" onClick={() => generatePDF()} />
             </div>
             <div className="p-0 pt-4 md:p-4" id="pageData">

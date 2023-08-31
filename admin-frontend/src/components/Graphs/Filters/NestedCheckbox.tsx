@@ -14,7 +14,7 @@ export default function NestedCheckbox({ data, request, update }: any) {
 
     return (
         <div>
-            <Dropdown items={zones} option={selectedZone} set={(value: any) => setSelectedZone(value)} />
+            <Dropdown items={zones} option={selectedZone} set={(value: any) => {setSelectedZone(value)}} />
             {selectedZone && <CheckboxFilter request={request} update={update} data={getFiltersForZone(selectedZone)} />}
         </div>
     )

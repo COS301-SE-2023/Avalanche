@@ -1,17 +1,18 @@
 import { MenuOptions, NotDropdown } from "@/assets/MenuOptions"
 import SideBarItem from "./SidebarItem"
 import Link from "next/link"
-import { useState, useEffect } from "react";
+import { useState, useEffect,useRef  } from "react";
 import { useTheme } from "next-themes";
 import { MoonIcon, SunIcon, Cog6ToothIcon, Bars4Icon, ArrowLeftOnRectangleIcon, PencilIcon, HomeIcon, ChevronDownIcon, ChartPieIcon } from "@heroicons/react/24/solid";
 import { selectModalManagerState } from "@/store/Slices/modalManagerSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { userState, logout } from "@/store/Slices/userSlice";
+import { graphState,selectDataSource } from "@/store/Slices/graphSlice";
 import { useRouter } from "next/router";
 import { getCookie, deleteCookie } from "cookies-next";
 import LoadingPage from "../Util/Loading";
 import ky from "ky";
-import { ErrorToast, SubmitButton, SuccessToast } from "../Util";
+import { Dropdown, ErrorToast, SubmitButton, SuccessToast } from "../Util";
 import CreateDashboardModal from "../Modals/CreateDashboardModal";
 import { Transition } from '@headlessui/react'
 import { v4 as uuidv4 } from 'uuid';
@@ -22,9 +23,11 @@ export default function Sidebar() {
     const [menu, setMenu] = useState<boolean>(false);
     const [df, setDF] = useState<boolean>(false);
     const stateUser = useSelector(userState);
+    const stateGraph = useSelector(graphState);
     const dispatch = useDispatch();
     const modalState = useSelector(selectModalManagerState);
     const router = useRouter();
+    const initialSelectedDataSource = useRef(stateGraph.selectedDataSource);
 
     const jwt = getCookie("jwt");
 
@@ -81,10 +84,33 @@ export default function Sidebar() {
     }, [stateUser]);
 
     /**
+     * Handles if the data source changes
+     * When the data source changes the current window should be reloaded to reflect data from the selected source
+     */
+    useEffect(() => {
+        // Only reload the page when selectedDataSource actually changes
+        if (initialSelectedDataSource.current !== stateGraph.selectedDataSource) {
+            initialSelectedDataSource.current = stateGraph.selectedDataSource;
+          //window.location.reload();
+        }
+    
+        // Update the reference for future comparisons
+        
+      }, [stateGraph.selectedDataSource]);
+
+    /**
      * Handles dark and light mode toggles
      */
     const toggleDarkMode = (): void => {
         theme === "dark" ? setTheme('light') : setTheme("dark")
+    }
+
+    /**
+     * Changes the selected Data source in the slice
+     * @param dataSource 
+     */
+    const reduceDataSource = (dataSource: string) => {
+        dispatch(selectDataSource(dataSource));
     }
 
     if (!getCookie("jwt")) {
@@ -161,7 +187,13 @@ export default function Sidebar() {
                                 </ul>
                             </ul>
                         </div>
+
                         <div className="absolute bottom-0 left-0 justify-center p-4 w-full lg:flex flex-col gap-2 bg-gray-200 dark:bg-primaryBackground z-20 border-r border-gray-200 dark:border-secondaryBackground">
+                            <div>
+                                <div className="flex items-center space-x-4">
+                                <Dropdown items={["zacr","africa","ryce"]} text={"select a warehouse"} option={stateGraph.selectedDataSource} set={reduceDataSource} />
+                                </div>
+                            </div>
                             <div>
                                 <div className="flex items-center space-x-4">
                                     <img className="w-10 h-10 rounded-full" src={`https://www.gravatar.com/avatar/${md5(stateUser.user.email)}`} alt="" />

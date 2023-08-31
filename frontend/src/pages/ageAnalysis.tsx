@@ -20,8 +20,8 @@ export default function AgeAnalysis() {
     const stateGraph = useSelector(graphState);
     const modalState = useSelector(selectModalManagerState);
 
-    useEffect(() => {
-
+    function loadData(){
+        
         const arrayAgeAnalysisShare: IAgeAnalysisGraphRequest[] = [];
 
         const ageAnalysisAverageTop5: IAgeAnalysisGraphRequest = { rank: 'top5', average: true, overall: false, zone: ['CO.ZA'] };
@@ -40,8 +40,15 @@ export default function AgeAnalysis() {
             dispatch(getAgeAnalysisData(data));
         })
 
+    }
 
+    useEffect(() => {
+        loadData();
     }, [])
+
+    useEffect(() => {
+        loadData();
+    }, [stateGraph.selectedDataSource])
 
     const captureCanvasElements = async () => {
         const canvasElements = Array.from(document.querySelectorAll('.graphChart'));
