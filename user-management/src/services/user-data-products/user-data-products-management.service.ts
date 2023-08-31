@@ -707,7 +707,7 @@ export class UserDataProductMangementService {
                             if (!filteredEndpoints[dataSource]) {
                                 filteredEndpoints[dataSource] = {};
                             }
-                            filteredEndpoints[dataSource][tou] = touData[tou];
+                            filteredEndpoints[dataSource] ={"tou": tou, "endpoints" : touData[tou]};
                         }
                     }
                 }
