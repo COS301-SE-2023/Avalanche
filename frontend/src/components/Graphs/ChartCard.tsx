@@ -90,16 +90,23 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
     }
 
     const filterGraphs = () => {
+        console.log('in filter graphs')
+        console.log(filters)
+        console.log(warehouse)
         if (warehouse) {
             const ep = filters.find((item: any) => item.endpoint === warehouse);
+            console.log(ep)
             if (!ep) return [];
-            return ep.graphs.find((item: any) => item.name === gType);
+            return ep.graphs.find((item: any) => item.graphName === gType);
         }
         return [];
     }
 
 
     const renderFilters = () => {
+        console.log('in render filters')
+        console.log(filterGraphs()?.filters)
+
         return filterGraphs()?.filters?.map((element: any, index: number) => (
             <Disclosure key={index}>
                 {({ open, close }) => (
