@@ -57,7 +57,7 @@ export function TableChart({ data }: any) {
                           <option key={idx} value={String(value)}>
                             {" "}
                             {/* Cast value to string */}
-                            {value}
+                            {String(value)}
                           </option>
                         ))}
                       </select>
