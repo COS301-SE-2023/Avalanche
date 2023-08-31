@@ -17,6 +17,9 @@ export default function OrgnizationCreateModal({ }: IOrgnizationCreateModal) {
     const dispatch = useDispatch<any>();
     const stateUser = useSelector(userState);
 
+    // This is causing issues and not opening the organisation modal 
+    // --> not sure why user organisation would be changing but apparently it is, 
+    // me confused, pls help @Michael
     useEffect(() => {
         dispatch(clearCurrentOpenState());
     }, [stateUser.user.organization])

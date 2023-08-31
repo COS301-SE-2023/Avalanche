@@ -82,7 +82,7 @@ export default function Movement() {
 
     useEffect(() => {
         loadData();
-    }, [stateGraph.selectDataSource])
+    }, [stateGraph.selectedDataSource])
 
     return (<>
         <Head>
