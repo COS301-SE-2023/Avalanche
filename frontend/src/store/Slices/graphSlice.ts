@@ -39,7 +39,7 @@ const initialState: IGraphState = {
     loading: false,
     latestAdd: -1,
     filters: [],
-    selectedDataSource:"",
+    selectedDataSource:"zacr",
     error: "",
     zones: zonesArr["zacr"]
 }

@@ -8,6 +8,7 @@ import { selectModalManagerState } from "@/store/Slices/modalManagerSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { userState, logout } from "@/store/Slices/userSlice";
 import { graphState,selectDataSource } from "@/store/Slices/graphSlice";
+import { permissionState,getEndpoints } from "@/store/Slices/permissionSlice";
 import { useRouter } from "next/router";
 import { getCookie, deleteCookie } from "cookies-next";
 import LoadingPage from "../Util/Loading";
@@ -24,7 +25,8 @@ export default function Sidebar() {
     const [df, setDF] = useState<boolean>(false);
     const stateUser = useSelector(userState);
     const stateGraph = useSelector(graphState);
-    const dispatch = useDispatch();
+    const statePermissions= useSelector(permissionState);
+    const dispatch = useDispatch<any>();
     const modalState = useSelector(selectModalManagerState);
     const router = useRouter();
     const initialSelectedDataSource = useRef(stateGraph.selectedDataSource);
@@ -44,6 +46,7 @@ export default function Sidebar() {
                 handleGroupInvite(key, type);
             }
         }
+        dispatch(getEndpoints());
     }, [])
 
     /**
@@ -53,7 +56,7 @@ export default function Sidebar() {
      */
     const handleGroupInvite = async (key: string, type: string) => {
         try {
-            await ky.post(`http://localho.st:4000/user-management/addUserToUserGroupWithKey`, {
+            await ky.post(`http://localhost:4000/user-management/addUserToUserGroupWithKey`, {
                 json: { key: `${key}` },
                 headers: {
                     "Authorization": `Bearer ${jwt}`
@@ -155,8 +158,15 @@ export default function Sidebar() {
                                 >
                                     <div className="ml-5">
                                         {
+                                            
                                             MenuOptions.items.map((option: any, index: number) => {
-                                                return <SideBarItem text={option.text} icon={option.icon} page={option.page} key={index} />
+                                                console.log("this is the entire perms object",statePermissions.permissions);
+                                                const statePermissionsArr=statePermissions.permissions.find((element:any)=>{return element.dataSource==stateGraph.selectedDataSource});
+                                                console.log("This is the perms array",statePermissionsArr);
+                                                if(statePermissionsArr && statePermissionsArr.endpoints.includes(option.endpoint)){
+                                                    return <SideBarItem text={option.text} icon={option.icon} page={option.page} key={index} />
+                                                }
+                                               
                                             })
                                         }
                                     </div>

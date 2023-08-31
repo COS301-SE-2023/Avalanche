@@ -34,7 +34,6 @@ export class UserOrganisationMangementService {
                 timestamp: new Date().toISOString()
             };
         }
-        console.log(user);
         const uniqueUsers = new Set();
         const usersInfo = [];
         const userGroupDetails = [];
@@ -178,7 +177,9 @@ export class UserOrganisationMangementService {
         delete user.apiKey;
         // Update the user's information in Redis
         await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60);
-
+        for(const products of user.products){
+            delete products.key;
+          }
         return {
             status: 'success', message: user,
             timestamp: new Date().toISOString()
@@ -231,6 +232,9 @@ export class UserOrganisationMangementService {
         userToBeRemoved.userGroups = null;
         await this.userRepository.save(userToBeRemoved);
         await this.redis.set(token, JSON.stringify(userToBeRemoved), 'EX', 24 * 60 * 60);
+        for(const products of userToBeRemoved.products){
+            delete products.key;
+          }
         return { status: 'success', message: { text: 'User removed from organisation and user groups', user: userToBeRemoved }, timestamp: new Date().toISOString() };
     }
 

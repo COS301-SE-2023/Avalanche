@@ -262,6 +262,7 @@ export const userSlice = createSlice({
         // Get Latest Org
         builder.addCase(getLatestOrganisation.fulfilled, (state, action) => {
             const payload = action.payload as any;
+            state.user.products= payload.products;
             state.user.organisation = payload.organisation;
             state.user.userGroups = payload.userGroups;
             state.loading = false;

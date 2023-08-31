@@ -4,6 +4,7 @@ import { userSlice } from "./Slices/userSlice";
 import { domainWatchSlice } from "./Slices/domainWatchSlice";
 import { settingsSlice } from "./Slices/settingsSlice";
 import { graphSlice } from "./Slices/graphSlice";
+import { permissionSlice } from "./Slices/permissionSlice";
 import { createWrapper } from "next-redux-wrapper";
 import thunk from "redux-thunk";
 import { persistReducer, persistStore } from "redux-persist";
@@ -31,6 +32,7 @@ const rootReducer = combineReducers({
     [settingsSlice.name]: settingsSlice.reducer,
     [domainWatchSlice.name]: domainWatchSlice.reducer,
     [graphSlice.name]: graphSlice.reducer,
+    [permissionSlice.name]: permissionSlice.reducer
 });
 
 const makeConfiguredStore = () =>

@@ -14,10 +14,15 @@ import "animate.css";
 import { ModalWrapper } from "./ModalOptions";
 import ky, { HTTPError } from "ky";
 import { getCookie } from "cookies-next";
+import { useDispatch } from "react-redux";
+import { getEndpoints } from "@/store/Slices/permissionSlice";
+import { getLatestOrganisation } from "@/store/Slices/userSlice";
 
 interface IIntegrationLoginModal {}
 
 export default function IntegrationLoginModal({}: IIntegrationLoginModal) {
+
+  const dispatch = useDispatch<any>();
 
   /**
    * This state variable handles whether the dropdown for selecting the integration should be open for closed.
@@ -102,6 +107,9 @@ export default function IntegrationLoginModal({}: IIntegrationLoginModal) {
             }
           )
           .json();
+        
+          dispatch(getEndpoints());
+          dispatch(getLatestOrganisation({}));
         SuccessToast({ text: "Successfully added integration." });
       } catch (e) {
         let error = e as HTTPError;
