@@ -5,6 +5,7 @@ interface IMenuItem {
     icon: any,
     page: string,
     role?: string,
+    endpoint?:string,
 }
 
 interface IMenu {
@@ -36,49 +37,57 @@ const MenuOptions: IMenu = {
             text: "Transactions",
             icon: <ChartBarSquareIcon className={holder} />,
             page: "dashboard",
-            role: ""
+            role: "",
+            endpoint:"transactions"
         },
         {
             text: "Registrar",
             icon: <TvIcon className={holder} />,
             page: "registrar",
-            role: ""
+            role: "",
+            endpoint:"transactions"
         },
         {
             text: "Registrar Market Comparison",
             icon: <MapIcon className={holder} />,
             page: "registrarMarketComparison",
-            role: ""
+            role: "",
+            endpoint:"transaction-ranking"
         },
         {
             text: "Movement",
             icon: <BoltIcon className={holder} />,
             page: "movement",
-            role: ""
+            role: "",
+            endpoint:"movement/vertical"
         },
         {
             text: "Domain Length",
             icon: <ClipboardIcon className={holder} />,
             page: "domainLength",
-            role: ""
+            role: "",
+            endpoint:"domainNameAnalysis/length"
         },
         {
             text: "Market Share",
             icon: <ChartBarIcon className={holder} />,
             page: "marketShare",
-            role: ""
+            role: "",
+            endpoint:"marketShare"
         },
         {
             text: "Registrar Age Analysis",
             icon: <HeartIcon className={holder} />,
             page: "ageAnalysis",
-            role: ""
+            role: "",
+            endpoint:"age"
         },
         {
             text: "Domain Name Analysis",
             icon: <EyeIcon className={holder} />,
             page: "domainNameAnalysis",
-            role: ""
+            role: "",
+            endpoint:"domainNameAnalysis/count"
         }
     ]
 }

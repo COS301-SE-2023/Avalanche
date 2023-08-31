@@ -3,7 +3,18 @@
     "type": "object",
     "properties": {
       "types": {
-        "type": "object"
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "type":{
+              "type": "string"
+            },
+            "threshold":{
+              "type": "number"
+            }
+          }
+      }
       },
       "domains": {
         "type": "array",
@@ -13,5 +24,5 @@
       }
     },
     "additionalProperties": false,
-    "required": ["type", "domains"]
+    "required": ["types", "domains"]
   }

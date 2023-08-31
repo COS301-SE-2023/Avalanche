@@ -12,6 +12,7 @@ import { userState } from "@/store/Slices/userSlice";
 import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import GeneralSettings from "@/components/Settings/General";
+import DataProducts from "@/components/Settings/DataProducts";
 
 export default function Settings() {
 
@@ -115,10 +116,7 @@ export default function Settings() {
                 <OrganizationSettings />
             }
             {tab === "integrations" && <>
-                <div className="flex justify-between items-center gap-10 mb-4">
-                    <WarningAlert title="No Data Products." text="You have not added any Data Products..." />
-                    <SubmitButton text="Add a new Data Product" onClick={() => dispatch(setCurrentOpenState("INTE.CreateIntegration"))} />
-                </div>
+                <DataProducts></DataProducts>
             </>}
         </div>
 
