@@ -80,6 +80,9 @@ export class UserDataProductMangementService {
                             delete user.salt;
                             delete user.apiKey;
                             await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60);
+                            for(const products of user.products){
+                                delete products.key;
+                              }
                             return {
                                 status: 'success', message: user,
                                 timestamp: new Date().toISOString()
@@ -185,6 +188,9 @@ export class UserDataProductMangementService {
                             delete user.salt;
                             delete user.password;
                             await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60);
+                            for(const products of userGroup.products){
+                                delete products.key;
+                              }
                             return {
                                 status: 'success', message: user,
                                 timestamp: new Date().toISOString()
@@ -274,6 +280,9 @@ export class UserDataProductMangementService {
                             delete user.salt;
                             delete user.apiKey;
                             await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60);
+                            for(const products of user.products){
+                                delete products.key;
+                              }
                             return {
                                 status: 'success', message: user,
                                 timestamp: new Date().toISOString()
@@ -379,6 +388,9 @@ export class UserDataProductMangementService {
                             delete user.salt;
                             delete user.password;
                             await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60);
+                            for(const products of userGroup.products){
+                                delete products.key;
+                              }
                             return {
                                 status: 'success', message: user,
                                 timestamp: new Date().toISOString()
