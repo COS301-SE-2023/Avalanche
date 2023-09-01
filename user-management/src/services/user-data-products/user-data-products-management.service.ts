@@ -50,7 +50,7 @@ export class UserDataProductMangementService {
                             }
                         });
 
-                        let key = responseGET.data.epp_username;
+                        const key = responseGET.data.epp_username;
                         const type = "registrar"
                         const userPayload = await this.redis.get(token);
                         if (!userPayload) {
@@ -80,9 +80,9 @@ export class UserDataProductMangementService {
                             delete user.salt;
                             delete user.apiKey;
                             await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60);
-                            for(const products of user.products){
+                            for (const products of user.products) {
                                 delete products.key;
-                              }
+                            }
                             return {
                                 status: 'success', message: user,
                                 timestamp: new Date().toISOString()
@@ -188,9 +188,9 @@ export class UserDataProductMangementService {
                             delete user.salt;
                             delete user.password;
                             await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60);
-                            for(const products of userGroup.products){
+                            for (const products of userGroup.products) {
                                 delete products.key;
-                              }
+                            }
                             return {
                                 status: 'success', message: user,
                                 timestamp: new Date().toISOString()
@@ -251,7 +251,7 @@ export class UserDataProductMangementService {
                             }
                         });
 
-                        let key = responseGET.data.epp_username;
+                        const key = responseGET.data.epp_username;
                         const type = "registrar"
                         const userPayload = await this.redis.get(token);
                         if (!userPayload) {
@@ -280,9 +280,9 @@ export class UserDataProductMangementService {
                             delete user.salt;
                             delete user.apiKey;
                             await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60);
-                            for(const products of user.products){
+                            for (const products of user.products) {
                                 delete products.key;
-                              }
+                            }
                             return {
                                 status: 'success', message: user,
                                 timestamp: new Date().toISOString()
@@ -388,9 +388,9 @@ export class UserDataProductMangementService {
                             delete user.salt;
                             delete user.password;
                             await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60);
-                            for(const products of userGroup.products){
+                            for (const products of userGroup.products) {
                                 delete products.key;
-                              }
+                            }
                             return {
                                 status: 'success', message: user,
                                 timestamp: new Date().toISOString()
@@ -621,57 +621,67 @@ export class UserDataProductMangementService {
     }
 
     async getFilters(token: string) {
-        const userPayload = await this.redis.get(token);
-        if (!userPayload) {
-            return {
-                status: 400, error: true, message: 'Invalid token.',
-                timestamp: new Date().toISOString()
-            };
-        }
-        const { email: userEmail } = JSON.parse(userPayload);
-        console.log(userEmail);
-        const user = await this.userRepository.findOne({
-            where: { email: userEmail }, relations: ['userGroups', 'organisation', 'dashboards'],
-            select: ['id', 'email', 'firstName', 'lastName', 'organisationId', 'products', 'userGroups', 'organisation', 'dashboards']
-        });
-        if (!user) {
-            return {
-                status: 400, error: true, message: 'User does not exist.',
-                timestamp: new Date().toISOString()
-            };
-        }
-
-        // Initialize an array to store the final result
-        const result = [];
-
-        // Iterate through the user's products
-        const allProducts = [...user.products, ...user.userGroups.flatMap(ug => ug.products)];
-
-        for (const product of allProducts) {
-            let dataSource = product.dataSource;
-            const tou = product.tou;
-            if (dataSource == 'zarc') {
-                dataSource = 'zacr';
+        try {
+            const userPayload = await this.redis.get(token);
+            if (!userPayload) {
+                return {
+                    status: 400, error: true, message: 'Invalid token.',
+                    timestamp: new Date().toISOString()
+                };
             }
-            // Find the endpoints related to the current data source
-            const endpoint = await this.endpointRepository.findOne({
-                where: { endpoint: dataSource }, // Match the endpoint with the dataSource
-                relations: ['graphs', 'graphs.filters']
+            const { email: userEmail } = JSON.parse(userPayload);
+            console.log(userEmail);
+            const user = await this.userRepository.findOne({
+                where: { email: userEmail }, relations: ['userGroups', 'organisation', 'dashboards'],
+                select: ['id', 'email', 'firstName', 'lastName', 'organisationId', 'products', 'userGroups', 'organisation', 'dashboards']
             });
-
-            // Iterate through the endpoints and collect the endpoints, graphs, and filters based on TOU
-
-            const graphsByTOU = endpoint.graphs.filter(graph => graph.user === tou);
-
-            // If there are graphs that match the TOU, include the endpoint along with graphs and filters
-            if (graphsByTOU.length > 0) {
-                result.push({
-                    endpoint: dataSource, graphs: graphsByTOU
-                });
+            if (!user) {
+                return {
+                    status: 400, error: true, message: 'User does not exist.',
+                    timestamp: new Date().toISOString()
+                };
             }
-        }
 
-        return { "status": "success", "message": result };
+            // Initialize an array to store the final result
+            const result = [];
+
+            // Iterate through the user's products
+            const allProducts = [...user.products, ...user.userGroups.flatMap(ug => ug.products)];
+            
+            for (const product of allProducts) {
+                if (product) {
+                    let dataSource = product.dataSource;
+                    const tou = product.tou;
+                    if (dataSource == 'zarc') {
+                        dataSource = 'zacr';
+                    }
+                    // Find the endpoints related to the current data source
+                    const endpoint = await this.endpointRepository.findOne({
+                        where: { endpoint: dataSource }, // Match the endpoint with the dataSource
+                        relations: ['graphs', 'graphs.filters']
+                    });
+
+                    // Iterate through the endpoints and collect the endpoints, graphs, and filters based on TOU
+
+                    const graphsByTOU = endpoint.graphs.filter(graph => graph.user === tou);
+
+                    // If there are graphs that match the TOU, include the endpoint along with graphs and filters
+                    if (graphsByTOU.length > 0) {
+                        result.push({
+                            endpoint: dataSource, graphs: graphsByTOU
+                        });
+                    }
+                }
+            }
+
+            return { "status": "success", "message": result };
+        } catch (error) {
+            console.log(error)
+            return {
+                status: 500, error: true, message: 'Unexpected error.',
+                timestamp: new Date().toISOString()
+            };
+        }
     }
 
     async getEndpoints(token: string) {
@@ -682,46 +692,46 @@ export class UserDataProductMangementService {
                 timestamp: new Date().toISOString()
             };
         }
-    
+
         const { email: userEmail } = JSON.parse(userPayload);
         const user = await this.userRepository.findOne({
             where: { email: userEmail },
             relations: ['userGroups', 'organisation', 'dashboards'],
             select: ['id', 'email', 'firstName', 'lastName', 'organisationId', 'products', 'userGroups', 'organisation', 'dashboards']
         });
-    
+
         if (!user) {
             return {
                 status: 400, error: true, message: 'User does not exist.',
                 timestamp: new Date().toISOString()
             };
         }
-    
+
         const redisEndpoint = JSON.parse(await this.redis.get('persephone'));
-        
+
         // Initialize an empty object to store the filtered endpoints
-        let filteredEndpoints = [];
-    
+        const filteredEndpoints = [];
+
         // Loop over the user's products to filter endpoints
         for (const product of user.products) {
             let dataSource = product.dataSource;
-            if(product.dataSource == 'zarc'){
+            if (product.dataSource == 'zarc') {
                 dataSource = 'zacr'
             }
             const tou = product.tou;
-    
+
             // Loop through the data from Redis to find matching dataSource and tou
             for (const data of redisEndpoint.data) {
                 if (data[dataSource]) {
                     for (const touData of data[dataSource]) {
                         if (touData[tou]) {
-                            filteredEndpoints.push({"dataSource" : dataSource, "tou": tou, "endpoints" : touData[tou]});
+                            filteredEndpoints.push({ "dataSource": dataSource, "tou": tou, "endpoints": touData[tou] });
                         }
                     }
                 }
             }
         }
-    
+
         return {
             status: "success",
             data: filteredEndpoints,
@@ -729,5 +739,5 @@ export class UserDataProductMangementService {
             timestamp: new Date().toISOString()
         };
     }
-    
+
 }
