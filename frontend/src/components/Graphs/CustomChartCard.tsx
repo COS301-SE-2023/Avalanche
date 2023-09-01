@@ -6,13 +6,14 @@ import { ChartCardButton } from "./ChartCardHeader";
 import { Fragment } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import "animate.css";
-import { useDispatch } from "react-redux";
-import { setCurrentOpenState, setData, setZoomData } from "@/store/Slices/modalManagerSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { clearCurrentOpenState, setCurrentOpenState, setData, setZoomData } from "@/store/Slices/modalManagerSlice";
 import { CheckboxFilter, DatePickerFilter, NestedCheckbox, RadioboxFilter, ToggleFilter } from "./Filters";
 import { Disclosure } from '@headlessui/react'
 import { ErrorToast, SubmitButton } from "../Util";
 import ky from "ky";
 import { getCookie } from "cookies-next";
+import { getFilters, graphState } from "@/store/Slices/graphSlice";
 // import { renderFilters, filterGraphs, generateDefaultValue } from "./Filters/utils";
 
 interface IChartCard {
@@ -25,9 +26,14 @@ interface IChartCard {
 }
 
 export default function CustomChartCard({ title, data, defaultGraph, state, id, updateGraph }: IChartCard) {
+    const dispatch = useDispatch<any>();
+    const stateGraph = useSelector(graphState);
+    const filters = stateGraph.filters;
 
-    const dispatch = useDispatch();
-
+    useEffect(() => {
+        dispatch(clearCurrentOpenState)
+        if (filters.length === 0) dispatch(getFilters({}));
+    }, [])
     const [type, setType] = useState<ChartType>(defaultGraph);
     const [filterDropdown, setFilterDropdown] = useState<boolean>(false);
     const [graphData, setGraphData] = useState<any>({});
@@ -57,8 +63,9 @@ export default function CustomChartCard({ title, data, defaultGraph, state, id, 
     }
 
     const renderFilters = () => {
-        return filterGraphs()?.filters?.map((element: any, index: number) => {
-            return <Disclosure key={index}>
+
+        return filterGraphs()?.filters?.map((element: any, index: number) => (
+            <Disclosure key={index}>
                 {({ open, close }) => (
                     <>
                         <Disclosure.Button className="flex w-full justify-between rounded-lg px-4 py-2 text-left text-sm font-medium hover:bg-gray-300 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75" onClick={() => {
@@ -84,7 +91,7 @@ export default function CustomChartCard({ title, data, defaultGraph, state, id, 
                     </>
                 )}
             </Disclosure>
-        })
+        ))
     }
 
     useEffect(() => {
@@ -149,11 +156,10 @@ export default function CustomChartCard({ title, data, defaultGraph, state, id, 
 
     const filterGraphs = () => {
         if (warehouse) {
-            const ep = state.filters.find((item: any) => item.endpoint === warehouse);
+            const ep = filters.find((item: any) => item.endpoint === warehouse);
             if (!ep) return [];
-            return ep.graphs.find((item: any) => item.name === gType);
+            return ep.graphs.find((item: any) => item.graphName === gType);
         }
-
         return [];
     }
 
