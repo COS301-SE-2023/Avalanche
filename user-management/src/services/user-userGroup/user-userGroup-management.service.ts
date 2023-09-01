@@ -67,7 +67,9 @@ export class UserUserGroupMangementService {
                     userGroup.products = products;
                     // Save the user group
                     await this.userGroupRepository.save(userGroup);
-
+                    for(const products of userGroup.products){
+                        delete products.key;
+                    }
                     return {
                         status: 'success', message: userGroup,
                         timestamp: new Date().toISOString()

@@ -51,9 +51,6 @@ export class UserOrganisationMangementService {
                                     lastName: groupUser.lastName,
                                     email: groupUser.email
                                 });
-                                console.log(groupUser.email);
-                                console.log(groupUser.firstName);
-                                console.log(groupUser.lastName);
                             }
                         }
                         const userInfoCopy = [];
@@ -85,9 +82,6 @@ export class UserOrganisationMangementService {
                                         lastName: groupUser.lastName,
                                         email: groupUser.email
                                     });
-                                    console.log(groupUser.email);
-                                    console.log(groupUser.firstName);
-                                    console.log(groupUser.lastName);
                                 }
                             }
                             const userInfoCopy = [];
@@ -129,7 +123,6 @@ export class UserOrganisationMangementService {
                 timestamp: new Date().toISOString()
             };
         }
-        console.log(user);
         // Check if the user already belongs to an organisation
         if (user.organisation !== null && user.organisation.id !== null) {
             return {
@@ -160,21 +153,25 @@ export class UserOrganisationMangementService {
         await this.organisationRepository.save(organisation);
 
         // Create a new user group for this organisation
+        const products = [{dataSource : "zarc", tou : "public", key : null}, {dataSource : "africa", tou : "public", key : null}, {dataSource : "ryce", tou : "public", key : null}];
         const userGroup = new UserGroup();
         userGroup.name = `admin-${organisation.name}`;
         userGroup.organisation = organisation;
         userGroup.permission = 1;
+        userGroup.products = products;
 
         await this.userGroupRepository.save(userGroup);
 
         // Assign the user to this organisation and user group
         user.organisation = organisation;
         user.userGroups = [userGroup];
-        console.log(user);
         await this.userRepository.save(user);
 
         delete user.salt;
         delete user.apiKey;
+        for(const products of user.products){
+            delete products.key;
+        }
         // Update the user's information in Redis
         await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60);
         for(const products of user.products){

@@ -42,7 +42,6 @@ export class AuthService {
 
         // Retrieve the data from Redis to verify it was saved correctly
         const savedData = await this.redis.get(email);
-        console.log(savedData);
 
         // Send email with OTP link
         await this.sendOTPEmail(email, otp);
@@ -136,7 +135,6 @@ export class AuthService {
     };
 
     const { password, salt, firstName, lastName, otp: savedOtp } = JSON.parse(userInfo);
-    console.log(password + " " + otp);
     if (otp !== savedOtp) {
       return {
         status: 400, error: true, message: 'Incorrect OTP.',
@@ -219,7 +217,6 @@ export class AuthService {
       };
     }
     const { email: userEmail } = JSON.parse(userPayload);
-    console.log(userEmail);
     const user = await this.userRepository.findOne({
       where: { email: userEmail }, relations: ['userGroups', 'organisation', 'dashboards'],
       select: ['id', 'email', 'firstName', 'lastName', 'organisationId', 'products', 'userGroups', 'organisation', 'dashboards']
@@ -244,7 +241,6 @@ export class AuthService {
   }
 
   async createAPIKey(token: string) {
-    console.log("elo");
     const userData = await this.redis.get(token);
     if (!userData) {
       return {
@@ -261,9 +257,6 @@ export class AuthService {
         timestamp: new Date().toISOString()
       };
     }
-
-    // console.log(user);
-    console.log(user['apiKey']);
 
     if (user.apiKey?.length > 0 || user.apiKey) {
       return {
