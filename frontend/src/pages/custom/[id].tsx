@@ -73,7 +73,7 @@ export default function CreateCustomDashboard() {
     }
 
     const renderGraphs = () => {
-        return graphs.map((graph: any, index: number) => <CustomChartCard title={graph.name} defaultGraph={ChartType.Pie} data={graph} key={index} state={stateGraph} id={id} updateGraph={updateGraph} />);
+        return graphs.map((graph: any, index: number) => <CustomChartCard title={graph.name} defaultGraph={ChartType.Line} data={graph} key={index} state={stateGraph} id={id} updateGraph={updateGraph} />);
     }
 
     const updateDashboard = async () => {
