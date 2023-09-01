@@ -1,5 +1,5 @@
-import { ChartBarIcon, FunnelIcon, MagnifyingGlassPlusIcon, ChevronDownIcon } from "@heroicons/react/24/solid";
-import { BarChart, BubbleChart, LineChart, PieChart, PolarAreaChart, RadarChart } from "@/components/Graphs";
+import { ChartBarIcon, FunnelIcon, MagnifyingGlassPlusIcon, ChevronDownIcon, ArrowDownTrayIcon } from "@heroicons/react/24/solid";
+import { BarChart, BubbleChart, LineChart, PieChart, PolarAreaChart, RadarChart, TableChart } from "@/components/Graphs";
 import { useState, useEffect } from 'react';
 import { ChartType, ChartTypeArray } from "@/Enums";
 import { ChartCardButton } from "./ChartCardHeader";
@@ -115,7 +115,7 @@ export default function CustomChartCard({ title, data, defaultGraph, state, id, 
                 }
             }).json();
             const d = res as any;
-            setGraphData(d.data);
+            setGraphData(d.data.data);
             setLoading(false);
         } catch (e) {
             if (e instanceof Error) return ErrorToast({ text: e.message })
@@ -185,6 +185,41 @@ export default function CustomChartCard({ title, data, defaultGraph, state, id, 
         fetchGraphData(requestObject);
     }
 
+    const convertToCSV = (data: any[]) => {
+        const replacer = (key: any, value: null) => value === null ? '' : value;
+        const header = Object.keys(data[0]);
+        const csv = [
+            header.join(','), // column headers
+            ...data.map(row => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join(','))
+        ].join('\r\n');
+
+        return csv;
+    }
+
+    const downloadCSV = (csv: BlobPart, filename: string) => {
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', filename);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    const downloadJSON = (json: BlobPart, filename: string) => {
+        const blob = new Blob([json], { type: 'application/json;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', filename);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
     return (<>
         <div className="block p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-primaryBackground dark:border-primaryBackground w-full animate__animated animate__fadeIn animate__slow">
             <div className="flex justify-between mb-5 text-black dark:text-white">
@@ -219,6 +254,41 @@ export default function CustomChartCard({ title, data, defaultGraph, state, id, 
                         <MagnifyingGlassPlusIcon className="w-6 h-6" />
                     </ChartCardButton>
                     {/* Change bar type */}
+                    <Menu as="div" className="relative inline-block text-left">
+                        <div>
+                            <Menu.Button className="inline-flex justify-center p-1.5 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-lightHover dark:hover:bg-gray-600">
+                                <ArrowDownTrayIcon className="w-6 h-6" /> {/* Use an appropriate download icon */}
+                            </Menu.Button>
+                        </div>
+                        <Transition
+                            as={Fragment}
+                            enter="transition ease-out duration-100"
+                            enterFrom="transform opacity-0 scale-95"
+                            enterTo="transform opacity-100 scale-100"
+                            leave="transition ease-in duration-75"
+                            leaveFrom="transform opacity-100 scale-100"
+                            leaveTo="transform opacity-0 scale-95"
+                        >
+                            <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-700">
+                                <div className="py-1">
+                                    <Menu.Item>
+                                        <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer" onClick={() => {
+                                            const csv = convertToCSV(graphData.jsonData);
+                                            downloadCSV(csv, 'data.csv');
+                                        }}>Download CSV</span>
+                                    </Menu.Item>
+                                    <Menu.Item>
+                                        <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer" onClick={() => {
+                                            const json = JSON.stringify(graphData.jsonData);
+                                            downloadJSON(json, 'data.json');
+                                        }}>Download JSON</span>
+                                    </Menu.Item>
+                                </div>
+                            </Menu.Items>
+                        </Transition>
+                    </Menu>
+
+                    {/* Change bar type */}
                     <Menu as="div" className="relative inline-block text-left -z-5">
                         <div>
                             <Menu.Button className="inline-flex justify-center p-1.5 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-lightHover dark:hover:bg-gray-600">
@@ -238,7 +308,14 @@ export default function CustomChartCard({ title, data, defaultGraph, state, id, 
                             <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-700">
                                 <div className="py-1">
                                     {
-                                        ChartTypeArray.map((item, index) => {
+                                        ChartTypeArray.filter(item => {
+                                            // If the dataset size is more than 1, only allow Line, Bar, and Scatter.
+                                            if (graphData?.chartData?.datasets?.length > 1) {
+                                                return [ChartType.Line, ChartType.Bar, ChartType.Radar, ChartType.Table, ChartType.Bubble].includes(item.type);
+                                            }
+                                            // Otherwise, show all chart types.
+                                            return true;
+                                        }).map((item, index) => {
                                             return (<Menu.Item key={index}>
                                                 <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer" key={index} onClick={() => {
                                                     setType(item.type);
@@ -253,12 +330,13 @@ export default function CustomChartCard({ title, data, defaultGraph, state, id, 
                 </div>
             </div>
             {!loading ? <div>
-                {graphData && graphData?.labels && graphData?.datasets && type === ChartType.Bar && <BarChart data={graphData} />}
-                {graphData && graphData?.labels && graphData?.datasets && type === ChartType.Pie && <PieChart data={graphData} />}
-                {graphData && graphData?.labels && graphData?.datasets && type === ChartType.Line && <LineChart data={graphData} addClass="h-96" />}
-                {graphData && graphData?.labels && graphData?.datasets && type === ChartType.Bubble && <BubbleChart data={graphData} />}
-                {graphData && graphData?.labels && graphData?.datasets && type === ChartType.PolarArea && <PolarAreaChart data={graphData} />}
-                {graphData && graphData?.labels && graphData?.datasets && type === ChartType.Radar && <RadarChart data={graphData} />}
+                {graphData && graphData?.chartData?.labels && graphData?.chartData?.datasets && type === ChartType.Bar && <BarChart data={graphData} />}
+                {graphData && graphData?.chartData?.labels && graphData?.chartData?.datasets && type === ChartType.Pie && <PieChart data={graphData} />}
+                {graphData && graphData?.chartData?.labels && graphData?.chartData?.datasets && type === ChartType.Line && <LineChart data={graphData} addClass="h-96" />}
+                {graphData && graphData?.chartData?.labels && graphData?.chartData?.datasets && type === ChartType.Bubble && <BubbleChart data={graphData} />}
+                {graphData && graphData?.chartData?.labels && graphData?.chartData?.datasets && type === ChartType.PolarArea && <PolarAreaChart data={graphData} />}
+                {graphData && graphData?.chartData?.labels && graphData?.chartData?.datasets && type === ChartType.Radar && <RadarChart data={graphData} />}
+                {graphData && graphData?.jsonData && graphData?.jsonData && type === ChartType.Table && <TableChart data={graphData} />}
             </div> : <div role="status" className="flex justify-between h-64 w-full bg-gray-300 rounded-lg animate-customPulse dark:bg-gray-700 p-6" />}
         </div >
     </>)

@@ -7,9 +7,12 @@
         "type": "string"
       },
       "graphs": {
-        "type": "object"
+        "type": "array"
+      },
+      "dashboardID": {
+        "type": "string"
       }
     },
     "additionalProperties": false,
-    "required": ["name", "graphs"]
+    "required": ["name", "graphs", "dashboardID"]
   }
