@@ -114,6 +114,7 @@ export class UserDashboardMangementService {
                     await this.redis.set(token, JSON.stringify(user))
                     delete user.salt;
                     delete user.apiKey;
+            
                     return {
                         status: "success",
                         message: user.dashboards,

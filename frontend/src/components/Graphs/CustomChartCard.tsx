@@ -113,6 +113,9 @@ export default function CustomChartCard({ title, data, defaultGraph, state, id, 
             setGType(data.type);
         }
         try {
+            if(data.filters){
+                filters = data.filters
+            }
             const jwt = getCookie("jwt");
             const url = data.endpointName ? `${process.env.NEXT_PUBLIC_API}/${data.endpointName}` : `${process.env.NEXT_PUBLIC_API}/${warehouse || data.warehouse}/${gType || data.type}`;
             const res = await ky.post(url, {
