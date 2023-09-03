@@ -444,3 +444,4 @@ frontend/cypress.env.json
 
 node_modules
 admin-frontend
+zeus/.env

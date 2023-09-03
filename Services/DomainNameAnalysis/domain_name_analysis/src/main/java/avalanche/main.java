@@ -13,7 +13,7 @@ public class main {
         try {
             ServiceHttpServer server = new ServiceHttpServer(4101);
             server.start();
-            server.handleDummyRequest("classify");
+            // server.handleDummyRequest("classify");
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
