@@ -92,16 +92,40 @@ const MenuOptions: IMenu = {
     ]
 }
 
-const dataSourceDescriptors = {
-    africa: "Everything in the .AFRICA namespace",
-    ryce: "Everything in the .DUNNO namespace",
-    zacr: "Everything in the .ZA namespace"
+interface IDataSourceItem {
+    code: string,
+    value: string
 }
 
-const dataSourceName = {
-    africa: "Africa",
-    ryce: "RyCE",
-    zacr: "ZACR"
-}
+const dataSourceDescriptors: IDataSourceItem[] = [
+    {
+        code: "zacr",
+        value: "Everything in the .ZA namespace"
+    },
+    {
+        code: "africa",
+        value: "Everything in the .AFRICA namespace"
+    },
+    {
+        code: "ryce",
+        value: "Everything in the EUROPEAN namespace"
+    }
+]
+
+const dataSourceName: IDataSourceItem[] = [
+    {
+        code: "zacr",
+        value: "ZACR"
+    },
+    {
+        code: "africa",
+        value: "Africa"
+    },
+    {
+        code: "ryce",
+        value: "RyCE"
+    }
+]
 
 export { MenuOptions, NotDropdown, dataSourceDescriptors, dataSourceName };
+export type { IDataSourceItem };

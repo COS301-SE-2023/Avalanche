@@ -1,4 +1,4 @@
-import { MenuOptions, NotDropdown, dataSourceDescriptors, dataSourceName } from "@/assets/MenuOptions"
+import { IDataSourceItem, MenuOptions, NotDropdown, dataSourceDescriptors, dataSourceName } from "@/assets/MenuOptions"
 import SideBarItem from "./SidebarItem"
 import Link from "next/link"
 import { useState, useEffect, useRef, Fragment } from "react";
@@ -209,17 +209,18 @@ export default function Sidebar() {
                                                 leaveFrom="transform opacity-100 scale-100"
                                                 leaveTo="transform opacity-0 scale-95"
                                             >
-                                                <Popover.Panel className="absolute ml-64 w-96 -top-20 rounded bg-primaryBackground p-5 flex gap-4 flex-col z-40">
+                                                <Popover.Panel className="absolute ml-64 w-96 -top-20 rounded bg-primaryBackground p-5 flex gap-4 flex-col">
                                                     {
                                                         statePermissions.permissions.map((item: IPermission, index: number) => {
-                                                            const name: string = item.dataSource as string;
+                                                            const name = dataSourceName.find((i: IDataSourceItem) => i.code === item.dataSource);
+                                                            const description = dataSourceDescriptors.find((i: IDataSourceItem) => i.code === item.dataSource);
                                                             return <div className="flex items-center gap-4 transition duration-75 hover:-translate-y-1 hover:cursor-pointer">
                                                                 <div className="bg-avalancheBlue rounded p-2">
                                                                     <GlobeAltIcon className="w-8 h-8 text-white" />
                                                                 </div>
                                                                 <div className="flex flex-col">
-                                                                    <p className="text-lg">{name}</p>
-                                                                    <p>{dataSourceDescriptors["zacr"]}</p>
+                                                                    <p className="text-lg">{name?.value}</p>
+                                                                    <p>{description?.value}</p>
                                                                 </div>
                                                             </div>
                                                         })
