@@ -4,7 +4,7 @@ import { ModalWrapper } from './ModalOptions';
 import { userState, createOrganisation } from '@/store/Slices/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { ICreateOrganisationRequest } from '@/interfaces/requests';
-import { setAnimateManagerState, clearCurrentOpenState } from '@/store/Slices/modalManagerSlice';
+import { clearCurrentOpenState } from '@/store/Slices/modalManagerSlice';
 
 interface IOrgnizationCreateModal {
 
@@ -12,17 +12,14 @@ interface IOrgnizationCreateModal {
 
 export default function OrgnizationCreateModal({ }: IOrgnizationCreateModal) {
 
-    console.log("In org modal")
-
     const dispatch = useDispatch<any>();
     const stateUser = useSelector(userState);
 
-    // This is causing issues and not opening the organisation modal 
-    // --> not sure why user organisation would be changing but apparently it is, 
-    // me confused, pls help @Michael
     useEffect(() => {
-        dispatch(clearCurrentOpenState());
-    }, [stateUser.user.organization])
+        if (stateUser.user.organisation) {
+            dispatch(clearCurrentOpenState());
+        }
+    }, [stateUser.user?.organisation]);
 
     /**
      * this variable is for the length of the name of the organization. It defines the maximum length the name can be.

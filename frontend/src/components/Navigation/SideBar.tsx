@@ -1,14 +1,14 @@
 import { MenuOptions, NotDropdown } from "@/assets/MenuOptions"
 import SideBarItem from "./SidebarItem"
 import Link from "next/link"
-import { useState, useEffect,useRef  } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTheme } from "next-themes";
 import { MoonIcon, SunIcon, Cog6ToothIcon, Bars4Icon, ArrowLeftOnRectangleIcon, PencilIcon, HomeIcon, ChevronDownIcon, ChartPieIcon } from "@heroicons/react/24/solid";
 import { selectModalManagerState } from "@/store/Slices/modalManagerSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { userState, logout } from "@/store/Slices/userSlice";
-import { graphState,selectDataSource } from "@/store/Slices/graphSlice";
-import { permissionState,getEndpoints } from "@/store/Slices/permissionSlice";
+import { graphState, selectDataSource } from "@/store/Slices/graphSlice";
+import { permissionState, getEndpoints } from "@/store/Slices/permissionSlice";
 import { useRouter } from "next/router";
 import { getCookie, deleteCookie } from "cookies-next";
 import LoadingPage from "../Util/Loading";
@@ -25,7 +25,7 @@ export default function Sidebar() {
     const [df, setDF] = useState<boolean>(false);
     const stateUser = useSelector(userState);
     const stateGraph = useSelector(graphState);
-    const statePermissions= useSelector(permissionState);
+    const statePermissions = useSelector(permissionState);
     const dispatch = useDispatch<any>();
     const modalState = useSelector(selectModalManagerState);
     const router = useRouter();
@@ -94,12 +94,12 @@ export default function Sidebar() {
         // Only reload the page when selectedDataSource actually changes
         if (initialSelectedDataSource.current !== stateGraph.selectedDataSource) {
             initialSelectedDataSource.current = stateGraph.selectedDataSource;
-          //window.location.reload();
+            //window.location.reload();
         }
-    
+
         // Update the reference for future comparisons
-        
-      }, [stateGraph.selectedDataSource]);
+
+    }, [stateGraph.selectedDataSource]);
 
     /**
      * Handles dark and light mode toggles
@@ -158,15 +158,15 @@ export default function Sidebar() {
                                 >
                                     <div className="ml-5">
                                         {
-                                            
+
                                             MenuOptions.items.map((option: any, index: number) => {
-                                                console.log("this is the entire perms object",statePermissions.permissions);
-                                                const statePermissionsArr=statePermissions.permissions.find((element:any)=>{return element.dataSource==stateGraph.selectedDataSource});
-                                                console.log("This is the perms array",statePermissionsArr);
-                                                if(statePermissionsArr && statePermissionsArr.endpoints.includes(option.endpoint)){
+                                                // console.log("this is the entire perms object",statePermissions.permissions);
+                                                const statePermissionsArr = statePermissions.permissions.find((element: any) => { return element.dataSource == stateGraph.selectedDataSource });
+                                                // console.log("This is the perms array",statePermissionsArr);
+                                                if (statePermissionsArr && statePermissionsArr.endpoints.includes(option.endpoint)) {
                                                     return <SideBarItem text={option.text} icon={option.icon} page={option.page} key={index} />
                                                 }
-                                               
+
                                             })
                                         }
                                     </div>
@@ -201,7 +201,7 @@ export default function Sidebar() {
                         <div className="absolute bottom-0 left-0 justify-center p-4 w-full lg:flex flex-col gap-2 bg-gray-200 dark:bg-primaryBackground z-20 border-r border-gray-200 dark:border-secondaryBackground">
                             <div>
                                 <div className="flex items-center space-x-4">
-                                <Dropdown items={["zacr","africa","ryce"]} text={"select a warehouse"} option={stateGraph.selectedDataSource} set={reduceDataSource} />
+                                    <Dropdown items={["zacr", "africa", "ryce"]} text={"select a warehouse"} option={stateGraph.selectedDataSource} set={reduceDataSource} />
                                 </div>
                             </div>
                             <div>

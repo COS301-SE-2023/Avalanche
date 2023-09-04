@@ -80,12 +80,6 @@ export const userSlice = createSlice({
         api: false,
     },
     reducers: {
-        setAuth(state) {
-            // set auth
-        },
-        getAuth(state) {
-
-        },
         setCreateGroupSuccess(state, action) {
             state.createGroupSuccess = action.payload;
         },
@@ -262,7 +256,7 @@ export const userSlice = createSlice({
         // Get Latest Org
         builder.addCase(getLatestOrganisation.fulfilled, (state, action) => {
             const payload = action.payload as any;
-            state.user.products= payload.products;
+            state.user.products = payload.products;
             state.user.organisation = payload.organisation;
             state.user.userGroups = payload.userGroups;
             state.loading = false;
@@ -447,6 +441,6 @@ export const getLatestOrganisation = createAsyncThunk("ORG.GetLatestOrganisation
     }
 })
 
-export const { setAuth, getAuth, resetRequest, logout, setCreateGroupSuccess, setAddUserGroupSuccess, clearError, updateDashboards, updateAPI, clearLoading } = userSlice.actions;
+export const { resetRequest, logout, setCreateGroupSuccess, setAddUserGroupSuccess, clearError, updateDashboards, updateAPI, clearLoading } = userSlice.actions;
 export const userState = (state: AppState) => state.user;
 export default userSlice.reducer;

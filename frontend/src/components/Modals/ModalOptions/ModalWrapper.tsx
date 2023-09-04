@@ -19,7 +19,6 @@ export default function ModalWrapper({ children, title, large }: IModalWrapper) 
     const close = () => {
         dispatch(clearCurrentOpenState());
         dispatch(setAnimateManagerState(false));
-        dispatch(clearZoomData());
         document.body.style.overflow = "visible";
     }
 

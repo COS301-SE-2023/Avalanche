@@ -31,7 +31,6 @@ export default function GeneralSettings({ user }: IGeneralSettings) {
     const dispatch = useDispatch<any>();
     const [passive, setPassive] = useState<PassiveEntry[]>([]);
     const [activeHelp, setActiveHelp] = useState<string[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
     const [apiKey, setAPIKey] = useState<string>("");
 
     const [types, setTypes] = useState<PassiveTypes[]>([]);
@@ -62,11 +61,7 @@ export default function GeneralSettings({ user }: IGeneralSettings) {
             }));
 
         } catch (e) {
-            // let error = e as HTTPError;
-            // if (error.name === 'HTTPError') {
-            //     const errorJson = await error.response.json();
-            //     return ErrorToast({ text: errorJson.message });
-            // }
+
         }
     }
 

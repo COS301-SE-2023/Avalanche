@@ -11,7 +11,7 @@ export interface IModalManagerState {
     animateManager: boolean,
     currentOpen: string,
     data: any,
-    zoomedData: {graphName : string, dashboardID : string}
+    zoomedData: { graphName: string, dashboardID: string }
 }
 
 /**
@@ -21,7 +21,7 @@ const initialState: IModalManagerState = {
     animateManager: false,
     currentOpen: "",
     data: null,
-    zoomedData: {graphName : "", dashboardID : ""}
+    zoomedData: { graphName: "", dashboardID: "" }
 }
 
 // Creating the managing code to manage the modal manager
@@ -35,8 +35,8 @@ export const modalManagerSlice = createSlice({
         },
         // Set the current open modal
         setCurrentOpenState(state, action) {
-            console.log("DEBUG")
-            console.log(action.payload)
+            // console.log("DEBUG")
+            // console.log(action.payload)
             state.currentOpen = action.payload
         },
         // Clear the current open modal
@@ -44,7 +44,7 @@ export const modalManagerSlice = createSlice({
 
             state.currentOpen = "";
             state.data = null;
-            state.zoomedData = {graphName : "", dashboardID : ""};
+            state.zoomedData = { graphName: "", dashboardID: "" };
         },
         // Set data
         setData(state, action) {
@@ -52,16 +52,12 @@ export const modalManagerSlice = createSlice({
         },
         // Zoomed Data
         setZoomData(state, action) {
-            console.log(action.payload.graphName);
+            // console.log(action.payload.graphName);
             if (state.zoomedData !== null && state.zoomedData !== undefined) {
                 state.zoomedData.graphName = action.payload?.graphName;
                 state.zoomedData.dashboardID = action.payload?.dashboardID;
             }
         },
-        // Clear Zoomed Data
-        clearZoomData(state) {
-            // state.zoomedData = {};
-        }
     },
     extraReducers: (builder) => {
         builder.addCase(HYDRATE, (state, action) => {
@@ -73,7 +69,7 @@ export const modalManagerSlice = createSlice({
     }
 });
 
-export const { setAnimateManagerState, setCurrentOpenState, clearCurrentOpenState, setData, setZoomData, clearZoomData } = modalManagerSlice.actions;
+export const { setAnimateManagerState, setCurrentOpenState, clearCurrentOpenState, setData, setZoomData } = modalManagerSlice.actions;
 
 export const selectModalManagerState = (state: AppState) => state.modalManager;
 
