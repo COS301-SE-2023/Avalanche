@@ -12,6 +12,7 @@ import TableIconButton from './TableIconButton';
 import SuccessToast from './SuccessToast';
 import Dropdown from './Dropdown';
 import DataProductItem from './DataProductItem';
+import BetterDropdown from './BetterDropdown';
 
 export {
     DangerAlert,
@@ -27,5 +28,6 @@ export {
     TableIconButton,
     SuccessToast,
     Dropdown,
-    DataProductItem
+    DataProductItem,
+    BetterDropdown
 };

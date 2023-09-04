@@ -190,7 +190,7 @@ export default function GeneralSettings({ user }: IGeneralSettings) {
         }
 
         try {
-            const res = await ky.post(`${process.env.NEXT_PUBLIC_API}/user-management/addDomainWatchPassiveDetails`, {
+            await ky.post(`${process.env.NEXT_PUBLIC_API}/user-management/addDomainWatchPassiveDetails`, {
                 json: obj,
                 headers: {
                     "Authorization": `Bearer ${getCookie("jwt")}`
@@ -204,7 +204,6 @@ export default function GeneralSettings({ user }: IGeneralSettings) {
                 return ErrorToast({ text: errorJson.message });
             }
         }
-
     }
 
     return (

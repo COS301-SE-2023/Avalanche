@@ -1,9 +1,9 @@
 import { MenuOptions, NotDropdown } from "@/assets/MenuOptions"
 import SideBarItem from "./SidebarItem"
 import Link from "next/link"
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Fragment } from "react";
 import { useTheme } from "next-themes";
-import { MoonIcon, SunIcon, Cog6ToothIcon, Bars4Icon, ArrowLeftOnRectangleIcon, PencilIcon, HomeIcon, ChevronDownIcon, ChartPieIcon } from "@heroicons/react/24/solid";
+import { MoonIcon, SunIcon, Cog6ToothIcon, Bars4Icon, ArrowLeftOnRectangleIcon, PencilIcon, HomeIcon, ChevronDownIcon, ChartPieIcon, QuestionMarkCircleIcon, ChevronRightIcon, GlobeAltIcon } from "@heroicons/react/24/solid";
 import { selectModalManagerState } from "@/store/Slices/modalManagerSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { userState, logout } from "@/store/Slices/userSlice";
@@ -13,9 +13,9 @@ import { useRouter } from "next/router";
 import { getCookie, deleteCookie } from "cookies-next";
 import LoadingPage from "../Util/Loading";
 import ky from "ky";
-import { Dropdown, ErrorToast, SubmitButton, SuccessToast } from "../Util";
+import { BetterDropdown, Dropdown, ErrorToast, SubmitButton, SuccessToast } from "../Util";
 import CreateDashboardModal from "../Modals/CreateDashboardModal";
-import { Transition } from '@headlessui/react'
+import { Transition, Popover } from '@headlessui/react'
 import { v4 as uuidv4 } from 'uuid';
 import md5 from 'md5';
 
@@ -91,14 +91,9 @@ export default function Sidebar() {
      * When the data source changes the current window should be reloaded to reflect data from the selected source
      */
     useEffect(() => {
-        // Only reload the page when selectedDataSource actually changes
         if (initialSelectedDataSource.current !== stateGraph.selectedDataSource) {
             initialSelectedDataSource.current = stateGraph.selectedDataSource;
-            //window.location.reload();
         }
-
-        // Update the reference for future comparisons
-
     }, [stateGraph.selectedDataSource]);
 
     /**
@@ -158,15 +153,11 @@ export default function Sidebar() {
                                 >
                                     <div className="ml-5">
                                         {
-
                                             MenuOptions.items.map((option: any, index: number) => {
-                                                // console.log("this is the entire perms object",statePermissions.permissions);
                                                 const statePermissionsArr = statePermissions.permissions.find((element: any) => { return element.dataSource == stateGraph.selectedDataSource });
-                                                // console.log("This is the perms array",statePermissionsArr);
                                                 if (statePermissionsArr && statePermissionsArr.endpoints.includes(option.endpoint)) {
                                                     return <SideBarItem text={option.text} icon={option.icon} page={option.page} key={index} />
                                                 }
-
                                             })
                                         }
                                     </div>
@@ -198,18 +189,64 @@ export default function Sidebar() {
                             </ul>
                         </div>
 
-                        <div className="absolute bottom-0 left-0 justify-center p-4 w-full lg:flex flex-col gap-2 bg-gray-200 dark:bg-primaryBackground z-20 border-r border-gray-200 dark:border-secondaryBackground">
-                            <div>
-                                <div className="flex items-center space-x-4">
-                                    <Dropdown items={["zacr", "africa", "ryce"]} text={"select a warehouse"} option={stateGraph.selectedDataSource} set={reduceDataSource} />
-                                </div>
+                        <div className="absolute bottom-0 left-0 justify-center p-4 w-full flex flex-col gap-4 bg-gray-200 dark:bg-primaryBackground z-20 border-r border-gray-200 dark:border-secondaryBackground">
+                            <div className="flex items-center space-x-4">
+                                {/* <BetterDropdown items={[{ name: "ZACR", value: "zacr" }, { name: "Africa", value: "africa" }, { name: "RyCE", value: "ryce" }]} text={"select a warehouse"} option={stateGraph.selectedDataSource} set={reduceDataSource} absolute={true} placement="above" />
+                                <QuestionMarkCircleIcon className="absolute top-2 right-2 h-5 w-5" /> */}
+                                <Popover className="w-full">
+                                    {({ open }) => (
+                                        <div className="w-full">
+                                            <Popover.Button className="bg-gray-50 border-2 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-thirdBackground dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 border-gray-300 dark:border-thirdBackground flex justify-between">
+                                                Select a warehouse
+                                                <ChevronRightIcon className={`ml-1 h-5 w-5 ${open && "rotate-180"}`} />
+                                            </Popover.Button>
+                                            <Transition
+                                                as={Fragment}
+                                                enter="transition ease-in duration-100"
+                                                enterFrom="transform opacity-0 scale-95"
+                                                enterTo="transform opacity-100 scale-100"
+                                                leave="transition ease-in duration-75"
+                                                leaveFrom="transform opacity-100 scale-100"
+                                                leaveTo="transform opacity-0 scale-95"
+                                            >
+                                                <Popover.Panel className="absolute ml-64 w-96 -top-20 rounded bg-primaryBackground p-5 flex gap-4 flex-col">
+                                                    <div className="flex items-center gap-4 transition duration-75 hover:-translate-y-1 hover:cursor-pointer">
+                                                        <div className="bg-avalancheBlue rounded p-2">
+                                                            <GlobeAltIcon className="w-8 h-8 text-white" />
+                                                        </div>
+                                                        <div className="flex flex-col">
+                                                            <p className="text-lg">ZACR</p>
+                                                            <p>Everything in the .ZA namespace</p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex items-center gap-4 transition duration-75 hover:-translate-y-1 hover:cursor-pointer">
+                                                        <div className="bg-avalancheBlue rounded p-2">
+                                                            <GlobeAltIcon className="w-8 h-8 text-white" />
+                                                        </div>
+                                                        <div className="flex flex-col">
+                                                            <p className="text-lg">Africa</p>
+                                                            <p>Everything in the .AFRICA namespace</p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex items-center gap-4 transition duration-75 hover:-translate-y-1 hover:cursor-pointer">
+                                                        <div className="bg-avalancheBlue rounded p-2">
+                                                            <GlobeAltIcon className="w-8 h-8 text-white" />
+                                                        </div>
+                                                        <div className="flex flex-col">
+                                                            <p className="text-lg">RyCE</p>
+                                                            <p>Everything in the .DUNNO namespace</p>
+                                                        </div>
+                                                    </div>
+                                                </Popover.Panel>
+                                            </Transition>
+                                        </div>
+                                    )}
+                                </Popover>
                             </div>
-                            <div>
-                                <div className="flex items-center space-x-4">
-                                    <img className="w-10 h-10 rounded-full" src={`https://www.gravatar.com/avatar/${md5(stateUser.user.email)}`} alt="" />
-                                    <div className="font-medium dark:text-white text-black">
-                                        <div>{stateUser.user.firstName} {stateUser.user.lastName}</div>
-                                    </div>
+                            <div className="flex items-center space-x-4">
+                                <img className="w-10 h-10 rounded-full" src={`https://www.gravatar.com/avatar/${md5(stateUser.user.email)}`} alt="" />
+                                <div className="font-medium dark:text-white text-black">
+                                    <div>{stateUser.user.firstName} {stateUser.user.lastName}</div>
                                 </div>
                             </div>
                             <div className="flex justify-center items-center gap-2">

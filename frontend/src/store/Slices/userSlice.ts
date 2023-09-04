@@ -308,6 +308,8 @@ export const login = createAsyncThunk("AUTH.Login", async (object: ILoginRequest
             json: object
         }).json() as any;
 
+        console.log(response);
+
         if (!response) {
             console.log("asdasdd");
             return rejectWithValue("There was an issue. We don't know what happened, and we sure you don't either. So just try again ^_^.");
