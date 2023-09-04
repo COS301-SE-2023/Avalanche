@@ -5,7 +5,7 @@ interface IMenuItem {
     icon: any,
     page: string,
     role?: string,
-    endpoint?:string,
+    endpoint?: string,
 }
 
 interface IMenu {
@@ -38,58 +38,70 @@ const MenuOptions: IMenu = {
             icon: <ChartBarSquareIcon className={holder} />,
             page: "dashboard",
             role: "",
-            endpoint:"transactions"
+            endpoint: "transactions"
         },
         {
             text: "Registrar",
             icon: <TvIcon className={holder} />,
             page: "registrar",
             role: "",
-            endpoint:"transactions"
+            endpoint: "transactions"
         },
         {
             text: "Registrar Market Comparison",
             icon: <MapIcon className={holder} />,
             page: "registrarMarketComparison",
             role: "",
-            endpoint:"transaction-ranking"
+            endpoint: "transaction-ranking"
         },
         {
             text: "Movement",
             icon: <BoltIcon className={holder} />,
             page: "movement",
             role: "",
-            endpoint:"movement/vertical"
+            endpoint: "movement/vertical"
         },
         {
             text: "Domain Length",
             icon: <ClipboardIcon className={holder} />,
             page: "domainLength",
             role: "",
-            endpoint:"domainNameAnalysis/length"
+            endpoint: "domainNameAnalysis/length"
         },
         {
             text: "Market Share",
             icon: <ChartBarIcon className={holder} />,
             page: "marketShare",
             role: "",
-            endpoint:"marketShare"
+            endpoint: "marketShare"
         },
         {
             text: "Registrar Age Analysis",
             icon: <HeartIcon className={holder} />,
             page: "ageAnalysis",
             role: "",
-            endpoint:"age"
+            endpoint: "age"
         },
         {
             text: "Domain Name Analysis",
             icon: <EyeIcon className={holder} />,
             page: "domainNameAnalysis",
             role: "",
-            endpoint:"domainNameAnalysis/count"
+            endpoint: "domainNameAnalysis/count"
         }
     ]
 }
 
-export { MenuOptions, NotDropdown };
+const dataSourceDescriptors = {
+    africa: "Everything in the .AFRICA namespace",
+    ryce: "Everything in the .DUNNO namespace",
+    zacr: "Everything in the .ZA namespace"
+}
+
+const dataSourceName = {
+    africa: "Africa",
+    ryce: "RyCE",
+    zacr: "ZACR"
+}
+
+export { MenuOptions, NotDropdown, dataSourceDescriptors, dataSourceName };

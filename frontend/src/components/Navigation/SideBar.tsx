@@ -1,19 +1,19 @@
-import { MenuOptions, NotDropdown } from "@/assets/MenuOptions"
+import { MenuOptions, NotDropdown, dataSourceDescriptors, dataSourceName } from "@/assets/MenuOptions"
 import SideBarItem from "./SidebarItem"
 import Link from "next/link"
 import { useState, useEffect, useRef, Fragment } from "react";
 import { useTheme } from "next-themes";
-import { MoonIcon, SunIcon, Cog6ToothIcon, Bars4Icon, ArrowLeftOnRectangleIcon, PencilIcon, HomeIcon, ChevronDownIcon, ChartPieIcon, QuestionMarkCircleIcon, ChevronRightIcon, GlobeAltIcon } from "@heroicons/react/24/solid";
+import { MoonIcon, SunIcon, Cog6ToothIcon, Bars4Icon, ArrowLeftOnRectangleIcon, PencilIcon, HomeIcon, ChevronDownIcon, ChartPieIcon, ChevronRightIcon, GlobeAltIcon } from "@heroicons/react/24/solid";
 import { selectModalManagerState } from "@/store/Slices/modalManagerSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { userState, logout } from "@/store/Slices/userSlice";
 import { graphState, selectDataSource } from "@/store/Slices/graphSlice";
-import { permissionState, getEndpoints } from "@/store/Slices/permissionSlice";
+import { permissionState, getEndpoints, IPermission } from "@/store/Slices/permissionSlice";
 import { useRouter } from "next/router";
 import { getCookie, deleteCookie } from "cookies-next";
 import LoadingPage from "../Util/Loading";
 import ky from "ky";
-import { BetterDropdown, Dropdown, ErrorToast, SubmitButton, SuccessToast } from "../Util";
+import { ErrorToast, SubmitButton, SuccessToast } from "../Util";
 import CreateDashboardModal from "../Modals/CreateDashboardModal";
 import { Transition, Popover } from '@headlessui/react'
 import { v4 as uuidv4 } from 'uuid';
@@ -56,7 +56,7 @@ export default function Sidebar() {
      */
     const handleGroupInvite = async (key: string, type: string) => {
         try {
-            await ky.post(`http://localhost:4000/user-management/addUserToUserGroupWithKey`, {
+            await ky.post(`${process.env.NEXT_PUBLIC_API}/user-management/addUserToUserGroupWithKey`, {
                 json: { key: `${key}` },
                 headers: {
                     "Authorization": `Bearer ${jwt}`
@@ -197,7 +197,7 @@ export default function Sidebar() {
                                     {({ open }) => (
                                         <div className="w-full">
                                             <Popover.Button className="bg-gray-50 border-2 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-thirdBackground dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 border-gray-300 dark:border-thirdBackground flex justify-between">
-                                                Select a warehouse
+                                                Select a data product
                                                 <ChevronRightIcon className={`ml-1 h-5 w-5 ${open && "rotate-180"}`} />
                                             </Popover.Button>
                                             <Transition
@@ -209,14 +209,28 @@ export default function Sidebar() {
                                                 leaveFrom="transform opacity-100 scale-100"
                                                 leaveTo="transform opacity-0 scale-95"
                                             >
-                                                <Popover.Panel className="absolute ml-64 w-96 -top-20 rounded bg-primaryBackground p-5 flex gap-4 flex-col">
-                                                    <div className="flex items-center gap-4 transition duration-75 hover:-translate-y-1 hover:cursor-pointer">
+                                                <Popover.Panel className="absolute ml-64 w-96 -top-20 rounded bg-primaryBackground p-5 flex gap-4 flex-col z-40">
+                                                    {
+                                                        statePermissions.permissions.map((item: IPermission, index: number) => {
+                                                            const name: string = item.dataSource as string;
+                                                            return <div className="flex items-center gap-4 transition duration-75 hover:-translate-y-1 hover:cursor-pointer">
+                                                                <div className="bg-avalancheBlue rounded p-2">
+                                                                    <GlobeAltIcon className="w-8 h-8 text-white" />
+                                                                </div>
+                                                                <div className="flex flex-col">
+                                                                    <p className="text-lg">{name}</p>
+                                                                    <p>{dataSourceDescriptors["zacr"]}</p>
+                                                                </div>
+                                                            </div>
+                                                        })
+                                                    }
+                                                    {/* <div className="flex items-center gap-4 transition duration-75 hover:-translate-y-1 hover:cursor-pointer">
                                                         <div className="bg-avalancheBlue rounded p-2">
                                                             <GlobeAltIcon className="w-8 h-8 text-white" />
                                                         </div>
                                                         <div className="flex flex-col">
-                                                            <p className="text-lg">ZACR</p>
-                                                            <p>Everything in the .ZA namespace</p>
+                                                            <p className="text-lg">{dataSourceName["zacr"]}</p>
+                                                            <p>{dataSourceDescriptors["zacr"]}</p>
                                                         </div>
                                                     </div>
                                                     <div className="flex items-center gap-4 transition duration-75 hover:-translate-y-1 hover:cursor-pointer">
@@ -224,8 +238,8 @@ export default function Sidebar() {
                                                             <GlobeAltIcon className="w-8 h-8 text-white" />
                                                         </div>
                                                         <div className="flex flex-col">
-                                                            <p className="text-lg">Africa</p>
-                                                            <p>Everything in the .AFRICA namespace</p>
+                                                            <p className="text-lg">{dataSourceName["africa"]}</p>
+                                                            <p>{dataSourceDescriptors["africa"]}</p>
                                                         </div>
                                                     </div>
                                                     <div className="flex items-center gap-4 transition duration-75 hover:-translate-y-1 hover:cursor-pointer">
@@ -233,10 +247,10 @@ export default function Sidebar() {
                                                             <GlobeAltIcon className="w-8 h-8 text-white" />
                                                         </div>
                                                         <div className="flex flex-col">
-                                                            <p className="text-lg">RyCE</p>
-                                                            <p>Everything in the .DUNNO namespace</p>
+                                                            <p className="text-lg">{dataSourceName["ryce"]}</p>
+                                                            <p>{dataSourceDescriptors["ryce"]}</p>
                                                         </div>
-                                                    </div>
+                                                    </div> */}
                                                 </Popover.Panel>
                                             </Transition>
                                         </div>
