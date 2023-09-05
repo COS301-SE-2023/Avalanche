@@ -1,6 +1,8 @@
 import { IChart } from "@/interfaces";
 import React, { useState } from "react";
-import Chart from "react-apexcharts";
+import dynamic from 'next/dynamic'
+
+const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 type JsonDataEntry = {
   [key: string]: string | number;
@@ -23,7 +25,6 @@ type ConvertedData = {
         text: string;
       };
       min: number;
-      max: number;
     };
   };
 };
@@ -78,9 +79,9 @@ const convertData = (jsonData: JsonDataEntry[]): ConvertedData => {
         title: {
           text: yAxisLabel,
         },
-        min: Math.min(0, yMin),
-        max: yMax,
+        min: Math.min(0, yMin)
       },
+
     }
   };
 
@@ -101,7 +102,7 @@ const convertData = (jsonData: JsonDataEntry[]): ConvertedData => {
 
 export function LineChart({ data, addClass }: IChart) {
 
-
+  const options = convertData(data.jsonData).options
 
   const [chartData, setChartData] = useState(convertData(data.jsonData));
 
@@ -109,11 +110,13 @@ export function LineChart({ data, addClass }: IChart) {
     <div className="line">
       <div className="row">
         <div className="mixed-chart">
-          <Chart
-            options={chartData.options}
-            series={chartData.series}
-            type="line"
-          />
+          {(typeof window !== 'undefined') &&
+            <Chart
+              options={chartData.options}
+              series={chartData.series}
+              type="line"
+            />
+          }
         </div>
       </div>
     </div>
