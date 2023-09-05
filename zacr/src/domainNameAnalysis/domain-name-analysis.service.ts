@@ -90,6 +90,80 @@ export class DomainNameAnalysisService {
     }
   }
 
+  async classification(dataO: any): Promise<any> {
+    try {
+      const filters = JSON.stringify(dataO.filters);
+      const num = dataO.filters.num;
+      const granularity = dataO.filters.granularity;
+
+      const sqlQuery = `call domainNameAnalysis('${filters}')`;
+      const dataR = await this.redis.get(`zacr` + sqlQuery + " classification");
+      let data: DataInterface;
+      let formattedData = '';
+
+      if (!dataR) {
+        let queryData;
+        try {
+          queryData = await this.snowflakeService.execute(sqlQuery);
+        } catch (e) {
+          return {
+            status: 500,
+            error: true,
+            message: 'Data Warehouse Error',
+            timestamp: new Date().toISOString(),
+          };
+        }
+
+        dataO.data = queryData[0]['DOMAINNAMEANALYSIS'];
+        delete dataO.filters;
+        const response = this.httpService.post(
+          'http://zanet.cloud:4101/domainNameAnalysis/count',
+          dataO,
+        );
+        const responseData = await lastValueFrom(response);
+        formattedData =
+          await this.graphFormattingService.formatDomainNameAnalysis(
+            JSON.stringify(responseData.data),
+          );
+
+        data = {
+          chartData: JSON.parse(formattedData),
+          jsonData: responseData.data,
+        };
+        await this.redis.set(
+          `zacr` + sqlQuery + " classification",
+          JSON.stringify(data),
+          'EX',
+          72 * 60 * 60,
+        );
+      } else {
+        data = JSON.parse(dataR);
+      }
+
+      return {
+        status: 'success',
+        data: {
+          graphName:
+            'Most common classifications in newly created domains in the last ' +
+            num +
+            ' ' +
+            granularity +
+            '(s)',
+          data: data,
+          warehouse: 'zacr',
+          graphType: 'domainNameAnalysis/classification',
+        },
+        timestamp: new Date().toISOString(),
+      };
+    } catch (e) {
+      return {
+        status: 500,
+        error: true,
+        message: `${e.message}`,
+        timestamp: new Date().toISOString(),
+      };
+    }
+  }
   async domainLength(filters: string, graphName: string): Promise<any> {
     try {
       graphName = this.domainLengthGraphName(filters);
