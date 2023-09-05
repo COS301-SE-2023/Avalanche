@@ -93,7 +93,7 @@ public class Classifier {
     public static void main(String[] args) throws IOException {
         Classifier c = new Classifier();
         String word = "hike";
-        System.out.println("Classify: " + word + "\u001b[35m");
+        System.out.println("Classify: " + word);
         System.out.println("\u001b[33m" + c.classify(word) + "\u001b[0m\n====\n");
         // String[] spl = word.split(" ");
         // for (String w : spl) {
