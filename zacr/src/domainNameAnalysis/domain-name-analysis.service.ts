@@ -121,6 +121,7 @@ export class DomainNameAnalysisService {
           dataO,
         );
         const responseData = await lastValueFrom(response);
+        console.log(responseData);
         formattedData =
           await this.graphFormattingService.formatDomainNameAnalysis(
             JSON.stringify(responseData.data),

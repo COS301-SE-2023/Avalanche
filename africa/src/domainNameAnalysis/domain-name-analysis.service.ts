@@ -13,7 +13,7 @@ export class DomainNameAnalysisService {
     @Inject('REDIS') private readonly redis: Redis,
     private readonly snowflakeService: SnowflakeService,
     private readonly graphFormattingService: GraphFormatService,
-  ) {}
+  ) { }
 
   async sendData(dataO: any): Promise<any> {
     try {
@@ -102,7 +102,7 @@ export class DomainNameAnalysisService {
 
       const sqlQuery = `call domainNameAnalysis('${filters}')`;
 
-      const dataR = await this.redis.get(`africa` + sqlQuery + " classification");
+      const dataR = await this.redis.get(`africa` + sqlQuery + ` classification`);
       let data: DataInterface;
       let formattedData = '';
       //console.log(dataR);
@@ -126,17 +126,19 @@ export class DomainNameAnalysisService {
           dataO,
         );
         const responseData = await lastValueFrom(response);
-        //console.log(responseData);
+        console.log(responseData);
+        let formattedResponseData = {data: this.formatClassification(responseData.data.data)}
         formattedData =
-          await this.graphFormattingService.formatDomainNameAnalysis(
-            JSON.stringify(responseData.data),
+          await this.graphFormattingService.formatDomainNameAnalysisClassification(
+            JSON.stringify(formattedResponseData),
           );
         data = {
           chartData: JSON.parse(formattedData),
-          jsonData: responseData.data,
+          jsonData: formattedResponseData,
         };
+        console.log(data);
         await this.redis.set(
-          `africa` + sqlQuery + " classification",
+          `africa` + sqlQuery + ` classification`,
           JSON.stringify(data),
           'EX',
           24 * 60 * 60,
@@ -161,7 +163,7 @@ export class DomainNameAnalysisService {
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
-      //console.log(e);
+      console.log(e);
       return {
         status: 500,
         error: true,
@@ -326,6 +328,34 @@ export class DomainNameAnalysisService {
       'December',
     ];
     return monthNames[num];
+  }
+
+  formatClassification(inputData: any) {
+    console.log(inputData)
+    console.log(JSON.stringify(inputData))
+    const outputData = {};
+
+    // Step 2: Loop through the input array
+    for (const entry of inputData) {
+      const { domain, classification } = entry;
+
+      // Step 3: Update the count and domains for each classification
+      if (!outputData[classification]) {
+        outputData[classification] = {
+          category: classification,
+          count: 0,
+          domains: [],
+        };
+      }
+
+      outputData[classification].count += 1;
+      outputData[classification].domains.push(domain);
+    }
+
+    // Step 4: Convert the object to an array
+    const finalOutput = Object.values(outputData);
+
+    return finalOutput
   }
   /*
   normaliseData(data: string): string {

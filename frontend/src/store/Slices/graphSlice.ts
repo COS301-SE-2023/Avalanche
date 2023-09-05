@@ -366,7 +366,7 @@ export const getDomainNameAnalysisClassificationData = createAsyncThunk("GRAPH.G
         const state = getState() as { graph: IGraphState }; // Replace 'graph' with the slice name if different
         const { selectedDataSource } = state.graph;
         const response = await ky.post(`${url}/${selectedDataSource}/domainNameAnalysis/classification`, {
-            json: object,
+            json: object, timeout: false,
             headers: {
                 "Authorization": `Bearer ${jwt}`
             }
@@ -582,7 +582,7 @@ export const getDomainNameAnalysisClassificationDataArray = createAsyncThunk("GR
         for (let i = 0; i < object.length; i++) {
             const graph = object[i];
             const res: any = await ky.post(`${url}/${selectedDataSource}/domainNameAnalysis/classification`, {
-                json: graph,
+                json: graph, timeout: false,
                 headers: {
                     "Authorization": `Bearer ${jwt}`
                 }
