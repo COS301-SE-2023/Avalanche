@@ -5,6 +5,7 @@ import { SnowflakeService } from '../snowflake/snowflake.service';
 import { DataFormatService } from '../data-format/data-format.service';
 import { AnalysisService } from '../analysis/analysis.service';
 import { GraphFormatService } from '../graph-format/graph-format.service';
+import { DataInterface } from '../interfaces/interfaces';
 
 @Injectable()
 export class TransactionService {
@@ -21,12 +22,13 @@ export class TransactionService {
       graphName = this.transactionsGraphName(filters, false);
 
       filters = JSON.stringify(filters);
-      console.log(filters);
+
       const sqlQuery = `call transactionsByRegistrar('${filters}')`;
 
-      let formattedData = await this.redis.get(`ryce` + sqlQuery);
-
-      if (!formattedData) {
+      const dataR = await this.redis.get(`ryce` + sqlQuery);
+      let data: DataInterface;
+      let formattedData = '';
+      if (!dataR) {
         let queryData;
 
         try {
@@ -43,15 +45,21 @@ export class TransactionService {
         formattedData = await this.graphFormattingService.formatTransactions(
           JSON.stringify(queryData),
         );
+
+        data = {
+          chartData: JSON.parse(formattedData),
+          jsonData: JSON.parse(queryData[0]['TRANSACTIONSBYREGISTRAR']),
+        };
+
         await this.redis.set(
           `ryce` + sqlQuery,
-          formattedData,
+          JSON.stringify(data),
           'EX',
-          72 * 60 * 60,
+          24 * 60 * 60,
         );
+      } else {
+        data = JSON.parse(dataR);
       }
-
-      console.log(formattedData);
 
       return {
         status: 'success',
@@ -59,7 +67,7 @@ export class TransactionService {
           graphName: graphName,
           warehouse: 'ryce',
           graphType: 'transactions',
-          ...JSON.parse(formattedData),
+          data: data,
         },
         timestamp: new Date().toISOString(),
       };
@@ -80,12 +88,13 @@ export class TransactionService {
       const filterObj = JSON.parse(JSON.stringify(filters));
       filterObj.isRanking = true;
       filters = JSON.stringify(filterObj);
-      console.log(filters);
+
       const sqlQuery = `call transactionsByRegistrar('${filters}')`;
 
-      let formattedData = await this.redis.get(`ryce` + sqlQuery);
-
-      if (!formattedData) {
+      const dataR = await this.redis.get(`ryce` + sqlQuery);
+      let data: DataInterface;
+      let formattedData = '';
+      if (!dataR) {
         let queryData;
         try {
           queryData = await this.snowflakeService.execute(sqlQuery);
@@ -103,20 +112,28 @@ export class TransactionService {
             JSON.stringify(queryData),
           );
 
+        data = {
+          chartData: JSON.parse(formattedData),
+          jsonData: JSON.parse(queryData[0]['TRANSACTIONSBYREGISTRAR']),
+        };
+
         await this.redis.set(
           `ryce` + sqlQuery,
-          formattedData,
+          JSON.stringify(data),
           'EX',
-          72 * 60 * 60,
+          24 * 60 * 60,
         );
+      } else {
+        data = JSON.parse(dataR);
       }
+
       return {
         status: 'success',
         data: {
           graphName: graphName,
           warehouse: 'ryce',
           graphType: 'transactions-ranking',
-          ...JSON.parse(formattedData),
+          data: data,
         },
         timestamp: new Date().toISOString(),
       };

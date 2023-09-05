@@ -38,7 +38,7 @@ export const domainWatchSlice = createSlice({
         builder.addCase(getDomainWatch.rejected, (state, action) => {
             const payload = action.payload as any;
             state.loading = false;
-            state.error = payload.error;
+            state.error = payload?.error;
         })
         builder.addCase(getDomainWatch.fulfilled, (state, action) => {
             const payload = action.payload as any;

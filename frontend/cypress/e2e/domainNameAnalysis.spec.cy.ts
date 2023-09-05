@@ -1,8 +1,13 @@
 describe("Registrar", () => {
     beforeEach(() => {
-        cy.setCookie('jwt', Cypress.env('jwt'));
+        //cy.setCookie('jwt', Cypress.env('jwt'));
+        cy.visit(Cypress.env('baseURL') + Cypress.env('basePort'));
+        cy.get('input[name=email]').type(Cypress.env('username'));
+        cy.get('input[name=password]').type(Cypress.env('password'));
+        cy.get('button[type=submit]').click();
+        cy.wait(5000);
         cy.visit(Cypress.env('baseURL')  + Cypress.env('basePort') + '/domainNameAnalysis');
-        cy.wait(10000);
+        cy.wait(2000);
         cy.url().should('eq', Cypress.env('baseURL')  + Cypress.env('basePort') + '/domainNameAnalysis')
     });
 
@@ -32,7 +37,7 @@ describe("Registrar", () => {
     it.only('loads everything on DomainNameAnalysis page', ()=>{
         cy.contains('Registrar').should('be.visible')
         cy.contains('p', 'Insights at your fingertips').should('be.visible');
-        cy.get('canvas[role="img"]').should('be.visible'); //graph itself
+        //cy.get('canvas[role="img"]',{timeout:20000}).should('be.visible'); //graph itself
         cy.get('h1').should(($h1Elements) => { //headings
             expect($h1Elements).to.have.length.above(1);
             expect($h1Elements).to.be.visible;

@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "graphName" : {
+            "type" : "string"
+        },
+        "rank": {
+            "type": "string",
+            "enum": ["top5", "top10", "top20", "bottom10", "bottom5", "bottom20"]
+        },
+        "zone": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        }
+    },
+    "additionalProperties": false
+}

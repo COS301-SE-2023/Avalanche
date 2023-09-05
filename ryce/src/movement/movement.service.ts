@@ -5,6 +5,7 @@ import { SnowflakeService } from '../snowflake/snowflake.service';
 import { DataFormatService } from '../data-format/data-format.service';
 import { AnalysisService } from '../analysis/analysis.service';
 import { GraphFormatService } from '../graph-format/graph-format.service';
+import { DataInterface } from '../interfaces/interfaces';
 
 @Injectable()
 export class MovementService {
@@ -21,12 +22,13 @@ export class MovementService {
       graphName = this.netVerticalGraphName(filters);
 
       filters = JSON.stringify(filters);
-      console.log(filters);
+
       const sqlQuery = `call nettVerticalMovement('${filters}')`;
 
-      let formattedData = await this.redis.get(`ryce` + sqlQuery);
-
-      if (!formattedData) {
+      const dataR = await this.redis.get(`ryce` + sqlQuery);
+      let data: DataInterface;
+      let formattedData = '';
+      if (!dataR) {
         let queryData;
         try {
           queryData = await this.snowflakeService.execute(sqlQuery);
@@ -43,15 +45,20 @@ export class MovementService {
           JSON.stringify(queryData),
         );
 
+        data = {
+          chartData: JSON.parse(formattedData),
+          jsonData: JSON.parse(queryData[0]['NETTVERTICALMOVEMENT']),
+        };
+
         await this.redis.set(
           `ryce` + sqlQuery,
-          formattedData,
+          JSON.stringify(data),
           'EX',
-          72 * 60 * 60,
+          24 * 60 * 60,
         );
+      } else {
+        data = JSON.parse(dataR);
       }
-
-      filters = JSON.parse(filters);
 
       return {
         status: 'success',
@@ -59,7 +66,7 @@ export class MovementService {
           graphName: graphName,
           warehouse: 'ryce',
           graphType: 'movement/vertical',
-          ...JSON.parse(formattedData),
+          data: data,
         },
         timestamp: new Date().toISOString(),
       };
@@ -142,7 +149,7 @@ export class MovementService {
 
     return (
       granularity +
-      'Nett Vertical Movement (Creates-Deletes) from ' +
+      'Net Vertical Movement (Creates-Deletes) from ' +
       dateFrom +
       ' to ' +
       dateTo +

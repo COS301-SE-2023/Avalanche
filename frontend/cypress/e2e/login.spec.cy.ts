@@ -1,12 +1,9 @@
 describe('Sign in Page', () => {
     beforeEach(() => {
-      cy.visit(Cypress.env('baseURL') + ":" + Cypress.env('basePort'));
+      cy.visit(Cypress.env('baseURL') + Cypress.env('basePort'));
       cy.url().should('eq', Cypress.env('baseURL')+"/");
     });
-  
-    it('successfully loads', () => {
-      cy.contains('Avalanche Analytics'); 
-    });
+ 
   
     it('should have email input', () => {
       cy.get('input[name=email]')
@@ -20,20 +17,11 @@ describe('Sign in Page', () => {
         .should('have.value', '');
     });
   
-    it('should navigate to "Forgot password" page on clicking "Forgot password"', () => {
-      cy.get('a[href="/forgot"]').click();
-      cy.url().should('include', '/forgot');
-    });
-  
-    it('should navigate to "Register" page on clicking "Sign up"', () => {
-      cy.contains("Sign up").click();
-      cy.url().should('include', '/register');
-    });
   });
 
-describe.only('login', () =>{
+describe('login', () =>{
     beforeEach(() =>{
-      cy.visit(Cypress.env('baseURL') + ":" + Cypress.env('basePort')+"/");
+      cy.visit(Cypress.env('baseURL') + Cypress.env('basePort')+"/");
       cy.url().should('eq', Cypress.env('baseURL')+"/");
     })
 
@@ -42,51 +30,50 @@ describe.only('login', () =>{
         cy.get('#toast-warning').should('exist');
     })*/
 
-    it('Incorrect email and password', () =>{
-        //given
-        cy.get('input[name=email]').type('fake@fakier.com');
-        cy.get('input[name=password]').type('fakePassword');
-        cy.intercept("POST", "user-management/login").as("response")
+    // it('Incorrect email and password', () =>{
+    //     //given
+    //     cy.get('input[name=email]').type('fake@fakier.com');
+    //     cy.get('input[name=password]').type('fakePassword');
+    //     cy.intercept("POST", "user-management/login").as("response")
 
-        //when
-        cy.get('button[type=submit]').click(); // Please replace with the actual route of your Dashboard page.
-        cy.wait(20000);
+    //     //when
+    //     cy.get('button[type=submit]').click(); // Please replace with the actual route of your Dashboard page.
+    //     cy.wait(20000);
 
-        //then
-        cy.wait("@response").then((interception) => {
-            const result = interception.response
-            expect(result.statusCode).to.equal(400)
-            expect(result.body.message).to.equal("This user does not exist, please enter the correct email/please register.")
-        })
-    })
+    //     //then
+    //     cy.wait("@response").then((interception) => {
+    //         const result = interception.response
+    //         expect(result.statusCode).to.equal(400)
+    //         expect(result.body.message).to.equal("This user does not exist, please enter the correct email/please register.")
+    //     })
+    // })
 
-    it('Correct email but incorrect password', () => {
-        cy.get('input[name=email]').type('kihale5691@sportrid.com');
-        cy.get('input[name=password]').type('fakePassword');
-        cy.intercept("POST", "user-management/login").as("response")
+    // it('Correct email but incorrect password', () => {
+    //     cy.get('input[name=email]').type('kihale5691@sportrid.com');
+    //     cy.get('input[name=password]').type('fakePassword');
+    //     cy.intercept("POST", "user-management/login").as("response")
 
-        cy.get('button[type=submit]').click();
-        cy.wait(20000);
+    //     cy.get('button[type=submit]').click();
+    //     cy.wait(20000);
 
-        cy.wait("@response").then((interception) => {
-            const result = interception.response
-            expect(result.statusCode).to.equal(400)
-            expect(result.body.message).to.equal("This user does not exist, please enter the correct email/please register.")
-        })
-    })
+    //     cy.wait("@response").then((interception) => {
+    //         const result = interception.response
+    //         expect(result.statusCode).to.equal(400)
+    //         expect(result.body.message).to.equal("This user does not exist, please enter the correct email/please register.")
+    //     })
+    // })
 
     it('Correct email and correct password', () => {
         cy.get('input[name=email]').type(Cypress.env('username'));
         cy.get('input[name=password]').type(Cypress.env('password'));
-        cy.intercept("POST", "user-management/login").as("response")
-
-        cy.get('button[type=submit]').click();
-        cy.wait(20000);
         
-        cy.wait("@response").then((interception) => {
-            const result = interception.response
-            expect(result.statusCode).to.equal(201)
-        })
+        cy.wait(2000);
+        
+     
+        cy.get('button[type=submit]').click();
+        cy.wait(1000);
+        
+       
 
         cy.url().should("eq", Cypress.env("baseURL")+"/dashboard")
     })

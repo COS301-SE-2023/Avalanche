@@ -1,20 +1,23 @@
 describe('Age Analysis', () => {
     beforeEach(() => {
-        // cy.visit(Cypress.env('baseURL') + ":" + Cypress.env('basePort'));
-        // cy.get('input[name=email]').type(Cypress.env('username'));
-        // cy.get('input[name=password]').type(Cypress.env('password'));
-        // cy.get('button[type=submit]').click();
-        // cy.url().should('eq', Cypress.env('baseURL') + ':' + Cypress.env('basePort') + '/dashboard');
-        // cy.get('#default-sidebar a[href="/ageAnalysis"]').click();
-        // cy.wait(5000);
-        cy.setCookie('jwt', Cypress.env('jwt'));
-        cy.visit(Cypress.env('baseURL')  + Cypress.env('basePort') + '/ageAnalysis');
+        cy.visit(Cypress.env('baseURL') + Cypress.env('basePort'));
+        cy.get('input[name=email]').type(Cypress.env('username'));
+        cy.get('input[name=password]').type(Cypress.env('password'));
+        cy.get('button[type=submit]').click();
         cy.wait(5000);
-        cy.url().should('eq',Cypress.env('baseURL')  + Cypress.env('basePort') + '/ageAnalysis' )
+        //cy.url().should('eq', Cypress.env('baseURL') +  Cypress.env('basePort') + '/dashboard');
+        cy.get('#default-sidebar a[href="/ageAnalysis"]').click();
+        cy.wait(5000);
+        //cy.setCookie('jwt', Cypress.env('jwt'));
+       
 
     });
 
     it('renders Sidebar with links', () => {
+
+        cy.visit(Cypress.env('baseURL')  + Cypress.env('basePort') + '/ageAnalysis');
+        cy.wait(5000);
+        cy.url().should('eq',Cypress.env('baseURL')  + Cypress.env('basePort') + '/ageAnalysis' )
 
         cy.get('#default-sidebar')
             .should('be.visible');
@@ -27,6 +30,10 @@ describe('Age Analysis', () => {
 
     it('renders page header', () => {
 
+        cy.visit(Cypress.env('baseURL')  + Cypress.env('basePort') + '/ageAnalysis');
+        cy.wait(5000);
+        cy.url().should('eq',Cypress.env('baseURL')  + Cypress.env('basePort') + '/ageAnalysis' )
+
         cy.get('h1')
             .should('be.visible');
 
@@ -36,6 +43,7 @@ describe('Age Analysis', () => {
 
         // Check that all requests for graphs have status code 201
         cy.intercept('POST', 'http://gateway:4000/ryce/age').as('postCheck');
+        cy.visit(Cypress.env('baseURL')  + Cypress.env('basePort') + '/ageAnalysis');
 
         // Wait for 5 POST requests to complete
         for (let i = 0; i < 4; i++) {
@@ -59,7 +67,9 @@ describe('Age Analysis', () => {
 
     it('checks requests responses', () => {
         // Check that all requests for graphs have status code 201
+        
         cy.intercept('POST', 'http://gateway:4000/ryce/age*').as('postCheck');
+        cy.visit(Cypress.env('baseURL')  + Cypress.env('basePort') + '/ageAnalysis');
     
         // Array of request processing promises
         const requestPromises = [];

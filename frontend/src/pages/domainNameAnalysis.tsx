@@ -56,8 +56,7 @@ export default function DomainNameAnalysis() {
         pdf.save('report.pdf');
     };
 
-    useEffect(() => {
-
+    function loadData(){
         const arrayDomainNameAnalysisShare: IDomainNameAnalysisGraphRequest[] = [];
 
         const ageAnalysisAverageTop5: IDomainNameAnalysisGraphRequest = { granularity: 'week', num: 5, minimumAppearances: 150 };
@@ -75,8 +74,16 @@ export default function DomainNameAnalysis() {
         arrayDomainNameAnalysisShare.forEach(data => {
             dispatch(getDomainNameAnalysisData(data));
         })
+    }
 
+    useEffect(() => {
+        loadData();
     }, [])
+
+    useEffect(() => {
+        loadData();
+    }, [stateGraph.selectedDataSource])
+
 
     return (<>
         <Head>

@@ -22,6 +22,8 @@ export class AppController {
   async transactions(data: any) {
     console.log('Transactions: ', data);
     const result = await this.transactionsService.transactions(data.filters,data.graphName);
+    console.log('Transaction Results: ');
+    console.log(result.data.data.chartData)
     if (result.error) {
       throw new RpcException({
         status: result.status,

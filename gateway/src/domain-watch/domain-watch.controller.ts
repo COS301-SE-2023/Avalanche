@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Post, Get } from '@nestjs/common';
+import { Body, Controller, Post, Get, HttpException } from '@nestjs/common';
 import { DomainWatchService } from './domain-watch.service';
 
 @Controller('domain-watch')
@@ -8,9 +8,16 @@ export class DomainWatchController {
 
   @Post('list')
   async sendData(@Body() data: any) {
-    console.log("bindo");
-    const result = await this.domainWatchService.sendData(data);
-    return result;
+    try {
+      const result = await this.domainWatchService.sendData(data);
+      return result;
+    } catch (error) {
+      const rpcError = error
+      if (typeof rpcError === 'object') {
+        throw new HttpException(rpcError.message || 'An unexpected error occurred', rpcError.status || 500);
+      }
+      throw error;
+    }
   }
 
   @Post('whoisyou')

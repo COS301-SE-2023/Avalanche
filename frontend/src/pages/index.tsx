@@ -5,6 +5,8 @@ import { useState, useEffect } from 'react';
 import React from 'react';
 import { SubmitButton, DangerAlert, Input, InputLabel, Anchor, ErrorToast } from '@/components/Util';
 import tempLogo from '../assets/logo.png';
+import lightBanner from '../assets/images/light-banner.png';
+import darkBanner from '../assets/images/dark-banner.png';
 import { Toaster } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { userState, login, clearError, clearLoading } from '@/store/Slices/userSlice';
@@ -70,7 +72,7 @@ export default function Home() {
     return true;
   }
   if (getCookie("jwt")) {
-    router.push("/dashboard");
+    router.push("/home");
     return <LoadingPage />
   } else
     return (
@@ -81,10 +83,7 @@ export default function Home() {
         </Head>
         <section className="bg-gray-50 dark:bg-primaryBackground">
           <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-screen lg:py-0">
-            <a href="#" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
-              <Image src={tempLogo} className="w-10 h-10 mr-2" alt="Logo" />
-              Avalanche Analytics
-            </a>
+            <Image src={lightBanner} className="w-full sm:max-w-lg mb-2" alt="Logo" />
             <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-lg xl:p-0 dark:bg-secondaryBackground dark:border-primaryBackground">
               <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                 <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">

@@ -38,7 +38,9 @@ describe('AgeService', () => {
 
       // Set up mocks
       mockRedis.get.mockResolvedValue(null); // Simulate Redis cache miss
-      mockSnowflakeService.execute.mockResolvedValue('queryData');
+      mockSnowflakeService.execute.mockResolvedValue([
+        { AGEANLYSIS: 'queryReturnData' },
+      ]);
       mockGraphFormatService.formatAgeAnalysis.mockResolvedValue(
         JSON.stringify({ format: 'formattedData' }),
       );
@@ -50,15 +52,14 @@ describe('AgeService', () => {
       expect(mockRedis.get).toHaveBeenCalledWith(`zacr${sqlQuery}`);
       expect(mockSnowflakeService.execute).toHaveBeenCalledWith(sqlQuery);
       expect(mockGraphFormatService.formatAgeAnalysis).toHaveBeenCalledWith(
-        JSON.stringify('queryData'),
+        JSON.stringify([{ AGEANLYSIS: 'queryReturnData' }]),
       );
       expect(mockRedis.set).toHaveBeenCalledWith(
         `zacr${sqlQuery}`,
-        JSON.stringify({ format: 'formattedData' }),
+        '{"chartData":"{\\"format\\":\\"formattedData\\"}","jsonData":"queryReturnData"}',
         'EX',
         72 * 60 * 60,
       );
-
       // Expect the result to be the final formatted data
       expect(result.status).toBe('success');
     });
@@ -115,7 +116,7 @@ describe('AgeService', () => {
       // Set up mocks
       mockRedis.get.mockResolvedValue(null); // Simulate Redis cache miss
       mockSnowflakeService.execute.mockResolvedValue('queryData');
-      mockGraphFormatService.formatAgeAnalysis.mockResolvedValue(
+      mockGraphFormatService.formatAgeAnalysis.mockRejectedValue(
         new Error('Format error'),
       );
 
