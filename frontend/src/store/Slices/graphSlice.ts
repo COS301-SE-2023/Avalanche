@@ -263,7 +263,7 @@ export const getGraphDataRanking = createAsyncThunk("GRAPH.GetGraphDataRanking",
         const jwt = getCookie("jwt");
         const state = getState() as { graph: IGraphState }; // Replace 'graph' with the slice name if different
         const { selectedDataSource } = state.graph;
-        const response = await ky.post(`${url}/${selectedDataSource}/transactions-ranking`, {
+        const response = await ky.post(`${url}/${selectedDataSource.toLowerCase()}/transactions-ranking`, {
             json: object,
             headers: {
                 "Authorization": `Bearer ${jwt}`
