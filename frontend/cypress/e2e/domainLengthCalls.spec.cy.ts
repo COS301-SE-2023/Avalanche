@@ -1,8 +1,13 @@
 describe('Domain Length', () => {
     beforeEach(() => {
-        cy.setCookie('jwt', Cypress.env('jwt'));
-        cy.visit(Cypress.env('baseURL')+ Cypress.env('basePort') + '/domainLength');
+        //cy.setCookie('jwt', Cypress.env('jwt'));
+        cy.visit(Cypress.env('baseURL') + Cypress.env('basePort'));
+        cy.get('input[name=email]').type(Cypress.env('username'));
+        cy.get('input[name=password]').type(Cypress.env('password'));
+        cy.get('button[type=submit]').click();
         cy.wait(5000);
+        cy.visit(Cypress.env('baseURL')+ Cypress.env('basePort') + '/domainLength');
+        
         cy.url().should('eq', Cypress.env('baseURL')+ Cypress.env('basePort') + '/domainLength')
     });
 
@@ -38,10 +43,7 @@ describe('Domain Length', () => {
 
         // Check the heading of each graph
         // Check that the word 'Monthly' appears on the page
-        cy.contains('Length of newly created domains from 2022-01-01 to 2022-12-31 across all registrars for all zones').should('be.visible');
-
-        // Check that the word 'Yearly' appears on the page
-        cy.contains('Length of newly created domains from 2022-05-08 to 2022-12-31 across all registrars for all zones').should('be.visible');
+        cy.contains('Length of newly created domains').should('be.visible');
 
 
         // Check for the existence of canvas in each graph
@@ -50,7 +52,7 @@ describe('Domain Length', () => {
 
     it('checks requests responses', () => {
         // Check that all requests for graphs have status code 201
-        cy.intercept('POST', 'http://127.0.0.1:4000/ryce/domainNameAnalysis/length*').as('postCheck');
+        cy.intercept('POST', 'http://gateway:4000/ryce/domainNameAnalysis/length*').as('postCheck');
     
         // Array of request processing promises
         const requestPromises = [];

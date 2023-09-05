@@ -5,16 +5,13 @@ on:
     branches:
       - working
       - stable
-  pull_request:
-    branches:
-      - working
-      - stable
 
 permissions:
   contents: read
 
 jobs:
-  test:
+  deploy:
+    needs: [test_job, test_java]
     runs-on: ubuntu-latest
 
     steps:
@@ -52,7 +49,7 @@ jobs:
           sudo apt install resolvconf
           wg-quick up $GITHUB_WORKSPACE/tunnel.conf
           
-      # SSH Into Server
+#       # SSH Into Server
 #       - name: 🔒 Removing olf files
 #         uses: appleboy/ssh-action@v1.0.0
 #         with:
@@ -61,17 +58,18 @@ jobs:
 #           password: ${{ secrets.SSH_PASSWORD }}
 #           port: ${{ secrets.SSH_PORT }}
 #           script: |
-#             rm -r -Services frontend gateway user-management zacr africa ryce
+#             rm -r Services frontend gateway user-management zacr africa ryce
           
       # Uploading files to server via SCP
       - name: ☝️ Upload to server
         uses: appleboy/scp-action@v0.1.4
         with:
+          overwrite: true
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
-          source: "frontend,gateway,user-management,zacr,africa,ryce, Services"
+          source: "frontend,gateway,user-management,zacr,africa,ryce,Services"
           target: ./
       
       # SSH Into Server

@@ -27,6 +27,7 @@ export class AppController {
       data.filters,
       data.graphName,
     );
+    console.log('Transactions result: ', result);
     if (result.error) {
       throw new RpcException({
         status: result.status,

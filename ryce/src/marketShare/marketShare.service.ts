@@ -3,6 +3,7 @@ import Redis from 'ioredis';
 import { JwtService } from '@nestjs/jwt';
 import { SnowflakeService } from '../snowflake/snowflake.service';
 import { GraphFormatService } from '../graph-format/graph-format.service';
+import { DataInterface } from '../interfaces/interfaces';
 
 @Injectable()
 export class MarketShareService {
@@ -18,12 +19,14 @@ export class MarketShareService {
       graphName = this.marketShareGraphName(filters);
 
       filters = JSON.stringify(filters);
-      console.log(filters);
+
       const sqlQuery = `call marketShare('${filters}')`;
 
-      let formattedData = await this.redis.get(`ryce` + sqlQuery);
+      const dataR = await this.redis.get(`ryce` + sqlQuery);
+      let data: DataInterface;
+      let formattedData = '';
 
-      if (!formattedData) {
+      if (!dataR) {
         let queryData;
         try {
           queryData = await this.snowflakeService.execute(sqlQuery);
@@ -39,22 +42,28 @@ export class MarketShareService {
           JSON.stringify(queryData),
         );
 
+        data = {
+          chartData: JSON.parse(formattedData),
+          jsonData: JSON.parse(queryData[0]['MARKETSHARE']),
+        };
+
         await this.redis.set(
           `ryce` + sqlQuery,
-          formattedData,
+          JSON.stringify(data),
           'EX',
-          72 * 60 * 60,
+          24 * 60 * 60,
         );
-      }else{
-        console.log('Retrieved from cache');
+      } else {
+        data = JSON.parse(dataR);
       }
+
       return {
         status: 'success',
         data: {
           graphName: graphName,
           warehouse: 'ryce',
           graphType: 'marketShare',
-          ...JSON.parse(formattedData),
+          data: data,
         },
         timestamp: new Date().toISOString(),
       };

@@ -56,15 +56,15 @@ export default function Movement() {
         pdf.save('report.pdf');
     };
 
-    useEffect(() => {
+    function loadData(){
         // const data: ITransactionGraphRequest = { zone: "CO.ZA", granularity: "week", group: "registrar", dateFrom: "2023-01-02", graphName: "Your mom" };
 
         const arrayMovementVerticalShare: IMovementGraphRequest[] = [];
 
-        const movementVertical: IMovementGraphRequest = { zone: ["WIEN"], };
+        const movementVertical: IMovementGraphRequest = { zone: stateGraph.zones.slice(0,1), };
         arrayMovementVerticalShare.push(movementVertical);
 
-        const movementVerticalRegistrar: IMovementGraphRequest = { zone: ["WIEN"], registrar: ["1und1", "registrygate", "internetx"] };
+        const movementVerticalRegistrar: IMovementGraphRequest = { zone: stateGraph.zones.slice(0,1), registrar: ["hetzner", "afrihost", "diamatrix"] };
         arrayMovementVerticalShare.push(movementVerticalRegistrar);
 
 
@@ -74,7 +74,15 @@ export default function Movement() {
 
 
         // dispatch(getGraphDataArray(array));
+    }
+
+    useEffect(() => {
+        loadData();
     }, [])
+
+    useEffect(() => {
+        loadData();
+    }, [stateGraph.selectedDataSource])
 
     return (<>
         <Head>

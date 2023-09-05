@@ -2,45 +2,35 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import * as Ajv from 'ajv';
-import * as fs from 'fs';
-import * as path from 'path';
+import { HttpService } from '@nestjs/axios';
 
 @Injectable()
 export class ValidateRequestMiddleware implements NestMiddleware {
-    private ajv = new Ajv();
-    private schemas: Record<string, Ajv.ValidateFunction> = {};
+  private ajv = new Ajv();
 
-  constructor() {
-    // Load JSON schemas from a directory on initialization
-    const projectRoot = path.resolve(__dirname, '../..');
-    const schemasDir = path.join(projectRoot, 'src/middleware/schemas');
-    this.loadSchemas(schemasDir, '');
-  }
-  private loadSchemas(dir: string, prefix: string) {
-    fs.readdirSync(dir).forEach((file) => {
-      const filePath = path.resolve(dir, file);
-      const stats = fs.statSync(filePath);
+  constructor(private readonly httpService: HttpService) { }
 
-      if (stats.isDirectory()) {
-        this.loadSchemas(filePath, `${prefix}/${file}`);
-      } else if (stats.isFile() && path.extname(file) === '.json') {
-        const schema = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-        const url = `${prefix}/${path.basename(file, '.json')}`;
-        this.schemas[url] = this.ajv.compile(schema);
-      }
-    });
-  }
-
-  use(req: Request, res: Response, next: NextFunction) {
+  async use(req: Request, res: Response, next: NextFunction) {
     console.log(req.originalUrl);
-    const validate = this.schemas[req.originalUrl];
-    if (!validate) {
+
+    // Replace with the actual URL of the hades instance, appending the endpoint URL
+    const hadesUrl = `${process.env.HADES ? `http://hades:3997` : "http://localhost:3997"}${req.originalUrl}`;
+    console.log(hadesUrl);
+
+    try {
+      const response = await this.httpService.get(hadesUrl).toPromise();
+      const schema = response.data;
+
+      const validate = this.ajv.compile(schema);
+      const valid = validate(req.body);
+      if (!valid) {
+        return res.status(400).send({ error: 'Invalid request body' });
+      }
+    } catch (error) {
+      // console.error(`Failed to get schema for URL ${req.originalUrl}:`, error.message);
       return res.status(400).send({ error: `No schema found for path ${req.path}` });
     }
-    const valid = validate(req.body);
-    if (!valid) {
-      return res.status(400).send({ error: 'Invalid request body'});
-    }
+
     next();
   }
 }

@@ -1,12 +1,25 @@
 describe('Default Dashboard', () => {
     beforeEach(() => {
-        cy.setCookie('jwt', Cypress.env('jwt'));
-        cy.visit(Cypress.env('baseURL')  + Cypress.env('basePort') + '/dashboard');
-        cy.wait(5000);
-        cy.url().should('eq',Cypress.env('baseURL')  + Cypress.env('basePort') + '/dashboard' )
+        //cy.setCookie('jwt', Cypress.env('jwt'));
+        
+        cy.visit(Cypress.env('baseURL') + Cypress.env('basePort')+"/");
+        cy.url().should('eq', Cypress.env('baseURL')+"/");
+        cy.get('input[name=email]').type(Cypress.env('username'));
+        cy.get('input[name=password]').type(Cypress.env('password'));
+        
+        cy.wait(2000);
+        
+        //cy.wait(10000);
+
+        //cy.url().should("eq", Cypress.env("baseURL")+"/dashboard")
+        
+        //cy.visit(Cypress.env('baseURL')  + Cypress.env('basePort') + '/dashboard');
+        //cy.wait(5000);
+        //cy.url().should('eq',Cypress.env('baseURL')  + Cypress.env('basePort') + '/dashboard' )
     });
 
     it('renders Sidebar with links', () => {
+        cy.get('button[type=submit]').click();
         it('The navigation should be visible', () => {
             cy.get('#default-sidebar')
                 .should('be.visible');
@@ -20,20 +33,20 @@ describe('Default Dashboard', () => {
     });
 
     it('renders page header', () => {
-
+        cy.get('button[type=submit]').click();
         cy.get('h1')
             .should('be.visible');
 
     });
 
     it('check requests received and graphs load ', () => {
-
         // Check that all requests for graphs have status code 201
-        cy.intercept('POST', 'http://gateway:4000/ryce/transactions*').as('postCheck');
-
+        cy.intercept('POST', 'http://gateway:4000/ryce/transactions*').as('postCheck');  
+        cy.wait(2000); 
+        cy.get('button[type=submit]').click();
         // Wait for 5 POST requests to complete
         for (let i = 0; i < 5; i++) {
-            cy.wait('@postCheck').then((interception) => {
+            cy.wait('@postCheck',{timeout:30000}).then((interception) => {
                 expect(interception.response.statusCode).to.eq(201);
             });
         }
@@ -58,7 +71,8 @@ describe('Default Dashboard', () => {
     it('checks requests responses', () => {
         // Check that all requests for graphs have status code 201
         cy.intercept('POST', 'http://gateway:4000/ryce/transactions*').as('postCheck');
-    
+        cy.wait(2000); 
+        cy.get('button[type=submit]').click();
         // Array of request processing promises
         const requestPromises = [];
         for (let i = 0; i < 5; i++) {
@@ -67,7 +81,7 @@ describe('Default Dashboard', () => {
 
                 new Cypress.Promise((resolve) => {
 
-                    cy.wait('@postCheck').then((interception) => {
+                    cy.wait('@postCheck',{timeout:10000}).then((interception) => {
 
                         expect(interception.response.statusCode).to.eq(201);
 

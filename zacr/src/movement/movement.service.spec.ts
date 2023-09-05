@@ -45,7 +45,7 @@ describe('MovementService', () => {
       expect(result.data).toEqual({
         graphName:
           'Monthly Nett Vertical Movement (Creates-Deletes) from 2022-01-01 to 2022-12-31 for all registrars for all zones in registry',
-        foo: 'bar',
+        data: { foo: 'bar' },
         warehouse: 'zacr',
         graphType: 'movement/vertical',
       });
@@ -68,15 +68,18 @@ describe('MovementService', () => {
         JSON.stringify('queryData'),
       );
       expect(mockRedis.set).toBeCalledWith(
-        expect.any(String),
-        JSON.stringify({ data: 'formattedData' }),
+        'zacrcall nettVerticalMovement(\'"filters"\')',
+        '{"chartData":"{\\"data\\":\\"formattedData\\"}"}',
         'EX',
         72 * 60 * 60,
       );
       expect(result.data).toEqual({
         graphName:
           'Monthly Nett Vertical Movement (Creates-Deletes) from 2022-01-01 to 2022-12-31 for all registrars for all zones in registry',
-        ...JSON.parse(JSON.stringify({ data: 'formattedData' })),
+        data: {
+          chartData: '{"data":"formattedData"}',
+          jsonData: undefined,
+        },
         warehouse: 'zacr',
         graphType: 'movement/vertical',
       });

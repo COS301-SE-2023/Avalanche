@@ -23,6 +23,7 @@ export class AppController {
   async transactions(data: any) {
     console.log('Transactions: ', data);
     const result = await this.transactionsService.transactions(data.filters,data.graphName);
+    console.log('Transactions result: ', result);
     if (result.error) {
       throw new RpcException({
         status: result.status,
@@ -123,6 +124,7 @@ export class AppController {
     return result;
   }
 
+  //internal
   @MessagePattern({ cmd: 'domainWatchPassive' })
   async domainWatchPassive() {
     const result = await this.domainWatchService.passive();
@@ -137,6 +139,7 @@ export class AppController {
     return result;
   }
 
+  //internal
   @MessagePattern({ cmd: 'loadDomains' })
   async loadDomains() {
     const result = await this.domainWatchService.loadDomains();
@@ -151,6 +154,7 @@ export class AppController {
     return result;
   }
 
+  //internal
   @MessagePattern({ cmd: 'registrarName' })
   async registarName(data: any) {
     const result = await this.registrarNameService.registrarName(data);

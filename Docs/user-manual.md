@@ -7,7 +7,7 @@
 6. [Organisation Setting](#organisation)
 7. [Domain Watch Passive](#domain-watch-passive)
 8. [API Key](#api-key)
-9. [Custom Dashboards](#custom-dashboard)
+9. [Custom Dashboards](#custom-dashboards)
 
 ## Signing Up
 ### Step 1
@@ -42,17 +42,17 @@ Each graph can be interacted with in isolation, and this does not affect the oth
 On a graph, there are 5 items that can be interacted with.
 ![](https://github.com/COS301-SE-2023/Avalanche/assets/77788584/4ec5a6c0-fb32-4793-b062-68c10fdc346e)
 1. This is simply the graph title
-2. This is the legend for the data in the graph. You can hide and show certain items by clicking on them. This allows you to refine your data visualization even more.
-   ![](https://github.com/COS301-SE-2023/Avalanche/assets/77788584/2adc2296-deb8-45a1-9e9c-e746771301fd)
+2. You can filter graphs based on different filters e.g date to
+   ![](https://github.com/COS301-SE-2023/Avalanche/assets/77788584/202b9c38-b16c-412d-882a-c67665c2f62b)
 3. You can magnify a graph to make the data easier to see.
    ![](https://github.com/COS301-SE-2023/Avalanche/assets/77788584/ae3cdda5-cc68-4786-a5f4-e34ac722f48c)
 4. You can change the type of graph you want the data to be shown as. In the image below we are going to show the data as a bar chart instead of a line chart.
+
    ![](https://github.com/COS301-SE-2023/Avalanche/assets/77788584/37625bb7-a707-4cc2-890b-ed30a8242b20)
    ![](https://github.com/COS301-SE-2023/Avalanche/assets/77788584/cd0bd6a0-da0c-4066-8fb8-8a964d867fd3)
-6. You can filter graphs based on different filters e.g date to
-   ![](https://github.com/COS301-SE-2023/Avalanche/assets/77788584/202b9c38-b16c-412d-882a-c67665c2f62b)
+5. This is the legend for the data in the graph. You can hide and show certain items by clicking on them. This allows you to refine your data visualization even more.
 
-### Nav Bar
+## Navbar
 Here is all the different pages you can visit, they will be similar dashboards to that of the homepage except for Domain Watch (this is highlighted later)
 
 ![](https://github.com/COS301-SE-2023/Avalanche/assets/77788584/e0190af0-2355-4d17-84e6-bacbd1ebe383)

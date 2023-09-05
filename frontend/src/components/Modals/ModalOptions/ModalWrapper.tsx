@@ -9,7 +9,6 @@ interface IModalWrapper {
 
 import { Fragment, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
-import ModalFooter from './ModalFooter';
 import { XMarkIcon } from '@heroicons/react/24/solid';
 
 export default function ModalWrapper({ children, title, large }: IModalWrapper) {
@@ -20,7 +19,6 @@ export default function ModalWrapper({ children, title, large }: IModalWrapper) 
     const close = () => {
         dispatch(clearCurrentOpenState());
         dispatch(setAnimateManagerState(false));
-        dispatch(clearZoomData());
         document.body.style.overflow = "visible";
     }
 

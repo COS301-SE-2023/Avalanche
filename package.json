@@ -4,5 +4,8 @@
     "license": "MIT",
     "scripts": {
         "frontend": "cd ./frontend && yarn dev"
+    },
+    "dependencies": {
+        "@nestjs/cli": "^10.1.12"
     }
 }
