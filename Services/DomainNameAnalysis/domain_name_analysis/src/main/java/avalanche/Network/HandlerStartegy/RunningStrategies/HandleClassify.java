@@ -42,7 +42,7 @@ public class HandleClassify extends Running {
         Classifier classifier = new Classifier();
         for (String str : strings) {
             i++;
-            // System.out.println(i);
+             System.out.println(i+"/"+strings.length);
             try {
                 resp += "{\"domain\":\"" + str + "\",\"classification\":\"";
                 resp += classifier.classify(str) + "\"}";
@@ -60,7 +60,7 @@ public class HandleClassify extends Running {
         long ttlTime = System.currentTimeMillis() - st;
         resp += ",\"searchTime(ms)\":" + ttlTime + "}";
         System.out.println("\n\n==================== RESPONSE ====================\n");
-        System.out.println(resp);
+        //System.out.println(resp);
         System.out.println("Done");
         return resp;
     }

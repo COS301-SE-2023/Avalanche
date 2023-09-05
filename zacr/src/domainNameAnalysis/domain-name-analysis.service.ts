@@ -117,7 +117,7 @@ export class DomainNameAnalysisService {
         dataO.data = queryData[0]['DOMAINNAMEANALYSIS'];
         delete dataO.filters;
         const response = this.httpService.post(
-          'http://zanet.cloud:4101/domainNameAnalysis/count',
+          'http://localhost:4101/domainNameAnalysis/classify',
           dataO,
         );
         const responseData = await lastValueFrom(response);
@@ -130,12 +130,15 @@ export class DomainNameAnalysisService {
           chartData: JSON.parse(formattedData),
           jsonData: responseData.data,
         };
+
+        console.log(data);
         await this.redis.set(
           `zacr` + sqlQuery + " classification",
           JSON.stringify(data),
           'EX',
           72 * 60 * 60,
         );
+        console.log("here");
       } else {
         data = JSON.parse(dataR);
       }
