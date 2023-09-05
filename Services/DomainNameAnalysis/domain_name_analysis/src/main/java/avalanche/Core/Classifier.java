@@ -13,17 +13,19 @@ import javafx.scene.web.WebHistory.Entry;
 
 public class Classifier {
 
-    private static List<Triplet<String, String, Integer>> training_set = null;
+    private static List<String> words = new ArrayList<>();
+    private static List<String> classifications = new ArrayList<>();
+    private static List<Integer> compressedLengths = new ArrayList<>();
 
     public static void init() {
-        training_set = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader("data/wordDict.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
                 if (parts.length == 2) {
-                    training_set.add(new Triplet<>(parts[0].trim(), parts[1].trim(),
-                            compressLength(parts[0].trim())));
+                    words.add(parts[0].trim());
+                    classifications.add(parts[1].trim());
+                    compressedLengths.add(compressLength(parts[0].trim()));
                 }
             }
         } catch (IOException e) {
@@ -32,7 +34,7 @@ public class Classifier {
     }
 
     public Classifier() {
-        if (training_set == null) {
+        if (words.isEmpty()) {
             init();
         }
     }
@@ -47,10 +49,10 @@ public class Classifier {
         PriorityQueue<Map.Entry<Integer, Double>> pq = new PriorityQueue<>(
                 (a, b) -> Double.compare(b.getValue(), a.getValue()));
 
-        for (int i = 0; i < training_set.size(); i++) {
-            Triplet<String, String, Integer> x2Tuple = training_set.get(i);
-            String x2 = x2Tuple.getValue0();
-            int Cx2 = x2Tuple.getValue2();
+        for (int i = 0; i < words.size(); i++) {
+
+            String x2 = words.get(i);
+            int Cx2 = compressedLengths.get(i);
             String x1x2 = x1 + x2;
             int Cx1x2 = compressLength(x1x2);
 
@@ -65,7 +67,7 @@ public class Classifier {
         while (!pq.isEmpty()) {
             Map.Entry<Integer, Double> entry = pq.poll();
             int idx = entry.getKey();
-            String[] wordAndClass = { training_set.get(idx).getValue0(), training_set.get(idx).getValue1() };
+            String[] wordAndClass = { words.get(idx), words.get(idx) };
             topKClass.add(new AbstractMap.SimpleEntry<>(wordAndClass, entry.getValue()));
         }
 
