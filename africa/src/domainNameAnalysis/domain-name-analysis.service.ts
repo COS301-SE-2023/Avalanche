@@ -27,7 +27,7 @@ export class DomainNameAnalysisService {
       const dataR = await this.redis.get(`africa` + sqlQuery);
       let data: DataInterface;
       let formattedData = '';
-
+      //console.log(dataR);
       if (!dataR) {
         let queryData;
         try {
@@ -44,7 +44,7 @@ export class DomainNameAnalysisService {
         dataO.data = queryData[0]['DOMAINNAMEANALYSIS'];
         delete dataO.filters;
         const response = this.httpService.post(
-          'http://zanet.cloud:4005/domainNameAnalysis/list',
+          'http://zanet.cloud:4101/domainNameAnalysis/count',
           dataO,
         );
         const responseData = await lastValueFrom(response);
@@ -55,7 +55,7 @@ export class DomainNameAnalysisService {
           );
         data = {
           chartData: JSON.parse(formattedData),
-          jsonData: JSON.parse(responseData.data),
+          jsonData: responseData.data,
         };
         await this.redis.set(
           `africa` + sqlQuery,
@@ -66,7 +66,7 @@ export class DomainNameAnalysisService {
       } else {
         data = JSON.parse(dataR);
       }
-
+      //console.log(data);
       return {
         status: 'success',
         data: {
@@ -83,6 +83,7 @@ export class DomainNameAnalysisService {
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
+      //console.log(e);
       return {
         status: 500,
         error: true,

@@ -56,7 +56,7 @@ export class DomainNameAnalysisService {
 
         data = {
           chartData: JSON.parse(formattedData),
-          jsonData: JSON.parse(responseData.data),
+          jsonData: responseData.data,
         };
 
         await this.redis.set(

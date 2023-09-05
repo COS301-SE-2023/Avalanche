@@ -59,7 +59,7 @@ export default function Home() {
                             <StartOutlineIcon className="w-6 h-6 text-yellow-500 absolute top-5 right-5" />
                         </div>
                     </Link>
-                    <Link className="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 hover:shadow-2xl duration-75 " href="/registrar">
+                    <Link className="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 hover:shadow-2xl duration-75 z-0" href="/registrar">
                         <div className="flex flex-col items-center justify-between h-full p-10 relative" >
                             <img className="w-64 mb-3" src="https://user-images.githubusercontent.com/91600439/259408746-00e4adf5-826a-4144-91f6-cce9ea72f5f4.svg" alt="Bonnie image" />
                             <div className="flex flex-col items-center">

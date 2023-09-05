@@ -21,6 +21,7 @@
     "@reduxjs/toolkit": "^1.9.5",
     "animate.css": "^4.1.1",
     "animate.css-react": "^1.1.0",
+    "apexcharts": "^3.42.0",
     "autoprefixer": "10.4.14",
     "axios": "^1.4.0",
     "chart.js": "^4.2.1",

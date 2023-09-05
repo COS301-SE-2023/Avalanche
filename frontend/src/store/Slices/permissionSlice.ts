@@ -1,39 +1,29 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { AppState } from "../store";
 import { HYDRATE } from "next-redux-wrapper";
-import ky from "ky";
-import { ITransactionGraphRequest } from "@/interfaces/requests";
 import { getCookie } from "cookies-next";
-import { chartColours } from "@/components/Graphs/data";
-import IMarketShareGraphRequest from "@/interfaces/requests/MarketShareGraph";
-import IDomainNameAnalysisGraphRequest from "@/interfaces/requests/DomainNameAnalysis";
-import IAgeAnalysisGraphRequest from "@/interfaces/requests/AgeAnalysisGraph";
-import IMovementGraphRequest from "@/interfaces/requests/Movement";
+import ky from "ky";
 
 const url = `${process.env.NEXT_PUBLIC_API}`;
 
 interface IPermissionState {
-    permissions:IPermission[]
+    permissions: IPermission[]
 }
 
-interface IPermission{
-    dataSource:string,
-    tou:string,
-    endpoints:string[]
+export interface IPermission {
+    dataSource: string,
+    tou: string,
+    endpoints: string[]
 }
 
 const initialState: IPermissionState = {
-    permissions:[]
+    permissions: []
 }
-
-
 
 export const permissionSlice = createSlice({
     name: "permission",
     initialState,
-    reducers: {
-        
-    },
+    reducers: {},
     extraReducers: (builder) => {
         builder.addCase(HYDRATE, (state, action) => {
             return {
@@ -43,19 +33,19 @@ export const permissionSlice = createSlice({
         })
         builder.addCase(getEndpoints.fulfilled, (state, action) => {
             const payload = action.payload as any;
-            console.log("THIS ONE GILLES",payload.data);
-            state.permissions=payload.data;
+            // console.log("THIS ONE GILLES", payload.data);
+            state.permissions = payload.data;
         })
         builder.addCase(getEndpoints.pending, (state) => {
-            console.log("Permissions pending");
+            // console.log("Permissions pending");
         })
         builder.addCase(getEndpoints.rejected, (state, action) => {
-            console.log("Get Permissions Rejected");
+            // console.log("Get Permissions Rejected");
         })
     }
 })
 
-export const getEndpoints = createAsyncThunk("PERM.GetEndpoints", async (object, {rejectWithValue}) => {
+export const getEndpoints = createAsyncThunk("PERM.GetEndpoints", async (object, { rejectWithValue }) => {
     try {
         const jwt = getCookie("jwt");
         const response = await ky.post(`${url}/user-management/getEndpoints`, {
