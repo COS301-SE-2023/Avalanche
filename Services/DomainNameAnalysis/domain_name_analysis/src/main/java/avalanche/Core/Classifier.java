@@ -7,20 +7,23 @@ import java.io.IOException;
 import java.util.*;
 import java.util.zip.*;
 
+import org.javatuples.Triplet;
+
 import javafx.scene.web.WebHistory.Entry;
 
 public class Classifier {
 
-    private static List<String[]> training_set;
+    private static List<Triplet<String, String, Integer>> training_set = null;
 
-    public Classifier() {
+    public static void init() {
         training_set = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader("data/wordDict.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
                 if (parts.length == 2) {
-                    training_set.add(new String[] { parts[0].trim(), parts[1].trim() });
+                    training_set.add(new Triplet<>(parts[0].trim(), parts[1].trim(),
+                            compressLength(parts[0].trim())));
                 }
             }
         } catch (IOException e) {
@@ -28,38 +31,53 @@ public class Classifier {
         }
     }
 
-    private static int k = 5;
+    public Classifier() {
+        if (training_set == null) {
+            init();
+        }
+    }
+
+    private static int k = 6;
 
     public static String classify(String toClassify) throws IOException {
         String x1 = toClassify;
         int Cx1 = compressLength(x1);
 
-        List<Double> distance_from_x1 = new ArrayList<>();
-        for (String[] x2Tuple : training_set) {
-            String x2 = x2Tuple[0];
-            int Cx2 = compressLength(x2);
-            String x1x2 = x2 + "" + x1;
+        // Using a priority queue to store the top k smallest distances
+        PriorityQueue<Map.Entry<Integer, Double>> pq = new PriorityQueue<>(
+                (a, b) -> Double.compare(b.getValue(), a.getValue()));
+
+        for (int i = 0; i < training_set.size(); i++) {
+            Triplet<String, String, Integer> x2Tuple = training_set.get(i);
+            String x2 = x2Tuple.getValue0();
+            int Cx2 = x2Tuple.getValue2();
+            String x1x2 = x1 + x2;
             int Cx1x2 = compressLength(x1x2);
 
-            double ncd = (double) (Cx1x2 - Math.min(Cx1, Cx2)) / Math.max(Cx1, Cx2);
-            distance_from_x1.add(ncd);
+            double ncdx1x2 = (double) (Cx1x2 - Math.min(Cx1, Cx2)) / Math.max(Cx1, Cx2);
+            pq.offer(new AbstractMap.SimpleEntry<>(i, ncdx1x2));
+            if (pq.size() > k) {
+                pq.poll();
+            }
         }
 
-        List<Map.Entry<String[], Double>> top_k_class = getTopKIndices(distance_from_x1, training_set, k);
-        // for (Map.Entry<String, Double> e : top_k_class) {
-        // System.out.println("\t" + e.getKey() + " " + e.getValue());
-        // }
-        System.out.println("===");
-        String predict_class = mostFrequent(top_k_class);
-        System.out.println("===");
-        return predict_class;
+        List<Map.Entry<String[], Double>> topKClass = new ArrayList<>();
+        while (!pq.isEmpty()) {
+            Map.Entry<Integer, Double> entry = pq.poll();
+            int idx = entry.getKey();
+            String[] wordAndClass = { training_set.get(idx).getValue0(), training_set.get(idx).getValue1() };
+            topKClass.add(new AbstractMap.SimpleEntry<>(wordAndClass, entry.getValue()));
+        }
+
+        Collections.reverse(topKClass); // Since the smallest distances will be at the beginning
+        return mostFrequent(topKClass);
 
     }
 
     public static void main(String[] args) throws IOException {
         Classifier c = new Classifier();
-        String word = "book hiking be healthy";
-        System.out.println("Classify: " + word);
+        String word = "hike";
+        System.out.println("Classify: " + word + "\u001b[35m");
         System.out.println("\u001b[33m" + c.classify(word) + "\u001b[0m\n==\n");
         // String[] spl = word.split(" ");
         // for (String w : spl) {
@@ -85,32 +103,14 @@ public class Classifier {
         for (Map.Entry<String[], Double> item : list) {
             String key = item.getKey()[1];
             counter.put(key, counter.getOrDefault(key, 0) + 1);
-            System.out.println(item.getKey()[0] + ", " + item.getKey()[1] + " [" + item.getValue() + "]");
+            // System.out.println(item.getKey()[0] + ", " + item.getKey()[1] + " [" +
+            // item.getValue() + "]");
             if (counter.get(key) > maxCount) {
                 maxCount = counter.get(key);
                 frequentItem = key;
             }
         }
         return frequentItem;
-    }
-
-    public static List<Map.Entry<String[], Double>> getTopKIndices(List<Double> arr, List<String[]> trainingSet,
-            int k) {
-        Integer[] indices = new Integer[arr.size()];
-        for (int i = 0; i < arr.size(); i++) {
-            indices[i] = i;
-        }
-
-        Arrays.sort(indices, Comparator.comparing(arr::get));
-        List<Map.Entry<String[], Double>> topKClass = new ArrayList<>();
-
-        for (int i = 0; i < k; i++) {
-            int idx = indices[i];
-            String[] wordAndClass = { trainingSet.get(idx)[0], trainingSet.get(idx)[1] };
-            topKClass.add(new AbstractMap.SimpleEntry<>(wordAndClass, arr.get(idx)));
-        }
-
-        return topKClass;
     }
 
 }

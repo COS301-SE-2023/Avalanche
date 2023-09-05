@@ -2,6 +2,7 @@ package avalanche.Network;
 
 import com.sun.net.httpserver.*;
 
+import avalanche.Core.Classifier;
 import avalanche.Core.FrequencyCounter;
 import avalanche.Network.HandlerStartegy.Closed;
 import avalanche.Network.HandlerStartegy.HandlerStrategy;
@@ -53,6 +54,10 @@ public class ServiceHttpServer {
         httpServer.createContext("/domainNameAnalysis/classify", classify);
     }
 
+    public void setup() {
+        Classifier.init();
+    };
+
     public void start() throws IOException {
         if (!this.state.equals("closed")) {
             System.out.println("Server already running");
@@ -69,6 +74,7 @@ public class ServiceHttpServer {
         forceAllStrategies(new Initialising());
         long st = System.currentTimeMillis();
         setDefaultStrategies();
+        setup();
         System.out.println("Init time in millis " + (System.currentTimeMillis() - st));
         System.out.println("Server started\n========================\n");
 
@@ -89,7 +95,7 @@ public class ServiceHttpServer {
         return httpHandlers.get(context).getHandlerStrategy().getResponse(body, st);
     }
 
-    public void handleDummyRequest(String context) throws IOException {
+    public String handleDummyRequest(String context) throws IOException {
         System.out.println("Dummy request sent");
         long st = System.currentTimeMillis();
         String o = getResponse(context,
@@ -231,6 +237,8 @@ public class ServiceHttpServer {
                         "\"capeyogaassist\"," + //
                         "\"eb-lourdon\"]}",
                 System.currentTimeMillis());
+
+        return o;
     }
 
     /*
