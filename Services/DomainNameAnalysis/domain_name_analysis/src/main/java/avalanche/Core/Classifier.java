@@ -9,11 +9,10 @@ import java.util.zip.*;
 
 import org.javatuples.Triplet;
 
-import javafx.scene.web.WebHistory.Entry;
 
 public class Classifier {
 
-    private final boolean PRINT_DEBUG = true;
+    private final boolean PRINT_DEBUG = false;
 
     private static List<String> words = new ArrayList<>();
     private static List<String> classifications = new ArrayList<>();

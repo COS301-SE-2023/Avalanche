@@ -15,12 +15,12 @@ public class main {
         try {
             ServiceHttpServer server = new ServiceHttpServer(4101);
             server.start();
-            // double n = 1;
+            // double n = 20.0;
             // double ttl = 0;
             // for (int i = 0; i < n; i++) {
-            // JSONObject j = new JSONObject(server.handleDummyRequest("classify"));
-            // System.out.println(j.getInt("searchTime(ms)"));
-            // ttl += j.getInt("searchTime(ms)");
+            //     JSONObject j = new JSONObject(server.handleDummyRequest("classify"));
+            //     System.out.println(j.getInt("searchTime(ms)"));
+            //     ttl += j.getInt("searchTime(ms)");
             // }
             // System.out.println("AVERAGE = " + (ttl / n));
 
