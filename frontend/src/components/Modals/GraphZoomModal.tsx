@@ -1,13 +1,14 @@
 import { ModalWrapper } from './ModalOptions';
 import { useState } from 'react';
 import { BarChart, BubbleChart, LineChart, PieChart, PolarAreaChart, RadarChart, TableChart } from "@/components/Graphs";
-import { selectModalManagerState, setZoomData, clearZoomData } from '@/store/Slices/modalManagerSlice';
+import { selectModalManagerState, setZoomData } from '@/store/Slices/modalManagerSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { ChartType } from '@/Enums';
 import { ErrorToast } from '../Util';
 import ky, { HTTPError } from 'ky';
 import { getCookie } from 'cookies-next';
 import { userState, updateDashboards } from "@/store/Slices/userSlice"
+import { useEffect } from "react";
 
 interface IGraphZoomModal {
     custom?: boolean
@@ -20,6 +21,7 @@ export default function GraphZoomModal({ custom }: IGraphZoomModal) {
     const state = useSelector(selectModalManagerState);
     const stateUser = useSelector(userState);
     const dispatch = useDispatch<any>();
+    const [data, setData] = useState<any>({});
 
     const [comment, setComment] = useState<string>("");
 
@@ -62,6 +64,15 @@ export default function GraphZoomModal({ custom }: IGraphZoomModal) {
         </div>))
     }
 
+    useEffect(() => {
+       if(state.data.data.jsonData.length){
+        setData(state.data.data);
+        console.log("should be good");
+       }
+    }, [state.data.data])
+
+    
+
     if (!state.data) {
         return (
             <ModalWrapper title={state.zoomedData?.graphName || state.data?.data?.graphName} large={true}>
@@ -71,16 +82,16 @@ export default function GraphZoomModal({ custom }: IGraphZoomModal) {
     }
     
     return (
-        <ModalWrapper title={state.zoomedData?.graphName || state.data?.data?.graphName} large={true}>
-            <div className="flex h-full">
+        <ModalWrapper title={state.zoomedData?.graphName || state.data.data.graphName} large={true}>
+            <div className="flex">
                 <div className="relative p-6 space-y-6 flex-auto">
-                    {state.data?.type === ChartType.Bar && <BarChart data={state.data.data} />}
-                    {state.data?.type === ChartType.Pie && <PieChart data={state.data.data} />}
-                    {state.data?.type === ChartType.Line && <LineChart data={state.data.data} addClass="h-full" />}
-                    {state.data?.type === ChartType.Bubble && <BubbleChart data={state.data.data} />}
-                    {state.data?.type === ChartType.PolarArea && <PolarAreaChart data={state.data.data} />}
-                    {state.data?.type === ChartType.Radar && <RadarChart data={state.data.data} />}
-                    {state.data?.type === ChartType.Table && <TableChart data={state.data.data} />}
+                    {state.data.type === ChartType.Bar && data.jsonData && <BarChart data={data} height='450%'/>}
+                    {state.data.type === ChartType.Pie && state.data.data.jsonData &&<PieChart data={state.data.data} />}
+                    {state.data.type === ChartType.Line && data.jsonData &&<LineChart data={data} height='450%'/>}
+                    {state.data.type === ChartType.Bubble && data.jsonData &&<BubbleChart data={state.data.data} />}
+                    {state.data.type === ChartType.PolarArea && state.data.data.jsonData.length &&<PolarAreaChart data={state.data.data} />}
+                    {state.data.type === ChartType.Radar && data.jsonData &&<RadarChart data={data} height='450%'/>}
+                    {state.data.type === ChartType.Table && state.data.data.jsonData.length &&<TableChart data={state.data.data} />}
                 </div>
                 {custom && <div className="flex flex-col gap-5 flex-auto">
                     <form onSubmit={(e) => uploadComment(e)}>
