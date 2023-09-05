@@ -8,9 +8,9 @@ import java.io.InputStreamReader;
 
 import avalanche.Utility.DomainTokeniser;
 
-public class Classifier {
+public class PythonClassifier {
 
-    public Classifier() {
+    public PythonClassifier() {
 
     }
 
