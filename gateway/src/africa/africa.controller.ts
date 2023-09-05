@@ -93,6 +93,23 @@ export class AfricaController {
     }
   }
 
+  @Post('domainNameAnalysis/classification')
+  @HttpCode(200)
+  async domainNameAnalysisClassification(@Body() data: any) {
+    const pattern = { cmd: 'domainNameAnalysis/classification' };
+    const payload = data;
+    try {
+      const result = await lastValueFrom(this.client.send(pattern, payload));
+      return result;
+    } catch (error) {
+      const rpcError = error
+      if (typeof rpcError === 'object') {
+        throw new HttpException(rpcError.message || 'An unexpected error occurred', rpcError.status || 500);
+      }
+      throw error;
+    }
+  }
+
   @Post('domainNameAnalysis/length')
   @HttpCode(200)
   async domainNameAnalysisLength(@Body() data: any) {

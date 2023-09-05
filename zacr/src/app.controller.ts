@@ -92,6 +92,20 @@ export class AppController {
     return result;
   }
 
+  @MessagePattern({ cmd: 'domainNameAnalysis/classification' })
+  async domainNameAnalysisClassification(data: any) {
+    const result = await this.domainNameAnalysisService.classification(data);
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result['timestamp'],
+      });
+    }
+
+    return result;
+  }
+
   @MessagePattern({ cmd: 'domainNameAnalysis/length' })
   async domainNameAnalysisLength(data: any) {
     const result = await this.domainNameAnalysisService.domainLength(
