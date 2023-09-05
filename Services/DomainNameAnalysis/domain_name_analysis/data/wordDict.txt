@@ -2116,6 +2116,7 @@ trends,lifestyle
 spa,lifestyle
 subscriptionbox,lifestyle
 hiking,lifestyle
+hike,lifestyle
 photography,lifestyle
 cycling,lifestyle
 sailing,lifestyle
