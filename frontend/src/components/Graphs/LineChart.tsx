@@ -1,90 +1,40 @@
-import React from "react";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js/auto";
-import { Line } from "react-chartjs-2";
 import { IChart } from "@/interfaces";
-import { useTheme } from "next-themes";
-import { chartColours } from "@/components/Graphs/data";
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
-
-const assignColours = (payload: any) => {
-  const datasets = payload.chartData.datasets;
-
-  datasets.forEach((set: any, index: number) => {
-    set.backgroundColor = chartColours[index % chartColours.length];
-    set.borderColor = chartColours[index % chartColours.length];
-    set.pointRadius = 4;
-    set.pointHoverRadius = 5;
-  });
-};
+import React, { useState } from "react";
+import Chart from "react-apexcharts";
 
 export function LineChart({ data, addClass }: IChart) {
-  const { theme } = useTheme();
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        display: data.datasets?.length === 1 ? false : true,
+  const [chartData, setChartData] = useState({
+    options: {
+      chart: {
+        id: "basic-bar"
       },
-      title: {
-        display: false,
-      },
+      xaxis: {
+        categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999]
+      }
     },
-    gridLines: {
-      zeroLineColor: "dark" ? "white" : "rgba(49, 54, 56, 0.5)",
-    },
-    scales: {
-      y: {
-        ticks: {
-          padding: 10,
-        },
-        grid: {
-          color:
-            theme === "dark"
-              ? "rgba(49, 54, 56, 0.7)"
-              : "rgba(49, 54, 56, 0.2)",
-        },
-        beginAtZero: true,
+    series: [
+      {
+        name: "series-1",
+        data: [30, 40, 45, 50, 49, 60, 70, 91]
       },
-      x: {
-        ticks: {
-          padding: 10,
-        },
-        label: {
-          padding: 10,
-        },
-        grid: {
-          color:
-            theme === "dark"
-              ? "rgba(49, 54, 56, 0.7)"
-              : "rgba(49, 54, 56, 0.2)",
-        },
-      },
-    },
-  };
-  let dataN = JSON.parse(JSON.stringify(data))
-  assignColours(dataN)
+      {
+        name: "series-2",
+        data: [3, 4, 4, 5, 4, 6, 7, 9]
+      }
+    ]
+  });
+
   return (
-    <div className={`${addClass}`}>
-      <Line options={options} data={dataN.chartData} />
+    <div className="line">
+      <div className="row">
+        <div className="mixed-chart">
+          <Chart
+            options={chartData.options}
+            series={chartData.series}
+            type="line"
+          />
+        </div>
+      </div>
     </div>
   );
 }
