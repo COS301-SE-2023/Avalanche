@@ -108,7 +108,7 @@ const dataSourceDescriptors: IDataSourceItem[] = [
     },
     {
         code: "ryce",
-        value: "Everything in the EUROPEAN namespace"
+        value: "Everything in the .WIEN, .TIROL, .COLOGNE, .KOELN namespace"
     }
 ]
 

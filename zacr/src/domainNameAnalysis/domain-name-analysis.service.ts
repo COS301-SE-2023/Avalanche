@@ -15,16 +15,18 @@ export class DomainNameAnalysisService {
     private readonly graphFormattingService: GraphFormatService,
   ) {}
 
-  async sendData(data: any): Promise<any> {
+  async sendData(dataO: any): Promise<any> {
     try {
-      const filters = JSON.stringify(data.filters);
-      const num = data.filters.num;
-      const granularity = data.filters.granularity;
+      const filters = JSON.stringify(dataO.filters);
+      const num = dataO.filters.num;
+      const granularity = dataO.filters.granularity;
 
       const sqlQuery = `call domainNameAnalysis('${filters}')`;
-      let formattedData = await this.redis.get(`zacr` + sqlQuery);
-      let dataRet: DataInterface;
-      if (!formattedData) {
+      const dataR = await this.redis.get(`zacr` + sqlQuery);
+      let data: DataInterface;
+      let formattedData = '';
+
+      if (!dataR) {
         let queryData;
         try {
           queryData = await this.snowflakeService.execute(sqlQuery);
@@ -36,11 +38,12 @@ export class DomainNameAnalysisService {
             timestamp: new Date().toISOString(),
           };
         }
-        data.data = queryData[0]['DOMAINNAMEANALYSIS'];
-        delete data.filters;
+
+        dataO.data = queryData[0]['DOMAINNAMEANALYSIS'];
+        delete dataO.filters;
         const response = this.httpService.post(
           'http://zanet.cloud:4101/domainNameAnalysis/count',
-          data,
+          dataO,
         );
         const responseData = await lastValueFrom(response);
         formattedData =
@@ -48,18 +51,18 @@ export class DomainNameAnalysisService {
             JSON.stringify(responseData.data),
           );
 
-        dataRet = {
+        data = {
           chartData: JSON.parse(formattedData),
-          jsonData: JSON.parse(responseData.data),
+          jsonData: responseData.data,
         };
         await this.redis.set(
           `zacr` + sqlQuery,
-          JSON.stringify({ data: dataRet }),
+          JSON.stringify(data),
           'EX',
           72 * 60 * 60,
         );
       } else {
-        dataRet = JSON.parse(formattedData);
+        data = JSON.parse(dataR);
       }
 
       return {
@@ -71,7 +74,7 @@ export class DomainNameAnalysisService {
             ' ' +
             granularity +
             '(s)',
-          data: dataRet,
+          data: data,
           warehouse: 'zacr',
           graphType: 'domainNameAnalysis/count',
         },
