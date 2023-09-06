@@ -55,7 +55,7 @@ export class DomainNameAnalysisService {
           );
         data = {
           chartData: JSON.parse(formattedData),
-          jsonData: responseData.data,
+          jsonData: responseData.data.data,
         };
         await this.redis.set(
           `africa` + sqlQuery,

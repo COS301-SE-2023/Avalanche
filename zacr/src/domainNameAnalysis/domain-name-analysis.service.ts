@@ -53,7 +53,7 @@ export class DomainNameAnalysisService {
 
         data = {
           chartData: JSON.parse(formattedData),
-          jsonData: responseData.data,
+          jsonData: responseData.data.data,
         };
         await this.redis.set(
           `zacr` + sqlQuery,
@@ -93,14 +93,16 @@ export class DomainNameAnalysisService {
   async classification(dataO: any): Promise<any> {
     try {
       const filters = JSON.stringify(dataO.filters);
+
       const num = dataO.filters.num;
       const granularity = dataO.filters.granularity;
 
       const sqlQuery = `call domainNameAnalysis('${filters}')`;
-      const dataR = await this.redis.get(`zacr` + sqlQuery + " classification");
+
+      const dataR = await this.redis.get(`zacr` + sqlQuery + ` classification`);
       let data: DataInterface;
       let formattedData = '';
-
+      //console.log(dataR);
       if (!dataR) {
         let queryData;
         try {
@@ -113,7 +115,7 @@ export class DomainNameAnalysisService {
             timestamp: new Date().toISOString(),
           };
         }
-
+        //console.log(queryData[0]['DOMAINNAMEANALYSIS']);
         dataO.data = queryData[0]['DOMAINNAMEANALYSIS'];
         delete dataO.filters;
         const response = this.httpService.post(
@@ -122,33 +124,31 @@ export class DomainNameAnalysisService {
         );
         const responseData = await lastValueFrom(response);
         console.log(responseData);
+        let formattedResponseData = {data: this.formatClassification(responseData.data.data)}
         formattedData =
-          await this.graphFormattingService.formatDomainNameAnalysis(
-            JSON.stringify(responseData.data),
+          await this.graphFormattingService.formatDomainNameAnalysisClassification(
+            JSON.stringify(formattedResponseData),
           );
-
         data = {
           chartData: JSON.parse(formattedData),
-          jsonData: responseData.data,
+          jsonData: formattedResponseData,
         };
-
         console.log(data);
         await this.redis.set(
-          `zacr` + sqlQuery + " classification",
+          `zacr` + sqlQuery + ` classification`,
           JSON.stringify(data),
           'EX',
-          72 * 60 * 60,
+          24 * 60 * 60,
         );
-        console.log("here");
       } else {
         data = JSON.parse(dataR);
       }
-
+      //console.log(data);
       return {
         status: 'success',
         data: {
           graphName:
-            'Most common classifications in newly created domains in the last ' +
+            'Most common categories in newly created domains in the last ' +
             num +
             ' ' +
             granularity +
@@ -160,6 +160,7 @@ export class DomainNameAnalysisService {
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
+      console.log(e);
       return {
         status: 500,
         error: true,
@@ -299,5 +300,33 @@ export class DomainNameAnalysisService {
       registrar +
       zone
     );
+  }
+
+  formatClassification(inputData: any) {
+    console.log(inputData)
+    console.log(JSON.stringify(inputData))
+    const outputData = {};
+
+    // Step 2: Loop through the input array
+    for (const entry of inputData) {
+      const { domain, classification } = entry;
+
+      // Step 3: Update the count and domains for each classification
+      if (!outputData[classification]) {
+        outputData[classification] = {
+          category: classification,
+          count: 0,
+          domains: [],
+        };
+      }
+
+      outputData[classification].count += 1;
+      outputData[classification].domains.push(domain);
+    }
+
+    // Step 4: Convert the object to an array
+    const finalOutput = Object.values(outputData);
+
+    return finalOutput
   }
 }

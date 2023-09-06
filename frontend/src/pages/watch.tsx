@@ -93,7 +93,7 @@ export default function Settings() {
         event.preventDefault();
 
         if (!data.domain) {
-            return ErrorToast({ text: "You must have a damain" });
+            return ErrorToast({ text: "You must have a domain" });
         } else if (!regex.test(data.domain)) {
             return ErrorToast({ text: "The format is incorrect. Check that there are no full stops (.), http:// or https:// in the domain that you have entered." });
         } else if (data.types.length === 0) {
