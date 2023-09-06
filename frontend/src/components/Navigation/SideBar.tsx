@@ -107,7 +107,7 @@ export default function Sidebar() {
      * Changes the selected Data source in the slice
      * @param dataSource 
      */
-    const reduceDataSource = (dataSource: string) => {
+    const reduceDataSource = (dataSource?: string) => {
         dispatch(selectDataSource(dataSource));
     }
 
@@ -197,7 +197,7 @@ export default function Sidebar() {
                                     {({ open }) => (
                                         <div className="w-full">
                                             <Popover.Button className="bg-gray-50 border-2 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-thirdBackground dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 border-gray-300 dark:border-thirdBackground flex justify-between">
-                                                Select a data product
+                                                {dataSourceName.find((i: IDataSourceItem) => stateGraph.selectedDataSource === i.code)?.value}
                                                 <ChevronRightIcon className={`ml-1 h-5 w-5 ${open && "rotate-180"}`} />
                                             </Popover.Button>
                                             <Transition
@@ -214,7 +214,7 @@ export default function Sidebar() {
                                                         statePermissions.permissions.map((item: IPermission, index: number) => {
                                                             const name = dataSourceName.find((i: IDataSourceItem) => i.code === item.dataSource);
                                                             const description = dataSourceDescriptors.find((i: IDataSourceItem) => i.code === item.dataSource);
-                                                            return <div className="flex items-center gap-4 transition duration-75 hover:-translate-y-1 hover:cursor-pointer">
+                                                            return <div onClick={()=>{reduceDataSource(name?.code)}} className="flex items-center gap-4 transition duration-75 hover:-translate-y-1 hover:cursor-pointer">
                                                                 <div className="bg-avalancheBlue rounded p-2">
                                                                     <GlobeAltIcon className="w-8 h-8 text-white" />
                                                                 </div>

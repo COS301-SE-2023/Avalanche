@@ -131,12 +131,38 @@ export class GraphFormatService {
 
   async formatDomainNameAnalysis(data: string): Promise<string> {
     const dataArr = JSON.parse(data)['data'];
+    console.log("In format")
+    console.log(dataArr)
     if (dataArr.length > 0) {
       const keys = Object.keys(dataArr[0]);
       if (keys.length === 3) {
         const dataToSend = JSON.stringify([{ data: JSON.stringify(dataArr) }]);
         return this.formatTwoColumns(keys, dataToSend, 'data', 'Count');
-      } else {
+      } else if (keys.length === 2) {
+        const dataToSend = JSON.stringify([{ data: JSON.stringify(dataArr) }]);
+        return this.formatTwoColumns(keys, dataToSend, 'data', 'Count');
+      }
+      else {
+        throw new Error(
+          'Invalid size array structure in Domain Name Analysis.',
+        );
+      }
+    } else {
+      throw new Error('Empty data array.');
+    }
+  }
+
+  async formatDomainNameAnalysisClassification(data: string): Promise<string> {
+    const dataArr = JSON.parse(data)['data'];
+    console.log("In format")
+    console.log(dataArr)
+    if (dataArr.length > 0) {
+      const keys = Object.keys(dataArr[0]);
+      if (keys.length === 3) {
+        const dataToSend = JSON.stringify([{ data: JSON.stringify(dataArr) }]);
+        return this.formatTwoColumns(keys, dataToSend, 'data', 'Count');
+      } 
+      else {
         throw new Error(
           'Invalid size array structure in Domain Name Analysis.',
         );

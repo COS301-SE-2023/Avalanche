@@ -9,11 +9,10 @@ import java.util.zip.*;
 
 import org.javatuples.Triplet;
 
-import javafx.scene.web.WebHistory.Entry;
 
 public class Classifier {
 
-    private final boolean PRINT_DEBUG = true;
+    private final boolean PRINT_DEBUG = false;
 
     private static List<String> words = new ArrayList<>();
     private static List<String> classifications = new ArrayList<>();
@@ -94,7 +93,7 @@ public class Classifier {
     public static void main(String[] args) throws IOException {
         Classifier c = new Classifier();
         String word = "hike";
-        System.out.println("Classify: " + word + "\u001b[35m");
+        System.out.println("Classify: " + word);
         System.out.println("\u001b[33m" + c.classify(word) + "\u001b[0m\n====\n");
         // String[] spl = word.split(" ");
         // for (String w : spl) {

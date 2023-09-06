@@ -132,6 +132,18 @@ export const graphSlice = createSlice({
             state.loading = true;
             state.graphs = [];
         })
+        builder.addCase(getDomainNameAnalysisClassificationData.fulfilled, (state, action) => {
+            const payload = action.payload as any;
+            // state.graphs.push(payload.data);
+            assignColours(payload)
+            state.graphs.push(payload.data);
+            state.latestAdd = state.graphs.length - 1;
+            state.loading = false;
+        })
+        builder.addCase(getDomainNameAnalysisClassificationData.pending, (state) => {
+            state.loading = true;
+            state.graphs = [];
+        })
         builder.addCase(getDomainLengthData.fulfilled, (state, action) => {
             const payload = action.payload as any;
             //state.graphs.push(payload.data);
@@ -201,6 +213,15 @@ export const graphSlice = createSlice({
             state.loading = true;
             state.graphs = [];
         })
+        builder.addCase(getDomainNameAnalysisClassificationDataArray.fulfilled, (state, action) => {
+            // const payload = action.payload as any;
+            // state.graphs = payload;
+            state.loading = false;
+        })
+        builder.addCase(getDomainNameAnalysisClassificationDataArray.pending, (state, action) => {
+            state.loading = true;
+            state.graphs = [];
+        })
         builder.addCase(getFilters.fulfilled, (state, action) => {
             const payload = action.payload as any;
             state.loading = false;
@@ -242,7 +263,7 @@ export const getGraphDataRanking = createAsyncThunk("GRAPH.GetGraphDataRanking",
         const jwt = getCookie("jwt");
         const state = getState() as { graph: IGraphState }; // Replace 'graph' with the slice name if different
         const { selectedDataSource } = state.graph;
-        const response = await ky.post(`${url}/${selectedDataSource}/transactions-ranking`, {
+        const response = await ky.post(`${url}/${selectedDataSource.toLowerCase()}/transactions-ranking`, {
             json: object,
             headers: {
                 "Authorization": `Bearer ${jwt}`
@@ -329,6 +350,23 @@ export const getDomainNameAnalysisData = createAsyncThunk("GRAPH.GetDomainNameAn
         const { selectedDataSource } = state.graph;
         const response = await ky.post(`${url}/${selectedDataSource}/domainNameAnalysis/count`, {
             json: object,
+            headers: {
+                "Authorization": `Bearer ${jwt}`
+            }
+        }).json();
+        return response;
+    } catch (e) {
+        if (e instanceof Error) return rejectWithValue(e.message);
+    }
+})
+
+export const getDomainNameAnalysisClassificationData = createAsyncThunk("GRAPH.GetDomainNameAnalysisClassificationData", async (object: IDomainNameAnalysisGraphRequest, { getState,rejectWithValue }) => {
+    try {
+        const jwt = getCookie("jwt");
+        const state = getState() as { graph: IGraphState }; // Replace 'graph' with the slice name if different
+        const { selectedDataSource } = state.graph;
+        const response = await ky.post(`${url}/${selectedDataSource}/domainNameAnalysis/classification`, {
+            json: object, timeout: false,
             headers: {
                 "Authorization": `Bearer ${jwt}`
             }
@@ -517,6 +555,34 @@ export const getDomainNameAnalysisDataArray = createAsyncThunk("GRAPH.GetDomainN
             const graph = object[i];
             const res: any = await ky.post(`${url}/${selectedDataSource}/domainNameAnalysis/count`, {
                 json: graph,
+                headers: {
+                    "Authorization": `Bearer ${jwt}`
+                }
+            }).json();
+            res.data.data.chartData.datasets.forEach((set: any, index: number) => {
+                set.backgroundColor = chartColours[index];
+            })
+            array.push(res.data);
+            addToGraphs(res.data);
+        }
+
+        return array;
+
+    } catch (e) {
+        if (e instanceof Error) return rejectWithValue(e.message);
+    }
+})
+
+export const getDomainNameAnalysisClassificationDataArray = createAsyncThunk("GRAPH.GetDomainNameAnalysisClassificationDataArray", async (object: IDomainNameAnalysisGraphRequest[], { getState,rejectWithValue }) => {
+    try {
+        const array: any[] = [];
+        const jwt = getCookie("jwt");
+        const state = getState() as { graph: IGraphState }; // Replace 'graph' with the slice name if different
+        const { selectedDataSource } = state.graph;
+        for (let i = 0; i < object.length; i++) {
+            const graph = object[i];
+            const res: any = await ky.post(`${url}/${selectedDataSource}/domainNameAnalysis/classification`, {
+                json: graph, timeout: false,
                 headers: {
                     "Authorization": `Bearer ${jwt}`
                 }
