@@ -1,5 +1,5 @@
 type JsonDataEntry = {
-  [key: string]: string | number;
+  [key: string]: string | number | string[];
 };
 
 type ConvertedData = {
@@ -23,7 +23,38 @@ type ConvertedData = {
   };
 };
 
+type ProportionConvertedData = {
+  series: number[];
+  options: {
+    labels: string[];
+  };
+};
+
+type TreeConvertedData = {
+  series: {
+    data: {
+      x: string | number;
+      y: number;
+    }[];
+  }[];
+  options: {};
+};
+
 export function convertData(jsonData: JsonDataEntry[], type: string): any {
+  //Clean the data returned with word arrays
+  if (jsonData.length > 0) {
+    const firstEntryKeys = Object.keys(jsonData[0]);
+    if (
+      firstEntryKeys.length == 3 &&
+      typeof jsonData[0][firstEntryKeys[2]] == "object"
+    ) {
+      jsonData = jsonData.map((entry) => {
+        const { [Object.keys(entry)[2]]: _, ...rest } = entry;
+        return rest;
+      });
+    }
+  }
+
   if (
     type == "line" ||
     type == "bar" ||
@@ -45,14 +76,24 @@ export function convertData(jsonData: JsonDataEntry[], type: string): any {
         }
       }
     }
-  } else {
+  } else if (type == "pie" || type == "polarArea") {
+    if (jsonData.length > 0) {
+      const firstEntryKeys = Object.keys(jsonData[0]);
+      if (firstEntryKeys.length == 2) {
+        return convertForProportion(jsonData);
+      }
+    }
+  } else if (type == "tree") {
+    if (jsonData.length > 0) {
+      const firstEntryKeys = Object.keys(jsonData[0]);
+      if (firstEntryKeys.length == 2) {
+        return convertForTree(jsonData);
+      }
+    }
   }
 }
 
-export function convertWithMultipleSeries(
-  jsonData: JsonDataEntry[]
-): ConvertedData {
-  console.log(jsonData);
+function convertWithMultipleSeries(jsonData: JsonDataEntry[]): ConvertedData {
   const seriesMap: { [key: string]: { [key: string]: number } } = {};
   const xAxisSet = new Set<string>();
   const seriesSet = new Set<string>();
@@ -125,9 +166,7 @@ export function convertWithMultipleSeries(
   return convertedData;
 }
 
-export function convertWithSingleSeries(
-  jsonData: JsonDataEntry[]
-): ConvertedData {
+function convertWithSingleSeries(jsonData: JsonDataEntry[]): ConvertedData {
   const xAxisSet = new Set<string>();
   let yMin = Infinity;
 
@@ -178,6 +217,69 @@ export function convertWithSingleSeries(
   };
 
   return convertedData;
+}
+
+export function convertForProportion(
+  jsonData: JsonDataEntry[]
+): ProportionConvertedData {
+  const xAxisValues: string[] = [];
+  const yAxisValues: number[] = [];
+
+  let xAxisLabel = "";
+  let yAxisLabel = "";
+
+  if (jsonData.length > 0) {
+    const firstEntryKeys = Object.keys(jsonData[0]);
+    xAxisLabel = firstEntryKeys[0];
+    yAxisLabel = firstEntryKeys[1];
+  }
+
+  jsonData.forEach((entry) => {
+    xAxisValues.push(entry[xAxisLabel] as string);
+    yAxisValues.push(entry[yAxisLabel] as number);
+  });
+
+  return {
+    series: yAxisValues,
+    options: {
+      labels: xAxisValues,
+    },
+  };
+}
+
+export function convertForTree(jsonData: JsonDataEntry[]): TreeConvertedData {
+  const seriesData: { x: any; y: any }[] = [];
+
+  let xAxisLabel = "";
+  let yAxisLabel = "";
+
+  if (jsonData.length > 0) {
+    const firstEntryKeys = Object.keys(jsonData[0]);
+    xAxisLabel = firstEntryKeys[0];
+    yAxisLabel = firstEntryKeys[1];
+  }
+
+  jsonData.forEach((entry) => {
+    if (
+      (typeof entry[xAxisLabel] == "string" ||
+        typeof entry[xAxisLabel] == "number") &&
+      typeof entry[yAxisLabel] == "number"
+    ) {
+      seriesData.push({
+        x: entry[xAxisLabel],
+        y: entry[yAxisLabel],
+      });
+    }
+  });
+
+  return {
+    series: [
+      {
+        data: seriesData,
+      },
+    ],
+    options: {},
+  };
 }
 
 function preprocessDataForCombinedSeries(
