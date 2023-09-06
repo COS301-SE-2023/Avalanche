@@ -25,10 +25,10 @@ export default function OrganizationSettings({ }: IOrganizationSettings) {
     /**
      * When the component loads, it must fetch the latest organisation object and the latest user groups
      */
-    // useEffect(() => {
-    //     dispatch(getLatestOrganisation({}));
-    //     dispatch(getUserGroups({}))
-    // }, [])
+    useEffect(() => {
+        dispatch(getLatestOrganisation({}));
+        dispatch(getUserGroups({}))
+    }, [])
 
     /**
      * For debugging

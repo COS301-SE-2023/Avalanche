@@ -3,7 +3,7 @@ import { SubmitButton, ErrorToast, InputLabel, Input, SuccessToast } from '../Ut
 import { ModalWrapper } from './ModalOptions';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearCurrentOpenState } from '@/store/Slices/modalManagerSlice';
-import { userState, getUserGroups } from '@/store/Slices/userSlice';
+import { userState, getUserGroups, getLatestOrganisation } from '@/store/Slices/userSlice';
 import { createOrganisationGroup } from '@/store/Slices/userSlice';
 import { ICreateUserGroupRequest } from '@/interfaces/requests';
 
@@ -19,7 +19,9 @@ export default function CreateGroupModal({ }: ICreateGroupModal) {
     useEffect(() => {
         if (stateUser.createGroupSuccess) {
             SuccessToast({ text: `Group with the name ${name} has been successfully created` });
-            dispatch(clearCurrentOpenState())
+            dispatch(getLatestOrganisation({}));
+            dispatch(getUserGroups({}));
+            dispatch(clearCurrentOpenState());    
         }
     }, [stateUser.user.userGroups])
 
