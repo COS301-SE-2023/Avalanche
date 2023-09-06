@@ -195,7 +195,7 @@ export function BubbleChart({ data, height }: IChart) {
             <Chart
               options={chartData.options}
               series={chartData.series}
-              type="bubble"
+              type="scatter"
               height={height}
             />
           }
