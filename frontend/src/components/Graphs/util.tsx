@@ -52,6 +52,7 @@ export function convertData(jsonData: JsonDataEntry[], type: string): any {
 export function convertWithMultipleSeries(
   jsonData: JsonDataEntry[]
 ): ConvertedData {
+  console.log(jsonData);
   const seriesMap: { [key: string]: { [key: string]: number } } = {};
   const xAxisSet = new Set<string>();
   const seriesSet = new Set<string>();
@@ -77,6 +78,7 @@ export function convertWithMultipleSeries(
 
     xAxisSet.add(xAxis);
     seriesSet.add(series);
+    console.log(series);
 
     if (!seriesMap[series]) {
       seriesMap[series] = {};
@@ -86,6 +88,8 @@ export function convertWithMultipleSeries(
     yMin = Math.min(yMin, yAxis);
     yMax = Math.max(yMax, yAxis);
   });
+
+  console.log(seriesSet);
 
   // Initialize the final object
   const convertedData: ConvertedData = {
@@ -198,16 +202,17 @@ function preprocessDataForCombinedSeries(
     const series1 = entry[series1Label] as string;
     const series2 = entry[series2Label] as string;
     const combinedSeries = `${series1}-${series2}`;
+    console.log(combinedSeries);
     const yAxis = entry[yAxisLabel] as number;
 
     const newDataEntry: JsonDataEntry = {
       [xAxisLabel]: xAxis,
-      [combinedSeries]: combinedSeries,
+      series: combinedSeries,
       [yAxisLabel]: yAxis,
     };
 
     preprocessedData.push(newDataEntry);
   });
-
+  console.log(preprocessedData);
   return preprocessedData;
 }
