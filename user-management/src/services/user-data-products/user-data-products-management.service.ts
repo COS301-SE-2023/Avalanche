@@ -60,7 +60,6 @@ export class UserDataProductMangementService {
                             };
                         }
                         const { email: userEmail } = JSON.parse(userPayload);
-                        console.log(userEmail);
                         if (userEmail) {
                             const user = await this.userRepository.findOne({ where: { email: userEmail }, relations: ['userGroups', 'organisation', 'dashboards'] });
                             if (!user) {
@@ -94,14 +93,12 @@ export class UserDataProductMangementService {
                             };
                         }
                     } catch (error) {
-                        console.error(error);
                         return {
                             status: 400, error: true, message: error,
                             timestamp: new Date().toISOString()
                         };
                     }
                 } catch (error) {
-                    console.error(error);
                     return {
                         status: 400, error: true, message: "User details are incorrect for API",
                         timestamp: new Date().toISOString()
@@ -144,8 +141,6 @@ export class UserDataProductMangementService {
                                 'Authorization': `Bearer ${tokenFromDNS}`
                             }
                         });
-
-                        console.log(responseGET.data);
                         const key = responseGET.data.epp_username;
                         const type = "registrar"
                         const userPayload = await this.redis.get(token);
@@ -202,14 +197,12 @@ export class UserDataProductMangementService {
                             }
                         }
                     } catch (error) {
-                        console.error(error);
                         return {
                             status: 400, error: true, message: error,
                             timestamp: new Date().toISOString()
                         };
                     }
                 } catch (error) {
-                    console.error(error);
                     return {
                         status: 400, error: true, message: error,
                         timestamp: new Date().toISOString()
@@ -294,14 +287,12 @@ export class UserDataProductMangementService {
                             };
                         }
                     } catch (error) {
-                        console.error(error);
                         return {
                             status: 400, error: true, message: error,
                             timestamp: new Date().toISOString()
                         };
                     }
                 } catch (error) {
-                    console.error(error);
                     return {
                         status: 400, error: true, message: "User details are incorrect for API",
                         timestamp: new Date().toISOString()
@@ -344,8 +335,6 @@ export class UserDataProductMangementService {
                                 'Authorization': `Bearer ${tokenFromDNS}`
                             }
                         });
-
-                        console.log(responseGET.data);
                         const key = responseGET.data.epp_username;
                         const type = "registrar"
                         const userPayload = await this.redis.get(token);
@@ -402,14 +391,12 @@ export class UserDataProductMangementService {
                             }
                         }
                     } catch (error) {
-                        console.error(error);
                         return {
                             status: 400, error: true, message: error,
                             timestamp: new Date().toISOString()
                         };
                     }
                 } catch (error) {
-                    console.error(error);
                     return {
                         status: 400, error: true, message: error,
                         timestamp: new Date().toISOString()
@@ -434,7 +421,6 @@ export class UserDataProductMangementService {
                 };
             }
             const { email: userEmail } = JSON.parse(userPayload);
-            console.log(userEmail);
             if (allocateToName == userEmail) {
                 const user = await this.userRepository.findOne({ where: { email: allocateToName }, relations: ['userGroups', 'organisation', 'dashboards'] });
                 if (!user) {
@@ -529,7 +515,6 @@ export class UserDataProductMangementService {
             };
         }
         const { email: userEmail } = JSON.parse(userPayload);
-        console.log(userEmail);
         const user = await this.userRepository.findOne({
             where: { email: userEmail }, relations: ['userGroups', 'organisation', 'dashboards'],
             select: ['id', 'email', 'firstName', 'lastName', 'organisationId', 'products', 'userGroups', 'organisation', 'dashboards']
@@ -580,7 +565,6 @@ export class UserDataProductMangementService {
             };
         }
         const { email: userEmail } = JSON.parse(userPayload);
-        console.log(userEmail);
         const user = await this.userRepository.findOne({
             where: { email: userEmail }, relations: ['userGroups', 'organisation', 'dashboards'],
             select: ['id', 'email', 'firstName', 'lastName', 'organisationId', 'products', 'userGroups', 'organisation', 'dashboards']
@@ -593,7 +577,6 @@ export class UserDataProductMangementService {
         }
         const passiveData = await this.watchedUserRepository.findOne({ where: { email: user.email }, select: ["person", "types", "domains"] });
         const emailData = await this.watchedUserRepository.findOne({ where: { email: user.email }, select: ["person", "email", "domains"] });
-        console.log("here");
         if (passiveData && emailData) {
             return { status: "success", message: { watched: passiveData, emailData: emailData }, timestamp: new Date().toISOString() };
         }
@@ -608,7 +591,6 @@ export class UserDataProductMangementService {
     async getDomainWatchPassive() {
         const passiveData = await this.watchedUserRepository.find({ select: ["person", "types", "domains"] });
         const emailData = await this.watchedUserRepository.find({ select: ["person", "email", "domains"] });
-        console.log("here");
         if (passiveData && emailData) {
             return { watched: passiveData, emailData: emailData };
         }
@@ -630,7 +612,6 @@ export class UserDataProductMangementService {
                 };
             }
             const { email: userEmail } = JSON.parse(userPayload);
-            console.log(userEmail);
             const user = await this.userRepository.findOne({
                 where: { email: userEmail }, relations: ['userGroups', 'organisation', 'dashboards'],
                 select: ['id', 'email', 'firstName', 'lastName', 'organisationId', 'products', 'userGroups', 'organisation', 'dashboards']
@@ -676,7 +657,6 @@ export class UserDataProductMangementService {
 
             return { "status": "success", "message": result };
         } catch (error) {
-            console.log(error)
             return {
                 status: 500, error: true, message: 'Unexpected error.',
                 timestamp: new Date().toISOString()

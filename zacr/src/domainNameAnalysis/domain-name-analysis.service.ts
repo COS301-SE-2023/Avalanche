@@ -102,7 +102,6 @@ export class DomainNameAnalysisService {
       const dataR = await this.redis.get(`zacr` + sqlQuery + ` classification`);
       let data: DataInterface;
       let formattedData = '';
-      //console.log(dataR);
       if (!dataR) {
         let queryData;
         try {
@@ -115,7 +114,6 @@ export class DomainNameAnalysisService {
             timestamp: new Date().toISOString(),
           };
         }
-        //console.log(queryData[0]['DOMAINNAMEANALYSIS']);
         dataO.data = queryData[0]['DOMAINNAMEANALYSIS'];
         delete dataO.filters;
         const response = this.httpService.post(
@@ -123,7 +121,6 @@ export class DomainNameAnalysisService {
           dataO,
         );
         const responseData = await lastValueFrom(response);
-        console.log(responseData);
         let formattedResponseData = {data: this.formatClassification(responseData.data.data)}
         formattedData =
           await this.graphFormattingService.formatDomainNameAnalysisClassification(
@@ -133,7 +130,6 @@ export class DomainNameAnalysisService {
           chartData: JSON.parse(formattedData),
           jsonData: formattedResponseData,
         };
-        console.log(data);
         await this.redis.set(
           `zacr` + sqlQuery + ` classification`,
           JSON.stringify(data),
@@ -143,7 +139,6 @@ export class DomainNameAnalysisService {
       } else {
         data = JSON.parse(dataR);
       }
-      //console.log(data);
       return {
         status: 'success',
         data: {
@@ -160,7 +155,6 @@ export class DomainNameAnalysisService {
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
-      console.log(e);
       return {
         status: 500,
         error: true,
@@ -303,8 +297,6 @@ export class DomainNameAnalysisService {
   }
 
   formatClassification(inputData: any) {
-    console.log(inputData)
-    console.log(JSON.stringify(inputData))
     const outputData = {};
 
     // Step 2: Loop through the input array
