@@ -3,6 +3,7 @@ import Redis from 'ioredis';
 import { JwtService } from '@nestjs/jwt';
 import { SnowflakeService } from '../snowflake/snowflake.service';
 import { GraphFormatService } from '../graph-format/graph-format.service';
+import { RegistrarNameService } from '../registrarName/registrarName.service';
 import { DataInterface } from '../interfaces/interfaces';
 import { query } from 'express';
 
@@ -13,6 +14,7 @@ export class MarketShareService {
     @Inject('REDIS') private readonly redis: Redis,
     private readonly snowflakeService: SnowflakeService,
     private readonly graphFormattingService: GraphFormatService,
+    private readonly registrarNameServices: RegistrarNameService,
   ) {}
 
   async marketShare(filters: string, graphName: string): Promise<any> {
@@ -25,6 +27,7 @@ export class MarketShareService {
       const dataR = await this.redis.get(`zacr` + sqlQuery);
       let data: DataInterface;
       let formattedData = '';
+      console.log('In Marketshare');
       if (!dataR) {
         let queryData;
         try {
@@ -37,6 +40,7 @@ export class MarketShareService {
             timestamp: new Date().toISOString(),
           };
         }
+
         /**
          * Get the total
          */
@@ -80,12 +84,29 @@ export class MarketShareService {
           0,
         );
 
+        // Replace registrar names to anonymise
+
+        if (
+          JSON.parse(filters).registrar &&
+          JSON.parse(filters).registrar.length == 1
+        ) {
+          let name: any = await this.registrarNameServices.registrarName({
+            code: JSON.parse(filters).registrar[0],
+          });
+          name = name.data.name;
+
+          topNRegistrars.forEach((item, index) => {
+            if (item.Registrar != name) {
+              item.Registrar = `Registrar ${index + 1}`;
+            }
+          });
+        }
+
         const otherRegistrarCount = overallCount - totalTopNRegistrarsCount;
         topNRegistrars.push({
           Registrar: 'Other',
           NumInRegistry: otherRegistrarCount,
         });
-
 
         const topNRegistrarsArr = [
           { MARKETSHARE: JSON.stringify(topNRegistrars) },
@@ -95,12 +116,10 @@ export class MarketShareService {
           JSON.stringify(topNRegistrarsArr),
         );
 
-
         data = {
           chartData: JSON.parse(formattedData),
           jsonData: topNRegistrars,
         };
-
 
         await this.redis.set(
           `zacr` + sqlQuery,
@@ -134,7 +153,7 @@ export class MarketShareService {
   marketShareGraphName(filters: any): string {
     let rank = filters['rank'];
     if (rank) {
-      rank = 'for the ' + rank + ' registrars in terms of domain count ';
+      rank = 'The ' + rank + ' registrars (i.t.o. domain count)';
     } else {
       rank = '';
     }
@@ -142,15 +161,12 @@ export class MarketShareService {
     let registrar = filters['registrar'];
     if (registrar) {
       if (registrar.length > 0) {
-        const regArr = [];
-        for (const r of registrar) {
-          regArr.push(r);
+        if (registrar.length == 1) {
+          registrar = 'Your domain count compared to ';
         }
-        registrar = regArr.join(', ');
-        registrar = 'across ' + registrar + ' ';
       }
     } else {
-      registrar = 'across all registrars ';
+      registrar = '';
     }
 
     let zone = filters['zone'];
@@ -162,11 +178,11 @@ export class MarketShareService {
         }
         zone = zoneArr.join(', ');
       }
-      zone = 'for ' + zone;
+      zone = ' across' + zone;
     } else {
-      zone = 'for all zones ';
+      zone = ' across all zones ';
     }
 
-    return 'Domain count marketshare ' + rank + registrar + zone;
+    return registrar + rank + zone;
   }
 }
