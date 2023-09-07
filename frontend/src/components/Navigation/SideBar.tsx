@@ -3,7 +3,7 @@ import SideBarItem from "./SidebarItem"
 import Link from "next/link"
 import { useState, useEffect, useRef, Fragment } from "react";
 import { useTheme } from "next-themes";
-import { MoonIcon, SunIcon, Cog6ToothIcon, Bars4Icon, ArrowLeftOnRectangleIcon, PencilIcon, HomeIcon, ChevronDownIcon, ChartPieIcon, ChevronRightIcon, GlobeAltIcon } from "@heroicons/react/24/solid";
+import { MoonIcon, SunIcon, Cog6ToothIcon, Bars4Icon, ArrowLeftOnRectangleIcon, PencilIcon, HomeIcon, ChevronDownIcon, ChartPieIcon, ChevronRightIcon, GlobeAltIcon, ServerStackIcon } from "@heroicons/react/24/solid";
 import { selectModalManagerState } from "@/store/Slices/modalManagerSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { userState, logout } from "@/store/Slices/userSlice";
@@ -13,7 +13,7 @@ import { useRouter } from "next/router";
 import { getCookie, deleteCookie } from "cookies-next";
 import LoadingPage from "../Util/Loading";
 import ky from "ky";
-import { ErrorToast, SubmitButton, SuccessToast } from "../Util";
+import { BetterDropdown, ErrorToast, SubmitButton, SuccessToast } from "../Util";
 import CreateDashboardModal from "../Modals/CreateDashboardModal";
 import { Transition, Popover } from '@headlessui/react'
 import { v4 as uuidv4 } from 'uuid';
@@ -123,7 +123,7 @@ export default function Sidebar() {
                 <div onClick={() => {
                     setMenu(false)
                 }} className={`${menu && 'max-h-full w-full h-screen bg-slate-900/50 fixed z-50'}`}>
-                    <aside id="default-sidebar" className={`fixed top-0 left-0 w-64 h-screen transition-transform ${!menu && '-translate-x-full'} sm:translate-x-0`}
+                    <aside id="default-sidebar" className={`fixed top-0 left-0 w-64 h-screen transition-transform ${!menu && '-translate-x-full'} sm:translate-x-0 flex flex-col`}
                         onClick={e => {
                             e.stopPropagation()
                         }}
@@ -188,75 +188,48 @@ export default function Sidebar() {
                             </ul>
                         </div>
 
-                        <div className="absolute bottom-0 left-0 justify-center p-4 w-full flex flex-col gap-4 bg-gray-200 dark:bg-dark-background dark:border-secondaryBackground z-20 border-r border-gray-200">
-                            <div className="flex items-center space-x-4">
-                                {/* <BetterDropdown items={[{ name: "ZACR", value: "zacr" }, { name: "Africa", value: "africa" }, { name: "RyCE", value: "ryce" }]} text={"select a warehouse"} option={stateGraph.selectedDataSource} set={reduceDataSource} absolute={true} placement="above" />
-                                <QuestionMarkCircleIcon className="absolute top-2 right-2 h-5 w-5" /> */}
-                                <Popover className="w-full">
-                                    {({ open }) => (
-                                        <div className="w-full">
-                                            <Popover.Button className="bg-gray-50 border-2 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-thirdBackground dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 border-gray-300 dark:border-thirdBackground flex justify-between">
-                                                {dataSourceName.find((i: IDataSourceItem) => stateGraph.selectedDataSource === i.code)?.value}
-                                                <ChevronRightIcon className={`ml-1 h-5 w-5 ${open && "rotate-180"}`} />
-                                            </Popover.Button>
-                                            <Transition
-                                                as={Fragment}
-                                                enter="transition ease-in duration-100"
-                                                enterFrom="transform opacity-0 scale-95"
-                                                enterTo="transform opacity-100 scale-100"
-                                                leave="transition ease-in duration-75"
-                                                leaveFrom="transform opacity-100 scale-100"
-                                                leaveTo="transform opacity-0 scale-95"
-                                            >
-                                                <Popover.Panel className="absolute ml-64 w-96 -top-20 rounded bg-primaryBackground p-5 flex gap-4 flex-col">
-                                                    {
-                                                        statePermissions.permissions.map((item: IPermission, index: number) => {
-                                                            const name = dataSourceName.find((i: IDataSourceItem) => i.code === item.dataSource);
-                                                            const description = dataSourceDescriptors.find((i: IDataSourceItem) => i.code === item.dataSource);
-                                                            return <div onClick={() => { reduceDataSource(name?.code) }} className="flex items-center gap-4 transition duration-75 hover:-translate-y-1 hover:cursor-pointer">
-                                                                <div className="bg-avalancheBlue rounded p-2">
-                                                                    <GlobeAltIcon className="w-8 h-8 text-white" />
-                                                                </div>
-                                                                <div className="flex flex-col">
-                                                                    <p className="text-lg">{name?.value}</p>
-                                                                    <p>{description?.value}</p>
-                                                                </div>
+                        <div className="bottom-0 left-0 justify-center p-4 w-full flex flex-col gap-4 bg-gray-200 dark:bg-dark-background dark:border-secondaryBackground border-r border-gray-200">
+                            <BetterDropdown items={[{ name: "ZACR", value: "zacr" }, { name: "Africa", value: "africa" }, { name: "RyCE", value: "ryce" }]} text={"select a warehouse"} option={stateGraph.selectedDataSource} set={reduceDataSource} absolute={true} placement="above" className="sm:hidden" />
+                            <Popover className="relative w-full sm:flex">
+                                {({ open, close }) => (
+                                    <div className="w-full">
+                                        <Popover.Button className="bg-gray-50 border-2 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-thirdBackground dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 border-gray-300 dark:border-thirdBackground flex justify-between">
+                                            {dataSourceName.find((i: IDataSourceItem) => stateGraph.selectedDataSource === i.code)?.value}
+                                            <ChevronRightIcon className={`ml-1 h-5 w-5 transition duration-125 ${open && "rotate-180"}`} />
+                                        </Popover.Button>
+                                        <Transition
+                                            as={Fragment}
+                                            enter="transition ease-in duration-100"
+                                            enterFrom="transform opacity-0 scale-95"
+                                            enterTo="transform opacity-100 scale-100"
+                                            leave="transition ease-in duration-75"
+                                            leaveFrom="transform opacity-100 scale-100"
+                                            leaveTo="transform opacity-0 scale-95"
+                                        >
+                                            <Popover.Panel className="absolute ml-64 w-96 -top-24 rounded bg-primaryBackground p-5 flex gap-4 flex-col">
+                                                {
+                                                    statePermissions.permissions.map((item: IPermission, index: number) => {
+                                                        const name = dataSourceName.find((i: IDataSourceItem) => i.code === item.dataSource);
+                                                        const description = dataSourceDescriptors.find((i: IDataSourceItem) => i.code === item.dataSource);
+                                                        return <div onClick={() => {
+                                                            reduceDataSource(name?.code);
+                                                            close();
+                                                        }} className="flex items-center gap-4 transition duration-75 hover:-translate-y-1 hover:cursor-pointer">
+                                                            <div className="bg-avalancheBlue rounded p-2">
+                                                                <ServerStackIcon className="w-8 h-8 text-white" />
                                                             </div>
-                                                        })
-                                                    }
-                                                    {/* <div className="flex items-center gap-4 transition duration-75 hover:-translate-y-1 hover:cursor-pointer">
-                                                        <div className="bg-avalancheBlue rounded p-2">
-                                                            <GlobeAltIcon className="w-8 h-8 text-white" />
+                                                            <div className="flex flex-col">
+                                                                <p className="text-lg">{name?.value}</p>
+                                                                <p>{description?.value}</p>
+                                                            </div>
                                                         </div>
-                                                        <div className="flex flex-col">
-                                                            <p className="text-lg">{dataSourceName["zacr"]}</p>
-                                                            <p>{dataSourceDescriptors["zacr"]}</p>
-                                                        </div>
-                                                    </div>
-                                                    <div className="flex items-center gap-4 transition duration-75 hover:-translate-y-1 hover:cursor-pointer">
-                                                        <div className="bg-avalancheBlue rounded p-2">
-                                                            <GlobeAltIcon className="w-8 h-8 text-white" />
-                                                        </div>
-                                                        <div className="flex flex-col">
-                                                            <p className="text-lg">{dataSourceName["africa"]}</p>
-                                                            <p>{dataSourceDescriptors["africa"]}</p>
-                                                        </div>
-                                                    </div>
-                                                    <div className="flex items-center gap-4 transition duration-75 hover:-translate-y-1 hover:cursor-pointer">
-                                                        <div className="bg-avalancheBlue rounded p-2">
-                                                            <GlobeAltIcon className="w-8 h-8 text-white" />
-                                                        </div>
-                                                        <div className="flex flex-col">
-                                                            <p className="text-lg">{dataSourceName["ryce"]}</p>
-                                                            <p>{dataSourceDescriptors["ryce"]}</p>
-                                                        </div>
-                                                    </div> */}
-                                                </Popover.Panel>
-                                            </Transition>
-                                        </div>
-                                    )}
-                                </Popover>
-                            </div>
+                                                    })
+                                                }
+                                            </Popover.Panel>
+                                        </Transition>
+                                    </div>
+                                )}
+                            </Popover>
                             <div className="flex items-center space-x-4">
                                 <img className="w-10 h-10 rounded-full" src={`https://www.gravatar.com/avatar/${md5(stateUser.user.email)}`} alt="" />
                                 <div className="font-medium dark:text-white text-black">
