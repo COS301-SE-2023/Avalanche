@@ -18,7 +18,6 @@ export class MarketShareService {
   ) {}
 
   async marketShare(filters: string, graphName: string): Promise<any> {
-    console.log(filters)
     try {
       graphName = this.marketShareGraphName(filters);
 
@@ -96,9 +95,9 @@ export class MarketShareService {
             name = await this.registrarNameServices.registrarName({
               code: JSON.parse(filters).registrar[0],
             });
+            name = name.data.name;
           }
 
-          name = name.data.name;
           topNRegistrars.forEach((item, index) => {
             if (item.Registrar != name) {
               item.Registrar = `Registrar ${index + 1}`;
