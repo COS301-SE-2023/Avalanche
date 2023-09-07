@@ -1,3 +1,9 @@
+import { useEffect } from "react";
+
+const themeColours = {
+  labelColour: "",
+};
+
 type JsonDataEntry = {
   [key: string]: string | number | string[];
 };
@@ -12,14 +18,41 @@ type ConvertedData = {
       categories: string[];
       title: {
         text: string;
+        style: {
+          color: string;
+        };
+      };
+      tooltip: {
+        enabled: boolean;
+      };
+      labels: {
+        style: {
+          colors: string;
+        };
       };
     };
     yaxis: {
       title: {
         text: string;
         forceNiceScale:boolean;
+        style: {
+          color: string;
+        };
       };
       min: number;
+      tooltip: {
+        enabled: false;
+      };
+      labels: {
+        style: {
+          colors: string;
+        };
+      };
+    };
+    legend: {
+      labels: {
+          colors: string; 
+      },
     };
   };
 };
@@ -41,7 +74,15 @@ type TreeConvertedData = {
   options: {};
 };
 
-export function convertData(jsonData: JsonDataEntry[], type: string): any {
+export function convertData(jsonData: JsonDataEntry[], type: string, theme: string|undefined): any {
+  //Set theme colour
+  
+  if (theme === "dark") {
+    themeColours.labelColour = "#FFFFFF";
+  } else {
+    themeColours.labelColour = "#000000";
+  }
+  
   //Clean the data returned with word arrays
   if (jsonData.length > 0) {
     const firstEntryKeys = Object.keys(jsonData[0]);
@@ -141,14 +182,41 @@ function convertWithMultipleSeries(jsonData: JsonDataEntry[]): ConvertedData {
         categories: Array.from(xAxisSet),
         title: {
           text: xAxisLabel,
+          style: {
+            color: themeColours.labelColour,
+          }
+        },
+        tooltip: {
+          enabled: false,
+        },
+        labels: {
+          style: {
+            colors: themeColours.labelColour, 
+          },
         },
       },
       yaxis: {
         title: {
           text: yAxisLabel,
           forceNiceScale: true,
+          style: {
+            color: themeColours.labelColour,
+          }
         },
         min: Math.min(0, yMin),
+        tooltip: {
+          enabled: false,
+        },
+        labels: {
+          style: {
+            colors: themeColours.labelColour, // e.g., '#FFFFFF' for white
+          },
+        },
+      },
+      legend: {
+        labels: {
+            colors: themeColours.labelColour, 
+        },
       },
     },
   };
@@ -207,14 +275,42 @@ function convertWithSingleSeries(jsonData: JsonDataEntry[]): ConvertedData {
         categories: Array.from(xAxisSet),
         title: {
           text: xAxisLabel,
+          style: {
+            color: themeColours.labelColour,
+          }
+          
+        },
+        tooltip: {
+          enabled: false,
+        },
+        labels: {
+          style: {
+            colors: themeColours.labelColour, 
+          },
         },
       },
       yaxis: {
         title: {
           text: yAxisLabel,
           forceNiceScale: true,
+          style: {
+            color: themeColours.labelColour,
+          }
         },
         min: Math.min(0, yMin),
+        tooltip: {
+          enabled: false,
+        },
+        labels: {
+          style: {
+            colors: themeColours.labelColour, 
+          },
+        },
+      },
+      legend: {
+        labels: {
+            colors: themeColours.labelColour, 
+        },
       },
     },
   };
