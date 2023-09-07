@@ -49,6 +49,12 @@ export default function Sidebar() {
         dispatch(getEndpoints());
     }, [])
 
+    useEffect(() => {
+        if(statePermissions.endpointResolution=="Retry"){
+            dispatch(getEndpoints());
+        }
+    }, [statePermissions.endpointResolution])
+
     /**
      * This will handle the group invites
      * @param key is the key of the invitation
@@ -185,13 +191,24 @@ export default function Sidebar() {
                                         })
                                     }
                                 </ul>
+
                             </ul>
                         </div>
 
-                        <div className="absolute bottom-0 left-0 justify-center p-4 w-full flex flex-col gap-4 bg-gray-200 dark:bg-dark-background dark:border-secondaryBackground z-20 border-r border-gray-200">
+                        <div className="absolute bottom-0 left-0 justify-center p-4 w-full flex flex-col gap-4 bg-gray-200 dark:bg-primaryBackground z-20 border-r border-gray-200 dark:border-secondaryBackground">
+                            <li>
+                                <SubmitButton text="Are you a registrar? Integrate" className="w-full" onClick={() => {
+                                    router.push({
+                                        pathname: '/settings',
+                                        query: { tab: 'integrations' }
+                                    })
+                                }} />
+                            </li>
+                        <div className="bottom-0 left-0 justify-center p-4 w-full flex flex-col gap-4 bg-gray-200 dark:bg-dark-background dark:border-secondaryBackground z-20 border-r border-gray-200">
                             <div className="flex items-center space-x-4">
                                 {/* <BetterDropdown items={[{ name: "ZACR", value: "zacr" }, { name: "Africa", value: "africa" }, { name: "RyCE", value: "ryce" }]} text={"select a warehouse"} option={stateGraph.selectedDataSource} set={reduceDataSource} absolute={true} placement="above" />
                                 <QuestionMarkCircleIcon className="absolute top-2 right-2 h-5 w-5" /> */}
+
                                 <Popover className="w-full">
                                     {({ open }) => (
                                         <div className="w-full">
@@ -199,6 +216,7 @@ export default function Sidebar() {
                                                 {dataSourceName.find((i: IDataSourceItem) => stateGraph.selectedDataSource === i.code)?.value}
                                                 <ChevronRightIcon className={`ml-1 h-5 w-5 ${open && "rotate-180"}`} />
                                             </Popover.Button>
+
                                             <Transition
                                                 as={Fragment}
                                                 enter="transition ease-in duration-100"
@@ -208,7 +226,7 @@ export default function Sidebar() {
                                                 leaveFrom="transform opacity-100 scale-100"
                                                 leaveTo="transform opacity-0 scale-95"
                                             >
-                                                <Popover.Panel className="absolute ml-64 w-96 -top-20 rounded bg-primaryBackground p-5 flex gap-4 flex-col">
+                                                <Popover.Panel className="absolute ml-64 w-96 -top-20 rounded bg-primaryBackground p-5 flex gap-4 flex-col z-50">
                                                     {
                                                         statePermissions.permissions.map((item: IPermission, index: number) => {
                                                             const name = dataSourceName.find((i: IDataSourceItem) => i.code === item.dataSource);

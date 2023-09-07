@@ -5,7 +5,7 @@ import Head from "next/head"
 import { ChartCard } from "@/components/Graphs"
 import { ChartType } from "@/Enums";
 import { useDispatch, useSelector } from "react-redux";
-import { graphState, getGraphData } from "@/store/Slices/graphSlice"
+import { graphState, getGraphData, clearGraphData } from "@/store/Slices/graphSlice"
 import { useEffect } from "react";
 import { ITransactionGraphRequest } from "@/interfaces/requests";
 import { selectModalManagerState } from "@/store/Slices/modalManagerSlice"
@@ -108,11 +108,17 @@ export default function Registrar() {
     }
 
     useEffect(() => {
+       if(stateGraph.cleared){
         loadData();
+       }
+    }, [stateGraph.cleared])
+
+    useEffect(() => {
+        dispatch(clearGraphData());
     }, [])
 
     useEffect(() => {
-        loadData();
+        dispatch(clearGraphData());
     }, [stateGraph.selectedDataSource])
 
     return (<>

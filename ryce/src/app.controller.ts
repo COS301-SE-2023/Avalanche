@@ -22,12 +22,10 @@ export class AppController {
 
   @MessagePattern({ cmd: 'transactions' })
   async transactions(data: any) {
-    console.log('Transactions: ', data);
     const result = await this.transactionsService.transactions(
       data.filters,
       data.graphName,
     );
-    console.log('Transactions result: ', result);
     if (result.error) {
       throw new RpcException({
         status: result.status,
@@ -41,7 +39,6 @@ export class AppController {
 
   @MessagePattern({ cmd: 'transactions-ranking' })
   async transactionsRanking(data: any) {
-    console.log('Transactions: ', data);
     const result = await this.transactionsService.transactionsRanking(
       data.filters,
       data.graphName,

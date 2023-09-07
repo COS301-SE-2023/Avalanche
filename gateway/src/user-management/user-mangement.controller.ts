@@ -1,10 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Body, Controller, Get, HttpCode, HttpException, Inject, Post } from '@nestjs/common';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
-import { timeStamp } from 'console';
 import { lastValueFrom } from 'rxjs';
-import { readFileSync } from 'fs';
-import { resolve } from 'path';
 import { Counter, Histogram , Registry} from 'prom-client';
 
 const register = new Registry();

@@ -9,8 +9,6 @@ export class DomainWatchService {
   constructor(private httpService: HttpService) { }
 
   async sendData(data: any): Promise<any> {
-    console.log(data);
-    console.log("elo");
     try {
       const response = this.httpService.post(
         'http://zanet.cloud:4100/domainWatch/active',

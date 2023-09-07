@@ -6,5 +6,5 @@ export default interface ITransactionGraphRequest {
     granularity?: string //year, month, week
     group?: string,
     transactions?: string[],
-    graphName: string
+    graphName?: string
 }

@@ -57,8 +57,6 @@ import { MovementService } from './movement/movement.service';
           database: process.env.SNOWFLAKE_DATABASE,
           schema: process.env.SNOWFLAKE_SCHEMA,
         });
-
-        // Try to connect to Snowflake, and check whether the connection was successful.
         connection.connect((err) => {
           if (err) {
             console.error('Unable to connect: ' + err.message);

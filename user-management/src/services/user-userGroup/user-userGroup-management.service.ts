@@ -421,8 +421,6 @@ export class UserUserGroupMangementService {
         // Parse the data
         const { userEmail, userGroupName } = JSON.parse(redisData);
 
-        console.log("EMAIL", userEmail, "GROUP NAME", userGroupName);
-
         // Retrieve the user with their groups based on the token
         const user = await this.userRepository.findOne({
             where: { email: userEmail }, relations: ['userGroups', 'organisation'],

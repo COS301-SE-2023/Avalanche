@@ -80,7 +80,6 @@ export class TransactionService {
   }
 
   async transactionsRanking(filters: any, graphName: string): Promise<any> {
-    console.log('zacr/transactionRanking');
     try {
       graphName = this.transactionsGraphName(filters, true);
 

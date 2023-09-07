@@ -23,7 +23,6 @@ export class UserOrganisationMangementService {
             };
         }
         const { email: userEmail } = JSON.parse(userPayload);
-        console.log(userEmail);
         const user = await this.userRepository.findOne({
             where: { email: userEmail }, relations: ['userGroups', 'organisation'],
             select: ['id', 'email', 'firstName', 'lastName', 'organisationId', 'products', 'userGroups', 'organisation']
@@ -112,7 +111,6 @@ export class UserOrganisationMangementService {
             };
         }
         const { email: userEmail } = JSON.parse(userPayload);
-        console.log(userEmail);
         const user = await this.userRepository.findOne({
             where: { email: userEmail }, relations: ['userGroups', 'organisation', 'dashboards'],
             select: ['id', 'email', 'firstName', 'lastName', 'organisationId', 'products', 'userGroups', 'organisation']
