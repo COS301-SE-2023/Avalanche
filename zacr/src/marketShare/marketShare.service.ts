@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { SnowflakeService } from '../snowflake/snowflake.service';
 import { GraphFormatService } from '../graph-format/graph-format.service';
 import { DataInterface } from '../interfaces/interfaces';
+import { query } from 'express';
 
 @Injectable()
 export class MarketShareService {
@@ -36,14 +37,70 @@ export class MarketShareService {
             timestamp: new Date().toISOString(),
           };
         }
-        formattedData = await this.graphFormattingService.formatMarketshare(
-          JSON.stringify(queryData),
+        /**
+         * Get the total
+         */
+        let filtersCount = {};
+        if (JSON.parse(filters).zone != undefined) {
+          filtersCount = { zone: JSON.parse(filters).zone };
+        }
+        filtersCount = JSON.stringify(filtersCount);
+        const sqlCountQuery = `call domainCount('${filtersCount}')`;
+
+        let dataCount: any = await this.redis.get(`zacr` + sqlCountQuery);
+        if (!dataCount) {
+          try {
+            dataCount = await this.snowflakeService.execute(sqlCountQuery);
+
+            await this.redis.set(
+              `zacr` + sqlCountQuery,
+              JSON.stringify(dataCount),
+              'EX',
+              24 * 60 * 60,
+            );
+          } catch (e) {
+            return {
+              status: 500,
+              error: true,
+              message: 'Data Warehouse Error',
+              timestamp: new Date().toISOString(),
+            };
+          }
+        } else {
+          dataCount = JSON.parse(dataCount);
+        }
+        const overallCount = JSON.parse(dataCount[0]['DOMAINCOUNT'])[0][
+          'NumInRegistry'
+        ];
+
+        const topNRegistrars = JSON.parse(queryData[0]['MARKETSHARE']);
+
+        const totalTopNRegistrarsCount = topNRegistrars.reduce(
+          (acc, curr) => acc + curr.NumInRegistry,
+          0,
         );
+
+        const otherRegistrarCount = overallCount - totalTopNRegistrarsCount;
+        topNRegistrars.push({
+          Registrar: 'Other',
+          NumInRegistry: otherRegistrarCount,
+        });
+
+
+        const topNRegistrarsArr = [
+          { MARKETSHARE: JSON.stringify(topNRegistrars) },
+        ];
+
+        formattedData = await this.graphFormattingService.formatMarketshare(
+          JSON.stringify(topNRegistrarsArr),
+        );
+
 
         data = {
           chartData: JSON.parse(formattedData),
-          jsonData: JSON.parse(queryData[0]['MARKETSHARE']),
+          jsonData: topNRegistrars,
         };
+
 
         await this.redis.set(
           `zacr` + sqlQuery,

@@ -41,8 +41,7 @@ export class GraphFormatService {
       if (keys.length === 3) {
         const dataToSend = JSON.stringify([{ data: JSON.stringify(dataArr) }]);
         return this.formatTwoColumns(keys, dataToSend, 'data', 'Count');
-      } 
-      else {
+      } else {
         throw new Error(
           'Invalid size array structure in Domain Name Analysis.',
         );
