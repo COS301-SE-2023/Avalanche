@@ -23,7 +23,7 @@ interface IChartCard {
 
 
 
-export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
+export default function ChartCard({ data, defaultGraph }: IChartCard) {
 
     const dispatch = useDispatch<any>();
     const stateGraph = useSelector(graphState);
@@ -37,6 +37,7 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
     const [type, setType] = useState<ChartType>(defaultGraph);
     const [filterDropdown, setFilterDropdown] = useState<boolean>(false);
     const [graphData, setGraphData] = useState<any>(data.data);
+    const [title, setGraphTitle] = useState<any>(data.graphName);
     const [warehouse, setWarehouse] = useState<string>(data.warehouse);
     const [gType, setGType] = useState<string>(data.graphType);
     const [loading, setLoading] = useState<boolean>(false);
@@ -159,8 +160,9 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
             const d = res as any;
             console.log("Before setGraphData")
             //console.log(d)
-            console.log("Graph name: " + d.data);
+            console.log(d.data);
             setGraphData(d.data.data);
+            setGraphTitle(d.data.graphName);
             setLoading(false);
         } catch (e) {
             if (e instanceof Error) return ErrorToast({ text: e.message })

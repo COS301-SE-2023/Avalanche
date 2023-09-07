@@ -65,33 +65,36 @@ export default function GraphZoomModal({ custom }: IGraphZoomModal) {
     }
 
     useEffect(() => {
-       if(state.data.data.jsonData.length){
-        setData(state.data.data);
-        console.log("should be good");
-       }
+        console.log(state);
+        if(state.data.data.jsonData){
+            setData(state.data.data);
+        }
+        
+        const check = data;
+        console.log(check);
     }, [state.data.data])
 
     
 
     if (!state.data) {
         return (
-            <ModalWrapper title={state.zoomedData?.graphName || state.data?.data?.graphName} large={true}>
+            <ModalWrapper title={state.zoomedData?.graphName || state.graphName} large={true}>
                 <div role="status" className="flex justify-between h-64 w-full bg-gray-300 rounded-lg animate-customPulse dark:bg-gray-700 p-6" />
             </ModalWrapper>
         )
     }
     
     return (
-        <ModalWrapper title={state.zoomedData?.graphName || state.data.data.graphName} large={true}>
+        <ModalWrapper title={state.zoomedData?.graphName || state.graphName} large={true}>
             <div className="flex">
                 <div className="relative p-6 space-y-6 flex-auto">
                     {state.data.type === ChartType.Bar && data.jsonData && <BarChart data={data} height='450%'/>}
-                    {state.data.type === ChartType.Pie && data.jsonData &&<PieChart data={state.data.data} height='450%'/>}
+                    {state.data.type === ChartType.Pie && data.jsonData &&<PieChart data={data} height='450%'/>}
                     {state.data.type === ChartType.Line && data.jsonData &&<LineChart data={data} height='450%'/>}
-                    {state.data.type === ChartType.Bubble && data.jsonData &&<BubbleChart data={state.data.data} height='450%'/>}
-                    {state.data.type === ChartType.PolarArea && data.jsonData &&<PolarAreaChart data={state.data.data} height='450%'/>}
+                    {state.data.type === ChartType.Bubble && data.jsonData &&<BubbleChart data={data} height='450%'/>}
+                    {state.data.type === ChartType.PolarArea && data.jsonData &&<PolarAreaChart data={data} height='450%'/>}
                     {state.data.type === ChartType.Radar && data.jsonData &&<RadarChart data={data} height='450%'/>}
-                    {state.data.type === ChartType.Table && state.data.data.jsonData.length &&<TableChart data={state.data.data} />}
+                    {state.data.type === ChartType.Table && data.jsonData &&<TableChart data={data} />}
                 </div>
                 {custom && <div className="flex flex-col gap-5 flex-auto">
                     <form onSubmit={(e) => uploadComment(e)}>

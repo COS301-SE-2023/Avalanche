@@ -53,7 +53,7 @@ export class MovementService {
           `zacr` + sqlQuery,
           JSON.stringify(data),
           'EX',
-          72 * 60 * 60,
+          24 * 60 * 60,
         );
       } else {
         data = JSON.parse(dataR);
