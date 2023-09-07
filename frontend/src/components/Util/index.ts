@@ -13,6 +13,7 @@ import SuccessToast from './SuccessToast';
 import Dropdown from './Dropdown';
 import DataProductItem from './DataProductItem';
 import BetterDropdown from './BetterDropdown';
+import SuccessAlert from './SuccessAlert';
 
 export {
     DangerAlert,
@@ -29,5 +30,6 @@ export {
     SuccessToast,
     Dropdown,
     DataProductItem,
-    BetterDropdown
+    BetterDropdown,
+    SuccessAlert
 };

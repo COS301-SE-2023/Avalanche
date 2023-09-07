@@ -123,7 +123,7 @@ export default function Sidebar() {
     } else
         return (
             <>
-                <button data-drawer-target="default-sidebar" data-drawer-toggle="default-sidebar" aria-controls="default-sidebar" type="button" className={`fixed top-2 right-2 z-20 inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600 bg-gray-700 animate__animated ${!modalState.currentOpen ? "animate__fadeIn animate__faster" : "hidden animate__fadeOut animate__faster"}`} onClick={() => setMenu(true)}>
+                <button className={`fixed top-2 right-2 z-20 inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600 bg-gray-700 animate__animated ${!modalState.currentOpen ? "animate__fadeIn animate__faster" : "hidden animate__fadeOut animate__faster"}`} onClick={() => setMenu(true)}>
                     <Bars4Icon className="h-8 w-8" />
                 </button>
                 <div onClick={() => {
@@ -134,11 +134,10 @@ export default function Sidebar() {
                             e.stopPropagation()
                         }}
                     >
-                        <div className="flex flex-col overflow-y-auto py-5 px-3 h-full border-r border-gray-200 bg-gray-200 dark:bg-primaryBackground dark:border-secondaryBackground">
+                        <div className="flex flex-col overflow-y-auto py-5 px-3 h-full border-r border-gray-200 bg-gray-200 dark:bg-dark-background dark:border-secondaryBackground">
                             {/* top list */}
                             <ul className="space-y-2">
                                 <SideBarItem text="Home" icon={<HomeIcon className="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />} page="home" />
-
                                 <li>
                                     <span className="flex items-center justify-between p-2 text-gray-900 rounded-lg dark:text-white hover:bg-lightHover dark:hover:bg-gray-700 hover:cursor-pointer" onClick={() => setDF(!df)}>
                                         <div className="flex">
@@ -205,6 +204,7 @@ export default function Sidebar() {
                                     })
                                 }} />
                             </li>
+                        <div className="bottom-0 left-0 justify-center p-4 w-full flex flex-col gap-4 bg-gray-200 dark:bg-dark-background dark:border-secondaryBackground z-20 border-r border-gray-200">
                             <div className="flex items-center space-x-4">
                                 {/* <BetterDropdown items={[{ name: "ZACR", value: "zacr" }, { name: "Africa", value: "africa" }, { name: "RyCE", value: "ryce" }]} text={"select a warehouse"} option={stateGraph.selectedDataSource} set={reduceDataSource} absolute={true} placement="above" />
                                 <QuestionMarkCircleIcon className="absolute top-2 right-2 h-5 w-5" /> */}
