@@ -195,7 +195,14 @@ export default function Sidebar() {
                             </ul>
                         </div>
 
-                        <div className="bottom-0 left-0 justify-center p-4 w-full flex flex-col gap-4 bg-gray-200 dark:bg-dark-background dark:border-dark-background border-r border-gray-200">
+                        <div className="bottom-0 left-0 justify-center p-4 w-full flex flex-col gap-2 bg-gray-200 dark:bg-dark-background dark:border-dark-background border-r border-gray-200">
+                            {(stateUser.user.dataProducts?.length === 0 || !stateUser.user.dataProducts) && <SubmitButton text="Are you a registrar? Integrate" className="w-full" onClick={() => {
+                                router.push({
+                                    pathname: '/settings',
+                                    query: { tab: 'integrations' }
+                                })
+                            }} />}
+
                             <BetterDropdown items={[{ name: "ZACR", value: "zacr" }, { name: "Africa", value: "africa" }, { name: "RyCE", value: "ryce" }]} text={"select a warehouse"} option={stateGraph.selectedDataSource} set={reduceDataSource} absolute={true} placement="above" className="sm:hidden" />
                             <Popover className="relative w-full sm:flex">
                                 {({ open, close }) => (
