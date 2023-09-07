@@ -18,6 +18,7 @@ export class MarketShareService {
   ) {}
 
   async marketShare(filters: string, graphName: string): Promise<any> {
+    console.log(filters)
     try {
       graphName = this.marketShareGraphName(filters);
 
@@ -158,7 +159,7 @@ export class MarketShareService {
     if (rank) {
       rank = 'The ' + rank + ' registrars (i.t.o. domain count)';
     } else {
-      rank = '';
+      rank = 'The top 5';
     }
 
     let registrar = filters['registrar'];
@@ -181,7 +182,7 @@ export class MarketShareService {
         }
         zone = zoneArr.join(', ');
       }
-      zone = ' across' + zone;
+      zone = ' across ' + zone;
     } else {
       zone = ' across all zones ';
     }
