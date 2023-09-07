@@ -83,7 +83,7 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
 
     const handleMagnifyModal = (): void => {
         const modal: any = {
-            type, data: graphData
+            type, data: graphData, graphName: title
         }
         dispatch(setCurrentOpenState("GRAPH.Modal"))
         dispatch(setData(modal));
@@ -159,6 +159,7 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
             const d = res as any;
             console.log("Before setGraphData")
             //console.log(d)
+            console.log("Graph name: " + d.data);
             setGraphData(d.data.data);
             setLoading(false);
         } catch (e) {
