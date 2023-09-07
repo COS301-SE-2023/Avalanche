@@ -21,6 +21,24 @@ module.exports = {
         customPulse: 'wiggle 2s ease-in-out infinite',
       },
       colors: {
+        success: {
+          border: '#00B257',
+          background: '#0cce6b',
+        },
+        danger: {
+          border: '#D30D11',
+          background: '#ED4245'
+        },
+        warning: {
+          border: '#F3B900',
+          background: '#FFC91B'
+        },
+        dark: {
+          background: '#00132D',
+          secondaryBackground: '#00193B',
+          thirdBackground: '#001E45',
+          forthBackground: '#002657'
+        },
         primaryBackground: '#121212',
         secondaryBackground: '#212121',
         thirdBackground: '#333533',
