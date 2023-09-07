@@ -63,7 +63,7 @@ export default function MarketShare() {
         const arrayMarketShare: IMarketShareGraphRequest[] = [];
         const currentDate = new Date();
 
-        const marketShareTop5: IMarketShareGraphRequest = { rank: 'top5', registrar : ["Individual"] };
+        const marketShareTop5: IMarketShareGraphRequest = { rank: 'top5', registrar : ['Individual'] };
         arrayMarketShare.push(marketShareTop5);
 
         const marketShareTop10: IMarketShareGraphRequest = { rank: 'top10' };
