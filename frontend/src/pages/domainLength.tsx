@@ -12,7 +12,7 @@ import GraphZoomModal from "@/components/Modals/GraphZoomModal"
 import IDomainNameAnalysisGraphRequest from "@/interfaces/requests/DomainNameAnalysis"
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
-import { SubmitButton } from "@/components/Util"
+import { SubmitButton, MainContent } from "@/components/Util"
 
 export default function DomainLength() {
 
@@ -56,7 +56,7 @@ export default function DomainLength() {
         pdf.save('report.pdf');
     };
 
-    function loadData(){
+    function loadData() {
         // const data: ITransactionGraphRequest = { zone: "CO.ZA", granularity: "week", group: "registrar", dateFrom: "2023-01-02", graphName: "Your mom" };
 
         const arrayDomainNameAnalysisShare: IDomainNameAnalysisGraphRequest[] = [];
@@ -76,10 +76,10 @@ export default function DomainLength() {
     }
 
     useEffect(() => {
-        if(stateGraph.cleared){
-         loadData();
+        if (stateGraph.cleared) {
+            loadData();
         }
-     }, [stateGraph.cleared])
+    }, [stateGraph.cleared])
 
     useEffect(() => {
         dispatch(clearGraphData());
@@ -95,7 +95,7 @@ export default function DomainLength() {
         </Head>
         <Sidebar />
 
-        <div className="p-4 sm:ml-64 bg-gray-100 dark:bg-secondaryBackground min-h-screen">
+        <MainContent>
             <div className="flex justify-between items-center">
                 <PageHeader title="Domain Name Analysis Length" subtitle="Insights at your fingertips" icon={<ClipboardIcon className="h-16 w-16 text-black dark:text-white" />} />
                 <SubmitButton text="Download Report" onClick={() => generatePDF()} />
@@ -147,7 +147,7 @@ export default function DomainLength() {
                     <ChartCard title="A ChartJS Chart 5" data={chartData} defaultGraph={ChartType.PolarArea} /> */}
                 </div>
             </div>
-        </div>
+        </MainContent>
         {
             modalState.currentOpen === "GRAPH.Modal" && <GraphZoomModal />
         }

@@ -12,7 +12,7 @@ import { selectModalManagerState } from "@/store/Slices/modalManagerSlice"
 import GraphZoomModal from "@/components/Modals/GraphZoomModal"
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
-import { SubmitButton } from "@/components/Util"
+import { SubmitButton, MainContent } from "@/components/Util"
 
 export default function RegistrarMarketComparison() {
 
@@ -60,7 +60,7 @@ export default function RegistrarMarketComparison() {
         pdf.save('report.pdf');
     };
 
-    function loadData(){
+    function loadData() {
         // const data: ITransactionGraphRequest = { zone: "CO.ZA", granularity: "week", group: "registrar", dateFrom: "2023-01-02", graphName: "Your mom" };
         const arrayRanking: ITransactionGraphRequest[] = [];
         const currentDate = new Date();
@@ -70,7 +70,7 @@ export default function RegistrarMarketComparison() {
         let dateTo = `${currentDate.getFullYear() - 1}-12-31`;
         // const monthlyLastYearRenewRanking: ITransactionGraphRequest = { graphName: `Monthly renew ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: stateGraph.zones.slice(0,1), registrar: ["afrihost", "hetzner", "diamatrix"], transactions: ["renew"] };
         // arrayRanking.push(monthlyLastYearRenewRanking);
-        const monthlyLastYearCreateRanking: ITransactionGraphRequest = { graphName: `Monthly create ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: stateGraph.zones.slice(0,1), registrar: ["afrihost", "hetzner", "diamatrix"], transactions: ["create"] };
+        const monthlyLastYearCreateRanking: ITransactionGraphRequest = { graphName: `Monthly create ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: stateGraph.zones.slice(0, 1), registrar: ["afrihost", "hetzner", "diamatrix"], transactions: ["create"] };
         arrayRanking.push(monthlyLastYearCreateRanking);
         // const monthlyLastYearTransferRanking: ITransactionGraphRequest = { graphName: `Monthly grace ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: 'CO.ZA', registrar : ["1und1","registrygate","internetx"], transactions : ["grace"] };
         // arrayRanking.push(monthlyLastYearTransferRanking);
@@ -95,10 +95,10 @@ export default function RegistrarMarketComparison() {
     }
 
     useEffect(() => {
-        if(stateGraph.cleared){
-         loadData();
+        if (stateGraph.cleared) {
+            loadData();
         }
-     }, [stateGraph.cleared])
+    }, [stateGraph.cleared])
 
     useEffect(() => {
         dispatch(clearGraphData());
@@ -114,7 +114,7 @@ export default function RegistrarMarketComparison() {
         </Head>
         <Sidebar />
 
-        <div className="p-4 sm:ml-64 bg-gray-100 dark:bg-secondaryBackground min-h-screen">
+        <MainContent>
             <div className="flex justify-between items-center">
                 <PageHeader title="Registrar Market Comparison" subtitle="Insights at your fingertips" icon={<MapIcon className="h-16 w-16 text-black dark:text-white" />} />
                 <SubmitButton text="Download Report" onClick={() => generatePDF()} />
@@ -174,7 +174,7 @@ export default function RegistrarMarketComparison() {
                     }
                 </div>
             </div>
-        </div>
+        </MainContent>
         {
             modalState.currentOpen === "GRAPH.Modal" && <GraphZoomModal />
         }

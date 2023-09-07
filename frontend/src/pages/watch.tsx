@@ -3,7 +3,7 @@ import Head from "next/head";
 import { MagnifyingGlassCircleIcon, QuestionMarkCircleIcon, ChevronUpDownIcon, ChevronUpIcon } from '@heroicons/react/24/solid';
 import { useEffect, useState } from "react";
 import PageHeader from "@/components/Util/PageHeader";
-import { SubmitButton, WarningAlert, ErrorToast, InputLabel, Input, AlternativeButton, Anchor } from "@/components/Util";
+import { SubmitButton, WarningAlert, ErrorToast, InputLabel, Input, AlternativeButton, Anchor, MainContent } from "@/components/Util";
 import { Toaster } from 'react-hot-toast';
 import { domainWatchState, getDomainWatch, updateChanging } from "@/store/Slices/domainWatchSlice";
 import { IDomainWatchRequest } from "@/interfaces/requests";
@@ -252,7 +252,7 @@ export default function Settings() {
         </Head>
         <Sidebar />
 
-        <div className="p-4 sm:ml-64 bg-white dark:bg-secondaryBackground min-h-screen">
+        <MainContent>
             <div className="flex justify-between items-center">
                 <PageHeader title="Domain Watch" subtitle="Watch your Domains" icon={<MagnifyingGlassCircleIcon className="h-16 w-16 text-black dark:text-white" />} />
             </div>
@@ -442,7 +442,7 @@ export default function Settings() {
 
                 </div>}
             </div >
-        </div>
+        </MainContent>
         {modalState.currentOpen === "WATCH.WHOIS" && <WHOISModal data={whois} />}
     </>
 }

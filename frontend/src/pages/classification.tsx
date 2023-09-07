@@ -12,7 +12,7 @@ import GraphZoomModal from "@/components/Modals/GraphZoomModal"
 import IDomainNameAnalysisGraphRequest from "@/interfaces/requests/DomainNameAnalysis"
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
-import { SubmitButton } from "@/components/Util"
+import { SubmitButton, MainContent } from "@/components/Util"
 
 export default function Classification() {
 
@@ -56,10 +56,10 @@ export default function Classification() {
         pdf.save('report.pdf');
     };
 
-    function loadData(){
+    function loadData() {
         const arrayDomainNameAnalysisShare: IDomainNameAnalysisGraphRequest[] = [];
 
-        const ageAnalysisAverageTop5: IDomainNameAnalysisGraphRequest = { granularity: 'week', num: 1};
+        const ageAnalysisAverageTop5: IDomainNameAnalysisGraphRequest = { granularity: 'week', num: 1 };
         arrayDomainNameAnalysisShare.push(ageAnalysisAverageTop5);
 
         // const ageAnalysisTop5: IDomainNameAnalysisGraphRequest = { granularity: 'week', num: 1 };
@@ -77,7 +77,7 @@ export default function Classification() {
     }
 
     useEffect(() => {
-        if(stateGraph.cleared){
+        if (stateGraph.cleared) {
             loadData();
         };
     }, [stateGraph.cleared])
@@ -97,7 +97,7 @@ export default function Classification() {
         </Head>
         <Sidebar />
 
-        <div className="p-4 sm:ml-64 bg-gray-100 dark:bg-secondaryBackground min-h-screen">
+        <MainContent>
             <div className="flex justify-between items-center">
                 <PageHeader title="Classification" subtitle="Insights at your fingertips" icon={<EyeIcon className="h-16 w-16 text-black dark:text-white" />} />
                 <SubmitButton text="Download Report" onClick={() => generatePDF()} />
@@ -144,7 +144,7 @@ export default function Classification() {
                     }
                 </div>
             </div>
-        </div>
+        </MainContent>
         {
             modalState.currentOpen === "GRAPH.Modal" && <GraphZoomModal />
         }

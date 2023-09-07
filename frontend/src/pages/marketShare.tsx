@@ -12,7 +12,7 @@ import GraphZoomModal from "@/components/Modals/GraphZoomModal"
 import IMarketShareGraphRequest from "@/interfaces/requests/MarketShareGraph"
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
-import { SubmitButton } from "@/components/Util"
+import { SubmitButton, MainContent } from "@/components/Util"
 
 export default function MarketShare() {
 
@@ -57,13 +57,13 @@ export default function MarketShare() {
         pdf.save('report.pdf');
     };
 
-    function loadData(){
+    function loadData() {
         // const data: ITransactionGraphRequest = { zone: "CO.ZA", granularity: "week", group: "registrar", dateFrom: "2023-01-02", graphName: "Your mom" };
 
         const arrayMarketShare: IMarketShareGraphRequest[] = [];
         const currentDate = new Date();
 
-        const marketShareTop5: IMarketShareGraphRequest = { rank: 'top5', registrar : ['Individual'] };
+        const marketShareTop5: IMarketShareGraphRequest = { rank: 'top5', registrar: ['Individual'] };
         arrayMarketShare.push(marketShareTop5);
 
         const marketShareTop10: IMarketShareGraphRequest = { rank: 'top10' };
@@ -82,10 +82,10 @@ export default function MarketShare() {
     }
 
     useEffect(() => {
-        if(stateGraph.cleared){
-         loadData();
+        if (stateGraph.cleared) {
+            loadData();
         }
-     }, [stateGraph.cleared])
+    }, [stateGraph.cleared])
 
     useEffect(() => {
         dispatch(clearGraphData());
@@ -101,7 +101,7 @@ export default function MarketShare() {
         </Head>
         <Sidebar />
 
-        <div className="p-4 sm:ml-64 bg-gray-100 dark:bg-secondaryBackground min-h-screen">
+        <MainContent>
             <div className="flex justify-between items-center">
                 <PageHeader title="Market Share" subtitle="Insights at your fingertips" icon={<ChartBarIcon className="h-16 w-16 text-black dark:text-white" />} />
                 <SubmitButton text="Download Report" onClick={() => generatePDF()} />
@@ -148,7 +148,7 @@ export default function MarketShare() {
                     }
                 </div>
             </div>
-        </div>
+        </MainContent>
         {
             modalState.currentOpen === "GRAPH.Modal" && <GraphZoomModal />
         }

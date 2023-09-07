@@ -12,7 +12,7 @@ import GraphZoomModal from "@/components/Modals/GraphZoomModal"
 import IDomainNameAnalysisGraphRequest from "@/interfaces/requests/DomainNameAnalysis"
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
-import { SubmitButton } from "@/components/Util"
+import { SubmitButton, MainContent } from "@/components/Util"
 
 export default function DomainNameAnalysis() {
 
@@ -56,7 +56,7 @@ export default function DomainNameAnalysis() {
         pdf.save('report.pdf');
     };
 
-    function loadData(){
+    function loadData() {
         const arrayDomainNameAnalysisShare: IDomainNameAnalysisGraphRequest[] = [];
 
         const ageAnalysisAverageTop5: IDomainNameAnalysisGraphRequest = { granularity: 'week', num: 5, minimumAppearances: 150 };
@@ -77,10 +77,10 @@ export default function DomainNameAnalysis() {
     }
 
     useEffect(() => {
-        if(stateGraph.cleared){
-         loadData();
+        if (stateGraph.cleared) {
+            loadData();
         }
-     }, [stateGraph.cleared])
+    }, [stateGraph.cleared])
 
     useEffect(() => {
         dispatch(clearGraphData());
@@ -97,7 +97,7 @@ export default function DomainNameAnalysis() {
         </Head>
         <Sidebar />
 
-        <div className="p-4 sm:ml-64 bg-gray-100 dark:bg-secondaryBackground min-h-screen">
+        <MainContent>
             <div className="flex justify-between items-center">
                 <PageHeader title="Domain Name Analysis" subtitle="Insights at your fingertips" icon={<EyeIcon className="h-16 w-16 text-black dark:text-white" />} />
                 <SubmitButton text="Download Report" onClick={() => generatePDF()} />
@@ -144,7 +144,7 @@ export default function DomainNameAnalysis() {
                     }
                 </div>
             </div>
-        </div>
+        </MainContent>
         {
             modalState.currentOpen === "GRAPH.Modal" && <GraphZoomModal />
         }
