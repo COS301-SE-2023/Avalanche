@@ -85,9 +85,7 @@ export const graphSlice = createSlice({
             
             const payload = action.payload as any;
             assignColours(payload)
-            console.log(state.graphs,"Compare these");
             state.graphs.push(payload.data);
-            console.log(state.graphs,"Compare these2");
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
             state.cleared=false;
