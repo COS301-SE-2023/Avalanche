@@ -95,12 +95,14 @@ export const graphSlice = createSlice({
         builder.addCase(getGraphData.pending, (state) => {
             state.loading = true;
         })
+
         builder.addCase(getGraphDataRanking.fulfilled, (state, action) => {
             const payload = action.payload as any;
             assignColours(payload)
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
+            state.cleared=false;
         })
         builder.addCase(getGraphDataRanking.pending, (state) => {
             state.loading = true;
@@ -112,6 +114,7 @@ export const graphSlice = createSlice({
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
+            state.cleared=false;
         })
         builder.addCase(getMarketShareData.pending, (state) => {
             state.loading = true;
@@ -124,6 +127,7 @@ export const graphSlice = createSlice({
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
+            state.cleared=false;
         })
         builder.addCase(getAgeAnalysisData.pending, (state) => {
             state.loading = true;
@@ -136,6 +140,7 @@ export const graphSlice = createSlice({
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
+            state.cleared=false;
         })
         builder.addCase(getDomainNameAnalysisData.pending, (state) => {
             state.loading = true;
@@ -148,6 +153,7 @@ export const graphSlice = createSlice({
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
+            state.cleared=false;
         })
         builder.addCase(getDomainNameAnalysisClassificationData.pending, (state) => {
             state.loading = true;
@@ -160,6 +166,12 @@ export const graphSlice = createSlice({
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
+            state.cleared=false;
+        })
+        builder.addCase(getMovementVerticalData.rejected, (state,action) => {
+            state.loading = false;
+            state.cleared=false;
+            console.log("FAILED WEEEWOOO",action.payload)
         })
         builder.addCase(getMovementVerticalData.pending, (state) => {
             state.loading = true;
@@ -167,11 +179,12 @@ export const graphSlice = createSlice({
         })
         builder.addCase(getMovementVerticalData.fulfilled, (state, action) => {
             const payload = action.payload as any;
-            //state.graphs.push(payload.data);
+            console.log()
             assignColours(payload)
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
+            state.cleared=false;
         })
         builder.addCase(getDomainLengthData.pending, (state) => {
             state.loading = true;
@@ -181,6 +194,7 @@ export const graphSlice = createSlice({
             // const payload = action.payload as any;
             // state.graphs = payload;
             state.loading = false;
+            state.cleared=false;
         })
         builder.addCase(getGraphDataArray.pending, (state, action) => {
             state.loading = true;
@@ -190,6 +204,7 @@ export const graphSlice = createSlice({
             // const payload = action.payload as any;
             // state.graphs = payload;
             state.loading = false;
+            state.cleared=false;
         })
         builder.addCase(getGraphDataRankingArray.pending, (state, action) => {
             state.loading = true;
@@ -199,6 +214,7 @@ export const graphSlice = createSlice({
             // const payload = action.payload as any;
             // state.graphs = payload;
             state.loading = false;
+            state.cleared=false;
         })
         builder.addCase(getMarketShareDataArray.pending, (state, action) => {
             state.loading = true;
@@ -208,6 +224,7 @@ export const graphSlice = createSlice({
             // const payload = action.payload as any;
             // state.graphs = payload;
             state.loading = false;
+            state.cleared=false;
         })
         builder.addCase(getAgeAnalysisDataArray.pending, (state, action) => {
             state.loading = true;
@@ -226,6 +243,7 @@ export const graphSlice = createSlice({
             // const payload = action.payload as any;
             // state.graphs = payload;
             state.loading = false;
+            state.cleared=false;
         })
         builder.addCase(getDomainNameAnalysisClassificationDataArray.pending, (state, action) => {
             state.loading = true;
@@ -236,6 +254,7 @@ export const graphSlice = createSlice({
             state.loading = false;
             state.filters = payload;
             state.error = "";
+            state.cleared=false;
         })
         builder.addCase(getFilters.pending, (state) => {
             state.filters = [];
