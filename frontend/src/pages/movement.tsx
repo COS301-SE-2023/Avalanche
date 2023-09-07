@@ -105,7 +105,7 @@ export default function Movement() {
                 <div className="grid lg:grid-cols-2 sm:grid-cols-1 md:grid-cols-2 gap-4 mb-4 grid-rows-2">
                     {
                         stateGraph.graphs?.length > 0 && stateGraph.graphs.map((data: any, index: number) => {
-                            if (data) return <ChartCard title={data.graphName} data={data} defaultGraph={ChartType.Line} key={index} />
+                            if (data) return <ChartCard title={data.graphName} data={data} defaultGraph={ChartType.Bar} key={index} />
                         })
                     }
                     {
