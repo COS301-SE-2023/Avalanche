@@ -51,7 +51,17 @@ export default function Home() {
 
   useEffect(() => {
     if (stateUser.requests.error) {
-      ErrorToast({ text: `${stateUser.requests.error}` });
+      switch (stateUser.requests.error) {
+        case 'This user does not exist, please enter the correct email/please register.': {
+          ErrorToast({ text: "The provided email/password do not match any registered user within our system." });
+          break;
+        }
+        case 'Incorrect password': {
+          ErrorToast({ text: "The provided email/password do not match any registered user within our system." });
+          break;
+        }
+      }
+      // ErrorToast({ text: `${stateUser.requests.error}` });
       dispatch(clearError());
     }
 
@@ -81,10 +91,10 @@ export default function Home() {
         <Head>
           <title>Avalanche</title>
         </Head>
-        <section className="bg-gray-50 dark:bg-primaryBackground">
+        <section className="bg-gray-50 dark:bg-dark-background">
           <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-screen lg:py-0">
-            <Image src={lightBanner} className="w-full sm:max-w-lg mb-2" alt="Logo" />
-            <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-lg xl:p-0 dark:bg-secondaryBackground dark:border-primaryBackground">
+            <Image src={lightBanner} className="w-full sm:max-w-sm mb-2" alt="Logo" />
+            <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-lg xl:p-0 dark:bg-dark-secondaryBackground dark:border-dark-secondaryBackground">
               <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                 <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                   Sign in to your account

@@ -34,7 +34,7 @@ module.exports = {
           background: '#FFC91B'
         },
         dark: {
-          background: '#00132D',
+          background: '#000C1D',
           secondaryBackground: '#00193B',
           thirdBackground: '#001E45',
           forthBackground: '#002657'
