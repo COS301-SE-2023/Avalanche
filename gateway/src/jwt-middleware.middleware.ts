@@ -13,7 +13,6 @@ export class JwtMiddleware implements NestMiddleware {
       // Get token from header
       const token = req.body.token?.split(' ')[1];
       req.body.token = token;
-      console.log(req.body);
       // Get user's information from Redis by token
       let userInfo: any;
       try {
