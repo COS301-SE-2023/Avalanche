@@ -226,7 +226,7 @@ export default function Sidebar() {
                                                 leaveFrom="transform opacity-100 scale-100"
                                                 leaveTo="transform opacity-0 scale-95"
                                             >
-                                                <Popover.Panel className="absolute ml-64 w-96 -top-20 rounded bg-primaryBackground p-5 flex gap-4 flex-col">
+                                                <Popover.Panel className="absolute ml-64 w-96 -top-20 rounded bg-primaryBackground p-5 flex gap-4 flex-col z-50">
                                                     {
                                                         statePermissions.permissions.map((item: IPermission, index: number) => {
                                                             const name = dataSourceName.find((i: IDataSourceItem) => i.code === item.dataSource);

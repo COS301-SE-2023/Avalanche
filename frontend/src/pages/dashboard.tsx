@@ -31,7 +31,7 @@ export default function Dashboard() {
         // All transactions, monthly granularity, for the last year
         let dateFrom = `${currentDate.getFullYear() - 1}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
         let dateTo = `${currentDate.getFullYear()}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
-        const monthlyLastYear: ITransactionGraphRequest = { graphName: `Monthly, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: stateGraph.zones.slice(0,1)  };
+        const monthlyLastYear: ITransactionGraphRequest = { granularity: "month", dateFrom, dateTo, zone: stateGraph.zones.slice(0,1)  };
         array.push(monthlyLastYear);
 
         // All transactions, monthly granularity, for the year before
