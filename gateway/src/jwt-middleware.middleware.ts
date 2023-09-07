@@ -68,6 +68,7 @@ export class JwtMiddleware implements NestMiddleware {
           delete req.body.token;
           const graphName1 = req.body.graphName;
           const minNum = req.body.minimumAppearances;
+          req.body.tou = productType;
           delete req.body.minimumAppearances;
           delete req.body.graphName;
           if (!req.body.filters) {
@@ -115,6 +116,7 @@ export class JwtMiddleware implements NestMiddleware {
           delete req.body.token;
           const graphName1 = req.body.graphName;
           const minNum = req.body.minimumAppearances;
+          req.body.tou = productType;
           delete req.body.minimumAppearances;
           delete req.body.graphName;
           if (!req.body.filters) {
@@ -146,6 +148,7 @@ export class JwtMiddleware implements NestMiddleware {
           if (!result.includes(url)) {
             return res.status(403).json({ status: 403, message: 'Access Forbidden', timestamp: new Date().toISOString() });
           }
+          
           if (productType == 'registrar') {
             if (req.body.registrar && req.body.registrar.length === 1) {
               if (req.body.registrar[0] === "Individual") {
@@ -162,6 +165,7 @@ export class JwtMiddleware implements NestMiddleware {
           delete req.body.token;
           const graphName1 = req.body.graphName;
           const minNum = req.body.minimumAppearances;
+          req.body.tou = productType;
           delete req.body.minimumAppearances;
           delete req.body.graphName;
           if (!req.body.filters) {

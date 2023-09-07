@@ -63,7 +63,7 @@ export default function MarketShare() {
         const arrayMarketShare: IMarketShareGraphRequest[] = [];
         const currentDate = new Date();
 
-        const marketShareTop5: IMarketShareGraphRequest = { rank: 'top5' };
+        const marketShareTop5: IMarketShareGraphRequest = { rank: 'top5', registrar : ["Individual"] };
         arrayMarketShare.push(marketShareTop5);
 
         const marketShareTop10: IMarketShareGraphRequest = { rank: 'top10' };
@@ -72,8 +72,6 @@ export default function MarketShare() {
         const marketShareTop20: IMarketShareGraphRequest = { rank: 'top20' };
         arrayMarketShare.push(marketShareTop20);
 
-        const marketShareBottom20: IMarketShareGraphRequest = { rank: 'bottom20' };
-        arrayMarketShare.push(marketShareBottom20);
 
         arrayMarketShare.forEach(data => {
             dispatch(getMarketShareData(data));
