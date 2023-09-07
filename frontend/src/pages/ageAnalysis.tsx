@@ -5,7 +5,7 @@ import Head from "next/head"
 import { ChartCard } from "@/components/Graphs"
 import { ChartType } from "@/Enums";
 import { useDispatch, useSelector } from "react-redux";
-import { graphState, getAgeAnalysisData } from "@/store/Slices/graphSlice"
+import { graphState, getAgeAnalysisData, clearGraphData } from "@/store/Slices/graphSlice"
 import { useEffect } from "react";
 import { selectModalManagerState } from "@/store/Slices/modalManagerSlice"
 import GraphZoomModal from "@/components/Modals/GraphZoomModal"
@@ -43,11 +43,17 @@ export default function AgeAnalysis() {
     }
 
     useEffect(() => {
-        loadData();
+        if(stateGraph.cleared){
+         loadData();
+        }
+     }, [stateGraph.cleared])
+
+    useEffect(() => {
+        dispatch(clearGraphData());
     }, [])
 
     useEffect(() => {
-        loadData();
+        dispatch(clearGraphData());
     }, [stateGraph.selectedDataSource])
 
     const captureCanvasElements = async () => {

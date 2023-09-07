@@ -5,7 +5,7 @@ import Head from "next/head"
 import { ChartCard } from "@/components/Graphs"
 import { ChartType } from "@/Enums";
 import { useDispatch, useSelector } from "react-redux";
-import { graphState, getMarketShareData } from "@/store/Slices/graphSlice"
+import { graphState, getMarketShareData, clearGraphData } from "@/store/Slices/graphSlice"
 import { useEffect } from "react";
 import { selectModalManagerState } from "@/store/Slices/modalManagerSlice"
 import GraphZoomModal from "@/components/Modals/GraphZoomModal"
@@ -63,7 +63,7 @@ export default function MarketShare() {
         const arrayMarketShare: IMarketShareGraphRequest[] = [];
         const currentDate = new Date();
 
-        const marketShareTop5: IMarketShareGraphRequest = { rank: 'top5' };
+        const marketShareTop5: IMarketShareGraphRequest = { rank: 'top5', registrar : ['Individual'] };
         arrayMarketShare.push(marketShareTop5);
 
         const marketShareTop10: IMarketShareGraphRequest = { rank: 'top10' };
@@ -72,8 +72,6 @@ export default function MarketShare() {
         const marketShareTop20: IMarketShareGraphRequest = { rank: 'top20' };
         arrayMarketShare.push(marketShareTop20);
 
-        const marketShareBottom20: IMarketShareGraphRequest = { rank: 'bottom20' };
-        arrayMarketShare.push(marketShareBottom20);
 
         arrayMarketShare.forEach(data => {
             dispatch(getMarketShareData(data));
@@ -84,11 +82,17 @@ export default function MarketShare() {
     }
 
     useEffect(() => {
-        loadData();
+        if(stateGraph.cleared){
+         loadData();
+        }
+     }, [stateGraph.cleared])
+
+    useEffect(() => {
+        dispatch(clearGraphData());
     }, [])
 
     useEffect(() => {
-        loadData();
+        dispatch(clearGraphData());
     }, [stateGraph.selectedDataSource])
 
     return (<>

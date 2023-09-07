@@ -5,7 +5,7 @@ import Head from "next/head"
 import { ChartCard } from "@/components/Graphs"
 import { ChartType } from "@/Enums";
 import { useDispatch, useSelector } from "react-redux";
-import { graphState, getMovementVerticalData } from "@/store/Slices/graphSlice"
+import { graphState, getMovementVerticalData, clearGraphData } from "@/store/Slices/graphSlice"
 import { useEffect } from "react";
 import { selectModalManagerState } from "@/store/Slices/modalManagerSlice"
 import GraphZoomModal from "@/components/Modals/GraphZoomModal"
@@ -72,11 +72,17 @@ export default function Movement() {
     }
 
     useEffect(() => {
-        loadData();
+        if(stateGraph.cleared){
+         loadData();
+        }
+     }, [stateGraph.cleared])
+
+    useEffect(() => {
+        dispatch(clearGraphData());
     }, [])
 
     useEffect(() => {
-        loadData();
+        dispatch(clearGraphData());
     }, [stateGraph.selectedDataSource])
 
     return (<>
@@ -94,7 +100,7 @@ export default function Movement() {
                 <div className="grid lg:grid-cols-2 sm:grid-cols-1 md:grid-cols-2 gap-4 mb-4 grid-rows-2">
                     {
                         stateGraph.graphs?.length > 0 && stateGraph.graphs.map((data: any, index: number) => {
-                            if (data) return <ChartCard title={data.graphName} data={data} defaultGraph={ChartType.Line} key={index} />
+                            if (data) return <ChartCard title={data.graphName} data={data} defaultGraph={ChartType.Bar} key={index} />
                         })
                     }
                     {
