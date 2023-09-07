@@ -88,8 +88,8 @@ export default function GraphZoomModal({ custom }: IGraphZoomModal) {
                     {state.data.type === ChartType.Bar && data.jsonData && <BarChart data={data} height='450%'/>}
                     {state.data.type === ChartType.Pie && data.jsonData &&<PieChart data={state.data.data} height='450%'/>}
                     {state.data.type === ChartType.Line && data.jsonData &&<LineChart data={data} height='450%'/>}
-                    {state.data.type === ChartType.Bubble && data.jsonData &&<BubbleChart data={state.data.data} />}
-                    {state.data.type === ChartType.PolarArea && state.data.data.jsonData.length &&<PolarAreaChart data={state.data.data} />}
+                    {state.data.type === ChartType.Bubble && data.jsonData &&<BubbleChart data={state.data.data} height='450%'/>}
+                    {state.data.type === ChartType.PolarArea && data.jsonData &&<PolarAreaChart data={state.data.data} height='450%'/>}
                     {state.data.type === ChartType.Radar && data.jsonData &&<RadarChart data={data} height='450%'/>}
                     {state.data.type === ChartType.Table && state.data.data.jsonData.length &&<TableChart data={state.data.data} />}
                 </div>

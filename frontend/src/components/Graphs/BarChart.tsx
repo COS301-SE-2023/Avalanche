@@ -108,7 +108,62 @@ export function BarChart({ data, height }: IChart) {
 
 
   const makeOptions = (jsonData: JsonDataEntry[]) => {
-    let allOptions = convertData(jsonData, "bar");
+    let allOptions = convertData(jsonData, "bar");;
+    let colourToUse=chartColours;
+    let annotationToUse={};
+    if(allOptions.options.yaxis.title.text=="Movement"){
+        colourToUse=[
+            function({ value, seriesIndex, w }) {
+              if (value >= 0) {
+                return '#008000'
+              } else {
+                return '#FF0000'
+              }
+            }
+          ];
+          annotationToUse={
+            yaxis: [{
+                y: 0,
+                y2: null,
+                strokeDashArray: 1,
+                borderColor: '#000000',
+                fillColor: '#000000',
+                opacity: 1,
+                offsetX: 0,
+                offsetY: 0,
+                width: '100%',
+                yAxisIndex: 0,
+                label: {
+                    borderColor: '#c2c2c2',
+                    borderWidth: 0,
+                    borderRadius: 0,
+                    text: undefined,
+                    textAnchor: 'end',
+                    position: 'left',
+                    offsetX: -8,
+                    offsetY: 5,
+                    mouseEnter: undefined,
+                    mouseLeave: undefined,
+                    click: undefined,
+                    style: {
+                        background: '#00000000',
+                        color: '#000000',
+                        fontSize: '12px',
+                        fontWeight: 400,
+                        fontFamily: undefined,
+                        cssClass: 'apexcharts-yaxis-annotation-label',
+                        padding: {
+                          left: 5,
+                          right: 5,
+                          top: 0,
+                          bottom: 2,
+                        }
+                    },
+                },
+            }],
+          };
+
+    }
     Object.assign(allOptions.options, {
 
       dataLabels: {
@@ -116,7 +171,8 @@ export function BarChart({ data, height }: IChart) {
         colors: undefined,  // This will use the series color for each data label
        
       },
-      colors:chartColours,
+      annotations: annotationToUse,
+        colors: colourToUse,
       stroke: {
         show: true,
         curve: 'smooth',
@@ -158,6 +214,7 @@ export function BarChart({ data, height }: IChart) {
           }
         }
       },
+      
       tooltip: {
         theme: 'dark', // or 'light'
         style: {

@@ -158,7 +158,7 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
             }).json();
             const d = res as any;
             console.log("Before setGraphData")
-            console.log(d)
+            //console.log(d)
             setGraphData(d.data.data);
             setLoading(false);
         } catch (e) {

@@ -5,7 +5,7 @@ import Head from "next/head"
 import { ChartCard } from "@/components/Graphs"
 import { ChartType } from "@/Enums";
 import { useDispatch, useSelector } from "react-redux";
-import { graphState, getMarketShareData } from "@/store/Slices/graphSlice"
+import { graphState, getMarketShareData, clearGraphData } from "@/store/Slices/graphSlice"
 import { useEffect } from "react";
 import { selectModalManagerState } from "@/store/Slices/modalManagerSlice"
 import GraphZoomModal from "@/components/Modals/GraphZoomModal"
@@ -84,11 +84,17 @@ export default function MarketShare() {
     }
 
     useEffect(() => {
-        loadData();
+        if(stateGraph.cleared){
+         loadData();
+        }
+     }, [stateGraph.cleared])
+
+    useEffect(() => {
+        dispatch(clearGraphData());
     }, [])
 
     useEffect(() => {
-        loadData();
+        dispatch(clearGraphData());
     }, [stateGraph.selectedDataSource])
 
     return (<>

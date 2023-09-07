@@ -167,6 +167,15 @@ export function PieChart({ data, height }: IChart) {
           fontFamily: 'Arial'     // Font family for the tooltip
         }
       },
+      // fill: {
+      //   type: 'image',
+      //   opacity: 0.85,
+      //   image: {
+      //      src: ['https://smesouthafrica.co.za/wp-content/uploads/2021/06/xneelo-review-sme-south-africa.jpg','https://mybroadband.co.za/news/wp-content/uploads/2014/06/Afrihost-adsl.jpg','https://smesouthafrica.co.za/wp-content/uploads/2021/06/xneelo-review-sme-south-africa.jpg','https://smesouthafrica.co.za/wp-content/uploads/2021/06/xneelo-review-sme-south-africa.jpg','https://smesouthafrica.co.za/wp-content/uploads/2021/06/xneelo-review-sme-south-africa.jpg'],
+      //     width: 25,
+      //     imagedHeight: 25
+      //   },
+      // },
       animations: {
         enabled: true,
         easing: 'easeinout',

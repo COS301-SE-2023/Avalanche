@@ -19,7 +19,8 @@ interface IGraphState {
     filters: any[],
     selectedDataSource:string,
     error: string,
-    zones:string[]
+    zones:string[],
+    cleared:boolean,
 }
 
 interface IZoneArr {
@@ -41,7 +42,8 @@ const initialState: IGraphState = {
     filters: [],
     selectedDataSource:"zacr",
     error: "",
-    zones: zonesArr["zacr"]
+    zones: zonesArr["zacr"],
+    cleared:false
 }
 
 const assignColours = (payload: any) => {
@@ -66,6 +68,10 @@ export const graphSlice = createSlice({
         selectDataSource(state, action) {
             state.selectedDataSource = action.payload as any;
             state.zones = zonesArr[state.selectedDataSource as keyof typeof zonesArr];
+        },
+        clearGraphData(state) {
+            state.graphs=[];
+            state.cleared=true;
         }          
     },
     extraReducers: (builder) => {
@@ -76,15 +82,18 @@ export const graphSlice = createSlice({
             };
         })
         builder.addCase(getGraphData.fulfilled, (state, action) => {
+            
             const payload = action.payload as any;
             assignColours(payload)
+            console.log(state.graphs,"Compare these");
             state.graphs.push(payload.data);
+            console.log(state.graphs,"Compare these2");
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
+            state.cleared=false;
         })
         builder.addCase(getGraphData.pending, (state) => {
             state.loading = true;
-            state.graphs = [];
         })
         builder.addCase(getGraphDataRanking.fulfilled, (state, action) => {
             const payload = action.payload as any;
@@ -617,6 +626,6 @@ export const getFilters = createAsyncThunk("GRAPH.GetFilters", async (object: an
     }
 })
 
-export const { addToGraphs, setLoading,selectDataSource } = graphSlice.actions;
+export const { addToGraphs, setLoading,selectDataSource,clearGraphData } = graphSlice.actions;
 export const graphState = (state: AppState) => state.graph;
 export default graphSlice.reducer;

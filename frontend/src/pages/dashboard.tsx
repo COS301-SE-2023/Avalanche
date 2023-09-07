@@ -5,7 +5,7 @@ import Head from "next/head"
 import { ChartCard } from "@/components/Graphs"
 import { ChartType } from "@/Enums";
 import { useDispatch, useSelector } from "react-redux";
-import { graphState, getGraphData } from "@/store/Slices/graphSlice"
+import { graphState, getGraphData, clearGraphData } from "@/store/Slices/graphSlice"
 import { useEffect, useRef } from "react";
 import { ITransactionGraphRequest } from "@/interfaces/requests";
 import { selectModalManagerState } from "@/store/Slices/modalManagerSlice"
@@ -61,19 +61,24 @@ export default function Dashboard() {
         dateTo = `${currentDate.getFullYear()}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
         const dailyTwoWeeks: ITransactionGraphRequest = { graphName: `Daily, from ${dateFrom} to ${dateTo}`, granularity: "day", dateFrom, dateTo, zone: stateGraph.zones.slice(0,1)  };
         array.push(dailyTwoWeeks);
-
-
+       
         array.forEach(data => {
             dispatch(getGraphData(data));
         })
     }
 
     useEffect(() => {
-        loadData();
+        if(stateGraph.cleared){
+            loadData();
+        }
+    }, [stateGraph.cleared])
+
+    useEffect(() => {
+        dispatch(clearGraphData());
     }, [])
 
     useEffect(() => {
-        loadData();
+        dispatch(clearGraphData());
     }, [stateGraph.selectedDataSource])
 
     const captureCanvasElements = async () => {
