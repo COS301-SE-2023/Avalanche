@@ -35,64 +35,72 @@ type ConvertedData = {
 
 
 export function BarChart({ data, height }: IChart) {
-  const { theme, setTheme } = useTheme();
+  const { theme } = useTheme();
+
+  const getColor = ({ value, seriesIndex, w }: any): string => {
+    if (value >= 0) {
+      return '#008000';
+    } else {
+      return '#FF0000';
+    }
+  };
 
   const makeOptions = (jsonData: JsonDataEntry[]) => {
-    
+
     let allOptions = convertData(jsonData, "bar", theme);
-    let colourToUse=chartColours;
-    let annotationToUse={};
-    if(allOptions.options.yaxis.title.text=="Movement"){
-        colourToUse=[
-            function({ value, seriesIndex, w }) {
-              if (value >= 0) {
-                return '#008000'
-              } else {
-                return '#FF0000'
+    let colourToUse = chartColours;
+    let annotationToUse = {};
+    if (allOptions.options.yaxis.title.text == "Movement") {
+      colourToUse = [
+        ({ value }: any): string => {
+          if (value >= 0) {
+            return '#008000' as string;
+          } else {
+            return '#FF0000' as string;
+          }
+        }
+      ] as any[];
+      annotationToUse = {
+        yaxis: [{
+          y: 0,
+          y2: null,
+          strokeDashArray: 1,
+          borderColor: '#000000',
+          fillColor: '#000000',
+          opacity: 1,
+          offsetX: 0,
+          offsetY: 0,
+          width: '100%',
+          yAxisIndex: 0,
+          label: {
+            borderColor: '#c2c2c2',
+            borderWidth: 0,
+            borderRadius: 0,
+            text: undefined,
+            textAnchor: 'end',
+            position: 'left',
+            offsetX: -8,
+            offsetY: 5,
+            mouseEnter: undefined,
+            mouseLeave: undefined,
+            click: undefined,
+            style: {
+              background: '#00000000',
+              color: '#000000',
+              fontSize: '12px',
+              fontWeight: 400,
+              fontFamily: undefined,
+              cssClass: 'apexcharts-yaxis-annotation-label',
+              padding: {
+                left: 5,
+                right: 5,
+                top: 0,
+                bottom: 2,
               }
-            }
-          ];
-          annotationToUse={
-            yaxis: [{
-                y: 0,
-                y2: null,
-                strokeDashArray: 1,
-                borderColor: '#000000',
-                fillColor: '#000000',
-                opacity: 1,
-                offsetX: 0,
-                offsetY: 0,
-                width: '100%',
-                yAxisIndex: 0,
-                label: {
-                    borderColor: '#c2c2c2',
-                    borderWidth: 0,
-                    borderRadius: 0,
-                    text: undefined,
-                    textAnchor: 'end',
-                    position: 'left',
-                    offsetX: -8,
-                    offsetY: 5,
-                    mouseEnter: undefined,
-                    mouseLeave: undefined,
-                    click: undefined,
-                    style: {
-                        background: '#00000000',
-                        color: '#000000',
-                        fontSize: '12px',
-                        fontWeight: 400,
-                        fontFamily: undefined,
-                        cssClass: 'apexcharts-yaxis-annotation-label',
-                        padding: {
-                          left: 5,
-                          right: 5,
-                          top: 0,
-                          bottom: 2,
-                        }
-                    },
-                },
-            }],
-          };
+            },
+          },
+        }],
+      };
 
     }
     Object.assign(allOptions.options, {
@@ -100,17 +108,17 @@ export function BarChart({ data, height }: IChart) {
       dataLabels: {
         enabled: false,
         colors: undefined,  // This will use the series color for each data label
-       
+
       },
       annotations: annotationToUse,
-        colors: colourToUse,
+      colors: colourToUse,
       stroke: {
         show: true,
         curve: 'smooth',
         lineCap: 'butt',
         colors: undefined,
-        dashArray: 0, 
-    },
+        dashArray: 0,
+      },
       chart: {
         zoom: {
           enabled: true,
@@ -130,8 +138,8 @@ export function BarChart({ data, height }: IChart) {
         },
         id: "basic-line",
         height: 100, // or any other fixed height
-    width: '100%',
-    type: 'area',
+        width: '100%',
+        type: 'area',
         toolbar: {
           show: true,
           tools: {
@@ -159,14 +167,14 @@ export function BarChart({ data, height }: IChart) {
         easing: 'easeinout',
         speed: 900,
         animateGradually: {
-            enabled: true,
-            delay: 300
+          enabled: true,
+          delay: 300
         },
         dynamicAnimation: {
-            enabled: true,
-            speed: 350
+          enabled: true,
+          speed: 350
         }
-    }
+      }
 
     });
     return allOptions;
@@ -175,11 +183,11 @@ export function BarChart({ data, height }: IChart) {
   const [chartData, setChartData] = useState(makeOptions(data.jsonData));
 
   useEffect(() => {
-    
+
     // Update the chart data to reflect the new colors
     setChartData(makeOptions(data.jsonData));
 
-  }, [theme]); 
+  }, [theme]);
 
   return (
     <div className="line">
