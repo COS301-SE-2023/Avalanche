@@ -49,6 +49,12 @@ export default function Sidebar() {
         dispatch(getEndpoints());
     }, [])
 
+    useEffect(() => {
+        if(statePermissions.endpointResolution=="Retry"){
+            dispatch(getEndpoints());
+        }
+    }, [statePermissions.endpointResolution])
+
     /**
      * This will handle the group invites
      * @param key is the key of the invitation
