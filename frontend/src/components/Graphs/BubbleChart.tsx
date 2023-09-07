@@ -1,9 +1,10 @@
 import { IChart } from "@/interfaces";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import dynamic from 'next/dynamic'
 import { json } from "stream/consumers";
 import { chartColours } from "./data";
 import { convertData } from "./util";
+import { useTheme } from "next-themes";
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
@@ -104,11 +105,11 @@ type ConvertedData = {
 // };
 
 export function BubbleChart({ data, height }: IChart) {
-
-
+  const { theme, setTheme } = useTheme();
 
   const makeOptions = (jsonData: JsonDataEntry[]) => {
-    let allOptions = convertData(jsonData, "bubble");
+    
+    let allOptions = convertData(jsonData, "bubble", theme);
     Object.assign(allOptions.options, {
 
       dataLabels: {
@@ -187,6 +188,12 @@ export function BubbleChart({ data, height }: IChart) {
 
   const [chartData, setChartData] = useState(makeOptions(data.jsonData));
 
+  useEffect(() => {
+    // Update the chart data to reflect the new colors
+    setChartData(makeOptions(data.jsonData));
+
+  }, [theme]); 
+  
   return (
     <div className="line">
       <div className="row max-h-screen">

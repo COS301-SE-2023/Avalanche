@@ -1,9 +1,10 @@
 import { IChart } from "@/interfaces";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import dynamic from 'next/dynamic'
 import { json } from "stream/consumers";
 import { chartColours } from "./data";
 import { convertData } from "./util";
+import { useTheme } from "next-themes";
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
@@ -32,83 +33,13 @@ type ConvertedData = {
   };
 };
 
-// const convertData = (jsonData: JsonDataEntry[]): ConvertedData => {
-//   const seriesMap: { [key: string]: { [key: string]: number } } = {};
-//   const xAxisSet = new Set<string>();
-//   const seriesSet = new Set<string>();
-//   let yMin = Infinity;
-//   let yMax = -Infinity;
-
-//   let xAxisLabel = "";
-//   let yAxisLabel = "";
-//   let seriesLabel = "";
-
-//   if (jsonData.length > 0) {
-//     const firstEntryKeys = Object.keys(jsonData[0]);
-//     xAxisLabel = firstEntryKeys[0];
-//     seriesLabel = firstEntryKeys[1];
-//     yAxisLabel = firstEntryKeys[2];
-//   }
-
-//   // Populate the seriesMap and collect unique xAxis and Series values
-//   jsonData.forEach((entry) => {
-//     const xAxis = entry[xAxisLabel] as string;
-//     const series = entry[seriesLabel] as string;
-//     const yAxis = entry[yAxisLabel] as number;
-
-//     xAxisSet.add(xAxis);
-//     seriesSet.add(series);
-
-//     if (!seriesMap[series]) {
-//       seriesMap[series] = {};
-//     }
-//     seriesMap[series][xAxis] = yAxis;
-
-//     yMin = Math.min(yMin, yAxis);
-//     yMax = Math.max(yMax, yAxis);
-//   });
-
-//   // Initialize the final object
-//   const convertedData: ConvertedData = {
-//     series: [],
-//     options: {
-//       xaxis: {
-//         categories: Array.from(xAxisSet),
-//         title: {
-//           text: xAxisLabel,
-//         },
-//       },
-//       yaxis: {
-//         title: {
-//           text: yAxisLabel,
-//         },
-//         //min: Math.min(0, yMin)
-//       },
-
-//     }
-//   };
-
-//   // Populate the series data
-//   seriesSet.forEach((seriesName) => {
-//     const data: number[] = [];
-//     xAxisSet.forEach((xAxisValue) => {
-//       data.push(seriesMap[seriesName][xAxisValue] ?? 0);
-//     });
-//     convertedData.series.push({
-//       name: seriesName,
-//       data,
-//     });
-//   });
-
-//   return convertedData;
-// };
 
 export function BarChart({ data, height }: IChart) {
-
-
+  const { theme, setTheme } = useTheme();
 
   const makeOptions = (jsonData: JsonDataEntry[]) => {
-    let allOptions = convertData(jsonData, "bar");;
+    
+    let allOptions = convertData(jsonData, "bar", theme);
     let colourToUse=chartColours;
     let annotationToUse={};
     if(allOptions.options.yaxis.title.text=="Movement"){
@@ -214,7 +145,6 @@ export function BarChart({ data, height }: IChart) {
           }
         }
       },
-      
       tooltip: {
         theme: 'dark', // or 'light'
         style: {
@@ -243,6 +173,13 @@ export function BarChart({ data, height }: IChart) {
   }
 
   const [chartData, setChartData] = useState(makeOptions(data.jsonData));
+
+  useEffect(() => {
+    
+    // Update the chart data to reflect the new colors
+    setChartData(makeOptions(data.jsonData));
+
+  }, [theme]); 
 
   return (
     <div className="line">

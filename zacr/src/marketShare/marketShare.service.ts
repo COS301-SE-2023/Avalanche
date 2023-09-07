@@ -18,7 +18,6 @@ export class MarketShareService {
   ) {}
 
   async marketShare(filters: string, graphName: string): Promise<any> {
-    console.log(filters)
     try {
       graphName = this.marketShareGraphName(filters);
 
