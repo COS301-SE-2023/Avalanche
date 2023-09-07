@@ -188,7 +188,7 @@ export default function Sidebar() {
                             </ul>
                         </div>
 
-                        <div className="absolute bottom-0 left-0 justify-center p-4 w-full flex flex-col gap-4 bg-gray-200 dark:bg-primaryBackground z-20 border-r border-gray-200 dark:border-secondaryBackground">
+                        <div className="absolute bottom-0 left-0 justify-center p-4 w-full flex flex-col gap-4 bg-gray-200 dark:bg-dark-background dark:border-secondaryBackground z-20 border-r border-gray-200">
                             <div className="flex items-center space-x-4">
                                 {/* <BetterDropdown items={[{ name: "ZACR", value: "zacr" }, { name: "Africa", value: "africa" }, { name: "RyCE", value: "ryce" }]} text={"select a warehouse"} option={stateGraph.selectedDataSource} set={reduceDataSource} absolute={true} placement="above" />
                                 <QuestionMarkCircleIcon className="absolute top-2 right-2 h-5 w-5" /> */}
