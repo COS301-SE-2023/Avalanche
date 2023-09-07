@@ -1,5 +1,5 @@
 import { IChart } from "@/interfaces";
-import React, { useState , useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { json } from "stream/consumers";
 import { chartColours } from "./data";
@@ -105,7 +105,7 @@ export function LineChart({ data, height }: IChart) {
     // Update the chart data to reflect the new colors
     setChartData(makeOptions(data.jsonData));
 
-  }, [theme]); 
+  }, [theme]);
 
   return (
     <div className="line">

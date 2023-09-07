@@ -1,4 +1,4 @@
-import { ChartBarIcon, FunnelIcon, MagnifyingGlassPlusIcon, ChevronDownIcon, DocumentIcon, ShareIcon, ArrowDownTrayIcon} from "@heroicons/react/24/solid";
+import { ChartBarIcon, FunnelIcon, MagnifyingGlassPlusIcon, ChevronDownIcon, DocumentIcon, ShareIcon, ArrowDownTrayIcon } from "@heroicons/react/24/solid";
 import { BarChart, BubbleChart, LineChart, PieChart, PolarAreaChart, RadarChart, TableChart } from "@/components/Graphs";
 import { useState, useEffect } from 'react';
 import { ChartType, ChartTypeArray } from "@/Enums";
@@ -20,8 +20,6 @@ interface IChartCard {
     data: any,
     defaultGraph: ChartType
 }
-
-
 
 export default function ChartCard({ data, defaultGraph }: IChartCard) {
 
@@ -101,7 +99,6 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
 
 
     const renderFilters = () => {
-
         return filterGraphs()?.filters?.map((element: any, index: number) => (
             <Disclosure key={index}>
                 {({ open, close }) => (
@@ -146,7 +143,6 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
     }
 
     const fetchGraphData = async (filters: any) => {
-        //////
         setLoading(true);
         try {
             const jwt = getCookie("jwt");
@@ -158,9 +154,6 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
                 }
             }).json();
             const d = res as any;
-            console.log("Before setGraphData")
-            //console.log(d)
-            console.log(d.data);
             setGraphData(d.data.data);
             setGraphTitle(d.data.graphName);
             setLoading(false);
@@ -203,14 +196,13 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
         link.click();
         document.body.removeChild(link);
     }
-    
 
     const camelCaseRenderer = (value: string) => {
         return value.replace(/([A-Z])/g, ' $1').replace(/^./, function (str) { return str.toUpperCase(); })
     }
 
     return (<>
-        <div className="block p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-primaryBackground dark:border-primaryBackground w-full animate__animated animate__fadeIn animate__slow z-10 graphChart max-h-[80vh] md:max-h-[70vh] overflow-y-auto">
+        <div className="block p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-dark-background dark:border-dark-background w-full animate__animated animate__fadeIn animate__slow z-10 graphChart max-h-[80vh] md:max-h-[70vh] overflow-y-auto">
             <div className="flex justify-between mb-5 text-black dark:text-white">
                 <h1 className="p-1.5">{title}</h1>
                 <div className="flex flex-row gap-1">
