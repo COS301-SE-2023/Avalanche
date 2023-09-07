@@ -90,7 +90,6 @@ export class GraphFormatService {
   }
 
   async formatNettVertical(data: string): Promise<string> {
-    console.log(data);
     const dataArr = JSON.parse(JSON.parse(data)[0]['NETTVERTICALMOVEMENT']);
     if (dataArr.length > 0) {
       const keys = Object.keys(dataArr[0]);
@@ -131,8 +130,6 @@ export class GraphFormatService {
 
   async formatDomainNameAnalysis(data: string): Promise<string> {
     const dataArr = JSON.parse(data)['data'];
-    console.log("In format")
-    console.log(dataArr)
     if (dataArr.length > 0) {
       const keys = Object.keys(dataArr[0]);
       if (keys.length === 3) {
@@ -154,8 +151,6 @@ export class GraphFormatService {
 
   async formatDomainNameAnalysisClassification(data: string): Promise<string> {
     const dataArr = JSON.parse(data)['data'];
-    console.log("In format")
-    console.log(dataArr)
     if (dataArr.length > 0) {
       const keys = Object.keys(dataArr[0]);
       if (keys.length === 3) {

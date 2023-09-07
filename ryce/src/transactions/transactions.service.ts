@@ -72,7 +72,6 @@ export class TransactionService {
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
-      console.log(e.message);
       return {
         status: 500,
         error: true,
@@ -106,7 +105,6 @@ export class TransactionService {
             timestamp: new Date().toISOString(),
           };
         }
-        //console.log(queryData);
         formattedData =
           await this.graphFormattingService.formatTransactionsRanking(
             JSON.stringify(queryData),
@@ -198,7 +196,6 @@ export class TransactionService {
     let trans = 'Transactions ';
     if (perReg) {
       reg = 'per registrar ';
-      console.log(filters['transactions']);
       if (filters['transactions']?.length > 0) {
         trans = '';
         for (let i = 0; i < filters['transactions']?.length - 1; i++) {

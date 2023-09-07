@@ -11,7 +11,6 @@ export class UserManagementService {
     @Inject('USER_MANAGEMENT_SERVICE') private readonly client: ClientProxy,
   ) { }
   async register(data: any) {
-    console.log("In register");
     return this.client.send({ cmd: 'register' }, data).toPromise();
   }
   async verify(data: any) {
@@ -21,7 +20,6 @@ export class UserManagementService {
     return this.client.send({ cmd: 'resendOTP' }, data).toPromise();
   }
   async login(data: any) {
-    console.log("login data:",data);
     return this.client.send({ cmd: 'login' }, data).toPromise();
   }
   async createAPIKey(data: any) {
