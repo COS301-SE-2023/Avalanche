@@ -14,6 +14,7 @@ import Dropdown from './Dropdown';
 import DataProductItem from './DataProductItem';
 import BetterDropdown from './BetterDropdown';
 import SuccessAlert from './SuccessAlert';
+import MainContent from './MainContent';
 
 export {
     DangerAlert,
@@ -31,5 +32,6 @@ export {
     Dropdown,
     DataProductItem,
     BetterDropdown,
-    SuccessAlert
+    SuccessAlert,
+    MainContent
 };

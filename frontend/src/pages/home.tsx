@@ -1,18 +1,18 @@
 import Sidebar from "@/components/Navigation/SideBar"
+import { MainContent } from "@/components/Util";
 import PageHeader from "@/components/Util/PageHeader"
-import { HomeIcon, StarIcon } from "@heroicons/react/24/solid";
-import { StarIcon as StartOutlineIcon } from "@heroicons/react/24/outline";
+import { HomeIcon } from "@heroicons/react/24/solid";
 import Head from "next/head"
 import Link from "next/link"
 
 export default function Home() {
     return (<>
         <Head>
-            <title>Home</title>
+            <title>Avalanche Home</title>
         </Head>
         <Sidebar />
 
-        <div className="p-4 sm:ml-64 bg-gray-100 dark:bg-secondaryBackground min-h-screen z-0">
+        <MainContent>
             <div className="flex justify-between items-center">
                 <PageHeader title="Home" subtitle="Welcome Home" icon={<HomeIcon className="h-16 w-16 text-black dark:text-white" />} />
             </div>
@@ -120,6 +120,6 @@ export default function Home() {
                     </Link>
                 </div>
             </div>
-        </div>
+        </MainContent>
     </>)
 }

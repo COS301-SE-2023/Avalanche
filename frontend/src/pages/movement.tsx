@@ -12,7 +12,7 @@ import GraphZoomModal from "@/components/Modals/GraphZoomModal"
 import IMovementGraphRequest from "@/interfaces/requests/Movement"
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
-import { SubmitButton } from "@/components/Util"
+import { MainContent, SubmitButton } from "@/components/Util"
 
 export default function Movement() {
 
@@ -56,24 +56,19 @@ export default function Movement() {
         pdf.save('report.pdf');
     };
 
-    function loadData(){
-        // const data: ITransactionGraphRequest = { zone: "CO.ZA", granularity: "week", group: "registrar", dateFrom: "2023-01-02", graphName: "Your mom" };
-
+    function loadData() {
         const arrayMovementVerticalShare: IMovementGraphRequest[] = [];
 
-        const movementVertical: IMovementGraphRequest = { zone: stateGraph.zones.slice(0,1), };
+        const movementVertical: IMovementGraphRequest = { zone: stateGraph.zones.slice(0, 1), };
         arrayMovementVerticalShare.push(movementVertical);
 
-        const movementVerticalRegistrar: IMovementGraphRequest = { zone: stateGraph.zones.slice(0,1), registrar: ["hetzner", "afrihost", "diamatrix"] };
+        const movementVerticalRegistrar: IMovementGraphRequest = { zone: stateGraph.zones.slice(0, 1), registrar: ["hetzner", "afrihost", "diamatrix"] };
         arrayMovementVerticalShare.push(movementVerticalRegistrar);
 
 
         arrayMovementVerticalShare.forEach(data => {
             dispatch(getMovementVerticalData(data));
         })
-
-
-        // dispatch(getGraphDataArray(array));
     }
 
     useEffect(() => {
@@ -90,7 +85,7 @@ export default function Movement() {
         </Head>
         <Sidebar />
 
-        <div className="p-4 sm:ml-64 bg-gray-100 dark:bg-secondaryBackground min-h-screen">
+        <MainContent>
             <div className="flex justify-between items-center">
                 <PageHeader title="Nett Movement" subtitle="Insights at your fingertips" icon={<BoltIcon className="h-16 w-16 text-black dark:text-white" />} />
                 <SubmitButton text="Download Report" onClick={() => generatePDF()} />
@@ -137,7 +132,7 @@ export default function Movement() {
                     }
                 </div>
             </div>
-        </div>
+        </MainContent>
         {
             modalState.currentOpen === "GRAPH.Modal" && <GraphZoomModal />
         }

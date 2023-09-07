@@ -128,7 +128,7 @@ export default function Sidebar() {
                             e.stopPropagation()
                         }}
                     >
-                        <div className="flex flex-col overflow-y-auto py-5 px-3 h-full border-r border-gray-200 bg-gray-200 dark:bg-dark-background dark:border-secondaryBackground">
+                        <div className="flex flex-col overflow-y-auto py-5 px-3 h-full border-r border-gray-200 bg-gray-200 dark:bg-dark-background dark:border-dark-background">
                             {/* top list */}
                             <ul className="space-y-2">
                                 <SideBarItem text="Home" icon={<HomeIcon className="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />} page="home" />
@@ -188,7 +188,7 @@ export default function Sidebar() {
                             </ul>
                         </div>
 
-                        <div className="bottom-0 left-0 justify-center p-4 w-full flex flex-col gap-4 bg-gray-200 dark:bg-dark-background dark:border-secondaryBackground border-r border-gray-200">
+                        <div className="bottom-0 left-0 justify-center p-4 w-full flex flex-col gap-4 bg-gray-200 dark:bg-dark-background dark:border-dark-background border-r border-gray-200">
                             <BetterDropdown items={[{ name: "ZACR", value: "zacr" }, { name: "Africa", value: "africa" }, { name: "RyCE", value: "ryce" }]} text={"select a warehouse"} option={stateGraph.selectedDataSource} set={reduceDataSource} absolute={true} placement="above" className="sm:hidden" />
                             <Popover className="relative w-full sm:flex">
                                 {({ open, close }) => (
