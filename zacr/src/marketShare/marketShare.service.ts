@@ -86,15 +86,18 @@ export class MarketShareService {
 
         // Replace registrar names to anonymise
 
-        if (
-          JSON.parse(filters).registrar &&
-          JSON.parse(filters).registrar.length == 1
-        ) {
-          let name: any = await this.registrarNameServices.registrarName({
-            code: JSON.parse(filters).registrar[0],
-          });
-          name = name.data.name;
+        if (JSON.parse(filters).tou != 'registry') {
+          let name: any = 'NoNameSpecified';
+          if (
+            JSON.parse(filters).registrar &&
+            JSON.parse(filters).registrar.length == 1
+          ) {
+            name = await this.registrarNameServices.registrarName({
+              code: JSON.parse(filters).registrar[0],
+            });
+          }
 
+          name = name.data.name;
           topNRegistrars.forEach((item, index) => {
             if (item.Registrar != name) {
               item.Registrar = `Registrar ${index + 1}`;
