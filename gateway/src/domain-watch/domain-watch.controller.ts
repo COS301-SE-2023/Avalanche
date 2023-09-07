@@ -4,20 +4,20 @@ import { DomainWatchService } from './domain-watch.service';
 import { Counter, Histogram, Registry } from 'prom-client';
 
 const register = new Registry();
-export const httpRequestDurationMicroseconds = new Histogram({
-  name: 'http_request_duration_seconds',
+export const httpRequestDurationMicrosecondsDW = new Histogram({
+  name: 'http_request_duration_secondsDW',
   help: 'Duration of HTTP requests in seconds',
   labelNames: ['method', 'route', 'code'],
   buckets: [0.1, 0.3, 0.5, 0.7, 0.9, 1],
 });
 
-export const httpRequestsTotal = new Counter({
-  name: 'http_requests_total',
+export const httpRequestsTotalDW = new Counter({
+  name: 'http_requests_totalDW',
   help: 'Total number of HTTP requests',
   labelNames: ['method', 'route', 'code'],
 });
-register.registerMetric(httpRequestDurationMicroseconds);
-register.registerMetric(httpRequestsTotal);
+register.registerMetric(httpRequestDurationMicrosecondsDW);
+register.registerMetric(httpRequestsTotalDW);
 
 @Controller('domain-watch')
 export class DomainWatchController {
@@ -25,15 +25,15 @@ export class DomainWatchController {
 
   @Post('list')
   async sendData(@Body() data: any) {
-    const end = httpRequestDurationMicroseconds.startTimer();
+    const end = httpRequestDurationMicrosecondsDW.startTimer();
     try {
       const result = await this.domainWatchService.sendData(data);
-      httpRequestsTotal.inc({ method: 'POST', route: 'list', code: 200 });
+      httpRequestsTotalDW.inc({ method: 'POST', route: 'list', code: 200 });
       end({ method: 'POST', route: 'list', code: 200 });
       return result;
     } catch (error) {
       const rpcError = error
-      httpRequestsTotal.inc({ method: 'POST', route: 'list', code: rpcError.status });
+      httpRequestsTotalDW.inc({ method: 'POST', route: 'list', code: rpcError.status });
       end({ method: 'POST', route: 'list', code: rpcError.status });
       if (typeof rpcError === 'object') {
         throw new HttpException(rpcError.message || 'An unexpected error occurred', rpcError.status || 500);
@@ -44,15 +44,15 @@ export class DomainWatchController {
 
   @Post('whoisyou')
   async whoisyou(@Body() data: any) {
-    const end = httpRequestDurationMicroseconds.startTimer();
+    const end = httpRequestDurationMicrosecondsDW.startTimer();
     try {
       const result = await this.domainWatchService.whoisyou(data);
-      httpRequestsTotal.inc({ method: 'POST', route: 'list', code: 200 });
+      httpRequestsTotalDW.inc({ method: 'POST', route: 'list', code: 200 });
       end({ method: 'POST', route: 'list', code: 200 });
       return result;
     } catch (error) {
       const rpcError = error
-      httpRequestsTotal.inc({ method: 'POST', route: 'list', code: rpcError.status });
+      httpRequestsTotalDW.inc({ method: 'POST', route: 'list', code: rpcError.status });
       end({ method: 'POST', route: 'list', code: rpcError.status });
       if (typeof rpcError === 'object') {
         throw new HttpException(rpcError.message || 'An unexpected error occurred', rpcError.status || 500);
@@ -62,15 +62,15 @@ export class DomainWatchController {
   }
   @Get('passive')
   async passive() {
-    const end = httpRequestDurationMicroseconds.startTimer();
+    const end = httpRequestDurationMicrosecondsDW.startTimer();
     try {
       const result = await this.domainWatchService.passive();
-      httpRequestsTotal.inc({ method: 'POST', route: 'list', code: 200 });
+      httpRequestsTotalDW.inc({ method: 'POST', route: 'list', code: 200 });
       end({ method: 'POST', route: 'list', code: 200 });
       return result;
     } catch (error) {
       const rpcError = error
-      httpRequestsTotal.inc({ method: 'POST', route: 'list', code: rpcError.status });
+      httpRequestsTotalDW.inc({ method: 'POST', route: 'list', code: rpcError.status });
       end({ method: 'POST', route: 'list', code: rpcError.status });
       if (typeof rpcError === 'object') {
         throw new HttpException(rpcError.message || 'An unexpected error occurred', rpcError.status || 500);
@@ -81,15 +81,15 @@ export class DomainWatchController {
 
   @Get('loadDomains')
   async loadDomains() {
-    const end = httpRequestDurationMicroseconds.startTimer();
+    const end = httpRequestDurationMicrosecondsDW.startTimer();
     try {
       const result = await this.domainWatchService.loadDomains();
-      httpRequestsTotal.inc({ method: 'POST', route: 'list', code: 200 });
+      httpRequestsTotalDW.inc({ method: 'POST', route: 'list', code: 200 });
       end({ method: 'POST', route: 'list', code: 200 });
       return result;
     } catch (error) {
       const rpcError = error
-      httpRequestsTotal.inc({ method: 'POST', route: 'list', code: rpcError.status });
+      httpRequestsTotalDW.inc({ method: 'POST', route: 'list', code: rpcError.status });
       end({ method: 'POST', route: 'list', code: rpcError.status });
       if (typeof rpcError === 'object') {
         throw new HttpException(rpcError.message || 'An unexpected error occurred', rpcError.status || 500);

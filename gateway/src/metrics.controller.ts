@@ -1,10 +1,10 @@
 import { Controller, Get } from '@nestjs/common';
 import { Registry, collectDefaultMetrics } from 'prom-client';
 import { httpRequestDurationMicroseconds, httpRequestsTotal } from './user-management/user-mangement.controller';
-import { httpRequestDurationMicroseconds as httpRequestDurationMicrosecondsZARC, httpRequestsTotal as httpRequestsTotalZARC } from './zacr/zacr.controller';
-import { httpRequestDurationMicroseconds as httpRequestDurationMicrosecondsAfrica, httpRequestsTotal as httpRequestsTotalAfrica } from './africa/africa.controller';
-import { httpRequestDurationMicroseconds as httpRequestDurationMicrosecondsRyCE, httpRequestsTotal as httpRequestsTotalRyCE } from './ryce/ryce.controller';
-import { httpRequestDurationMicroseconds as httpRequestDurationMicrosecondsDW, httpRequestsTotal as httpRequestsTotalDW } from './domain-watch/domain-watch.controller';
+import { httpRequestDurationMicrosecondsZACR, httpRequestsTotalZACR } from './zacr/zacr.controller';
+import { httpRequestDurationMicrosecondsAfrica, httpRequestsTotalAfrica } from './africa/africa.controller';
+import { httpRequestDurationMicrosecondsRyce, httpRequestsTotalRyce } from './ryce/ryce.controller';
+import { httpRequestDurationMicrosecondsDW, httpRequestsTotalDW } from './domain-watch/domain-watch.controller';
 
 @Controller('metrics')
 export class MetricsController {
@@ -15,12 +15,12 @@ export class MetricsController {
     collectDefaultMetrics({ register: this.register });
     this.register.registerMetric(httpRequestsTotal);
     this.register.registerMetric(httpRequestDurationMicroseconds);
-    this.register.registerMetric(httpRequestsTotalZARC);
-    this.register.registerMetric(httpRequestDurationMicrosecondsZARC);
+    this.register.registerMetric(httpRequestsTotalZACR);
+    this.register.registerMetric(httpRequestDurationMicrosecondsZACR);
     this.register.registerMetric(httpRequestsTotalAfrica);
     this.register.registerMetric(httpRequestDurationMicrosecondsAfrica);
-    this.register.registerMetric(httpRequestsTotalRyCE);
-    this.register.registerMetric(httpRequestDurationMicrosecondsRyCE);
+    this.register.registerMetric(httpRequestsTotalRyce);
+    this.register.registerMetric(httpRequestDurationMicrosecondsRyce);
     this.register.registerMetric(httpRequestsTotalDW);
     this.register.registerMetric(httpRequestDurationMicrosecondsDW);
   }
