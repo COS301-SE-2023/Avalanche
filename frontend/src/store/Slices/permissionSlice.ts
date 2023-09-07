@@ -3,22 +3,29 @@ import { AppState } from "../store";
 import { HYDRATE } from "next-redux-wrapper";
 import { getCookie } from "cookies-next";
 import ky from "ky";
+import { ErrorToast } from "@/components/Util";
+import { useDispatch } from "react-redux";
 
 const url = `${process.env.NEXT_PUBLIC_API}`;
 
 interface IPermissionState {
-    permissions: IPermission[]
+    permissions: IPermission[],
+    endpointResolution:string
 }
 
 export interface IPermission {
     dataSource: string,
     tou: string,
-    endpoints: string[]
+    endpoints: string[],
 }
 
 const initialState: IPermissionState = {
-    permissions: []
+    permissions: [],
+    endpointResolution:"None"
+
 }
+
+
 
 export const permissionSlice = createSlice({
     name: "permission",
@@ -33,14 +40,15 @@ export const permissionSlice = createSlice({
         })
         builder.addCase(getEndpoints.fulfilled, (state, action) => {
             const payload = action.payload as any;
-            // console.log("THIS ONE GILLES", payload.data);
             state.permissions = payload.data;
+            state.endpointResolution="Done";
         })
         builder.addCase(getEndpoints.pending, (state) => {
-            // console.log("Permissions pending");
+            state.endpointResolution="Pending";
         })
         builder.addCase(getEndpoints.rejected, (state, action) => {
-            // console.log("Get Permissions Rejected");
+            ErrorToast({text:"Could not fetch your permissions...\n Trying again"});
+            state.endpointResolution="Retry";
         })
     }
 })
