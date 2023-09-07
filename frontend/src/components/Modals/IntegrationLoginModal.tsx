@@ -8,7 +8,7 @@ import {
   SuccessToast,
   DataProductItem as ListItem
 } from "../Util";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
 import "animate.css";
 import { ModalWrapper } from "./ModalOptions";
@@ -16,11 +16,11 @@ import ky, { HTTPError } from "ky";
 import { getCookie } from "cookies-next";
 import { useDispatch } from "react-redux";
 import { getEndpoints } from "@/store/Slices/permissionSlice";
-import { getLatestOrganisation } from "@/store/Slices/userSlice";
+import { getLatestOrganisation, getUserGroups } from "@/store/Slices/userSlice";
 
-interface IIntegrationLoginModal {}
+interface IIntegrationLoginModal { }
 
-export default function IntegrationLoginModal({}: IIntegrationLoginModal) {
+export default function IntegrationLoginModal({ }: IIntegrationLoginModal) {
 
   const dispatch = useDispatch<any>();
 
@@ -74,6 +74,23 @@ export default function IntegrationLoginModal({}: IIntegrationLoginModal) {
    */
   const [password, setPassword] = useState<string>("");
 
+  const [isPersonal, setIsPersonal] = useState<boolean>(true);
+  const [userGroups, setUserGroups] = useState<any[]>([]);
+  const [selectedGroup, setSelectedGroup] = useState<string>("");
+
+  useEffect(() => {
+    if (!isPersonal) {
+      const fetchUserGroups = async () => {
+        const response = await dispatch(getUserGroups({}));
+        if (response.payload) {
+          console.log(response.payload.users);
+          setUserGroups(response.payload.users);
+        }
+      };
+      fetchUserGroups();
+    }
+  }, [isPersonal]);
+
   /**
    * Contains the logic to handle the form onSubmit event
    * This should call Redux to call the backend to do its logic
@@ -88,6 +105,7 @@ export default function IntegrationLoginModal({}: IIntegrationLoginModal) {
 
     // user-management/integrateWithWExternalAPI
     if (integration.name == "ZACR" || integration.name == "AFRICA") {
+      console.log(selectedGroup);
       try {
         const res = await ky
           .post(
@@ -96,10 +114,10 @@ export default function IntegrationLoginModal({}: IIntegrationLoginModal) {
               timeout: false,
               json: {
                 type: integration.name,
-                allocateToName: email,
+                allocateToName: isPersonal ? email : selectedGroup,
                 username: email,
                 password: password,
-                personal: true,
+                personal: isPersonal,
               },
               headers: {
                 Authorization: `Bearer ${getCookie("jwt")}`,
@@ -107,9 +125,9 @@ export default function IntegrationLoginModal({}: IIntegrationLoginModal) {
             }
           )
           .json();
-        
-          dispatch(getEndpoints());
-          dispatch(getLatestOrganisation({}));
+
+        dispatch(getEndpoints());
+        dispatch(getLatestOrganisation({}));
         SuccessToast({ text: "Successfully added integration." });
       } catch (e) {
         let error = e as HTTPError;
@@ -142,29 +160,29 @@ export default function IntegrationLoginModal({}: IIntegrationLoginModal) {
         className="w-full gap-2 flex justify-center"
       />
 
-{dropdown && (
-      <div
-        id="dropdown"
-        className="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 w-full"
-      >
-        <ul
-          className="py-2 text-sm text-gray-700 dark:text-gray-200"
-          aria-labelledby="dropdownDefaultButton"
+      {dropdown && (
+        <div
+          id="dropdown"
+          className="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 w-full"
         >
-          {integrations.map((integrationData, index) => (
-            <ListItem
-              key={index}
-              name={integrationData.name}
-              endpoint={integrationData.endpoint}
-              image={integrationData.image}
-              setIntegration={setIntegration}
-              setValid={setValid}
-              setDropdown={setDropdown}
-            />
-          ))}
-        </ul>
-      </div>
-    )}
+          <ul
+            className="py-2 text-sm text-gray-700 dark:text-gray-200"
+            aria-labelledby="dropdownDefaultButton"
+          >
+            {integrations.map((integrationData, index) => (
+              <ListItem
+                key={index}
+                name={integrationData.name}
+                endpoint={integrationData.endpoint}
+                image={integrationData.image}
+                setIntegration={setIntegration}
+                setValid={setValid}
+                setDropdown={setDropdown}
+              />
+            ))}
+          </ul>
+        </div>
+      )}
 
       {valid && (
         <>
@@ -203,9 +221,32 @@ export default function IntegrationLoginModal({}: IIntegrationLoginModal) {
                 }}
               />
             </div>
+            <div>
+              <input
+                type="checkbox"
+                id="isPersonal"
+                checked={isPersonal}
+                onChange={(e) => setIsPersonal(e.target.checked)}
+              />
+              <label htmlFor="isPersonal">Personal</label>
+            </div>
+            {!isPersonal && (
+              <div>
+                <label htmlFor="userGroup">Select User Group</label>
+                <select
+                  id="userGroup"
+                  value={selectedGroup}
+                  onBlur={(e) => setSelectedGroup(e.target.value)}
+                >
+                  {userGroups.map((group, index) => (
+                    <option key={index} value={group.userGroupName}>{group.userGroupName}</option>
+                  ))}
+                </select>
+
+              </div>)}
             <SubmitButton
               text={`Login to ${integration.name}`}
-              onClick={() => {}}
+              onClick={() => { }}
               className="w-full"
               loading={loading}
             />
