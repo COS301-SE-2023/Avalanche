@@ -42,6 +42,15 @@ jobs:
           directory: frontend
           file_name: .env.local # optional (default: .env)
           fail_on_empty: false # optional (default: false)
+          
+      - name: Make admin envfile
+        uses: SpicyPizza/create-envfile@v1.3
+        with:
+          envkey_NODE_ENV: production
+          envkey_NEXT_PUBLIC_ZEUS: "zeus"
+          directory: admin-frontend
+          file_name: .env.local # optional (default: .env)
+          fail_on_empty: false # optional (default: false)
 
       # Initilizing the tunnel so we can connect to the server
       - name: 🔐 WG Creating Tunnel
