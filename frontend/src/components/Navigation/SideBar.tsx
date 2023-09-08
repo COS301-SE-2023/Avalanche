@@ -228,7 +228,7 @@ export default function Sidebar() {
                                                         return <div onClick={() => {
                                                             reduceDataSource(name?.code);
                                                             close();
-                                                        }} className="flex items-center gap-4 transition duration-75 hover:-translate-y-1 hover:cursor-pointer">
+                                                        }} className="flex items-center gap-4 transition duration-75 hover:-translate-y-1 hover:cursor-pointer" key={index}>
                                                             <div className="bg-avalancheBlue rounded p-2">
                                                                 <ServerStackIcon className="w-8 h-8 text-white" />
                                                             </div>
