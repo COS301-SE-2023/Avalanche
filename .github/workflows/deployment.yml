@@ -58,22 +58,21 @@ jobs:
           sudo apt install resolvconf
           wg-quick up $GITHUB_WORKSPACE/tunnel.conf
 
-      #       # SSH Into Server
-      #       - name: 🔒 Removing olf files
-      #         uses: appleboy/ssh-action@v1.0.0
-      #         with:
-      #           host: ${{ secrets.SSH_HOST }}
-      #           username: ${{ secrets.SSH_USERNAME }}
-      #           password: ${{ secrets.SSH_PASSWORD }}
-      #           port: ${{ secrets.SSH_PORT }}
-      #           script: |
-      #             rm -r Services frontend gateway user-management zacr africa ryce
+            # SSH Into Server
+            - name: 🔒 Removing olf files
+              uses: appleboy/ssh-action@v1.0.0
+              with:
+                host: ${{ secrets.SSH_HOST }}
+                username: ${{ secrets.SSH_USERNAME }}
+                password: ${{ secrets.SSH_PASSWORD }}
+                port: ${{ secrets.SSH_PORT }}
+                script: |
+                  rm -r Services frontend gateway user-management zacr africa ryce admin-frontend
 
       # Uploading files to server via SCP
       - name: ☝️ Upload to server
         uses: appleboy/scp-action@v0.1.4
         with:
-          rm: true
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
