@@ -47,7 +47,7 @@ jobs:
         uses: SpicyPizza/create-envfile@v1.3
         with:
           envkey_NODE_ENV: production
-          envkey_NEXT_PUBLIC_ZEUS: "zeus"
+          envkey_NEXT_PUBLIC_ZEUS: "skunkworks.dns.net.za"
           directory: admin-frontend
           file_name: .env.local # optional (default: .env)
           fail_on_empty: false # optional (default: false)
@@ -73,7 +73,7 @@ jobs:
       - name: ☝️ Upload to server
         uses: appleboy/scp-action@v0.1.4
         with:
-          overwrite: true
+          rm: true
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
