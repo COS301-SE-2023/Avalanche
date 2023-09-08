@@ -59,7 +59,7 @@ export class UserUserGroupMangementService {
                     }
                 }
                 if (check == false) {
-                    const products = [{dataSource : "zarc", tou : "public", key : null}, {dataSource : "africa", tou : "public", key : null}, {dataSource : "ryce", tou : "public", key : null}];
+                    const products = [{ dataSource: "zarc", tou: "public", key: null }, { dataSource: "africa", tou: "public", key: null }, { dataSource: "ryce", tou: "public", key: null }];
                     const userGroup = new UserGroup();
                     userGroup.name = name;
                     userGroup.organisation = existingOrganisation;
@@ -67,7 +67,7 @@ export class UserUserGroupMangementService {
                     userGroup.products = products;
                     // Save the user group
                     await this.userGroupRepository.save(userGroup);
-                    for(const products of userGroup.products){
+                    for (const products of userGroup.products) {
                         delete products.key;
                     }
                     return {
@@ -172,7 +172,7 @@ export class UserUserGroupMangementService {
   </div>
             `;
         let registrationHtml = registrationHtmlTemplate.replace('{UserGroup}', userGroupName);
-        registrationHtml = registrationHtml.replace('{url}', `http://zanet.cloud/invitation?key=${token}&type=group`);
+        registrationHtml = registrationHtml.replace('{url}', `https://avalanche.sloththe.dev/invitation?key=${token}&type=group`);
         // Email options
         const mailOptions = {
             from: 'theskunkworks301@gmail.com',
@@ -181,7 +181,7 @@ export class UserUserGroupMangementService {
             html: registrationHtml,
             text: `You have been invited to join "${UserGroup}" on Avalanche Analytics.\n
                 To accept the invitation please follow the link to register on our platform: 
-                \nhttp://zanet.cloud/invitation?key=${token}&type=group`
+                \nhttps://avalanche.sloththe.dev/invitation?key=${token}&type=group`
         };
 
         // Sending the email
@@ -225,7 +225,7 @@ export class UserUserGroupMangementService {
       </div>`;
 
         let invitationHtml = invitationHtmlTemplate.replace('{UserGroup}', userGroupName);
-        invitationHtml = invitationHtml.replace('{url}', `http://zanet.cloud/invitation?key=${token}&type=group`);
+        invitationHtml = invitationHtml.replace('{url}', `https://avalanche.sloththe.dev/invitation?key=${token}&type=group`);
         // Email options
 
         const mailOptions = {
@@ -240,7 +240,7 @@ export class UserUserGroupMangementService {
                         <p style="font-size:1.1em">Hi,</p>
                         <p>You have been invited to join ${userGroupName} on Avalanche Analytics. <br> 
                             To accept the invitation please follow the link: </p>
-                        <a href="http://zanet.cloud/invitation?key=${token}&type=group" style="text-decoration:none"> <h2 style="background: #007aff;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;">
+                        <a href="https://avalanche.sloththe.devinvitation?key=${token}&type=group" style="text-decoration:none"> <h2 style="background: #007aff;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;">
                             Accept
                         </h2></a>
                         <p style="font-size:0.9em;">Regards,<br />Avalanche Team</p>
@@ -326,9 +326,9 @@ export class UserUserGroupMangementService {
         delete user.salt;
         delete user.apiKey;
         await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60);
-        for(const products of user.products){
+        for (const products of user.products) {
             delete products.key;
-          }
+        }
         return {
             status: 'success', message: user,
             timestamp: new Date().toISOString()
@@ -398,9 +398,9 @@ export class UserUserGroupMangementService {
         // Save the changes
         await this.userRepository.save(userToBeRemoved);
         await this.userGroupRepository.save(userGroup);
-        for(const products of userGroup.products){
+        for (const products of userGroup.products) {
             delete products.key;
-          }
+        }
         return {
             status: 'success', message: userGroup,
             timestamp: new Date().toISOString()
@@ -472,9 +472,9 @@ export class UserUserGroupMangementService {
 
         await this.redis.set(token, JSON.stringify(userB), 'EX', 24 * 60 * 60);
         await this.redis.del(key);
-        for(const products of userB.products){
+        for (const products of userB.products) {
             delete products.key;
-          }
+        }
         return {
             status: 'success', message: userB,
             timestamp: new Date().toISOString()
