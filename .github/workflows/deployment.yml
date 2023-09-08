@@ -68,7 +68,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
-          source: "frontend,gateway,user-management,zacr,africa,ryce,Services"
+          source: "frontend,gateway,user-management,zacr,africa,ryce,Services,hades,zeus,admin-frontend"
           target: ./
       
       # SSH Into Server
