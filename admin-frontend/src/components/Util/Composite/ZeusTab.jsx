@@ -36,7 +36,7 @@ import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/mod
 export default function ZeusTab({ filterData }) {
 
     const stateZeus = useSelector(zeusState);
-    let [data, setData] = useState<any>(JSON.parse(JSON.stringify(filterData.filter)) );
+    let [data, setData] = useState(JSON.parse(JSON.stringify(filterData.filter)) );
     let [menuExpanded, setMenuExpanded] = useState<boolean>(false);
     const dispatch = useDispatch();
     const [filterName, setFilterName] = useState<string>(filterData.name);
