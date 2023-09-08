@@ -20,9 +20,10 @@ import ky, { HTTPError } from "ky"
 import ISaveFilters from '@/interfaces/requests/SaveFilters';
 
 import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
+import { heraState } from '@/store/Slices/HeraSlice';
 
 interface ITransferFilterData {
-    filterData: IFilterData
+    permissionData: any
 }
 
 interface IMenuButton {
@@ -33,17 +34,13 @@ interface IMenuButton {
 
 
 
-export default function ZeusTab({ filterData }: ITransferFilterData) {
+export default function HeraTab({ permissionData }: ITransferFilterData) {
 
-    const stateZeus = useSelector(zeusState);
-    let [data, setData] = useState<any>(JSON.parse(JSON.stringify(filterData.filter)) as typeof filterData.filter);
+    const stateHera = useSelector(heraState);
     let [menuExpanded, setMenuExpanded] = useState<boolean>(false);
     const dispatch = useDispatch();
-    const [filterName, setFilterName] = useState<string>(filterData.name);
-    const [undoStack, setUndoStack] = useState<any[]>([JSON.parse(JSON.stringify(filterData.filter)) as typeof filterData.filter]);
+    const [undoStack, setUndoStack] = useState<any[]>([JSON.parse(JSON.stringify(permissionData)) as typeof permissionData]);
     const undoStackRef = useRef(undoStack);
-    const dataRef = useRef(data);
-    const nameRef = useRef(filterName);
 
     useEffect(() => {
         console.log(undoStack);
@@ -51,58 +48,16 @@ export default function ZeusTab({ filterData }: ITransferFilterData) {
 
 
 
-    function saveFilter() {
-        const name = nameRef.current;
-        const saveData = dataRef.current;
-        console.log("data", dataRef.current);
-        dispatch(updateFilterData({ name, saveData }));
-        SuccessToast({ text: "Did the save, boss" });
-        const copy = JSON.parse(JSON.stringify(saveData)) as typeof saveData;
-        console.log("copy", copy);
-        setData(copy);
-        setFilterName(dataRef.current.name);
-    }
-
-    const handleFilterChange = (newFilters: any) => {
-        // Save the previous filters to the undo stack
-
-        const thing = { ...data };
-        console.log(thing, "thing");
-        setData(newFilters);
-        console.log(newFilters);
-        setUndoStack(prevUndoStack => [...prevUndoStack, { ...data }]);
-    };
 
 
-    const handleUndo = () => {
-        console.log(undoStackRef.current);
-        // Use the current undoStack value from the state updater function
-        if (undoStackRef.current.length > 1) {
-            const previousData = undoStackRef.current[undoStackRef.current.length - 2];
-            setData(previousData);
-            setUndoStack(prevUndoStack => prevUndoStack.slice(0, prevUndoStack.length - 1));
-        } else {
-            ErrorToast({ text: "Can't undo any further, stack is empty" });
-        }
-    };
+
+
 
     const updateDashboard = async () => {
-        const name = nameRef.current;
-        const saveData = dataRef.current;
-        console.log("data", dataRef.current);
-        dispatch(updateFilterData({ name, saveData }));
-        //SuccessToast({ text: "Did the save, boss" });
-        const copy = JSON.parse(JSON.stringify(saveData)) as typeof saveData;
-        console.log("copy", copy);
-        setData(copy);
-        setFilterName(dataRef.current.name);
+ 
         console.log("making data")
-        const updateData: ISaveFilters = {
-            dataSource: stateZeus.zeus.fetchParams.dataSource,
-            endpoint: stateZeus.zeus.fetchParams.endpoint,
-            typeOfUser: stateZeus.zeus.fetchParams.typeOfUser,
-            filterId: saveData.id,
-            data: saveData
+        const updateData: any = {
+           
         };
         try {
 
@@ -127,25 +82,15 @@ export default function ZeusTab({ filterData }: ITransferFilterData) {
 
     }
 
-    const killMe = () => {
-        console.log("data");
-    }
+  
 
     useEffect(() => {
         console.log('Updated undoStack:', undoStack);
         undoStackRef.current = undoStack; // Update the ref with the latest undoStack value
     }, [undoStack]);
 
-    useEffect(() => {
-        console.log('Updated data:', data);
-        console.log("before", dataRef.current);
-        dataRef.current = data; // Update the ref with the latest undoStack value
-        console.log("after", dataRef.current)
-    }, [data]);
 
-    useEffect(() => {
-        nameRef.current = filterName.replaceAll(" ", "-");
-    }, [filterName]);
+   
 
 
 
@@ -155,16 +100,6 @@ export default function ZeusTab({ filterData }: ITransferFilterData) {
 
 
     const [menuButtons, setMenuButtons] = useState<IMenuButton[]>([
-        {
-            buttonName: "undo",
-            func: handleUndo,
-            svg: "M 12 4.5 a 7.5 7.5 90 1 1 -6.819 4.371 a 0.75 0.75 90 0 0 -1.362 -0.6255 A 9 9 90 1 0 12 3 v 1.5 z M 12 6.699 V 0.801 a 0.375 0.375 90 0 0 -0.615 -0.288 L 7.845 3.462 a 0.375 0.375 90 0 0 0 0.576 l 3.54 2.949 A 0.375 0.375 90 0 0 12 6.699 z"
-        },
-        {
-            buttonName: "undo",
-            func: handleUndo,
-            svg: "M 12 4.5 a 7.5 7.5 90 1 1 -6.819 4.371 a 0.75 0.75 90 0 0 -1.362 -0.6255 A 9 9 90 1 0 12 3 v 1.5 z M 12 6.699 V 0.801 a 0.375 0.375 90 0 0 -0.615 -0.288 L 7.845 3.462 a 0.375 0.375 90 0 0 0 0.576 l 3.54 2.949 A 0.375 0.375 90 0 0 12 6.699 z"
-        },
         {
             buttonName: "save",
             func: updateDashboard,
@@ -221,7 +156,7 @@ export default function ZeusTab({ filterData }: ITransferFilterData) {
 
             </div>
             <div className="relative left bottom-10  z-0">
-                <JsonTree readOnly={false} rootName="filter" data={data} onFullyUpdate={handleFilterChange}></JsonTree>
+                <JsonTree readOnly={false} rootName="Permissions" data={stateHera.hera.data} onFullyUpdate={()=>{}}></JsonTree>
             </div>
 
         </div>

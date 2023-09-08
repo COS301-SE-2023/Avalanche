@@ -28,8 +28,19 @@ export default function Home() {
                             <StartOutlineIcon className="w-6 h-6 text-yellow-500 absolute top-5 right-5" />
                         </div>
                     </Link>
+                    <Link className="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 hover:shadow-2xl duration-75" href="/hera">
+                        <div className="flex flex-col items-center justify-between h-full pt-10 pb-10 relative" >
+                            <img className="w-64 mb-3" src="https://astonmartin.sloththe.dev/isawesome/undraw_team_page_re_cffb.svg" alt="Bonnie image" />
+                            <div className="flex flex-col items-center">
+                                <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white text-center">Hera</h5>
+                                <span className="text-sm text-gray-500 dark:text-gray-400 text-center">Permit them people</span>
+                            </div>
+                            <StartOutlineIcon className="w-6 h-6 text-yellow-500 absolute top-5 right-5" />
+                        </div>
+                    </Link>
                     
                 </div>
+                
             </div>
         </div>
     </>)
