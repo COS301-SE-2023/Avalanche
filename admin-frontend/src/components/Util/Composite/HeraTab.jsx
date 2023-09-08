@@ -37,7 +37,7 @@ import { heraState } from '@/store/Slices/HeraSlice';
 export default function HeraTab({ permissionData }) {
 
     const stateHera = useSelector(heraState);
-    let [menuExpanded, setMenuExpanded] = useState<boolean>(false);
+    let [menuExpanded, setMenuExpanded] = useState(false);
     const dispatch = useDispatch();
     const [undoStack, setUndoStack] = useState([JSON.parse(JSON.stringify(permissionData))]);
     const undoStackRef = useRef(undoStack);

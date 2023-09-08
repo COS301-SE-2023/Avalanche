@@ -37,9 +37,9 @@ export default function ZeusTab({ filterData }) {
 
     const stateZeus = useSelector(zeusState);
     let [data, setData] = useState(JSON.parse(JSON.stringify(filterData.filter)) );
-    let [menuExpanded, setMenuExpanded] = useState<boolean>(false);
+    let [menuExpanded, setMenuExpanded] = useState(false);
     const dispatch = useDispatch();
-    const [filterName, setFilterName] = useState<string>(filterData.name);
+    const [filterName, setFilterName] = useState(filterData.name);
     const [undoStack, setUndoStack] = useState([JSON.parse(JSON.stringify(filterData.filter)) ]);
     const undoStackRef = useRef(undoStack);
     const dataRef = useRef(data);
