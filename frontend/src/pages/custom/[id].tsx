@@ -81,13 +81,14 @@ export default function CreateCustomDashboard() {
         const dataaaaaaaaa = [] as any;
 
         graphs.forEach((g: any) => {
-            const d = g.endpointName?.split("/");
-            const warehouse = g.warehouse || d[0];
-            const type = g.type || d[1];
+            const d = g?.endpointName?.split("/");
+            const warehouse = g?.warehouse || d[0];
+            const type = g?.type || d[1];
             const gg = {
                 endpointName: warehouse + "/" + type,
-                graphName: g.name || g.graphName,
-                filters: g.filters,
+                graphName: g?.name || g?.graphName,
+                filters: g?.filters,
+                comments: g?.comments || []
             };
             dataaaaaaaaa.push(gg);
         });

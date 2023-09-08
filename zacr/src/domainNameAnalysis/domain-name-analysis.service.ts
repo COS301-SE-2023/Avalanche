@@ -5,6 +5,7 @@ import { lastValueFrom } from 'rxjs';
 import { SnowflakeService } from '../snowflake/snowflake.service';
 import { GraphFormatService } from '../graph-format/graph-format.service';
 import { DataInterface } from 'src/interfaces/interfaces';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class DomainNameAnalysisService {
@@ -90,6 +91,7 @@ export class DomainNameAnalysisService {
     }
   }
 
+  @Cron(CronExpression.EVERY_DAY_AT_5AM)
   async classification(dataO: any): Promise<any> {
     try {
       const filters = JSON.stringify(dataO.filters);

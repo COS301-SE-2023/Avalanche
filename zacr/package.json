@@ -27,6 +27,7 @@
     "@nestjs/jwt": "^10.0.3",
     "@nestjs/microservices": "^9.4.2",
     "@nestjs/platform-express": "^9.0.0",
+    "@nestjs/schedule": "^3.0.3",
     "csvtojson": "^2.0.10",
     "ioredis": "^5.3.2",
     "reflect-metadata": "^0.1.13",
@@ -66,7 +67,9 @@
     ],
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",
-    "testPathIgnorePatterns": [".*-integration\\.service\\.spec\\.ts$"],
+    "testPathIgnorePatterns": [
+      ".*-integration\\.service\\.spec\\.ts$"
+    ],
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
