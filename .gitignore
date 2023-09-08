@@ -443,5 +443,4 @@ Services/DomainWatch/domain_watch/target/test-classes/avalanche/Network/HandlerS
 frontend/cypress.env.json
 docker-compose.yml.1
 node_modules
-admin-frontend
 zeus/.env

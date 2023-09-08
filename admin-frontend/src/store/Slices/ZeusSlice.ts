@@ -262,7 +262,7 @@ export const zeusSlice = createSlice({
 
 export const getFilters = createAsyncThunk("FILTERS.Get", async (object: IFetchFiltersRequest, { rejectWithValue }) => {
     try {
-        const response = ky.post(`http://localhost:3998/getFilters`, {
+        const response = ky.post(`http://${process.env.NEXT_PUBLIC_ZEUS ? process.env.NEXT_PUBLIC_ZEUS:"localhost"}:3998/getFilters`, {
             json: object, timeout: false, headers: {
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
@@ -277,7 +277,7 @@ export const getFilters = createAsyncThunk("FILTERS.Get", async (object: IFetchF
 
 export const getDropdownData = createAsyncThunk("DROPDOWNDATA.Get", async (object, { rejectWithValue }) => {
     try {
-        const response = ky.get(`http://localhost:3998/getData`, {
+        const response = ky.get(`http://${process.env.NEXT_PUBLIC_ZEUS ? process.env.NEXT_PUBLIC_ZEUS:"localhost"}:3998/getData`, {
             json: object, timeout: false, headers: {
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",

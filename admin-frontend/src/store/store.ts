@@ -1,6 +1,7 @@
 import { configureStore, ThunkAction, Action, combineReducers } from "@reduxjs/toolkit";
 import { createWrapper } from "next-redux-wrapper";
 import { zeusSlice } from "./Slices/ZeusSlice";
+import { heraSlice } from "./Slices/HeraSlice";
 import thunk from "redux-thunk";
 import { persistReducer, persistStore } from "redux-persist";
 import createWebStorage from "redux-persist/lib/storage/createWebStorage";
@@ -24,6 +25,7 @@ const storage = typeof window !== "undefined" ? createWebStorage("local") : crea
 
 const rootReducer = combineReducers({
     [zeusSlice.name]: zeusSlice.reducer,
+    [heraSlice.name]: heraSlice.reducer,
     [modalManagerSlice.name]:modalManagerSlice.reducer,
 });
 
