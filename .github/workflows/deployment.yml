@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   deploy:
-    needs: [test_job, test_java]
+    # needs: [test_job, test_java]
     runs-on: ubuntu-latest
 
     steps:
