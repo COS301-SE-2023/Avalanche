@@ -10,7 +10,6 @@ import { getCookie, deleteCookie } from "cookies-next";
 import LoadingPage from "../Util/Loading";
 import ky from "ky";
 import { ErrorToast, SubmitButton, SuccessToast } from "../Util";
-import CreateDashboardModal from "../Modals/CreateDashboardModal";
 import { Transition } from '@headlessui/react'
 import { v4 as uuidv4 } from 'uuid';
 import md5 from 'md5';

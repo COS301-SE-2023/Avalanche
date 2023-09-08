@@ -22,24 +22,24 @@ import ISaveFilters from '@/interfaces/requests/SaveFilters';
 import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
 import { heraState } from '@/store/Slices/HeraSlice';
 
-interface ITransferFilterData {
-    permissionData: any
-}
+// interface ITransferFilterData {
+//     permissionData: any
+// }
 
-interface IMenuButton {
-    buttonName: string,
-    func: any,
-    svg: string
-}
+// interface IMenuButton {
+//     buttonName: string,
+//     func: any,
+//     svg: string
+// }
 
 
 
-export default function HeraTab({ permissionData }: ITransferFilterData) {
+export default function HeraTab({ permissionData }) {
 
     const stateHera = useSelector(heraState);
     let [menuExpanded, setMenuExpanded] = useState<boolean>(false);
     const dispatch = useDispatch();
-    const [undoStack, setUndoStack] = useState<any[]>([JSON.parse(JSON.stringify(permissionData)) as typeof permissionData]);
+    const [undoStack, setUndoStack] = useState([JSON.parse(JSON.stringify(permissionData))]);
     const undoStackRef = useRef(undoStack);
 
     useEffect(() => {
@@ -56,7 +56,7 @@ export default function HeraTab({ permissionData }: ITransferFilterData) {
     const updateDashboard = async () => {
  
         console.log("making data")
-        const updateData: any = {
+        const updateData = {
            
         };
         try {
@@ -68,12 +68,12 @@ export default function HeraTab({ permissionData }: ITransferFilterData) {
                     "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
                     "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token"
                 }
-            }).json() as any;
+            }).json();
             console.log("done")
             console.log(res);
             return SuccessToast({ text: `Successfully updated ${name}` })
         } catch (e) {
-            let error = e as HTTPError;
+            let error = e;
             if (error.name === 'HTTPError') {
                 const errorJson = await error.response.json();
                 return ErrorToast({ text: "iProblem" });
@@ -99,7 +99,7 @@ export default function HeraTab({ permissionData }: ITransferFilterData) {
     }
 
 
-    const [menuButtons, setMenuButtons] = useState<IMenuButton[]>([
+    const [menuButtons, setMenuButtons] = useState([
         {
             buttonName: "save",
             func: updateDashboard,
@@ -108,7 +108,7 @@ export default function HeraTab({ permissionData }: ITransferFilterData) {
     ]);
     const makeMenuButtons = () => {
         let num = (((menuButtons.length) * 4));
-        return menuButtons.map((item: IMenuButton, index: number) => {
+        return menuButtons.map((item, index) => {
             
             
             console.log(num);

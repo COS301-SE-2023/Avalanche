@@ -21,26 +21,26 @@ import ISaveFilters from '@/interfaces/requests/SaveFilters';
 
 import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
 
-interface ITransferFilterData {
-    filterData: IFilterData
-}
+// interface ITransferFilterData {
+//     filterData: IFilterData
+// }
 
-interface IMenuButton {
-    buttonName: string,
-    func: any,
-    svg: string
-}
+// interface IMenuButton {
+//     buttonName: string,
+//     func: any,
+//     svg: string
+// }
 
 
 
-export default function ZeusTab({ filterData }: ITransferFilterData) {
+export default function ZeusTab({ filterData }) {
 
     const stateZeus = useSelector(zeusState);
-    let [data, setData] = useState<any>(JSON.parse(JSON.stringify(filterData.filter)) as typeof filterData.filter);
+    let [data, setData] = useState<any>(JSON.parse(JSON.stringify(filterData.filter)) );
     let [menuExpanded, setMenuExpanded] = useState<boolean>(false);
     const dispatch = useDispatch();
     const [filterName, setFilterName] = useState<string>(filterData.name);
-    const [undoStack, setUndoStack] = useState<any[]>([JSON.parse(JSON.stringify(filterData.filter)) as typeof filterData.filter]);
+    const [undoStack, setUndoStack] = useState([JSON.parse(JSON.stringify(filterData.filter)) ]);
     const undoStackRef = useRef(undoStack);
     const dataRef = useRef(data);
     const nameRef = useRef(filterName);
@@ -57,13 +57,13 @@ export default function ZeusTab({ filterData }: ITransferFilterData) {
         console.log("data", dataRef.current);
         dispatch(updateFilterData({ name, saveData }));
         SuccessToast({ text: "Did the save, boss" });
-        const copy = JSON.parse(JSON.stringify(saveData)) as typeof saveData;
+        const copy = JSON.parse(JSON.stringify(saveData));
         console.log("copy", copy);
         setData(copy);
         setFilterName(dataRef.current.name);
     }
 
-    const handleFilterChange = (newFilters: any) => {
+    const handleFilterChange = (newFilters) => {
         // Save the previous filters to the undo stack
 
         const thing = { ...data };
@@ -92,12 +92,12 @@ export default function ZeusTab({ filterData }: ITransferFilterData) {
         console.log("data", dataRef.current);
         dispatch(updateFilterData({ name, saveData }));
         //SuccessToast({ text: "Did the save, boss" });
-        const copy = JSON.parse(JSON.stringify(saveData)) as typeof saveData;
+        const copy = JSON.parse(JSON.stringify(saveData));
         console.log("copy", copy);
         setData(copy);
         setFilterName(dataRef.current.name);
         console.log("making data")
-        const updateData: ISaveFilters = {
+        const updateData = {
             dataSource: stateZeus.zeus.fetchParams.dataSource,
             endpoint: stateZeus.zeus.fetchParams.endpoint,
             typeOfUser: stateZeus.zeus.fetchParams.typeOfUser,
@@ -113,12 +113,12 @@ export default function ZeusTab({ filterData }: ITransferFilterData) {
                     "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
                     "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token"
                 }
-            }).json() as any;
+            }).json() ;
             console.log("done")
             console.log(res);
             return SuccessToast({ text: `Successfully updated ${name}` })
         } catch (e) {
-            let error = e as HTTPError;
+            let error = e ;
             if (error.name === 'HTTPError') {
                 const errorJson = await error.response.json();
                 return ErrorToast({ text: "iProblem" });
@@ -154,7 +154,7 @@ export default function ZeusTab({ filterData }: ITransferFilterData) {
     }
 
 
-    const [menuButtons, setMenuButtons] = useState<IMenuButton[]>([
+    const [menuButtons, setMenuButtons] = useState([
         {
             buttonName: "undo",
             func: handleUndo,
@@ -173,7 +173,7 @@ export default function ZeusTab({ filterData }: ITransferFilterData) {
     ]);
     const makeMenuButtons = () => {
         let num = (((menuButtons.length) * 4));
-        return menuButtons.map((item: IMenuButton, index: number) => {
+        return menuButtons.map((item, index) => {
             
             
             console.log(num);

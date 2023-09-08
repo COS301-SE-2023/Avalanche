@@ -13,7 +13,6 @@ import { getCookie } from "cookies-next";
 import ZeusMenu from "@/components/Util/Composite/ZeusMenu";
 import ZeusEditor from "@/components/Util/Composite/ZeusEditor";
 import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
-import AddUserToGroup from "@/components/Modals/AddUserToGroup";
 import GenericTextInput from "@/components/Modals/GenericTextInput";
 
 
