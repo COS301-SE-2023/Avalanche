@@ -67,7 +67,7 @@ export default function ZeusEditor() {
     const makeTabContent = () => {
         return stateZeus.zeus.filters.map((item: IFilterData, index: number) => {
             if (item.opened) {
-                return <div className={item.selected ? ' p-4 rounded-lg bg-gray-50 dark:bg-primaryBackground overflow-x-scroll overflow-y-scoll max-h-[calc(100vh-11rem)]':'hidden p-4 rounded-lg bg-gray-50 dark:bg-primaryBackground overflow-x-scroll overflow-y-scoll max-h-[calc(100vh-11rem)]'} id={item.name.replaceAll(" ", "-") + ""} role="tabpanel">
+                return <div className={item.selected ? ' p-4 rounded-lg bg-gray-50 dark:bg-primaryBackground overflow-x-hidden overflow-y-scoll max-h-[calc(100vh-11rem)]':'hidden p-4 rounded-lg bg-gray-50 dark:bg-primaryBackground overflow-x-scroll overflow-y-scoll max-h-[calc(100vh-11rem)]'} id={item.name.replaceAll(" ", "-") + ""} role="tabpanel">
                     <ZeusTab filterData={item}></ZeusTab> 
                 </div>
             } else return null;

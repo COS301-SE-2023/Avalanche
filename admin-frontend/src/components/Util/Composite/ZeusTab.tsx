@@ -8,7 +8,7 @@ import {
     INPUT_USAGE_TYPES,
 } from 'react-editable-json-tree';
 
-
+import { Transition } from '@headlessui/react'
 
 import { useEffect, useState, useRef } from "react";
 import SubmitButton from '../SubmitButton';
@@ -97,17 +97,17 @@ export default function ZeusTab({ filterData }: ITransferFilterData) {
         setData(copy);
         setFilterName(dataRef.current.name);
         console.log("making data")
-        const updateData:ISaveFilters={
-            dataSource:stateZeus.zeus.fetchParams.dataSource,
-            endpoint:stateZeus.zeus.fetchParams.endpoint,
-            typeOfUser:stateZeus.zeus.fetchParams.typeOfUser,
-            filterId:saveData.id,
-            data:saveData
+        const updateData: ISaveFilters = {
+            dataSource: stateZeus.zeus.fetchParams.dataSource,
+            endpoint: stateZeus.zeus.fetchParams.endpoint,
+            typeOfUser: stateZeus.zeus.fetchParams.typeOfUser,
+            filterId: saveData.id,
+            data: saveData
         };
         try {
-           
+
             console.log("send req")
-            const res =  await ky.post("http://localhost:3998/editFilter", {
+            const res = await ky.post("http://localhost:3998/editFilter", {
                 json: updateData, timeout: false, headers: {
                     "Access-Control-Allow-Origin": "*",
                     "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
@@ -121,7 +121,7 @@ export default function ZeusTab({ filterData }: ITransferFilterData) {
             let error = e as HTTPError;
             if (error.name === 'HTTPError') {
                 const errorJson = await error.response.json();
-                return ErrorToast({ text: "iProblem"});
+                return ErrorToast({ text: "iProblem" });
             }
         }
 
@@ -161,28 +161,43 @@ export default function ZeusTab({ filterData }: ITransferFilterData) {
             svg: "M 12 4.5 a 7.5 7.5 90 1 1 -6.819 4.371 a 0.75 0.75 90 0 0 -1.362 -0.6255 A 9 9 90 1 0 12 3 v 1.5 z M 12 6.699 V 0.801 a 0.375 0.375 90 0 0 -0.615 -0.288 L 7.845 3.462 a 0.375 0.375 90 0 0 0 0.576 l 3.54 2.949 A 0.375 0.375 90 0 0 12 6.699 z"
         },
         {
+            buttonName: "undo",
+            func: handleUndo,
+            svg: "M 12 4.5 a 7.5 7.5 90 1 1 -6.819 4.371 a 0.75 0.75 90 0 0 -1.362 -0.6255 A 9 9 90 1 0 12 3 v 1.5 z M 12 6.699 V 0.801 a 0.375 0.375 90 0 0 -0.615 -0.288 L 7.845 3.462 a 0.375 0.375 90 0 0 0 0.576 l 3.54 2.949 A 0.375 0.375 90 0 0 12 6.699 z"
+        },
+        {
             buttonName: "save",
             func: updateDashboard,
             svg: "M4 3h13l3.707 3.707a1 1 0 0 1 .293.707V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm8 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM5 5v4h10V5H5z"
         },
     ]);
     const makeMenuButtons = () => {
-
+        let num = (((menuButtons.length) * 4));
         return menuButtons.map((item: IMenuButton, index: number) => {
-            let num = (((menuButtons.length - index) * 4));
-            num = Math.floor(num * 10) / 10;
-            console.log(num)
-            const openStyle = "transition-transform delay-75 duration-200 translate-x-0 flex justify-center items-center w-[52px] h-[52px] text-gray-500 hover:text-gray-900 bg-white rounded-lg  dark:hover:text-white dark:text-gray-400 dark:bg-secondaryBackground dark:hover:bg-thirdBackground focus:ring-2 focus:ring-gray-300 focus:outline-none dark:focus:ring-gray-400";
-            const closedStyle = `invisible transition-transform delay-100 translate-x-[${num}rem]  flex justify-center items-center w-[52px] h-[52px] text-gray-500 hover:text-gray-900 bg-white rounded-lg  dark:hover:text-white dark:text-gray-400 dark:bg-secondaryBackground dark:hover:bg-thirdBackground focus:ring-2 focus:ring-gray-300 focus:outline-none dark:focus:ring-gray-400 z-0`;
-            return <><button onClick={item.func} type="button" data-tooltip-target="tooltip-share" data-tooltip-placement="left"
-                className=
-                {menuExpanded ? openStyle :
-                    closedStyle}>
-                <svg className="w-8 h-8" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                    <path d={item.svg} />
-                </svg>
-                <span className="sr-only">item.buttonName</span>
-            </button>
+            
+            
+            console.log(num);
+            const openStyle = `flex justify-center items-center w-[52px] h-[52px] text-gray-500 hover:text-gray-900 bg-white rounded-lg  dark:hover:text-white dark:text-gray-400 dark:bg-secondaryBackground dark:hover:bg-thirdBackground focus:ring-2 focus:ring-gray-300 focus:outline-none dark:focus:ring-gray-400`;
+            
+            return <><Transition
+                show={menuExpanded}
+                enter="transition duration-300 transform opacity transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);"
+                enterFrom={`translate-x-[15rem] opacity-0`}
+                enterTo="translate-x-0 opacity-100"
+                leave="transition duration-300 transform"
+                leaveFrom="translate-x-0 opacity-100"
+                leaveTo={`translate-x-[15rem] opacity-0`}
+            >
+                <button onClick={item.func} type="button" data-tooltip-target="tooltip-share" data-tooltip-placement="left"
+                    className=
+                    {openStyle}>
+                    <svg className="w-8 h-8" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                        <path d={item.svg} />
+                    </svg>
+                    <span className="sr-only">item.buttonName</span>
+                </button>
+            </Transition>
+
                 <div id="tooltip-share" role="tooltip" className="absolute z-10 invisible inline-block w-auto px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
                     Share
                     <div className="tooltip-arrow" data-popper-arrow></div>
@@ -200,6 +215,7 @@ export default function ZeusTab({ filterData }: ITransferFilterData) {
                     <span className="sr-only">Open actions menu</span>
                 </button>
                 <div id="speed-dial-menu-square" className={menuExpanded ? "flex items-center mr-4 space-x-2" : "flex items-center mr-4 space-x-2"}>
+
                     {makeMenuButtons()}
                 </div>
 
