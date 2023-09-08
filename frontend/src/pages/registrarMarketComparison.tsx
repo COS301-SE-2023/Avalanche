@@ -5,14 +5,14 @@ import Head from "next/head"
 import { ChartCard } from "@/components/Graphs"
 import { ChartType } from "@/Enums";
 import { useDispatch, useSelector } from "react-redux";
-import { graphState, getGraphDataRanking } from "@/store/Slices/graphSlice"
+import { graphState, getGraphDataRanking, clearGraphData } from "@/store/Slices/graphSlice"
 import { useEffect } from "react";
 import { ITransactionGraphRequest } from "@/interfaces/requests";
 import { selectModalManagerState } from "@/store/Slices/modalManagerSlice"
 import GraphZoomModal from "@/components/Modals/GraphZoomModal"
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
-import { SubmitButton } from "@/components/Util"
+import { SubmitButton, MainContent } from "@/components/Util"
 
 export default function RegistrarMarketComparison() {
 
@@ -60,7 +60,7 @@ export default function RegistrarMarketComparison() {
         pdf.save('report.pdf');
     };
 
-    useEffect(() => {
+    function loadData() {
         // const data: ITransactionGraphRequest = { zone: "CO.ZA", granularity: "week", group: "registrar", dateFrom: "2023-01-02", graphName: "Your mom" };
         const arrayRanking: ITransactionGraphRequest[] = [];
         const currentDate = new Date();
@@ -68,11 +68,11 @@ export default function RegistrarMarketComparison() {
         // All transactions, monthly granularity, for the last year
         let dateFrom = `${currentDate.getFullYear() - 1}-01-01`;
         let dateTo = `${currentDate.getFullYear() - 1}-12-31`;
-        const monthlyLastYearRenewRanking: ITransactionGraphRequest = { graphName: `Monthly renew ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: ['WIEN'], registrar: ["1und1", "registrygate", "internetx"], transactions: ["renew"] };
-        arrayRanking.push(monthlyLastYearRenewRanking);
-        const monthlyLastYearCreateRanking: ITransactionGraphRequest = { graphName: `Monthly create ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: ['WIEN'], registrar: ["1und1", "registrygate", "internetx"], transactions: ["create"] };
+        // const monthlyLastYearRenewRanking: ITransactionGraphRequest = { graphName: `Monthly renew ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: stateGraph.zones.slice(0,1), registrar: ["afrihost", "hetzner", "diamatrix"], transactions: ["renew"] };
+        // arrayRanking.push(monthlyLastYearRenewRanking);
+        const monthlyLastYearCreateRanking: ITransactionGraphRequest = { graphName: `Monthly create ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: stateGraph.zones.slice(0, 1), registrar: ["afrihost", "hetzner", "diamatrix"], transactions: ["create"] };
         arrayRanking.push(monthlyLastYearCreateRanking);
-        // const monthlyLastYearTransferRanking: ITransactionGraphRequest = { graphName: `Monthly grace ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: 'WIEN', registrar : ["1und1","registrygate","internetx"], transactions : ["grace"] };
+        // const monthlyLastYearTransferRanking: ITransactionGraphRequest = { graphName: `Monthly grace ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: 'CO.ZA', registrar : ["1und1","registrygate","internetx"], transactions : ["grace"] };
         // arrayRanking.push(monthlyLastYearTransferRanking);
 
         //  All transactions, weekly, last 3 months
@@ -80,11 +80,11 @@ export default function RegistrarMarketComparison() {
         holderDate.getMonth() - 3;
         dateFrom = `${holderDate.getFullYear()}-${pad(holderDate.getMonth() - 3)}-01`;
         dateTo = `${currentDate.getFullYear()}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
-        const monthlyThreeMonthsTransferRanking: ITransactionGraphRequest = { graphName: `Monthly transfer ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, registrar: ["1und1", "registrygate", "internetx"], transactions: ["transfer"] };
-        arrayRanking.push(monthlyThreeMonthsTransferRanking);
-        const monthlyThreeMonthsCreateRanking: ITransactionGraphRequest = { graphName: `Monthly create ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, registrar: ["1und1", "registrygate", "internetx"], transactions: ["create"] };
+        // const monthlyThreeMonthsTransferRanking: ITransactionGraphRequest = { graphName: `Monthly transfer ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, registrar: ["afrihost", "hetzner", "diamatrix"], transactions: ["transfer"] };
+        // arrayRanking.push(monthlyThreeMonthsTransferRanking);
+        const monthlyThreeMonthsCreateRanking: ITransactionGraphRequest = { graphName: `Monthly create ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, registrar: ["afrihost", "hetzner", "diamatrix"], transactions: ["create"] };
         arrayRanking.push(monthlyThreeMonthsCreateRanking);
-        const monthlyThreeMonthsRenewRanking: ITransactionGraphRequest = { graphName: `Monthly renew ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, registrar: ["1und1", "registrygate", "internetx"], transactions: ["renew"] };
+        const monthlyThreeMonthsRenewRanking: ITransactionGraphRequest = { graphName: `Monthly renew ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, registrar: ["afrihost", "hetzner", "diamatrix"], transactions: ["renew"] };
         arrayRanking.push(monthlyThreeMonthsRenewRanking);
 
         arrayRanking.forEach(data => {
@@ -92,7 +92,21 @@ export default function RegistrarMarketComparison() {
         })
 
         // dispatch(getGraphDataarrayRanking(arrayRanking));
+    }
+
+    useEffect(() => {
+        if (stateGraph.cleared) {
+            loadData();
+        }
+    }, [stateGraph.cleared])
+
+    useEffect(() => {
+        dispatch(clearGraphData());
     }, [])
+
+    useEffect(() => {
+        dispatch(clearGraphData());
+    }, [stateGraph.selectedDataSource])
 
     return (<>
         <Head>
@@ -100,7 +114,7 @@ export default function RegistrarMarketComparison() {
         </Head>
         <Sidebar />
 
-        <div className="p-4 sm:ml-64 bg-gray-100 dark:bg-secondaryBackground min-h-screen">
+        <MainContent>
             <div className="flex justify-between items-center">
                 <PageHeader title="Registrar Market Comparison" subtitle="Insights at your fingertips" icon={<MapIcon className="h-16 w-16 text-black dark:text-white" />} />
                 <SubmitButton text="Download Report" onClick={() => generatePDF()} />
@@ -160,7 +174,7 @@ export default function RegistrarMarketComparison() {
                     }
                 </div>
             </div>
-        </div>
+        </MainContent>
         {
             modalState.currentOpen === "GRAPH.Modal" && <GraphZoomModal />
         }

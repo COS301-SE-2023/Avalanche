@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 
-import avalanche.Classification.Classifier;
+import avalanche.Classification.PythonClassifier;
 
 public class ClassifierTest {
     @Test
@@ -33,7 +33,7 @@ public class ClassifierTest {
                 "aaenterprises",
                 "tohaveandtoholdsworth",
                 "smittieai", };
-        Classifier classifier = new Classifier();
+        PythonClassifier classifier = new PythonClassifier();
         String[] labels = { "Technology", "Education", "Healthcare", "Entertainment", "Travel or Hospitality,Finance",
                 "Food or Beverage", "Real Estate", "Automotive", "Sports or Fitness", "Marketing or Advertising",
                 "Fashion or Beauty", "Art and Culture", "News or Media", "Social networking",

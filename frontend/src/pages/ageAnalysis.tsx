@@ -5,14 +5,14 @@ import Head from "next/head"
 import { ChartCard } from "@/components/Graphs"
 import { ChartType } from "@/Enums";
 import { useDispatch, useSelector } from "react-redux";
-import { graphState, getAgeAnalysisData } from "@/store/Slices/graphSlice"
+import { graphState, getAgeAnalysisData, clearGraphData } from "@/store/Slices/graphSlice"
 import { useEffect } from "react";
 import { selectModalManagerState } from "@/store/Slices/modalManagerSlice"
 import GraphZoomModal from "@/components/Modals/GraphZoomModal"
 import IAgeAnalysisGraphRequest from "@/interfaces/requests/AgeAnalysisGraph"
 import jsPDF from "jspdf"
 import html2canvas from "html2canvas"
-import { SubmitButton } from "@/components/Util"
+import { SubmitButton, MainContent } from "@/components/Util"
 
 export default function AgeAnalysis() {
 
@@ -20,28 +20,41 @@ export default function AgeAnalysis() {
     const stateGraph = useSelector(graphState);
     const modalState = useSelector(selectModalManagerState);
 
-    useEffect(() => {
+    function loadData() {
 
         const arrayAgeAnalysisShare: IAgeAnalysisGraphRequest[] = [];
 
-        const ageAnalysisAverageTop5: IAgeAnalysisGraphRequest = { rank: 'top5', average: true, overall: false, zone: ['WIEN'] };
+        const ageAnalysisAverageTop5: IAgeAnalysisGraphRequest = { rank: 'top5', average: true, overall: false, zone: stateGraph.zones.slice(0, 1) };
         arrayAgeAnalysisShare.push(ageAnalysisAverageTop5);
 
-        const ageAnalysisTop5: IAgeAnalysisGraphRequest = { rank: 'top5', overall: false, average: false, zone: ['WIEN'] };
+        const ageAnalysisTop5: IAgeAnalysisGraphRequest = { rank: 'top5', overall: false, average: false, zone: stateGraph.zones.slice(0, 1) };
         arrayAgeAnalysisShare.push(ageAnalysisTop5);
 
-        const marketShareTop20: IAgeAnalysisGraphRequest = { rank: 'top20', overall: false, average: true, zone: ['WIEN'] };
+        const marketShareTop20: IAgeAnalysisGraphRequest = { rank: 'top20', overall: false, average: true, zone: stateGraph.zones.slice(0, 1) };
         arrayAgeAnalysisShare.push(marketShareTop20);
 
-        const ageAnalysisTop10: IAgeAnalysisGraphRequest = { rank: 'top10', overall: false, average: true, zone: ['WIEN'] };
+        const ageAnalysisTop10: IAgeAnalysisGraphRequest = { rank: 'top10', overall: false, average: true, zone: stateGraph.zones.slice(0, 1) };
         arrayAgeAnalysisShare.push(ageAnalysisTop10);
 
         arrayAgeAnalysisShare.forEach(data => {
             dispatch(getAgeAnalysisData(data));
         })
 
+    }
 
+    useEffect(() => {
+        if (stateGraph.cleared) {
+            loadData();
+        }
+    }, [stateGraph.cleared])
+
+    useEffect(() => {
+        dispatch(clearGraphData());
     }, [])
+
+    useEffect(() => {
+        dispatch(clearGraphData());
+    }, [stateGraph.selectedDataSource])
 
     const captureCanvasElements = async () => {
         const canvasElements = Array.from(document.querySelectorAll('.graphChart'));
@@ -85,7 +98,7 @@ export default function AgeAnalysis() {
         </Head>
         <Sidebar />
 
-        <div className="p-4 sm:ml-64 bg-gray-100 dark:bg-secondaryBackground min-h-screen">
+        <MainContent>
             <div className="flex justify-between items-center">
                 <PageHeader title="Registrar Age Analysis" subtitle="Insights at your fingertips" icon={<HeartIcon className="h-16 w-16 text-black dark:text-white" />} />
                 <SubmitButton text="Download Report" onClick={() => generatePDF()} />
@@ -132,7 +145,7 @@ export default function AgeAnalysis() {
                     }
                 </div>
             </div>
-        </div>
+        </MainContent>
         {
             modalState.currentOpen === "GRAPH.Modal" && <GraphZoomModal />
         }

@@ -20,7 +20,6 @@ export class AppController {
 
   @MessagePattern({ cmd: 'transactions' })
   async transactions(data: any) {
-    console.log('Transactions: ', data);
     const result = await this.transactionsService.transactions(data.filters,data.graphName);
     if (result.error) {
       throw new RpcException({
@@ -35,7 +34,6 @@ export class AppController {
 
   @MessagePattern({ cmd: 'transactions-ranking' })
   async transactionsRanking(data: any) {
-    console.log('Transactions: ', data);
     const result = await this.transactionsService.transactionsRanking(data.filters,data.graphName);
     if (result.error) {
       throw new RpcException({
@@ -79,6 +77,20 @@ export class AppController {
   @MessagePattern({ cmd: 'domainNameAnalysis/count' })
   async domainNameAnalysisCount(data: any) {
     const result = await this.domainNameAnalysisService.sendData(data);
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result['timestamp'],
+      });
+    }
+
+    return result;
+  }
+
+  @MessagePattern({ cmd: 'domainNameAnalysis/classification' })
+  async domainNameAnalysisClassification(data: any) {
+    const result = await this.domainNameAnalysisService.classification(data);
     if (result.error) {
       throw new RpcException({
         status: result.status,

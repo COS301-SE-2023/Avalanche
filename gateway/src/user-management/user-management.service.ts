@@ -3,6 +3,7 @@ import { HttpException } from '@nestjs/common';
 import { HttpStatus } from '@nestjs/common';
 import { Injectable, Inject } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+import { Console } from 'console';
 
 @Injectable()
 export class UserManagementService {
@@ -10,7 +11,6 @@ export class UserManagementService {
     @Inject('USER_MANAGEMENT_SERVICE') private readonly client: ClientProxy,
   ) { }
   async register(data: any) {
-    console.log("In register");
     return this.client.send({ cmd: 'register' }, data).toPromise();
   }
   async verify(data: any) {
@@ -20,7 +20,6 @@ export class UserManagementService {
     return this.client.send({ cmd: 'resendOTP' }, data).toPromise();
   }
   async login(data: any) {
-    console.log("login data:",data);
     return this.client.send({ cmd: 'login' }, data).toPromise();
   }
   async createAPIKey(data: any) {
@@ -74,8 +73,11 @@ export class UserManagementService {
   async addUserToUserGroupWithKey(data: any) {
     return this.client.send({ cmd: 'addUserToUserGroupWithKey' }, data).toPromise();
   }
-  async integrateUserWithWExternalAPI(data: any) {
-    return this.client.send({ cmd: 'integrateUserWithWExternalAPI' }, data).toPromise();
+  async integrateUserWithAfricaExternalAPI(data: any) {
+    return this.client.send({ cmd: 'integrateUserWithAfricaExternalAPI' }, data).toPromise();
+  }
+  async integrateUserWithZARCExternalAPI(data: any) {
+    return this.client.send({ cmd: 'integrateUserWithZARCExternalAPI' }, data).toPromise();
   }
   async integrateWithDataProducts(data: any) {
     return this.client.send({ cmd: 'integrateWithDataProducts' }, data).toPromise();
@@ -89,5 +91,11 @@ export class UserManagementService {
   }
   async getDomainWatchPassiveUser(data: any) {
     return this.client.send({ cmd: 'getDomainWatchPassiveUser' }, data).toPromise();
+  }
+  async getFilters(data: any) {
+    return this.client.send({ cmd: 'getFilters' }, data).toPromise();
+  }
+  async getEndpoints(data: any) {
+    return this.client.send({ cmd: 'getEndpoints' }, data).toPromise();
   }
 }

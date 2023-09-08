@@ -5,14 +5,14 @@ import Head from "next/head"
 import { ChartCard } from "@/components/Graphs"
 import { ChartType } from "@/Enums";
 import { useDispatch, useSelector } from "react-redux";
-import { graphState, getMovementVerticalData } from "@/store/Slices/graphSlice"
+import { graphState, getMovementVerticalData, clearGraphData } from "@/store/Slices/graphSlice"
 import { useEffect } from "react";
 import { selectModalManagerState } from "@/store/Slices/modalManagerSlice"
 import GraphZoomModal from "@/components/Modals/GraphZoomModal"
 import IMovementGraphRequest from "@/interfaces/requests/Movement"
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
-import { SubmitButton } from "@/components/Util"
+import { MainContent, SubmitButton } from "@/components/Util"
 
 export default function Movement() {
 
@@ -56,25 +56,34 @@ export default function Movement() {
         pdf.save('report.pdf');
     };
 
-    useEffect(() => {
-        // const data: ITransactionGraphRequest = { zone: "CO.ZA", granularity: "week", group: "registrar", dateFrom: "2023-01-02", graphName: "Your mom" };
-
+    function loadData() {
         const arrayMovementVerticalShare: IMovementGraphRequest[] = [];
 
-        const movementVertical: IMovementGraphRequest = { zone: ["WIEN"], };
+        const movementVertical: IMovementGraphRequest = { zone: stateGraph.zones.slice(0, 1), };
         arrayMovementVerticalShare.push(movementVertical);
 
-        const movementVerticalRegistrar: IMovementGraphRequest = { zone: ["WIEN"], registrar: ["1und1", "registrygate", "internetx"] };
+        const movementVerticalRegistrar: IMovementGraphRequest = { zone: stateGraph.zones.slice(0, 1), registrar: ["hetzner", "afrihost", "diamatrix"] };
         arrayMovementVerticalShare.push(movementVerticalRegistrar);
 
 
         arrayMovementVerticalShare.forEach(data => {
             dispatch(getMovementVerticalData(data));
         })
+    }
 
+    useEffect(() => {
+        if(stateGraph.cleared){
+         loadData();
+        }
+     }, [stateGraph.cleared])
 
-        // dispatch(getGraphDataArray(array));
+    useEffect(() => {
+        dispatch(clearGraphData());
     }, [])
+
+    useEffect(() => {
+        dispatch(clearGraphData());
+    }, [stateGraph.selectedDataSource])
 
     return (<>
         <Head>
@@ -82,7 +91,7 @@ export default function Movement() {
         </Head>
         <Sidebar />
 
-        <div className="p-4 sm:ml-64 bg-gray-100 dark:bg-secondaryBackground min-h-screen">
+        <MainContent>
             <div className="flex justify-between items-center">
                 <PageHeader title="Nett Movement" subtitle="Insights at your fingertips" icon={<BoltIcon className="h-16 w-16 text-black dark:text-white" />} />
                 <SubmitButton text="Download Report" onClick={() => generatePDF()} />
@@ -91,7 +100,7 @@ export default function Movement() {
                 <div className="grid lg:grid-cols-2 sm:grid-cols-1 md:grid-cols-2 gap-4 mb-4 grid-rows-2">
                     {
                         stateGraph.graphs?.length > 0 && stateGraph.graphs.map((data: any, index: number) => {
-                            if (data) return <ChartCard title={data.graphName} data={data} defaultGraph={ChartType.Line} key={index} />
+                            if (data) return <ChartCard title={data.graphName} data={data} defaultGraph={ChartType.Bar} key={index} />
                         })
                     }
                     {
@@ -129,7 +138,7 @@ export default function Movement() {
                     }
                 </div>
             </div>
-        </div>
+        </MainContent>
         {
             modalState.currentOpen === "GRAPH.Modal" && <GraphZoomModal />
         }

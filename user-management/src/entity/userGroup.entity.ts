@@ -24,6 +24,6 @@ export class UserGroup {
   @Column({ nullable: true })
   organisationId: number;
 
-  @Column("simple-array", { nullable: true })
-  products: string[];
+  @Column("json", { nullable: true })
+  products : {dataSource : string, tou : string, key : string}[];
 }

@@ -1,13 +1,14 @@
 import Head from 'next/head'
-import { Anchor, Checkbox, Input, InputLabel, ErrorToast, SubmitButton, SuccessToast } from '@/components/Util'
-import { useState, useEffect } from 'react';
-import tempLogo from '../assets/logo.png';
+import { Anchor, Checkbox, Input, InputLabel, ErrorToast, SubmitButton, SuccessToast, WarningAlert, DangerAlert, SuccessAlert } from '@/components/Util'
+import { useState, useEffect, } from 'react';
 import Image from 'next/image';
 import { Toaster } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { userState, register, resetRequest, otpVerify } from '@/store/Slices/userSlice';
 import { IRegisterRequest, IOTPVerifyRequest } from '@/interfaces/requests';
-import { CheckCircleIcon, HashtagIcon, IdentificationIcon } from "@heroicons/react/24/solid"
+import { CheckCircleIcon, HashtagIcon, IdentificationIcon, EnvelopeIcon } from "@heroicons/react/24/solid"
+import lightBanner from '../assets/images/light-banner.png';
+import { Transition } from '@headlessui/react';
 
 export default function Register() {
 
@@ -64,8 +65,15 @@ export default function Register() {
         notReg: false,
     }
 
+    enum Password {
+        VALID, NOMATCH, NOREQ, EMPTY
+    }
+
 
     const [registerObject, setRegisterObject] = useState<any>(initRegister);
+    const [passwordsMatch, setPassowrdsMatch] = useState<Password>(Password.EMPTY);
+    const passwordRegex: RegExp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,24}$/;
+    const [emailsMatch, setEmailsMatch] = useState<boolean>(true);
     const [otp, setOtp] = useState<string>("");
     const [step, setStep] = useState<number>(1);
 
@@ -122,19 +130,36 @@ export default function Register() {
 
     }
 
+    useEffect(() => {
+        if (registerObject.email && registerObject.confirmEmail && registerObject.confirmEmail !== registerObject.email) {
+            setEmailsMatch(false);
+        } else {
+            setEmailsMatch(true);
+        }
+    }, [registerObject.email, registerObject.confirmEmail]);
+
+    useEffect(() => {
+        if (registerObject.password && !passwordRegex.test(registerObject.password)) {
+            setPassowrdsMatch(Password.NOREQ);
+        } else {
+            if (registerObject.confirmPassword && registerObject.password !== registerObject.confirmPassword) {
+                setPassowrdsMatch(Password.NOMATCH)
+            } else {
+                setPassowrdsMatch(Password.VALID)
+            }
+        }
+    }, [registerObject.password, registerObject.confirmPassword])
+
     return (
         <>
             <Head>
                 <title>Avalanche</title>
             </Head>
             <Toaster />
-            <section className="bg-gray-50 dark:bg-primaryBackground">
+            <section className="bg-gray-50 dark:bg-dark-background">
                 <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-                    <a href="#" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
-                        <Image src={tempLogo} className="w-10 h-10 mr-2" alt="Logo" />
-                        Avalanche Analytics
-                    </a>
-                    <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-lg xl:p-0 dark:bg-secondaryBackground dark:border-primaryBackground">
+                    <Image src={lightBanner} className="w-full sm:max-w-sm mb-2" alt="Logo" />
+                    <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-lg xl:p-0 dark:bg-dark-secondaryBackground dark:border-dark-secondaryBackground">
                         <ol className="flex justify-center items-center w-full pr-6 pl-6 pt-6">
                             <li className="flex w-full items-center text-blue-600 dark:text-blue-500 after:content-[''] after:w-full after:h-1 after:border-b after:border-blue-100 after:border-4 after:inline-block dark:after:border-blue-800">
                                 <span className="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-full lg:h-12 lg:w-12 dark:bg-blue-800 shrink-0">
@@ -189,15 +214,26 @@ export default function Register() {
                                             <InputLabel htmlFor="email" text="Your email" />
                                             <Input type="email" placeholder="michael@dundermifflin.com" name="email" id="email" required={true} value={registerObject.email} onChange={(event: React.FormEvent<HTMLInputElement>) => {
                                                 update("email", event.currentTarget.value);
-                                            }} />
+                                            }} error={!emailsMatch} />
                                         </div>
                                         <div className="w-full">
                                             <InputLabel htmlFor="confirm-email" text="Confirm your email" />
                                             <Input type="email" placeholder="michael@dundermifflin.com" name="confirm-email" id="confirm-email" required={true} value={registerObject.confirmEmail} onChange={(event: React.FormEvent<HTMLInputElement>) => {
                                                 update("confirmEmail", event.currentTarget.value);
-                                            }} />
+                                            }} error={!emailsMatch} />
                                         </div>
                                     </div>
+                                    <Transition
+                                        show={!emailsMatch}
+                                        enter="transition ease-out duration-100"
+                                        enterFrom="transform opacity-0 scale-95"
+                                        enterTo="transform opacity-100 scale-100"
+                                        leave="transition ease-in duration-75"
+                                        leaveFrom="transform opacity-100 scale-100"
+                                        leaveTo="transform opacity-0 scale-95"
+                                    >
+                                        <WarningAlert title="Emails do not match!" text="The two provided email addresses to not match." />
+                                    </Transition>
                                     <div className="flex flex-row mb-2 gap-2">
                                         <div className="w-full">
                                             <InputLabel htmlFor="password" text="Your password" />
@@ -212,25 +248,38 @@ export default function Register() {
                                             }} />
                                         </div>
                                     </div>
-                                    <div className="flex items-start">
+                                    <Transition
+                                        show={passwordsMatch === Password.NOREQ || passwordsMatch === Password.NOMATCH}
+                                        enter="transition ease-out duration-100"
+                                        enterFrom="transform opacity-0 scale-95"
+                                        enterTo="transform opacity-100 scale-100"
+                                        leave="transition ease-in duration-75"
+                                        leaveFrom="transform opacity-100 scale-100"
+                                        leaveTo="transform opacity-0 scale-95"
+                                    >
+                                        <WarningAlert title="Invalid Password!" text={passwordsMatch === Password.NOREQ ? "This password does not match the requirements. You need at least 1 capital letter, 1 number, 1 symbol and at least 8 characters long." : passwordsMatch === Password.NOMATCH ? "Your passwords don't match." : "There is an error with your passwords."} />
+                                    </Transition>
+
+                                    {/* <div className="flex items-start">
                                         <div className="flex items-center h-5">
                                             <Checkbox required={true} describedby='terms' id='terms' />
                                         </div>
                                         <div className="ml-3 text-sm">
                                             <label htmlFor="terms" className="font-light text-gray-500 dark:text-gray-300">I accept the <Anchor href="#" text="Terms and Conditions" /></label>
                                         </div>
-                                    </div>
-                                    <SubmitButton disabled={stateUser.requests.loading} loading={stateUser.requests.loading} text="Create an Account" onClick={() => { }} className='w-full' />
+                                    </div> */}
+                                    <SubmitButton disabled={stateUser.requests.loading} loading={stateUser.requests.loading} text="Create your Account" onClick={() => { }} className='w-full' />
                                     <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                                         Already have an account? <Anchor href="/" text="Login here" />
                                     </p>
                                 </form>}
-                            {step === 2 && <form className="space-y-4 md:space-y-6" onSubmit={(event) => otpSubmit(event)}>
+                            {step === 2 && <form className="space-y-4 md:space-y-4" onSubmit={(event) => otpSubmit(event)}>
                                 <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                                     Verification
                                 </h1>
+                                <SuccessAlert title='Success' text={`An OTP was sent to ${registerObject.email}. Please allow up to 10 minutes for the OTP to arrive.`} />
                                 <div className="w-full">
-                                    <InputLabel htmlFor="verify-code" text="Enter the code your just recieved in your email..." />
+                                    <InputLabel htmlFor="verify-code" text="OTP Code" />
                                     <Input type="numeric" placeholder="000000" name="verify-code" id="verify-code" required={true} value={otp} onChange={(event: React.FormEvent<HTMLInputElement>) => {
                                         setOtp(event.currentTarget.value);
                                     }} />
@@ -240,10 +289,11 @@ export default function Register() {
                                     Already have an account? <Anchor href="/" text="Login here" />
                                 </p>
                             </form>}
-                            {step === 3 && <div>
-                                <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white mb-2">
+                            {step === 3 && <div className='flex flex-col gap-4'>
+                                <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                                     Successfully Registered
                                 </h1>
+                                <SuccessAlert title='Registered!' text={`You are successfully registered on Avalanche Analytics! Go back to the login page to get started.`} />
                                 <Anchor href="/" text="Go back to login" />
                             </div>}
                         </div>

@@ -9,7 +9,7 @@ on:
 
 jobs:
   
-  test:
+  test_java:
     if: contains(github.event.head_commit.message, '_TEST_') || contains('
         refs/heads/working
         refs/heads/stable

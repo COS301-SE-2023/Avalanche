@@ -11,6 +11,10 @@ import DeleteButton from './DeleteButton';
 import TableIconButton from './TableIconButton';
 import SuccessToast from './SuccessToast';
 import Dropdown from './Dropdown';
+import DataProductItem from './DataProductItem';
+import BetterDropdown from './BetterDropdown';
+import SuccessAlert from './SuccessAlert';
+import MainContent from './MainContent';
 
 export {
     DangerAlert,
@@ -25,5 +29,9 @@ export {
     DeleteButton,
     TableIconButton,
     SuccessToast,
-    Dropdown
+    Dropdown,
+    DataProductItem,
+    BetterDropdown,
+    SuccessAlert,
+    MainContent
 };

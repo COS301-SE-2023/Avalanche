@@ -1,5 +1,5 @@
-import { ChartBarIcon, FunnelIcon, MagnifyingGlassPlusIcon, ChevronDownIcon } from "@heroicons/react/24/solid";
-import { BarChart, BubbleChart, LineChart, PieChart, PolarAreaChart, RadarChart } from "@/components/Graphs";
+import { ChartBarIcon, FunnelIcon, MagnifyingGlassPlusIcon, ChevronDownIcon, DocumentIcon, ShareIcon, ArrowDownTrayIcon } from "@heroicons/react/24/solid";
+import { BarChart, BubbleChart, LineChart, PieChart, PolarAreaChart, RadarChart, TableChart } from "@/components/Graphs";
 import { useState, useEffect } from 'react';
 import { ChartType, ChartTypeArray } from "@/Enums";
 import { ChartCardButton } from "./ChartCardHeader";
@@ -21,7 +21,7 @@ interface IChartCard {
     defaultGraph: ChartType
 }
 
-export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
+export default function ChartCard({ data, defaultGraph }: IChartCard) {
 
     const dispatch = useDispatch<any>();
     const stateGraph = useSelector(graphState);
@@ -34,7 +34,8 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
 
     const [type, setType] = useState<ChartType>(defaultGraph);
     const [filterDropdown, setFilterDropdown] = useState<boolean>(false);
-    const [graphData, setGraphData] = useState<any>(data);
+    const [graphData, setGraphData] = useState<any>(data.data);
+    const [title, setGraphTitle] = useState<any>(data.graphName);
     const [warehouse, setWarehouse] = useState<string>(data.warehouse);
     const [gType, setGType] = useState<string>(data.graphType);
     const [loading, setLoading] = useState<boolean>(false);
@@ -81,7 +82,7 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
 
     const handleMagnifyModal = (): void => {
         const modal: any = {
-            type, data: graphData
+            type, data: graphData, graphName: title
         }
         dispatch(setCurrentOpenState("GRAPH.Modal"))
         dispatch(setData(modal));
@@ -91,7 +92,7 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
         if (warehouse) {
             const ep = filters.find((item: any) => item.endpoint === warehouse);
             if (!ep) return [];
-            return ep.graphs.find((item: any) => item.name === gType);
+            return ep.graphs.find((item: any) => item.graphName === gType);
         }
         return [];
     }
@@ -153,11 +154,47 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
                 }
             }).json();
             const d = res as any;
-            setGraphData(d.data);
+            setGraphData(d.data.data);
+            setGraphTitle(d.data.graphName);
             setLoading(false);
         } catch (e) {
             if (e instanceof Error) return ErrorToast({ text: e.message })
         }
+    }
+
+    const convertToCSV = (data: any[]) => {
+        const replacer = (key: any, value: null) => value === null ? '' : value;
+        const header = Object.keys(data[0]);
+        const csv = [
+            header.join(','), // column headers
+            ...data.map(row => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join(','))
+        ].join('\r\n');
+
+        return csv;
+    }
+
+    const downloadCSV = (csv: BlobPart, filename: string) => {
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', filename);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    const downloadJSON = (json: BlobPart, filename: string) => {
+        const blob = new Blob([json], { type: 'application/json;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', filename);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     }
 
     const camelCaseRenderer = (value: string) => {
@@ -165,7 +202,7 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
     }
 
     return (<>
-        <div className="block p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-primaryBackground dark:border-primaryBackground w-full animate__animated animate__fadeIn animate__slow z-10 graphChart">
+        <div className="block p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-dark-background dark:border-dark-background w-full animate__animated animate__fadeIn animate__slow z-10 graphChart max-h-[80vh] md:max-h-[70vh] overflow-y-auto">
             <div className="flex justify-between mb-5 text-black dark:text-white">
                 <h1 className="p-1.5">{title}</h1>
                 <div className="flex flex-row gap-1">
@@ -197,6 +234,40 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
                     }}>
                         <MagnifyingGlassPlusIcon className="w-6 h-6" />
                     </ChartCardButton>
+                    <Menu as="div" className="relative inline-block text-left">
+                        <div>
+                            <Menu.Button className="inline-flex justify-center p-1.5 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-lightHover dark:hover:bg-gray-600">
+                                <ArrowDownTrayIcon className="w-6 h-6" /> {/* Use an appropriate download icon */}
+                            </Menu.Button>
+                        </div>
+                        <Transition
+                            as={Fragment}
+                            enter="transition ease-out duration-100"
+                            enterFrom="transform opacity-0 scale-95"
+                            enterTo="transform opacity-100 scale-100"
+                            leave="transition ease-in duration-75"
+                            leaveFrom="transform opacity-100 scale-100"
+                            leaveTo="transform opacity-0 scale-95"
+                        >
+                            <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-700">
+                                <div className="py-1">
+                                    <Menu.Item>
+                                        <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer" onClick={() => {
+                                            const csv = convertToCSV(graphData.jsonData);
+                                            downloadCSV(csv, 'data.csv');
+                                        }}>Download CSV</span>
+                                    </Menu.Item>
+                                    <Menu.Item>
+                                        <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer" onClick={() => {
+                                            const json = JSON.stringify(graphData.jsonData);
+                                            downloadJSON(json, 'data.json');
+                                        }}>Download JSON</span>
+                                    </Menu.Item>
+                                </div>
+                            </Menu.Items>
+                        </Transition>
+                    </Menu>
+
                     {/* Change bar type */}
                     <Menu as="div" className="relative inline-block text-left -z-5">
                         <div>
@@ -217,7 +288,14 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
                             <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-700">
                                 <div className="py-1">
                                     {
-                                        ChartTypeArray.map((item, index) => {
+                                        ChartTypeArray.filter(item => {
+                                            // If the dataset size is more than 1, only allow Line, Bar, and Scatter.
+                                            if (graphData?.chartData?.datasets?.length > 1) {
+                                                return [ChartType.Line, ChartType.Bar, ChartType.Radar, ChartType.Table, ChartType.Bubble].includes(item.type);
+                                            }
+                                            // Otherwise, show all chart types.
+                                            return true;
+                                        }).map((item, index) => {
                                             return (<Menu.Item key={index}>
                                                 <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer" key={index} onClick={() => {
                                                     setType(item.type);
@@ -238,8 +316,11 @@ export default function ChartCard({ title, data, defaultGraph }: IChartCard) {
                 {type === ChartType.Bubble && <BubbleChart data={graphData} />}
                 {type === ChartType.PolarArea && <PolarAreaChart data={graphData} />}
                 {type === ChartType.Radar && <RadarChart data={graphData} />}
+                {type === ChartType.Table && <TableChart data={graphData} />}
             </div> : <div role="status" className="flex justify-between h-64 w-full bg-gray-300 rounded-lg animate-customPulse dark:bg-gray-700 p-6" />}
 
         </div >
     </>)
+
+
 }

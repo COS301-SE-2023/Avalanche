@@ -4,6 +4,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { lastValueFrom } from 'rxjs';
 import { SnowflakeService } from '../snowflake/snowflake.service';
 import { GraphFormatService } from '../graph-format/graph-format.service';
+import { DataInterface } from 'src/interfaces/interfaces';
 
 @Injectable()
 export class DomainNameAnalysisService {
@@ -12,21 +13,21 @@ export class DomainNameAnalysisService {
     @Inject('REDIS') private readonly redis: Redis,
     private readonly snowflakeService: SnowflakeService,
     private readonly graphFormattingService: GraphFormatService,
-  ) {}
+  ) { }
 
-  async sendData(data: any): Promise<any> {
+  async sendData(dataO: any): Promise<any> {
     try {
-      console.log(data);
-      const filters = JSON.stringify(data.filters);
-      //console.log(filters);
-      const num = data.filters.num;
-      const granularity = data.filters.granularity;
+      const filters = JSON.stringify(dataO.filters);
+
+      const num = dataO.filters.num;
+      const granularity = dataO.filters.granularity;
 
       const sqlQuery = `call domainNameAnalysis('${filters}')`;
-      //console.log(sqlQuery);
-      let formattedData = await this.redis.get(`africa` + sqlQuery);
 
-      if (!formattedData) {
+      const dataR = await this.redis.get(`africa` + sqlQuery);
+      let data: DataInterface;
+      let formattedData = '';
+      if (!dataR) {
         let queryData;
         try {
           queryData = await this.snowflakeService.execute(sqlQuery);
@@ -38,27 +39,30 @@ export class DomainNameAnalysisService {
             timestamp: new Date().toISOString(),
           };
         }
-        //console.log(queryData[0]['DOMAINNAMEANALYSIS']);
-        data.data = queryData[0]['DOMAINNAMEANALYSIS'];
-        delete data.filters;
+        dataO.data = queryData[0]['DOMAINNAMEANALYSIS'];
+        delete dataO.filters;
         const response = this.httpService.post(
-          'http://zanet.cloud:4005/domainNameAnalysis/list',
-          data,
+          'http://zanet.cloud:4101/domainNameAnalysis/count',
+          dataO,
         );
         const responseData = await lastValueFrom(response);
-        //console.log(responseData);
         formattedData =
           await this.graphFormattingService.formatDomainNameAnalysis(
             JSON.stringify(responseData.data),
           );
+        data = {
+          chartData: JSON.parse(formattedData),
+          jsonData: responseData.data.data,
+        };
         await this.redis.set(
           `africa` + sqlQuery,
-          formattedData,
+          JSON.stringify(data),
           'EX',
-          72 * 60 * 60,
+          24 * 60 * 60,
         );
+      } else {
+        data = JSON.parse(dataR);
       }
-
       return {
         status: 'success',
         data: {
@@ -68,9 +72,83 @@ export class DomainNameAnalysisService {
             ' ' +
             granularity +
             '(s)',
-          ...JSON.parse(formattedData),
+          data: data,
           warehouse: 'africa',
           graphType: 'domainNameAnalysis/count',
+        },
+        timestamp: new Date().toISOString(),
+      };
+    } catch (e) {
+      return {
+        status: 500,
+        error: true,
+        message: `${e.message}`,
+        timestamp: new Date().toISOString(),
+      };
+    }
+  }
+
+  async classification(dataO: any): Promise<any> {
+    try {
+      const filters = JSON.stringify(dataO.filters);
+
+      const num = dataO.filters.num;
+      const granularity = dataO.filters.granularity;
+
+      const sqlQuery = `call domainNameAnalysis('${filters}')`;
+
+      const dataR = await this.redis.get(`africa` + sqlQuery + ` classification`);
+      let data: DataInterface;
+      let formattedData = '';
+      if (!dataR) {
+        let queryData;
+        try {
+          queryData = await this.snowflakeService.execute(sqlQuery);
+        } catch (e) {
+          return {
+            status: 500,
+            error: true,
+            message: 'Data Warehouse Error',
+            timestamp: new Date().toISOString(),
+          };
+        }
+        dataO.data = queryData[0]['DOMAINNAMEANALYSIS'];
+        delete dataO.filters;
+        const response = this.httpService.post(
+          'http://localhost:4101/domainNameAnalysis/classify',
+          dataO,
+        );
+        const responseData = await lastValueFrom(response);
+        let formattedResponseData = {data: this.formatClassification(responseData.data.data)}
+        formattedData =
+          await this.graphFormattingService.formatDomainNameAnalysisClassification(
+            JSON.stringify(formattedResponseData),
+          );
+        data = {
+          chartData: JSON.parse(formattedData),
+          jsonData: formattedResponseData,
+        };
+        await this.redis.set(
+          `africa` + sqlQuery + ` classification`,
+          JSON.stringify(data),
+          'EX',
+          24 * 60 * 60,
+        );
+      } else {
+        data = JSON.parse(dataR);
+      }
+      return {
+        status: 'success',
+        data: {
+          graphName:
+            'Most common categories in newly created domains in the last ' +
+            num +
+            ' ' +
+            granularity +
+            '(s)',
+          data: data,
+          warehouse: 'africa',
+          graphType: 'domainNameAnalysis/classification',
         },
         timestamp: new Date().toISOString(),
       };
@@ -89,12 +167,14 @@ export class DomainNameAnalysisService {
       graphName = this.domainLengthGraphName(filters);
 
       filters = JSON.stringify(filters);
-      console.log(filters);
+
       const sqlQuery = `CALL SKUNKWORKS_DB.public.domainLengthAnalysis('${filters}')`;
 
-      let formattedData = await this.redis.get(`africa` + sqlQuery);
+      const dataR = await this.redis.get(`africa` + sqlQuery);
+      let data: DataInterface;
+      let formattedData = '';
 
-      if (!formattedData) {
+      if (!dataR) {
         let queryData;
 
         try {
@@ -114,18 +194,24 @@ export class DomainNameAnalysisService {
           await this.graphFormattingService.formatDomainLengthAnalysis(
             JSON.stringify(queryData),
           );
+        data = {
+          chartData: JSON.parse(formattedData),
+          jsonData: JSON.parse(queryData[0]['DOMAINLENGTHANALYSIS']),
+        };
         await this.redis.set(
           `africa` + sqlQuery,
-          formattedData,
+          JSON.stringify(data),
           'EX',
-          72 * 60 * 60,
+          24 * 60 * 60,
         );
+      } else {
+        data = JSON.parse(dataR);
       }
       return {
         status: 'success',
         data: {
           graphName: graphName,
-          ...JSON.parse(formattedData),
+          data: data,
           warehouse: 'africa',
           graphType: 'domainNameAnalysis/length',
         },
@@ -231,6 +317,32 @@ export class DomainNameAnalysisService {
       'December',
     ];
     return monthNames[num];
+  }
+
+  formatClassification(inputData: any) {
+    const outputData = {};
+
+    // Step 2: Loop through the input array
+    for (const entry of inputData) {
+      const { domain, classification } = entry;
+
+      // Step 3: Update the count and domains for each classification
+      if (!outputData[classification]) {
+        outputData[classification] = {
+          category: classification,
+          count: 0,
+          domains: [],
+        };
+      }
+
+      outputData[classification].count += 1;
+      outputData[classification].domains.push(domain);
+    }
+
+    // Step 4: Convert the object to an array
+    const finalOutput = Object.values(outputData);
+
+    return finalOutput
   }
   /*
   normaliseData(data: string): string {

@@ -14,10 +14,6 @@ interface IDropdown {
     text?: string
 }
 
-const camelCaseRenderer = (value: string) => {
-    return value.replace(/([A-Z])/g, ' $1').replace(/^./, function (str) { return str.toUpperCase(); })
-}
-
 export default function Dropdown({ items, option, set, id, text }: IDropdown) {
     return (
         <Menu as="div" className="relative inline-block text-left w-full" id={id}>
@@ -37,8 +33,8 @@ export default function Dropdown({ items, option, set, id, text }: IDropdown) {
                 leaveFrom="transform opacity-100 scale-100"
                 leaveTo="transform opacity-0 scale-95"
             >
-                <Menu.Items className="right-0 z-20 mt-2 w-full origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none transition-height">
-                    <div className="py-1">
+                <Menu.Items className="overflow-auto absolute right-0 z-20 mt-2 w-full origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none transition-height">
+                    <div className="py-1 max-h-20">
                         {
                             items.map((item: any, index: number) => (
                                 <Menu.Item key={index}>

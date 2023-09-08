@@ -48,6 +48,7 @@ class ServiceHttpHandler implements HttpHandler {
 
             OutputStream os = httpExchange.getResponseBody();
             os.write(response.getBytes());
+            System.out.println("wrote to Output stream:\n"+response);
             os.close();
             scanner.close();
             System.gc();

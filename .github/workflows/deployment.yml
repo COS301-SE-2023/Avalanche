@@ -10,7 +10,8 @@ permissions:
   contents: read
 
 jobs:
-  test:
+  deploy:
+    needs: [test_job, test_java]
     runs-on: ubuntu-latest
 
     steps:

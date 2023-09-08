@@ -14,9 +14,9 @@ import { join } from 'path';
 @Injectable()
 export class UserUserGroupMangementService {
     constructor(@Inject('REDIS') private readonly redis: Redis, private readonly configService: ConfigService,
-        @InjectRepository(User) private userRepository: Repository<User>,
-        @InjectRepository(UserGroup) private userGroupRepository: Repository<UserGroup>,
-        @InjectRepository(Organisation) private organisationRepository: Repository<Organisation>) { }
+        @InjectRepository(User, 'user') private userRepository: Repository<User>,
+        @InjectRepository(UserGroup, 'user') private userGroupRepository: Repository<UserGroup>,
+        @InjectRepository(Organisation, 'user') private organisationRepository: Repository<Organisation>) { }
 
     async createUserGroup(token: string, name: string, permission: number) {
         // Get organizationId and the userPermission from Redis using token
@@ -59,14 +59,17 @@ export class UserUserGroupMangementService {
                     }
                 }
                 if (check == false) {
+                    const products = [{dataSource : "zarc", tou : "public", key : null}, {dataSource : "africa", tou : "public", key : null}, {dataSource : "ryce", tou : "public", key : null}];
                     const userGroup = new UserGroup();
                     userGroup.name = name;
                     userGroup.organisation = existingOrganisation;
                     userGroup.permission = permission;
-
+                    userGroup.products = products;
                     // Save the user group
                     await this.userGroupRepository.save(userGroup);
-
+                    for(const products of userGroup.products){
+                        delete products.key;
+                    }
                     return {
                         status: 'success', message: userGroup,
                         timestamp: new Date().toISOString()
@@ -323,7 +326,9 @@ export class UserUserGroupMangementService {
         delete user.salt;
         delete user.apiKey;
         await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60);
-
+        for(const products of user.products){
+            delete products.key;
+          }
         return {
             status: 'success', message: user,
             timestamp: new Date().toISOString()
@@ -393,7 +398,9 @@ export class UserUserGroupMangementService {
         // Save the changes
         await this.userRepository.save(userToBeRemoved);
         await this.userGroupRepository.save(userGroup);
-
+        for(const products of userGroup.products){
+            delete products.key;
+          }
         return {
             status: 'success', message: userGroup,
             timestamp: new Date().toISOString()
@@ -413,8 +420,6 @@ export class UserUserGroupMangementService {
 
         // Parse the data
         const { userEmail, userGroupName } = JSON.parse(redisData);
-
-        console.log("EMAIL", userEmail, "GROUP NAME", userGroupName);
 
         // Retrieve the user with their groups based on the token
         const user = await this.userRepository.findOne({
@@ -467,6 +472,9 @@ export class UserUserGroupMangementService {
 
         await this.redis.set(token, JSON.stringify(userB), 'EX', 24 * 60 * 60);
         await this.redis.del(key);
+        for(const products of userB.products){
+            delete products.key;
+          }
         return {
             status: 'success', message: userB,
             timestamp: new Date().toISOString()
