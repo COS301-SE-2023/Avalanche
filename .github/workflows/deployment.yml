@@ -90,4 +90,4 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            docker compose up --build --detach --no-cache
+            docker compose up --build --detach --force-recreate
