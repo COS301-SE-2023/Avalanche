@@ -39,7 +39,6 @@ export class UserManagementController {
         if (typeof rpcError === 'object') {
           throw new HttpException(rpcError.message || 'An unexpected error occurred', rpcError.status || 500);
         }
-        throw error;
       }
     }
     @Post('getEndpoints')
