@@ -22,12 +22,12 @@ const NotDropdown: IMenu = {
             page: "watch",
             role: ""
         },
-        {
-            text: "QBee",
-            icon: <Squares2X2Icon className={holder} />,
-            page: "qbee",
-            role: ""
-        },
+        // {
+        //     text: "QBee",
+        //     icon: <Squares2X2Icon className={holder} />,
+        //     page: "qbee",
+        //     role: ""
+        // },
     ]
 }
 

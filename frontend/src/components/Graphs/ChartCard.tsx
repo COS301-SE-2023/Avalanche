@@ -131,16 +131,30 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
 
     const filterSubmit = () => {
         const keys = Object.keys(request);
-
+    
         const requestObject: any = {};
-
-        keys.forEach((key, index) => {
-            requestObject[key] = request[key].value;
+    
+        // Map of filter names to their types for easy lookup
+        const filterTypeMap: { [key: string]: string } = {};
+        filterGraphs()?.filters.forEach((filter: any) => {
+            filterTypeMap[filter.name] = filter.type;
         });
-
-        setFilterDropdown(!filterDropdown)
+    
+        keys.forEach((key, index) => {
+            const currentValue = request[key].value;
+    
+            // Check if the type is string[] and the current value is a string
+            if (filterTypeMap[key] === 'string[]' && typeof currentValue === 'string') {
+                requestObject[key] = [currentValue];
+            } else {
+                requestObject[key] = currentValue;
+            }
+        });
+    
+        setFilterDropdown(!filterDropdown);
         fetchGraphData(requestObject);
-    }
+    };
+    
 
     const fetchGraphData = async (filters: any) => {
         setLoading(true);
@@ -313,7 +327,7 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
                 {type === ChartType.Bar && <BarChart data={graphData} />}
                 {type === ChartType.Pie && <PieChart data={graphData} />}
                 {type === ChartType.Line && <LineChart data={graphData} addClass="h-96" />}
-                {type === ChartType.Bubble && <BubbleChart data={graphData} />}
+                {type === ChartType.Bubble && <BubbleChart data={graphData}  />}
                 {type === ChartType.PolarArea && <PolarAreaChart data={graphData} />}
                 {type === ChartType.Radar && <RadarChart data={graphData} />}
                 {type === ChartType.Table && <TableChart data={graphData} />}
@@ -321,6 +335,5 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
 
         </div >
     </>)
-
 
 }
