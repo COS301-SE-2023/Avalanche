@@ -204,7 +204,7 @@ export default function Sidebar() {
                             }} />}
 
                             <BetterDropdown items={[{ name: "ZACR", value: "zacr" }, { name: "Africa", value: "africa" }, { name: "RyCE", value: "ryce" }]} text={"select a warehouse"} option={stateGraph.selectedDataSource} set={reduceDataSource} absolute={true} placement="above" className="sm:hidden" />
-                            <Popover className="relative w-full sm:flex">
+                            <Popover className="relative w-full hidden sm:flex">
                                 {({ open, close }) => (
                                     <div className="w-full">
                                         <Popover.Button className="bg-gray-50 border-2 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-thirdBackground dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 border-gray-300 dark:border-thirdBackground flex justify-between">
