@@ -70,7 +70,7 @@ export default function RegistrarMarketComparison() {
         let dateTo = `${currentDate.getFullYear() - 1}-12-31`;
         // const monthlyLastYearRenewRanking: ITransactionGraphRequest = { graphName: `Monthly renew ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: stateGraph.zones.slice(0,1), registrar: ["afrihost", "hetzner", "diamatrix"], transactions: ["renew"] };
         // arrayRanking.push(monthlyLastYearRenewRanking);
-        const monthlyLastYearCreateRanking: ITransactionGraphRequest = { graphName: `Monthly create ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: stateGraph.zones.slice(0, 1), registrar: ["afrihost", "hetzner", "diamatrix"], transactions: ["create"] };
+        const monthlyLastYearCreateRanking: ITransactionGraphRequest = { graphName: `Monthly create ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: stateGraph.zones.slice(0, 1), transactions: ["create"] };
         arrayRanking.push(monthlyLastYearCreateRanking);
         // const monthlyLastYearTransferRanking: ITransactionGraphRequest = { graphName: `Monthly grace ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: 'CO.ZA', registrar : ["1und1","registrygate","internetx"], transactions : ["grace"] };
         // arrayRanking.push(monthlyLastYearTransferRanking);
@@ -82,9 +82,9 @@ export default function RegistrarMarketComparison() {
         dateTo = `${currentDate.getFullYear()}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
         // const monthlyThreeMonthsTransferRanking: ITransactionGraphRequest = { graphName: `Monthly transfer ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, registrar: ["afrihost", "hetzner", "diamatrix"], transactions: ["transfer"] };
         // arrayRanking.push(monthlyThreeMonthsTransferRanking);
-        const monthlyThreeMonthsCreateRanking: ITransactionGraphRequest = { graphName: `Monthly create ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, registrar: ["afrihost", "hetzner", "diamatrix"], transactions: ["create"] };
+        const monthlyThreeMonthsCreateRanking: ITransactionGraphRequest = { graphName: `Monthly create ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo,  transactions: ["create"] };
         arrayRanking.push(monthlyThreeMonthsCreateRanking);
-        const monthlyThreeMonthsRenewRanking: ITransactionGraphRequest = { graphName: `Monthly renew ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, registrar: ["afrihost", "hetzner", "diamatrix"], transactions: ["renew"] };
+        const monthlyThreeMonthsRenewRanking: ITransactionGraphRequest = { graphName: `Monthly renew ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo,  transactions: ["renew"] };
         arrayRanking.push(monthlyThreeMonthsRenewRanking);
 
         arrayRanking.forEach(data => {

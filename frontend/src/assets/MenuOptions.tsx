@@ -52,7 +52,7 @@ const MenuOptions: IMenu = {
             icon: <MapIcon className={holder} />,
             page: "registrarMarketComparison",
             role: "",
-            endpoint: "transaction-ranking"
+            endpoint: "transactions-ranking"
         },
         {
             text: "Movement",
