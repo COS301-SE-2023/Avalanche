@@ -34,7 +34,7 @@ type ConvertedData = {
     yaxis: {
       title: {
         text: string;
-        forceNiceScale:boolean;
+        forceNiceScale: boolean;
         style: {
           color: string;
         };
@@ -51,8 +51,16 @@ type ConvertedData = {
     };
     legend: {
       labels: {
-          colors: string; 
-      },
+        colors: string;
+      };
+      position: string;
+      horizontalAlign: string;
+      height: number;
+      itemMargin: {
+        horizontal: number; // Adjust as needed
+        vertical: number; // Adjust as needed
+      };
+      fontSize: any;
     };
   };
 };
@@ -74,15 +82,19 @@ type TreeConvertedData = {
   options: {};
 };
 
-export function convertData(jsonData: JsonDataEntry[], type: string, theme: string|undefined): any {
+export function convertData(
+  jsonData: JsonDataEntry[],
+  type: string,
+  theme: string | undefined
+): any {
   //Set theme colour
-  
+
   if (theme === "dark") {
     themeColours.labelColour = "#FFFFFF";
   } else {
     themeColours.labelColour = "#000000";
   }
-  
+
   //Clean the data returned with word arrays
   if (jsonData.length > 0) {
     const firstEntryKeys = Object.keys(jsonData[0]);
@@ -184,14 +196,14 @@ function convertWithMultipleSeries(jsonData: JsonDataEntry[]): ConvertedData {
           text: xAxisLabel,
           style: {
             color: themeColours.labelColour,
-          }
+          },
         },
         tooltip: {
           enabled: false,
         },
         labels: {
           style: {
-            colors: themeColours.labelColour, 
+            colors: themeColours.labelColour,
           },
         },
       },
@@ -201,7 +213,7 @@ function convertWithMultipleSeries(jsonData: JsonDataEntry[]): ConvertedData {
           forceNiceScale: true,
           style: {
             color: themeColours.labelColour,
-          }
+          },
         },
         min: Math.min(0, yMin),
         tooltip: {
@@ -215,7 +227,15 @@ function convertWithMultipleSeries(jsonData: JsonDataEntry[]): ConvertedData {
       },
       legend: {
         labels: {
-            colors: themeColours.labelColour, 
+          colors: themeColours.labelColour,
+        },
+        position: "bottom",
+        horizontalAlign: "left",
+        height: 50,
+        fontSize: '12px',
+        itemMargin: {
+          horizontal: 15, // Adjust as needed
+          vertical: 2, // Adjust as needed
         },
       },
     },
@@ -277,15 +297,14 @@ function convertWithSingleSeries(jsonData: JsonDataEntry[]): ConvertedData {
           text: xAxisLabel,
           style: {
             color: themeColours.labelColour,
-          }
-          
+          },
         },
         tooltip: {
           enabled: false,
         },
         labels: {
           style: {
-            colors: themeColours.labelColour, 
+            colors: themeColours.labelColour,
           },
         },
       },
@@ -295,7 +314,7 @@ function convertWithSingleSeries(jsonData: JsonDataEntry[]): ConvertedData {
           forceNiceScale: true,
           style: {
             color: themeColours.labelColour,
-          }
+          },
         },
         min: Math.min(0, yMin),
         tooltip: {
@@ -303,14 +322,22 @@ function convertWithSingleSeries(jsonData: JsonDataEntry[]): ConvertedData {
         },
         labels: {
           style: {
-            colors: themeColours.labelColour, 
+            colors: themeColours.labelColour,
           },
         },
       },
       legend: {
         labels: {
-            colors: themeColours.labelColour, 
+          colors: themeColours.labelColour,
         },
+        position: "bottom",
+        horizontalAlign: "left",
+        itemMargin: {
+          horizontal: 15, // Adjust as needed
+          vertical: 5, // Adjust as needed
+        },
+        height: 10,
+        fontSize: '12px'
       },
     },
   };

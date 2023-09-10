@@ -218,7 +218,7 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
     return (<>
         <div className="block p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-dark-background dark:border-dark-background w-full animate__animated animate__fadeIn animate__slow z-10 graphChart max-h-[80vh] md:max-h-[70vh] overflow-y-auto">
             <div className="flex justify-between mb-5 text-black dark:text-white">
-                <h1 className="p-1.5">{title}</h1>
+                <h1 className="p-1.5 chart-title">{title}</h1>
                 <div className="flex flex-row gap-1">
                     <div className="relative">
                         <div className="inline-flex justify-center p-1.5 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-lightHover dark:hover:bg-gray-600" onClick={() => setFilterDropdown(!filterDropdown)}>
