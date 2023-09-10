@@ -15,11 +15,18 @@
                 "type": "string"
             }
         },
+        
         "average": {
             "type": "boolean"
         },
         "overall": {
             "type": "boolean"
+        },
+        "registrar": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
         }
     },
     "additionalProperties": false
