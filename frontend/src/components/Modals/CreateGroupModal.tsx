@@ -19,7 +19,6 @@ export default function CreateGroupModal({ }: ICreateGroupModal) {
     useEffect(() => {
         if (stateUser.createGroupSuccess) {
             SuccessToast({ text: `Group with the name ${name} has been successfully created` });
-            //dispatch(getLatestOrganisation({}));
             dispatch(getUserGroups({}));
             dispatch(clearCurrentOpenState())
         }
@@ -67,6 +66,7 @@ export default function CreateGroupModal({ }: ICreateGroupModal) {
             ErrorToast({ text: error });
             return;
         };
+
         setLoading(true);
 
         const data: ICreateUserGroupRequest = {
