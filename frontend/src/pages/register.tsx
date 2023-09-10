@@ -158,7 +158,7 @@ export default function Register() {
             <Toaster />
             <section className="bg-gray-50 dark:bg-dark-background">
                 <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-                    <Image src={lightBanner} className="w-full sm:max-w-sm mb-2" alt="Logo" />
+                    <Image src={darkBanner} className="w-full sm:max-w-lg mb-2" alt="Logo" />
                     <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-lg xl:p-0 dark:bg-dark-secondaryBackground dark:border-dark-secondaryBackground">
                         <ol className="flex justify-center items-center w-full pr-6 pl-6 pt-6">
                             <li className="flex w-full items-center text-blue-600 dark:text-blue-500 after:content-[''] after:w-full after:h-1 after:border-b after:border-blue-100 after:border-4 after:inline-block dark:after:border-blue-800">
