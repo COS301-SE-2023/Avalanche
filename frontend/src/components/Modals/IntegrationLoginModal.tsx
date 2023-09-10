@@ -236,7 +236,7 @@ export default function IntegrationLoginModal({ }: IIntegrationLoginModal) {
             {!isPersonal && (
               <Dropdown items={userGroups.map((item: any) => item.userGroupName)} id="userGroup" option={selectedGroup} set={(e: string) => {
                 setSelectedGroup(e);
-              }} />
+              }} text="Select a user group" />
               // <div>
               //   <label htmlFor="userGroup">Select User Group</label>
               //   <select
