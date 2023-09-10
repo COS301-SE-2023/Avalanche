@@ -15,6 +15,7 @@ import DataProductItem from './DataProductItem';
 import BetterDropdown from './BetterDropdown';
 import SuccessAlert from './SuccessAlert';
 import MainContent from './MainContent';
+import DoubleToggle from './DoubleToggle';
 
 export {
     DangerAlert,
@@ -33,5 +34,6 @@ export {
     DataProductItem,
     BetterDropdown,
     SuccessAlert,
-    MainContent
+    MainContent,
+    DoubleToggle
 };
