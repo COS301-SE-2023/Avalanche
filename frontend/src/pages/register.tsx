@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import { Anchor, Checkbox, Input, InputLabel, ErrorToast, SubmitButton, SuccessToast, WarningAlert, DangerAlert, SuccessAlert } from '@/components/Util'
+import { Anchor, Input, InputLabel, ErrorToast, SubmitButton, SuccessToast, WarningAlert, DangerAlert, SuccessAlert } from '@/components/Util'
 import { useState, useEffect, } from 'react';
 import Image from 'next/image';
 import { Toaster } from 'react-hot-toast';
@@ -7,8 +7,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { userState, register, resetRequest, otpVerify } from '@/store/Slices/userSlice';
 import { IRegisterRequest, IOTPVerifyRequest } from '@/interfaces/requests';
 import { CheckCircleIcon, HashtagIcon, IdentificationIcon, EnvelopeIcon } from "@heroicons/react/24/solid"
-import lightBanner from '../assets/images/light-banner.png';
 import { Transition } from '@headlessui/react';
+import darkBanner from '../assets/images/dark-banner.png';
 
 export default function Register() {
 

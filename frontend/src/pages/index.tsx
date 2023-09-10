@@ -4,7 +4,6 @@ import Head from 'next/head'
 import { useState, useEffect } from 'react';
 import React from 'react';
 import { SubmitButton, DangerAlert, Input, InputLabel, Anchor, ErrorToast } from '@/components/Util';
-import tempLogo from '../assets/logo.png';
 import lightBanner from '../assets/images/light-banner.png';
 import darkBanner from '../assets/images/dark-banner.png';
 import { Toaster } from 'react-hot-toast';
