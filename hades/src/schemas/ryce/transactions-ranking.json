@@ -33,7 +33,7 @@
         },
         "granularity": {
             "type": "string",
-            "enum": ["day", "month", "week", "year"]
+            "enum": ["day", "month", "week", "year",""]
         },
         "group": {
             "type": "string"

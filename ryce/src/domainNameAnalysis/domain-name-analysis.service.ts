@@ -44,7 +44,7 @@ export class DomainNameAnalysisService {
         dataO.data = queryData[0]['DOMAINNAMEANALYSIS'];
         delete dataO.filters;
         const response = this.httpService.post(
-          'http://zanet.cloud:4005/domainNameAnalysis/list',
+          'http://DomainAnalysis:4101/domainNameAnalysis/list',
           dataO,
         );
         const responseData = await lastValueFrom(response);
