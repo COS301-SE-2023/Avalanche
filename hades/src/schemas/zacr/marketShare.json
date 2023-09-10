@@ -7,7 +7,7 @@
         },
         "rank": {
             "type": "string",
-            "enum": ["top5", "top10", "top20", "bottom10", "bottom5", "bottom20"]
+            "enum": ["top5", "top10", "top20", "bottom10", "bottom5", "bottom20",""]
         },
         "zone": {
             "type": "array",
