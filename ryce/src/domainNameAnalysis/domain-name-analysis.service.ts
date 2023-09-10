@@ -13,7 +13,7 @@ export class DomainNameAnalysisService {
     @Inject('REDIS') private readonly redis: Redis,
     private readonly snowflakeService: SnowflakeService,
     private readonly graphFormattingService: GraphFormatService,
-  ) {}
+  ) { }
 
   async sendData(dataO: any): Promise<any> {
     try {
@@ -44,7 +44,7 @@ export class DomainNameAnalysisService {
         dataO.data = queryData[0]['DOMAINNAMEANALYSIS'];
         delete dataO.filters;
         const response = this.httpService.post(
-          'http://DomainAnalysis:4101/domainNameAnalysis/list',
+          'http://DomainAnalysis:4005/domainNameAnalysis/list',
           dataO,
         );
         const responseData = await lastValueFrom(response);
