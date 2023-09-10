@@ -62,9 +62,6 @@ export default function Movement() {
         const movementVertical: IMovementGraphRequest = { zone: stateGraph.zones.slice(0, 1), };
         arrayMovementVerticalShare.push(movementVertical);
 
-        const movementVerticalRegistrar: IMovementGraphRequest = { zone: stateGraph.zones.slice(0, 1) };
-        arrayMovementVerticalShare.push(movementVerticalRegistrar);
-
 
         arrayMovementVerticalShare.forEach(data => {
             dispatch(getMovementVerticalData(data));
