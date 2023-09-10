@@ -119,7 +119,7 @@ export class DomainNameAnalysisService {
         dataO.data = queryData[0]['DOMAINNAMEANALYSIS'];
         delete dataO.filters;
         const response = this.httpService.post(
-          'http://localhost:4101/domainNameAnalysis/classify',
+          'http://DomainAnalysis:4101/domainNameAnalysis/classify',
           dataO,
         );
         const responseData = await lastValueFrom(response);
