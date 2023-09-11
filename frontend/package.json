@@ -19,6 +19,8 @@
     "@heroicons/react": "^2.0.17",
     "@react-pdf/renderer": "^3.1.12",
     "@reduxjs/toolkit": "^1.9.5",
+    "@sentry/nextjs": "^7.68.0",
+    "@sentry/react": "^7.68.0",
     "animate.css": "^4.1.1",
     "animate.css-react": "^1.1.0",
     "apexcharts": "^3.42.0",
