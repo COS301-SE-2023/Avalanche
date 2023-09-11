@@ -7,6 +7,7 @@ import { AnalysisService } from '../analysis/analysis.service';
 import { GraphFormatService } from '../graph-format/graph-format.service';
 import { json } from 'stream/consumers';
 import { DataInterface } from '../interfaces/interfaces';
+import { RegistrarNameService } from '../registrarName/registrarName.service';
 
 @Injectable()
 export class AgeService {
@@ -16,6 +17,7 @@ export class AgeService {
     private readonly snowflakeService: SnowflakeService,
     private readonly statisticalAnalysisService: AnalysisService,
     private readonly graphFormattingService: GraphFormatService,
+    private readonly registrarNameServices: RegistrarNameService,
   ) {}
 
   async age(filters: string, graphName: string): Promise<any> {
@@ -41,13 +43,37 @@ export class AgeService {
           };
         }
 
+        const topNRegistrars = JSON.parse(queryData[0]['AGEANALYSIS']);
+        if (JSON.parse(filters).tou != 'registry') {
+          let name: any = 'NoNameSpecified';
+          if (
+            JSON.parse(filters).registrar &&
+            JSON.parse(filters).registrar.length == 1
+          ) {
+            name = await this.registrarNameServices.registrarName({
+              code: JSON.parse(filters).registrar[0],
+            });
+            name = name.data.name;
+          }
+
+          topNRegistrars.forEach((item, index) => {
+            if (item.Registrar != name) {
+              item.Registrar = `Registrar ${index + 1}`;
+            }
+          });
+        }
+
+        const topNRegistrarsArr = [
+          { AGEANALYSIS: JSON.stringify(topNRegistrars) },
+        ];
+
         formattedData = await this.graphFormattingService.formatAgeAnalysis(
-          JSON.stringify(queryData),
+          JSON.stringify(topNRegistrarsArr),
         );
 
         data = {
           chartData: JSON.parse(formattedData),
-          jsonData: JSON.parse(queryData[0]['AGEANALYSIS']),
+          jsonData: topNRegistrars,
         };
 
         //data = JSON.stringify([formattedData, queryData[0]['AGEANLYSIS']]);

@@ -13,11 +13,12 @@ import { useRouter } from "next/router";
 import { getCookie, deleteCookie } from "cookies-next";
 import LoadingPage from "../Util/Loading";
 import ky from "ky";
-import { BetterDropdown, ErrorToast, SubmitButton, SuccessToast } from "../Util";
+import { BetterDropdown, ErrorToast, SubmitButton, SuccessToast, WarningAlert } from "../Util";
 import CreateDashboardModal from "../Modals/CreateDashboardModal";
 import { Transition, Popover } from '@headlessui/react'
 import { v4 as uuidv4 } from 'uuid';
 import md5 from 'md5';
+import ErrorAlert from "../Util/ErrorAlert";
 
 export default function Sidebar() {
     const { theme, setTheme } = useTheme();
@@ -32,6 +33,11 @@ export default function Sidebar() {
     const initialSelectedDataSource = useRef(stateGraph.selectedDataSource);
 
     const jwt = getCookie("jwt");
+
+    useEffect(() => {
+        setTheme('light');
+        // document.body.classList.remove('dark');
+    }, [])
 
     /**
      * Handles the invitation
@@ -137,6 +143,7 @@ export default function Sidebar() {
                         <div className="flex flex-col overflow-y-auto py-5 px-3 h-full border-r border-gray-200 bg-gray-200 dark:bg-dark-background dark:border-dark-background">
                             {/* top list */}
                             <ul className="space-y-2">
+                                <ErrorAlert title="Beta" italic={false} text="This product is in beta. If you come across any issues/bugs, please report them ASAP!" />
                                 <SideBarItem text="Home" icon={<HomeIcon className="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />} page="home" />
                                 <li>
                                     <span className="flex items-center justify-between p-2 text-gray-900 rounded-lg dark:text-white hover:bg-lightHover dark:hover:bg-gray-700 hover:cursor-pointer" onClick={() => setDF(!df)}>
@@ -203,8 +210,9 @@ export default function Sidebar() {
                                 })
                             }} />}
 
-                            <BetterDropdown items={[{ name: "ZACR", value: "zacr" }, { name: "Africa", value: "africa" }, { name: "RyCE", value: "ryce" }]} text={"select a warehouse"} option={stateGraph.selectedDataSource} set={reduceDataSource} absolute={true} placement="above" className="sm:hidden" />
-                            <Popover className="relative w-full hidden sm:flex">
+                            <BetterDropdown items={[{ name: "ZACR", value: "zacr" }, { name: "Africa", value: "africa" }, { name: "RyCE", value: "ryce" }]} text={"select a warehouse"} option={stateGraph.selectedDataSource} set={reduceDataSource} absolute={true} placement="above" />
+
+                            {/* <Popover className="relative w-full hidden sm:flex">
                                 {({ open, close }) => (
                                     <div className="w-full">
                                         <Popover.Button className="bg-gray-50 border-2 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-thirdBackground dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 border-gray-300 dark:border-thirdBackground flex justify-between">
@@ -243,7 +251,7 @@ export default function Sidebar() {
                                         </Transition>
                                     </div>
                                 )}
-                            </Popover>
+                            </Popover> */}
                             <div className="flex items-center space-x-4">
                                 <img className="w-10 h-10 rounded-full" src={`https://www.gravatar.com/avatar/${md5(stateUser.user.email)}`} alt="" />
                                 <div className="font-medium dark:text-white text-black">
@@ -254,10 +262,10 @@ export default function Sidebar() {
                                 <Link href="/settings" data-tooltip-target="tooltip-settings" className="inline-flex justify-center p-2 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-600">
                                     <Cog6ToothIcon className="w-6 h-6" />
                                 </Link>
-                                <button type="button" className="inline-flex justify-center p-2 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-600" onClick={() => toggleDarkMode()}>
+                                {/* <button type="button" className="inline-flex justify-center p-2 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-600" onClick={() => toggleDarkMode()}>
                                     {theme === "dark" ? <SunIcon className="w-6 h-6" /> : <MoonIcon className="w-6 h-6" />}
                                     <span className="sr-only">Theme toggle</span>
-                                </button>
+                                </button> */}
                                 <button type="button" className="inline-flex justify-center p-2 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-600" onClick={() => dispatch(logout())}>
                                     <ArrowLeftOnRectangleIcon className="w-6 h-6" />
                                     <span className="sr-only">Logout</span>

@@ -6,7 +6,9 @@ import {
   AlternativeButton,
   ErrorToast,
   SuccessToast,
-  DataProductItem as ListItem
+  DataProductItem as ListItem,
+  DoubleToggle,
+  Dropdown
 } from "../Util";
 import React, { useEffect, useState } from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
@@ -146,7 +148,7 @@ export default function IntegrationLoginModal({ }: IIntegrationLoginModal) {
     <ModalWrapper title="Add a new Data Product">
       {/* Modal Content */}
       <AlternativeButton
-        text={valid ? integration.name : "Select Provider"}
+        text={valid ? integration.name : "Select Date Product"}
         onClick={() => {
           setDropdown(!dropdown);
         }}
@@ -222,28 +224,13 @@ export default function IntegrationLoginModal({ }: IIntegrationLoginModal) {
               />
             </div>
             <div>
-              <input
-                type="checkbox"
-                id="isPersonal"
-                checked={isPersonal}
-                onChange={(e) => setIsPersonal(e.target.checked)}
-              />
-              <label htmlFor="isPersonal">Personal</label>
+              <DoubleToggle leftTitle="Personal" rightTitle="User Group" value={!isPersonal} onChange={(e: React.FormEvent<HTMLFormElement>) => setIsPersonal(!isPersonal)} name="isPersonal" />
             </div>
             {!isPersonal && (
-              <div>
-                <label htmlFor="userGroup">Select User Group</label>
-                <select
-                  id="userGroup"
-                  value={selectedGroup}
-                  onBlur={(e) => setSelectedGroup(e.target.value)}
-                >
-                  {userGroups.map((group, index) => (
-                    <option key={index} value={group.userGroupName}>{group.userGroupName}</option>
-                  ))}
-                </select>
-
-              </div>)}
+              <Dropdown items={userGroups.map((item: any) => item.userGroupName)} id="userGroup" option={selectedGroup} set={(e: string) => {
+                setSelectedGroup(e);
+              }} text="Select a user group" />
+            )}
             <SubmitButton
               text={`Login to ${integration.name}`}
               onClick={() => { }}
