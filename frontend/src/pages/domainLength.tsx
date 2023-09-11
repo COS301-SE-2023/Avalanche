@@ -12,7 +12,8 @@ import GraphZoomModal from "@/components/Modals/GraphZoomModal"
 import IDomainNameAnalysisGraphRequest from "@/interfaces/requests/DomainNameAnalysis"
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
-import { SubmitButton, MainContent } from "@/components/Util"
+import { SubmitButton, MainContent, WarningAlert } from "@/components/Util"
+import NoFind from "@/components/CustomSVG/NoFind"
 
 export default function DomainLength() {
 
@@ -57,8 +58,6 @@ export default function DomainLength() {
     };
 
     function loadData() {
-        // const data: ITransactionGraphRequest = { zone: "CO.ZA", granularity: "week", group: "registrar", dateFrom: "2023-01-02", graphName: "Your mom" };
-
         const arrayDomainNameAnalysisShare: IDomainNameAnalysisGraphRequest[] = [];
 
         const ageAnalysisAverageTop5: IDomainNameAnalysisGraphRequest = {};
@@ -67,12 +66,9 @@ export default function DomainLength() {
         const ageAnalysisTop5: IDomainNameAnalysisGraphRequest = { dateFrom: "2022-05-08" };
         arrayDomainNameAnalysisShare.push(ageAnalysisTop5);
 
-
-
         arrayDomainNameAnalysisShare.forEach(data => {
             dispatch(getDomainLengthData(data));
         })
-        // dispatch(getGraphDataArray(array));
     }
 
     useEffect(() => {
@@ -101,7 +97,15 @@ export default function DomainLength() {
                 <SubmitButton text="Download Report" onClick={() => generatePDF()} />
             </div>
             <div className="p-0 pt-4 md:p-4">
-                <div className="grid lg:grid-cols-2 sm:grid-cols-1 md:grid-cols-2 gap-4 mb-4 grid-rows-2">
+                {
+                    !stateGraph.loading && stateGraph.graphs.length === 0 && <div className="flex items-center flex-col gap-2">
+                        <NoFind className="h-48 w-48" />
+                        <h3 className="text-3xl font-medium text-gray-700 dark:text-white">No Data</h3>
+                        <p className='text-xl text-gray-600 dark:text-gray-400'>There was no data returned. Try another dashboard.</p>
+                        {stateGraph.error && <WarningAlert title="We got an error." text={stateGraph.error} italic={true} report="Please report this error to the developers, along with the page that you are on." />}
+                    </div>
+                }
+                {stateGraph.graphs?.length || stateGraph.loading && <div className="grid lg:grid-cols-2 sm:grid-cols-1 md:grid-cols-2 gap-4 mb-4 grid-rows-2">
                     {
                         stateGraph.graphs?.length > 0 && stateGraph.graphs.map((data: any, index: number) => {
                             if (data) return <ChartCard title={data.graphName} data={data} defaultGraph={ChartType.Line} key={index} />
@@ -145,7 +149,7 @@ export default function DomainLength() {
                     <ChartCard title="A ChartJS Chart 3" data={chartData} defaultGraph={ChartType.Line} />
                     <ChartCard title="A ChartJS Chart 4" data={chartData} defaultGraph={ChartType.Radar} />
                     <ChartCard title="A ChartJS Chart 5" data={chartData} defaultGraph={ChartType.PolarArea} /> */}
-                </div>
+                </div>}
             </div>
         </MainContent>
         {
