@@ -4,7 +4,6 @@ import Head from 'next/head'
 import { useState, useEffect } from 'react';
 import React from 'react';
 import { SubmitButton, DangerAlert, Input, InputLabel, Anchor, ErrorToast } from '@/components/Util';
-import tempLogo from '../assets/logo.png';
 import lightBanner from '../assets/images/light-banner.png';
 import darkBanner from '../assets/images/dark-banner.png';
 import { Toaster } from 'react-hot-toast';
@@ -96,7 +95,8 @@ export default function Home() {
         </Head>
         <section className="bg-gray-50 dark:bg-dark-background">
           <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-screen lg:py-0">
-          {theme === "dark" ? <Image src={lightBanner} className="w-full sm:max-w-lg mb-2" alt="Logo" /> : <Image src={darkBanner} className="w-full sm:max-w-lg mb-2" alt="Logo" />}
+            {/* {theme === "dark" ? <Image src={lightBanner} className="w-full sm:max-w-lg mb-2" alt="Logo" /> : <Image src={darkBanner} className="w-full sm:max-w-lg mb-2" alt="Logo" />} */}
+            <Image src={darkBanner} className="w-full sm:max-w-lg mb-2" alt="Logo" />
             <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-lg xl:p-0 dark:bg-secondaryBackground dark:border-primaryBackground">
               <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                 <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
@@ -113,9 +113,9 @@ export default function Home() {
                     <Input type="password" placeholder="••••••••" id="password" name="password" required={true} value={password} onChange={(event: React.FormEvent<HTMLInputElement>) => setPassword(event.currentTarget.value)} />
                     {passwordError && <DangerAlert title="Invalid Password!" text="This password is invalid." />}
                   </div>
-                  <div className="flex items-center justify-between">
+                  {/* <div className="flex items-center justify-between">
                     <Anchor href="/forgot" text="Forgot password" customFont="text-sm" />
-                  </div>
+                  </div> */}
                   <SubmitButton text="Sign in" onClick={() => null} loading={stateUser.loading} disabled={stateUser.loading} className="w-full" />
                   <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                     Don&apos;t have an account yet? <Link href="/register" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</Link>

@@ -17,5 +17,11 @@ export default function AlternativeButton({ text, onClick, loading = false, clas
         </svg>
     }
 
-    return <button type="button" className={`py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-gray-400 rounded-lg hover:bg-gray-100 hover:text-blue-700 dark:bg-primaryBackground dark:text-gray-200  ${loading ? "disabled cursor-not-allowed" : "dark:hover:text-white dark:hover:bg-gray-700"} ${className}`} disabled={loading} onClick={(event) => onClick(event)}>{loading && loadingElement()}{text} {icon && icon}</button>
+    return (
+        <button
+            type="button"
+            className={`py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-gray-400 rounded-lg hover:bg-avalancheBlue hover:text-white dark:bg-primaryBackground dark:text-gray-200  ${loading ? "disabled cursor-not-allowed" : "dark:hover:text-white dark:hover:bg-gray-700"} ${className} transition duration-75`}
+            disabled={loading}
+            onClick={(event) => onClick(event)}>{loading && loadingElement()}{text} {icon && icon}</button>
+    )
 }

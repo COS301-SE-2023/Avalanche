@@ -51,3 +51,9 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+/*Responsive title for charts*/
+.chart-title {
+  font-size: calc(12px + (0.5)*1vw);
+
+}

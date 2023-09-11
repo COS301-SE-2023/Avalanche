@@ -1,17 +1,12 @@
 package avalanche.Network.HandlerStartegy.RunningStrategies;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import avalanche.Classification.PythonClassifier;
 import avalanche.Core.Classifier;
-import avalanche.Core.FrequencyCounter;
-import avalanche.DataClasses.WordFrequency;
 import avalanche.Network.HandlerStartegy.Running;
 
 public class HandleClassify extends Running {
@@ -42,7 +37,7 @@ public class HandleClassify extends Running {
         Classifier classifier = new Classifier();
         for (String str : strings) {
             i++;
-             System.out.println(i+"/"+strings.length);
+            System.out.println(i + "/" + strings.length);
             try {
                 resp += "{\"domain\":\"" + str + "\",\"classification\":\"";
                 resp += classifier.classify(str) + "\"}";
@@ -60,7 +55,7 @@ public class HandleClassify extends Running {
         long ttlTime = System.currentTimeMillis() - st;
         resp += ",\"searchTime(ms)\":" + ttlTime + "}";
         System.out.println("\n\n==================== RESPONSE ====================\n");
-        //System.out.println(resp);
+        // System.out.println(resp);
         System.out.println("Done");
         return resp;
     }

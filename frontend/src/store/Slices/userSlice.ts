@@ -206,6 +206,8 @@ export const userSlice = createSlice({
         })
         builder.addCase(createOrganisationGroup.rejected, (state, action) => {
             state.createGroupSuccess = false;
+            state.requests.error = action.payload as string;
+            state.loading = false;
         })
         // Get User Group
         builder.addCase(getUserGroups.fulfilled, (state, action) => {
@@ -357,7 +359,9 @@ export const createOrganisationGroup = createAsyncThunk("ORG.CreateOrganisationG
         }).json();
         return response as ICreateUserGroupResponse;
     } catch (e) {
-        if (e instanceof Error) return rejectWithValue(e.message);
+        let error = e as HTTPError;
+        const newError = await error.response.json();
+        return rejectWithValue(newError.message);
     }
 })
 
