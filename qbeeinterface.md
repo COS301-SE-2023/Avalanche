@@ -144,3 +144,120 @@ Interface Column {
     table: string // which table it's from or some mapping (for grouping)
 },
 ```
+## Output schema:
+```
+interface Query {
+  selectedColumns: SelectedColumn[];
+  filters: FilterCondition[];
+}
+
+interface SelectedColumn {
+  columnName: string;
+  aggregation?: AggregationType;
+  renamed?: string;
+}
+
+type AggregationType = 'SUM' | 'COUNT' | 'AVG' | 'MIN' | 'MAX'; // Add more aggregation types as needed
+
+interface FilterCondition {
+  type?: LogicalOperator;
+  conditions?: FilterCondition[];
+  column?: string;
+  operator?: ComparisonOperator;
+  value?: string | number | boolean;
+  aggregation?: AggregationType;
+  aggregated?: boolean;
+}
+
+type LogicalOperator = 'AND' | 'OR';
+type ComparisonOperator = '=' | '<' | '>' | '<=' | '>=' | 'LIKE'; // Add more comparison operators as needed
+
+```
+
+### Example
+JSON as payload to backend:
+```
+{
+  "selectedColumns": [
+    {
+      "columnName": "Genre",
+      "renamed": "Book Genre"
+    },
+    {
+      "columnName": "YearPublished",
+      "aggregation": "AVG",
+      "renamed": "Average Publication Year"
+    },
+    {
+      "columnName": "BookTitle",
+      "aggregation": "COUNT",
+      "renamed": "Total Books"
+    },
+    {
+      "columnName": "Author"
+    }
+  ],
+  "filters": [
+    {
+      "type": "OR",
+      "conditions": [
+        {
+          "type": "AND",
+          "conditions": [
+            {
+              "type": "OR",
+              "conditions": [
+                {
+                  "column": "Genre",
+                  "operator": "=",
+                  "value": "Fantasy"
+                },
+                {
+                  "column": "Genre",
+                  "operator": "=",
+                  "value": "SciFi"
+                }
+              ]
+            },
+            {
+              "column": "YearPublished",
+              "operator": "<",
+              "value": 2015
+            }
+          ]
+        },
+        {
+          "column": "Author",
+          "operator": "=",
+          "value": "John Green"
+        },
+        {
+          "column": "BookTitle",
+          "aggregation": "COUNT",
+          "operator": ">",
+          "value": 5,
+          "aggregated": true
+        }
+      ]
+    }
+  ]
+}
+
+```
+Translated to:
+```
+SELECT 
+    Genre AS "Book Genre",
+    AVG(YearPublished) AS "Average Publication Year",
+    COUNT(BookTitle) AS "Total Books",
+    Author
+FROM TableName
+WHERE 
+    (
+        (Genre = 'Fantasy' OR Genre = 'SciFi') 
+        AND YearPublished < 2015
+    ) 
+    OR Author = 'John Green'
+GROUP BY Genre, Author
+HAVING COUNT(BookTitle) > 5;
+```
