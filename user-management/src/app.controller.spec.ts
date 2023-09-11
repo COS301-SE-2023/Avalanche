@@ -80,7 +80,7 @@ describe('AppController', () => {
       })
       .overrideProvider(UserDataProductMangementService)
       .useValue({
-        integrateUserWithWExternalAPI: jest.fn(),
+        integrateUserWithZARCExternalAPI: jest.fn(),
         integrateWithDataProducts: jest.fn(),
         addDomainWatchPassiveDetails : jest.fn(),
         getDomainWatchPassive : jest.fn()
@@ -518,7 +518,7 @@ describe('AppController', () => {
 
   //Method integrate with external API
   describe('integrateWithExternalAPI', () => {
-    it('should return the result of userDataProductManService.integrateUserWithWExternalAPI()', async () => {
+    it('should return the result of userDataProductManService.integrateUserWithZARCExternalAPI()', async () => {
       const result = {
         status: 200,
         error: false,
@@ -534,14 +534,14 @@ describe('AppController', () => {
         personal: 'boolean', //true for user, false for userGroup
       };
       jest
-        .spyOn(userDataProductManService, 'integrateUserWithWExternalAPI')
+        .spyOn(userDataProductManService, 'integrateUserWithZARCExternalAPI')
         .mockImplementation(() => Promise.resolve(result));
 
       expect(
-        await appController.integrateUserWithWExternalAPI(userInfoData),
+        await appController.integrateUserWithZARCExternalAPI(userInfoData),
       ).toBe(result);
       expect(
-        userDataProductManService.integrateUserWithWExternalAPI,
+        userDataProductManService.integrateUserWithZARCExternalAPI,
       ).toHaveBeenCalledWith(
         userInfoData.token,
         userInfoData.type,

@@ -8,7 +8,6 @@ import { Repository } from 'typeorm';
 import { UserGroup } from '../../entity/userGroup.entity';
 import { Organisation } from '../../entity/organisation.entity';
 import { Dashboard } from '../../entity/dashboard.entity';
-import { time, timeStamp } from 'console';
 @Injectable()
 export class UserDashboardMangementService {
     constructor(@Inject('REDIS') private readonly redis: Redis,
@@ -26,7 +25,6 @@ export class UserDashboardMangementService {
             };
         }
         const { email: userEmail } = JSON.parse(userPayload);
-        console.log(userEmail);
         const user = await this.userRepository.findOne({
             where: { email: userEmail }, relations: ['userGroups', 'organisation', 'dashboards'],
             select: ['id', 'email', 'firstName', 'lastName', 'organisationId', 'products', 'userGroups', 'organisation', 'dashboards']
@@ -80,7 +78,6 @@ export class UserDashboardMangementService {
             };
         }
         const { email: userEmail } = JSON.parse(userPayload);
-        console.log(userEmail);
         const user = await this.userRepository.findOne({
             where: { email: userEmail }, relations: ['userGroups', 'organisation', 'dashboards'],
             select: ['id', 'email', 'firstName', 'lastName', 'organisationId', 'products', 'userGroups', 'organisation', 'dashboards']
@@ -114,6 +111,7 @@ export class UserDashboardMangementService {
                     await this.redis.set(token, JSON.stringify(user))
                     delete user.salt;
                     delete user.apiKey;
+            
                     return {
                         status: "success",
                         message: user.dashboards,
@@ -138,7 +136,6 @@ export class UserDashboardMangementService {
             };
         }
         const { email: userEmail } = JSON.parse(userPayload);
-        console.log(userEmail);
         const user = await this.userRepository.findOne({
             where: { email: userEmail }, relations: ['userGroups', 'organisation', 'dashboards'],
             select: ['id', 'email', 'firstName', 'lastName', 'organisationId', 'products', 'userGroups', 'organisation', 'dashboards']
@@ -206,7 +203,6 @@ export class UserDashboardMangementService {
             };
         }
         const { email: userEmail } = JSON.parse(userPayload);
-        console.log(userEmail);
         const user = await this.userRepository.findOne({
             where: { email: userEmail }, relations: ['userGroups', 'organisation', 'dashboards'],
             select: ['id', 'email', 'firstName', 'lastName', 'organisationId', 'products', 'userGroups', 'organisation', 'dashboards']

@@ -28,6 +28,10 @@ export class ZacrService {
     return this.client.send({ cmd: 'domainNameAnalysis/count' }, data).toPromise();
   }
 
+  async domainNameAnalysisClassification(data: any) {
+    return this.client.send({ cmd: 'domainNameAnalysis/classification' }, data).toPromise();
+  }
+
   async domainNameAnalysisLength(data: any) {
     return this.client.send({ cmd: 'domainNameAnalysis/length' }, data).toPromise();
   }

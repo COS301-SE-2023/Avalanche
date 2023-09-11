@@ -6,7 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Endpoint } from './entity/endpoint.entity';
 import { Filter } from './entity/filter.entity';
 import { Graph } from './entity/graph.entity';
-import { Value } from './entity/value.entity';
+import { RedisProvider } from './redis.provider';
 
 @Module({
   imports: [
@@ -21,14 +21,14 @@ import { Value } from './entity/value.entity';
         password: configService.get('POSTGRES_PASSWORD'),
         database: configService.get('POSTGRES_DB'),
         schema: configService.get('POSTGRES_SCHEMA'),
-        entities: [Endpoint, Filter, Graph, Value], // We change entities to an array that includes the User entity. 
+        entities: [Endpoint, Filter, Graph], // We change entities to an array that includes the User entity. 
         synchronize: true,
       }),
       inject: [ConfigService],
     }),
-    TypeOrmModule.forFeature([Endpoint, Filter, Graph, Value]),
+    TypeOrmModule.forFeature([Endpoint, Filter, Graph]),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,RedisProvider],
 })
 export class AppModule {}

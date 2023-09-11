@@ -442,5 +442,5 @@ docker-compose.yml
 Services/DomainWatch/domain_watch/target/test-classes/avalanche/Network/HandlerStrategy/RunningStrategies/HandlePassiveTest.class
 frontend/cypress.env.json
 docker-compose.yml.1
-
+node_modules
 zeus/.env

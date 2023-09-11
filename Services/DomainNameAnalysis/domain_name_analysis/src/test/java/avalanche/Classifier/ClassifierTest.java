@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 
-import avalanche.Classification.Classifier;
+import avalanche.Core.Classifier;
 
 public class ClassifierTest {
     @Test
@@ -39,6 +39,8 @@ public class ClassifierTest {
                 "Fashion or Beauty", "Art and Culture", "News or Media", "Social networking",
                 "Business and professional services" };
 
-        System.out.println(classifier.classify(domains, labels, 0.08));
+        for (String string : domains) {
+            classifier.classify(string);
+        }
     }
 }

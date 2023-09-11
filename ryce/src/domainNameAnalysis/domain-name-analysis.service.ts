@@ -4,6 +4,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { lastValueFrom } from 'rxjs';
 import { SnowflakeService } from '../snowflake/snowflake.service';
 import { GraphFormatService } from '../graph-format/graph-format.service';
+import { DataInterface } from '../interfaces/interfaces';
 
 @Injectable()
 export class DomainNameAnalysisService {
@@ -14,19 +15,20 @@ export class DomainNameAnalysisService {
     private readonly graphFormattingService: GraphFormatService,
   ) {}
 
-  async sendData(data: any): Promise<any> {
+  async sendData(dataO: any): Promise<any> {
     try {
-      console.log(data);
-      const filters = JSON.stringify(data.filters);
-      console.log(filters);
-      const num = data.filters.num;
-      const granularity = data.filters.granularity;
+      const filters = JSON.stringify(dataO.filters);
+
+      const num = dataO.filters.num;
+      const granularity = dataO.filters.granularity;
 
       const sqlQuery = `call domainNameAnalysis('${filters}')`;
-      console.log(sqlQuery);
-      let formattedData = await this.redis.get(`ryce` + sqlQuery);
 
-      if (!formattedData) {
+      const dataR = await this.redis.get(`ryce` + sqlQuery);
+      let data: DataInterface;
+      let formattedData = '';
+
+      if (!dataR) {
         let queryData;
         try {
           queryData = await this.snowflakeService.execute(sqlQuery);
@@ -38,25 +40,33 @@ export class DomainNameAnalysisService {
             timestamp: new Date().toISOString(),
           };
         }
-        console.log(queryData[0]['DOMAINNAMEANALYSIS']);
-        data.data = queryData[0]['DOMAINNAMEANALYSIS'];
-        delete data.filters;
+
+        dataO.data = queryData[0]['DOMAINNAMEANALYSIS'];
+        delete dataO.filters;
         const response = this.httpService.post(
-          'http://zanet.cloud:4005/domainNameAnalysis/list',
-          data,
+          'http://DomainAnalysis:4101/domainNameAnalysis/list',
+          dataO,
         );
         const responseData = await lastValueFrom(response);
-        console.log(responseData);
+
         formattedData =
           await this.graphFormattingService.formatDomainNameAnalysis(
             JSON.stringify(responseData.data),
           );
+
+        data = {
+          chartData: JSON.parse(formattedData),
+          jsonData: responseData.data,
+        };
+
         await this.redis.set(
           `ryce` + sqlQuery,
-          formattedData,
+          JSON.stringify(data),
           'EX',
-          72 * 60 * 60,
+          24 * 60 * 60,
         );
+      } else {
+        data = JSON.parse(dataR);
       }
 
       return {
@@ -70,7 +80,7 @@ export class DomainNameAnalysisService {
             '(s)',
           warehouse: 'ryce',
           graphType: 'domainNameAnalysis/count',
-          ...JSON.parse(formattedData),
+          data: data,
         },
         timestamp: new Date().toISOString(),
       };
@@ -89,12 +99,14 @@ export class DomainNameAnalysisService {
       graphName = this.domainLengthGraphName(filters);
 
       filters = JSON.stringify(filters);
-      console.log(filters);
+
       const sqlQuery = `CALL SKUNKWORKS_DB.public.domainLengthAnalysis('${filters}')`;
 
-      let formattedData = await this.redis.get(`ryce` + sqlQuery);
+      const dataR = await this.redis.get(`ryce` + sqlQuery);
+      let data: DataInterface;
+      let formattedData = '';
 
-      if (!formattedData) {
+      if (!dataR) {
         let queryData;
 
         try {
@@ -114,20 +126,27 @@ export class DomainNameAnalysisService {
           await this.graphFormattingService.formatDomainLengthAnalysis(
             JSON.stringify(queryData),
           );
+        data = {
+          chartData: JSON.parse(formattedData),
+          jsonData: JSON.parse(queryData[0]['DOMAINLENGTHANALYSIS']),
+        };
         await this.redis.set(
           `ryce` + sqlQuery,
-          formattedData,
+          JSON.stringify(data),
           'EX',
-          72 * 60 * 60,
+          24 * 60 * 60,
         );
+      } else {
+        data = JSON.parse(dataR);
       }
+
       return {
         status: 'success',
         data: {
           graphName: graphName,
           warehouse: 'ryce',
           graphType: 'domainNameAnalysis/length',
-          ...JSON.parse(formattedData),
+          data: data,
         },
         timestamp: new Date().toISOString(),
       };

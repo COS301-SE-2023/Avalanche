@@ -9,6 +9,7 @@ import { UserDataProductMangementService } from './user-data-products-management
 import { Repository } from 'typeorm';
 import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
+import { Endpoint } from '../../entity/endpoint.entity';
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
@@ -19,6 +20,7 @@ describe('UserDataProductMangementService', () => {
   let userGroupRepository: Repository<UserGroup>;
   let organisationRepository: Repository<Organisation>;
   let watchedUserRepository: Repository<WatchedUser>;
+  let endpointRepository: Repository<Endpoint>;
   let redis;
 
   beforeEach(async () => {
@@ -29,6 +31,7 @@ describe('UserDataProductMangementService', () => {
         { provide: getRepositoryToken(UserGroup), useClass: Repository },
         { provide: getRepositoryToken(Organisation), useClass: Repository },
         { provide: getRepositoryToken(WatchedUser), useClass: Repository },
+        { provide: getRepositoryToken(Endpoint), useClass: Repository },
         { provide: 'REDIS', useValue: { get: jest.fn() } },
         ConfigService
       ],
@@ -39,6 +42,7 @@ describe('UserDataProductMangementService', () => {
     userGroupRepository = await moduleRef.get(getRepositoryToken(UserGroup));
     organisationRepository = await moduleRef.get(getRepositoryToken(Organisation));
     watchedUserRepository = await moduleRef.get(getRepositoryToken(WatchedUser));
+    endpointRepository = await moduleRef.get(getRepositoryToken(Endpoint));
     redis = await moduleRef.get('REDIS');
   });
 
@@ -54,13 +58,13 @@ describe('UserDataProductMangementService', () => {
   });
 
   // More tests
-  describe('integrateUserWithWExternalAPI', () => {
+  describe('integrateUserWithZARCExternalAPI', () => {
     it('should return error when invalid zone type is given and personal is true', async () => {
       mockedAxios.post.mockResolvedValue({ data: { token: 'token' } });
       mockedAxios.get.mockResolvedValue({ data: { epp_username: 'username' } });
       jest.spyOn(userRepository, 'findOne').mockResolvedValue(new User());
 
-      const result = await service.integrateUserWithWExternalAPI('token', 'INVALID_ZONE', 'name', 'username', 'password', true);
+      const result = await service.integrateUserWithZARCExternalAPI('token', 'INVALID_ZONE', 'name', 'username', 'password', true);
       expect(result).toEqual({
         status: 400,
         error: true,
@@ -75,7 +79,7 @@ describe('UserDataProductMangementService', () => {
       jest.spyOn(userRepository, 'findOne').mockResolvedValue(new User());
       jest.spyOn(userGroupRepository, 'findOne').mockResolvedValue(null);
 
-      const result = await service.integrateUserWithWExternalAPI('token', 'AFRICA', 'name', 'username', 'password', false);
+      const result = await service.integrateUserWithZARCExternalAPI('token', 'AFRICA', 'name', 'username', 'password', false);
       expect(result).toEqual({
         status: 400,
         error: true,
@@ -87,7 +91,7 @@ describe('UserDataProductMangementService', () => {
     it('should return error when token is invalid and personal is false', async () => {
       jest.spyOn(redis, 'get').mockResolvedValue(null);
 
-      const result = await service.integrateUserWithWExternalAPI('invalid_token', 'AFRICA', 'name', 'username', 'password', false);
+      const result = await service.integrateUserWithZARCExternalAPI('invalid_token', 'AFRICA', 'name', 'username', 'password', false);
       expect(result).toEqual({
         status: 400,
         error: true,

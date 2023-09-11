@@ -5,19 +5,19 @@ import { useEffect, useState } from "react";
 import { useRouter } from 'next/router';
 import PageHeader from "@/components/Util/PageHeader";
 import { IntegrationLoginModal } from "@/components/Modals";
-import { SubmitButton, WarningAlert } from "@/components/Util";
+import { SubmitButton, WarningAlert, MainContent } from "@/components/Util";
 import { Toaster } from 'react-hot-toast';
 import OrganizationSettings from "@/components/Settings/Organizations";
 import { userState } from "@/store/Slices/userSlice";
 import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import GeneralSettings from "@/components/Settings/General";
+import DataProducts from "@/components/Settings/DataProducts";
 
 export default function Settings() {
 
     const modalState = useSelector(selectModalManagerState);
     const user = useSelector(userState);
-    const dispatch = useDispatch();
 
     /**
      * This is just calling the NextJS router so we can reference it later on in the code
@@ -83,7 +83,7 @@ export default function Settings() {
         </Head>
         <Sidebar />
 
-        <div className="p-4 sm:ml-64 bg-white dark:bg-secondaryBackground min-h-screen">
+        <MainContent>
             <div className="flex justify-between items-center">
                 <PageHeader title="Settings" subtitle="Configure your Avalanche" icon={<Cog6ToothIcon className="h-16 w-16 text-black dark:text-white" />} />
                 <div className="flex items-center space-x-4 hidden lg:flex">
@@ -115,12 +115,9 @@ export default function Settings() {
                 <OrganizationSettings />
             }
             {tab === "integrations" && <>
-                <div className="flex justify-between items-center gap-10 mb-4">
-                    <WarningAlert title="No Data Products." text="You have not added any Data Products..." />
-                    <SubmitButton text="Add a new Data Product" onClick={() => dispatch(setCurrentOpenState("INTE.CreateIntegration"))} />
-                </div>
+                <DataProducts></DataProducts>
             </>}
-        </div>
+        </MainContent>
 
         {/* Models go here */}
         {modalState.currentOpen === "INTE.CreateIntegration" && <IntegrationLoginModal />}

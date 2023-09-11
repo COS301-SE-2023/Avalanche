@@ -9,7 +9,13 @@ import '../assets/global.scss';
 
 function App({ Component, ...rest }: AppProps) {
   const { store, props } = wrapper.useWrappedStore(rest);
-  return <ThemeProvider attribute="class">
+  return <ThemeProvider
+    storageKey='theme'
+    enableSystem={false}
+    forcedTheme='light'
+    enableColorScheme={false}
+    themes={['light']}
+  >
     <Provider store={store}>
       <PersistGate loading={null} persistor={store.__persistor}>
         <main>

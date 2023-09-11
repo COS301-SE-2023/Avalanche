@@ -5,13 +5,13 @@ import Head from "next/head"
 import { ChartCard } from "@/components/Graphs"
 import { ChartType } from "@/Enums";
 import { useDispatch, useSelector } from "react-redux";
-import { graphState, getGraphData } from "@/store/Slices/graphSlice"
+import { graphState, getGraphData, clearGraphData } from "@/store/Slices/graphSlice"
 import { useEffect } from "react";
 import { ITransactionGraphRequest } from "@/interfaces/requests";
 import { selectModalManagerState } from "@/store/Slices/modalManagerSlice"
 import GraphZoomModal from "@/components/Modals/GraphZoomModal"
 import html2canvas from "html2canvas";
-import { SubmitButton } from "@/components/Util"
+import { SubmitButton, MainContent } from "@/components/Util"
 import jsPDF from "jspdf"
 
 export default function Registrar() {
@@ -60,7 +60,7 @@ export default function Registrar() {
         pdf.save('report.pdf');
     };
 
-    useEffect(() => {
+    function loadData() {
         // const data: ITransactionGraphRequest = { zone: "CO.ZA", granularity: "week", group: "registrar", dateFrom: "2023-01-02", graphName: "Your mom" };
 
         const array: ITransactionGraphRequest[] = [];
@@ -69,19 +69,19 @@ export default function Registrar() {
         // All transactions, monthly granularity, for the last year
         let dateFrom = `${currentDate.getFullYear() - 1}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
         let dateTo = `${currentDate.getFullYear()}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
-        const monthlyLastYear: ITransactionGraphRequest = { zone: ["CO.ZA"], registrar: ["afrihost"], graphName: `Monthly\n from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo };
+        const monthlyLastYear: ITransactionGraphRequest = { zone: stateGraph.zones.slice(0, 1), registrar: ["Individual"], graphName: `Monthly\n from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo };
         array.push(monthlyLastYear);
 
         // All transactions, monthly granularity, for the year before
         dateFrom = `${currentDate.getFullYear() - 2}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
         dateTo = `${currentDate.getFullYear() - 1}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
-        const monthlyPastYear: ITransactionGraphRequest = { zone: ["CO.ZA"], registrar: ["hetzner"], graphName: `Monthly\n from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo };
+        const monthlyPastYear: ITransactionGraphRequest = { zone: stateGraph.zones.slice(0, 1), registrar: ["Individual"], graphName: `Monthly\n from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo };
         array.push(monthlyPastYear);
 
         // All transactions, yearly, 5 years
         dateFrom = `${currentDate.getFullYear() - 5}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
         dateTo = `${currentDate.getFullYear()}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
-        const yearlyPastFive: ITransactionGraphRequest = { zone: ["CO.ZA"], registrar: ["afrihost"], graphName: `Yearly\n from ${dateFrom} to ${dateTo}`, granularity: "year", dateFrom, dateTo };
+        const yearlyPastFive: ITransactionGraphRequest = { zone: stateGraph.zones.slice(0, 1), registrar: ["Individual"], graphName: `Yearly\n from ${dateFrom} to ${dateTo}`, granularity: "year", dateFrom, dateTo };
         array.push(yearlyPastFive);
 
         //  All transactions, weekly, last 3 months
@@ -89,7 +89,7 @@ export default function Registrar() {
         holderDate.getMonth() - 3;
         dateFrom = `${holderDate.getFullYear()}-${pad(holderDate.getMonth() - 3)}-${pad(holderDate.getDate())}`;
         dateTo = `${currentDate.getFullYear()}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
-        const weeklyThreeMonths: ITransactionGraphRequest = { zone: ["CO.ZA"], registrar: ["afrihost"], graphName: `Weekly\n from ${dateFrom} to ${dateTo}`, granularity: "week", dateFrom, dateTo };
+        const weeklyThreeMonths: ITransactionGraphRequest = { zone: stateGraph.zones.slice(0, 1), registrar: ["Individual"], graphName: `Weekly\n from ${dateFrom} to ${dateTo}`, granularity: "week", dateFrom, dateTo };
         array.push(weeklyThreeMonths);
 
         // All transactions, daily, last 2 weeks
@@ -97,7 +97,7 @@ export default function Registrar() {
         holderDate.setDate(holderDate.getDate() - 14);
         dateFrom = `${holderDate.getFullYear()}-${pad(holderDate.getMonth())}-${pad(holderDate.getDate())}`;
         dateTo = `${currentDate.getFullYear()}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
-        const dailyTwoWeeks: ITransactionGraphRequest = { zone: ["CO.ZA"], registrar: ["afrihost"], graphName: `Daily\n from ${dateFrom} to ${dateTo}`, granularity: "day", dateFrom, dateTo };
+        const dailyTwoWeeks: ITransactionGraphRequest = { zone: stateGraph.zones.slice(0, 1), registrar: ["Individual"], graphName: `Daily\n from ${dateFrom} to ${dateTo}`, granularity: "day", dateFrom, dateTo };
         array.push(dailyTwoWeeks);
 
 
@@ -105,7 +105,21 @@ export default function Registrar() {
             dispatch(getGraphData(data));
         })
 
+    }
+
+    useEffect(() => {
+        if (stateGraph.cleared) {
+            loadData();
+        }
+    }, [stateGraph.cleared])
+
+    useEffect(() => {
+        dispatch(clearGraphData());
     }, [])
+
+    useEffect(() => {
+        dispatch(clearGraphData());
+    }, [stateGraph.selectedDataSource])
 
     return (<>
         <Head>
@@ -113,7 +127,7 @@ export default function Registrar() {
         </Head>
         <Sidebar />
 
-        <div className="p-4 sm:ml-64 bg-gray-100 dark:bg-secondaryBackground min-h-screen">
+        <MainContent>
             <div className="flex justify-between items-center">
                 <PageHeader title="Registrar" subtitle="Insights at your fingertips" icon={<TvIcon className="h-16 w-16 text-black dark:text-white" />} />
                 <SubmitButton text="Download Report" onClick={() => generatePDF()} />
@@ -167,7 +181,7 @@ export default function Registrar() {
                     }
                 </div>
             </div>
-        </div>
+        </MainContent>
         {
             modalState.currentOpen === "GRAPH.Modal" && <GraphZoomModal />
         }

@@ -1,16 +1,14 @@
 import Sidebar from "@/components/Navigation/SideBar"
-import PageHeader from "@/components/Util/PageHeader"
-import { HomeIcon, PencilSquareIcon, PencilIcon, CpuChipIcon, XMarkIcon, CheckIcon } from "@heroicons/react/24/solid"
+import { PencilIcon, CpuChipIcon, XMarkIcon, CheckIcon } from "@heroicons/react/24/solid"
 import Head from "next/head"
-import { ChartCard, CustomChartCard } from "@/components/Graphs"
+import { CustomChartCard } from "@/components/Graphs"
 import { ChartType } from "@/Enums";
 import { useDispatch, useSelector } from "react-redux";
-import { graphState, getGraphData, getGraphDataRanking } from "@/store/Slices/graphSlice"
+import { graphState } from "@/store/Slices/graphSlice"
 import { useState, useEffect } from "react";
-import { ITransactionGraphRequest } from "@/interfaces/requests";
 import { selectModalManagerState, setCurrentOpenState } from "@/store/Slices/modalManagerSlice"
 import GraphZoomModal from "@/components/Modals/GraphZoomModal"
-import { ErrorToast, Input, SubmitButton, SuccessToast } from "@/components/Util"
+import { ErrorToast, Input, SubmitButton, SuccessToast, MainContent } from "@/components/Util"
 import GraphCreateModal from "@/components/Modals/GraphCreateModal";
 import { getFilters } from "@/store/Slices/graphSlice"
 import { userState } from "@/store/Slices/userSlice"
@@ -19,7 +17,7 @@ import { useRouter } from "next/router"
 import ky, { HTTPError } from "ky"
 import { getCookie } from "cookies-next"
 import { updateDashboards } from "@/store/Slices/userSlice";
-import Script from "next/script"
+import NoFind from "@/components/CustomSVG/NoFind";
 
 
 export default function CreateCustomDashboard() {
@@ -73,7 +71,7 @@ export default function CreateCustomDashboard() {
     }
 
     const renderGraphs = () => {
-        return graphs.map((graph: any, index: number) => <CustomChartCard title={graph.name} defaultGraph={ChartType.Pie} data={graph} key={index} state={stateGraph} id={id} updateGraph={updateGraph} />);
+        return graphs.map((graph: any, index: number) => <CustomChartCard title={graph.name} defaultGraph={ChartType.Line} data={graph} key={index} state={stateGraph} id={id} updateGraph={updateGraph} />);
     }
 
     const updateDashboard = async () => {
@@ -83,13 +81,14 @@ export default function CreateCustomDashboard() {
         const dataaaaaaaaa = [] as any;
 
         graphs.forEach((g: any) => {
-            const d = g.endpointName?.split("/");
-            const warehouse = g.warehouse || d[0];
-            const type = g.type || d[1];
+            const d = g?.endpointName?.split("/");
+            const warehouse = g?.warehouse || d[0];
+            const type = g?.type || d[1];
             const gg = {
                 endpointName: warehouse + "/" + type,
-                graphName: g.name || g.graphName,
-                filters: g.filters,
+                graphName: g?.name || g?.graphName,
+                filters: g?.filters,
+                comments: g?.comments || []
             };
             dataaaaaaaaa.push(gg);
         });
@@ -170,7 +169,7 @@ export default function CreateCustomDashboard() {
         <Sidebar />
         <Toaster />
 
-        <div className="p-4 sm:ml-64 bg-gray-100 dark:bg-secondaryBackground min-h-screen">
+        <MainContent>
             <div className="flex justify-between items-center flex-col lg:flex-row">
                 <div className="flex flex-row gap-2 items-center">
                     <CpuChipIcon className="h-16 w-16 text-black dark:text-white" />
@@ -207,11 +206,15 @@ export default function CreateCustomDashboard() {
                 </div>
             </div>
             <div className="p-0 pt-4 md:p-4">
-                <div className="grid gap-4 mb-4 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                {graphs.length === 0 ? <div className="flex justify-center flex-col items-center h-[calc(100vh-24rem)]">
+                    <NoFind className="h-48 w-48" />
+                    <h3 className="text-3xl font-medium text-gray-700 dark:text-white">No graphs found...</h3>
+                    <p className='text-xl text-gray-600 dark:text-gray-400'>No graphs exist yet... Get graphing!</p>
+                </div> : <div className="grid gap-4 mb-4 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2">
                     {renderGraphs()}
-                </div>
+                </div>}
             </div>
-        </div>
+        </MainContent>
 
         {/* Modals */}
         {modalState.currentOpen === "GRAPH.AddGraph" && <GraphCreateModal state={stateGraph} add={addToGraphs} />}

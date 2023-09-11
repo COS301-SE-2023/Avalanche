@@ -31,6 +31,14 @@ export default function OrganizationSettings({ }: IOrganizationSettings) {
     }, [])
 
     /**
+     * For debugging
+     */
+    // useEffect(() => {
+    //     console.log('changed')
+    //     console.log(modalState.currentOpen)
+    // }, [modalState.currentOpen])
+
+    /**
      * This state variable holds the current active user group tab.
      */
     const [groupTab, setGroupTab] = useState<string>("");
@@ -239,7 +247,7 @@ export default function OrganizationSettings({ }: IOrganizationSettings) {
 
         </> : <div className="flex justify-between items-center gap-10 mb-4">
             <WarningAlert title="No Organisation" text='To create an organisation, simply click on the "Add a new organisation" button to get started!' />
-            <SubmitButton text="Add a new organization" onClick={() => dispatch(setCurrentOpenState("ORG.CreateOrg"))} />
+            <SubmitButton text="Add a new organization" onClick={() => { dispatch(setCurrentOpenState("ORG.CreateOrg")) }} />
         </div>
         }
 
