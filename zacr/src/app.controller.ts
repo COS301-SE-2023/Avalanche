@@ -89,7 +89,6 @@ export class AppController {
   }
 
   @MessagePattern({ cmd: 'domainNameAnalysis/classification' })
-  @Cors({ origin: 'https://avalanche.sloththe.dev' })
   async domainNameAnalysisClassification(data: any) {
     const result = await this.domainNameAnalysisService.classification(data);
     if (result.error) {
@@ -180,7 +179,5 @@ export class AppController {
     return result;
   }
 }
-function Cors(arg0: { origin: string; }): (target: AppController, propertyKey: "domainNameAnalysisClassification", descriptor: TypedPropertyDescriptor<(data: any) => Promise<any>>) => void {
-  throw new Error('Function not implemented.')
-}
+
 
