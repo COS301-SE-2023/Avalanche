@@ -225,31 +225,11 @@ export default function IntegrationLoginModal({ }: IIntegrationLoginModal) {
             </div>
             <div>
               <DoubleToggle leftTitle="Personal" rightTitle="User Group" value={!isPersonal} onChange={(e: React.FormEvent<HTMLFormElement>) => setIsPersonal(!isPersonal)} name="isPersonal" />
-              {/* <input
-                type="checkbox"
-                id="isPersonal"
-                checked={isPersonal}
-                onChange={(e) => setIsPersonal(e.target.checked)}
-              />
-              <label htmlFor="isPersonal">Personal</label> */}
             </div>
             {!isPersonal && (
               <Dropdown items={userGroups.map((item: any) => item.userGroupName)} id="userGroup" option={selectedGroup} set={(e: string) => {
                 setSelectedGroup(e);
               }} text="Select a user group" />
-              // <div>
-              //   <label htmlFor="userGroup">Select User Group</label>
-              //   <select
-              //     id="userGroup"
-              //     value={selectedGroup}
-              //     onBlur={(e) => setSelectedGroup(e.target.value)}
-              //   >
-              //     {userGroups.map((group, index) => (
-              //       <option key={index} value={group.userGroupName}>{group.userGroupName}</option>
-              //     ))}
-              //   </select>
-
-              // </div>
             )}
             <SubmitButton
               text={`Login to ${integration.name}`}

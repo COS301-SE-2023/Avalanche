@@ -12,7 +12,8 @@ import { selectModalManagerState } from "@/store/Slices/modalManagerSlice"
 import GraphZoomModal from "@/components/Modals/GraphZoomModal"
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
-import { SubmitButton, MainContent } from "@/components/Util"
+import { SubmitButton, MainContent, WarningAlert } from "@/components/Util"
+import NoFind from "@/components/CustomSVG/NoFind"
 
 export default function RegistrarMarketComparison() {
 
@@ -61,37 +62,32 @@ export default function RegistrarMarketComparison() {
     };
 
     function loadData() {
-        // const data: ITransactionGraphRequest = { zone: "CO.ZA", granularity: "week", group: "registrar", dateFrom: "2023-01-02", graphName: "Your mom" };
         const arrayRanking: ITransactionGraphRequest[] = [];
         const currentDate = new Date();
 
         // All transactions, monthly granularity, for the last year
         let dateFrom = `${currentDate.getFullYear() - 1}-01-01`;
         let dateTo = `${currentDate.getFullYear() - 1}-12-31`;
-        // const monthlyLastYearRenewRanking: ITransactionGraphRequest = { graphName: `Monthly renew ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: stateGraph.zones.slice(0,1), registrar: ["afrihost", "hetzner", "diamatrix"], transactions: ["renew"] };
-        // arrayRanking.push(monthlyLastYearRenewRanking);
+
         const monthlyLastYearCreateRanking: ITransactionGraphRequest = { graphName: `Monthly create ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: stateGraph.zones.slice(0, 1), transactions: ["create"] };
         arrayRanking.push(monthlyLastYearCreateRanking);
-        // const monthlyLastYearTransferRanking: ITransactionGraphRequest = { graphName: `Monthly grace ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: 'CO.ZA', registrar : ["1und1","registrygate","internetx"], transactions : ["grace"] };
-        // arrayRanking.push(monthlyLastYearTransferRanking);
 
         //  All transactions, weekly, last 3 months
         let holderDate = new Date();
         holderDate.getMonth() - 3;
         dateFrom = `${holderDate.getFullYear()}-${pad(holderDate.getMonth() - 3)}-01`;
         dateTo = `${currentDate.getFullYear()}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
-        // const monthlyThreeMonthsTransferRanking: ITransactionGraphRequest = { graphName: `Monthly transfer ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, registrar: ["afrihost", "hetzner", "diamatrix"], transactions: ["transfer"] };
-        // arrayRanking.push(monthlyThreeMonthsTransferRanking);
-        const monthlyThreeMonthsCreateRanking: ITransactionGraphRequest = { graphName: `Monthly create ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo,  transactions: ["create"] };
+
+        const monthlyThreeMonthsCreateRanking: ITransactionGraphRequest = { graphName: `Monthly create ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, transactions: ["create"] };
         arrayRanking.push(monthlyThreeMonthsCreateRanking);
-        const monthlyThreeMonthsRenewRanking: ITransactionGraphRequest = { graphName: `Monthly renew ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo,  transactions: ["renew"] };
+
+        const monthlyThreeMonthsRenewRanking: ITransactionGraphRequest = { graphName: `Monthly renew ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, transactions: ["renew"] };
         arrayRanking.push(monthlyThreeMonthsRenewRanking);
 
         arrayRanking.forEach(data => {
             dispatch(getGraphDataRanking(data));
         })
 
-        // dispatch(getGraphDataarrayRanking(arrayRanking));
     }
 
     useEffect(() => {
@@ -120,7 +116,15 @@ export default function RegistrarMarketComparison() {
                 <SubmitButton text="Download Report" onClick={() => generatePDF()} />
             </div>
             <div className="p-0 pt-4 md:p-4">
-                <div className="grid lg:grid-cols-2 sm:grid-cols-1 md:grid-cols-2 gap-4 mb-4 grid-rows-2">
+                {
+                    !stateGraph.loading && stateGraph.graphs.length === 0 && <div className="flex items-center flex-col gap-2">
+                        <NoFind className="h-48 w-48" />
+                        <h3 className="text-3xl font-medium text-gray-700 dark:text-white">No Data</h3>
+                        <p className='text-xl text-gray-600 dark:text-gray-400'>There was no data returned. Try another dashboard.</p>
+                        {stateGraph.error && <WarningAlert title="We got an error." text={stateGraph.error} italic={true} report="Please report this error to the developers, along with the page that you are on." />}
+                    </div>
+                }
+                {stateGraph.graphs?.length || stateGraph.loading && <div className="grid lg:grid-cols-2 sm:grid-cols-1 md:grid-cols-2 gap-4 mb-4 grid-rows-2">
                     {
                         stateGraph.graphs?.length > 0 && stateGraph.graphs.map((data: any, index: number) => {
                             if (data) return <ChartCard title={data.graphName} data={data} defaultGraph={ChartType.Line} key={index} />
@@ -172,7 +176,7 @@ export default function RegistrarMarketComparison() {
                             </div>
                         </>
                     }
-                </div>
+                </div>}
             </div>
         </MainContent>
         {

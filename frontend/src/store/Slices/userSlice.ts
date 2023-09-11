@@ -360,11 +360,8 @@ export const createOrganisationGroup = createAsyncThunk("ORG.CreateOrganisationG
         return response as ICreateUserGroupResponse;
     } catch (e) {
         let error = e as HTTPError;
-        if (error.name === 'HTTPError') {
-            const newError = await error.response.json();
-            console.log(newError.message);
-            return rejectWithValue(newError.message);
-        }
+        const newError = await error.response.json();
+        return rejectWithValue(newError.message);
     }
 })
 

@@ -39,6 +39,7 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
     const [warehouse, setWarehouse] = useState<string>(data.warehouse);
     const [gType, setGType] = useState<string>(data.graphType);
     const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<boolean>(false);
 
     const [request, setRequest] = useState<any>({});
 
@@ -131,18 +132,18 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
 
     const filterSubmit = () => {
         const keys = Object.keys(request);
-    
+
         const requestObject: any = {};
-    
+
         // Map of filter names to their types for easy lookup
         const filterTypeMap: { [key: string]: string } = {};
         filterGraphs()?.filters.forEach((filter: any) => {
             filterTypeMap[filter.name] = filter.type;
         });
-    
+
         keys.forEach((key, index) => {
             const currentValue = request[key].value;
-    
+
             // Check if the type is string[] and the current value is a string
             if (filterTypeMap[key] === 'string[]' && typeof currentValue === 'string') {
                 requestObject[key] = [currentValue];
@@ -150,11 +151,10 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
                 requestObject[key] = currentValue;
             }
         });
-    
+
         setFilterDropdown(!filterDropdown);
         fetchGraphData(requestObject);
     };
-    
 
     const fetchGraphData = async (filters: any) => {
         setLoading(true);
@@ -171,8 +171,12 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
             setGraphData(d.data.data);
             setGraphTitle(d.data.graphName);
             setLoading(false);
+            setError(false);
         } catch (e) {
-            if (e instanceof Error) return ErrorToast({ text: e.message })
+            if (e instanceof Error) {
+                ErrorToast({ text: e.message });
+                setError(true);
+            }
         }
     }
 
@@ -323,16 +327,19 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
                     </Menu>
                 </div>
             </div>
-            {!loading ? <div>
-                {type === ChartType.Bar && <BarChart data={graphData} />}
-                {type === ChartType.Pie && <PieChart data={graphData} />}
-                {type === ChartType.Line && <LineChart data={graphData} addClass="h-96" />}
-                {type === ChartType.Bubble && <BubbleChart data={graphData}  />}
-                {type === ChartType.PolarArea && <PolarAreaChart data={graphData} />}
-                {type === ChartType.Radar && <RadarChart data={graphData} />}
-                {type === ChartType.Table && <TableChart data={graphData} />}
-            </div> : <div role="status" className="flex justify-between h-64 w-full bg-gray-300 rounded-lg animate-customPulse dark:bg-gray-700 p-6" />}
-
+            {
+                loading ? <div role="status" className="flex justify-between h-64 w-full bg-gray-300 rounded-lg animate-customPulse dark:bg-gray-700 p-6" />
+                    : error ? <span>error here</span>
+                        : <>
+                            {type === ChartType.Bar && <BarChart data={graphData} />}
+                            {type === ChartType.Pie && <PieChart data={graphData} />}
+                            {type === ChartType.Line && <LineChart data={graphData} addClass="h-96" />}
+                            {type === ChartType.Bubble && <BubbleChart data={graphData} />}
+                            {type === ChartType.PolarArea && <PolarAreaChart data={graphData} />}
+                            {type === ChartType.Radar && <RadarChart data={graphData} />}
+                            {type === ChartType.Table && <TableChart data={graphData} />}
+                        </>
+            }
         </div >
     </>)
 
