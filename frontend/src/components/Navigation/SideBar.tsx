@@ -13,11 +13,12 @@ import { useRouter } from "next/router";
 import { getCookie, deleteCookie } from "cookies-next";
 import LoadingPage from "../Util/Loading";
 import ky from "ky";
-import { BetterDropdown, ErrorToast, SubmitButton, SuccessToast } from "../Util";
+import { BetterDropdown, ErrorToast, SubmitButton, SuccessToast, WarningAlert } from "../Util";
 import CreateDashboardModal from "../Modals/CreateDashboardModal";
 import { Transition, Popover } from '@headlessui/react'
 import { v4 as uuidv4 } from 'uuid';
 import md5 from 'md5';
+import ErrorAlert from "../Util/ErrorAlert";
 
 export default function Sidebar() {
     const { theme, setTheme } = useTheme();
@@ -142,6 +143,7 @@ export default function Sidebar() {
                         <div className="flex flex-col overflow-y-auto py-5 px-3 h-full border-r border-gray-200 bg-gray-200 dark:bg-dark-background dark:border-dark-background">
                             {/* top list */}
                             <ul className="space-y-2">
+                                <ErrorAlert title="Beta" italic={false} text="This product is in beta. If you come across any issues/bugs, please report them ASAP!" />
                                 <SideBarItem text="Home" icon={<HomeIcon className="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />} page="home" />
                                 <li>
                                     <span className="flex items-center justify-between p-2 text-gray-900 rounded-lg dark:text-white hover:bg-lightHover dark:hover:bg-gray-700 hover:cursor-pointer" onClick={() => setDF(!df)}>
