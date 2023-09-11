@@ -21,6 +21,7 @@ import GraphErrors from './GraphErrors';
 import GraphsRenderer from './GraphsRenderer';
 import DashboardBase from './DashboardBase';
 import ChartCardError from './ChartCardError';
+import HomeCard from './HomeCard';
 
 export {
     DangerAlert,
@@ -45,5 +46,6 @@ export {
     GraphErrors,
     GraphsRenderer,
     DashboardBase,
-    ChartCardError
+    ChartCardError,
+    HomeCard
 };
