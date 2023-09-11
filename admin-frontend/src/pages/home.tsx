@@ -33,7 +33,7 @@ export default function Home() {
                             <img className="w-64 mb-3" src="https://astonmartin.sloththe.dev/isawesome/undraw_team_page_re_cffb.svg" alt="Bonnie image" />
                             <div className="flex flex-col items-center">
                                 <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white text-center">Hera</h5>
-                                <span className="text-sm text-gray-500 dark:text-gray-400 text-center">Permit them people</span>
+                                <span className="text-sm text-gray-500 dark:text-gray-400 text-center">Give Es to those TOUs</span>
                             </div>
                             <StartOutlineIcon className="w-6 h-6 text-yellow-500 absolute top-5 right-5" />
                         </div>

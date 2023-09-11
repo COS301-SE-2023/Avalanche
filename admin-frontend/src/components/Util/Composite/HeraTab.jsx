@@ -20,7 +20,7 @@ import ky, { HTTPError } from "ky"
 import ISaveFilters from '@/interfaces/requests/SaveFilters';
 
 import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
-import { heraState } from '@/store/Slices/HeraSlice';
+import { heraState, updateHeraData } from '@/store/Slices/HeraSlice';
 
 // interface ITransferFilterData {
 //     permissionData: any
@@ -38,31 +38,49 @@ export default function HeraTab({ permissionData }) {
 
     const stateHera = useSelector(heraState);
     let [menuExpanded, setMenuExpanded] = useState(false);
+    let [data, setData] = useState(JSON.parse(JSON.stringify(permissionData)) );
     const dispatch = useDispatch();
-    const [undoStack, setUndoStack] = useState([JSON.parse(JSON.stringify(permissionData))]);
-    const undoStackRef = useRef(undoStack);
+
+
+
+
 
     useEffect(() => {
-        console.log(undoStack);
-    }, [undoStack]);
+        console.log('Updated data:', data);
+    }, [data]);
 
-
-
-
-
+    function transformData(data) {
+        let result = {
+            data: []
+        };
+    
+        for (let source of data.dataSources) {
+            let dataSourceObj = {};
+            dataSourceObj[source.dataSourceName] = [];
+            for (let userType of source.typesOfUsers) {
+                let userObj = {};
+                userObj[userType.typeOfUser] = userType.endpoints;
+                dataSourceObj[source.dataSourceName].push(userObj);
+            }
+            result.data.push(dataSourceObj);
+        }
+    
+        return result;
+    }
 
 
 
     const updateDashboard = async () => {
- 
+        dispatch(updateHeraData(data));
         console.log("making data")
+        let dataL=transformData(data);
         const updateData = {
-           
+           data:dataL.data
         };
         try {
 
             console.log("send req")
-            const res = await ky.post(`http://${process.env.NEXT_PUBLIC_ZEUS ? process.env.NEXT_PUBLIC_ZEUS:"localhost"}:3998/editFilter`, {
+            const res = await ky.post(`http://${process.env.NEXT_PUBLIC_ZEUS ? process.env.NEXT_PUBLIC_ZEUS:"localhost"}:3998/editPersephone`, {
                 json: updateData, timeout: false, headers: {
                     "Access-Control-Allow-Origin": "*",
                     "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
@@ -81,17 +99,12 @@ export default function HeraTab({ permissionData }) {
         }
 
     }
-
-  
-
-    useEffect(() => {
-        console.log('Updated undoStack:', undoStack);
-        undoStackRef.current = undoStack; // Update the ref with the latest undoStack value
-    }, [undoStack]);
-
-
    
-
+    const handleFilterChange = (newFilters) => {
+        // Save the previous filters to the undo stack
+        setData(newFilters);
+       
+    };
 
 
     function toggleCheck() {
@@ -114,7 +127,7 @@ export default function HeraTab({ permissionData }) {
             console.log(num);
             const openStyle = `flex justify-center items-center w-[52px] h-[52px] text-gray-500 hover:text-gray-900 bg-white rounded-lg  dark:hover:text-white dark:text-gray-400 dark:bg-secondaryBackground dark:hover:bg-thirdBackground focus:ring-2 focus:ring-gray-300 focus:outline-none dark:focus:ring-gray-400`;
             
-            return <><Transition
+            return <>< Transition key={index}
                 show={menuExpanded}
                 enter="transition duration-300 transform opacity transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);"
                 enterFrom={`translate-x-[15rem] opacity-0`}
@@ -123,10 +136,10 @@ export default function HeraTab({ permissionData }) {
                 leaveFrom="translate-x-0 opacity-100"
                 leaveTo={`translate-x-[15rem] opacity-0`}
             >
-                <button onClick={item.func} type="button" data-tooltip-target="tooltip-share" data-tooltip-placement="left"
+                <button  onClick={item.func} key={index} type="button" data-tooltip-target="tooltip-share" data-tooltip-placement="left"
                     className=
                     {openStyle}>
-                    <svg className="w-8 h-8" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                    <svg key={index} className="w-8 h-8" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
                         <path d={item.svg} />
                     </svg>
                     <span className="sr-only">item.buttonName</span>
@@ -156,7 +169,7 @@ export default function HeraTab({ permissionData }) {
 
             </div>
             <div className="relative left bottom-10  z-0">
-                <JsonTree readOnly={false} rootName="Permissions" data={stateHera.hera.data} onFullyUpdate={()=>{}}></JsonTree>
+                <JsonTree readOnly={false} rootName="Permissions" data={data} onFullyUpdate={handleFilterChange}></JsonTree>
             </div>
 
         </div>

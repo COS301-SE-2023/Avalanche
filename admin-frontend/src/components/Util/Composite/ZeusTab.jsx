@@ -51,17 +51,7 @@ export default function ZeusTab({ filterData }) {
 
 
 
-    function saveFilter() {
-        const name = nameRef.current;
-        const saveData = dataRef.current;
-        console.log("data", dataRef.current);
-        dispatch(updateFilterData({ name, saveData }));
-        SuccessToast({ text: "Did the save, boss" });
-        const copy = JSON.parse(JSON.stringify(saveData));
-        console.log("copy", copy);
-        setData(copy);
-        setFilterName(dataRef.current.name);
-    }
+  
 
     const handleFilterChange = (newFilters) => {
         // Save the previous filters to the undo stack
@@ -121,7 +111,7 @@ export default function ZeusTab({ filterData }) {
             let error = e ;
             if (error.name === 'HTTPError') {
                 const errorJson = await error.response.json();
-                return ErrorToast({ text: "iProblem" });
+                return ErrorToast({ text: errorJson.message });
             }
         }
 
@@ -188,7 +178,7 @@ export default function ZeusTab({ filterData }) {
                 leaveFrom="translate-x-0 opacity-100"
                 leaveTo={`translate-x-[15rem] opacity-0`}
             >
-                <button onClick={item.func} type="button" data-tooltip-target="tooltip-share" data-tooltip-placement="left"
+                <button onClick={item.func} key={index} type="button" data-tooltip-target="tooltip-share" data-tooltip-placement="left"
                     className=
                     {openStyle}>
                     <svg className="w-8 h-8" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
