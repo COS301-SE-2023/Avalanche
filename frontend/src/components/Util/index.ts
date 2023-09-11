@@ -20,6 +20,7 @@ import LoadingGrid from './LoadingGrid';
 import GraphErrors from './GraphErrors';
 import GraphsRenderer from './GraphsRenderer';
 import DashboardBase from './DashboardBase';
+import ChartCardError from './ChartCardError';
 
 export {
     DangerAlert,
@@ -43,5 +44,6 @@ export {
     LoadingGrid,
     GraphErrors,
     GraphsRenderer,
-    DashboardBase
+    DashboardBase,
+    ChartCardError
 };
