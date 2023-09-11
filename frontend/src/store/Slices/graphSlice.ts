@@ -107,6 +107,22 @@ export const graphSlice = createSlice({
             state.loading = false;
             state.cleared = false;
         })
+        builder.addCase(getGraphRegistrarData.pending, (state) => {
+            state.loading = true;
+        })
+        builder.addCase(getGraphRegistrarData.rejected, (state, action) => {
+            state.loading = false;
+            state.cleared = false;
+            state.error = action.payload as string;
+        })
+        builder.addCase(getGraphRegistrarData.fulfilled, (state, action) => {
+            const payload = action.payload as any;
+            assignColours(payload)
+            state.graphs.push(payload.data);
+            state.latestAdd = state.graphs.length - 1;
+            state.loading = false;
+            state.cleared = false;
+        })
         builder.addCase(getGraphDataRanking.pending, (state) => {
             state.loading = true;
             state.graphs = [];
@@ -304,6 +320,25 @@ export const getGraphData = createAsyncThunk("GRAPH.GetGraphData", async (object
         const state = getState() as { graph: IGraphState }; // Replace 'graph' with the slice name if different
         const { selectedDataSource } = state.graph;
         const response = await ky.post(`${url}/${selectedDataSource}/transactions`, {
+            json: object,
+            headers: {
+                "Authorization": `Bearer ${jwt}`
+            }
+        }).json();
+        return response;
+    } catch (e) {
+        let error = e as HTTPError;
+        const newError = await error.response.json();
+        return rejectWithValue(newError.message);
+    }
+})
+
+export const getGraphRegistrarData = createAsyncThunk("GRAPH.GetGraphRegistrarData", async (object: ITransactionGraphRequest, { getState, rejectWithValue }) => {
+    try {
+        const jwt = getCookie("jwt");
+        const state = getState() as { graph: IGraphState }; // Replace 'graph' with the slice name if different
+        const { selectedDataSource } = state.graph;
+        const response = await ky.post(`${url}/${selectedDataSource}/registrar`, {
             json: object,
             headers: {
                 "Authorization": `Bearer ${jwt}`

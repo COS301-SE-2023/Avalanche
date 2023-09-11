@@ -12,6 +12,10 @@ export class ZacrService {
     return this.client.send({ cmd: 'transactions' }, data).toPromise();
   }
 
+  async registrar(data: any) {
+    return this.client.send({ cmd: 'transactions' }, data).toPromise();
+  }
+
   async transactionsRanking(data: any) {
     return this.client.send({ cmd: 'transactions-ranking' }, data).toPromise();
   }
