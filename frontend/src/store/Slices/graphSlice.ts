@@ -9,6 +9,7 @@ import IMarketShareGraphRequest from "@/interfaces/requests/MarketShareGraph";
 import IDomainNameAnalysisGraphRequest from "@/interfaces/requests/DomainNameAnalysis";
 import IAgeAnalysisGraphRequest from "@/interfaces/requests/AgeAnalysisGraph";
 import IMovementGraphRequest from "@/interfaces/requests/Movement";
+import * as Sentry from "@sentry/nextjs";
 
 const url = `${process.env.NEXT_PUBLIC_API}`;
 
@@ -219,7 +220,6 @@ export const graphSlice = createSlice({
         })
         builder.addCase(getMovementVerticalData.fulfilled, (state, action) => {
             const payload = action.payload as any;
-            console.log()
             assignColours(payload)
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
@@ -329,6 +329,7 @@ export const getGraphData = createAsyncThunk("GRAPH.GetGraphData", async (object
     } catch (e) {
         let error = e as HTTPError;
         const newError = await error.response.json();
+        Sentry.captureException(newError);
         return rejectWithValue(newError.message);
     }
 })
@@ -367,6 +368,7 @@ export const getGraphDataRanking = createAsyncThunk("GRAPH.GetGraphDataRanking",
     } catch (e) {
         let error = e as HTTPError;
         const newError = await error.response.json();
+        Sentry.captureException(newError);
         return rejectWithValue(newError.message);
     }
 })
@@ -386,6 +388,7 @@ export const getMarketShareData = createAsyncThunk("GRAPH.GetMarketShareData", a
     } catch (e) {
         let error = e as HTTPError;
         const newError = await error.response.json();
+        Sentry.captureException(newError);
         return rejectWithValue(newError.message);
     }
 })
@@ -405,6 +408,7 @@ export const getAgeAnalysisData = createAsyncThunk("GRAPH.GetAgeAnalysisData", a
     } catch (e) {
         let error = e as HTTPError;
         const newError = await error.response.json();
+        Sentry.captureException(newError);
         return rejectWithValue(newError.message);
     }
 })
@@ -424,6 +428,7 @@ export const getDomainLengthData = createAsyncThunk("GRAPH.GetDomainLengthData",
     } catch (e) {
         let error = e as HTTPError;
         const newError = await error.response.json();
+        Sentry.captureException(newError);
         return rejectWithValue(newError.message);
     }
 })
@@ -443,6 +448,7 @@ export const getMovementVerticalData = createAsyncThunk("GRAPH.GetMovementVertic
     } catch (e) {
         let error = e as HTTPError;
         const newError = await error.response.json();
+        Sentry.captureException(newError);
         return rejectWithValue(newError.message);
     }
 })
@@ -462,6 +468,7 @@ export const getDomainNameAnalysisData = createAsyncThunk("GRAPH.GetDomainNameAn
     } catch (e) {
         let error = e as HTTPError;
         const newError = await error.response.json();
+        Sentry.captureException(newError);
         return rejectWithValue(newError.message);
     }
 })
@@ -481,6 +488,7 @@ export const getDomainNameAnalysisClassificationData = createAsyncThunk("GRAPH.G
     } catch (e) {
         let error = e as HTTPError;
         const newError = await error.response.json();
+        Sentry.captureException(newError);
         return rejectWithValue(newError.message);
     }
 })
@@ -511,6 +519,7 @@ export const getGraphDataArray = createAsyncThunk("GRAPH.GetGraphDataArray", asy
     } catch (e) {
         let error = e as HTTPError;
         const newError = await error.response.json();
+        Sentry.captureException(newError);
         return rejectWithValue(newError.message);
     }
 })
@@ -541,6 +550,7 @@ export const getDomainLenghtDataArray = createAsyncThunk("GRAPH.GetDomainLengthD
     } catch (e) {
         let error = e as HTTPError;
         const newError = await error.response.json();
+        Sentry.captureException(newError);
         return rejectWithValue(newError.message);
     }
 })
@@ -571,6 +581,7 @@ export const getMovementVerticalDataArray = createAsyncThunk("GRAPH.GetMovementV
     } catch (e) {
         let error = e as HTTPError;
         const newError = await error.response.json();
+        Sentry.captureException(newError);
         return rejectWithValue(newError.message);
     }
 })
@@ -601,6 +612,7 @@ export const getGraphDataRankingArray = createAsyncThunk("GRAPH.GetGraphDataRank
     } catch (e) {
         let error = e as HTTPError;
         const newError = await error.response.json();
+        Sentry.captureException(newError);
         return rejectWithValue(newError.message);
     }
 })
@@ -631,6 +643,7 @@ export const getMarketShareDataArray = createAsyncThunk("GRAPH.GetaMarketShareDa
     } catch (e) {
         let error = e as HTTPError;
         const newError = await error.response.json();
+        Sentry.captureException(newError);
         return rejectWithValue(newError.message);
     }
 })
@@ -661,6 +674,7 @@ export const getAgeAnalysisDataArray = createAsyncThunk("GRAPH.GetAgeAnalysisDat
     } catch (e) {
         let error = e as HTTPError;
         const newError = await error.response.json();
+        Sentry.captureException(newError);
         return rejectWithValue(newError.message);
     }
 })
@@ -691,6 +705,7 @@ export const getDomainNameAnalysisDataArray = createAsyncThunk("GRAPH.GetDomainN
     } catch (e) {
         let error = e as HTTPError;
         const newError = await error.response.json();
+        Sentry.captureException(newError);
         return rejectWithValue(newError.message);
     }
 })
@@ -721,6 +736,7 @@ export const getDomainNameAnalysisClassificationDataArray = createAsyncThunk("GR
     } catch (e) {
         let error = e as HTTPError;
         const newError = await error.response.json();
+        Sentry.captureException(newError);
         return rejectWithValue(newError.message);
     }
 })
@@ -738,6 +754,7 @@ export const getFilters = createAsyncThunk("GRAPH.GetFilters", async (object: an
     } catch (e) {
         let error = e as HTTPError;
         const newError = await error.response.json();
+        Sentry.captureException(newError);
         return rejectWithValue(newError.message);
     }
 })
