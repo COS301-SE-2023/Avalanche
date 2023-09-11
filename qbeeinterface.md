@@ -134,15 +134,75 @@ Column[]
 ```
 Column:
 ```
-Interface Column {
-    columnName: string,
-    columnType: string, //or enum
-    typeOfFilter: string, // or enum
-    filterReturnType: string, 
-    filterValues?: string[],
-    filter: boolean,
-    table: string // which table it's from or some mapping (for grouping)
-},
+type ColumnType = 'string' | 'number' | 'date' | 'boolean';
+type FilterType = 'checkbox' | 'input' | 'date-picker';
+type FilterReturnType = 'string' | 'string[]' | 'number' | 'date' | 'boolean';
+
+interface Column {
+    columnName: string;
+    columnType: ColumnType;
+    typeOfFilter: FilterType;
+    filterReturnType: FilterReturnType;
+    filterValues?: string[];
+    filter: boolean;
+    table: string;
+}
+
+```
+### Example:
+```
+const schema: Column[] = [
+    {
+        columnName: 'Title',
+        columnType: 'string',
+        typeOfFilter: 'input',
+        filterReturnType: 'string',
+        filter: true,
+        table: 'Books'
+    },
+    {
+        columnName: 'PublicationDate',
+        columnType: 'date',
+        typeOfFilter: 'date-picker',
+        filterReturnType: 'date',
+        filter: true,
+        table: 'Books'
+    },
+    {
+        columnName: 'Genre',
+        columnType: 'string',
+        typeOfFilter: 'checkbox',
+        filterReturnType: 'string[]',
+        filterValues: ['Fantasy', 'SciFi', 'Romance', 'Mystery'],
+        filter: true,
+        table: 'Books'
+    },
+    {
+        columnName: 'AuthorID',
+        columnType: 'number',
+        typeOfFilter: 'input',
+        filterReturnType: 'number',
+        filter: false,
+        table: 'Books'
+    },
+    {
+        columnName: 'AuthorName',
+        columnType: 'string',
+        typeOfFilter: 'input',
+        filterReturnType: 'string',
+        filter: true,
+        table: 'Authors'
+    },
+    {
+        columnName: 'Nationality',
+        columnType: 'string',
+        typeOfFilter: 'checkbox',
+        filterReturnType: 'string[]',
+        filterValues: ['American', 'British', 'French', 'German'],
+        filter: true,
+        table: 'Authors'
+    }
+];
 ```
 ## Output schema:
 ```
@@ -261,3 +321,42 @@ WHERE
 GROUP BY Genre, Author
 HAVING COUNT(BookTitle) > 5;
 ```
+
+### Another example
+```
+{
+  "selectedColumns": [
+    { "columnName": "Title", "renamed": "Book Title" },
+    { "columnName": "PublicationDate", "renamed": "Release Date" },
+    { "columnName": "Genre" },
+    { "columnName": "AuthorName", "renamed": "Author" }
+  ],
+  "filters": [
+    {
+      "type": "AND",
+      "conditions": [
+        { "column": "Genre", "operator": "=", "value": "Fantasy" },
+        { "column": "Nationality", "operator": "=", "value": "British" }
+      ]
+    }
+  ]
+}
+
+=====================================
+SELECT 
+    b.Title AS "Book Title",
+    b.PublicationDate AS "Release Date",
+    b.Genre,
+    a.AuthorName AS "Author"
+FROM 
+    Books b
+JOIN 
+    Authors a ON b.AuthorID = a.AuthorID
+WHERE 
+    b.Genre = 'Fantasy' AND a.Nationality = 'British';
+
+====================================
+The JOIN clause is inferred from the fact that both Books and Authors tables are involved in the query and there's a common AuthorID column in both tables.
+The table aliases b and a are used for brevity and clarity in the SQL statement.
+```
+
