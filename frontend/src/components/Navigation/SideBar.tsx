@@ -47,7 +47,8 @@ export default function Sidebar() {
                 handleGroupInvite(key, type);
             }
         }
-        dispatch(getEndpoints());
+        if (stateUser.user.email) dispatch(getEndpoints());
+
     }, [])
 
     useEffect(() => {
@@ -94,7 +95,7 @@ export default function Sidebar() {
     }, [stateUser]);
 
     useEffect(() => {
-        if (!hasCookie('firstTime') && !stateUser.user.organisation) {
+        if (!hasCookie('firstTime')) {
             dispatch(setCurrentOpenState("MISC.FirstTime"));
         }
     }, [])

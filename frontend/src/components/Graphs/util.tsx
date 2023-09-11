@@ -173,7 +173,6 @@ function convertWithMultipleSeries(jsonData: JsonDataEntry[]): ConvertedData {
 
     xAxisSet.add(xAxis);
     seriesSet.add(series);
-    //console.log(series);
 
     if (!seriesMap[series]) {
       seriesMap[series] = {};
@@ -184,7 +183,6 @@ function convertWithMultipleSeries(jsonData: JsonDataEntry[]): ConvertedData {
     yMax = Math.max(yMax, yAxis);
   });
 
-  //console.log(seriesSet);
 
   // Initialize the final object
   const convertedData: ConvertedData = {
@@ -430,7 +428,6 @@ function preprocessDataForCombinedSeries(
     const series1 = entry[series1Label] as string;
     const series2 = entry[series2Label] as string;
     const combinedSeries = `${series1}-${series2}`;
-    //console.log(combinedSeries);
     const yAxis = entry[yAxisLabel] as number;
 
     const newDataEntry: JsonDataEntry = {
@@ -441,6 +438,5 @@ function preprocessDataForCombinedSeries(
 
     preprocessedData.push(newDataEntry);
   });
-  //console.log(preprocessedData);
   return preprocessedData;
 }

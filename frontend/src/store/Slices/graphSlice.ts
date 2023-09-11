@@ -204,7 +204,6 @@ export const graphSlice = createSlice({
         })
         builder.addCase(getMovementVerticalData.fulfilled, (state, action) => {
             const payload = action.payload as any;
-            console.log()
             assignColours(payload)
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;

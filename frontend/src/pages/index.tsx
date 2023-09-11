@@ -17,7 +17,6 @@ import { useTheme } from "next-themes";
 
 export default function Home() {
   const { theme, setTheme } = useTheme();
-  console.log(theme)
   const emailRegex: RegExp = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
   const passwordRegex: RegExp = /"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,24}$"/;
 
