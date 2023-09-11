@@ -1,4 +1,4 @@
-FROM node:20-alpine as builder
+FROM node:18-alpine as builder
 
 ENV NODE_ENV build
 
@@ -13,7 +13,7 @@ RUN yarn build
 
 # ---
 
-FROM node:20-alpine
+FROM node:18-alpine
 
 # ENV NODE_ENV production
 
