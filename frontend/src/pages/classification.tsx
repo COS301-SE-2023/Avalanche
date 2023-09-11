@@ -2,18 +2,15 @@ import Sidebar from "@/components/Navigation/SideBar"
 import PageHeader from "@/components/Util/PageHeader"
 import { EyeIcon } from "@heroicons/react/24/solid"
 import Head from "next/head"
-import { ChartCard } from "@/components/Graphs"
-import { ChartType } from "@/Enums";
 import { useDispatch, useSelector } from "react-redux";
-import { graphState, getDomainNameAnalysisData, getDomainNameAnalysisClassificationData, clearGraphData } from "@/store/Slices/graphSlice"
+import { graphState, getDomainNameAnalysisClassificationData, clearGraphData } from "@/store/Slices/graphSlice"
 import { useEffect } from "react";
 import { selectModalManagerState } from "@/store/Slices/modalManagerSlice"
 import GraphZoomModal from "@/components/Modals/GraphZoomModal"
 import IDomainNameAnalysisGraphRequest from "@/interfaces/requests/DomainNameAnalysis"
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
-import { SubmitButton, MainContent, WarningAlert, GraphErrors, GraphsRenderer, LoadingGrid } from "@/components/Util"
-import NoFind from "@/components/CustomSVG/NoFind"
+import { SubmitButton, MainContent, DashboardBase } from "@/components/Util"
 
 export default function Classification() {
 
@@ -94,11 +91,7 @@ export default function Classification() {
                 <PageHeader title="Classification" subtitle="Insights at your fingertips" icon={<EyeIcon className="h-16 w-16 text-black dark:text-white" />} />
                 <SubmitButton text="Download Report" onClick={() => generatePDF()} />
             </div>
-            <div className="p-0 pt-4 md:p-4">
-                {stateGraph.loading && <LoadingGrid />}
-                {stateGraph.graphs.length === 0 && stateGraph.error && <GraphErrors error={stateGraph.error} />}
-                {stateGraph.graphs?.length > 0 && !stateGraph.loading && <GraphsRenderer graphs={stateGraph.graphs} />}
-            </div>
+            <DashboardBase state={stateGraph} />
         </MainContent>
         {
             modalState.currentOpen === "GRAPH.Modal" && <GraphZoomModal />

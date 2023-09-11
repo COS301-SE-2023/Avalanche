@@ -2,8 +2,6 @@ import Sidebar from "@/components/Navigation/SideBar"
 import PageHeader from "@/components/Util/PageHeader"
 import { MapIcon } from "@heroicons/react/24/solid"
 import Head from "next/head"
-import { ChartCard } from "@/components/Graphs"
-import { ChartType } from "@/Enums";
 import { useDispatch, useSelector } from "react-redux";
 import { graphState, getGraphDataRanking, clearGraphData } from "@/store/Slices/graphSlice"
 import { useEffect } from "react";
@@ -12,8 +10,7 @@ import { selectModalManagerState } from "@/store/Slices/modalManagerSlice"
 import GraphZoomModal from "@/components/Modals/GraphZoomModal"
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
-import { SubmitButton, MainContent, WarningAlert, DashboardBase } from "@/components/Util"
-import NoFind from "@/components/CustomSVG/NoFind"
+import { SubmitButton, MainContent, DashboardBase } from "@/components/Util"
 
 export default function RegistrarMarketComparison() {
 
