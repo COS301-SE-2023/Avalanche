@@ -73,8 +73,8 @@ interface Edge {
     label: string,
     column: string,
     typeOfColumn: string, // eg number, date or text
-    aggregationType: string,
-    renamedColumn: string, // user input
+    aggregationType?: string,
+    renamedColumn?: string, // user input
     help: string // info about what it does
  }
  //aggregationType and TypeOfColumn should probably be enums
@@ -126,4 +126,21 @@ interface Edge {
 //possibly:
 { label: 'Start Of Filters' }
 //But since we may just make it a block on side then nothing
+```
+
+## Input Schema:
+```
+Column[]
+```
+Column:
+```
+Interface Column {
+    columnName: string,
+    columnType: string, //or enum
+    typeOfFilter: string, // or enum
+    filterReturnType: string, 
+    filterValues?: string[],
+    filter: boolean,
+    table: string // which table it's from or some mapping (for grouping)
+},
 ```
