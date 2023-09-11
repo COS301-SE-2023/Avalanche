@@ -210,7 +210,7 @@ export default function Sidebar() {
                                 })
                             }} />}
 
-                            <BetterDropdown items={[{ name: "ZACR", value: "zacr" }, { name: "Africa", value: "africa" }, { name: "RyCE", value: "ryce" }]} text={"select a warehouse"} option={stateGraph.selectedDataSource} set={reduceDataSource} absolute={true} placement="above" />
+                            <BetterDropdown items={[{ name: "ZARC", value: "zacr" }, { name: "Africa", value: "africa" }, { name: "RyCE", value: "ryce" }]} text={"select a warehouse"} option={stateGraph.selectedDataSource} set={reduceDataSource} absolute={true} placement="above" />
 
                             {/* <Popover className="relative w-full hidden sm:flex">
                                 {({ open, close }) => (
