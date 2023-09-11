@@ -10,10 +10,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCurrentOpenState, setData, clearCurrentOpenState } from "@/store/Slices/modalManagerSlice";
 import { CheckboxFilter, DatePickerFilter, NestedCheckbox, RadioboxFilter, ToggleFilter } from "./Filters";
 import { Disclosure } from '@headlessui/react'
-import { ErrorToast, SubmitButton } from "../Util";
+import { ChartCardError, ErrorToast, SubmitButton } from "../Util";
 import { getFilters, graphState } from "@/store/Slices/graphSlice";
 import { getCookie } from "cookies-next";
-import ky from "ky";
+import ky, { HTTPError } from "ky";
 
 interface IChartCard {
     title: string,
@@ -40,6 +40,7 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
     const [gType, setGType] = useState<string>(data.graphType);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<boolean>(false);
+    const [errorMessage, setErrorMessage] = useState<string>("");
 
     const [request, setRequest] = useState<any>({});
 
@@ -98,7 +99,6 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
         return [];
     }
 
-
     const renderFilters = () => {
         return filterGraphs()?.filters?.map((element: any, index: number) => (
             <Disclosure key={index}>
@@ -154,7 +154,7 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
 
         setFilterDropdown(!filterDropdown);
         fetchGraphData(requestObject);
-    };
+    }
 
     const fetchGraphData = async (filters: any) => {
         setLoading(true);
@@ -172,11 +172,13 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
             setGraphTitle(d.data.graphName);
             setLoading(false);
             setError(false);
+            setErrorMessage("");
         } catch (e) {
-            if (e instanceof Error) {
-                ErrorToast({ text: e.message });
-                setError(true);
-            }
+            let error = e as HTTPError;
+            const newError = await error.response.json();
+            setError(true);
+            setLoading(false);
+            setErrorMessage(newError.message);
         }
     }
 
@@ -327,19 +329,17 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
                     </Menu>
                 </div>
             </div>
-            {
-                loading ? <div role="status" className="flex justify-between h-64 w-full bg-gray-300 rounded-lg animate-customPulse dark:bg-gray-700 p-6" />
-                    : error ? <span>error here</span>
-                        : <>
-                            {type === ChartType.Bar && <BarChart data={graphData} />}
-                            {type === ChartType.Pie && <PieChart data={graphData} />}
-                            {type === ChartType.Line && <LineChart data={graphData} addClass="h-96" />}
-                            {type === ChartType.Bubble && <BubbleChart data={graphData} />}
-                            {type === ChartType.PolarArea && <PolarAreaChart data={graphData} />}
-                            {type === ChartType.Radar && <RadarChart data={graphData} />}
-                            {type === ChartType.Table && <TableChart data={graphData} />}
-                        </>
-            }
+            {loading && <div role="status" className="flex justify-between h-64 w-full bg-gray-300 rounded-lg animate-customPulse dark:bg-gray-700 p-6" />}
+            {error && !loading && <ChartCardError error={errorMessage} />}
+            {!loading && !error && graphData && <>
+                {type === ChartType.Bar && <BarChart data={graphData} />}
+                {type === ChartType.Pie && <PieChart data={graphData} />}
+                {type === ChartType.Line && <LineChart data={graphData} addClass="h-96" />}
+                {type === ChartType.Bubble && <BubbleChart data={graphData} />}
+                {type === ChartType.PolarArea && <PolarAreaChart data={graphData} />}
+                {type === ChartType.Radar && <RadarChart data={graphData} />}
+                {type === ChartType.Table && <TableChart data={graphData} />}
+            </>}
         </div >
     </>)
 
