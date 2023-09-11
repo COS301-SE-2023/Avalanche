@@ -122,7 +122,7 @@ const dataSourceDescriptors: IDataSourceItem[] = [
 const dataSourceName: IDataSourceItem[] = [
     {
         code: "zacr",
-        value: "ZACR"
+        value: "ZARC"
     },
     {
         code: "africa",
