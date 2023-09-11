@@ -94,7 +94,7 @@ export default function Sidebar() {
     }, [stateUser]);
 
     useEffect(() => {
-        if (!hasCookie('firstTime')) {
+        if (!hasCookie('firstTime') && !stateUser.user.organisation) {
             dispatch(setCurrentOpenState("MISC.FirstTime"));
         }
     }, [])
