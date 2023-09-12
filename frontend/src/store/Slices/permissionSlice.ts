@@ -69,7 +69,7 @@ export const getEndpoints = createAsyncThunk("PERM.GetEndpoints", async (object,
 
 export const getDropdownData = createAsyncThunk("DROPDOWNDATA.Get", async (object, { rejectWithValue }) => {
     try {
-        const response = ky.get(`http://localhost:3998/getData`, {
+        const response = ky.get(`${url}/getData`, {
             json: object, timeout: false, headers: {
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
