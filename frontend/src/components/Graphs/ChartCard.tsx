@@ -45,13 +45,22 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
     const [request, setRequest] = useState<any>({});
 
     const addRequestObject = (key: string, value: any) => {
+
+        console.log('Adding request')
+        console.log(key)
+        console.log(request)
+        console.log(request[key])
         if (!request[key]) {
             const temp = { ...request };
             let object = { ...value };
+            console.log(value.input)
             object.value = generateDefaultValue(value.input);
             temp[key] = object;
             setRequest(temp);
+            console.log('Request')
+            console.log(request)
         }
+        
     }
 
     const generateDefaultValue = (type: string) => {
