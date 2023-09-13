@@ -238,25 +238,6 @@ export const graphSlice = createSlice({
         })
         builder.addCase(getMovementVerticalRankedData.fulfilled, (state, action) => {
             const payload = action.payload as any;
-            console.log()
-            assignColours(payload)
-            state.graphs.push(payload.data);
-            state.latestAdd = state.graphs.length - 1;
-            state.loading = false;
-            state.cleared = false;
-        })
-        builder.addCase(getMovementVerticalRankedData.rejected, (state, action) => {
-            state.loading = false;
-            state.cleared = false;
-            state.error = action.payload as string;
-        })
-        builder.addCase(getMovementVerticalRankedData.pending, (state) => {
-            state.loading = true;
-            state.graphs = [];
-        })
-        builder.addCase(getMovementVerticalRankedData.fulfilled, (state, action) => {
-            const payload = action.payload as any;
-            console.log()
             assignColours(payload)
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
