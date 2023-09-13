@@ -115,7 +115,7 @@ interface Edge {
     comparisonTypes: string,
     selectedComparison: string,
     typeOfFilter: string, //eg. checkbox, daterange etc.
-    filterValues?: string, //eg. for checkboxes
+    values?: string, //eg. for checkboxes
     selectedValues: string[] | number | string | any
     help: string // info about what it does
  }
@@ -155,7 +155,7 @@ const schema: Column[] = [
     {
         columnName: 'Title',
         columnType: 'string',
-        typeOfFilter: 'input',
+        typeOfFilter: 'inputbox',
         filterReturnType: 'string',
         filter: true,
         table: 'Books'
@@ -180,7 +180,7 @@ const schema: Column[] = [
     {
         columnName: 'AuthorID',
         columnType: 'number',
-        typeOfFilter: 'input',
+        typeOfFilter: 'inputbox',
         filterReturnType: 'number',
         filter: false,
         table: 'Books'
@@ -188,7 +188,7 @@ const schema: Column[] = [
     {
         columnName: 'AuthorName',
         columnType: 'string',
-        typeOfFilter: 'input',
+        typeOfFilter: 'inputbox',
         filterReturnType: 'string',
         filter: true,
         table: 'Authors'
@@ -204,7 +204,7 @@ const schema: Column[] = [
     }
 ];
 ```
-## Output schema:
+## Traversed schema:
 ```
 interface Query {
   selectedColumns: SelectedColumn[];
@@ -359,4 +359,14 @@ WHERE
 The JOIN clause is inferred from the fact that both Books and Authors tables are involved in the query and there's a common AuthorID column in both tables.
 The table aliases b and a are used for brevity and clarity in the SQL statement.
 ```
-
+## Output --> for table
+```
+[{
+  col1: data,
+  col2: data1
+},
+{
+  col1: data2,
+  col2: data3
+}]
+```

@@ -2,7 +2,7 @@
     {
         "columnName": "Line Price",
         "columnType": "number",
-        "typeOfFilter": "input",
+        "typeOfFilter": "inputbox",
         "filterReturnType": "number",
         "comparisonTypes": ["=", "<", ">"],
         "filter": true,
@@ -11,7 +11,7 @@
     {
         "columnName": "Nett. Amount",
         "columnType": "number",
-        "typeOfFilter": "input",
+        "typeOfFilter": "inputbox",
         "filterReturnType": "number",
         "comparisonTypes": ["=", "<", ">"],
         "filter": true,
@@ -20,7 +20,7 @@
     {
         "columnName": "Quantity",
         "columnType": "number",
-        "typeOfFilter": "input",
+        "typeOfFilter": "inputbox",
         "filterReturnType": "number",
         "comparisonTypes": ["=", "<", ">"],
         "filter": true,
@@ -29,7 +29,7 @@
     {
         "columnName": "Registry Code",
         "columnType": "string",
-        "typeOfFilter": "dropdown",
+        "typeOfFilter": "checkbox",
         "filterReturnType": "string[]",
         "filterValues": ["DOTKOELN GMBH", "PUNKT.WIEN GMBH", "PUNKT TIROL GMBH"],
         "comparisonTypes": ["=", "LIKE"],
@@ -47,7 +47,7 @@
     {
         "columnName": "Day Of Week",
         "columnType": "number",
-        "typeOfFilter": "input",
+        "typeOfFilter": "inputbox",
         "filterReturnType": "number",
         "comparisonTypes": ["=", "<", ">"],
         "filter": true,
@@ -56,7 +56,7 @@
     {
         "columnName": "Day Name",
         "columnType": "string",
-        "typeOfFilter": "dropdown",
+        "typeOfFilter": "checkbox",
         "filterReturnType": "string[]",
         "filterValues": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
         "comparisonTypes": ["=", "LIKE"],
@@ -66,7 +66,7 @@
     {
         "columnName": "Is Weekday?",
         "columnType": "boolean",
-        "typeOfFilter": "checkbox",
+        "typeOfFilter": "togglebox",
         "filterReturnType": "boolean",
         "comparisonTypes": ["="],
         "filter": true,
@@ -75,35 +75,32 @@
     {
         "columnName": "Month",
         "columnType": "number",
-        "typeOfFilter": "input",
+        "typeOfFilter": "inputbox",
         "filterReturnType": "number",
         "comparisonTypes": ["=", "<", ">"],
         "filter": true,
         "table": "Dim Date"
     },
     {
-        "columnName": "Month Year",
-        "columnType": "text",
-        "typeOfFilter": "input",
-        "filterReturnType": "text",
-        "comparisonTypes": ["=", "LIKE"],
-        "filter": true,
+        "columnName": "Month Year", 
+        "columnType": "string",
+        "filter": false,
         "table": "Dim Date"
     },
     {
         "columnName": "Month Name",
-        "columnType": "text",
-        "typeOfFilter": "input",
-        "filterReturnType": "text",
+        "columnType": "string",
+        "typeOfFilter": "inputbox",
+        "filterReturnType": "string",
         "comparisonTypes": ["=", "LIKE"],
         "filter": true,
         "table": "Dim Date"
     },
     {
         "columnName": "Year Name",
-        "columnType": "text",
-        "typeOfFilter": "input",
-        "filterReturnType": "text",
+        "columnType": "string",
+        "typeOfFilter": "inputbox",
+        "filterReturnType": "string",
         "comparisonTypes": ["=", "LIKE"],
         "filter": true,
         "table": "Dim Date"
@@ -111,7 +108,7 @@
     {
         "columnName": "Code",
         "columnType": "string",
-        "typeOfFilter": "dropdown",
+        "typeOfFilter": "checkbox",
         "filterReturnType": "string[]",
         "filterValues": [
             "WIEN_TRANSFER",
@@ -196,7 +193,7 @@
     {
         "columnName": "Exists In Registry?",
         "columnType": "boolean",
-        "typeOfFilter": "checkbox",
+        "typeOfFilter": "togglebox",
         "filterReturnType": "boolean",
         "filter": true,
         "table": "Dim Registry Domain"
@@ -204,16 +201,16 @@
     {
         "columnName": "Auto-Renew",
         "columnType": "boolean",
-        "typeOfFilter": "checkbox",
+        "typeOfFilter": "togglebox",
         "filterReturnType": "boolean",
         "filter": true,
         "table": "Dim Registry Domain"
     },
     {
         "columnName": "Status",
-        "columnType": "text",
-        "typeOfFilter": "dropdown",
-        "filterReturnType": "text",
+        "columnType": "string",
+        "typeOfFilter": "checkbox",
+        "filterReturnType": "string",
         "filterValues": ["inactive", "I", "U"],
         "filter": true,
         "table": "Dim Registry Domain"
@@ -221,8 +218,8 @@
     {
         "columnName": "Code",
         "columnType": "string",
-        "typeOfFilter": "input",
-        "filterReturnType": "text",
+        "typeOfFilter": "inputbox",
+        "filterReturnType": "string",
         "comparisonTypes": ["=", "LIKE"],
         "filter": true,
         "table": "Dim Registry Registrar"
@@ -230,8 +227,8 @@
     {
         "columnName": "Name",
         "columnType": "string",
-        "typeOfFilter": "input",
-        "filterReturnType": "text",
+        "typeOfFilter": "inputbox",
+        "filterReturnType": "string",
         "comparisonTypes": ["=", "LIKE"],
         "filter": true,
         "table": "Dim Registry Registrar"
@@ -239,8 +236,8 @@
     {
         "columnName": "Company Name",
         "columnType": "string",
-        "typeOfFilter": "input",
-        "filterReturnType": "text",
+        "typeOfFilter": "inputbox",
+        "filterReturnType": "string",
         "comparisonTypes": ["=", "LIKE"],
         "filter": true,
         "table": "Dim Registry Registrar"
@@ -248,8 +245,8 @@
     {
         "columnName": "Trading Name",
         "columnType": "string",
-        "typeOfFilter": "input",
-        "filterReturnType": "text",
+        "typeOfFilter": "inputbox",
+        "filterReturnType": "string",
         "comparisonTypes": ["=", "LIKE"],
         "filter": true,
         "table": "Dim Registry Registrar"
@@ -257,8 +254,8 @@
     {
         "columnName": "System",
         "columnType": "string",
-        "typeOfFilter": "input",
-        "filterReturnType": "text",
+        "typeOfFilter": "inputbox",
+        "filterReturnType": "string",
         "comparisonTypes": ["=", "LIKE"],
         "filter": true,
         "table": "Dim Sales Detail"
@@ -266,7 +263,7 @@
     {
         "columnName": "Type",
         "columnType": "string",
-        "typeOfFilter": "dropdown",
+        "typeOfFilter": "checkbox",
         "filterReturnType": "string[]",
         "filterValues": ["Credit Note", "Invoice", null],
         "comparisonTypes": ["=", "LIKE"],
@@ -276,7 +273,7 @@
     {
         "columnName": "Source",
         "columnType": "string",
-        "typeOfFilter": "dropdown",
+        "typeOfFilter": "checkbox",
         "filterReturnType": "string[]",
         "filterValues": ["rengine", "rest api", "registrypanel: admin", null],
         "comparisonTypes": ["=", "LIKE"],
@@ -286,7 +283,7 @@
     {
         "columnName": "Zone",
         "columnType": "string",
-        "typeOfFilter": "dropdown",
+        "typeOfFilter": "checkbox",
         "filterReturnType": "string[]",
         "filterValues": ["TIROL", "WIEN", "KOELN", "COLOGNE"],
         "comparisonTypes": ["="],
@@ -296,7 +293,7 @@
     {
         "columnName": "Name",
         "columnType": "string",
-        "typeOfFilter": "dropdown",
+        "typeOfFilter": "checkbox",
         "filterReturnType": "string[]",
         "filterValues": ["cologne", "wien", "tirol", "koeln"],
         "comparisonTypes": ["="],
@@ -306,7 +303,7 @@
     {
         "columnName": "Operator",
         "columnType": "string",
-        "typeOfFilter": "dropdown",
+        "typeOfFilter": "checkbox",
         "filterReturnType": "string[]",
         "filterValues": ["punkt.wien GmbH", "punkt Tirol GmbH", "dotKoeln GmbH"],
         "comparisonTypes": ["="],
