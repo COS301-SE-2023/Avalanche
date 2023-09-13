@@ -37,9 +37,6 @@ export const modalManagerSlice = createSlice({
         },
         // Set the current open modal
         setCurrentOpenState(state, action) {
-            // console.log("DEBUG")
-            // console.log(action.payload)
-            // console.log("Here: " + action.payload)
             state.currentOpen = action.payload
         },
         // Clear the current open modal
@@ -57,7 +54,6 @@ export const modalManagerSlice = createSlice({
         },
         // Zoomed Data
         setZoomData(state, action) {
-            // console.log(action.payload.graphName);
             if (state.zoomedData !== null && state.zoomedData !== undefined) {
                 state.zoomedData.graphName = action.payload?.graphName;
                 state.zoomedData.dashboardID = action.payload?.dashboardID;

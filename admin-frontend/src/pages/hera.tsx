@@ -11,7 +11,7 @@ import { IDomainWatchType } from "@/interfaces/requests/DomainWatch";
 import ky, { HTTPError } from "ky";
 import { getCookie } from "cookies-next";
 import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
-import {getHera} from '@/store/Slices/HeraSlice';
+import { getHera, updateHeraData } from '@/store/Slices/HeraSlice';
 
 import HeraEditor from "@/components/Util/Composite/HeraEditor";
 
@@ -54,10 +54,11 @@ export default function Settings() {
                 <div className="col-span-3 "> <HeraEditor /></div>
                 <div className="col-span-1 ">
                     <div className="p-2 ">
-                        <SubmitButton onClick={() => {dispatch(getHera({}))}} className="w-full" text={"Fetch"}></SubmitButton>
-                    </div>
-                    <div className="p-2 ">
-                        <SubmitButton onClick={() => { }} className="w-full" text={"Update"}></SubmitButton>
+                        <SubmitButton onClick={() => {
+                            dispatch(updateHeraData({}));
+                            dispatch(getHera({}));
+                        }
+                        } className="w-full" text={"Fetch"}></SubmitButton>
                     </div>
                 </div>
             </div >

@@ -85,7 +85,6 @@ export default function IntegrationLoginModal({ }: IIntegrationLoginModal) {
       const fetchUserGroups = async () => {
         const response = await dispatch(getUserGroups({}));
         if (response.payload) {
-          console.log(response.payload.users);
           setUserGroups(response.payload.users);
         }
       };
@@ -107,7 +106,6 @@ export default function IntegrationLoginModal({ }: IIntegrationLoginModal) {
 
     // user-management/integrateWithWExternalAPI
     if (integration.name == "ZACR" || integration.name == "AFRICA") {
-      console.log(selectedGroup);
       try {
         const res = await ky
           .post(
