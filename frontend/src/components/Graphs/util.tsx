@@ -47,6 +47,7 @@ type ConvertedData = {
         style: {
           colors: string;
         };
+        formatter: any;
       };
     };
     legend: {
@@ -221,6 +222,9 @@ function convertWithMultipleSeries(jsonData: JsonDataEntry[]): ConvertedData {
           style: {
             colors: themeColours.labelColour, // e.g., '#FFFFFF' for white
           },
+          formatter: (val: number): string => {
+            return val.toLocaleString(); 
+          },
         },
       },
       legend: {
@@ -321,6 +325,9 @@ function convertWithSingleSeries(jsonData: JsonDataEntry[]): ConvertedData {
         labels: {
           style: {
             colors: themeColours.labelColour,
+          },
+          formatter: (val: number): string => {
+            return val.toLocaleString(); 
           },
         },
       },
