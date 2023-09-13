@@ -84,14 +84,16 @@ export class AppService {
       const graphGet = existingData[0].graphs.find(graph => graph.graphName === data.endpoint && graph.user === data.typeOfUser);
       const graph = await this.graphRepository.findOne({ where: { id: graphGet.id }, relations: ["filters"] });
       const filterEntity = new Filter();
-      filterEntity.name = data.data.name;
-      filterEntity.type = data.data.type;
-      filterEntity.input = data.data.input;
+      filterEntity.name = data.data[0].name;
+      filterEntity.type = data.data[0].type;
+      filterEntity.input = data.data[0].input;
       if (data.data.values) {
-        filterEntity.values = data.data.values;
+        filterEntity.values = data.data[0].values;
       }
       filterEntity.graph = graph; // Correcting the relationship
       await this.filterRepository.save(filterEntity);
+      const graphReturn = await this.graphRepository.findOne({ where: { id: graphGet.id }, relations: ["filters"] });
+      return {"status" : "success"};
     }
 
     throw new BadRequestException('Invalid request data');

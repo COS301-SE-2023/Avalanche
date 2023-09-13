@@ -9,6 +9,7 @@ import IMarketShareGraphRequest from "@/interfaces/requests/MarketShareGraph";
 import IDomainNameAnalysisGraphRequest from "@/interfaces/requests/DomainNameAnalysis";
 import IAgeAnalysisGraphRequest from "@/interfaces/requests/AgeAnalysisGraph";
 import IMovementGraphRequest from "@/interfaces/requests/Movement";
+import IMovementGraphRankedRequest from "@/interfaces/requests/MovementRanked";
 
 const url = `${process.env.NEXT_PUBLIC_API}`;
 
@@ -226,6 +227,24 @@ export const graphSlice = createSlice({
             state.loading = false;
             state.cleared = false;
         })
+        builder.addCase(getMovementVerticalRankedData.rejected, (state, action) => {
+            state.loading = false;
+            state.cleared = false;
+            state.error = action.payload as string;
+        })
+        builder.addCase(getMovementVerticalRankedData.pending, (state) => {
+            state.loading = true;
+            state.graphs = [];
+        })
+        builder.addCase(getMovementVerticalRankedData.fulfilled, (state, action) => {
+            const payload = action.payload as any;
+            console.log()
+            assignColours(payload)
+            state.graphs.push(payload.data);
+            state.latestAdd = state.graphs.length - 1;
+            state.loading = false;
+            state.cleared = false;
+        })
         builder.addCase(getDomainLengthData.pending, (state) => {
             state.loading = true;
             state.graphs = [];
@@ -434,6 +453,25 @@ export const getMovementVerticalData = createAsyncThunk("GRAPH.GetMovementVertic
         const state = getState() as { graph: IGraphState }; // Replace 'graph' with the slice name if different
         const { selectedDataSource } = state.graph;
         const response = await ky.post(`${url}/${selectedDataSource}/movement/vertical`, {
+            json: object,
+            headers: {
+                "Authorization": `Bearer ${jwt}`
+            }
+        }).json();
+        return response;
+    } catch (e) {
+        let error = e as HTTPError;
+        const newError = await error.response.json();
+        return rejectWithValue(newError.message);
+    }
+})
+
+export const getMovementVerticalRankedData = createAsyncThunk("GRAPH.GetMovementVerticalRankedData", async (object: IMovementGraphRankedRequest, { getState, rejectWithValue }) => {
+    try {
+        const jwt = getCookie("jwt");
+        const state = getState() as { graph: IGraphState }; // Replace 'graph' with the slice name if different
+        const { selectedDataSource } = state.graph;
+        const response = await ky.post(`${url}/${selectedDataSource}/movement/verticalRanked`, {
             json: object,
             headers: {
                 "Authorization": `Bearer ${jwt}`

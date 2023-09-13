@@ -135,6 +135,23 @@ export class AppController {
     return result;
   }
 
+  @MessagePattern({ cmd: 'movement/verticalRanked' })
+  async nettVerticalMovementRanked(data: any) {
+    const result = await this.movementService.nettVeriticalRanked(
+      data.filters,
+      data.graphName,
+    );
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
+
   //internal
   @MessagePattern({ cmd: 'domainWatchPassive' })
   async domainWatchPassive() {

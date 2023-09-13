@@ -80,6 +80,67 @@ export class MovementService {
     }
   }
 
+  async nettVeriticalRanked(filters: string, graphName: string): Promise<any> {
+    try {
+      graphName = this.netVerticalGraphName(filters);
+
+      filters = JSON.stringify(filters);
+      const sqlQuery = `call netVerticalMovementRanked('${filters}')`;
+
+      const dataR = await this.redis.get(`zacr` + sqlQuery);
+      let data: DataInterface;
+      let formattedData = '';
+      if (!dataR) {
+        let queryData;
+        try {
+          queryData = await this.snowflakeService.execute(sqlQuery);
+        } catch (e) {
+          return {
+            status: 500,
+            error: true,
+            message: 'Data Warehouse Error',
+            timestamp: new Date().toISOString(),
+          };
+        }
+
+        formattedData = JSON.stringify({datasets: [{label: 'Vertical Ranked'}]});
+
+        data = {
+          chartData: JSON.parse(formattedData),
+          jsonData: JSON.parse(queryData[0]['NETVERTICALMOVEMENTRANKED']),
+        };
+
+        await this.redis.set(
+          `zacr` + sqlQuery,
+          JSON.stringify(data),
+          'EX',
+          24 * 60 * 60,
+        );
+      } else {
+        data = JSON.parse(dataR);
+      }
+
+      filters = JSON.parse(filters);
+      return {
+        status: 'success',
+        data: {
+          graphName: graphName,
+          data: data,
+          warehouse: 'zacr',
+          graphType: 'movement/verticalRanked',
+        },
+        timestamp: new Date().toISOString(),
+      };
+    } catch (e) {
+      return {
+        status: 500,
+        error: true,
+        message: `${e.message}`,
+        timestamp: new Date().toISOString(),
+      };
+    }
+  }
+
   netVerticalGraphName(filters: any): string {
     let registrar = filters['registrar'];
     if (registrar) {

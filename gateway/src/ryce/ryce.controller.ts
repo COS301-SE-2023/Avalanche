@@ -222,6 +222,28 @@ export class RyceController {
     }
   }
 
+  @Post('movement/verticalRanked')
+  @HttpCode(200)
+  async movementVerticalRanked(@Body() data: any) {
+    const end = httpRequestDurationMicrosecondsRyce.startTimer();
+    const pattern = { cmd: 'movement/verticalRanked' };
+    const payload = data;
+    try {
+      const result = await lastValueFrom(this.client.send(pattern, payload));
+      httpRequestsTotalRyce.inc({ method: 'POST', route: 'movement/verticalRanked', code: 200 });
+      end({ method: 'POST', route: 'movement/verticalRanked', code: 200 });
+      return result;
+    } catch (error) {
+      const rpcError = error
+      httpRequestsTotalRyce.inc({ method: 'POST', route: 'movement/verticalRanked', code: rpcError.status });
+      end({ method: 'POST', route: 'movement/verticalRanked', code: rpcError.status });
+      if (typeof rpcError === 'object') {
+        throw new HttpException(rpcError.message || 'An unexpected error occurred', rpcError.status || 500);
+      }
+      throw error;
+    }
+  }
+
   @Post('domainWatchPassive')
   @HttpCode(200)
   async domainWatchPassive(@Body() data: any) {
