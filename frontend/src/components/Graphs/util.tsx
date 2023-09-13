@@ -47,6 +47,7 @@ type ConvertedData = {
         style: {
           colors: string;
         };
+        formatter: any;
       };
     };
     legend: {
@@ -61,6 +62,15 @@ type ConvertedData = {
         vertical: number; // Adjust as needed
       };
       fontSize: any;
+    };
+    annotations?: {
+      yaxis: 
+        {
+          y: number; // replace with the y-value where you want the line
+          borderColor: string; // color of the line
+          
+        }[]
+      ;
     };
   };
 };
@@ -119,13 +129,13 @@ export function convertData(
     if (jsonData.length > 0) {
       const firstEntryKeys = Object.keys(jsonData[0]);
       if (firstEntryKeys.length == 2) {
-        return convertWithSingleSeries(jsonData);
+        return convertWithSingleSeries(jsonData, type);
       } else if (firstEntryKeys.length == 3) {
-        return convertWithMultipleSeries(jsonData);
+        return convertWithMultipleSeries(jsonData, type);
       } else if (firstEntryKeys.length == 4) {
         if (firstEntryKeys[2] == "Registrars") {
           return convertWithMultipleSeries(
-            preprocessDataForCombinedSeries(jsonData)
+            preprocessDataForCombinedSeries(jsonData), type
           );
         }
       }
@@ -147,7 +157,7 @@ export function convertData(
   }
 }
 
-function convertWithMultipleSeries(jsonData: JsonDataEntry[]): ConvertedData {
+function convertWithMultipleSeries(jsonData: JsonDataEntry[], type: string): ConvertedData {
   const seriesMap: { [key: string]: { [key: string]: number } } = {};
   const xAxisSet = new Set<string>();
   const seriesSet = new Set<string>();
@@ -183,6 +193,18 @@ function convertWithMultipleSeries(jsonData: JsonDataEntry[]): ConvertedData {
     yMax = Math.max(yMax, yAxis);
   });
 
+  var annotationsToUse;
+  if(type != 'radar'){
+    annotationsToUse = {
+      yaxis: [
+        {
+          y: 0,
+          borderColor: "#000000", // Black color
+          
+        },
+      ],
+    }
+  }
 
   // Initialize the final object
   const convertedData: ConvertedData = {
@@ -221,6 +243,9 @@ function convertWithMultipleSeries(jsonData: JsonDataEntry[]): ConvertedData {
           style: {
             colors: themeColours.labelColour, // e.g., '#FFFFFF' for white
           },
+          formatter: (val: number): string => {
+            return val.toLocaleString();
+          },
         },
       },
       legend: {
@@ -230,12 +255,13 @@ function convertWithMultipleSeries(jsonData: JsonDataEntry[]): ConvertedData {
         position: "bottom",
         horizontalAlign: "left",
         height: 50,
-        fontSize: '12px',
+        fontSize: "12px",
         itemMargin: {
           horizontal: 15, // Adjust as needed
           vertical: 2, // Adjust as needed
         },
       },
+      ...(annotationsToUse ? { annotations: annotationsToUse } : {}) 
     },
   };
 
@@ -254,7 +280,7 @@ function convertWithMultipleSeries(jsonData: JsonDataEntry[]): ConvertedData {
   return convertedData;
 }
 
-function convertWithSingleSeries(jsonData: JsonDataEntry[]): ConvertedData {
+function convertWithSingleSeries(jsonData: JsonDataEntry[], type: string): ConvertedData {
   const xAxisSet = new Set<string>();
   let yMin = Infinity;
 
@@ -280,6 +306,19 @@ function convertWithSingleSeries(jsonData: JsonDataEntry[]): ConvertedData {
     yMin = Math.min(yMin, yAxis);
   });
 
+  var annotationsToUse;
+  if(type != 'radar'){
+    annotationsToUse = {
+      yaxis: [
+        {
+          y: 0,
+          borderColor: "#000000", // Black color
+          
+        },
+      ],
+    }
+  }
+  
   // Initialize the final object
   const convertedData: ConvertedData = {
     series: [
@@ -322,6 +361,9 @@ function convertWithSingleSeries(jsonData: JsonDataEntry[]): ConvertedData {
           style: {
             colors: themeColours.labelColour,
           },
+          formatter: (val: number): string => {
+            return val.toLocaleString();
+          },
         },
       },
       legend: {
@@ -335,10 +377,14 @@ function convertWithSingleSeries(jsonData: JsonDataEntry[]): ConvertedData {
           vertical: 5, // Adjust as needed
         },
         height: 10,
-        fontSize: '12px'
+        fontSize: "12px",
       },
+      ...(annotationsToUse ? { annotations: annotationsToUse } : {}) 
     },
   };
+
+  
+
 
   return convertedData;
 }
