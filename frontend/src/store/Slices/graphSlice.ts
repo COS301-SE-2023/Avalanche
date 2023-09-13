@@ -490,25 +490,6 @@ export const getMovementVerticalData = createAsyncThunk("GRAPH.GetMovementVertic
     }
 })
 
-export const getMovementVerticalRankedData = createAsyncThunk("GRAPH.GetMovementVerticalRankedData", async (object: IMovementGraphRankedRequest, { getState, rejectWithValue }) => {
-    try {
-        const jwt = getCookie("jwt");
-        const state = getState() as { graph: IGraphState }; // Replace 'graph' with the slice name if different
-        const { selectedDataSource } = state.graph;
-        const response = await ky.post(`${url}/${selectedDataSource}/movement/verticalRanked`, {
-            json: object,
-            headers: {
-                "Authorization": `Bearer ${jwt}`
-            }
-        }).json();
-        return response;
-    } catch (e) {
-        let error = e as HTTPError;
-        const newError = await error.response.json();
-        Sentry.captureException(newError);
-        return rejectWithValue(newError.message);
-    }
-})
 
 export const getMovementVerticalRankedData = createAsyncThunk("GRAPH.GetMovementVerticalRankedData", async (object: IMovementGraphRankedRequest, { getState, rejectWithValue }) => {
     try {
