@@ -17,7 +17,6 @@ import { useTheme } from "next-themes";
 
 export default function Home() {
   const { theme, setTheme } = useTheme();
-  console.log(theme)
   const emailRegex: RegExp = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
   const passwordRegex: RegExp = /"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,24}$"/;
 
@@ -113,9 +112,9 @@ export default function Home() {
                     <Input type="password" placeholder="••••••••" id="password" name="password" required={true} value={password} onChange={(event: React.FormEvent<HTMLInputElement>) => setPassword(event.currentTarget.value)} />
                     {passwordError && <DangerAlert title="Invalid Password!" text="This password is invalid." />}
                   </div>
-                  <div className="flex items-center justify-between">
+                  {/* <div className="flex items-center justify-between">
                     <Anchor href="/forgot" text="Forgot password" customFont="text-sm" />
-                  </div>
+                  </div> */}
                   <SubmitButton text="Sign in" onClick={() => null} loading={stateUser.loading} disabled={stateUser.loading} className="w-full" />
                   <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                     Don&apos;t have an account yet? <Link href="/register" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</Link>

@@ -66,11 +66,9 @@ export default function GraphCreateModal({ state, add }: ICreateGroupModal) {
     }
 
     const filterGraphs = () => {
-        console.log('in filterGraphs')
         if (endpoint) {
             const ep = state.filters.find((item: any) => item.endpoint === endpoint);
             if (!ep) return [];
-            console.log(ep.graphs.map((item: any) => item.graphName))
             return ep.graphs.map((item: any) => item.graphName);
         }
 

@@ -1,17 +1,18 @@
 import { setAnimateManagerState, clearCurrentOpenState } from '@/store/Slices/modalManagerSlice';
 import { useDispatch } from 'react-redux';
-
-interface IModalWrapper {
-    children: any,
-    title: string,
-    large?: boolean
-}
-
 import { Fragment, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/solid';
+import { setCookie } from 'cookies-next';
+interface IModalWrapper {
+    children: any,
+    title: string,
+    large?: boolean,
+    cookieToSet?: any
+}
 
-export default function ModalWrapper({ children, title, large }: IModalWrapper) {
+
+export default function ModalWrapper({ children, title, large, cookieToSet }: IModalWrapper) {
     const [open, setOpen] = useState(true)
     const dispatch = useDispatch();
     const cancelButtonRef = useRef(null)
@@ -20,6 +21,9 @@ export default function ModalWrapper({ children, title, large }: IModalWrapper) 
         dispatch(clearCurrentOpenState());
         dispatch(setAnimateManagerState(false));
         document.body.style.overflow = "visible";
+        if (cookieToSet) {
+            setCookie(cookieToSet.name, cookieToSet.data);
+        }
     }
 
     return (

@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { AppState } from "../store";
 import { HYDRATE } from "next-redux-wrapper";
-import ky from "ky";
+import ky, { HTTPError } from "ky";
 import { ITransactionGraphRequest } from "@/interfaces/requests";
 import { getCookie } from "cookies-next";
 import { chartColours } from "@/components/Graphs/data";
@@ -9,6 +9,8 @@ import IMarketShareGraphRequest from "@/interfaces/requests/MarketShareGraph";
 import IDomainNameAnalysisGraphRequest from "@/interfaces/requests/DomainNameAnalysis";
 import IAgeAnalysisGraphRequest from "@/interfaces/requests/AgeAnalysisGraph";
 import IMovementGraphRequest from "@/interfaces/requests/Movement";
+import * as Sentry from "@sentry/nextjs";
+import IMovementGraphRankedRequest from "@/interfaces/requests/MovementRanked";
 
 const url = `${process.env.NEXT_PUBLIC_API}`;
 
@@ -17,10 +19,10 @@ interface IGraphState {
     loading: boolean
     latestAdd: number,
     filters: any[],
-    selectedDataSource:string,
+    selectedDataSource: string,
     error: string,
-    zones:string[],
-    cleared:boolean,
+    zones: string[],
+    cleared: boolean,
 }
 
 interface IZoneArr {
@@ -31,7 +33,7 @@ interface IZoneArr {
 
 const zonesArr: IZoneArr = {
     africa: ["AFRICA"],
-    zacr: ["CO.ZA", "ORG.ZA", "NET.ZA", "WEB.ZA" ],
+    zacr: ["CO.ZA", "ORG.ZA", "NET.ZA", "WEB.ZA"],
     ryce: ["WIEN", "TIROL", "KOELN", "COLOGNE"]
 }
 
@@ -40,16 +42,14 @@ const initialState: IGraphState = {
     loading: false,
     latestAdd: -1,
     filters: [],
-    selectedDataSource:"zacr",
+    selectedDataSource: "zacr",
     error: "",
     zones: zonesArr["zacr"],
-    cleared:false
+    cleared: false
 }
 
 const assignColours = (payload: any) => {
     const datasets = payload.data.data.chartData.datasets;
-
-    
 };
 
 export const graphSlice = createSlice({
@@ -70,9 +70,13 @@ export const graphSlice = createSlice({
             state.zones = zonesArr[state.selectedDataSource as keyof typeof zonesArr];
         },
         clearGraphData(state) {
-            state.graphs=[];
-            state.cleared=true;
-        }          
+            state.graphs = [];
+            state.error = "";
+            state.cleared = true;
+        },
+        clearError(state) {
+            state.error = "";
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(HYDRATE, (state, action) => {
@@ -82,29 +86,53 @@ export const graphSlice = createSlice({
             };
         })
         builder.addCase(getGraphData.fulfilled, (state, action) => {
-            
             const payload = action.payload as any;
             assignColours(payload)
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
-            state.cleared=false;
+            state.cleared = false;
         })
         builder.addCase(getGraphData.pending, (state) => {
             state.loading = true;
         })
-
+        builder.addCase(getGraphData.rejected, (state, action) => {
+            state.loading = false;
+            state.cleared = false;
+            state.error = action.payload as string;
+        })
         builder.addCase(getGraphDataRanking.fulfilled, (state, action) => {
             const payload = action.payload as any;
             assignColours(payload)
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
-            state.cleared=false;
+            state.cleared = false;
+        })
+        builder.addCase(getGraphRegistrarData.pending, (state) => {
+            state.loading = true;
+        })
+        builder.addCase(getGraphRegistrarData.rejected, (state, action) => {
+            state.loading = false;
+            state.cleared = false;
+            state.error = action.payload as string;
+        })
+        builder.addCase(getGraphRegistrarData.fulfilled, (state, action) => {
+            const payload = action.payload as any;
+            assignColours(payload)
+            state.graphs.push(payload.data);
+            state.latestAdd = state.graphs.length - 1;
+            state.loading = false;
+            state.cleared = false;
         })
         builder.addCase(getGraphDataRanking.pending, (state) => {
             state.loading = true;
             state.graphs = [];
+        })
+        builder.addCase(getGraphDataRanking.rejected, (state, action) => {
+            state.loading = false;
+            state.cleared = false;
+            state.error = action.payload as string;
         })
         builder.addCase(getMarketShareData.fulfilled, (state, action) => {
             const payload = action.payload as any;
@@ -112,64 +140,80 @@ export const graphSlice = createSlice({
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
-            state.cleared=false;
+            state.cleared = false;
         })
         builder.addCase(getMarketShareData.pending, (state) => {
             state.loading = true;
             state.graphs = [];
         })
+        builder.addCase(getMarketShareData.rejected, (state, action) => {
+            state.loading = false;
+            state.cleared = false;
+            state.error = action.payload as string;
+        })
         builder.addCase(getAgeAnalysisData.fulfilled, (state, action) => {
             const payload = action.payload as any;
-            // state.graphs.push(payload.data);
             assignColours(payload)
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
-            state.cleared=false;
+            state.cleared = false;
         })
         builder.addCase(getAgeAnalysisData.pending, (state) => {
             state.loading = true;
             state.graphs = [];
         })
+        builder.addCase(getAgeAnalysisData.rejected, (state, action) => {
+            state.loading = false;
+            state.cleared = false;
+            state.error = action.payload as string;
+        })
         builder.addCase(getDomainNameAnalysisData.fulfilled, (state, action) => {
             const payload = action.payload as any;
-            // state.graphs.push(payload.data);
             assignColours(payload)
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
-            state.cleared=false;
+            state.cleared = false;
         })
         builder.addCase(getDomainNameAnalysisData.pending, (state) => {
             state.loading = true;
             state.graphs = [];
         })
+        builder.addCase(getDomainNameAnalysisData.rejected, (state, action) => {
+            state.loading = false;
+            state.cleared = false;
+            state.error = action.payload as string;
+        })
         builder.addCase(getDomainNameAnalysisClassificationData.fulfilled, (state, action) => {
             const payload = action.payload as any;
-            // state.graphs.push(payload.data);
             assignColours(payload)
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
-            state.cleared=false;
+            state.cleared = false;
         })
         builder.addCase(getDomainNameAnalysisClassificationData.pending, (state) => {
             state.loading = true;
             state.graphs = [];
         })
+        builder.addCase(getDomainNameAnalysisClassificationData.rejected, (state, action) => {
+            state.loading = false;
+            state.cleared = false;
+            state.error = action.payload as string;
+        })
         builder.addCase(getDomainLengthData.fulfilled, (state, action) => {
             const payload = action.payload as any;
-            //state.graphs.push(payload.data);
             assignColours(payload)
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
-            state.cleared=false;
+            state.cleared = false;
         })
-        builder.addCase(getMovementVerticalData.rejected, (state,action) => {
+        builder.addCase(getMovementVerticalData.rejected, (state, action) => {
             state.loading = false;
-            state.cleared=false;
-            console.log("FAILED WEEEWOOO",action.payload)
+            state.cleared = false;
+            state.error = action.payload as string;
         })
         builder.addCase(getMovementVerticalData.pending, (state) => {
             state.loading = true;
@@ -177,60 +221,81 @@ export const graphSlice = createSlice({
         })
         builder.addCase(getMovementVerticalData.fulfilled, (state, action) => {
             const payload = action.payload as any;
-            console.log()
             assignColours(payload)
             state.graphs.push(payload.data);
             state.latestAdd = state.graphs.length - 1;
             state.loading = false;
-            state.cleared=false;
+            state.cleared = false;
+        })
+        builder.addCase(getMovementVerticalRankedData.rejected, (state, action) => {
+            state.loading = false;
+            state.cleared = false;
+            state.error = action.payload as string;
+        })
+        builder.addCase(getMovementVerticalRankedData.pending, (state) => {
+            state.loading = true;
+            state.graphs = [];
+        })
+        builder.addCase(getMovementVerticalRankedData.fulfilled, (state, action) => {
+            const payload = action.payload as any;
+            assignColours(payload)
+            state.graphs.push(payload.data);
+            state.latestAdd = state.graphs.length - 1;
+            state.loading = false;
+            state.cleared = false;
         })
         builder.addCase(getDomainLengthData.pending, (state) => {
             state.loading = true;
             state.graphs = [];
         })
-        builder.addCase(getGraphDataArray.fulfilled, (state, action) => {
-            // const payload = action.payload as any;
-            // state.graphs = payload;
+        builder.addCase(getDomainLengthData.rejected, (state, action) => {
             state.loading = false;
-            state.cleared=false;
+            state.cleared = false;
+            state.error = action.payload as string;
+        })
+        builder.addCase(getGraphDataArray.fulfilled, (state, action) => {
+            state.loading = false;
+            state.cleared = false;
         })
         builder.addCase(getGraphDataArray.pending, (state, action) => {
             state.loading = true;
             state.graphs = [];
         })
         builder.addCase(getGraphDataRankingArray.fulfilled, (state, action) => {
-            // const payload = action.payload as any;
-            // state.graphs = payload;
             state.loading = false;
-            state.cleared=false;
+            state.cleared = false;
         })
         builder.addCase(getGraphDataRankingArray.pending, (state, action) => {
             state.loading = true;
             state.graphs = [];
         })
-        builder.addCase(getMarketShareDataArray.fulfilled, (state, action) => {
-            // const payload = action.payload as any;
-            // state.graphs = payload;
+        builder.addCase(getGraphDataArray.rejected, (state, action) => {
             state.loading = false;
-            state.cleared=false;
+            state.cleared = false;
+            state.error = action.payload as string;
+        })
+        builder.addCase(getMarketShareDataArray.fulfilled, (state, action) => {
+            state.loading = false;
+            state.cleared = false;
         })
         builder.addCase(getMarketShareDataArray.pending, (state, action) => {
             state.loading = true;
             state.graphs = [];
         })
-        builder.addCase(getAgeAnalysisDataArray.fulfilled, (state, action) => {
-            // const payload = action.payload as any;
-            // state.graphs = payload;
+        builder.addCase(getMarketShareDataArray.rejected, (state, action) => {
             state.loading = false;
-            state.cleared=false;
+            state.cleared = false;
+            state.error = action.payload as string;
+        })
+        builder.addCase(getAgeAnalysisDataArray.fulfilled, (state, action) => {
+            state.loading = false;
+            state.cleared = false;
         })
         builder.addCase(getAgeAnalysisDataArray.pending, (state, action) => {
             state.loading = true;
             state.graphs = [];
         })
         builder.addCase(getDomainNameAnalysisDataArray.fulfilled, (state, action) => {
-            // const payload = action.payload as any;
-            // state.graphs = payload;
             state.loading = false;
         })
         builder.addCase(getDomainNameAnalysisDataArray.pending, (state, action) => {
@@ -241,7 +306,7 @@ export const graphSlice = createSlice({
             // const payload = action.payload as any;
             // state.graphs = payload;
             state.loading = false;
-            state.cleared=false;
+            state.cleared = false;
         })
         builder.addCase(getDomainNameAnalysisClassificationDataArray.pending, (state, action) => {
             state.loading = true;
@@ -252,7 +317,7 @@ export const graphSlice = createSlice({
             state.loading = false;
             state.filters = payload;
             state.error = "";
-            state.cleared=false;
+            state.cleared = false;
         })
         builder.addCase(getFilters.pending, (state) => {
             state.filters = [];
@@ -261,8 +326,8 @@ export const graphSlice = createSlice({
         })
         builder.addCase(getFilters.rejected, (state, action) => {
             state.loading = false;
-            state.error = action.payload as any;
             state.filters = [];
+            state.error = action.payload as string;
         })
     }
 })
@@ -280,11 +345,33 @@ export const getGraphData = createAsyncThunk("GRAPH.GetGraphData", async (object
         }).json();
         return response;
     } catch (e) {
-        if (e instanceof Error) return rejectWithValue(e.message);
+        let error = e as HTTPError;
+        const newError = await error.response.json();
+        Sentry.captureException(newError);
+        return rejectWithValue(newError.message);
     }
 })
 
-export const getGraphDataRanking = createAsyncThunk("GRAPH.GetGraphDataRanking", async (object: ITransactionGraphRequest, { getState,rejectWithValue }) => {
+export const getGraphRegistrarData = createAsyncThunk("GRAPH.GetGraphRegistrarData", async (object: ITransactionGraphRequest, { getState, rejectWithValue }) => {
+    try {
+        const jwt = getCookie("jwt");
+        const state = getState() as { graph: IGraphState }; // Replace 'graph' with the slice name if different
+        const { selectedDataSource } = state.graph;
+        const response = await ky.post(`${url}/${selectedDataSource}/registrar`, {
+            json: object,
+            headers: {
+                "Authorization": `Bearer ${jwt}`
+            }
+        }).json();
+        return response;
+    } catch (e) {
+        let error = e as HTTPError;
+        const newError = await error.response.json();
+        return rejectWithValue(newError.message);
+    }
+})
+
+export const getGraphDataRanking = createAsyncThunk("GRAPH.GetGraphDataRanking", async (object: ITransactionGraphRequest, { getState, rejectWithValue }) => {
     try {
         const jwt = getCookie("jwt");
         const state = getState() as { graph: IGraphState }; // Replace 'graph' with the slice name if different
@@ -297,11 +384,14 @@ export const getGraphDataRanking = createAsyncThunk("GRAPH.GetGraphDataRanking",
         }).json();
         return response;
     } catch (e) {
-        if (e instanceof Error) return rejectWithValue(e.message);
+        let error = e as HTTPError;
+        const newError = await error.response.json();
+        Sentry.captureException(newError);
+        return rejectWithValue(newError.message);
     }
 })
 
-export const getMarketShareData = createAsyncThunk("GRAPH.GetMarketShareData", async (object: IMarketShareGraphRequest, {getState, rejectWithValue }) => {
+export const getMarketShareData = createAsyncThunk("GRAPH.GetMarketShareData", async (object: IMarketShareGraphRequest, { getState, rejectWithValue }) => {
     try {
         const jwt = getCookie("jwt");
         const state = getState() as { graph: IGraphState }; // Replace 'graph' with the slice name if different
@@ -314,11 +404,14 @@ export const getMarketShareData = createAsyncThunk("GRAPH.GetMarketShareData", a
         }).json();
         return response;
     } catch (e) {
-        if (e instanceof Error) return rejectWithValue(e.message);
+        let error = e as HTTPError;
+        const newError = await error.response.json();
+        Sentry.captureException(newError);
+        return rejectWithValue(newError.message);
     }
 })
 
-export const getAgeAnalysisData = createAsyncThunk("GRAPH.GetAgeAnalysisData", async (object: IAgeAnalysisGraphRequest, { getState,rejectWithValue }) => {
+export const getAgeAnalysisData = createAsyncThunk("GRAPH.GetAgeAnalysisData", async (object: IAgeAnalysisGraphRequest, { getState, rejectWithValue }) => {
     try {
         const jwt = getCookie("jwt");
         const state = getState() as { graph: IGraphState }; // Replace 'graph' with the slice name if different
@@ -331,11 +424,14 @@ export const getAgeAnalysisData = createAsyncThunk("GRAPH.GetAgeAnalysisData", a
         }).json();
         return response;
     } catch (e) {
-        if (e instanceof Error) return rejectWithValue(e.message);
+        let error = e as HTTPError;
+        const newError = await error.response.json();
+        Sentry.captureException(newError);
+        return rejectWithValue(newError.message);
     }
 })
 
-export const getDomainLengthData = createAsyncThunk("GRAPH.GetDomainLengthData", async (object: IDomainNameAnalysisGraphRequest, { getState,rejectWithValue }) => {
+export const getDomainLengthData = createAsyncThunk("GRAPH.GetDomainLengthData", async (object: IDomainNameAnalysisGraphRequest, { getState, rejectWithValue }) => {
     try {
         const jwt = getCookie("jwt");
         const state = getState() as { graph: IGraphState }; // Replace 'graph' with the slice name if different
@@ -348,11 +444,14 @@ export const getDomainLengthData = createAsyncThunk("GRAPH.GetDomainLengthData",
         }).json();
         return response;
     } catch (e) {
-        if (e instanceof Error) return rejectWithValue(e.message);
+        let error = e as HTTPError;
+        const newError = await error.response.json();
+        Sentry.captureException(newError);
+        return rejectWithValue(newError.message);
     }
 })
 
-export const getMovementVerticalData = createAsyncThunk("GRAPH.GetMovementVerticalData", async (object: IMovementGraphRequest, {getState,rejectWithValue }) => {
+export const getMovementVerticalData = createAsyncThunk("GRAPH.GetMovementVerticalData", async (object: IMovementGraphRequest, { getState, rejectWithValue }) => {
     try {
         const jwt = getCookie("jwt");
         const state = getState() as { graph: IGraphState }; // Replace 'graph' with the slice name if different
@@ -365,11 +464,34 @@ export const getMovementVerticalData = createAsyncThunk("GRAPH.GetMovementVertic
         }).json();
         return response;
     } catch (e) {
-        if (e instanceof Error) return rejectWithValue(e.message);
+        let error = e as HTTPError;
+        const newError = await error.response.json();
+        Sentry.captureException(newError);
+        return rejectWithValue(newError.message);
     }
 })
 
-export const getDomainNameAnalysisData = createAsyncThunk("GRAPH.GetDomainNameAnalysisData", async (object: IDomainNameAnalysisGraphRequest, { getState,rejectWithValue }) => {
+
+export const getMovementVerticalRankedData = createAsyncThunk("GRAPH.GetMovementVerticalRankedData", async (object: IMovementGraphRankedRequest, { getState, rejectWithValue }) => {
+    try {
+        const jwt = getCookie("jwt");
+        const state = getState() as { graph: IGraphState }; // Replace 'graph' with the slice name if different
+        const { selectedDataSource } = state.graph;
+        const response = await ky.post(`${url}/${selectedDataSource}/movement/verticalRanked`, {
+            json: object,
+            headers: {
+                "Authorization": `Bearer ${jwt}`
+            }
+        }).json();
+        return response;
+    } catch (e) {
+        let error = e as HTTPError;
+        const newError = await error.response.json();
+        return rejectWithValue(newError.message);
+    }
+})
+
+export const getDomainNameAnalysisData = createAsyncThunk("GRAPH.GetDomainNameAnalysisData", async (object: IDomainNameAnalysisGraphRequest, { getState, rejectWithValue }) => {
     try {
         const jwt = getCookie("jwt");
         const state = getState() as { graph: IGraphState }; // Replace 'graph' with the slice name if different
@@ -382,11 +504,14 @@ export const getDomainNameAnalysisData = createAsyncThunk("GRAPH.GetDomainNameAn
         }).json();
         return response;
     } catch (e) {
-        if (e instanceof Error) return rejectWithValue(e.message);
+        let error = e as HTTPError;
+        const newError = await error.response.json();
+        Sentry.captureException(newError);
+        return rejectWithValue(newError.message);
     }
 })
 
-export const getDomainNameAnalysisClassificationData = createAsyncThunk("GRAPH.GetDomainNameAnalysisClassificationData", async (object: IDomainNameAnalysisGraphRequest, { getState,rejectWithValue }) => {
+export const getDomainNameAnalysisClassificationData = createAsyncThunk("GRAPH.GetDomainNameAnalysisClassificationData", async (object: IDomainNameAnalysisGraphRequest, { getState, rejectWithValue }) => {
     try {
         const jwt = getCookie("jwt");
         const state = getState() as { graph: IGraphState }; // Replace 'graph' with the slice name if different
@@ -399,11 +524,14 @@ export const getDomainNameAnalysisClassificationData = createAsyncThunk("GRAPH.G
         }).json();
         return response;
     } catch (e) {
-        if (e instanceof Error) return rejectWithValue(e.message);
+        let error = e as HTTPError;
+        const newError = await error.response.json();
+        Sentry.captureException(newError);
+        return rejectWithValue(newError.message);
     }
 })
 
-export const getGraphDataArray = createAsyncThunk("GRAPH.GetGraphDataArray", async (object: ITransactionGraphRequest[], { getState,rejectWithValue }) => {
+export const getGraphDataArray = createAsyncThunk("GRAPH.GetGraphDataArray", async (object: ITransactionGraphRequest[], { getState, rejectWithValue }) => {
     try {
         const array: any[] = [];
         const jwt = getCookie("jwt");
@@ -427,11 +555,14 @@ export const getGraphDataArray = createAsyncThunk("GRAPH.GetGraphDataArray", asy
         return array;
 
     } catch (e) {
-        if (e instanceof Error) return rejectWithValue(e.message);
+        let error = e as HTTPError;
+        const newError = await error.response.json();
+        Sentry.captureException(newError);
+        return rejectWithValue(newError.message);
     }
 })
 
-export const getDomainLenghtDataArray = createAsyncThunk("GRAPH.GetDomainLengthDataArray", async (object: IDomainNameAnalysisGraphRequest[], { getState,rejectWithValue }) => {
+export const getDomainLenghtDataArray = createAsyncThunk("GRAPH.GetDomainLengthDataArray", async (object: IDomainNameAnalysisGraphRequest[], { getState, rejectWithValue }) => {
     try {
         const array: any[] = [];
         const jwt = getCookie("jwt");
@@ -455,11 +586,14 @@ export const getDomainLenghtDataArray = createAsyncThunk("GRAPH.GetDomainLengthD
         return array;
 
     } catch (e) {
-        if (e instanceof Error) return rejectWithValue(e.message);
+        let error = e as HTTPError;
+        const newError = await error.response.json();
+        Sentry.captureException(newError);
+        return rejectWithValue(newError.message);
     }
 })
 
-export const getMovementVerticalDataArray = createAsyncThunk("GRAPH.GetMovementVerticalDataArray", async (object: IMovementGraphRequest[], { getState,rejectWithValue }) => {
+export const getMovementVerticalDataArray = createAsyncThunk("GRAPH.GetMovementVerticalDataArray", async (object: IMovementGraphRequest[], { getState, rejectWithValue }) => {
     try {
         const array: any[] = [];
         const jwt = getCookie("jwt");
@@ -483,11 +617,14 @@ export const getMovementVerticalDataArray = createAsyncThunk("GRAPH.GetMovementV
         return array;
 
     } catch (e) {
-        if (e instanceof Error) return rejectWithValue(e.message);
+        let error = e as HTTPError;
+        const newError = await error.response.json();
+        Sentry.captureException(newError);
+        return rejectWithValue(newError.message);
     }
 })
 
-export const getGraphDataRankingArray = createAsyncThunk("GRAPH.GetGraphDataRankingArray", async (object: ITransactionGraphRequest[], { getState,rejectWithValue }) => {
+export const getGraphDataRankingArray = createAsyncThunk("GRAPH.GetGraphDataRankingArray", async (object: ITransactionGraphRequest[], { getState, rejectWithValue }) => {
     try {
         const array: any[] = [];
         const jwt = getCookie("jwt");
@@ -511,11 +648,14 @@ export const getGraphDataRankingArray = createAsyncThunk("GRAPH.GetGraphDataRank
         return array;
 
     } catch (e) {
-        if (e instanceof Error) return rejectWithValue(e.message);
+        let error = e as HTTPError;
+        const newError = await error.response.json();
+        Sentry.captureException(newError);
+        return rejectWithValue(newError.message);
     }
 })
 
-export const getMarketShareDataArray = createAsyncThunk("GRAPH.GetaMarketShareDataArray", async (object: IMarketShareGraphRequest[], { getState,rejectWithValue }) => {
+export const getMarketShareDataArray = createAsyncThunk("GRAPH.GetaMarketShareDataArray", async (object: IMarketShareGraphRequest[], { getState, rejectWithValue }) => {
     try {
         const array: any[] = [];
         const jwt = getCookie("jwt");
@@ -539,11 +679,14 @@ export const getMarketShareDataArray = createAsyncThunk("GRAPH.GetaMarketShareDa
         return array;
 
     } catch (e) {
-        if (e instanceof Error) return rejectWithValue(e.message);
+        let error = e as HTTPError;
+        const newError = await error.response.json();
+        Sentry.captureException(newError);
+        return rejectWithValue(newError.message);
     }
 })
 
-export const getAgeAnalysisDataArray = createAsyncThunk("GRAPH.GetAgeAnalysisDataArray", async (object: IAgeAnalysisGraphRequest[], {getState, rejectWithValue }) => {
+export const getAgeAnalysisDataArray = createAsyncThunk("GRAPH.GetAgeAnalysisDataArray", async (object: IAgeAnalysisGraphRequest[], { getState, rejectWithValue }) => {
     try {
         const array: any[] = [];
         const jwt = getCookie("jwt");
@@ -567,11 +710,14 @@ export const getAgeAnalysisDataArray = createAsyncThunk("GRAPH.GetAgeAnalysisDat
         return array;
 
     } catch (e) {
-        if (e instanceof Error) return rejectWithValue(e.message);
+        let error = e as HTTPError;
+        const newError = await error.response.json();
+        Sentry.captureException(newError);
+        return rejectWithValue(newError.message);
     }
 })
 
-export const getDomainNameAnalysisDataArray = createAsyncThunk("GRAPH.GetDomainNameAnalysisDataArray", async (object: IDomainNameAnalysisGraphRequest[], { getState,rejectWithValue }) => {
+export const getDomainNameAnalysisDataArray = createAsyncThunk("GRAPH.GetDomainNameAnalysisDataArray", async (object: IDomainNameAnalysisGraphRequest[], { getState, rejectWithValue }) => {
     try {
         const array: any[] = [];
         const jwt = getCookie("jwt");
@@ -595,11 +741,14 @@ export const getDomainNameAnalysisDataArray = createAsyncThunk("GRAPH.GetDomainN
         return array;
 
     } catch (e) {
-        if (e instanceof Error) return rejectWithValue(e.message);
+        let error = e as HTTPError;
+        const newError = await error.response.json();
+        Sentry.captureException(newError);
+        return rejectWithValue(newError.message);
     }
 })
 
-export const getDomainNameAnalysisClassificationDataArray = createAsyncThunk("GRAPH.GetDomainNameAnalysisClassificationDataArray", async (object: IDomainNameAnalysisGraphRequest[], { getState,rejectWithValue }) => {
+export const getDomainNameAnalysisClassificationDataArray = createAsyncThunk("GRAPH.GetDomainNameAnalysisClassificationDataArray", async (object: IDomainNameAnalysisGraphRequest[], { getState, rejectWithValue }) => {
     try {
         const array: any[] = [];
         const jwt = getCookie("jwt");
@@ -623,7 +772,10 @@ export const getDomainNameAnalysisClassificationDataArray = createAsyncThunk("GR
         return array;
 
     } catch (e) {
-        if (e instanceof Error) return rejectWithValue(e.message);
+        let error = e as HTTPError;
+        const newError = await error.response.json();
+        Sentry.captureException(newError);
+        return rejectWithValue(newError.message);
     }
 })
 
@@ -636,13 +788,15 @@ export const getFilters = createAsyncThunk("GRAPH.GetFilters", async (object: an
                 "Authorization": `Bearer ${jwt}`
             }
         }).json();
-        //console.log(res.message)
         return res.message;
     } catch (e) {
-        if (e instanceof Error) return rejectWithValue(e.message);
+        let error = e as HTTPError;
+        const newError = await error.response.json();
+        Sentry.captureException(newError);
+        return rejectWithValue(newError.message);
     }
 })
 
-export const { addToGraphs, setLoading,selectDataSource,clearGraphData } = graphSlice.actions;
+export const { addToGraphs, setLoading, selectDataSource, clearGraphData, clearError } = graphSlice.actions;
 export const graphState = (state: AppState) => state.graph;
 export default graphSlice.reducer;

@@ -11,7 +11,7 @@ export interface IModalManagerState {
     animateManager: boolean,
     currentOpen: string,
     data: any,
-    graphName : string,
+    graphName: string,
     zoomedData: { graphName: string, dashboardID: string }
 }
 
@@ -22,7 +22,7 @@ const initialState: IModalManagerState = {
     animateManager: false,
     currentOpen: "",
     data: null,
-    graphName : "",
+    graphName: "",
     zoomedData: { graphName: "", dashboardID: "" }
 }
 
@@ -37,9 +37,6 @@ export const modalManagerSlice = createSlice({
         },
         // Set the current open modal
         setCurrentOpenState(state, action) {
-            // console.log("DEBUG")
-            // console.log(action.payload)
-            console.log("Here: " + action.payload)
             state.currentOpen = action.payload
         },
         // Clear the current open modal
@@ -52,12 +49,11 @@ export const modalManagerSlice = createSlice({
         },
         // Set data
         setData(state, action) {
-            state.data = { data : action.payload.data, type : action.payload.type};
+            state.data = { data: action.payload.data, type: action.payload.type };
             state.graphName = action.payload.graphName;
         },
         // Zoomed Data
         setZoomData(state, action) {
-            // console.log(action.payload.graphName);
             if (state.zoomedData !== null && state.zoomedData !== undefined) {
                 state.zoomedData.graphName = action.payload?.graphName;
                 state.zoomedData.dashboardID = action.payload?.dashboardID;

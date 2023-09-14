@@ -1,16 +1,16 @@
-import { IDataSourceItem, MenuOptions, NotDropdown, dataSourceDescriptors, dataSourceName } from "@/assets/MenuOptions"
+import { MenuOptions, NotDropdown } from "@/assets/MenuOptions"
 import SideBarItem from "./SidebarItem"
 import Link from "next/link"
-import { useState, useEffect, useRef, Fragment } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTheme } from "next-themes";
-import { MoonIcon, SunIcon, Cog6ToothIcon, Bars4Icon, ArrowLeftOnRectangleIcon, PencilIcon, HomeIcon, ChevronDownIcon, ChartPieIcon, ChevronRightIcon, GlobeAltIcon, ServerStackIcon } from "@heroicons/react/24/solid";
-import { selectModalManagerState } from "@/store/Slices/modalManagerSlice";
+import { Cog6ToothIcon, Bars4Icon, ArrowLeftOnRectangleIcon, PencilIcon, HomeIcon, ChevronDownIcon, ChartPieIcon } from "@heroicons/react/24/solid";
+import { clearCurrentOpenState, selectModalManagerState, setCurrentOpenState } from "@/store/Slices/modalManagerSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { userState, logout } from "@/store/Slices/userSlice";
 import { graphState, selectDataSource } from "@/store/Slices/graphSlice";
-import { permissionState, getEndpoints, IPermission } from "@/store/Slices/permissionSlice";
+import { permissionState, getEndpoints } from "@/store/Slices/permissionSlice";
 import { useRouter } from "next/router";
-import { getCookie, deleteCookie } from "cookies-next";
+import { getCookie, deleteCookie, hasCookie, setCookie } from "cookies-next";
 import LoadingPage from "../Util/Loading";
 import ky from "ky";
 import { BetterDropdown, ErrorToast, SubmitButton, SuccessToast } from "../Util";
@@ -18,6 +18,8 @@ import CreateDashboardModal from "../Modals/CreateDashboardModal";
 import { Transition, Popover } from '@headlessui/react'
 import { v4 as uuidv4 } from 'uuid';
 import md5 from 'md5';
+import ErrorAlert from "../Util/ErrorAlert";
+import { FirstTimeModal } from "../Modals";
 
 export default function Sidebar() {
     const { theme, setTheme } = useTheme();
@@ -30,13 +32,7 @@ export default function Sidebar() {
     const modalState = useSelector(selectModalManagerState);
     const router = useRouter();
     const initialSelectedDataSource = useRef(stateGraph.selectedDataSource);
-
     const jwt = getCookie("jwt");
-
-    useEffect(() => {
-        setTheme('light');
-        // document.body.classList.remove('dark');
-    }, [])
 
     /**
      * Handles the invitation
@@ -51,7 +47,8 @@ export default function Sidebar() {
                 handleGroupInvite(key, type);
             }
         }
-        dispatch(getEndpoints());
+        if (stateUser.user.email) dispatch(getEndpoints());
+
     }, [])
 
     useEffect(() => {
@@ -96,6 +93,12 @@ export default function Sidebar() {
             clearingData();
         }
     }, [stateUser]);
+
+    useEffect(() => {
+        if (!hasCookie('firstTime')) {
+            dispatch(setCurrentOpenState("MISC.FirstTime"));
+        }
+    }, [])
 
     /**
      * Handles if the data source changes
@@ -142,6 +145,7 @@ export default function Sidebar() {
                         <div className="flex flex-col overflow-y-auto py-5 px-3 h-full border-r border-gray-200 bg-gray-200 dark:bg-dark-background dark:border-dark-background">
                             {/* top list */}
                             <ul className="space-y-2">
+                                <ErrorAlert title="Beta!" italic={false} text="This dashboard is in beta. You might encounter bugs/issues. If you come across any, don't worry. We have logged it automatically." />
                                 <SideBarItem text="Home" icon={<HomeIcon className="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />} page="home" />
                                 <li>
                                     <span className="flex items-center justify-between p-2 text-gray-900 rounded-lg dark:text-white hover:bg-lightHover dark:hover:bg-gray-700 hover:cursor-pointer" onClick={() => setDF(!df)}>
@@ -208,7 +212,7 @@ export default function Sidebar() {
                                 })
                             }} />}
 
-                            <BetterDropdown items={[{ name: "ZACR", value: "zacr" }, { name: "Africa", value: "africa" }, { name: "RyCE", value: "ryce" }]} text={"select a warehouse"} option={stateGraph.selectedDataSource} set={reduceDataSource} absolute={true} placement="above" />
+                            <BetterDropdown items={[{ name: "ZARC", value: "zacr" }, { name: "Africa", value: "africa" }, { name: "RyCE", value: "ryce" }]} text={"select a warehouse"} option={stateGraph.selectedDataSource} set={reduceDataSource} absolute={true} placement="above" />
 
                             {/* <Popover className="relative w-full hidden sm:flex">
                                 {({ open, close }) => (
@@ -260,10 +264,10 @@ export default function Sidebar() {
                                 <Link href="/settings" data-tooltip-target="tooltip-settings" className="inline-flex justify-center p-2 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-600">
                                     <Cog6ToothIcon className="w-6 h-6" />
                                 </Link>
-                                <button type="button" className="inline-flex justify-center p-2 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-600" onClick={() => toggleDarkMode()}>
+                                {/* <button type="button" className="inline-flex justify-center p-2 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-600" onClick={() => toggleDarkMode()}>
                                     {theme === "dark" ? <SunIcon className="w-6 h-6" /> : <MoonIcon className="w-6 h-6" />}
                                     <span className="sr-only">Theme toggle</span>
-                                </button>
+                                </button> */}
                                 <button type="button" className="inline-flex justify-center p-2 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-600" onClick={() => dispatch(logout())}>
                                     <ArrowLeftOnRectangleIcon className="w-6 h-6" />
                                     <span className="sr-only">Logout</span>
@@ -273,6 +277,10 @@ export default function Sidebar() {
                     </aside>
                 </div>
                 {modalState.currentOpen === "GRAPH.CreateDashboard" && <CreateDashboardModal />}
+                {modalState.currentOpen === "MISC.FirstTime" && <FirstTimeModal cookieToSet={{ name: 'firstTime', data: false }} close={() => {
+                    dispatch(clearCurrentOpenState());
+                    setCookie('firstTime', false);
+                }} />}
             </>
         )
 }
