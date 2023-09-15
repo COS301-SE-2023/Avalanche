@@ -1,0 +1,47 @@
+[
+    {
+        "schema": "transaction details",
+        "table": "Fact Sales",
+        "columns": [
+            "Line Price","Nett. Amount","Quantity","Registry Code"
+        ],
+        "joins": [
+            {
+                "table": "Dim Date",
+                "from": "Dim Date Key",
+                "to": "Dim Date Key",
+                "columns": ["Date","Day Of Week","Day Name","Is Weekday?","Month","Month Year","Month Name","Year Name"]
+            },
+            {
+                "table": "Dim Registry Product",
+                "from": "Dim Product Key",
+                "to": "Dim Product Key",
+                "columns": ["Code"]
+            },
+            {
+                "table": "Dim Registry Domain",
+                "from": "Dim Domain Key",
+                "to": "Dim Domain Key",
+                "columns": ["Created Date","Expiry Date","Exists In Registry?","Status"]
+            },
+            {
+                "table": "Dim Registry Registrar",
+                "from": "Dim Registrar Key",
+                "to": "Dim Registrar Key",
+                "columns": ["Code","Name","Company Name","Trading Name"]
+            },
+            {
+                "table": "Dim Sales Detail",
+                "from": "Dim Sales Detail Key",
+                "to": "Dim Sales Detail Key",
+                "columns": [ "System","Type","Source"]
+            },
+            {
+                "table": "Dim Registry Zone",
+                "from": "Dim Zone Key",
+                "to": "Dim Zone Key",
+                "columns": [ "Zone", "Name","Operator"]
+            }
+        ]
+    }
+]
