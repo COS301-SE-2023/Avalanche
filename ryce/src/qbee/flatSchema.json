@@ -102,7 +102,8 @@
         "typeOfFilter": "inputbox",
         "filterReturnType": "string",
         "comparisonTypes": ["=", "LIKE"],
-        "filter": true,
+        "filter": [{"tou" : "registrar", "filterValues" : [2022,2021]},{"tou" : "registry", "filterValues" : [2022,2021]}],
+        "aggregation" : [{"tou" : "public", "aggretate" : true}],
         "table": "Dim Date"
     },
     {
