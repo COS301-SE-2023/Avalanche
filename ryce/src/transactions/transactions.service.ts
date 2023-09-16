@@ -5,7 +5,7 @@ import { SnowflakeService } from '../snowflake/snowflake.service';
 import { DataFormatService } from '../data-format/data-format.service';
 import { AnalysisService } from '../analysis/analysis.service';
 import { GraphFormatService } from '../graph-format/graph-format.service';
-import { DataInterface } from '../interfaces/interfaces';
+import { NewDataInterface } from '../interfaces/interfaces';
 
 @Injectable()
 export class TransactionService {
@@ -19,15 +19,13 @@ export class TransactionService {
 
   async transactions(filters: any, graphName: string): Promise<any> {
     try {
-      graphName = this.transactionsGraphName(filters, false);
-
       filters = JSON.stringify(filters);
 
       const sqlQuery = `call transactionsByRegistrar('${filters}')`;
 
       const dataR = await this.redis.get(`ryce` + sqlQuery);
-      let data: DataInterface;
-      let formattedData = '';
+      let data: NewDataInterface;
+      let formattedData;
       if (!dataR) {
         let queryData;
 
@@ -42,14 +40,18 @@ export class TransactionService {
           };
         }
 
-        formattedData = await this.graphFormattingService.formatTransactions(
-          JSON.stringify(queryData),
-        );
-
-        data = {
-          chartData: JSON.parse(formattedData),
-          jsonData: JSON.parse(queryData[0]['TRANSACTIONSBYREGISTRAR']),
+        formattedData = {
+          datasets: [{ label: 'Label1' }, { label: 'Label2' }],
         };
+
+        const graphData = {
+          chartData: formattedData,
+          jsonData: queryData[0]['TRANSACTIONSBYREGISTRAR'].data,
+        };
+
+        filters = queryData[0]['TRANSACTIONSBYREGISTRAR'].filters;
+
+        data = { data: graphData, filters: filters };
 
         await this.redis.set(
           `ryce` + sqlQuery,
@@ -61,17 +63,21 @@ export class TransactionService {
         data = JSON.parse(dataR);
       }
 
+      graphName = this.transactionsGraphName(data.filters, false);
+
       return {
         status: 'success',
         data: {
           graphName: graphName,
           warehouse: 'ryce',
           graphType: 'transactions',
-          data: data,
+          data: data.data,
+          filters: data.filters,
         },
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
+      console.debug(e);
       return {
         status: 500,
         error: true,
@@ -83,16 +89,14 @@ export class TransactionService {
 
   async transactionsRanking(filters: any, graphName: string): Promise<any> {
     try {
-      graphName = this.transactionsGraphName(filters, true);
       const filterObj = JSON.parse(JSON.stringify(filters));
-      filterObj.isRanking = true;
       filters = JSON.stringify(filterObj);
 
       const sqlQuery = `call transactionsByRegistrar('${filters}')`;
 
       const dataR = await this.redis.get(`ryce` + sqlQuery);
-      let data: DataInterface;
-      let formattedData = '';
+      let data: NewDataInterface;
+      let formattedData;
       if (!dataR) {
         let queryData;
         try {
@@ -105,15 +109,18 @@ export class TransactionService {
             timestamp: new Date().toISOString(),
           };
         }
-        formattedData =
-          await this.graphFormattingService.formatTransactionsRanking(
-            JSON.stringify(queryData),
-          );
-
-        data = {
-          chartData: JSON.parse(formattedData),
-          jsonData: JSON.parse(queryData[0]['TRANSACTIONSBYREGISTRAR']),
+        formattedData = {
+          datasets: [{ label: 'Label1' }, { label: 'Label2' }],
         };
+
+        const graphData = {
+          chartData: formattedData,
+          jsonData: queryData[0]['TRANSACTIONSBYREGISTRAR'].data,
+        };
+
+        filters = queryData[0]['TRANSACTIONSBYREGISTRAR'].filters;
+
+        const data = { data: { data: graphData, filters: filters } };
 
         await this.redis.set(
           `ryce` + sqlQuery,
@@ -125,17 +132,21 @@ export class TransactionService {
         data = JSON.parse(dataR);
       }
 
+      graphName = this.transactionsGraphName(data.filters, true);
+
       return {
         status: 'success',
         data: {
           graphName: graphName,
           warehouse: 'ryce',
           graphType: 'transactions-ranking',
-          data: data,
+          data: data.data,
+          filters: data.filters,
         },
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
+      console.debug(e);
       return {
         status: 500,
         error: true,

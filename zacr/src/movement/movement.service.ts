@@ -103,7 +103,9 @@ export class MovementService {
           };
         }
 
-        formattedData = JSON.stringify({datasets: [{label: 'Vertical Ranked'}]});
+        formattedData = JSON.stringify({
+          datasets: [{ label: 'Vertical Ranked' }],
+        });
 
         data = {
           chartData: JSON.parse(formattedData),
