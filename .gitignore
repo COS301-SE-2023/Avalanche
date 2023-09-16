@@ -444,3 +444,4 @@ frontend/cypress.env.json
 docker-compose.yml.1
 node_modules
 zeus/.env
+qbee/.env
