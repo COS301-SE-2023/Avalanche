@@ -5,7 +5,7 @@ import { SnowflakeService } from '../snowflake/snowflake.service';
 import { DataFormatService } from '../data-format/data-format.service';
 import { AnalysisService } from '../analysis/analysis.service';
 import { GraphFormatService } from '../graph-format/graph-format.service';
-import { NewDataInterface } from '../interfaces/interfaces';
+import { NewDataInterface, formatDate } from '../interfaces/interfaces';
 
 @Injectable()
 export class TransactionService {
@@ -28,7 +28,6 @@ export class TransactionService {
       let formattedData;
       if (!dataR) {
         let queryData;
-
         try {
           queryData = await this.snowflakeService.execute(sqlQuery);
         } catch (e) {
@@ -157,33 +156,11 @@ export class TransactionService {
   }
 
   transactionsGraphName(filters: any, perReg: boolean): string {
-    let dateFrom;
-    if (filters['dateFrom'] === undefined) {
-      dateFrom = new Date();
-      dateFrom.setFullYear(dateFrom.getUTCFullYear() - 1);
-      dateFrom = dateFrom.getFullYear() + '-01-01';
-    } else {
-      dateFrom = new Date(filters['dateFrom']);
-      let month = dateFrom.getUTCMonth() + 1;
-      month = month < 10 ? '0' + month : month;
-      let day = dateFrom.getUTCDate();
-      day = day < 10 ? '0' + day : day;
-      dateFrom = dateFrom.getUTCFullYear() + '-' + month + '-' + day;
-    }
+    let dateFrom = filters['dateFrom'];
+    dateFrom = formatDate(dateFrom);
 
-    let dateTo;
-    if (filters['dateTo'] === undefined) {
-      dateTo = new Date();
-      dateTo.setFullYear(dateTo.getUTCFullYear() - 1);
-      dateTo = dateTo.getFullYear() + '-12-31';
-    } else {
-      dateTo = new Date(filters['dateTo']);
-      let month = dateTo.getUTCMonth() + 1;
-      month = month < 10 ? '0' + month : month;
-      let day = dateTo.getUTCDate();
-      day = day < 10 ? '0' + day : day;
-      dateTo = dateTo.getUTCFullYear() + '-' + month + '-' + day;
-    }
+    let dateTo = filters['dateTo'];
+    dateTo = formatDate(dateTo);
 
     let granularity = 'Monthly ';
     const gCheck = filters['granularity'];
@@ -197,10 +174,10 @@ export class TransactionService {
     }
 
     let zone = filters['zone'];
-    if (zone) {
-      zone = ' for ' + zone;
+    if (zone?.length > 0) {
+      zone = ' (' + zone.join(',') + ')';
     } else {
-      zone = ' for all zones in registry';
+      zone = ' (all zones)';
     }
 
     let reg = '';
