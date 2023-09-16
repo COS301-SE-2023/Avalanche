@@ -1,12 +1,26 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
+import { MessagePattern, RpcException } from '@nestjs/microservices';
 import { AppService } from './app.service';
+import { QueryBuilderService } from './services/queryBuilder.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private readonly appService: AppService,
+    private readonly qBeeService: QueryBuilderService,
+  ) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @MessagePattern({ cmd: 'qbee' })
+  async executeQbeeQuery(data: any) {
+    const result = await this.qBeeService.constructQuery(data.query, data.user);
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
   }
 }
