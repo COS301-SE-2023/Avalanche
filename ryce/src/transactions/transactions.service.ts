@@ -2,7 +2,6 @@ import { Inject, Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
 import { JwtService } from '@nestjs/jwt';
 import { SnowflakeService } from '../snowflake/snowflake.service';
-import { DataFormatService } from '../data-format/data-format.service';
 import { AnalysisService } from '../analysis/analysis.service';
 import { GraphFormatService } from '../graph-format/graph-format.service';
 import { NewDataInterface, formatDate } from '../interfaces/interfaces';
@@ -13,8 +12,6 @@ export class TransactionService {
     private jwtService: JwtService,
     @Inject('REDIS') private readonly redis: Redis,
     private readonly snowflakeService: SnowflakeService,
-    private readonly statisticalAnalysisService: AnalysisService,
-    private readonly graphFormattingService: GraphFormatService,
   ) {}
 
   async transactions(filters: any, graphName: string): Promise<any> {
