@@ -50,7 +50,7 @@ export class MovementService {
 
         const graphData = {
           chartData: formattedData,
-          jsonData: queryData[0]['NETTVERTICALMOVEMENT'],
+          jsonData: queryData[0]['NETTVERTICALMOVEMENT'].data,
         };
 
         filters = queryData[0]['NETTVERTICALMOVEMENT'].filters;
@@ -117,7 +117,7 @@ export class MovementService {
 
         const graphData = {
           chartData: formattedData,
-          jsonData: queryData[0]['NETVERTICALMOVEMENTRANKED'],
+          jsonData: queryData[0]['NETVERTICALMOVEMENTRANKED'].data,
         };
 
         filters = queryData[0]['NETVERTICALMOVEMENTRANKED'].filters;
