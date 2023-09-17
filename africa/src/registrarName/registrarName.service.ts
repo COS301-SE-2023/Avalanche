@@ -11,7 +11,9 @@ export class RegistrarNameService {
   ) {}
 
   async registrarName(json: any): Promise<any> {
-    const name: any = await this.redis.get(`africaRegistrarCode` + json['code']);
+    const name: any = await this.redis.get(
+      `africaRegistrarCode` + json['code'],
+    );
 
     if (name) {
       return {
