@@ -2,10 +2,9 @@ import { Inject, Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
 import { JwtService } from '@nestjs/jwt';
 import { SnowflakeService } from '../snowflake/snowflake.service';
-import { DataFormatService } from '../data-format/data-format.service';
 import { AnalysisService } from '../analysis/analysis.service';
 import { GraphFormatService } from '../graph-format/graph-format.service';
-import { DataInterface } from '../interfaces/interfaces';
+import { formatDate, NewDataInterface } from '../interfaces/interfaces';
 
 @Injectable()
 export class MovementService {
@@ -19,19 +18,19 @@ export class MovementService {
 
   async nettVeritical(filters: string, graphName: string): Promise<any> {
     try {
-      graphName = this.netVerticalGraphName(filters);
-
       filters = JSON.stringify(filters);
+
       const sqlQuery = `call nettVerticalMovement('${filters}')`;
 
       const dataR = await this.redis.get(`zacr` + sqlQuery);
-      let data: DataInterface;
-      let formattedData = '';
+      let data: NewDataInterface;
+      let formattedData;
       if (!dataR) {
         let queryData;
         try {
           queryData = await this.snowflakeService.execute(sqlQuery);
         } catch (e) {
+          console.debug(e);
           return {
             status: 500,
             error: true,
@@ -40,14 +39,18 @@ export class MovementService {
           };
         }
 
-        formattedData = await this.graphFormattingService.formatNettVertical(
-          JSON.stringify(queryData),
-        );
-
-        data = {
-          chartData: JSON.parse(formattedData),
-          jsonData: JSON.parse(queryData[0]['NETTVERTICALMOVEMENT']),
+        formattedData = {
+          datasets: [{ label: 'Vertical Movement' }],
         };
+
+        const graphData = {
+          chartData: formattedData,
+          jsonData: queryData[0]['NETTVERTICALMOVEMENT'],
+        };
+
+        filters = queryData[0]['NETTVERTICALMOVEMENT'].filters;
+
+        data = { data: graphData, filters: filters };
 
         await this.redis.set(
           `zacr` + sqlQuery,
@@ -59,14 +62,16 @@ export class MovementService {
         data = JSON.parse(dataR);
       }
 
-      filters = JSON.parse(filters);
+      graphName = this.netVerticalGraphName(data.filters);
+
       return {
         status: 'success',
         data: {
           graphName: graphName,
-          data: data,
           warehouse: 'zacr',
           graphType: 'movement/vertical',
+          data: data.data,
+          filters: data.filters,
         },
         timestamp: new Date().toISOString(),
       };
@@ -82,14 +87,12 @@ export class MovementService {
 
   async nettVeriticalRanked(filters: string, graphName: string): Promise<any> {
     try {
-      graphName = this.netVerticalGraphName(filters);
-
       filters = JSON.stringify(filters);
       const sqlQuery = `call netVerticalMovementRanked('${filters}')`;
 
       const dataR = await this.redis.get(`zacr` + sqlQuery);
-      let data: DataInterface;
-      let formattedData = '';
+      let data: NewDataInterface;
+      let formattedData;
       if (!dataR) {
         let queryData;
         try {
@@ -103,14 +106,18 @@ export class MovementService {
           };
         }
 
-        formattedData = JSON.stringify({
+        formattedData = {
           datasets: [{ label: 'Vertical Ranked' }],
-        });
-
-        data = {
-          chartData: JSON.parse(formattedData),
-          jsonData: JSON.parse(queryData[0]['NETVERTICALMOVEMENTRANKED']),
         };
+
+        const graphData = {
+          chartData: formattedData,
+          jsonData: queryData[0]['NETVERTICALMOVEMENTRANKED'],
+        };
+
+        filters = queryData[0]['NETVERTICALMOVEMENTRANKED'].filters;
+
+        const data = { data: { data: graphData, filters: filters } };
 
         await this.redis.set(
           `zacr` + sqlQuery,
@@ -122,14 +129,17 @@ export class MovementService {
         data = JSON.parse(dataR);
       }
 
+      graphName = this.verticalRankedGraphName(data.filters);
+
       filters = JSON.parse(filters);
       return {
         status: 'success',
         data: {
           graphName: graphName,
-          data: data,
           warehouse: 'zacr',
           graphType: 'movement/verticalRanked',
+          data: data.data,
+          filters: data.filters,
         },
         timestamp: new Date().toISOString(),
       };
@@ -151,53 +161,24 @@ export class MovementService {
         for (const r of registrar) {
           regArr.push(r);
         }
-        registrar = ' ' + regArr.join(', ');
+        registrar = regArr.join(', ');
       }
     } else {
-      registrar = ' all registrars';
+      registrar = 'all registrars';
     }
 
     let zone = filters['zone'];
-    if (zone) {
-      if (zone.length > 0) {
-        const zoneArr = [];
-        for (const r of zone) {
-          zoneArr.push(r);
-        }
-        zone = zoneArr.join(', ');
-      }
-      zone = ' for ' + zone;
+    if (zone?.length > 0) {
+      zone = ' (' + zone.join(',') + ')';
     } else {
-      zone = ' for all zones in registry';
+      zone = ' (all zones)';
     }
 
-    let dateFrom;
-    if (filters['dateFrom'] === undefined) {
-      dateFrom = new Date();
-      dateFrom.setFullYear(dateFrom.getUTCFullYear() - 1);
-      dateFrom = dateFrom.getFullYear() + '-01-01';
-    } else {
-      dateFrom = new Date(filters['dateFrom']);
-      let month = dateFrom.getUTCMonth() + 1;
-      month = month < 10 ? '0' + month : month;
-      let day = dateFrom.getUTCDate();
-      day = day < 10 ? '0' + day : day;
-      dateFrom = dateFrom.getUTCFullYear() + '-' + month + '-' + day;
-    }
+    let dateFrom = filters['dateFrom'];
+    dateFrom = formatDate(dateFrom);
 
-    let dateTo;
-    if (filters['dateTo'] === undefined) {
-      dateTo = new Date();
-      dateTo.setFullYear(dateTo.getUTCFullYear() - 1);
-      dateTo = dateTo.getFullYear() + '-12-31';
-    } else {
-      dateTo = new Date(filters['dateTo']);
-      let month = dateTo.getUTCMonth() + 1;
-      month = month < 10 ? '0' + month : month;
-      let day = dateTo.getUTCDate();
-      day = day < 10 ? '0' + day : day;
-      dateTo = dateTo.getUTCFullYear() + '-' + month + '-' + day;
-    }
+    let dateTo = filters['dateTo'];
+    dateTo = formatDate(dateTo);
 
     let granularity = 'Monthly ';
     const gCheck = filters['granularity'];
@@ -212,13 +193,52 @@ export class MovementService {
 
     return (
       granularity +
-      'Nett Vertical Movement (Creates-Deletes) from ' +
+      'Net Vertical Movement (Creates-Deletes) from ' +
       dateFrom +
       ' to ' +
       dateTo +
-      ' for' +
       registrar +
       zone
     );
+  }
+
+  verticalRankedGraphName(filters) {
+    let title = 'Net Vertical Movement ';
+
+    // Rank
+    if (filters.rank) {
+      title += `for the ${filters.rank}`;
+    } else {
+      title += 'for all Registrars';
+    }
+
+    // Registrar
+    if (
+      filters.registrar !== 'all' &&
+      Array.isArray(filters.registrar) &&
+      filters.registrar.length > 0
+    ) {
+      const regList = filters.registrar.join(', ');
+      title += ` (Specifically: ${regList})`;
+    }
+
+    // Date
+    if (filters.dateFrom && filters.dateTo) {
+      title += `, from ${formatDate(filters.dateFrom)} to ${formatDate(
+        filters.dateTo,
+      )}`;
+    }
+
+    // Zone
+    let zone = filters['zone'];
+    if (zone?.length > 0) {
+      zone = ' (' + zone.join(',') + ')';
+    } else {
+      zone = ' (all zones)';
+    }
+
+    title += zone;
+
+    return title;
   }
 }

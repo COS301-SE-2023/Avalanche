@@ -2,10 +2,8 @@ import { Inject, Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
 import { JwtService } from '@nestjs/jwt';
 import { SnowflakeService } from '../snowflake/snowflake.service';
-import { GraphFormatService } from '../graph-format/graph-format.service';
 import { RegistrarNameService } from '../registrarName/registrarName.service';
-import { DataInterface } from '../interfaces/interfaces';
-import { query } from 'express';
+import { NewDataInterface } from '../interfaces/interfaces';
 
 @Injectable()
 export class MarketShareService {
@@ -13,21 +11,18 @@ export class MarketShareService {
     private jwtService: JwtService,
     @Inject('REDIS') private readonly redis: Redis,
     private readonly snowflakeService: SnowflakeService,
-    private readonly graphFormattingService: GraphFormatService,
     private readonly registrarNameServices: RegistrarNameService,
   ) {}
 
   async marketShare(filters: string, graphName: string): Promise<any> {
     try {
-      graphName = this.marketShareGraphName(filters);
-
       filters = JSON.stringify(filters);
       const sqlQuery = `call marketShare('${filters}')`;
 
       const dataR = await this.redis.get(`zacr` + sqlQuery);
-      let data: DataInterface;
-      let formattedData = '';
-      console.log('In Marketshare');
+      let data: NewDataInterface;
+      let formattedData;
+
       if (!dataR) {
         let queryData;
         try {
@@ -46,7 +41,10 @@ export class MarketShareService {
          */
         let filtersCount = {};
         if (JSON.parse(filters).zone != undefined) {
-          filtersCount = { zone: JSON.parse(filters).zone };
+          filtersCount = {
+            zone: JSON.parse(filters).zone,
+            registrar: JSON.parse(filters).registrar,
+          };
         }
         filtersCount = JSON.stringify(filtersCount);
         const sqlCountQuery = `call domainCount('${filtersCount}')`;
@@ -63,6 +61,7 @@ export class MarketShareService {
               24 * 60 * 60,
             );
           } catch (e) {
+            console.debug(e);
             return {
               status: 500,
               error: true,
@@ -73,11 +72,10 @@ export class MarketShareService {
         } else {
           dataCount = JSON.parse(dataCount);
         }
-        const overallCount = JSON.parse(dataCount[0]['DOMAINCOUNT'])[0][
-          'NumInRegistry'
-        ];
+        const overallCount =
+          dataCount[0]['DOMAINCOUNT'].data[0]['NumInRegistry'];
 
-        const topNRegistrars = JSON.parse(queryData[0]['MARKETSHARE']);
+        const topNRegistrars = queryData[0]['MARKETSHARE'].data;
 
         const totalTopNRegistrarsCount = topNRegistrars.reduce(
           (acc, curr) => acc + curr.NumInRegistry,
@@ -111,18 +109,18 @@ export class MarketShareService {
           NumInRegistry: otherRegistrarCount,
         });
 
-        const topNRegistrarsArr = [
-          { MARKETSHARE: JSON.stringify(topNRegistrars) },
-        ];
+        formattedData = {
+          datasets: [{ label: 'Marketshare' }],
+        };
 
-        formattedData = await this.graphFormattingService.formatMarketshare(
-          JSON.stringify(topNRegistrarsArr),
-        );
-
-        data = {
-          chartData: JSON.parse(formattedData),
+        const graphData = {
+          chartData: formattedData,
           jsonData: topNRegistrars,
         };
+
+        filters = queryData[0]['MARKETSHARE'].filters;
+
+        data = { data: graphData, filters: filters };
 
         await this.redis.set(
           `zacr` + sqlQuery,
@@ -133,17 +131,22 @@ export class MarketShareService {
       } else {
         data = JSON.parse(dataR);
       }
+
+      graphName = this.marketShareGraphName(data.filters);
+
       return {
         status: 'success',
         data: {
           graphName: graphName,
-          data: data,
           warehouse: 'zacr',
           graphType: 'marketShare',
+          data: data.data,
+          filters: data.filters,
         },
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
+      console.debug(e);
       return {
         status: 500,
         error: true,
@@ -158,34 +161,27 @@ export class MarketShareService {
     if (rank) {
       rank = 'The ' + rank + ' registrars (i.t.o. domain count)';
     } else {
-      rank = 'The top 5';
+      rank = 'The top5';
     }
 
-    let registrar = filters['registrar'];
-    if (registrar) {
-      if (registrar.length > 0) {
-        if (registrar.length == 1) {
-          registrar = 'Your domain count compared to ';
-        }
-      }
-    } else {
-      registrar = '';
+    // Registrar
+    let registrar = '';
+    if (
+      filters.registrar !== 'all' &&
+      Array.isArray(filters.registrar) &&
+      filters.registrar.length > 0
+    ) {
+      const regList = filters.registrar.join(', ');
+      registrar += ` (Specifically also including: ${regList})`;
     }
 
     let zone = filters['zone'];
-    if (zone) {
-      if (zone.length > 0) {
-        const zoneArr = [];
-        for (const r of zone) {
-          zoneArr.push(r);
-        }
-        zone = zoneArr.join(', ');
-      }
-      zone = ' across ' + zone;
+    if (zone?.length > 0) {
+      zone = ' (' + zone.join(',') + ')';
     } else {
-      zone = ' across all zones ';
+      zone = ' (all zones)';
     }
 
-    return registrar + rank + zone;
+    return rank + registrar + zone;
   }
 }
