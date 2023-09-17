@@ -116,7 +116,7 @@ export class TransactionService {
 
         filters = queryData[0]['TRANSACTIONSBYREGISTRAR'].filters;
 
-        const data = { data: { data: graphData, filters: filters } };
+        data = { data: graphData, filters: filters };
 
         await this.redis.set(
           `zacr` + sqlQuery,
