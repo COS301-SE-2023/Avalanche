@@ -28,6 +28,7 @@ export class MarketShareService {
         try {
           queryData = await this.snowflakeService.execute(sqlQuery);
         } catch (e) {
+          console.debug(e);
           return {
             status: 500,
             error: true,
@@ -78,7 +79,7 @@ export class MarketShareService {
         const topNRegistrars = queryData[0]['MARKETSHARE'].data;
 
         const totalTopNRegistrarsCount = topNRegistrars.reduce(
-          (acc, curr) => acc + curr.NumInRegistry,
+          (acc, curr) => acc + (curr.NumInRegistry ? curr.NumInRegistry : 0),
           0,
         );
 
@@ -97,8 +98,8 @@ export class MarketShareService {
           }
 
           topNRegistrars.forEach((item, index) => {
-            if (item.Registrar != name) {
-              item.Registrar = `Registrar ${index + 1}`;
+            if (index != 0 && item.Registrar != name) {
+              item.Registrar = `Registrar ${index}`;
             }
           });
         }
