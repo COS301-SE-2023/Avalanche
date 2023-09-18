@@ -7,10 +7,11 @@ import avalanche.DataClasses.Domain;
 
 public class ResolutionChecker {
 
-    public static void checkResolution(Domain[] domainsToCheck) {
-        for (Domain domain : domainsToCheck) {
-            if (domain != null) {
-                domain.setResolves(isDomainResolvable(domain.getFullyQualifiedDomainName()));
+    public static void checkResolution(Domain[] domainsToCheck, int totalTodo) {
+
+        for (int i = 0; i < totalTodo; i++) {
+            if (domainsToCheck[i] != null) {
+                domainsToCheck[i].setResolves(isDomainResolvable(domainsToCheck[i].getFullyQualifiedDomainName()));
             }
         }
     }

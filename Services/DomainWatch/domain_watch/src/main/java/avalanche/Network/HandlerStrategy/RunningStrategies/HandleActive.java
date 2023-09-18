@@ -67,16 +67,17 @@ public class HandleActive extends Running {
         hits.toArray(hitsArr);
         Arrays.sort(hitsArr, Collections.reverseOrder());
         // Check for resolution only if
+
+        int initSize = hits.size();
+        int totalTodo = Math.min(initSize, 200);
         try {
             String resolve = obj.getString("resolve");
             if (resolve.equalsIgnoreCase("true")) {
-                ResolutionChecker.checkResolution(hitsArr);
+                ResolutionChecker.checkResolution(hitsArr, totalTodo);
             }
         } catch (JSONException jsonException) {
             System.out.println("do not have to resolve");
         }
-        int initSize = hits.size();
-        int totalTodo = Math.min(initSize, 500);
         System.out.println("\nFound " + initSize + " matches\nBuilding response\n");
         for (int k = 0; k < totalTodo; k++) {
             resp += "    " + hitsArr[k].toJSON();
