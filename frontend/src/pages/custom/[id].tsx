@@ -19,6 +19,7 @@ import { getCookie } from "cookies-next"
 import { updateDashboards } from "@/store/Slices/userSlice";
 import NoFind from "@/components/CustomSVG/NoFind";
 import introJs from 'intro.js';
+import 'intro.js/introjs.css';
 
 
 export default function CreateCustomDashboard() {
@@ -73,14 +74,6 @@ export default function CreateCustomDashboard() {
 
     const renderGraphs = () => {
         return graphs.map((graph: any, index: number) => <CustomChartCard title={graph.name} defaultGraph={ChartType.Line} data={graph} key={index} state={stateGraph} id={id} updateGraph={updateGraph} />);
-    }
-
-    const startTut = () =>{
-        introJs().start();
-        //const introJsPopup = document.getElementsByClassName('introjs-overlay')[0] as HTMLDivElement;
-        //if (introJsPopup){
-        //    introJsPopup.style.zIndex = '1000'
-        //}
     }
 
     const updateDashboard = async () => {
@@ -171,6 +164,32 @@ export default function CreateCustomDashboard() {
 
     }
 
+    const startTut = () => {
+        introJs().setOptions({
+            steps: [
+            {
+              element: document.querySelector('.card-demo') as HTMLElement,
+              intro: 'Tooltip has position right',
+              position: 'right'
+            },
+            {
+              element: document.querySelector('.card-demo-link')as HTMLElement,
+              intro: 'Tooltip has position left',
+              position: 'left'
+            },
+            {
+              element: document.querySelector('.card-demo-text')as HTMLElement,
+              intro: 'Tooltip has position bottom',
+              position: 'bottom'
+            },
+            {
+              element: document.querySelector('.card-demo')as HTMLElement,
+              intro: 'Tooltip has position top',
+              position: 'top'
+            }]
+          }).start();
+    }
+
     return (<>
         <Head>
             <title>Dashboard</title>
@@ -179,7 +198,22 @@ export default function CreateCustomDashboard() {
         <Toaster />
 
         <MainContent>
-            <div className="flex justify-between items-center flex-col lg:flex-row"  data-intro='Hello World'>
+            <div data-title="Welcome!" data-intro="Hello World! 👋" className="card-demo">
+                <div className="card shadow--md">
+                    <div className="card__image" data-intro="Intro.js can highlight on elements">
+                        a
+                    </div>
+                    <div className="card__body" data-title="Farewell!" data-intro="And this is the last step!">
+                        <h4>Quaco Lighthouse</h4>
+                        <small>
+                            The Quaco Head Lighthouse is a well maintained lighthouse close to St.
+                            Martins. It is a short, beautiful walk to the lighthouse along the
+                            seashore.
+                        </small>
+                    </div>
+                </div>
+            </div>
+            <div className="flex justify-between items-center flex-col lg:flex-row">
                 <div className="flex flex-row gap-2 items-center">
                     <CpuChipIcon className="h-16 w-16 text-black dark:text-white" />
                     <SubmitButton text="Start tutorial" className="flex-auto" onClick={() => {
