@@ -216,6 +216,7 @@
         "filter": true,
         "table": "Dim Registry Domain"
     },
+
     {
         "columnName": "Code",
         "columnType": "string",
@@ -252,6 +253,7 @@
         "filter": true,
         "table": "Dim Registry Registrar"
     },
+    
     {
         "columnName": "System",
         "columnType": "string",
