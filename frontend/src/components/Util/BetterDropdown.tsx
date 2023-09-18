@@ -1,8 +1,8 @@
-import { Fragment, useState } from 'react'
+import { Fragment } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 
-function classNames(...classes: any) {
+const classNames = (...classes: any) => {
     return classes.filter(Boolean).join(' ')
 }
 
@@ -27,8 +27,6 @@ export default function BetterDropdown({ items, option, set, id, text, absolute,
     const getName = (o: string) => {
         return items.find((item: IItem) => item.value === o)?.name;
     }
-
-    // const [open, setOpen] = useState<boolean>(false);
 
     return (
         <Menu as="div" className="inline-block text-left w-full" id={id}>
@@ -60,7 +58,6 @@ export default function BetterDropdown({ items, option, set, id, text, absolute,
                                                     <span
                                                         onClick={() => {
                                                             set(item.value);
-                                                            // setOpen(false);
                                                             close();
                                                         }}
                                                         className={classNames(
@@ -81,6 +78,5 @@ export default function BetterDropdown({ items, option, set, id, text, absolute,
                 </>
             )}
         </Menu>
-
     )
 }
