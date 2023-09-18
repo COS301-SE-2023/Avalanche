@@ -6,6 +6,7 @@
         "frontend": "cd ./frontend && yarn dev"
     },
     "dependencies": {
-        "@nestjs/cli": "^10.1.12"
+        "@nestjs/cli": "^10.1.12",
+        "intro.js": "^7.2.0"
     }
 }
