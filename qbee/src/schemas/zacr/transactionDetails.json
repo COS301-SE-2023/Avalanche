@@ -50,9 +50,7 @@
                     "typeOfFilter": "checkbox",
                     "filterReturnType": "string[]",
                     "filterValues": [
-                        "DOTKOELN GMBH",
-                        "PUNKT.WIEN GMBH",
-                        "PUNKT TIROL GMBH"
+                        "ZACR"
                     ],
                     "comparisonTypes": [
                         "=",
@@ -81,7 +79,11 @@
                     "columnType": "number",
                     "typeOfFilter": "inputbox",
                     "filterReturnType": "number",
-                    "comparisonTypes": ["=", "<", ">"],
+                    "comparisonTypes": [
+                        "=",
+                        "<",
+                        ">"
+                    ],
                     "filter": true,
                     "table": "Dim Date"
                 },
@@ -90,8 +92,19 @@
                     "columnType": "string",
                     "typeOfFilter": "checkbox",
                     "filterReturnType": "string[]",
-                    "filterValues": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-                    "comparisonTypes": ["=", "LIKE"],
+                    "filterValues": [
+                        "Monday",
+                        "Tuesday",
+                        "Wednesday",
+                        "Thursday",
+                        "Friday",
+                        "Saturday",
+                        "Sunday"
+                    ],
+                    "comparisonTypes": [
+                        "=",
+                        "LIKE"
+                    ],
                     "filter": true,
                     "table": "Dim Date"
                 },
@@ -100,7 +113,9 @@
                     "columnType": "boolean",
                     "typeOfFilter": "togglebox",
                     "filterReturnType": "boolean",
-                    "comparisonTypes": ["="],
+                    "comparisonTypes": [
+                        "="
+                    ],
                     "filter": true,
                     "table": "Dim Date"
                 },
@@ -109,12 +124,16 @@
                     "columnType": "number",
                     "typeOfFilter": "inputbox",
                     "filterReturnType": "number",
-                    "comparisonTypes": ["=", "<", ">"],
+                    "comparisonTypes": [
+                        "=",
+                        "<",
+                        ">"
+                    ],
                     "filter": true,
                     "table": "Dim Date"
                 },
                 {
-                    "columnName": "Month Year", 
+                    "columnName": "Month Year",
                     "columnType": "string",
                     "filter": false,
                     "table": "Dim Date"
@@ -124,7 +143,10 @@
                     "columnType": "string",
                     "typeOfFilter": "inputbox",
                     "filterReturnType": "string",
-                    "comparisonTypes": ["=", "LIKE"],
+                    "comparisonTypes": [
+                        "=",
+                        "LIKE"
+                    ],
                     "filter": true,
                     "table": "Dim Date"
                 },
@@ -133,9 +155,17 @@
                     "columnType": "string",
                     "typeOfFilter": "inputbox",
                     "filterReturnType": "string",
-                    "comparisonTypes": ["=", "LIKE"],
-                    "filter": [{"tou" : "registrar", "filterValues" : [2022,2021]},{"tou" : "registry", "filterValues" : [2022,2021]}],
-                    "aggregation" : [{"tou" : "public", "aggretate" : true}],
+                    "comparisonTypes": [
+                        "=",
+                        "LIKE"
+                    ],
+                    "filter": true,
+                    "aggregation": [
+                        {
+                            "tou": "public",
+                            "aggretate": true
+                        }
+                    ],
                     "table": "Dim Date"
                 }
             ]
@@ -151,64 +181,50 @@
                     "typeOfFilter": "checkbox",
                     "filterReturnType": "string[]",
                     "filterValues": [
-                        "WIEN_TRANSFER",
-                        "WIEN_RENEW_PREMIUM_G",
-                        "WIEN_RENEW_PREMIUM_C",
-                        "KOELN_AUTORENEW",
-                        "TIROL_NEW",
-                        "WIEN_TRANSFER_PREMIUM_G",
-                        "KOELN_TRANSFER_PREMIUM_I",
-                        "WIEN_RENEW_PREMIUM_B",
-                        "KOELN_NEW",
-                        "WIEN_PREMIUM_D",
-                        "KOELN_RENEW_PREMIUM_D",
-                        "TIROL_TRANSFER",
-                        "COLOGNE_RENEW_PREMIUM_I",
-                        "KOELN_TRANSFER",
-                        "WIEN_TRANSFER_PREMIUM_C",
-                        "WIEN_RENEW_PREMIUM_H",
-                        "WIEN_RENEW_PREMIUM_D",
-                        "KOELN_RENEW",
-                        "KOELN_PREMIUM_I",
-                        "COLOGNE_PREMIUM_I",
-                        "WIEN_PREMIUM_A",
-                        "WIEN_RENEW",
-                        "COLOGNE_PREMIUM_D",
-                        "TIROL_RESTORE",
-                        "COLOGNE_RENEW_PREMIUM_D",
-                        "TIROL_GRACE",
-                        "KOELN_RESTORE",
-                        "WIEN_TRANSFER_PREMIUM_E",
-                        "WIEN_TRANSFER_PREMIUM_D",
-                        "WIEN_GRACE",
-                        "WIEN_PREMIUM_F",
-                        "WIEN_RENEW_PREMIUM_A",
-                        "WIEN_PREMIUM_H",
-                        "COLOGNE_TRANSFER_PREMIUM_D",
-                        "WIEN_PREMIUM_B",
-                        "WIEN_TRANSFER_PREMIUM_A",
-                        "WIEN_TRANSFER_NULL",
-                        "COLOGNE_RESTORE",
-                        "COLOGNE_NEW",
-                        "COLOGNE_RENEW",
-                        "WIEN_TRANSFER_PREMIUM_B",
-                        "COLOGNE_AUTORENEW",
-                        "KOELN_TRANSFER_PREMIUM_D",
-                        "COLOGNE_TRANSFER",
-                        "WIEN_TRANSFER_PREMIUM_H",
-                        "TIROL_TRANSFER_NULL",
-                        "WIEN_NEW",
-                        "WIEN_RENEW_PREMIUM_E",
-                        "WIEN_PREMIUM_C",
-                        "KOELN_PREMIUM_D",
-                        "WIEN_PREMIUM_E",
-                        "KOELN_RENEW_PREMIUM_I",
-                        "TIROL_RENEW",
-                        "WIEN_RESTORE",
-                        "WIEN_PREMIUM_G",
-                        "COLOGNE_TRANSFER_PREMIUM_I"
+                        "NET.ZA_LANDRUSH_PREMIUM",
+                        "NET.ZA_GRACE",
+                        "NET.ZA_RENEW",
+                        "WEB.ZA_SUNRISE_PREMIUM",
+                        "WEB.ZA_GRACE",
+                        "ORG.ZA_LANDRUSH",
+                        "ORG.ZA_TRANSFER",
+                        "WEB.ZA_LANDRUSH",
+                        "WEB.ZA_RENEW",
+                        "WEB.ZA_CLOSED_REDEEM",
+                        "CO.ZA_ACCRED",
+                        "NET.ZA_PREMIUM",
+                        "ORG.ZA_LANDRUSH_PREMIUM",
+                        "CO.ZA_CLOSED_REDEEM",
+                        "WEB.ZA_TRANSFER",
+                        "WEB.ZA_SUNRISE",
+                        "CO.ZA_GRACE",
+                        "NET.ZA_LEGACY_TRANSFER",
+                        "ORG.ZA_SUNRISE",
+                        "NET.ZA_NEW",
+                        "CO.ZA_RENEW",
+                        "ORG.ZA_PREMIUM",
+                        "WEB.ZA_LANDRUSH_PREMIUM",
+                        "ORG.ZA_GRACE",
+                        "NET.ZA_TRANSFER",
+                        "CO.ZA_TRANSFER",
+                        "NET.ZA_SUNRISE_PREMIUM",
+                        "ORG.ZA_RENEW",
+                        "ORG.ZA_NEW",
+                        "NET.ZA_LANDRUSH",
+                        "NET.ZA_SUNRISE",
+                        "ORG.ZA_SUNRISE_PREMIUM",
+                        "ORG.ZA_LEGACY_TRANSFER",
+                        "WEB.ZA_PREMIUM",
+                        "WEB.ZA_NEW",
+                        "CO.ZA_NEW",
+                        "NET.ZA_CLOSED_REDEEM",
+                        "ORG.ZA_CLOSED_REDEEM",
+                        "WEB.ZA_NEW_VT"
                     ],
-                    "comparisonTypes": ["=", "LIKE"],
+                    "comparisonTypes": [
+                        "=",
+                        "LIKE"
+                    ],
                     "filter": true,
                     "table": "Dim Registry Product"
                 }
@@ -220,78 +236,15 @@
             "to": "Dim Domain Key",
             "columns": [
                 {
-                    "columnName": "Code",
-                    "columnType": "string",
-                    "typeOfFilter": "checkbox",
-                    "filterReturnType": "string[]",
-                    "filterValues": [
-                        "WIEN_TRANSFER",
-                        "WIEN_RENEW_PREMIUM_G",
-                        "WIEN_RENEW_PREMIUM_C",
-                        "KOELN_AUTORENEW",
-                        "TIROL_NEW",
-                        "WIEN_TRANSFER_PREMIUM_G",
-                        "KOELN_TRANSFER_PREMIUM_I",
-                        "WIEN_RENEW_PREMIUM_B",
-                        "KOELN_NEW",
-                        "WIEN_PREMIUM_D",
-                        "KOELN_RENEW_PREMIUM_D",
-                        "TIROL_TRANSFER",
-                        "COLOGNE_RENEW_PREMIUM_I",
-                        "KOELN_TRANSFER",
-                        "WIEN_TRANSFER_PREMIUM_C",
-                        "WIEN_RENEW_PREMIUM_H",
-                        "WIEN_RENEW_PREMIUM_D",
-                        "KOELN_RENEW",
-                        "KOELN_PREMIUM_I",
-                        "COLOGNE_PREMIUM_I",
-                        "WIEN_PREMIUM_A",
-                        "WIEN_RENEW",
-                        "COLOGNE_PREMIUM_D",
-                        "TIROL_RESTORE",
-                        "COLOGNE_RENEW_PREMIUM_D",
-                        "TIROL_GRACE",
-                        "KOELN_RESTORE",
-                        "WIEN_TRANSFER_PREMIUM_E",
-                        "WIEN_TRANSFER_PREMIUM_D",
-                        "WIEN_GRACE",
-                        "WIEN_PREMIUM_F",
-                        "WIEN_RENEW_PREMIUM_A",
-                        "WIEN_PREMIUM_H",
-                        "COLOGNE_TRANSFER_PREMIUM_D",
-                        "WIEN_PREMIUM_B",
-                        "WIEN_TRANSFER_PREMIUM_A",
-                        "WIEN_TRANSFER_NULL",
-                        "COLOGNE_RESTORE",
-                        "COLOGNE_NEW",
-                        "COLOGNE_RENEW",
-                        "WIEN_TRANSFER_PREMIUM_B",
-                        "COLOGNE_AUTORENEW",
-                        "KOELN_TRANSFER_PREMIUM_D",
-                        "COLOGNE_TRANSFER",
-                        "WIEN_TRANSFER_PREMIUM_H",
-                        "TIROL_TRANSFER_NULL",
-                        "WIEN_NEW",
-                        "WIEN_RENEW_PREMIUM_E",
-                        "WIEN_PREMIUM_C",
-                        "KOELN_PREMIUM_D",
-                        "WIEN_PREMIUM_E",
-                        "KOELN_RENEW_PREMIUM_I",
-                        "TIROL_RENEW",
-                        "WIEN_RESTORE",
-                        "WIEN_PREMIUM_G",
-                        "COLOGNE_TRANSFER_PREMIUM_I"
-                    ],
-                    "comparisonTypes": ["=", "LIKE"],
-                    "filter": true,
-                    "table": "Dim Registry Product"
-                },
-                {
                     "columnName": "Created Date",
                     "columnType": "date",
                     "typeOfFilter": "date-picker",
                     "filterReturnType": "date",
-                    "comparisonTypes": ["=", "<", ">"],
+                    "comparisonTypes": [
+                        "=",
+                        "<",
+                        ">"
+                    ],
                     "filter": true,
                     "table": "Dim Registry Domain"
                 },
@@ -300,7 +253,11 @@
                     "columnType": "date",
                     "typeOfFilter": "date-picker",
                     "filterReturnType": "date",
-                    "comparisonTypes": ["=", ">", "<"],
+                    "comparisonTypes": [
+                        "=",
+                        ">",
+                        "<"
+                    ],
                     "filter": true,
                     "table": "Dim Registry Domain"
                 },
@@ -325,7 +282,11 @@
                     "columnType": "string",
                     "typeOfFilter": "checkbox",
                     "filterReturnType": "string",
-                    "filterValues": ["inactive", "I", "U"],
+                    "filterValues": [
+                        "inactive",
+                        "I",
+                        "U"
+                    ],
                     "filter": true,
                     "table": "Dim Registry Domain"
                 }
@@ -341,7 +302,10 @@
                     "columnType": "string",
                     "typeOfFilter": "inputbox",
                     "filterReturnType": "string",
-                    "comparisonTypes": ["=", "LIKE"],
+                    "comparisonTypes": [
+                        "=",
+                        "LIKE"
+                    ],
                     "filter": true,
                     "table": "Dim Registry Registrar"
                 },
@@ -350,7 +314,10 @@
                     "columnType": "string",
                     "typeOfFilter": "inputbox",
                     "filterReturnType": "string",
-                    "comparisonTypes": ["=", "LIKE"],
+                    "comparisonTypes": [
+                        "=",
+                        "LIKE"
+                    ],
                     "filter": true,
                     "table": "Dim Registry Registrar"
                 },
@@ -359,7 +326,10 @@
                     "columnType": "string",
                     "typeOfFilter": "inputbox",
                     "filterReturnType": "string",
-                    "comparisonTypes": ["=", "LIKE"],
+                    "comparisonTypes": [
+                        "=",
+                        "LIKE"
+                    ],
                     "filter": true,
                     "table": "Dim Registry Registrar"
                 },
@@ -368,7 +338,10 @@
                     "columnType": "string",
                     "typeOfFilter": "inputbox",
                     "filterReturnType": "string",
-                    "comparisonTypes": ["=", "LIKE"],
+                    "comparisonTypes": [
+                        "=",
+                        "LIKE"
+                    ],
                     "filter": true,
                     "table": "Dim Registry Registrar"
                 }
@@ -384,7 +357,10 @@
                     "columnType": "string",
                     "typeOfFilter": "inputbox",
                     "filterReturnType": "string",
-                    "comparisonTypes": ["=", "LIKE"],
+                    "comparisonTypes": [
+                        "=",
+                        "LIKE"
+                    ],
                     "filter": true,
                     "table": "Dim Sales Detail"
                 },
@@ -393,8 +369,15 @@
                     "columnType": "string",
                     "typeOfFilter": "checkbox",
                     "filterReturnType": "string[]",
-                    "filterValues": ["Credit Note", "Invoice", null],
-                    "comparisonTypes": ["=", "LIKE"],
+                    "filterValues": [
+                        "Credit Note",
+                        "Invoice",
+                        null
+                    ],
+                    "comparisonTypes": [
+                        "=",
+                        "LIKE"
+                    ],
                     "filter": true,
                     "table": "Dim Sales Detail"
                 },
@@ -403,8 +386,13 @@
                     "columnType": "string",
                     "typeOfFilter": "checkbox",
                     "filterReturnType": "string[]",
-                    "filterValues": ["rengine", "rest api", "registrypanel: admin", null],
-                    "comparisonTypes": ["=", "LIKE"],
+                    "filterValues": [
+                        "openerp%",
+                        null
+                    ],
+                    "comparisonTypes": [
+                        "LIKE"
+                    ],
                     "filter": true,
                     "table": "Dim Sales Detail"
                 }
@@ -420,8 +408,15 @@
                     "columnType": "string",
                     "typeOfFilter": "checkbox",
                     "filterReturnType": "string[]",
-                    "filterValues": ["TIROL", "WIEN", "KOELN", "COLOGNE"],
-                    "comparisonTypes": ["="],
+                    "filterValues": [
+                        "CO.ZA",
+                        "WEB.ZA",
+                        "ORG.ZA",
+                        "NET.ZA"
+                    ],
+                    "comparisonTypes": [
+                        "="
+                    ],
                     "filter": true,
                     "table": "Dim Registry Zone"
                 },
@@ -430,8 +425,15 @@
                     "columnType": "string",
                     "typeOfFilter": "checkbox",
                     "filterReturnType": "string[]",
-                    "filterValues": ["cologne", "wien", "tirol", "koeln"],
-                    "comparisonTypes": ["="],
+                    "filterValues": [
+                        "co.za",
+                        "web.za",
+                        "org.za",
+                        "net.za"
+                    ],
+                    "comparisonTypes": [
+                        "="
+                    ],
                     "filter": true,
                     "table": "Dim Registry Zone"
                 },
@@ -440,8 +442,12 @@
                     "columnType": "string",
                     "typeOfFilter": "checkbox",
                     "filterReturnType": "string[]",
-                    "filterValues": ["punkt.wien GmbH", "punkt Tirol GmbH", "dotKoeln GmbH"],
-                    "comparisonTypes": ["="],
+                    "filterValues": [
+                        "ZARC"
+                    ],
+                    "comparisonTypes": [
+                        "="
+                    ],
                     "filter": true,
                     "table": "Dim Registry Zone"
                 }
