@@ -1,81 +1,23 @@
-import Sidebar from "@/components/Navigation/SideBar";
-import { Squares2X2Icon, RectangleStackIcon, PlusIcon } from "@heroicons/react/24/solid";
+import { Squares2X2Icon } from "@heroicons/react/24/solid";
 import Head from "next/head";
 import Link from "next/link";
 import { useCallback, useState, useEffect } from 'react';
-import ReactFlow, { applyNodeChanges, MiniMap, Controls, Background, BackgroundVariant, Panel, ReactFlowProvider, ControlButton, useReactFlow, Node, Edge, applyEdgeChanges, OnNodesChange, addEdge, OnEdgesChange, OnConnect, getIncomers, getOutgoers, getConnectedEdges, FitView, useOnSelectionChange } from 'reactflow';
+import ReactFlow, { applyNodeChanges, Controls, Background, BackgroundVariant, Panel, ReactFlowProvider, useReactFlow, Node, Edge, applyEdgeChanges, OnNodesChange, addEdge, OnEdgesChange, OnConnect, Connection, } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { useRouter } from 'next/router';
 import Dagre from '@dagrejs/dagre';
 import { v4 as uuidv4 } from 'uuid';
+import { randomRange } from "@/utils";
+import { Role as QBeeRole } from "@/interfaces/qbee/enums";
+import { SubmitButton } from "@/components/Util";
 
 import OutputNode from "@/components/QBee/OutputNode";
 import SelectBlock from "@/components/QBee/SelectNode";
 import EdgeNode from "@/components/QBee/EdgeNode";
-import { Role as QBeeRole } from "@/interfaces/qbee/enums";
-import { SubmitButton } from "@/components/Util";
+import AddNode from "@/components/QBee/AddNode";
+import FilterBlock from "@/components/QBee/Filtering/FilterBlock";
 
-const nodeTypes = { outputNode: OutputNode, selectBlock: SelectBlock, edgeNode: EdgeNode };
-
-const initialNodes: Node[] = [
-    {
-        id: "SelectGroup",
-        type: "group",
-        position: { x: 0, y: 0 },
-        style: {
-            width: 1000,
-            height: 500
-        },
-        data: {}
-    },
-    // {
-    //     id: "FilterGroup",
-    //     type: "group",
-    //     position: { x: 500, y: 0 },
-    //     style: {
-    //         width: 400, height: 200
-    //     },
-    //     data: {}
-    // },
-    {
-        id: "SelectStart",
-        extent: "parent",
-        parentNode: "SelectGroup",
-        position: { x: -75, y: 50 },
-        data: {
-            label: "Start of Select",
-            role: QBeeRole.startOfSelect,
-            connectTo: [QBeeRole.selectBlock],
-            handles: {
-                source: {}
-            }
-        },
-        draggable: false,
-        deletable: false,
-        type: "edgeNode",
-    },
-    {
-        id: "SelectEnd",
-        extent: "parent",
-        parentNode: "SelectGroup",
-        position: { x: 930, y: 50 },
-        type: "edgeNode",
-        data: {
-            label: "End of Select",
-            role: QBeeRole.endOfSelect,
-            connectTo: [QBeeRole.startOfilter],
-            handles: {
-                target: {},
-                source: {}
-            }
-        },
-        draggable: false,
-    }
-];
-
-const initialEdges: Edge[] = [
-
-];
+const nodeTypes = { outputNode: OutputNode, selectBlock: SelectBlock, edgeNode: EdgeNode, addNode: AddNode, filterBlock: FilterBlock };
 
 const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
 
@@ -120,6 +62,179 @@ export default function QBee() {
 
 function Flow() {
 
+    const initialNodes: Node[] = [
+        // ---- Start of Select Area
+        {
+            id: "SelectGroup",
+            type: "group",
+            position: { x: 0, y: 0 },
+            style: {
+                width: 1000,
+                height: 500
+            },
+            data: {},
+            deletable: false,
+            draggable: false,
+        },
+        {
+            id: "selectStart",
+            extent: "parent",
+            parentNode: "SelectGroup",
+            position: { x: -75, y: 50 },
+            data: {
+                label: "Start of Select",
+                role: QBeeRole.startOfSelect,
+                connectTo: [QBeeRole.selectBlock],
+                handles: {
+                    source: {}
+                }
+            },
+            draggable: false,
+            deletable: false,
+            type: "edgeNode",
+        },
+        {
+            id: "selectEnd",
+            extent: "parent",
+            parentNode: "SelectGroup",
+            position: { x: 930, y: 50 },
+            type: "edgeNode",
+            data: {
+                label: "End of Select",
+                role: QBeeRole.endOfSelect,
+                connectTo: [QBeeRole.startOfFilter],
+                handles: {
+                    target: {},
+                    source: {}
+                }
+            },
+            deletable: false,
+            draggable: false,
+        },
+        {
+            id: "selectAdd",
+            position: { x: 980, y: -20 },
+            data: {
+                click: () => addSelectNode()
+            },
+            type: 'addNode',
+            extent: 'parent',
+            parentNode: 'SelectGroup',
+            deletable: false,
+            draggable: false,
+        },
+        // ---- End of Select Area
+        // ---- Start of Filter Area
+        {
+            id: "FilterGroup",
+            type: "group",
+            position: { x: 1300, y: 0 },
+            style: {
+                width: 1000,
+                height: 500
+            },
+            data: {},
+            deletable: false,
+            draggable: true,
+        },
+        {
+            id: "filterStart",
+            extent: "parent",
+            parentNode: "FilterGroup",
+            position: { x: -75, y: 50 },
+            data: {
+                label: "Start of Filter",
+                role: QBeeRole.startOfFilter,
+                connectTo: [QBeeRole.filterBlock],
+                handles: {
+                    source: {},
+                    target: {}
+                }
+            },
+            draggable: false,
+            deletable: false,
+            type: "edgeNode",
+        },
+        {
+            id: "filterEnd",
+            extent: "parent",
+            parentNode: "FilterGroup",
+            position: { x: 930, y: 50 },
+            type: "edgeNode",
+            data: {
+                label: "End of Filter",
+                role: QBeeRole.endOfFilter,
+                connectTo: [],
+                handles: {
+                    target: {},
+                    source: {}
+                }
+            },
+            deletable: false,
+            draggable: false,
+        },
+        {
+            id: "filterAdd",
+            position: { x: 980, y: -20 },
+            data: {
+                click: () => addFilterNode()
+            },
+            type: 'addNode',
+            extent: 'parent',
+            parentNode: 'FilterGroup',
+            deletable: false,
+            draggable: false,
+        },
+        // ---- End of Filter Area
+    ];
+
+    const initialEdges: Edge[] = [
+        {
+            id: "selectToFilter",
+            source: QBeeRole.endOfSelect,
+            target: QBeeRole.startOfFilter,
+            deletable: false,
+        }
+    ];
+
+    const addSelectNode = (): void => {
+        setNodes((nds) => nds.concat({
+            id: `${QBeeRole.selectBlock}-${uuidv4()}`,
+            type: QBeeRole.selectBlock,
+            extent: 'parent',
+            parentNode: 'SelectGroup',
+            data: {
+                label: "",
+                column: "",
+                typeOfColumn: "",
+                help: "",
+                aggregationType: "",
+                renamedColumn: "",
+                connectTo: [QBeeRole.selectBlock, QBeeRole.endOfSelect]
+            },
+            position: { x: randomRange(350, 750), y: randomRange(150, 350) },
+        }));
+    }
+
+    const addFilterNode = (): void => {
+        setNodes((nds) => nds.concat({
+            id: `${QBeeRole.filterBlock}-${uuidv4()}`,
+            type: QBeeRole.filterBlock,
+            extent: 'parent',
+            parentNode: 'FilterGroup',
+            data: {
+                label: "",
+                column: "",
+                typeOfColumn: "",
+                help: "",
+                aggregationType: "",
+                renamedColumn: "",
+                connectTo: [QBeeRole.filterBlock, QBeeRole.endOfFilter]
+            },
+            position: { x: randomRange(350, 750), y: randomRange(150, 350) },
+        }));
+    }
+
     const router = useRouter();
     const [nodes, setNodes] = useState<Node[]>(initialNodes);
     const [edges, setEdges] = useState<Edge[]>(initialEdges);
@@ -127,23 +242,21 @@ function Flow() {
     const { fitView } = useReactFlow();
 
     useEffect(() => {
-        // console.log(nodes);
-
         const node = nodes.find(item => item.selected);
-
-        console.log(node);
-
         if (node?.id === "SelectGroup") setSelectedPanel(node.id);
+        if (node?.id === "FilterGroup") setSelectedPanel(node.id);
         if (node?.type === "outputNode") setSelectedPanel(node.type);
         if (node === null || node === undefined) setSelectedPanel("blocks");
 
-    }, [nodes])
+    }, [nodes]);
+
+    const defaultEdgeOptions = {
+        zIndex: 1
+    };
 
     // Runs when Nodes are added/removed/updated/changed
     const onNodesChange: OnNodesChange = useCallback(
-        (changes) => {
-            setNodes((nds) => applyNodeChanges(changes, nds))
-        },
+        (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
         [setNodes]
     );
 
@@ -153,8 +266,9 @@ function Flow() {
         [setEdges]
     );
 
+    // When a node connects
     const onConnect: OnConnect = useCallback(
-        (connection) => setEdges((eds) => addEdge(connection, eds)),
+        (connection: Connection) => setEdges((eds) => addEdge(connection, eds)),
         [setEdges]
     );
 
@@ -179,10 +293,8 @@ function Flow() {
     const onLayout = useCallback(
         (direction: string) => {
             const layouted = getLayoutedElements(nodes, edges, { direction });
-
             setNodes([...layouted.nodes]);
             setEdges([...layouted.edges]);
-
             fitView();
         },
         [nodes, edges]
@@ -198,7 +310,7 @@ function Flow() {
                     nodes={nodes}
                     edges={edges}
                     fitView
-                    defaultEdgeOptions={{ animated: true }}
+                    defaultEdgeOptions={{ animated: true, zIndex: 1 }}
                     onNodesChange={onNodesChange}
                     onEdgesChange={onEdgesChange}
                     onConnect={onConnect}
@@ -206,72 +318,26 @@ function Flow() {
                         hideAttribution: true
                     }}
                     nodeTypes={nodeTypes}
-                    defaultViewport={{ x: 0, y: 0, zoom: 0.5 }}
+                    defaultViewport={{ x: 0, y: 0, zoom: 0.1 }}
                 >
-                    <Controls>
-                        {/* <ControlButton onClick={() => {
-                            onLayout('LR')
-                        }}>
-                            <RectangleStackIcon className="text-black" />
-                        </ControlButton> */}
-                    </Controls>
+                    <Controls />
                     <Background color="#ccc" variant={BackgroundVariant.Dots} />
-                    <Panel position="top-right" style={{}} className="bg-black rounded p-4 h-fit">
-                        {selectedPanel === "SelectGroup" && <>
-                            <h4 className="text-white underline text-xl mb-2">Select Area</h4>
-                            <p className="text-white mb-2 max-w-xs">This is the select area. Anything that you need to select shows up in this area.</p>
-                            <SubmitButton
-                                text="Add a Select Block"
-                                className="w-full"
-                                onClick={() => {
-                                    const newNode: Node = {
-                                        id: `selectBlock-${uuidv4()}`,
-                                        type: 'selectBlock',
-                                        extent: 'parent',
-                                        parentNode: 'SelectGroup',
-                                        data: {
-                                            label: "",
-                                            column: "",
-                                            typeOfColumn: "",
-                                            help: "",
-                                            aggregationType: "",
-                                            renamedColumn: "",
-                                            connectTo: [QBeeRole.selectBlock, QBeeRole.endOfSelect]
-                                        },
-                                        position: { x: 0, y: 0 },
-                                    };
-                                    setNodes((nds) => nds.concat(newNode));
-                                }} />
-                        </>}
-                        {/* {selectedPanel === "blocks" && <>
-                            <h4 className="text-white underline text-xl mb-4">Blocks</h4>
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="block max-w-xs p-4 bg-white border border-gray-200 rounded shadow  dark:bg-gray-800 dark:border-gray-700 relative" draggable={true}>
-                                    <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Select</h5>
-                                    <p className="font-normal text-gray-700 dark:text-gray-400">Something to do with Select</p>
-                                    <span className={`absolute -top-3 -right-3 duration-75 rounded-full p-1 border-white border-4 text-white ${nodes.find(item => item.type === "selectBlock") ? "bg-gray-400" : "bg-green-500 hover:bg-green-600 cursor-pointer"}`} onClick={() => {
-                                        if (!nodes.find(item => item.type === "selectBlock")) {
-                                            const newNode: Node = {
-                                                id: 'selectBlock',
-                                                type: 'selectBlock',
-                                                extent: 'parent',
-                                                parentNode: 'SelectGroup',
-                                                data: {
-                                                    connectTo: [QBeeRole.selectBlock, QBeeRole.endOfSelect]
-                                                },
-                                                position: { x: 0, y: 0 },
-                                            };
-                                            setNodes((nds) => nds.concat(newNode));
-                                        }
-                                    }}><PlusIcon className="w-5 h-5" /></span>
-                                </div>
-                            </div>
-                        </>}
-                        {selectedPanel === "selectBlock" && <>
-                            <h4 className="text-white underline text-xl mb-4">selectBlock</h4>
-                            <p className="text-white">Options should be changed from within the block, not on this panel.</p>
-                        </>} */}
-                    </Panel>
+                    {selectedPanel === "SelectGroup" && <Panel position="top-right" style={{}} className="bg-black rounded p-4 h-fit">
+                        <h4 className="text-white underline text-xl mb-2">Select Area</h4>
+                        <p className="text-white mb-2 max-w-xs">This is the select area. Anything that you need to select shows up in this area.</p>
+                        <SubmitButton
+                            text="Add a Select Block"
+                            className="w-full"
+                            onClick={() => addSelectNode()} />
+                    </Panel>}
+                    {selectedPanel === "SelectGroup" && <Panel position="top-right" style={{}} className="bg-black rounded p-4 h-fit">
+                        <h4 className="text-white underline text-xl mb-2">Filter Area</h4>
+                        <p className="text-white mb-2 max-w-xs">This is the filter area. Anything that you need to filter shows up in this area.</p>
+                        <SubmitButton
+                            text="Add a Select Block"
+                            className="w-full"
+                            onClick={() => addFilterNode()} />
+                    </Panel>}
                     <Panel position="top-left" className="bg-black p-2 rounded-lg cursor-pointer" onClick={() => router.push("/home")}><Squares2X2Icon className="w-4=6 h-6" /></Panel>
                 </ReactFlow>
             </ReactFlowProvider>

@@ -5,7 +5,7 @@ interface NodeData {
     label: string,
     handles?: any
     role: QBeeRole,
-    connectTo: string,
+    connectTo: string[],
 };
 
 export default function EdgeNode({ data }: NodeProps<NodeData>) {
@@ -16,20 +16,15 @@ export default function EdgeNode({ data }: NodeProps<NodeData>) {
                 type="source"
                 position={Position.Right}
                 isValidConnection={(connection: Connection) => {
-                    console.log(connection?.target?.split("-")[0], data.connectTo)
-
                     if (connection?.target?.split("-")[0]) {
                         if (!data.connectTo.includes(connection?.target?.split("-")[0] as string)) {
-                            console.log("false 1");
                             return false
                         }
                     } else {
                         if (!data.connectTo.includes(connection?.target as string)) {
-                            console.log("false 2");
                             return false;
                         };
                     }
-
                     return true;
                 }}
             />}

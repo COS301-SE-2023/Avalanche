@@ -6,13 +6,17 @@ interface NodeData {
     label: string,
     column: string,
     typeOfColumn: string,
-    help: string,
-    aggregationType: string,
-    renamedColumn: string,
+    aggregationType?: string,
+    comparisonTypes: string,
+    selectedComparison: string,
+    typeOfFilter: string,
+    values?: string,
+    selectedValues: string[],
+    help: string
     connectTo: QBeeRole[]
 };
 
-export default function SelectBlock({ data }: NodeProps<NodeData>) {
+export default function FilterBlock({ data }: NodeProps<NodeData>) {
     return <div className='bg-avalancheBlue p-3 rounded'>
         <div>
             <Handle
@@ -39,7 +43,7 @@ export default function SelectBlock({ data }: NodeProps<NodeData>) {
                     return true;
                 }}
             />
-            <span className='text-xl'>Select</span>
+            <span className='text-xl'>Filter</span>
         </div>
     </div>
 }

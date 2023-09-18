@@ -1,9 +1,9 @@
 export enum Role {
     startOfSelect = "selectStart",
-    endOfSelect = "endSelect",
+    endOfSelect = "selectEnd",
     selectBlock = "selectBlock",
-    startOfilter = "startFilter",
-    endOfFilter = "endFilter",
+    startOfFilter = "filterStart",
+    endOfFilter = "filterEnd",
     orBlock = "orBlock",
     andBlock = "andBlock",
     filterBlock = "filterBlock"
