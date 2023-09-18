@@ -14,7 +14,6 @@ const common_1 = require("@nestjs/common");
 const Ajv = require("ajv");
 const fs = require("fs");
 const path = require("path");
-const chokidar = require("chokidar");
 let SchemaService = exports.SchemaService = class SchemaService {
     constructor() {
         this.ajv = new Ajv();
@@ -24,7 +23,6 @@ let SchemaService = exports.SchemaService = class SchemaService {
         const schemasDir = path.join(projectRoot, 'src/schemas');
         console.log(schemasDir);
         this.loadSchemas(schemasDir, '');
-        this.watchForSchemaChanges(schemasDir);
     }
     loadSchemas(dir, prefix) {
         fs.readdirSync(dir).forEach((file) => {
@@ -38,22 +36,6 @@ let SchemaService = exports.SchemaService = class SchemaService {
                 const url = `${prefix}/${path.basename(file, '.json')}`;
                 this.schemas[url] = schema;
             }
-        });
-    }
-    watchForSchemaChanges(dir) {
-        const watcher = chokidar.watch(dir, {
-            ignored: /(^|[\/\\])\../,
-            persistent: true,
-        });
-        watcher.on('add', (path) => {
-            console.log(`File ${path} has been added`);
-            setTimeout(() => {
-                this.loadSchemas(dir, '');
-            }, 10000);
-        });
-        watcher.on('change', (path) => {
-            console.log(`File ${path} has been changed`);
-            this.loadSchemas(dir, '');
         });
     }
     getSchemaByUrl(url) {
