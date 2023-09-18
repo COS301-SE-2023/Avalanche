@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 type FiltersProps = {
   [key: string]: any;
@@ -31,14 +31,14 @@ export default function FilterTooltip ( {filters}: any ) {
       className="absolute z-10 inline-block px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg shadow-lg whitespace-nowrap"
     >
       {Object.entries(filters).map(([key, value]) => {
-        let displayValue;
+        let displayValue: string | ReactNode = "";
         let displayKey = camelCaseRenderer(key);
         if (key.includes('date') || key.includes('Date')) {
           displayValue = formatDate(value as string);
         } else if (Array.isArray(value)) {
           displayValue = formatArray(value);
         } else {
-          displayValue = value;
+          displayValue = String(value);
         }
         return (<>
           <div key={key}>
