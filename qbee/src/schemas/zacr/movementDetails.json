@@ -1,0 +1,272 @@
+{
+    "schema": "movementDetails",
+    "fact": "Fact Domain Movement",
+    "tables": [
+        {
+            "table": "Fact Domain Movement",
+            "columns": [
+                {
+                    "columnName": "Count Movement",
+                    "columnType": "number",
+                    "typeOfFilter": "inputbox",
+                    "filterReturnType": "number",
+                    "comparisonTypes": [
+                        "=",
+                        "<",
+                        ">"
+                    ],
+                    "table": "Fact Domain Movement",
+                    "filter": true
+                },
+                {
+                    "columnName": "Nett. Movement",
+                    "columnType": "number",
+                    "typeOfFilter": "inputbox",
+                    "filterReturnType": "number",
+                    "comparisonTypes": [
+                        "=",
+                        "<",
+                        ">"
+                    ],
+                    "filter": true,
+                    "table": "Fact Domain Movement"
+                },
+                {
+                    "columnName": "Registry Code",
+                    "columnType": "string",
+                    "typeOfFilter": "checkbox",
+                    "filterReturnType": "string[]",
+                    "filterValues": [
+                        "ZACR"
+                    ],
+                    "comparisonTypes": [
+                        "=",
+                        "LIKE"
+                    ],
+                    "filter": true,
+                    "table": "Fact Sales"
+                }
+            ]
+        },
+        {
+            "table": "Dim Date",
+            "from": "Dim Date Key",
+            "to": "Dim Date Key",
+            "columns": [
+                {
+                    "columnName": "Date",
+                    "columnType": "date",
+                    "typeOfFilter": "date-picker",
+                    "filterReturnType": "date",
+                    "filter": true,
+                    "table": "Dim Date"
+                },
+                {
+                    "columnName": "Day Of Week",
+                    "columnType": "number",
+                    "typeOfFilter": "inputbox",
+                    "filterReturnType": "number",
+                    "comparisonTypes": [
+                        "=",
+                        "<",
+                        ">"
+                    ],
+                    "filter": true,
+                    "table": "Dim Date"
+                },
+                {
+                    "columnName": "Day Name",
+                    "columnType": "string",
+                    "typeOfFilter": "checkbox",
+                    "filterReturnType": "string[]",
+                    "filterValues": [
+                        "Monday",
+                        "Tuesday",
+                        "Wednesday",
+                        "Thursday",
+                        "Friday",
+                        "Saturday",
+                        "Sunday"
+                    ],
+                    "comparisonTypes": [
+                        "=",
+                        "LIKE"
+                    ],
+                    "filter": true,
+                    "table": "Dim Date"
+                },
+                {
+                    "columnName": "Is Weekday?",
+                    "columnType": "boolean",
+                    "typeOfFilter": "togglebox",
+                    "filterReturnType": "boolean",
+                    "comparisonTypes": [
+                        "="
+                    ],
+                    "filter": true,
+                    "table": "Dim Date"
+                },
+                {
+                    "columnName": "Month",
+                    "columnType": "number",
+                    "typeOfFilter": "inputbox",
+                    "filterReturnType": "number",
+                    "comparisonTypes": [
+                        "=",
+                        "<",
+                        ">"
+                    ],
+                    "filter": true,
+                    "table": "Dim Date"
+                },
+                {
+                    "columnName": "Month Year",
+                    "columnType": "string",
+                    "filter": false,
+                    "table": "Dim Date"
+                },
+                {
+                    "columnName": "Month Name",
+                    "columnType": "string",
+                    "typeOfFilter": "inputbox",
+                    "filterReturnType": "string",
+                    "comparisonTypes": [
+                        "=",
+                        "LIKE"
+                    ],
+                    "filter": true,
+                    "table": "Dim Date"
+                },
+                {
+                    "columnName": "Year Name",
+                    "columnType": "string",
+                    "typeOfFilter": "inputbox",
+                    "filterReturnType": "string",
+                    "comparisonTypes": [
+                        "=",
+                        "LIKE"
+                    ],
+                    "filter": true,
+                    "aggregation": [
+                        {
+                            "tou": "public",
+                            "aggretate": true
+                        }
+                    ],
+                    "table": "Dim Date"
+                }
+            ]
+        },
+        
+        {
+            "table": "Dim Registry Registrar",
+            "from": "Dim Registrar Key",
+            "to": "Dim Registrar Key",
+            "columns": [
+                {
+                    "columnName": "Code",
+                    "columnType": "string",
+                    "typeOfFilter": "inputbox",
+                    "filterReturnType": "string",
+                    "comparisonTypes": [
+                        "=",
+                        "LIKE"
+                    ],
+                    "filter": true,
+                    "table": "Dim Registry Registrar"
+                },
+                {
+                    "columnName": "Name",
+                    "columnType": "string",
+                    "typeOfFilter": "inputbox",
+                    "filterReturnType": "string",
+                    "comparisonTypes": [
+                        "=",
+                        "LIKE"
+                    ],
+                    "filter": true,
+                    "table": "Dim Registry Registrar"
+                },
+                {
+                    "columnName": "Company Name",
+                    "columnType": "string",
+                    "typeOfFilter": "inputbox",
+                    "filterReturnType": "string",
+                    "comparisonTypes": [
+                        "=",
+                        "LIKE"
+                    ],
+                    "filter": true,
+                    "table": "Dim Registry Registrar"
+                },
+                {
+                    "columnName": "Trading Name",
+                    "columnType": "string",
+                    "typeOfFilter": "inputbox",
+                    "filterReturnType": "string",
+                    "comparisonTypes": [
+                        "=",
+                        "LIKE"
+                    ],
+                    "filter": true,
+                    "table": "Dim Registry Registrar"
+                }
+            ]
+        },
+        {
+            "table": "Dim Registry Zone",
+            "from": "Dim Zone Key",
+            "to": "Dim Zone Key",
+            "columns": [
+                {
+                    "columnName": "Zone",
+                    "columnType": "string",
+                    "typeOfFilter": "checkbox",
+                    "filterReturnType": "string[]",
+                    "filterValues": [
+                        "CO.ZA",
+                        "WEB.ZA",
+                        "ORG.ZA",
+                        "NET.ZA"
+                    ],
+                    "comparisonTypes": [
+                        "="
+                    ],
+                    "filter": true,
+                    "table": "Dim Registry Zone"
+                },
+                {
+                    "columnName": "Name",
+                    "columnType": "string",
+                    "typeOfFilter": "checkbox",
+                    "filterReturnType": "string[]",
+                    "filterValues": [
+                        "co.za",
+                        "web.za",
+                        "org.za",
+                        "net.za"
+                    ],
+                    "comparisonTypes": [
+                        "="
+                    ],
+                    "filter": true,
+                    "table": "Dim Registry Zone"
+                },
+                {
+                    "columnName": "Operator",
+                    "columnType": "string",
+                    "typeOfFilter": "checkbox",
+                    "filterReturnType": "string[]",
+                    "filterValues": [
+                        "ZARC"
+                    ],
+                    "comparisonTypes": [
+                        "="
+                    ],
+                    "filter": true,
+                    "table": "Dim Registry Zone"
+                }
+            ]
+        }
+    ]
+}
