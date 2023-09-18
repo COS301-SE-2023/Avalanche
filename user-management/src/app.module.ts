@@ -15,6 +15,7 @@ import { UserDataProductMangementService } from './services//user-data-products/
 import { UserUserGroupMangementService } from './services/user-userGroup/user-userGroup-management.service';
 import { UserDashboardMangementService } from './services/user-dashboard/user-dashboard-management.service';
 import { Dashboard } from './entity/dashboard.entity';
+import { Dashboard as FrontendDashboard } from './entity/frontendDashboard.entity';
 import { WatchedUser } from './entity/watch.entity';
 import { Filter } from './entity/filter.entity';
 import { Endpoint } from './entity/endpoint.entity';
@@ -70,13 +71,13 @@ import { Graph } from './entity/graph.entity';
         password: configService.get('POSTGRES_PASSWORD'),
         database: configService.get('POSTGRES_DB'),
         schema: configService.get('POSTGRES_SCHEMA2'),
-        entities: [ Filter, Endpoint, Graph], // We change entities to an array that includes the User entity. 
+        entities: [ Filter, Endpoint, Graph, FrontendDashboard], // We change entities to an array that includes the User entity. 
         synchronize: true,
       }),
       inject: [ConfigService],
     }),
     TypeOrmModule.forFeature([User, UserGroup, Organisation, Dashboard, WatchedUser], 'user'),
-    TypeOrmModule.forFeature([Filter, Endpoint, Graph], 'filters'),
+    TypeOrmModule.forFeature([Filter, Endpoint, Graph, FrontendDashboard], 'filters'),
 
   ],
   controllers: [AppController],

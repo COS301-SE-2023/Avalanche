@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Graph } from './graph.entity';
+import { Dashboard } from './frontendDashboard.entity';
 
 @Entity()
 export class Endpoint {
@@ -11,5 +12,8 @@ export class Endpoint {
 
   @OneToMany(() => Graph, graph => graph.endpoint) // Corrected here
   graphs: Graph[];
+
+  @OneToMany(() => Dashboard, dashboard => dashboard.endpoint) // Corrected here
+  dashboards: Dashboard[];
 }
 
