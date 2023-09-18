@@ -10,9 +10,7 @@ public class ResolutionChecker {
     public static void checkResolution(Domain[] domainsToCheck) {
         for (Domain domain : domainsToCheck) {
             if (domain != null) {
-
                 domain.setResolves(isDomainResolvable(domain.getFullyQualifiedDomainName()));
-                System.out.println(domain.getFullyQualifiedDomainName());
             }
         }
     }
