@@ -1,6 +1,7 @@
 import { Node, NodeProps, Handle, Position, Connection } from 'reactflow';
-import { SelectBlock } from '@/interfaces/qbee/interfaces';
 import { Role as QBeeRole } from "@/interfaces/qbee/enums";
+import { useSelector } from 'react-redux';
+import { qbeeState } from '@/store/Slices/qbeeSlice';
 
 interface NodeData {
     label: string,
@@ -17,6 +18,9 @@ interface NodeData {
 };
 
 export default function FilterBlock({ data }: NodeProps<NodeData>) {
+
+    const stateQBEE = useSelector(qbeeState);
+
     return <div className='bg-avalancheBlue p-3 rounded'>
         <div>
             <Handle

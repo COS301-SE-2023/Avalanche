@@ -16,10 +16,11 @@ import OutputNode from "@/components/QBee/OutputNode";
 import SelectBlock from "@/components/QBee/SelectNode";
 import EdgeNode from "@/components/QBee/EdgeNode";
 import AddNode from "@/components/QBee/AddNode";
-import FilterBlock from "@/components/QBee/Filtering/FilterBlock";
+import FilterBlock from "@/components/QBee/FilterBlock";
 
 import dummyData from "@/components/QBee/dummy.json";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { addData, qbeeState } from "@/store/Slices/qbeeSlice";
 
 const nodeTypes = { outputNode: OutputNode, selectBlock: SelectBlock, edgeNode: EdgeNode, addNode: AddNode, filterBlock: FilterBlock };
 
@@ -253,7 +254,7 @@ function Flow() {
 
     const router = useRouter();
     const dispatch = useDispatch<any>();
-    // dispatch(setData)
+    dispatch(addData(dummyData as DBData[]));
     const [nodes, setNodes] = useState<Node[]>(initialNodes);
     const [edges, setEdges] = useState<Edge[]>(initialEdges);
     const [selectedPanel, setSelectedPanel] = useState<string>("blocks");

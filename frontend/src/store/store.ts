@@ -5,7 +5,7 @@ import { domainWatchSlice } from "./Slices/domainWatchSlice";
 import { settingsSlice } from "./Slices/settingsSlice";
 import { graphSlice } from "./Slices/graphSlice";
 import { permissionSlice } from "./Slices/permissionSlice";
-import { qbeeSlice } from "./Slices/qbee";
+import { qbeeSlice } from "./Slices/qbeeSlice";
 import { createWrapper } from "next-redux-wrapper";
 import thunk from "redux-thunk";
 import { persistReducer, persistStore } from "redux-persist";
