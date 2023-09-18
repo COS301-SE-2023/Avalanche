@@ -7,6 +7,10 @@ import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AppService } from './app.service';
+import { PermissionsService } from './services/permission.service';
+import { SchemaService } from './services/schema.service';
+import { QueryBuilderService } from './services/queryBuilder.service';
+import { SQLTranslatorService } from './services/sqlTranslator.service';
 
 @Module({
   imports: [
@@ -34,7 +38,7 @@ import { AppService } from './app.service';
 
   ],
   controllers: [AppController],
-  providers: [AppService, RedisProvider],
+  providers: [AppService, RedisProvider, PermissionsService, SchemaService, QueryBuilderService, SQLTranslatorService],
   exports: [],
 })
 export class AppModule { }
