@@ -726,4 +726,66 @@ export class UserDataProductMangementService {
         };
     }
 
+    async getDashboards(token: string) {
+        try {
+            const userPayload = await this.redis.get(token);
+            if (!userPayload) {
+                return {
+                    status: 400, error: true, message: 'Invalid token.',
+                    timestamp: new Date().toISOString()
+                };
+            }
+            const { email: userEmail } = JSON.parse(userPayload);
+            const user = await this.userRepository.findOne({
+                where: { email: userEmail }, relations: ['userGroups', 'organisation', 'dashboards'],
+                select: ['id', 'email', 'firstName', 'lastName', 'organisationId', 'products', 'userGroups', 'organisation', 'dashboards']
+            });
+            if (!user) {
+                return {
+                    status: 400, error: true, message: 'User does not exist.',
+                    timestamp: new Date().toISOString()
+                };
+            }
+
+            // Initialize an array to store the final result
+            const result = [];
+
+            // Iterate through the user's products
+            const allProducts = [...user.products, ...user.userGroups.flatMap(ug => ug.products)];
+            
+            for (const product of allProducts) {
+                if (product) {
+                    let dataSource = product.dataSource;
+                    const tou = product.tou;
+                    if (dataSource == 'zarc') {
+                        dataSource = 'zacr';
+                    }
+                    // Find the endpoints related to the current data source
+                    const endpoint = await this.endpointRepository.findOne({
+                        where: { endpoint: dataSource }, // Match the endpoint with the dataSource
+                        relations: ['dashboards']
+                    });
+
+                    // Iterate through the endpoints and collect the endpoints, graphs, and filters based on TOU
+
+                    const graphsByTOU = endpoint.dashboards.filter(dashboard => dashboard.user === tou);
+
+                    // If there are graphs that match the TOU, include the endpoint along with graphs and filters
+                    if (graphsByTOU.length > 0) {
+                        result.push({
+                            endpoint: dataSource, graphs: graphsByTOU
+                        });
+                    }
+                }
+            }
+
+            return { "status": "success", "message": result };
+        } catch (error) {
+            return {
+                status: 500, error: true, message: 'Unexpected error.',
+                timestamp: new Date().toISOString()
+            };
+        }
+    }
+
 }
