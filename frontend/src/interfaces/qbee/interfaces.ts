@@ -1,6 +1,7 @@
 import { Node } from "reactflow"
 import { Area, Role } from "./enums"
 
+// ---- Related to QBee Flow
 export interface NodeData {
     connectTo: Role[],
     role: Role,
@@ -37,4 +38,15 @@ export interface FilterBock {
     values?: string,
     selectedValues: string[],
     help: string
+}
+
+// ---- From the database??
+export interface DBData {
+    columnName: string,
+    columnType: string,
+    typeOfFilter: string,
+    filterReturnType: string,
+    comparisonValues: string[],
+    filter: boolean,
+    table: string
 }

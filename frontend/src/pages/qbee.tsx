@@ -9,6 +9,7 @@ import Dagre from '@dagrejs/dagre';
 import { v4 as uuidv4 } from 'uuid';
 import { randomRange } from "@/utils";
 import { Role as QBeeRole } from "@/interfaces/qbee/enums";
+import { DBData } from "@/interfaces/qbee/interfaces";
 import { SubmitButton } from "@/components/Util";
 
 import OutputNode from "@/components/QBee/OutputNode";
@@ -16,6 +17,9 @@ import SelectBlock from "@/components/QBee/SelectNode";
 import EdgeNode from "@/components/QBee/EdgeNode";
 import AddNode from "@/components/QBee/AddNode";
 import FilterBlock from "@/components/QBee/Filtering/FilterBlock";
+
+import dummyData from "@/components/QBee/dummy.json";
+import { useDispatch } from "react-redux";
 
 const nodeTypes = { outputNode: OutputNode, selectBlock: SelectBlock, edgeNode: EdgeNode, addNode: AddNode, filterBlock: FilterBlock };
 
@@ -62,6 +66,9 @@ export default function QBee() {
 
 function Flow() {
 
+    /**
+     * Holds the initial nodes for the Flow
+     */
     const initialNodes: Node[] = [
         // ---- Start of Select Area
         {
@@ -188,6 +195,9 @@ function Flow() {
         // ---- End of Filter Area
     ];
 
+    /**
+     * Holds the initial edges for the flow
+     */
     const initialEdges: Edge[] = [
         {
             id: "selectToFilter",
@@ -197,6 +207,9 @@ function Flow() {
         }
     ];
 
+    /**
+     * Adds a select node to the select subflow
+     */
     const addSelectNode = (): void => {
         setNodes((nds) => nds.concat({
             id: `${QBeeRole.selectBlock}-${uuidv4()}`,
@@ -216,6 +229,9 @@ function Flow() {
         }));
     }
 
+    /**
+     * Adds a filter node to the filter subflow
+     */
     const addFilterNode = (): void => {
         setNodes((nds) => nds.concat({
             id: `${QBeeRole.filterBlock}-${uuidv4()}`,
@@ -236,11 +252,16 @@ function Flow() {
     }
 
     const router = useRouter();
+    const dispatch = useDispatch<any>();
+    // dispatch(setData)
     const [nodes, setNodes] = useState<Node[]>(initialNodes);
     const [edges, setEdges] = useState<Edge[]>(initialEdges);
     const [selectedPanel, setSelectedPanel] = useState<string>("blocks");
     const { fitView } = useReactFlow();
 
+    /**
+     * I use this for when I have to render that side block with the options
+     */
     useEffect(() => {
         const node = nodes.find(item => item.selected);
         if (node?.id === "SelectGroup") setSelectedPanel(node.id);
@@ -249,10 +270,6 @@ function Flow() {
         if (node === null || node === undefined) setSelectedPanel("blocks");
 
     }, [nodes]);
-
-    const defaultEdgeOptions = {
-        zIndex: 1
-    };
 
     // Runs when Nodes are added/removed/updated/changed
     const onNodesChange: OnNodesChange = useCallback(
@@ -272,6 +289,13 @@ function Flow() {
         [setEdges]
     );
 
+    /**
+     * Used for the layouting nicely of elements, but this is scuffed with the subflow, so it is disabled for now
+     * @param nodes 
+     * @param edges 
+     * @param options 
+     * @returns 
+     */
     const getLayoutedElements = (nodes: Node[], edges: Edge[], options: any) => {
         g.setGraph({ rankdir: options.direction });
 
@@ -290,6 +314,9 @@ function Flow() {
         };
     };
 
+    /**
+     * Used for the layouting nicely of elements, but this is scuffed with the subflow, so it is disabled for now
+     */
     const onLayout = useCallback(
         (direction: string) => {
             const layouted = getLayoutedElements(nodes, edges, { direction });
