@@ -227,6 +227,7 @@ function Flow() {
                 connectTo: [QBeeRole.selectBlock, QBeeRole.endOfSelect]
             },
             position: { x: randomRange(350, 750), y: randomRange(150, 350) },
+            zIndex: 2
         }));
     }
 
