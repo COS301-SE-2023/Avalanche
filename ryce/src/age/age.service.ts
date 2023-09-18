@@ -6,7 +6,7 @@ import { DataFormatService } from '../data-format/data-format.service';
 import { AnalysisService } from '../analysis/analysis.service';
 import { GraphFormatService } from '../graph-format/graph-format.service';
 import { json } from 'stream/consumers';
-import { DataInterface } from '../interfaces/interfaces';
+import { DataInterface, NewDataInterface } from '../interfaces/interfaces';
 import { RegistrarNameService } from '../registrarName/registrarName.service';
 
 @Injectable()
@@ -22,19 +22,19 @@ export class AgeService {
 
   async age(filters: string, graphName: string): Promise<any> {
     try {
-      graphName = this.ageGraphName(filters);
       filters = JSON.stringify(filters);
       const sqlQuery = `call ageAnalysis('${filters}')`;
 
       const dataR = await this.redis.get(`ryce` + sqlQuery);
-      let data: DataInterface;
-      let formattedData = '';
+      let data: NewDataInterface;
+      let formattedData;
       if (!dataR) {
         let queryData: any;
 
         try {
           queryData = await this.snowflakeService.execute(sqlQuery);
         } catch (e) {
+          console.debug(e);
           return {
             status: 500,
             error: true,
@@ -43,7 +43,7 @@ export class AgeService {
           };
         }
 
-        const topNRegistrars = JSON.parse(queryData[0]['AGEANALYSIS']);
+        const topNRegistrars = queryData[0]['AGEANALYSIS'].data;
         if (JSON.parse(filters).tou != 'registry') {
           let name: any = 'NoNameSpecified';
           if (
@@ -56,11 +56,39 @@ export class AgeService {
             name = name.data.name;
           }
 
-          topNRegistrars.forEach((item, index) => {
-            if (item.Registrar != name) {
-              item.Registrar = `Registrar ${index + 1}`;
-            }
-          });
+          if (queryData[0]['AGEANALYSIS'].filters.average) {
+            topNRegistrars.forEach((item, index) => {
+              if (
+                index != 0 &&
+                item.Registrar != name &&
+                item.Registrar != 'Overall'
+              ) {
+                item.Registrar = `Registrar ${index}`;
+              }
+            });
+          } else {
+            const mapNames = {};
+            let regNumber = 1;
+            topNRegistrars.forEach((item, index) => {
+              if (
+                index != 0 &&
+                item.Registrar != name &&
+                item.Registrar != 'Overall' &&
+                mapNames[item.Registrar] == undefined
+              ) {
+                mapNames[item.Registrar] = `Registrar ${regNumber++}`;
+              }
+            });
+            topNRegistrars.forEach((item, index) => {
+              if (
+                index != 0 &&
+                item.Registrar != name &&
+                item.Registrar != 'Overall'
+              ) {
+                item.Registrar = mapNames[item.Registrar];
+              }
+            });
+          }
         }
 
         const topNRegistrarsArr = [
@@ -71,10 +99,14 @@ export class AgeService {
           JSON.stringify(topNRegistrarsArr),
         );
 
-        data = {
+        filters = queryData[0]['AGEANALYSIS'].filters;
+
+        const graphData = {
           chartData: JSON.parse(formattedData),
           jsonData: topNRegistrars,
         };
+
+        data = { data: graphData, filters: filters };
 
         //data = JSON.stringify([formattedData, queryData[0]['AGEANLYSIS']]);
         await this.redis.set(
@@ -87,11 +119,14 @@ export class AgeService {
         data = JSON.parse(dataR);
       }
 
+      graphName = this.ageGraphName(data.filters);
+
       return {
         status: 'success',
         data: {
           graphName: graphName,
-          data: data,
+          data: data.data,
+          filters: data.filters,
           warehouse: 'ryce',
           graphType: 'age',
         },
