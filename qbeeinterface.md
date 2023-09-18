@@ -22,8 +22,7 @@ enum Area {
 
 ```
 interface Node {
-    connectTo: Role[], 
-        //can have function or something based on role instead of storing in each node - might make it slower but idk
+    connectTo: Role[], //can have function or something based on role instead of storing in each node - might make it slower but idk
     role: Role
     area: Area
 }
