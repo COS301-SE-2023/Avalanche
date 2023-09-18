@@ -6,6 +6,8 @@ import { DataFormatService } from '../data-format/data-format.service';
 import { AnalysisService } from '../analysis/analysis.service';
 import { GraphFormatService } from '../graph-format/graph-format.service';
 import { json } from 'stream/consumers';
+import { DataInterface, NewDataInterface } from '../interfaces/interfaces';
+import { RegistrarNameService } from '../registrarName/registrarName.service';
 
 @Injectable()
 export class AgeService {
@@ -15,23 +17,24 @@ export class AgeService {
     private readonly snowflakeService: SnowflakeService,
     private readonly statisticalAnalysisService: AnalysisService,
     private readonly graphFormattingService: GraphFormatService,
+    private readonly registrarNameServices: RegistrarNameService,
   ) {}
 
   async age(filters: string, graphName: string): Promise<any> {
     try {
-      graphName = this.ageGraphName(filters);
       filters = JSON.stringify(filters);
-      console.log(filters);
       const sqlQuery = `call ageAnalysis('${filters}')`;
 
-      let formattedData = await this.redis.get(`ryce` + sqlQuery);
-
-      if (!formattedData) {
+      const dataR = await this.redis.get(`ryce` + sqlQuery);
+      let data: NewDataInterface;
+      let formattedData;
+      if (!dataR) {
         let queryData: any;
 
         try {
           queryData = await this.snowflakeService.execute(sqlQuery);
         } catch (e) {
+          console.debug(e);
           return {
             status: 500,
             error: true,
@@ -40,25 +43,92 @@ export class AgeService {
           };
         }
 
+        const topNRegistrars = queryData[0]['AGEANALYSIS'].data;
+        if (JSON.parse(filters).tou != 'registry') {
+          let name: any = 'NoNameSpecified';
+          if (
+            JSON.parse(filters).registrar &&
+            JSON.parse(filters).registrar.length == 1
+          ) {
+            name = await this.registrarNameServices.registrarName({
+              code: JSON.parse(filters).registrar[0],
+            });
+            name = name.data.name;
+          }
+
+          if (queryData[0]['AGEANALYSIS'].filters.average) {
+            topNRegistrars.forEach((item, index) => {
+              if (
+                index != 0 &&
+                item.Registrar != name &&
+                item.Registrar != 'Overall'
+              ) {
+                item.Registrar = `Registrar ${index}`;
+              }
+            });
+          } else {
+            const mapNames = {};
+            let regNumber = 1;
+            topNRegistrars.forEach((item, index) => {
+              if (
+                index != 0 &&
+                item.Registrar != name &&
+                item.Registrar != 'Overall' &&
+                mapNames[item.Registrar] == undefined
+              ) {
+                mapNames[item.Registrar] = `Registrar ${regNumber++}`;
+              }
+            });
+            topNRegistrars.forEach((item, index) => {
+              if (
+                index != 0 &&
+                item.Registrar != name &&
+                item.Registrar != 'Overall'
+              ) {
+                item.Registrar = mapNames[item.Registrar];
+              }
+            });
+          }
+        }
+
+        const topNRegistrarsArr = [
+          { AGEANALYSIS: JSON.stringify(topNRegistrars) },
+        ];
+
         formattedData = await this.graphFormattingService.formatAgeAnalysis(
-          JSON.stringify(queryData),
+          JSON.stringify(topNRegistrarsArr),
         );
 
+        filters = queryData[0]['AGEANALYSIS'].filters;
+
+        const graphData = {
+          chartData: JSON.parse(formattedData),
+          jsonData: topNRegistrars,
+        };
+
+        data = { data: graphData, filters: filters };
+
+        //data = JSON.stringify([formattedData, queryData[0]['AGEANLYSIS']]);
         await this.redis.set(
           `ryce` + sqlQuery,
-          formattedData,
+          JSON.stringify(data),
           'EX',
-          72 * 60 * 60,
+          24 * 60 * 60,
         );
+      } else {
+        data = JSON.parse(dataR);
       }
+
+      graphName = this.ageGraphName(data.filters);
 
       return {
         status: 'success',
         data: {
+          graphName: graphName,
+          data: data.data,
+          filters: data.filters,
           warehouse: 'ryce',
           graphType: 'age',
-          graphName: graphName,
-          ...JSON.parse(formattedData),
         },
         timestamp: new Date().toISOString(),
       };
@@ -75,9 +145,9 @@ export class AgeService {
   ageGraphName(filters: any): string {
     let rank = filters['rank'];
     if (rank) {
-      rank = 'the ' + rank + ' registrars in terms of domain count ';
+      rank = ' the ' + rank + ' registrars in terms of domain count ';
     } else {
-      rank = 'all registrars ';
+      rank = ' all registrars ';
     }
     const overall = filters['overall'];
     const average = filters['average'];
@@ -91,6 +161,6 @@ export class AgeService {
     } else if (overall === false && average === false) {
       filter = ', showing the number of domains per age per registrar';
     }
-    return 'Age Analysis of domains for ' + rank + filter;
+    return 'Age Analysis of domains for' + rank + filter;
   }
 }

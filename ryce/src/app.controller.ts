@@ -22,7 +22,6 @@ export class AppController {
 
   @MessagePattern({ cmd: 'transactions' })
   async transactions(data: any) {
-    console.log('Transactions: ', data);
     const result = await this.transactionsService.transactions(
       data.filters,
       data.graphName,
@@ -40,7 +39,6 @@ export class AppController {
 
   @MessagePattern({ cmd: 'transactions-ranking' })
   async transactionsRanking(data: any) {
-    console.log('Transactions: ', data);
     const result = await this.transactionsService.transactionsRanking(
       data.filters,
       data.graphName,
@@ -121,6 +119,23 @@ export class AppController {
   @MessagePattern({ cmd: 'movement/vertical' })
   async nettVerticalMovement(data: any) {
     const result = await this.movementService.nettVeritical(
+      data.filters,
+      data.graphName,
+    );
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
+
+  @MessagePattern({ cmd: 'movement/verticalRanked' })
+  async nettVerticalMovementRanked(data: any) {
+    const result = await this.movementService.nettVeriticalRanked(
       data.filters,
       data.graphName,
     );

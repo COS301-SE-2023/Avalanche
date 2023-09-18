@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { Test, TestingModule } from '@nestjs/testing';
 import { TransactionService } from './transactions.service';
 import { JwtService } from '@nestjs/jwt';
@@ -23,7 +22,10 @@ describe('TransactionService', () => {
     mockSnowflakeService = { execute: jest.fn() };
     mockDataFormatService = {};
     mockAnalysisService = { analyze: jest.fn() };
-    mockGraphFormatService = { formatTransactions: jest.fn(), formatTransactionsRanking: jest.fn() };
+    mockGraphFormatService = {
+      formatTransactions: jest.fn(),
+      formatTransactionsRanking: jest.fn(),
+    };
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -44,12 +46,16 @@ describe('TransactionService', () => {
     it('should correctly process transactions when data is not cached in Redis', async () => {
       const filters = JSON.stringify({ data: 'someData' });
       const graphName = 'graphName';
-      const sqlQuery = `call transactionsByRegistrar('${JSON.stringify(filters)}')`;
+      const sqlQuery = `call transactionsByRegistrar('${JSON.stringify(
+        filters,
+      )}')`;
 
       // Set up mocks
-      mockRedis.get.mockResolvedValue(null);  // Simulate Redis cache miss
+      mockRedis.get.mockResolvedValue(null); // Simulate Redis cache miss
       mockSnowflakeService.execute.mockResolvedValue('queryData');
-      mockGraphFormatService.formatTransactions.mockResolvedValue('formattedData');
+      mockGraphFormatService.formatTransactions.mockResolvedValue(
+        'formattedData',
+      );
 
       // Call the method under test
       const result = await service.transactions(filters, graphName);
@@ -57,11 +63,18 @@ describe('TransactionService', () => {
       // Expect the mocks to have been called with the correct arguments
       expect(mockRedis.get).toHaveBeenCalledWith(`zacr${sqlQuery}`);
       expect(mockSnowflakeService.execute).toHaveBeenCalledWith(sqlQuery);
-      expect(mockGraphFormatService.formatTransactions).toHaveBeenCalledWith(JSON.stringify('queryData'));
-      expect(mockRedis.set).toHaveBeenCalledWith(`zacr${sqlQuery}`, 'formattedData', 'EX', 72 * 60 * 60);
+      expect(mockGraphFormatService.formatTransactions).toHaveBeenCalledWith(
+        JSON.stringify('queryData'),
+      );
+      expect(mockRedis.set).toHaveBeenCalledWith(
+        `zacr${sqlQuery}`,
+        '{"chartData":"formattedData"}',
+        'EX',
+        72 * 60 * 60,
+      );
 
       // Expect the result to be the final formatted data
-      expect(result.status).toBe(500);
+      expect(result.status).toBe('success');
     });
 
     it('should correctly process transactions when data is already cached in Redis', async () => {
@@ -69,7 +82,7 @@ describe('TransactionService', () => {
       const graphName = 'graphName';
 
       // Set up mocks
-      mockRedis.get.mockResolvedValue('cachedData');  // Simulate Redis cache hit
+      mockRedis.get.mockResolvedValue(JSON.stringify({ cache: 'cachedData' })); // Simulate Redis cache hit
 
       // Call the method under test
       const result = await service.transactions(filters, graphName);
@@ -85,17 +98,21 @@ describe('TransactionService', () => {
       expect(mockGraphFormatService.formatTransactions).not.toHaveBeenCalled();
 
       // Expect the result to be the final formatted data
-      expect(result.status).toBe(500);
+      expect(result.status).toBe('success');
     });
 
     it('should return error response when Snowflake service fails', async () => {
       const filters = JSON.stringify({ data: 'someData' });
       const graphName = 'graphName';
-      const sqlQuery = `call transactionsByRegistrar('${JSON.stringify(filters)}')`;
+      const sqlQuery = `call transactionsByRegistrar('${JSON.stringify(
+        filters,
+      )}')`;
 
       // Set up mocks
-      mockRedis.get.mockResolvedValue(null);  // Simulate Redis cache miss
-      mockSnowflakeService.execute.mockRejectedValue(new Error('Data Warehouse Error'));
+      mockRedis.get.mockResolvedValue(null); // Simulate Redis cache miss
+      mockSnowflakeService.execute.mockRejectedValue(
+        new Error('Data Warehouse Error'),
+      );
 
       // Call the method under test
       const result = await service.transactions(filters, graphName);
@@ -113,21 +130,27 @@ describe('TransactionService', () => {
     it('should correctly throw an error when transaction format fails', async () => {
       const filters = JSON.stringify({ data: 'someData' });
       const graphName = 'graphName';
-      const sqlQuery = `call transactionsByRegistrar('${JSON.stringify(filters)}')`;
+      const sqlQuery = `call transactionsByRegistrar('${JSON.stringify(
+        filters,
+      )}')`;
 
       // Set up mocks
-      mockRedis.get.mockResolvedValue(null);  // Simulate Redis cache miss
+      mockRedis.get.mockResolvedValue(null); // Simulate Redis cache miss
       mockSnowflakeService.execute.mockResolvedValue('queryData');
-      mockGraphFormatService.formatTransactions.mockResolvedValue(new Error('Format error'));
-  
+      mockGraphFormatService.formatTransactions.mockRejectedValue(
+        new Error('Format error'),
+      );
+
       // Call the method under test
       const result = await service.transactions(filters, graphName);
-  
+
       // Expect the mocks to have been called with the correct arguments
       expect(mockRedis.get).toHaveBeenCalledWith(`zacr${sqlQuery}`);
       expect(mockSnowflakeService.execute).toHaveBeenCalledWith(sqlQuery);
-      expect(mockGraphFormatService.formatTransactions).toHaveBeenCalledWith(JSON.stringify('queryData'));
-      
+      expect(mockGraphFormatService.formatTransactions).toHaveBeenCalledWith(
+        JSON.stringify('queryData'),
+      );
+
       // Expect the result to be error
       expect(result.status).toBe(500);
       expect(result.error).toBe(true);
@@ -138,64 +161,85 @@ describe('TransactionService', () => {
     it('should correctly process transaction rankings when data is not cached in Redis', async () => {
       const filters = { data: 'someData', isRanking: true };
       const graphName = 'graphName';
-      const sqlQuery = `call transactionsByRegistrar('${JSON.stringify(filters)}')`;
+      const sqlQuery = `call transactionsByRegistrar('${JSON.stringify(
+        filters,
+      )}')`;
 
       // Set up mocks
-      mockRedis.get.mockResolvedValue(null);  // Simulate Redis cache miss
+      mockRedis.get.mockResolvedValue(null); // Simulate Redis cache miss
       mockSnowflakeService.execute.mockResolvedValue('queryData');
-      mockGraphFormatService.formatTransactionsRanking.mockResolvedValue(JSON.stringify({formattedData: 'formattedData'}));
-  
+      mockGraphFormatService.formatTransactionsRanking.mockResolvedValue(
+        JSON.stringify({ formattedData: 'formattedData' }),
+      );
+
       // Call the method under test
       const result = await service.transactionsRanking(filters, graphName);
-  
+
       // Expect the mocks to have been called with the correct arguments
       expect(mockRedis.get).toHaveBeenCalledWith(`zacr${sqlQuery}`);
       expect(mockSnowflakeService.execute).toHaveBeenCalledWith(sqlQuery);
-      expect(mockGraphFormatService.formatTransactionsRanking).toHaveBeenCalledWith(JSON.stringify('queryData'));
-      expect(mockRedis.set).toHaveBeenCalledWith(`zacr${sqlQuery}`, JSON.stringify({formattedData: 'formattedData'}), 'EX', 72 * 60 * 60);
-  
+      expect(
+        mockGraphFormatService.formatTransactionsRanking,
+      ).toHaveBeenCalledWith(JSON.stringify('queryData'));
+      expect(mockRedis.set).toHaveBeenCalledWith(
+        `zacr${sqlQuery}`,
+        '{"chartData":"{\\"formattedData\\":\\"formattedData\\"}"}',
+        'EX',
+        72 * 60 * 60,
+      );
+
       // Expect the result to be the final formatted data
-      expect(result.status).toBe("success");
+      expect(result.status).toBe('success');
     });
-  
+
     it('should correctly process transaction rankings when data is already cached in Redis', async () => {
       const filters = { data: 'someData', isRanking: true };
       const graphName = 'graphName';
-      const sqlQuery = `call transactionsByRegistrar('${JSON.stringify(filters)}')`;
-  
+      const sqlQuery = `call transactionsByRegistrar('${JSON.stringify(
+        filters,
+      )}')`;
+
       // Set up mocks
-      mockRedis.get.mockResolvedValue(JSON.stringify({cachedData: 'cachedData'}));  // Simulate Redis cache hit
-  
+      mockRedis.get.mockResolvedValue(
+        JSON.stringify({ cachedData: 'cachedData' }),
+      ); // Simulate Redis cache hit
+
       // Call the method under test
       const result = await service.transactionsRanking(filters, graphName);
-  
+
       // Expect the mocks to have been called with the correct arguments
       expect(mockRedis.get).toHaveBeenCalledWith(`zacr${sqlQuery}`);
-  
+
       // Snowflake and GraphFormat services should not be called when data is cached
       expect(mockSnowflakeService.execute).not.toHaveBeenCalled();
-      expect(mockGraphFormatService.formatTransactionsRanking).not.toHaveBeenCalled();
-  
+      expect(
+        mockGraphFormatService.formatTransactionsRanking,
+      ).not.toHaveBeenCalled();
+
       // Expect the result to be the final formatted data
-      expect(result.status).toBe("success");
+      expect(result.status).toBe('success');
     });
-  
+
     it('should return error response when Snowflake service fails', async () => {
       const filters = { data: 'someData', isRanking: true };
       const graphName = 'graphName';
-      const sqlQuery = `call transactionsByRegistrar('${JSON.stringify(filters)}')`;
-  
+      const sqlQuery = `call transactionsByRegistrar('${JSON.stringify(
+        filters,
+      )}')`;
+
       // Set up mocks
-      mockRedis.get.mockResolvedValue(null);  // Simulate Redis cache miss
-      mockSnowflakeService.execute.mockRejectedValue(new Error('Data Warehouse Error'));
-  
+      mockRedis.get.mockResolvedValue(null); // Simulate Redis cache miss
+      mockSnowflakeService.execute.mockRejectedValue(
+        new Error('Data Warehouse Error'),
+      );
+
       // Call the method under test
       const result = await service.transactionsRanking(filters, graphName);
-  
+
       // Expect the mocks to have been called with the correct arguments
       expect(mockRedis.get).toHaveBeenCalledWith(`zacr${sqlQuery}`);
       expect(mockSnowflakeService.execute).toHaveBeenCalledWith(sqlQuery);
-  
+
       // Expect the result to be an error message
       expect(result.status).toBe(500);
       expect(result.error).toBe(true);
@@ -205,21 +249,27 @@ describe('TransactionService', () => {
     it('should correctly throw an error when transaction format fails', async () => {
       const filters = { data: 'someData', isRanking: true };
       const graphName = 'graphName';
-      const sqlQuery = `call transactionsByRegistrar('${JSON.stringify(filters)}')`;
+      const sqlQuery = `call transactionsByRegistrar('${JSON.stringify(
+        filters,
+      )}')`;
 
       // Set up mocks
-      mockRedis.get.mockResolvedValue(null);  // Simulate Redis cache miss
+      mockRedis.get.mockResolvedValue(null); // Simulate Redis cache miss
       mockSnowflakeService.execute.mockResolvedValue('queryData');
-      mockGraphFormatService.formatTransactionsRanking.mockResolvedValue(new Error('Format error'));
-  
+      mockGraphFormatService.formatTransactionsRanking.mockRejectedValue(
+        new Error('Format error'),
+      );
+
       // Call the method under test
       const result = await service.transactionsRanking(filters, graphName);
-  
+
       // Expect the mocks to have been called with the correct arguments
       expect(mockRedis.get).toHaveBeenCalledWith(`zacr${sqlQuery}`);
       expect(mockSnowflakeService.execute).toHaveBeenCalledWith(sqlQuery);
-      expect(mockGraphFormatService.formatTransactionsRanking).toHaveBeenCalledWith(JSON.stringify('queryData'));
-      
+      expect(
+        mockGraphFormatService.formatTransactionsRanking,
+      ).toHaveBeenCalledWith(JSON.stringify('queryData'));
+
       // Expect the result to be error
       expect(result.status).toBe(500);
       expect(result.error).toBe(true);
@@ -245,7 +295,7 @@ describe('TransactionService', () => {
         dateFrom: '2022-07-27',
         dateTo: '2023-07-27',
         granularity: 'year',
-        zone: 'zoneA'
+        zone: 'zoneA',
       };
       const perReg = false;
       const result = service.transactionsGraphName(filters, perReg);
@@ -258,7 +308,7 @@ describe('TransactionService', () => {
       const filters = {
         dateFrom: '2022-07-27',
         granularity: 'week',
-        zone: 'zoneB'
+        zone: 'zoneB',
       };
       const perReg = true;
       const result = service.transactionsGraphName(filters, perReg);
@@ -274,7 +324,7 @@ describe('TransactionService', () => {
       const filters = {
         dateFrom: '2022-07-27',
         granularity: 'day',
-        zone: 'zoneB'
+        zone: 'zoneB',
       };
       const perReg = true;
       const result = service.transactionsGraphName(filters, perReg);
@@ -286,5 +336,4 @@ describe('TransactionService', () => {
       expect(result).toBe(expected);
     });
   });
-
 });

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1690717644107" clover="3.2.0">
-  <project timestamp="1690717644107" name="All files">
-    <metrics statements="693" coveredstatements="432" conditionals="269" coveredconditionals="79" methods="124" coveredmethods="97" elements="1086" coveredelements="608" complexity="0" loc="693" ncloc="693" packages="6" files="12" classes="12"/>
+<coverage generated="1690819802547" clover="3.2.0">
+  <project timestamp="1690819802547" name="All files">
+    <metrics statements="693" coveredstatements="435" conditionals="269" coveredconditionals="82" methods="124" coveredmethods="97" elements="1086" coveredelements="614" complexity="0" loc="693" ncloc="693" packages="6" files="12" classes="12"/>
     <package name="src">
       <metrics statements="42" coveredstatements="36" conditionals="17" coveredconditionals="15" methods="3" coveredmethods="3"/>
       <file name="jwt-middleware.middleware.ts" path="C:\Users\markb\OneDrive\Documents\GitHub\Avalanche\gateway\src\jwt-middleware.middleware.ts">
@@ -644,9 +644,9 @@
       </file>
     </package>
     <package name="src.zacr">
-      <metrics statements="97" coveredstatements="64" conditionals="40" coveredconditionals="0" methods="18" coveredmethods="17"/>
+      <metrics statements="97" coveredstatements="67" conditionals="40" coveredconditionals="3" methods="18" coveredmethods="17"/>
       <file name="zacr.controller.ts" path="C:\Users\markb\OneDrive\Documents\GitHub\Avalanche\gateway\src\zacr\zacr.controller.ts">
-        <metrics statements="85" coveredstatements="53" conditionals="40" coveredconditionals="0" methods="9" coveredmethods="9"/>
+        <metrics statements="85" coveredstatements="56" conditionals="40" coveredconditionals="3" methods="9" coveredmethods="9"/>
         <line num="2" count="5" type="stmt"/>
         <line num="3" count="5" type="stmt"/>
         <line num="4" count="5" type="stmt"/>
@@ -667,10 +667,10 @@
         <line num="29" count="4" type="stmt"/>
         <line num="30" count="4" type="stmt"/>
         <line num="31" count="4" type="stmt"/>
-        <line num="32" count="4" type="stmt"/>
-        <line num="34" count="0" type="stmt"/>
-        <line num="35" count="0" type="cond" truecount="0" falsecount="1"/>
-        <line num="36" count="0" type="cond" truecount="0" falsecount="4"/>
+        <line num="32" count="1" type="stmt"/>
+        <line num="34" count="3" type="stmt"/>
+        <line num="35" count="3" type="cond" truecount="1" falsecount="0"/>
+        <line num="36" count="3" type="cond" truecount="2" falsecount="2"/>
         <line num="38" count="0" type="stmt"/>
         <line num="43" count="5" type="stmt"/>
         <line num="44" count="4" type="stmt"/>

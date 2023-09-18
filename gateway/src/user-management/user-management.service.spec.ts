@@ -44,7 +44,7 @@ describe('UserManagementService', () => {
     { method: 'exitOrganisation', cmd: 'exitOrganisation' },
     { method: 'removeUserFromOrganisation', cmd: 'removeUserFromOrganisation' },
     { method: 'addUserToUserGroupWithKey', cmd: 'addUserToUserGroupWithKey' },
-    { method: 'integrateUserWithWExternalAPI', cmd: 'integrateUserWithWExternalAPI' },
+    { method: 'integrateUserWithZARCExternalAPI', cmd: 'integrateUserWithZARCExternalAPI' },
     { method: 'integrateWithDataProducts', cmd: 'integrateWithDataProducts' },
     { method: 'createAPIKey', cmd: 'createAPIKey'},
     { method: 'checkUserAPIKey', cmd: 'checkUserAPIKey'},

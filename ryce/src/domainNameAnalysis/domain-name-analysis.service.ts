@@ -4,6 +4,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { lastValueFrom } from 'rxjs';
 import { SnowflakeService } from '../snowflake/snowflake.service';
 import { GraphFormatService } from '../graph-format/graph-format.service';
+import { DataInterface, NewDataInterface } from '../interfaces/interfaces';
 
 @Injectable()
 export class DomainNameAnalysisService {
@@ -14,19 +15,20 @@ export class DomainNameAnalysisService {
     private readonly graphFormattingService: GraphFormatService,
   ) {}
 
-  async sendData(data: any): Promise<any> {
+  async sendData(dataO: any): Promise<any> {
     try {
-      console.log(data);
-      const filters = JSON.stringify(data.filters);
-      console.log(filters);
-      const num = data.filters.num;
-      const granularity = data.filters.granularity;
+      const filters = JSON.stringify(dataO.filters);
+
+      const num = dataO.filters.num;
+      const granularity = dataO.filters.granularity;
 
       const sqlQuery = `call domainNameAnalysis('${filters}')`;
-      console.log(sqlQuery);
-      let formattedData = await this.redis.get(`ryce` + sqlQuery);
 
-      if (!formattedData) {
+      const dataR = await this.redis.get(`ryce` + sqlQuery);
+      let data: DataInterface;
+      let formattedData = '';
+
+      if (!dataR) {
         let queryData;
         try {
           queryData = await this.snowflakeService.execute(sqlQuery);
@@ -38,25 +40,33 @@ export class DomainNameAnalysisService {
             timestamp: new Date().toISOString(),
           };
         }
-        console.log(queryData[0]['DOMAINNAMEANALYSIS']);
-        data.data = queryData[0]['DOMAINNAMEANALYSIS'];
-        delete data.filters;
+
+        dataO.data = queryData[0]['DOMAINNAMEANALYSIS'];
+        delete dataO.filters;
         const response = this.httpService.post(
-          'http://zanet.cloud:4005/domainNameAnalysis/list',
-          data,
+          'http://DomainAnalysis:4101/domainNameAnalysis/list',
+          dataO,
         );
         const responseData = await lastValueFrom(response);
-        console.log(responseData);
+
         formattedData =
           await this.graphFormattingService.formatDomainNameAnalysis(
             JSON.stringify(responseData.data),
           );
+
+        data = {
+          chartData: JSON.parse(formattedData),
+          jsonData: responseData.data,
+        };
+
         await this.redis.set(
           `ryce` + sqlQuery,
-          formattedData,
+          JSON.stringify(data),
           'EX',
-          72 * 60 * 60,
+          24 * 60 * 60,
         );
+      } else {
+        data = JSON.parse(dataR);
       }
 
       return {
@@ -70,7 +80,7 @@ export class DomainNameAnalysisService {
             '(s)',
           warehouse: 'ryce',
           graphType: 'domainNameAnalysis/count',
-          ...JSON.parse(formattedData),
+          data: data,
         },
         timestamp: new Date().toISOString(),
       };
@@ -86,15 +96,15 @@ export class DomainNameAnalysisService {
 
   async domainLength(filters: string, graphName: string): Promise<any> {
     try {
-      graphName = this.domainLengthGraphName(filters);
-
       filters = JSON.stringify(filters);
-      console.log(filters);
+
       const sqlQuery = `CALL SKUNKWORKS_DB.public.domainLengthAnalysis('${filters}')`;
 
-      let formattedData = await this.redis.get(`ryce` + sqlQuery);
+      const dataR = await this.redis.get(`ryce` + sqlQuery);
+      let data: NewDataInterface;
+      let formattedData;
 
-      if (!formattedData) {
+      if (!dataR) {
         let queryData;
 
         try {
@@ -110,28 +120,44 @@ export class DomainNameAnalysisService {
         // const analyzedData = await this.statisticalAnalysisService.analyze(
         //   queryData,
         // );
-        formattedData =
-          await this.graphFormattingService.formatDomainLengthAnalysis(
-            JSON.stringify(queryData),
-          );
+        formattedData = {
+          datasets: [{ label: 'Label1' }],
+        };
+
+        const graphData = {
+          chartData: formattedData,
+          jsonData: queryData[0]['DOMAINLENGTHANALYSIS'].data,
+        };
+
+        filters = queryData[0]['DOMAINLENGTHANALYSIS'].filters;
+
+        data = { data: graphData, filters: filters };
+
         await this.redis.set(
           `ryce` + sqlQuery,
-          formattedData,
+          JSON.stringify(data),
           'EX',
-          72 * 60 * 60,
+          24 * 60 * 60,
         );
+      } else {
+        data = JSON.parse(dataR);
       }
+
+      graphName = this.domainLengthGraphName(data.filters);
+
       return {
         status: 'success',
         data: {
           graphName: graphName,
           warehouse: 'ryce',
           graphType: 'domainNameAnalysis/length',
-          ...JSON.parse(formattedData),
+          data: data.data,
+          filters: data.filters,
         },
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
+      console.log(e);
       return {
         status: 500,
         error: true,
@@ -157,19 +183,13 @@ export class DomainNameAnalysisService {
     }
 
     let zone = filters['zone'];
-    if (zone) {
-      if (zone.length > 0) {
-        const zoneArr = [];
-        for (const r of zone) {
-          zoneArr.push(r);
-        }
-        zone = zoneArr.join(', ');
-      }
-      zone = ' for ' + zone;
+    if (zone?.length > 0) {
+      zone = ' (' + zone.join(',') + ')';
     } else {
-      zone = ' for all zones';
+      zone = ' (all zones)';
     }
 
+    /*
     let dateFrom;
     if (filters['dateFrom'] === undefined) {
       dateFrom = new Date();
@@ -204,33 +224,9 @@ export class DomainNameAnalysisService {
       dateTo =
         day + ' ' + this.getMonth(monthNum - 1) + ' ' + dateTo.getUTCFullYear();
     }
+    */
 
-    return (
-      'Length of newly created domains from ' +
-      dateFrom +
-      ' to ' +
-      dateTo +
-      registrar +
-      zone
-    );
-  }
-
-  getMonth(num: number): string {
-    const monthNames = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
-    ];
-    return monthNames[num];
+    return 'Length of newly created domains ' + registrar + zone;
   }
 
   // normaliseData(data: string): string {

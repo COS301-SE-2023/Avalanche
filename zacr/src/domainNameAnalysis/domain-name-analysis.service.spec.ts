@@ -51,7 +51,7 @@ describe('DomainNameAnalysisService', () => {
         data: {
           graphName:
             'Most common sub words in newly created domains in the last 10 month(s)',
-          test: 'data',
+          data: { test: 'data' },
           warehouse: 'zacr',
           graphType: 'domainNameAnalysis/count',
         },
@@ -77,7 +77,7 @@ describe('DomainNameAnalysisService', () => {
       expect(mockHttpService.post).toHaveBeenCalled();
       expect(mockRedis.set).toHaveBeenCalledWith(
         `zacr` + mockQuery,
-        JSON.stringify({ formattedData: 'formattedData' }),
+        '{"data":{"chartData":"{\\"formattedData\\":\\"formattedData\\"}","jsonData":"responseData"}}',
         'EX',
         72 * 60 * 60,
       );
@@ -86,7 +86,10 @@ describe('DomainNameAnalysisService', () => {
         data: {
           graphName:
             'Most common sub words in newly created domains in the last 10 month(s)',
-          formattedData: 'formattedData',
+          data: {
+            chartData: '{"formattedData":"formattedData"}',
+            jsonData: 'responseData',
+          },
           warehouse: 'zacr',
           graphType: 'domainNameAnalysis/count',
         },

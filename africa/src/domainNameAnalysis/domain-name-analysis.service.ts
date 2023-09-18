@@ -4,6 +4,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { lastValueFrom } from 'rxjs';
 import { SnowflakeService } from '../snowflake/snowflake.service';
 import { GraphFormatService } from '../graph-format/graph-format.service';
+import { DataInterface, NewDataInterface } from 'src/interfaces/interfaces';
 
 @Injectable()
 export class DomainNameAnalysisService {
@@ -14,19 +15,19 @@ export class DomainNameAnalysisService {
     private readonly graphFormattingService: GraphFormatService,
   ) {}
 
-  async sendData(data: any): Promise<any> {
+  async sendData(dataO: any): Promise<any> {
     try {
-      console.log(data);
-      const filters = JSON.stringify(data.filters);
-      //console.log(filters);
-      const num = data.filters.num;
-      const granularity = data.filters.granularity;
+      const filters = JSON.stringify(dataO.filters);
+
+      const num = dataO.filters.num;
+      const granularity = dataO.filters.granularity;
 
       const sqlQuery = `call domainNameAnalysis('${filters}')`;
-      //console.log(sqlQuery);
-      let formattedData = await this.redis.get(`africa` + sqlQuery);
 
-      if (!formattedData) {
+      const dataR = await this.redis.get(`africa` + sqlQuery);
+      let data: DataInterface;
+      let formattedData = '';
+      if (!dataR) {
         let queryData;
         try {
           queryData = await this.snowflakeService.execute(sqlQuery);
@@ -38,27 +39,30 @@ export class DomainNameAnalysisService {
             timestamp: new Date().toISOString(),
           };
         }
-        //console.log(queryData[0]['DOMAINNAMEANALYSIS']);
-        data.data = queryData[0]['DOMAINNAMEANALYSIS'];
-        delete data.filters;
+        dataO.data = queryData[0]['DOMAINNAMEANALYSIS'];
+        delete dataO.filters;
         const response = this.httpService.post(
-          'http://zanet.cloud:4005/domainNameAnalysis/list',
-          data,
+          'http://DomainAnalysis:4101/domainNameAnalysis/count',
+          dataO,
         );
         const responseData = await lastValueFrom(response);
-        //console.log(responseData);
         formattedData =
           await this.graphFormattingService.formatDomainNameAnalysis(
             JSON.stringify(responseData.data),
           );
+        data = {
+          chartData: JSON.parse(formattedData),
+          jsonData: responseData.data.data,
+        };
         await this.redis.set(
           `africa` + sqlQuery,
-          formattedData,
+          JSON.stringify(data),
           'EX',
-          72 * 60 * 60,
+          24 * 60 * 60,
         );
+      } else {
+        data = JSON.parse(dataR);
       }
-
       return {
         status: 'success',
         data: {
@@ -68,7 +72,7 @@ export class DomainNameAnalysisService {
             ' ' +
             granularity +
             '(s)',
-          ...JSON.parse(formattedData),
+          data: data,
           warehouse: 'africa',
           graphType: 'domainNameAnalysis/count',
         },
@@ -84,17 +88,95 @@ export class DomainNameAnalysisService {
     }
   }
 
+  async classification(dataO: any): Promise<any> {
+    try {
+      const filters = JSON.stringify(dataO.filters);
+
+      const num = dataO.filters.num;
+      const granularity = dataO.filters.granularity;
+
+      const sqlQuery = `call domainNameAnalysis('${filters}')`;
+
+      const dataR = await this.redis.get(
+        `africa` + sqlQuery + ` classification`,
+      );
+      let data: DataInterface;
+      let formattedData = '';
+      if (!dataR) {
+        let queryData;
+        try {
+          queryData = await this.snowflakeService.execute(sqlQuery);
+        } catch (e) {
+          return {
+            status: 500,
+            error: true,
+            message: 'Data Warehouse Error',
+            timestamp: new Date().toISOString(),
+          };
+        }
+        dataO.data = queryData[0]['DOMAINNAMEANALYSIS'];
+        delete dataO.filters;
+        const response = this.httpService.post(
+          'http://DomainAnalysis:4101/domainNameAnalysis/classify',
+          dataO,
+        );
+        const responseData = await lastValueFrom(response);
+        const formattedResponseData = {
+          data: this.formatClassification(responseData.data.data),
+        };
+        formattedData =
+          await this.graphFormattingService.formatDomainNameAnalysisClassification(
+            JSON.stringify(formattedResponseData),
+          );
+        data = {
+          chartData: JSON.parse(formattedData),
+          jsonData: formattedResponseData.data,
+        };
+        await this.redis.set(
+          `africa` + sqlQuery + ` classification`,
+          JSON.stringify(data),
+          'EX',
+          24 * 60 * 60,
+        );
+      } else {
+        data = JSON.parse(dataR);
+      }
+      return {
+        status: 'success',
+        data: {
+          graphName:
+            'Most common categories in newly created domains in the last ' +
+            num +
+            ' ' +
+            granularity +
+            '(s)',
+          data: data,
+          warehouse: 'africa',
+          graphType: 'domainNameAnalysis/classification',
+        },
+        timestamp: new Date().toISOString(),
+      };
+    } catch (e) {
+      return {
+        status: 500,
+        error: true,
+        message: `${e.message}`,
+        timestamp: new Date().toISOString(),
+      };
+    }
+  }
+
   async domainLength(filters: string, graphName: string): Promise<any> {
     try {
-      graphName = this.domainLengthGraphName(filters);
-
       filters = JSON.stringify(filters);
-      console.log(filters);
+
       const sqlQuery = `CALL SKUNKWORKS_DB.public.domainLengthAnalysis('${filters}')`;
 
-      let formattedData = await this.redis.get(`africa` + sqlQuery);
+      const dataR = await this.redis.get(`africa` + sqlQuery);
+      let data: NewDataInterface;
+      let formattedData;
 
-      if (!formattedData) {
+      if (!dataR) {
         let queryData;
 
         try {
@@ -110,28 +192,44 @@ export class DomainNameAnalysisService {
         // const analyzedData = await this.statisticalAnalysisService.analyze(
         //   queryData,
         // );
-        formattedData =
-          await this.graphFormattingService.formatDomainLengthAnalysis(
-            JSON.stringify(queryData),
-          );
+        formattedData = {
+          datasets: [{ label: 'Label1' }],
+        };
+
+        const graphData = {
+          chartData: formattedData,
+          jsonData: queryData[0]['DOMAINLENGTHANALYSIS'].data,
+        };
+
+        filters = queryData[0]['DOMAINLENGTHANALYSIS'].filters;
+
+        data = { data: graphData, filters: filters };
+
         await this.redis.set(
           `africa` + sqlQuery,
-          formattedData,
+          JSON.stringify(data),
           'EX',
-          72 * 60 * 60,
+          24 * 60 * 60,
         );
+      } else {
+        data = JSON.parse(dataR);
       }
+
+      graphName = this.domainLengthGraphName(data.filters);
+
       return {
         status: 'success',
         data: {
           graphName: graphName,
-          ...JSON.parse(formattedData),
           warehouse: 'africa',
           graphType: 'domainNameAnalysis/length',
+          data: data.data,
+          filters: data.filters,
         },
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
+      console.log(e);
       return {
         status: 500,
         error: true,
@@ -157,19 +255,13 @@ export class DomainNameAnalysisService {
     }
 
     let zone = filters['zone'];
-    if (zone) {
-      if (zone.length > 0) {
-        const zoneArr = [];
-        for (const r of zone) {
-          zoneArr.push(r);
-        }
-        zone = zoneArr.join(', ');
-      }
-      zone = ' for ' + zone;
+    if (zone?.length > 0) {
+      zone = ' (' + zone.join(',') + ')';
     } else {
-      zone = ' for all zones';
+      zone = ' (all zones)';
     }
 
+    /*
     let dateFrom;
     if (filters['dateFrom'] === undefined) {
       dateFrom = new Date();
@@ -204,33 +296,33 @@ export class DomainNameAnalysisService {
       dateTo =
         day + ' ' + this.getMonth(monthNum - 1) + ' ' + dateTo.getUTCFullYear();
     }
+    */
 
-    return (
-      'Length of newly created domains from ' +
-      dateFrom +
-      ' to ' +
-      dateTo +
-      registrar +
-      zone
-    );
+    return 'Length of newly created domains ' + registrar + zone;
   }
 
-  getMonth(num: number): string {
-    const monthNames = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
-    ];
-    return monthNames[num];
+  formatClassification(inputData: any) {
+    const outputData = {};
+
+    // Step 2: Loop through the input array
+    for (const entry of inputData) {
+      const { domain, classification } = entry;
+
+      // Step 3: Update the count and domains for each classification
+      if (!outputData[classification]) {
+        outputData[classification] = {
+          category: classification,
+          count: 0,
+        };
+      }
+
+      outputData[classification].count += 1;
+    }
+
+    // Step 4: Convert the object to an array
+    const finalOutput = Object.values(outputData);
+
+    return finalOutput;
   }
   /*
   normaliseData(data: string): string {

@@ -3,6 +3,9 @@ import Redis from 'ioredis';
 import { JwtService } from '@nestjs/jwt';
 import { SnowflakeService } from '../snowflake/snowflake.service';
 import { GraphFormatService } from '../graph-format/graph-format.service';
+import { RegistrarNameService } from '../registrarName/registrarName.service';
+import { DataInterface, NewDataInterface } from '../interfaces/interfaces';
+import { query } from 'express';
 
 @Injectable()
 export class MarketShareService {
@@ -11,23 +14,24 @@ export class MarketShareService {
     @Inject('REDIS') private readonly redis: Redis,
     private readonly snowflakeService: SnowflakeService,
     private readonly graphFormattingService: GraphFormatService,
+    private readonly registrarNameServices: RegistrarNameService,
   ) {}
 
   async marketShare(filters: string, graphName: string): Promise<any> {
     try {
-      graphName = this.marketShareGraphName(filters);
-
       filters = JSON.stringify(filters);
-      console.log(filters);
       const sqlQuery = `call marketShare('${filters}')`;
 
-      let formattedData = await this.redis.get(`ryce` + sqlQuery);
+      const dataR = await this.redis.get(`ryce` + sqlQuery);
+      let data: NewDataInterface;
+      let formattedData;
 
-      if (!formattedData) {
+      if (!dataR) {
         let queryData;
         try {
           queryData = await this.snowflakeService.execute(sqlQuery);
         } catch (e) {
+          console.debug(e);
           return {
             status: 500,
             error: true,
@@ -35,28 +39,118 @@ export class MarketShareService {
             timestamp: new Date().toISOString(),
           };
         }
-        formattedData = await this.graphFormattingService.formatMarketshare(
-          JSON.stringify(queryData),
+
+        /**
+         * Get the total
+         */
+        let filtersCount = {};
+        if (JSON.parse(filters).zone != undefined) {
+          filtersCount = {
+            zone: JSON.parse(filters).zone,
+            registrar: JSON.parse(filters).registrar,
+          };
+        }
+        filtersCount = JSON.stringify(filtersCount);
+        const sqlCountQuery = `call domainCount('${filtersCount}')`;
+
+        let dataCount: any = await this.redis.get(`ryce` + sqlCountQuery);
+        if (!dataCount) {
+          try {
+            dataCount = await this.snowflakeService.execute(sqlCountQuery);
+
+            await this.redis.set(
+              `ryce` + sqlCountQuery,
+              JSON.stringify(dataCount),
+              'EX',
+              24 * 60 * 60,
+            );
+          } catch (e) {
+            console.log(e);
+            return {
+              status: 500,
+              error: true,
+              message: 'Data Warehouse Error',
+              timestamp: new Date().toISOString(),
+            };
+          }
+        } else {
+          dataCount = JSON.parse(dataCount);
+        }
+        const overallCount =
+          dataCount[0]['DOMAINCOUNT'].data[0]['NumInRegistry'];
+
+        const topNRegistrars = queryData[0]['MARKETSHARE'].data;
+
+        const totalTopNRegistrarsCount = topNRegistrars.reduce(
+          (acc, curr) => acc + (curr.NumInRegistry ? curr.NumInRegistry : 0),
+          0,
         );
+
+        // Replace registrar names to anonymise
+
+        if (JSON.parse(filters).tou != 'registry') {
+          let name: any = 'NoNameSpecified';
+          if (
+            JSON.parse(filters).registrar &&
+            JSON.parse(filters).registrar.length == 1
+          ) {
+            name = await this.registrarNameServices.registrarName({
+              code: JSON.parse(filters).registrar[0],
+            });
+            name = name.data.name;
+          }
+
+          topNRegistrars.forEach((item, index) => {
+            if (index != 0 && item.Registrar != name) {
+              item.Registrar = `Registrar ${index}`;
+            }
+          });
+        }
+
+        const otherRegistrarCount = overallCount - totalTopNRegistrarsCount;
+        topNRegistrars.push({
+          Registrar: 'Other',
+          NumInRegistry: otherRegistrarCount,
+        });
+
+        formattedData = {
+          datasets: [{ label: 'Marketshare' }],
+        };
+
+        const graphData = {
+          chartData: formattedData,
+          jsonData: topNRegistrars,
+        };
+
+        filters = queryData[0]['MARKETSHARE'].filters;
+
+        data = { data: graphData, filters: filters };
 
         await this.redis.set(
           `ryce` + sqlQuery,
-          formattedData,
+          JSON.stringify(data),
           'EX',
-          72 * 60 * 60,
+          24 * 60 * 60,
         );
+      } else {
+        data = JSON.parse(dataR);
       }
+
+      graphName = this.marketShareGraphName(data.filters);
+
       return {
         status: 'success',
         data: {
           graphName: graphName,
           warehouse: 'ryce',
           graphType: 'marketShare',
-          ...JSON.parse(formattedData),
+          data: data.data,
+          filters: data.filters,
         },
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
+      console.debug(e);
       return {
         status: 500,
         error: true,
@@ -69,39 +163,29 @@ export class MarketShareService {
   marketShareGraphName(filters: any): string {
     let rank = filters['rank'];
     if (rank) {
-      rank = 'for the ' + rank + ' registrars in terms of domain count ';
+      rank = 'The ' + rank + ' registrars (i.t.o. domain count)';
     } else {
-      rank = '';
+      rank = 'The top5';
     }
 
-    let registrar = filters['registrar'];
-    if (registrar) {
-      if (registrar.length > 0) {
-        const regArr = [];
-        for (const r of registrar) {
-          regArr.push(r);
-        }
-        registrar = regArr.join(', ');
-        registrar = 'across ' + registrar + ' ';
-      }
-    } else {
-      registrar = 'across all registrars ';
+    // Registrar
+    let registrar = '';
+    if (
+      filters.registrar !== 'all' &&
+      Array.isArray(filters.registrar) &&
+      filters.registrar.length > 0
+    ) {
+      const regList = filters.registrar.join(', ');
+      registrar += ` (Specifically also including: ${regList})`;
     }
 
     let zone = filters['zone'];
-    if (zone) {
-      if (zone.length > 0) {
-        const zoneArr = [];
-        for (const r of zone) {
-          zoneArr.push(r);
-        }
-        zone = zoneArr.join(', ');
-      }
-      zone = 'for ' + zone;
+    if (zone?.length > 0) {
+      zone = ' (' + zone.join(',') + ')';
     } else {
-      zone = 'for all zones ';
+      zone = ' (all zones)';
     }
 
-    return 'Domain count marketshare ' + rank + registrar + zone;
+    return rank + registrar + zone;
   }
 }

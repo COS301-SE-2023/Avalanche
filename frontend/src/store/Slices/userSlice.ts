@@ -80,12 +80,6 @@ export const userSlice = createSlice({
         api: false,
     },
     reducers: {
-        setAuth(state) {
-            // set auth
-        },
-        getAuth(state) {
-
-        },
         setCreateGroupSuccess(state, action) {
             state.createGroupSuccess = action.payload;
         },
@@ -212,6 +206,8 @@ export const userSlice = createSlice({
         })
         builder.addCase(createOrganisationGroup.rejected, (state, action) => {
             state.createGroupSuccess = false;
+            state.requests.error = action.payload as string;
+            state.loading = false;
         })
         // Get User Group
         builder.addCase(getUserGroups.fulfilled, (state, action) => {
@@ -262,6 +258,7 @@ export const userSlice = createSlice({
         // Get Latest Org
         builder.addCase(getLatestOrganisation.fulfilled, (state, action) => {
             const payload = action.payload as any;
+            state.user.products = payload.products;
             state.user.organisation = payload.organisation;
             state.user.userGroups = payload.userGroups;
             state.loading = false;
@@ -311,7 +308,12 @@ export const login = createAsyncThunk("AUTH.Login", async (object: ILoginRequest
     try {
         const response = await ky.post(`${url}/login`, {
             json: object
-        }).json();
+        }).json() as any;
+
+        if (!response) {
+            return rejectWithValue("There was an issue. We don't know what happened, and we sure you don't either. So just try again ^_^.");
+        }
+
         return response;
     } catch (e) {
         let error = e as HTTPError;
@@ -354,7 +356,9 @@ export const createOrganisationGroup = createAsyncThunk("ORG.CreateOrganisationG
         }).json();
         return response as ICreateUserGroupResponse;
     } catch (e) {
-        if (e instanceof Error) return rejectWithValue(e.message);
+        let error = e as HTTPError;
+        const newError = await error.response.json();
+        return rejectWithValue(newError.message);
     }
 })
 
@@ -440,6 +444,6 @@ export const getLatestOrganisation = createAsyncThunk("ORG.GetLatestOrganisation
     }
 })
 
-export const { setAuth, getAuth, resetRequest, logout, setCreateGroupSuccess, setAddUserGroupSuccess, clearError, updateDashboards, updateAPI, clearLoading } = userSlice.actions;
+export const { resetRequest, logout, setCreateGroupSuccess, setAddUserGroupSuccess, clearError, updateDashboards, updateAPI, clearLoading } = userSlice.actions;
 export const userState = (state: AppState) => state.user;
 export default userSlice.reducer;

@@ -90,20 +90,20 @@ export default function AddUserToGroup() {
     return (
         <ModalWrapper title="Add a User to a Group">
             <form className="space-y-6" onSubmit={(event) => formSubmit(event)}>
-                <>
+                <div>
                     <InputLabel htmlFor="name" text="Group Name" />
                     <Input type="text" name="name" id="name" placeholder="Paper Sales" required={true} disabled={loading} value={name} onChange={(event: React.FormEvent<HTMLInputElement>) => {
                         nameError && setNameError(false);
                         setName(event.currentTarget.value);
                     }} maxLength={20} error={nameError} />
-                </>
-                <>
+                </div>
+                <div>
                     <InputLabel htmlFor="email" text="User Email" />
                     <Input type="email" name="email" id="email" placeholder="john@example.com" required={true} disabled={loading} value={email} onChange={(event: React.FormEvent<HTMLInputElement>) => {
                         emailError && setEmailError(false);
                         setEmail(event.currentTarget.value);
                     }} error={emailError} />
-                </>
+                </div>
                 <SubmitButton text="Add User to Group" onClick={(event: React.FormEvent<HTMLFormElement>) => {
                     formSubmit(event);
                 }} className="w-full" loading={loading} />

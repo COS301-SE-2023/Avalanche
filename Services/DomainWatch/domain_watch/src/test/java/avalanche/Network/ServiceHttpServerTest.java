@@ -25,14 +25,14 @@ public class ServiceHttpServerTest {
 
     @BeforeAll
     public static void initServer() throws IOException, InstantiationException {
-        server = new ServiceHttpServer(4004, true);
+        server = new ServiceHttpServer(4100, true);
         server.start();
     }
 
     @Test
     public void setSpecificStrategy() throws IOException {
         server.setSpecificStrategy("active", new Closed());
-        URL url = new URL("http://localhost:4004/domainWatch/active");
+        URL url = new URL("http://localhost:4100/domainWatch/active");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("POST");
         con.setRequestProperty("Content-Type", "application/json");
@@ -65,7 +65,7 @@ public class ServiceHttpServerTest {
     @Test
     public void postWithValidRequestShouldNotReturnError() throws IOException, InstantiationException {
 
-        URL url = new URL("http://localhost:4004/domainWatch/active");
+        URL url = new URL("http://localhost:4100/domainWatch/active");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("POST");
         con.setRequestProperty("Content-Type", "application/json");
@@ -91,7 +91,7 @@ public class ServiceHttpServerTest {
     @Test
     public void postWithNoBodyShouldReturnError() throws IOException, InstantiationException {
 
-        URL url = new URL("http://localhost:4004/domainWatch/active");
+        URL url = new URL("http://localhost:4100/domainWatch/active");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("POST");
         con.setRequestProperty("Content-Type", "application/json");
@@ -108,7 +108,7 @@ public class ServiceHttpServerTest {
     @Test
     public void postWithInvalidRequestShouldReturn400() throws IOException, InstantiationException {
 
-        URL url = new URL("http://localhost:4004/domainWatch/active");
+        URL url = new URL("http://localhost:4100/domainWatch/active");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("POST");
         con.setRequestProperty("Content-Type", "application/json");
@@ -125,7 +125,7 @@ public class ServiceHttpServerTest {
     @Test
     public void postWithInvalidMetricShouldReturn400() throws IOException, InstantiationException {
 
-        URL url = new URL("http://localhost:4004/domainWatch/active");
+        URL url = new URL("http://localhost:4100/domainWatch/active");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("POST");
         con.setRequestProperty("Content-Type", "application/json");
@@ -142,7 +142,7 @@ public class ServiceHttpServerTest {
     @Test
     public void closedServerShouldReturn500() throws IOException, InstantiationException {
         server.forceAllStrategies(new Initialising());
-        URL url = new URL("http://localhost:4004/domainWatch/active");
+        URL url = new URL("http://localhost:4100/domainWatch/active");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("POST");
         con.setRequestProperty("Content-Type", "application/json");
@@ -161,7 +161,7 @@ public class ServiceHttpServerTest {
     @Test
     public void optionsShouldNotReturnError() throws IOException, InstantiationException {
 
-        URL url = new URL("http://localhost:4004/domainWatch/active");
+        URL url = new URL("http://localhost:4100/domainWatch/active");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("OPTIONS");
         con.setRequestProperty("Content-Type", "application/json");
@@ -186,7 +186,7 @@ public class ServiceHttpServerTest {
     @Test
     public void getShouldReturnError405() throws IOException, InstantiationException {
 
-        URL url = new URL("http://localhost:4004/domainWatch/active");
+        URL url = new URL("http://localhost:4100/domainWatch/active");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
         int responseCode = con.getResponseCode();
@@ -198,7 +198,7 @@ public class ServiceHttpServerTest {
     @Test
     public void putShouldReturnError405() throws IOException, InstantiationException {
 
-        URL url = new URL("http://localhost:4004/domainWatch/active");
+        URL url = new URL("http://localhost:4100/domainWatch/active");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("PUT");
         int responseCode = con.getResponseCode();

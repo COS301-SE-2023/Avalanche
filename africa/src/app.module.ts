@@ -26,7 +26,7 @@ import { MovementService } from './movement/movement.service';
         name: 'AFRICA_SERVICE',
         transport: Transport.TCP,
         options: {
-          host: process.env.AFRICA || 'localhost',
+          host: process.env.HOST || 'localhost',
           port: 4005,
         },
       },
@@ -57,8 +57,6 @@ import { MovementService } from './movement/movement.service';
           database: process.env.SNOWFLAKE_DATABASE,
           schema: process.env.SNOWFLAKE_SCHEMA,
         });
-
-        // Try to connect to Snowflake, and check whether the connection was successful.
         connection.connect((err) => {
           if (err) {
             console.error('Unable to connect: ' + err.message);

@@ -15,7 +15,7 @@ import { Response, response } from 'express';
 @Injectable()
 export class AuthService {
   constructor(@Inject('REDIS') private readonly redis: Redis, private readonly configService: ConfigService,
-    @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(User, 'user') private userRepository: Repository<User>,
     private jwtService: JwtService) { }
 
   async register(email: string, password: string, firstName: string, lastName: string) {
@@ -42,7 +42,6 @@ export class AuthService {
 
         // Retrieve the data from Redis to verify it was saved correctly
         const savedData = await this.redis.get(email);
-        console.log(savedData);
 
         // Send email with OTP link
         await this.sendOTPEmail(email, otp);
@@ -136,7 +135,6 @@ export class AuthService {
     };
 
     const { password, salt, firstName, lastName, otp: savedOtp } = JSON.parse(userInfo);
-    console.log(password + " " + otp);
     if (otp !== savedOtp) {
       return {
         status: 400, error: true, message: 'Incorrect OTP.',
@@ -145,12 +143,9 @@ export class AuthService {
     };
 
     // Save user's information to PostgreSQL
-    const user = this.userRepository.create({ email, password, salt, firstName, lastName });
-    console.log(user);
+    const products = [{dataSource : "zarc", tou : "public", key : null}, {dataSource : "africa", tou : "public", key : null}, {dataSource : "ryce", tou : "public", key : null}];
+    const user = this.userRepository.create({ email, password, salt, firstName, lastName, products });
     const check = await this.userRepository.save(user);
-    console.log(check);
-
-    // Remove user's information from Redis
     await this.redis.del(email);
 
     return {
@@ -162,8 +157,6 @@ export class AuthService {
   async login(email: string, passwordLogin: string) {
     // Fetch user from the PostgreSQL database
     const user = await this.userRepository.findOne({ where: { email }, relations: ['userGroups', 'organisation', 'dashboards'] });
-    console.log(user);
-
     // If user not found, throw error
     if (!user) {
       return {
@@ -183,8 +176,6 @@ export class AuthService {
     if (passwordLogin1 === user.password) {
       passwordIsValid = true;
     }
-    console.log(user.password);
-    console.log(passwordLogin1);
 
     // If the password isn't valid, throw error
     if (!passwordIsValid) {
@@ -205,7 +196,9 @@ export class AuthService {
     const { password, salt, ...userWithoutPassword } = user;
     const userWithToken = { ...userWithoutPassword, token: jwtToken, apiCheck : apiCheck };
     await this.redis.set(jwtToken, JSON.stringify(userWithToken), 'EX', 24 * 60 * 60);
-
+    for(const products of userWithToken.products){
+      delete products.key;
+    }
     // Send back user's information along with the token as a JSON object
     return {
       status: "success", userWithToken,
@@ -224,7 +217,6 @@ export class AuthService {
       };
     }
     const { email: userEmail } = JSON.parse(userPayload);
-    console.log(userEmail);
     const user = await this.userRepository.findOne({
       where: { email: userEmail }, relations: ['userGroups', 'organisation', 'dashboards'],
       select: ['id', 'email', 'firstName', 'lastName', 'organisationId', 'products', 'userGroups', 'organisation', 'dashboards']
@@ -239,6 +231,9 @@ export class AuthService {
     // Update the user's information in Redis
     await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60);
 
+    for(const products of user.products){
+      delete products.key;
+    }
     return {
       status: 'success', message: user,
       timestamp: new Date().toISOString()
@@ -246,7 +241,6 @@ export class AuthService {
   }
 
   async createAPIKey(token: string) {
-    console.log("elo");
     const userData = await this.redis.get(token);
     if (!userData) {
       return {
@@ -263,9 +257,6 @@ export class AuthService {
         timestamp: new Date().toISOString()
       };
     }
-
-    // console.log(user);
-    console.log(user['apiKey']);
 
     if (user.apiKey?.length > 0 || user.apiKey) {
       return {
@@ -335,8 +326,6 @@ export class AuthService {
       };
     }
 
-    console.log(user);
-
     // reroll your api key with an api key check
     if (user['apiKey'] == token) {
       return {
@@ -345,7 +334,6 @@ export class AuthService {
       };
     }
 
-    console.log(user);
 
     if (!user['apiKey']) {
       return {
@@ -363,6 +351,9 @@ export class AuthService {
     await this.redis.del(tempApi);
     // await this.redis.del(token);
     const userWithToken = { ...user, apiKey: jwtToken };
+    for(const products of userWithToken.products){
+      delete products.key;
+    }
     // Send back user's information along with the token as a JSON object
     return {
       status: "success", message: userWithToken.apiKey,

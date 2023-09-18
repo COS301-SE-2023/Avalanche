@@ -31,7 +31,6 @@ export default function GeneralSettings({ user }: IGeneralSettings) {
     const dispatch = useDispatch<any>();
     const [passive, setPassive] = useState<PassiveEntry[]>([]);
     const [activeHelp, setActiveHelp] = useState<string[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
     const [apiKey, setAPIKey] = useState<string>("");
 
     const [types, setTypes] = useState<PassiveTypes[]>([]);
@@ -62,11 +61,7 @@ export default function GeneralSettings({ user }: IGeneralSettings) {
             }));
 
         } catch (e) {
-            let error = e as HTTPError;
-            if (error.name === 'HTTPError') {
-                const errorJson = await error.response.json();
-                return ErrorToast({ text: errorJson.message });
-            }
+
         }
     }
 
@@ -195,12 +190,13 @@ export default function GeneralSettings({ user }: IGeneralSettings) {
         }
 
         try {
-            const res = await ky.post(`${process.env.NEXT_PUBLIC_API}/user-management/addDomainWatchPassiveDetails`, {
+            await ky.post(`${process.env.NEXT_PUBLIC_API}/user-management/addDomainWatchPassiveDetails`, {
                 json: obj,
                 headers: {
                     "Authorization": `Bearer ${getCookie("jwt")}`
                 }
             }).json();
+            return SuccessToast({ text: "Successfully Saved" });
         } catch (e) {
             let error = e as HTTPError;
             if (error.name === 'HTTPError') {
@@ -208,7 +204,6 @@ export default function GeneralSettings({ user }: IGeneralSettings) {
                 return ErrorToast({ text: errorJson.message });
             }
         }
-
     }
 
     return (
@@ -244,7 +239,7 @@ export default function GeneralSettings({ user }: IGeneralSettings) {
                                     <input type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" checked={getIndexByType("Soundex") !== -1} onClick={() => checkType("Soundex")} onChange={() => { }} />
                                 </div>
                                 <h3 className="block text-sm font-medium text-gray-900 dark:text-white">Soundex</h3>
-                                <QuestionMarkCircleIcon className="h-5 w-5 hover:text-avalancheBlue cursor-pointer" onClick={() => onHelpClick("Soundex")} />
+                                <QuestionMarkCircleIcon className="h-5 w-5 text-gray-500 hover:text-avalancheBlue cursor-pointer" onClick={() => onHelpClick("Soundex")} />
                             </div>
                             {helpHelper("Soundex") && <p className="text-sm font-light text-gray-500 dark:text-gray-400 mb-2">
                                 Soundex is a method used to simplify and <span className="font-semibold">standardize the representation of names based on their sound</span>. It assigns a code to each name so that similar-sounding names have the same code. This helps in grouping and matching names with <span className="font-semibold">similar pronunciations, even if they are spelled differently</span>. It&apos;s often used for tasks like searching databases or linking records where the <span className="font-semibold">pronunciation matters more than the exact spelling</span>. <Anchor href="https://en.wikipedia.org/wiki/Soundex" text="Wikipedia" /><br /><br />The higher the percentage, the higher Soundex match you want.
@@ -265,7 +260,7 @@ export default function GeneralSettings({ user }: IGeneralSettings) {
                                     <input type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" checked={getIndexByType("Levenshtein") !== -1} onClick={() => checkType("Levenshtein")} onChange={() => { }} />
                                 </div>
                                 <h3 className="block text-sm font-medium text-gray-900 dark:text-white">Levenshtein</h3>
-                                <QuestionMarkCircleIcon className="h-5 w-5 hover:text-avalancheBlue cursor-pointer" onClick={() => onHelpClick("Levenshtein")} />
+                                <QuestionMarkCircleIcon className="h-5 w-5 text-gray-500 hover:text-avalancheBlue cursor-pointer" onClick={() => onHelpClick("Levenshtein")} />
                             </div>
 
                             {helpHelper("Levenshtein") && <p className="text-sm font-light text-gray-500 dark:text-gray-400 mb-2">
