@@ -31,14 +31,6 @@ export default function OrganizationSettings({ }: IOrganizationSettings) {
     }, [])
 
     /**
-     * For debugging
-     */
-    // useEffect(() => {
-    //     console.log('changed')
-    //     console.log(modalState.currentOpen)
-    // }, [modalState.currentOpen])
-
-    /**
      * This state variable holds the current active user group tab.
      */
     const [groupTab, setGroupTab] = useState<string>("");

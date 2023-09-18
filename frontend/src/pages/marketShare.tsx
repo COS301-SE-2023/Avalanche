@@ -2,8 +2,6 @@ import Sidebar from "@/components/Navigation/SideBar"
 import PageHeader from "@/components/Util/PageHeader"
 import { ChartBarIcon } from "@heroicons/react/24/solid"
 import Head from "next/head"
-import { ChartCard } from "@/components/Graphs"
-import { ChartType } from "@/Enums";
 import { useDispatch, useSelector } from "react-redux";
 import { graphState, getMarketShareData, clearGraphData } from "@/store/Slices/graphSlice"
 import { useEffect } from "react";
@@ -12,7 +10,7 @@ import GraphZoomModal from "@/components/Modals/GraphZoomModal"
 import IMarketShareGraphRequest from "@/interfaces/requests/MarketShareGraph"
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
-import { SubmitButton, MainContent } from "@/components/Util"
+import { SubmitButton, MainContent, DashboardBase } from "@/components/Util"
 
 export default function MarketShare() {
 
@@ -58,8 +56,6 @@ export default function MarketShare() {
     };
 
     function loadData() {
-        // const data: ITransactionGraphRequest = { zone: "CO.ZA", granularity: "week", group: "registrar", dateFrom: "2023-01-02", graphName: "Your mom" };
-
         const arrayMarketShare: IMarketShareGraphRequest[] = [];
         const currentDate = new Date();
 
@@ -72,13 +68,9 @@ export default function MarketShare() {
         const marketShareTop20: IMarketShareGraphRequest = { rank: 'top20' };
         arrayMarketShare.push(marketShareTop20);
 
-
         arrayMarketShare.forEach(data => {
             dispatch(getMarketShareData(data));
         })
-
-
-        // dispatch(getGraphDataArray(array));
     }
 
     useEffect(() => {
@@ -106,48 +98,7 @@ export default function MarketShare() {
                 <PageHeader title="Market Share" subtitle="Insights at your fingertips" icon={<ChartBarIcon className="h-16 w-16 text-black dark:text-white" />} />
                 <SubmitButton text="Download Report" onClick={() => generatePDF()} />
             </div>
-            <div className="p-0 pt-4 md:p-4">
-                <div className="grid lg:grid-cols-2 sm:grid-cols-1 md:grid-cols-2 gap-4 mb-4 grid-rows-2">
-                    {
-                        stateGraph.graphs?.length > 0 && stateGraph.graphs.map((data: any, index: number) => {
-                            if (data) return <ChartCard title={data.graphName} data={data} defaultGraph={ChartType.Line} key={index} />
-                        })
-                    }
-                    {
-                        stateGraph.loading && <>
-                            <div role="status" className="flex justify-between h-64 w-full bg-gray-300 rounded-lg animate-customPulse dark:bg-gray-700 p-6">
-                                <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-800 w-32"></div>
-                                <div className="flex gap-1">
-                                    <div className="h-6 w-6 bg-gray-200 rounded dark:bg-gray-800  w-32 p-1.5"></div>
-                                    <div className="h-6 w-6 bg-gray-200 rounded dark:bg-gray-800 w-32 p-1.5"></div>
-                                </div>
-                            </div>
-                            <div role="status" className="flex justify-between h-64 w-full bg-gray-300 rounded-lg animate-customPulse dark:bg-gray-700 p-6">
-                                <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-800 w-32"></div>
-                                <div className="flex gap-1">
-                                    <div className="h-6 w-6 bg-gray-200 rounded dark:bg-gray-800 w-32"></div>
-                                    <div className="h-6 w-6 bg-gray-200 rounded dark:bg-gray-800 w-32"></div>
-                                </div>
-                            </div>
-                            <div role="status" className="flex justify-between h-64 w-full bg-gray-300 rounded-lg animate-customPulse dark:bg-gray-700 p-6">
-                                <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-800 w-32"></div>
-                                <div className="flex gap-1">
-                                    <div className="h-6 w-6 bg-gray-200 rounded dark:bg-gray-800 w-32"></div>
-                                    <div className="h-6 w-6 bg-gray-200 rounded dark:bg-gray-800 w-32"></div>
-                                </div>
-                            </div>
-                            <div role="status" className="flex justify-between h-64 w-full bg-gray-300 rounded-lg animate-customPulse dark:bg-gray-700 p-6">
-                                <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-800 w-32"></div>
-                                <div className="flex gap-1">
-                                    <div className="h-6 w-6 bg-gray-200 rounded dark:bg-gray-800 w-32"></div>
-                                    <div className="h-6 w-6 bg-gray-200 rounded dark:bg-gray-800 w-32"></div>
-                                </div>
-                            </div>
-
-                        </>
-                    }
-                </div>
-            </div>
+            <DashboardBase state={stateGraph} />
         </MainContent>
         {
             modalState.currentOpen === "GRAPH.Modal" && <GraphZoomModal />

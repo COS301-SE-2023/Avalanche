@@ -310,10 +310,7 @@ export const login = createAsyncThunk("AUTH.Login", async (object: ILoginRequest
             json: object
         }).json() as any;
 
-        console.log(response);
-
         if (!response) {
-            console.log("asdasdd");
             return rejectWithValue("There was an issue. We don't know what happened, and we sure you don't either. So just try again ^_^.");
         }
 
@@ -360,11 +357,8 @@ export const createOrganisationGroup = createAsyncThunk("ORG.CreateOrganisationG
         return response as ICreateUserGroupResponse;
     } catch (e) {
         let error = e as HTTPError;
-        if (error.name === 'HTTPError') {
-            const newError = await error.response.json();
-            console.log(newError.message);
-            return rejectWithValue(newError.message);
-        }
+        const newError = await error.response.json();
+        return rejectWithValue(newError.message);
     }
 })
 

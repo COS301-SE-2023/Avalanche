@@ -45,7 +45,7 @@ const MenuOptions: IMenu = {
             icon: <TvIcon className={holder} />,
             page: "registrar",
             role: "",
-            endpoint: "transactions"
+            endpoint: "registrar"
         },
         {
             text: "Registrar Market Comparison",
@@ -122,7 +122,7 @@ const dataSourceDescriptors: IDataSourceItem[] = [
 const dataSourceName: IDataSourceItem[] = [
     {
         code: "zacr",
-        value: "ZACR"
+        value: "ZARC"
     },
     {
         code: "africa",

@@ -46,6 +46,28 @@ export class RyceController {
     }
   }
 
+  @Post('registrar')
+  @HttpCode(200)
+  async registrar(@Body() data: any) {
+    const end = httpRequestDurationMicrosecondsRyce.startTimer();
+    const pattern = { cmd: 'transactions' };
+    const payload = data;
+    try {
+      const result = await lastValueFrom(this.client.send(pattern, payload));
+      httpRequestsTotalRyce.inc({ method: 'POST', route: 'registrar', code: 200 });
+      end({ method: 'POST', route: 'registrar', code: 200 });
+      return result;
+    } catch (error) {
+      const rpcError = error
+      httpRequestsTotalRyce.inc({ method: 'POST', route: 'registrar', code: rpcError.status });
+      end({ method: 'POST', route: 'registrar', code: rpcError.status });
+      if (typeof rpcError === 'object') {
+        throw new HttpException(rpcError.message || 'An unexpected error occurred', rpcError.status || 500);
+      }
+      throw error;
+    }
+  }
+
   @Post('transactions-ranking')
   @HttpCode(200)
   async transactionsRaking(@Body() data: any) {
@@ -193,6 +215,28 @@ export class RyceController {
       const rpcError = error
       httpRequestsTotalRyce.inc({ method: 'POST', route: 'movement/vertical', code: rpcError.status });
       end({ method: 'POST', route: 'movement/vertical', code: rpcError.status });
+      if (typeof rpcError === 'object') {
+        throw new HttpException(rpcError.message || 'An unexpected error occurred', rpcError.status || 500);
+      }
+      throw error;
+    }
+  }
+
+  @Post('movement/verticalRanked')
+  @HttpCode(200)
+  async movementVerticalRanked(@Body() data: any) {
+    const end = httpRequestDurationMicrosecondsRyce.startTimer();
+    const pattern = { cmd: 'movement/verticalRanked' };
+    const payload = data;
+    try {
+      const result = await lastValueFrom(this.client.send(pattern, payload));
+      httpRequestsTotalRyce.inc({ method: 'POST', route: 'movement/verticalRanked', code: 200 });
+      end({ method: 'POST', route: 'movement/verticalRanked', code: 200 });
+      return result;
+    } catch (error) {
+      const rpcError = error
+      httpRequestsTotalRyce.inc({ method: 'POST', route: 'movement/verticalRanked', code: rpcError.status });
+      end({ method: 'POST', route: 'movement/verticalRanked', code: rpcError.status });
       if (typeof rpcError === 'object') {
         throw new HttpException(rpcError.message || 'An unexpected error occurred', rpcError.status || 500);
       }

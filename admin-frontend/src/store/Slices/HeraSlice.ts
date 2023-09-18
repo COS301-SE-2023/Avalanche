@@ -37,7 +37,7 @@ export const heraSlice = createSlice({
 
 
     reducers: {
-        updateData(state, action) {
+        updateHeraData(state, action) {
             state.hera.data = action.payload;
         },
        
@@ -115,6 +115,6 @@ export const getHera = createAsyncThunk("HERA.Get", async (object: any, { reject
 })
 
 
-export const { updateNeedToFetch,updateData} = heraSlice.actions;
+export const { updateNeedToFetch,updateHeraData} = heraSlice.actions;
 export const heraState = (state: AppState) => state.hera;
 export default heraSlice.reducer;
