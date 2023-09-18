@@ -18,6 +18,7 @@ import ky, { HTTPError } from "ky"
 import { getCookie } from "cookies-next"
 import { updateDashboards } from "@/store/Slices/userSlice";
 import NoFind from "@/components/CustomSVG/NoFind";
+import introJs from 'intro.js';
 
 
 export default function CreateCustomDashboard() {
@@ -72,6 +73,14 @@ export default function CreateCustomDashboard() {
 
     const renderGraphs = () => {
         return graphs.map((graph: any, index: number) => <CustomChartCard title={graph.name} defaultGraph={ChartType.Line} data={graph} key={index} state={stateGraph} id={id} updateGraph={updateGraph} />);
+    }
+
+    const startTut = () =>{
+        introJs().start();
+        //const introJsPopup = document.getElementsByClassName('introjs-overlay')[0] as HTMLDivElement;
+        //if (introJsPopup){
+        //    introJsPopup.style.zIndex = '1000'
+        //}
     }
 
     const updateDashboard = async () => {
@@ -170,9 +179,12 @@ export default function CreateCustomDashboard() {
         <Toaster />
 
         <MainContent>
-            <div className="flex justify-between items-center flex-col lg:flex-row">
+            <div className="flex justify-between items-center flex-col lg:flex-row"  data-intro='Hello World'>
                 <div className="flex flex-row gap-2 items-center">
                     <CpuChipIcon className="h-16 w-16 text-black dark:text-white" />
+                    <SubmitButton text="Start tutorial" className="flex-auto" onClick={() => {
+                        startTut()
+                    }} />
                     <div>
                         {!editName && <h1 className="text-3xl text-gray-900 dark:text-white font-bold flex gap-2"><span>{name ? name : "Custom Dashboard"}</span> <PencilIcon className="w-4 h-4 right-0 top-0 hover:cursor-pointer hover:text-avalancheBlue duration-75 hover:scale-125" onClick={() => setEditName(true)} /></h1>}
                         {editName && <div className="flex gap-4">
