@@ -22,6 +22,7 @@ import GraphsRenderer from './GraphsRenderer';
 import DashboardBase from './DashboardBase';
 import ChartCardError from './ChartCardError';
 import HomeCard from './HomeCard';
+import FilterTooltip from './FilterTooltip';
 
 export {
     DangerAlert,
@@ -47,5 +48,6 @@ export {
     GraphsRenderer,
     DashboardBase,
     ChartCardError,
-    HomeCard
+    HomeCard,
+    FilterTooltip,
 };

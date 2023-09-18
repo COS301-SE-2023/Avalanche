@@ -56,11 +56,39 @@ export class AgeService {
             name = name.data.name;
           }
 
-          topNRegistrars.forEach((item, index) => {
-            if (item.Registrar != name && item.Registrar != 'Overall') {
-              item.Registrar = `Registrar ${index + 1}`;
-            }
-          });
+          if (queryData[0]['AGEANALYSIS'].filters.average) {
+            topNRegistrars.forEach((item, index) => {
+              if (
+                index != 0 &&
+                item.Registrar != name &&
+                item.Registrar != 'Overall'
+              ) {
+                item.Registrar = `Registrar ${index}`;
+              }
+            });
+          } else {
+            const mapNames = {};
+            let regNumber = 1;
+            topNRegistrars.forEach((item, index) => {
+              if (
+                index != 0 &&
+                item.Registrar != name &&
+                item.Registrar != 'Overall' &&
+                mapNames[item.Registrar] == undefined
+              ) {
+                mapNames[item.Registrar] = `Registrar ${regNumber++}`;
+              }
+            });
+            topNRegistrars.forEach((item, index) => {
+              if (
+                index != 0 &&
+                item.Registrar != name &&
+                item.Registrar != 'Overall'
+              ) {
+                item.Registrar = mapNames[item.Registrar];
+              }
+            });
+          }
         }
 
         const topNRegistrarsArr = [
@@ -71,12 +99,12 @@ export class AgeService {
           JSON.stringify(topNRegistrarsArr),
         );
 
+        filters = queryData[0]['AGEANALYSIS'].filters;
+
         const graphData = {
           chartData: JSON.parse(formattedData),
           jsonData: topNRegistrars,
         };
-
-        filters = queryData[0]['AGEANALYSIS'].filters;
 
         data = { data: graphData, filters: filters };
 
