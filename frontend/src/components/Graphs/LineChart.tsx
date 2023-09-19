@@ -20,15 +20,7 @@ export function LineChart({ data, height }: IChart) {
     let allOptions = convertData(jsonData, "line", theme);
     let colourToUse = chartColours;
     let fillValue=undefined;
-    let markerValue={
-      size: 5, // Adjust the size as per your preference
-      shape: "circle", // This will make the markers circular
-      strokeWidth: 0,
-      hover: {
-        size: 7, // Adjust the size for hover state as per your preference
-      },
-    } as any;
-    if (allOptions.options.yaxis.title.text == " Movement" && allOptions.series.length==1) {
+    if (allOptions.options.yaxis.title.text == " Movement" && allOptions.series &&allOptions.series.length==1) {
       colourToUse = ['#FF0000'] as any[];
       fillValue={
         type: "gradient",
@@ -42,9 +34,7 @@ export function LineChart({ data, height }: IChart) {
     
         }
       };
-      let discreteValues=[] as any;
       
-      markerValue=undefined;
     }
     Object.assign(allOptions.options, {
       dataLabels: {
@@ -103,7 +93,14 @@ export function LineChart({ data, height }: IChart) {
           fontFamily: "Arial", // Font family for the tooltip
         },
       },
-      markers: markerValue,
+      markers: {
+        size: 5, // Adjust the size as per your preference
+        shape: "circle", // This will make the markers circular
+        strokeWidth: 0,
+        hover: {
+          size: 7, // Adjust the size for hover state as per your preference
+        },
+      },
       animations: {
         enabled: true,
         easing: "easeinout",
