@@ -2,11 +2,10 @@ import { Inject, Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
 import { JwtService } from '@nestjs/jwt';
 import { SnowflakeService } from '../snowflake/snowflake.service';
-import { DataFormatService } from '../data-format/data-format.service';
 import { AnalysisService } from '../analysis/analysis.service';
 import { GraphFormatService } from '../graph-format/graph-format.service';
 import {
-  DataInterface,
+  ChartType,
   formatDate,
   NewDataInterface,
 } from '../interfaces/interfaces';
@@ -44,9 +43,17 @@ export class MovementService {
           };
         }
 
-        formattedData = {
-          datasets: [{ label: 'Vertical Movement' }],
-        };
+        if (
+          queryData[0]['NETTVERTICALMOVEMENT'].filters?.registrar?.length > 0
+        ) {
+          formattedData = {
+            datasets: [{ label: 'Vertical Movement' }],
+          };
+        } else {
+          formattedData = {
+            datasets: [{ label: 'Vertical Movement' }],
+          };
+        }
 
         const graphData = {
           chartData: formattedData,
@@ -77,6 +84,8 @@ export class MovementService {
           graphType: 'movement/vertical',
           data: data.data,
           filters: data.filters,
+          chartType:
+            data.filters.registrar?.length > 0 ? ChartType.Line : ChartType.Bar,
         },
         timestamp: new Date().toISOString(),
       };
@@ -145,6 +154,7 @@ export class MovementService {
           graphType: 'movement/verticalRanked',
           data: data.data,
           filters: data.filters,
+          chartType: ChartType.PolarArea,
         },
         timestamp: new Date().toISOString(),
       };

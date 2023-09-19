@@ -4,7 +4,11 @@ import { JwtService } from '@nestjs/jwt';
 import { SnowflakeService } from '../snowflake/snowflake.service';
 import { AnalysisService } from '../analysis/analysis.service';
 import { GraphFormatService } from '../graph-format/graph-format.service';
-import { formatDate, NewDataInterface } from '../interfaces/interfaces';
+import {
+  ChartType,
+  formatDate,
+  NewDataInterface,
+} from '../interfaces/interfaces';
 
 @Injectable()
 export class MovementService {
@@ -39,9 +43,17 @@ export class MovementService {
           };
         }
 
-        formattedData = {
-          datasets: [{ label: 'Vertical Movement' }],
-        };
+        if (
+          queryData[0]['NETTVERTICALMOVEMENT'].filters?.registrar?.length > 0
+        ) {
+          formattedData = {
+            datasets: [{ label: 'Vertical Movement' }],
+          };
+        } else {
+          formattedData = {
+            datasets: [{ label: 'Vertical Movement' }],
+          };
+        }
 
         const graphData = {
           chartData: formattedData,
@@ -72,11 +84,12 @@ export class MovementService {
           graphType: 'movement/vertical',
           data: data.data,
           filters: data.filters,
+          chartType:
+            data.filters.registrar?.length > 0 ? ChartType.Line : ChartType.Bar,
         },
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
-      console.debug(e);
       return {
         status: 500,
         error: true,
@@ -99,7 +112,6 @@ export class MovementService {
         try {
           queryData = await this.snowflakeService.execute(sqlQuery);
         } catch (e) {
-          console.debug(e);
           return {
             status: 500,
             error: true,
@@ -133,7 +145,7 @@ export class MovementService {
 
       graphName = this.verticalRankedGraphName(data.filters);
 
-      filters = data.filters;
+      filters = JSON.parse(filters);
       return {
         status: 'success',
         data: {
@@ -142,11 +154,11 @@ export class MovementService {
           graphType: 'movement/verticalRanked',
           data: data.data,
           filters: data.filters,
+          chartType: ChartType.PolarArea,
         },
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
-      console.debug(e);
       return {
         status: 500,
         error: true,
