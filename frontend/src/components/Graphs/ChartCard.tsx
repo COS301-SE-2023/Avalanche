@@ -309,7 +309,7 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
 
 	return (
 		<>
-			<div className="block p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-dark-background dark:border-dark-background w-full animate__animated animate__fadeIn animate__slow z-10 graphChart max-h-[80vh] md:max-h-[70vh] overflow-y-auto">
+			<div className="block p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-dark-background dark:border-dark-background w-full animate__animated animate__fadeIn animate__slow z-10 graphChart max-h-[80vh] md:max-h-[70vh]">
 				<div className="flex justify-between mb-5 text-black dark:text-white">
 					<h1 className="p-1.5 chart-title">{title}</h1>
 					<div className="flex flex-row gap-1">
@@ -321,9 +321,9 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
 								onMouseLeave={() => setShowFilterTooltip(false)}
 							>
 								<FunnelIcon className="w-6 h-6" />
-								{showFilterTooltip && (
+								{showFilterTooltip && <div className="relative z-20">
 									<FilterTooltip filters={filtersApplied} ></FilterTooltip>
-								)}
+								</div>}
 							</div>
 							<Transition
 								as={Fragment}
@@ -336,14 +336,16 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
 								appear={true}
 								show={filterDropdown}
 							>
-								<div className="absolute right-0 z-20 w-96 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none p-2 dark:bg-gray-700 max-h-72 overflow-y-scroll">
-									<h1 className="text-xl underline font-semibold">Filters</h1>
-									{renderFilters()}
-									<SubmitButton
-										text="Get Results"
-										className="mt-4 w-full"
-										onClick={() => filterSubmit()}
-									/>
+								<div className="relative z-20">
+									<div className="absolute right-0  w-96 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none p-2 dark:bg-gray-700 max-h-72 overflow-y-scroll">
+										<h1 className="text-xl underline font-semibold">Filters</h1>
+										{renderFilters()}
+										<SubmitButton
+											text="Get Results"
+											className="mt-4 w-full"
+											onClick={() => filterSubmit()}
+										/>
+									</div>
 								</div>
 							</Transition>
 						</div>
@@ -354,7 +356,7 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
 						>
 							<MagnifyingGlassPlusIcon className="w-6 h-6" />
 						</ChartCardButton>
-						<Menu as="div" className="relative inline-block text-left">
+						<Menu as="div" className="inline-block text-left">
 							<div>
 								<Menu.Button className="inline-flex justify-center p-1.5 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-lightHover dark:hover:bg-gray-600">
 									<ArrowDownTrayIcon className="w-6 h-6" />{" "}
@@ -370,37 +372,39 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
 								leaveFrom="transform opacity-100 scale-100"
 								leaveTo="transform opacity-0 scale-95"
 							>
-								<Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-700">
-									<div className="py-1">
-										<Menu.Item>
-											<span
-												className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
-												onClick={() => {
-													const csv = convertToCSV(graphData.jsonData);
-													downloadCSV(csv, "data.csv");
-												}}
-											>
-												Download CSV
-											</span>
-										</Menu.Item>
-										<Menu.Item>
-											<span
-												className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
-												onClick={() => {
-													const json = JSON.stringify(graphData.jsonData);
-													downloadJSON(json, "data.json");
-												}}
-											>
-												Download JSON
-											</span>
-										</Menu.Item>
-									</div>
-								</Menu.Items>
+								<div className="relative z-20">
+									<Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-700">
+										<div className="py-1">
+											<Menu.Item>
+												<span
+													className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
+													onClick={() => {
+														const csv = convertToCSV(graphData.jsonData);
+														downloadCSV(csv, "data.csv");
+													}}
+												>
+													Download CSV
+												</span>
+											</Menu.Item>
+											<Menu.Item>
+												<span
+													className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
+													onClick={() => {
+														const json = JSON.stringify(graphData.jsonData);
+														downloadJSON(json, "data.json");
+													}}
+												>
+													Download JSON
+												</span>
+											</Menu.Item>
+										</div>
+									</Menu.Items>
+								</div>
 							</Transition>
 						</Menu>
 
 						{/* Change bar type */}
-						<Menu as="div" className="relative inline-block text-left -z-5">
+						<Menu as="div">
 							<div>
 								<Menu.Button className="inline-flex justify-center p-1.5 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-lightHover dark:hover:bg-gray-600">
 									<ChartBarIcon className="w-6 h-6" />
@@ -416,38 +420,38 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
 								leaveFrom="transform opacity-100 scale-100"
 								leaveTo="transform opacity-0 scale-95"
 							>
-								<Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-700">
-									<div className="py-1">
-										{ChartTypeArray.filter((item) => {
-											// If the dataset size is more than 1, only allow Line, Bar, and Scatter.
-											if (graphData?.chartData?.datasets?.length > 1) {
-												return [
-													ChartType.Line,
-													ChartType.Bar,
-													ChartType.Radar,
-													ChartType.Table,
-													ChartType.Bubble,
-												].includes(item.type);
-											}
-											// Otherwise, show all chart types.
-											return true;
-										}).map((item, index) => {
-											return (
-												<Menu.Item key={index}>
-													<span
-														className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
-														key={index}
-														onClick={() => {
-															setType(item.type);
-														}}
-													>
-														{item.name} Chart
-													</span>
-												</Menu.Item>
-											);
-										})}
-									</div>
-								</Menu.Items>
+								<div className="relative z-40">
+									<Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-700">
+										<div className="py-1">
+											{ChartTypeArray.filter((item) => {
+												if (graphData?.chartData?.datasets?.length > 1) {
+													return [
+														ChartType.Line,
+														ChartType.Bar,
+														ChartType.Radar,
+														ChartType.Table,
+														ChartType.Bubble,
+													].includes(item.type);
+												}
+												return true;
+											}).map((item, index) => {
+												return (
+													<Menu.Item key={index}>
+														<span
+															className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
+															key={index}
+															onClick={() => {
+																setType(item.type);
+															}}
+														>
+															{item.name} Chart
+														</span>
+													</Menu.Item>
+												);
+											})}
+										</div>
+									</Menu.Items>
+								</div>
 							</Transition>
 						</Menu>
 					</div>
