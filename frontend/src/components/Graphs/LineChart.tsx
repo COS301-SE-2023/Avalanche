@@ -46,6 +46,7 @@ export function LineChart({ data, height }: IChart) {
       for (let index = 0; index < allOptions.series[0].data.length; index++) {
         if(allOptions.series[0].data[index]<0){
           discreteValues.push({
+            seriesIndex:index,
             size: 5, // Adjust the size as per your preference
             shape: "circle", // This will make the markers circular
             strokeWidth: 0,
@@ -56,6 +57,7 @@ export function LineChart({ data, height }: IChart) {
           },);
         }else{
           discreteValues.push({
+            seriesIndex:index,
             size: 5, // Adjust the size as per your preference
             shape: "circle", // This will make the markers circular
             strokeWidth: 0,
