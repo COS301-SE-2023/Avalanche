@@ -759,6 +759,8 @@ export class UserDataProductMangementService {
             }
             
             const userProduct = user.products.find(product => product.dataSource === dataSource);
+            const check = await this.redis.get(dataSource + " " + endpointV + " " + userProduct.tou)
+            if(check == null){
             const endpoint = await this.endpointRepository.findOne({
                 where: { endpoint: g }, // Match the endpoint with the dataSource
                 relations: ['dashboards']
@@ -774,8 +776,13 @@ export class UserDataProductMangementService {
             const result ={
                 dashboardGraphs : graphs
             };
+            await this.redis.set(dataSource + " " + endpointV + " " + userProduct.tou, JSON.stringify(result));
 
             return { "status": "success", "message": result };
+        }else{
+            const result = await this.redis.get(dataSource + " " + endpointV + " " + userProduct.tou);
+            return { "status": "success", "message": JSON.parse(result) };
+        }
         } catch (error) {
             return {
                 status: 500, error: true, message: 'Unexpected error.',
