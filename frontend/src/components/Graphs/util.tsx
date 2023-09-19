@@ -158,22 +158,24 @@ export function convertData(
 }
 
 function convertWithMultipleSeries(jsonData: JsonDataEntry[], type: string): ConvertedData {
+  jsonData = [...jsonData]
   const seriesMap: { [key: string]: { [key: string]: number } } = {};
   const xAxisSet = new Set<string>();
   const seriesSet = new Set<string>();
   let yMin = Infinity;
   let yMax = -Infinity;
 
-  let xAxisLabel = "";
-  let yAxisLabel = "";
-  let seriesLabel = "";
+  let xAxisLabel:any = "";
+  let yAxisLabel:any = "";
+  let seriesLabel: any = "";
 
   if (jsonData.length > 0) {
-    const firstEntryKeys = Object.keys(jsonData[0]);
-    xAxisLabel = firstEntryKeys[0];
-    seriesLabel = firstEntryKeys[1];
-    yAxisLabel = firstEntryKeys[2];
+    xAxisLabel = jsonData[0].xAxis;
+    yAxisLabel = jsonData[0].yAxis;
+    seriesLabel = jsonData[0].series;
   }
+
+  jsonData.splice(0,1);
 
   // Populate the seriesMap and collect unique xAxis and Series values
   jsonData.forEach((entry) => {
@@ -244,7 +246,7 @@ function convertWithMultipleSeries(jsonData: JsonDataEntry[], type: string): Con
             colors: themeColours.labelColour, // e.g., '#FFFFFF' for white
           },
           formatter: (val: number): string => {
-            return val.toLocaleString();
+            return val?.toLocaleString();
           },
         },
       },
@@ -281,18 +283,19 @@ function convertWithMultipleSeries(jsonData: JsonDataEntry[], type: string): Con
 }
 
 function convertWithSingleSeries(jsonData: JsonDataEntry[], type: string): ConvertedData {
+  jsonData = [...jsonData];
   const xAxisSet = new Set<string>();
   let yMin = Infinity;
 
-  let xAxisLabel = "";
-  let yAxisLabel = "";
+  let xAxisLabel: any = "";
+  let yAxisLabel: any = "";
 
   if (jsonData.length > 0) {
-    const firstEntryKeys = Object.keys(jsonData[0]);
-    xAxisLabel = firstEntryKeys[0];
-    yAxisLabel = firstEntryKeys[1];
+    xAxisLabel = jsonData[0].xAxis;
+    yAxisLabel = jsonData[0].yAxis;
   }
 
+  jsonData.splice(0,1);
   const seriesData: number[] = [];
 
   // Populate the xAxisSet and seriesData
@@ -362,7 +365,7 @@ function convertWithSingleSeries(jsonData: JsonDataEntry[], type: string): Conve
             colors: themeColours.labelColour,
           },
           formatter: (val: number): string => {
-            return val.toLocaleString();
+            return val?.toLocaleString();
           },
         },
       },
@@ -392,17 +395,19 @@ function convertWithSingleSeries(jsonData: JsonDataEntry[], type: string): Conve
 export function convertForProportion(
   jsonData: JsonDataEntry[]
 ): ProportionConvertedData {
+  jsonData = [...jsonData];
   const xAxisValues: string[] = [];
   const yAxisValues: number[] = [];
 
-  let xAxisLabel = "";
-  let yAxisLabel = "";
+  let xAxisLabel:any = "";
+  let yAxisLabel:any = "";
 
   if (jsonData.length > 0) {
-    const firstEntryKeys = Object.keys(jsonData[0]);
-    xAxisLabel = firstEntryKeys[0];
-    yAxisLabel = firstEntryKeys[1];
+    xAxisLabel = jsonData[0].xAxis;
+    yAxisLabel = jsonData[0].yAxis;
   }
+
+  jsonData.splice(0,1)
 
   jsonData.forEach((entry) => {
     xAxisValues.push(entry[xAxisLabel] as string);

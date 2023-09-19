@@ -35,15 +35,23 @@ interface SchemaDetail {
 export class SchemaService {
   private schemas: SchemaDetail[] = [];
 
-  constructor() {
+  public initializeSchemas() {
     const projectRoot = path.resolve(__dirname, '../');
-    const schemasFilePath = path.join(projectRoot, 'src/schemas/transactionDetails.json'); // Adjust path as needed
+    const schemasFilePath = path.join(projectRoot, 'src/schemas'); // Adjust path as needed
     this.loadSchemas(schemasFilePath);
   }
 
-  private loadSchemas(filePath: string) {
-    const fileContent = fs.readFileSync(filePath, 'utf-8');
-    this.schemas = JSON.parse(fileContent);
+  protected loadSchemas(dir: string) {
+    fs.readdirSync(dir).forEach((file) => {
+      const filePath = path.join(dir, file);
+      const stats = fs.statSync(filePath);
+
+      if (stats.isFile() && path.extname(file) === '.json') {
+        const fileContent = fs.readFileSync(filePath, 'utf-8');
+        const parsedSchemas: SchemaDetail[] = JSON.parse(fileContent);
+        this.schemas.push(...parsedSchemas); // Merge new schemas into existing array
+      }
+    });
   }
 
   getSchemaByFact(fact: string): SchemaDetail | null {

@@ -726,7 +726,7 @@ export class UserDataProductMangementService {
         };
     }
 
-    async getDashboards(token: string) {
+    async getDashboards(token: string, endpointV: string, dataSource: string) {
         try {
             const userPayload = await this.redis.get(token);
             if (!userPayload) {
@@ -749,35 +749,27 @@ export class UserDataProductMangementService {
 
             // Initialize an array to store the final result
             const result = [];
-
-            // Iterate through the user's products
-            const allProducts = [...user.products, ...user.userGroups.flatMap(ug => ug.products)];
-            
-            for (const product of allProducts) {
-                if (product) {
-                    let dataSource = product.dataSource;
-                    const tou = product.tou;
-                    if (dataSource == 'zarc') {
-                        dataSource = 'zacr';
-                    }
-                    // Find the endpoints related to the current data source
-                    const endpoint = await this.endpointRepository.findOne({
-                        where: { endpoint: dataSource }, // Match the endpoint with the dataSource
-                        relations: ['dashboards']
-                    });
-
-                    // Iterate through the endpoints and collect the endpoints, graphs, and filters based on TOU
-
-                    const graphsByTOU = endpoint.dashboards.filter(dashboard => dashboard.user === tou);
-
-                    // If there are graphs that match the TOU, include the endpoint along with graphs and filters
-                    if (graphsByTOU.length > 0) {
-                        result.push({
-                            endpoint: dataSource, graphs: graphsByTOU
-                        });
-                    }
-                }
+            let g = dataSource;
+            if(g == 'zarc'){
+                g = 'zacr'
             }
+            
+            const userProduct = user.products.find(product => product.dataSource === dataSource);
+            const endpoint = await this.endpointRepository.findOne({
+                where: { endpoint: g }, // Match the endpoint with the dataSource
+                relations: ['dashboards']
+            });
+            const dashboards = endpoint.dashboards.find(dashboard => dashboard.name == endpointV && dashboard.user == userProduct.tou);
+            if(!dashboards){
+                return {
+                    status: 403, error: true, message: 'Unauthorised.',
+                    timestamp: new Date().toISOString()
+                };  
+            }
+            const graphs = dashboards.graphs;
+            result.push({
+                dashboardGraphs : graphs
+            });
 
             return { "status": "success", "message": result };
         } catch (error) {

@@ -98,4 +98,8 @@ export class UserManagementService {
   async getEndpoints(data: any) {
     return this.client.send({ cmd: 'getEndpoints' }, data).toPromise();
   }
+
+  async getDashboards(data: any) {
+    return this.client.send({ cmd: 'getDashboards' }, data).toPromise();
+  }
 }

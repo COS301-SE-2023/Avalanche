@@ -58,21 +58,21 @@ export default function Movement() {
     function loadData() {
         const arrayMovementVerticalShare: IMovementGraphRequest[] = [];
 
-        const arrayMovementVerticalRanked : IMovementGraphRankedRequest[] = [];
+        // const arrayMovementVerticalRanked : IMovementGraphRankedRequest[] = [];
 
         const movementVertical: IMovementGraphRequest = { zone: stateGraph.zones.slice(0, 1), };
         arrayMovementVerticalShare.push(movementVertical);
 
         const movementVerticalRanked: IMovementGraphRankedRequest = { zone: stateGraph.zones.slice(0, 1), };
-        arrayMovementVerticalRanked.push(movementVerticalRanked);
+        // arrayMovementVerticalRanked.push(movementVerticalRanked);
 
         arrayMovementVerticalShare.forEach(data => {
             dispatch(getMovementVerticalData(data));
         })
 
-        arrayMovementVerticalRanked.forEach(data => {
-            dispatch(getMovementVerticalRankedData(data));
-        })
+        // arrayMovementVerticalRanked.forEach(data => {
+        //     dispatch(getMovementVerticalRankedData(data));
+        // })
     }
 
     useEffect(() => {

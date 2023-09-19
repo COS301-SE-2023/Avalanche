@@ -22,7 +22,8 @@ enum Area {
 
 ```
 interface Node {
-    connectTo: Role[], //can have function or something based on role instead of storing in each node - might make it slower but idk
+    connectTo: Role[], 
+        //can have function or something based on role instead of storing in each node - might make it slower but idk
     role: Role
     area: Area
 }
@@ -63,7 +64,15 @@ interface Edge {
 * startOfSelect:
 ```
 //possibly:
-{ label: 'Start Of Select' }
+{ 
+    label: 'Start Of Select',
+    role: Role,
+    connectTo: Role[],
+    handles: { // holds data for the handles
+        right?: {},
+        left?: {}
+    }
+}
 //But since we may just make it a block on side then nothing
 ```
 * selectBlock:

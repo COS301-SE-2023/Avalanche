@@ -136,14 +136,14 @@ export class AppService {
     if (!existingData) {
       throw new NotFoundException('Data not found');
     }
-    
+    for(const dashboards of data.dashboardData){
     const dashboardEntity = new Dashboard();
-    dashboardEntity.name = data.dashboardData[0].name;
-    dashboardEntity.user = data.dashboardData[0].user;
-    dashboardEntity.graphs = data.dashboardData[0].graphs;
+    dashboardEntity.name = dashboards.name;
+    dashboardEntity.user = dashboards.user;
+    dashboardEntity.graphs = dashboards.graphs;
     dashboardEntity.endpoint = existingData;
     const dashboardResult =await this.dashboardRepository.save(dashboardEntity);
-
+  }
     return {'status' : 'success'};
 
   }
