@@ -555,11 +555,23 @@ function Flow() {
                                     This is the filter area. Anything that you need to filter
                                     shows up in this area.
                                 </p>
-                                <SubmitButton
-                                    text="Add a Filter Block"
-                                    className="w-full"
-                                    onClick={() => addFilterNode()}
-                                />
+                                <div className="space-y-4">
+                                    <SubmitButton
+                                        text="Add a Filter Block"
+                                        className="w-full"
+                                        onClick={() => addFilterNode()}
+                                    />
+                                    <SubmitButton
+                                        text="Add an AND Block"
+                                        className="w-full"
+                                        onClick={() => addAndNode()}
+                                    />
+                                    <SubmitButton
+                                        text="Add an OR Block"
+                                        className="w-full"
+                                        onClick={() => addOrNode()}
+                                    />
+                                </div>
                             </Panel>
                         )}
                         <Panel position="top-left" className="flex gap-2 flex-col">
