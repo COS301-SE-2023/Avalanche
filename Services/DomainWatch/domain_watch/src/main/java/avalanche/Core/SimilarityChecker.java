@@ -224,7 +224,7 @@ public class SimilarityChecker {
                     for (int i = 0; i < threads.length; i++) {
                         threads[i].start();
                     }
-                    spinThreads(0, threads);
+                    spinThreads(0, threads, "Soundex");
                     for (int i = 0; i < threads.length; i++) {
                         try {
                             threads[i].join();
@@ -234,7 +234,7 @@ public class SimilarityChecker {
 
                         }
                     }
-                    spinThreads(0, threads);
+                    spinThreads(0, threads, "Soundex");
                 }
             } else {
                 for (int i = 0; i < threads.length; i++) {
@@ -244,7 +244,7 @@ public class SimilarityChecker {
                 for (int i = 0; i < threads.length; i++) {
                     threads[i].start();
                 }
-                spinThreads(0, threads);
+                spinThreads(0, threads, "Soundex");
                 for (int i = 0; i < threads.length; i++) {
                     try {
                         threads[i].join();
@@ -254,7 +254,7 @@ public class SimilarityChecker {
 
                     }
                 }
-                spinThreads(0, threads);
+                spinThreads(0, threads, "Soundex");
             }
         } else {
             for (String zone : splitDoms.keySet()) {
@@ -267,7 +267,7 @@ public class SimilarityChecker {
                     for (int i = 0; i < threads.length; i++) {
                         threads[i].start();
                     }
-                    spinThreads(0, threads);
+                    spinThreads(0, threads, "Soundex");
                     for (int i = 0; i < threads.length; i++) {
                         try {
                             threads[i].join();
@@ -277,7 +277,7 @@ public class SimilarityChecker {
 
                         }
                     }
-                    spinThreads(0, threads);
+                    spinThreads(0, threads, "Soundex");
                 }
             }
         }
@@ -299,7 +299,7 @@ public class SimilarityChecker {
                         threads[i].start();
                     }
 
-                    spinThreads(0, threads);
+                    spinThreads(0, threads, "Levenshtein");
                     for (int i = 0; i < threads.length; i++) {
                         try {
                             threads[i].join();
@@ -308,7 +308,7 @@ public class SimilarityChecker {
                             e.printStackTrace();
                         }
                     }
-                    spinThreads(0, threads);
+                    spinThreads(0, threads, "Levenshtein");
                 }
             } else {
                 for (int i = 0; i < threads.length; i++) {
@@ -319,7 +319,7 @@ public class SimilarityChecker {
                     threads[i].start();
                 }
 
-                spinThreads(0, threads);
+                spinThreads(0, threads, "Levenshtein");
                 for (int i = 0; i < threads.length; i++) {
                     try {
                         threads[i].join();
@@ -328,7 +328,7 @@ public class SimilarityChecker {
                         e.printStackTrace();
                     }
                 }
-                spinThreads(0, threads);
+                spinThreads(0, threads, "Levenshtein");
             }
         } else {
             for (String zone : splitDoms.keySet()) {
@@ -341,7 +341,7 @@ public class SimilarityChecker {
                         threads[i].start();
                     }
 
-                    spinThreads(0, threads);
+                    spinThreads(0, threads, "Levenshtein");
                     for (int i = 0; i < threads.length; i++) {
                         try {
                             threads[i].join();
@@ -350,7 +350,7 @@ public class SimilarityChecker {
                             e.printStackTrace();
                         }
                     }
-                    spinThreads(0, threads);
+                    spinThreads(0, threads, "Levenshtein");
                 }
             }
         }
@@ -358,16 +358,17 @@ public class SimilarityChecker {
         return hits;
     }
 
-    private void spinThreads(int position, Thread[] threads) {
+    private void spinThreads(int position, Thread[] threads, String activity) {
         final String[] loading = { "-", "\\", "|", "/" };
         int loaderNum = position % loading.length;
-        for (int i = 0; i < threads.length; i++) {
-            System.out.print("\u001b[1000D");
-            System.out.print("\u001b[1A");
-        }
+        // for (int i = 0; i < threads.length; i++) {
+        // System.out.print("\u001b[1000D");
+        // System.out.print("\u001b[1A");
+        // }
         for (int i = 0; i < threads.length; i++) {
             System.out.println(
-                    "Thread " + i + "-\t" + threads[i].getState().toString() + "[" + loading[loaderNum] + "]");
+                    "Thread " + i + "-\t" + threads[i].getState().toString() + "[" + loading[loaderNum] + "] ("
+                            + activity + ")");
         }
     }
 
