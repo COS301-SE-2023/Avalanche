@@ -92,6 +92,10 @@ type TreeConvertedData = {
   options: {};
 };
 
+const camelCaseRenderer = (value: string) => {
+  return value.replace(/([A-Z])/g, ' $1').replace(/^./, function (str) { return str.toUpperCase(); })
+}
+
 export function convertData(
   jsonData: JsonDataEntry[],
   type: string,
@@ -216,7 +220,7 @@ function convertWithMultipleSeries(jsonData: JsonDataEntry[], type: string): Con
       xaxis: {
         categories: Array.from(xAxisSet),
         title: {
-          text: xAxisLabel,
+          text: camelCaseRenderer(xAxisLabel),
           style: {
             color: themeColours.labelColour,
           },
@@ -234,7 +238,7 @@ function convertWithMultipleSeries(jsonData: JsonDataEntry[], type: string): Con
         
         forceNiceScale: true,
         title: {
-          text: yAxisLabel,
+          text: camelCaseRenderer(yAxisLabel),
           style: {
             color: themeColours.labelColour,
           },
@@ -336,7 +340,7 @@ function convertWithSingleSeries(jsonData: JsonDataEntry[], type: string): Conve
       xaxis: {
         categories: Array.from(xAxisSet),
         title: {
-          text: xAxisLabel,
+          text: camelCaseRenderer(xAxisLabel),
           style: {
             color: themeColours.labelColour,
           },
@@ -353,7 +357,7 @@ function convertWithSingleSeries(jsonData: JsonDataEntry[], type: string): Conve
       yaxis: {
         forceNiceScale: true,
         title: {
-          text: yAxisLabel,
+          text: camelCaseRenderer(yAxisLabel),
           style: {
             color: themeColours.labelColour,
           },

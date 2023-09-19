@@ -117,7 +117,7 @@ export class MovementService {
 
         filters = queryData[0]['NETVERTICALMOVEMENTRANKED'].filters;
 
-        const data = { data: { data: graphData, filters: filters } };
+        data = { data: graphData, filters: filters };
 
         await this.redis.set(
           `africa` + sqlQuery,
