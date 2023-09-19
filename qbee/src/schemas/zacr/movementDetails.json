@@ -157,7 +157,32 @@
                 }
             ]
         },
-        
+        {
+            "table": "Dim Registry Movement Detail",
+            "from": "Dim Movement Detail Key",
+            "to": "Dim Movement Detail Key",
+            "columns": [
+                {
+                    "columnName": "Movement Type",
+                    "columnType": "string",
+                    "typeOfFilter": "checkbox",
+                    "filterReturnType": "string",
+                    "comparisonTypes": [
+                        "=",
+                        "LIKE"
+                    ],
+                    "filterValues":[
+                        "Create",
+                        "Delete",
+                        "Transfer Out",
+                        "Transfer In",
+                        "Renew"
+                    ],
+                    "filter": true,
+                    "table": "Registry Movement Detail"
+                }
+            ]
+        },
         {
             "table": "Dim Registry Registrar",
             "from": "Dim Registrar Key",
