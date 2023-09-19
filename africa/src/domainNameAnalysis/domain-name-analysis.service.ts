@@ -4,7 +4,11 @@ import { Injectable, Inject } from '@nestjs/common';
 import { lastValueFrom } from 'rxjs';
 import { SnowflakeService } from '../snowflake/snowflake.service';
 import { GraphFormatService } from '../graph-format/graph-format.service';
-import { DataInterface, NewDataInterface } from 'src/interfaces/interfaces';
+import {
+  ChartType,
+  DataInterface,
+  NewDataInterface,
+} from 'src/interfaces/interfaces';
 
 @Injectable()
 export class DomainNameAnalysisService {
@@ -25,8 +29,8 @@ export class DomainNameAnalysisService {
       const sqlQuery = `call domainNameAnalysis('${filters}')`;
 
       const dataR = await this.redis.get(`africa` + sqlQuery);
-      let data: DataInterface;
-      let formattedData = '';
+      let data: NewDataInterface;
+      let formattedData;
       if (!dataR) {
         let queryData;
         try {
@@ -46,14 +50,22 @@ export class DomainNameAnalysisService {
           dataO,
         );
         const responseData = await lastValueFrom(response);
-        formattedData =
-          await this.graphFormattingService.formatDomainNameAnalysis(
-            JSON.stringify(responseData.data),
-          );
-        data = {
-          chartData: JSON.parse(formattedData),
-          jsonData: responseData.data.data,
+        formattedData = {
+          datasets: [{ label: 'Label1' }],
         };
+
+        const jsonData: any[] = responseData.data.data;
+        jsonData.forEach((item) => {
+          delete item.domains;
+        });
+        jsonData.unshift({ xAxis: 'word', yAxis: 'frequency' });
+
+        const graphData = {
+          chartData: formattedData,
+          jsonData: jsonData,
+        };
+
+        data = { data: graphData, filters: {} };
         await this.redis.set(
           `africa` + sqlQuery,
           JSON.stringify(data),
@@ -72,7 +84,9 @@ export class DomainNameAnalysisService {
             ' ' +
             granularity +
             '(s)',
-          data: data,
+          data: data.data,
+          filters: data.filters,
+          chartType: ChartType.Bubble,
           warehouse: 'africa',
           graphType: 'domainNameAnalysis/count',
         },
@@ -100,8 +114,8 @@ export class DomainNameAnalysisService {
       const dataR = await this.redis.get(
         `africa` + sqlQuery + ` classification`,
       );
-      let data: DataInterface;
-      let formattedData = '';
+      let data: NewDataInterface;
+      let formattedData;
       if (!dataR) {
         let queryData;
         try {
@@ -121,17 +135,22 @@ export class DomainNameAnalysisService {
           dataO,
         );
         const responseData = await lastValueFrom(response);
-        const formattedResponseData = {
-          data: this.formatClassification(responseData.data.data),
+        formattedData = {
+          datasets: [{ label: 'Label1' }],
         };
-        formattedData =
-          await this.graphFormattingService.formatDomainNameAnalysisClassification(
-            JSON.stringify(formattedResponseData),
-          );
-        data = {
-          chartData: JSON.parse(formattedData),
-          jsonData: formattedResponseData.data,
+
+        const jsonData: any[] = responseData.data.data;
+        jsonData.forEach((item) => {
+          delete item.domains;
+        });
+        jsonData.unshift({ xAxis: 'word', yAxis: 'frequency' });
+
+        const graphData = {
+          chartData: formattedData,
+          jsonData: jsonData,
         };
+
+        data = { data: graphData, filters: {} };
         await this.redis.set(
           `africa` + sqlQuery + ` classification`,
           JSON.stringify(data),
@@ -151,6 +170,7 @@ export class DomainNameAnalysisService {
             granularity +
             '(s)',
           data: data,
+          chartType: ChartType.Bubble,
           warehouse: 'africa',
           graphType: 'domainNameAnalysis/classification',
         },
@@ -225,6 +245,7 @@ export class DomainNameAnalysisService {
           graphType: 'domainNameAnalysis/length',
           data: data.data,
           filters: data.filters,
+          chartType: ChartType.Line,
         },
         timestamp: new Date().toISOString(),
       };
