@@ -109,7 +109,9 @@ export default function CustomChartCard({ title, data, defaultGraph, state, id, 
         if (data.endpointName) {
             const d = data.endpointName.split("/");
             setWarehouse(d[0]);
-            setGType(d[1]);
+            d.splice(0,1)
+            setGType(d.join('/'));
+
         } else {
             setWarehouse(data.warehouse);
             setGType(data.type);
@@ -128,7 +130,6 @@ export default function CustomChartCard({ title, data, defaultGraph, state, id, 
             }).json();
             const d = res as any;
             setGraphData(d.data.data);
-            console.log(graphData)
             setLoading(false);
             setError(false);
             setErrorMessage("");
