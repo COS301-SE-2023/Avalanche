@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 export function TableChart({ data }: any) {
-  data = JSON.parse(JSON.stringify(data.jsonData));
+  data = data.jsonData;
   data.splice(0,1);
   const headers = data.length ? Object.keys(data[0]) : [];
 
