@@ -445,3 +445,4 @@ docker-compose.yml.1
 node_modules
 zeus/.env
 qbee/.env
+gatekeeper/.env

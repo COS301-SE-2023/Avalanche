@@ -663,6 +663,7 @@ export class UserDataProductMangementService {
 
             return { "status": "success", "message": result };
         } catch (error) {
+            console.log(error,"Error");
             return {
                 status: 500, error: true, message: 'Unexpected error.',
                 timestamp: new Date().toISOString()
