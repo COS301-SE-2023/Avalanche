@@ -9,8 +9,6 @@ import java.util.zip.*;
 
 import org.javatuples.Triplet;
 
-import javafx.scene.web.WebHistory.Entry;
-
 public class Classifier {
 
     private final boolean PRINT_DEBUG = true;
