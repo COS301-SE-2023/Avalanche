@@ -9,13 +9,15 @@ interface ITable {
 interface IInitState {
     data: DBData[],
     tables: string[],
-    columns: string[]
+    columns: string[],
+    edited: boolean
 }
 
 const InitState: IInitState = {
     data: [],
     tables: [],
-    columns: []
+    columns: [],
+    edited: false,
 }
 
 export const qbeeSlice = createSlice({
@@ -33,6 +35,7 @@ export const qbeeSlice = createSlice({
             state.data.forEach((item: DBData) => {
                 if (item.table === action.payload) state.columns.push(item.columnName);
             })
+            state.edited = true;
         },
         clear(state) {
             state.data = [];
@@ -44,6 +47,9 @@ export const qbeeSlice = createSlice({
         },
         addToFilterable(state, action) {
 
+        },
+        setEdited(state, action) {
+            state.edited = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -56,6 +62,6 @@ export const qbeeSlice = createSlice({
     }
 })
 
-export const { addData, selectTable, clear, addToFilterable } = qbeeSlice.actions;
+export const { addData, selectTable, clear, addToFilterable, setEdited } = qbeeSlice.actions;
 export const qbeeState = (state: AppState) => state.qbee;
 export default qbeeSlice.reducer;

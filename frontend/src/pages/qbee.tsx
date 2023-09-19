@@ -1,4 +1,4 @@
-import { Squares2X2Icon } from "@heroicons/react/24/solid";
+import { Squares2X2Icon, DocumentCheckIcon, CheckIcon, CheckCircleIcon } from "@heroicons/react/24/solid";
 import Head from "next/head";
 import Link from "next/link";
 import { useCallback, useState, useEffect } from 'react';
@@ -10,7 +10,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { randomRange } from "@/utils";
 import { Role as QBeeRole } from "@/interfaces/qbee/enums";
 import { DBData } from "@/interfaces/qbee/interfaces";
-import { SubmitButton } from "@/components/Util";
+import { SubmitButton, SuccessToast } from "@/components/Util";
+import { useDispatch, useSelector } from "react-redux";
+import { addData, qbeeState } from "@/store/Slices/qbeeSlice";
 
 import OutputNode from "@/components/QBee/OutputNode";
 import SelectBlock from "@/components/QBee/SelectNode";
@@ -19,8 +21,7 @@ import AddNode from "@/components/QBee/AddNode";
 import FilterBlock from "@/components/QBee/FilterBlock";
 
 import dummyData from "@/components/QBee/dummy.json";
-import { useDispatch, useSelector } from "react-redux";
-import { addData, qbeeState } from "@/store/Slices/qbeeSlice";
+import { Toaster } from "react-hot-toast";
 
 const nodeTypes = { outputNode: OutputNode, selectBlock: SelectBlock, edgeNode: EdgeNode, addNode: AddNode, filterBlock: FilterBlock };
 
@@ -45,7 +46,7 @@ export default function QBee() {
         };
     }, []);
 
-    if (screenWidth > 768) return <div><ReactFlowProvider><Flow /></ReactFlowProvider></div>;
+    if (screenWidth > 768) return <div><ReactFlowProvider><Toaster /><Flow /></ReactFlowProvider></div>;
     return <>
         <Head>
             <title>🐝</title>
@@ -254,7 +255,7 @@ function Flow() {
         }));
     }
 
-    const quickConnect = (from: string, to: string) => {
+    const quickConnect = (from: string, to: string): void => {
         setEdges((edgs: Edge[]) => edgs.concat({
             id: `${from}-${to}-${uuidv4()}`,
             source: from,
@@ -376,7 +377,14 @@ function Flow() {
                             className="w-full"
                             onClick={() => addFilterNode()} />
                     </Panel>}
-                    <Panel position="top-left" className="bg-black p-2 rounded-lg cursor-pointer" onClick={() => router.push("/home")}><Squares2X2Icon className="w-4=6 h-6" /></Panel>
+                    <Panel position="top-left" className="flex gap-2 flex-col">
+                        <div className="bg-black p-2 rounded-lg cursor-pointer" onClick={() => router.push("/home")}>
+                            <Squares2X2Icon className="w-4=6 h-6" />
+                        </div>
+                        <div className="bg-success-background p-2 rounded-lg cursor-pointer" onClick={() => SuccessToast({ text: "Successfully saved 🐝 Or have you 👀" })}>
+                            <CheckCircleIcon className="w-4=6 h-6" />
+                        </div>
+                    </Panel>
                 </ReactFlow>
             </ReactFlowProvider>
         </div>
