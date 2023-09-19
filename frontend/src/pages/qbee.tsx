@@ -44,7 +44,7 @@ import dummyData from "@/components/QBee/dummy.json";
 import { Toaster } from "react-hot-toast";
 
 const nodeTypes = {
-    outputNode: OutputNode,
+    outputBlock: OutputNode,
     selectBlock: SelectBlock,
     edgeNode: EdgeNode,
     addNode: AddNode,
@@ -256,34 +256,15 @@ function Flow() {
         // ---- End of Filter Area
         // ---- Start of Output
         {
-            id: "OutputGroup",
-            type: "group",
-            position: { x: 4600, y: 0 },
-            style: {
-                width: 1000,
-                height: 500,
-            },
-            data: {},
-            deletable: false,
-            draggable: true,
-        },
-        {
-            id: "outputStart",
-            extent: "parent",
-            parentNode: "OutputGroup",
-            position: { x: -75, y: 50 },
+            id: QBeeRole.outputBlock,
+            type: QBeeRole.outputBlock,
+            position: { x: 4600, y: -50 },
             data: {
-                label: "In for the Output",
-                role: QBeeRole.startOfOutput,
-                connectTo: [],
-                handles: {
-                    target: {},
-                },
+                role: QBeeRole.outputBlock
             },
-            draggable: false,
             deletable: false,
-            type: "edgeNode",
-        },
+            draggable: true
+        }
     ];
 
     /**
@@ -299,7 +280,7 @@ function Flow() {
         {
             id: "filterToOutput",
             source: QBeeRole.endOfFilter,
-            target: QBeeRole.startOfOutput,
+            target: QBeeRole.outputBlock,
             deletable: false,
         },
     ];
@@ -395,6 +376,8 @@ function Flow() {
 
     /**
      * Update a node
+     * @id is the id of the node
+     * @data is the data
      */
     const updateNode = (id: string, data: any): void => {
         setNodes((prevElements: Node[]) =>
