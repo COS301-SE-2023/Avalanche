@@ -176,10 +176,10 @@ export class MovementService {
         for (const r of registrar) {
           regArr.push(r);
         }
-        registrar = regArr.join(', ');
+        registrar = ` for ${regArr.join(', ')}`;
       }
     } else {
-      registrar = 'all registrars';
+      registrar = ' for all registrars';
     }
 
     let zone = filters['zone'];
