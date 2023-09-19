@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 import Dagre from '@dagrejs/dagre';
 import { v4 as uuidv4 } from 'uuid';
 import { randomRange } from "@/utils";
-import { Role as QBeeRole } from "@/interfaces/qbee/enums";
+import { Role as QBeeRole, ComparisonType as QBeeComparisonType } from "@/interfaces/qbee/enums";
 import { DBData } from "@/interfaces/qbee/interfaces";
 import { SubmitButton, SuccessToast } from "@/components/Util";
 import { useDispatch } from "react-redux";
@@ -251,18 +251,38 @@ function Flow() {
             extent: 'parent',
             parentNode: 'SelectGroup',
             data: {
-                label: "",
                 column: "",
                 typeOfColumn: "",
                 help: "",
                 aggregationType: "",
                 renamedColumn: "",
                 connectTo: [QBeeRole.selectBlock, QBeeRole.endOfSelect],
-                quickConnect: quickConnect
+                quickConnect: quickConnect,
+                update: updateNode
             },
             position: { x: randomRange(350, 750), y: randomRange(150, 350) },
             zIndex: 2
         }));
+    }
+
+    /**
+     * Update a node
+     */
+    const updateNode = (id: string, data: any): void => {
+        setNodes((prevElements: Node[]) =>
+            prevElements.map((element) => {
+                if (element.id === id) {
+                    return {
+                        ...element,
+                        data: {
+                            ...element.data,
+                            ...data,
+                        },
+                    };
+                }
+                return element;
+            })
+        );
     }
 
     /**
@@ -281,7 +301,9 @@ function Flow() {
                 help: "",
                 aggregationType: "",
                 renamedColumn: "",
-                connectTo: [QBeeRole.filterBlock, QBeeRole.endOfFilter]
+                comparisonType: QBeeComparisonType.EQUAL,
+                connectTo: [QBeeRole.filterBlock, QBeeRole.endOfFilter],
+                update: updateNode
             },
             position: { x: randomRange(350, 750), y: randomRange(150, 350) },
         }));
@@ -312,7 +334,6 @@ function Flow() {
         if (node?.id === "FilterGroup") setSelectedPanel(node.id);
         if (node?.type === "outputNode") setSelectedPanel(node.type);
         if (node === null || node === undefined) setSelectedPanel("blocks");
-
     }, [nodes]);
 
     // Runs when Nodes are added/removed/updated/changed

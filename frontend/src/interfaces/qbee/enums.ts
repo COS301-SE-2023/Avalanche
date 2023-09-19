@@ -16,3 +16,26 @@ export enum Area {
     filter = "Filter",
     output = "Output"
 }
+
+export enum AggregationType {
+    SUM = "SUM",
+    COUNT = "COUNT",
+    AVG = "AVG",
+    MIN = "MIN",
+    MAX = "MAX"
+}
+
+export enum Filters {
+    DateRange = "DateRange",
+    Checkbox = "checkbox",
+    Radiobox = "radiobox",
+    Togglebox = "togglebox",
+    Inputbox = "inputbox",
+}
+
+export enum ComparisonType {
+    EQUAL = "=",
+    LIKE = "LIKE",
+    GREATERTHAN = ">",
+    LESSTHAN = "<"
+}

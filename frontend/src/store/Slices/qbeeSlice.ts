@@ -3,14 +3,11 @@ import { AppState } from "../store";
 import { HYDRATE } from "next-redux-wrapper";
 import { DBData } from "@/interfaces/qbee/interfaces";
 
-interface ITable {
-    column: string
-}
 interface IInitState {
     data: DBData[],
     tables: string[],
     columns: string[],
-    edited: boolean
+    edited: boolean,
 }
 
 const InitState: IInitState = {
@@ -27,15 +24,9 @@ export const qbeeSlice = createSlice({
         addData(state, action) {
             state.data = action.payload;
 
-            action.payload.filter((item: DBData) => {
-                if (!state.tables.includes(item.table)) state.tables.push(item.table);
+            action.payload.forEach((item: DBData) => {
+                state.columns.push(item.columnName);
             })
-        },
-        selectTable(state, action) {
-            state.data.forEach((item: DBData) => {
-                if (item.table === action.payload) state.columns.push(item.columnName);
-            })
-            state.edited = true;
         },
         clear(state) {
             state.data = [];
@@ -62,6 +53,6 @@ export const qbeeSlice = createSlice({
     }
 })
 
-export const { addData, selectTable, clear, addToFilterable, setEdited } = qbeeSlice.actions;
+export const { addData, clear, addToFilterable, setEdited } = qbeeSlice.actions;
 export const qbeeState = (state: AppState) => state.qbee;
 export default qbeeSlice.reducer;

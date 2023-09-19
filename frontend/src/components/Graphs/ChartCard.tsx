@@ -64,7 +64,7 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
 	const [warehouse, setWarehouse] = useState<string>(data.warehouse);
 	const [gType, setGType] = useState<string>(data.graphType);
 	const [filtersApplied, setFiltersApplied] = useState<any>(data.filters);
-	console.log(filtersApplied)
+	// console.log(filtersApplied)
 	const [loading, setLoading] = useState<boolean>(false);
 	const [error, setError] = useState<boolean>(false);
 	const [errorMessage, setErrorMessage] = useState<string>("");
@@ -73,10 +73,10 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
 	const [showFilterTooltip, setShowFilterTooltip] = useState<boolean>(false);
 
 	const addRequestObject = (key: string, value: any) => {
-		console.log("Adding request");
-		console.log(key);
-		console.log(request);
-		console.log(request[key]);
+		// console.log("Adding request");
+		// console.log(key);
+		// console.log(request);
+		// console.log(request[key]);
 		if (!request[key]) {
 			const temp = { ...request };
 			let object = { ...value };
@@ -84,8 +84,8 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
 			object.value = generateDefaultValue(value.input);
 			temp[key] = object;
 			setRequest(temp);
-			console.log("Request");
-			console.log(request);
+			// console.log("Request");
+			// console.log(request);
 		}
 	};
 
@@ -467,13 +467,9 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
 					<>
 						{type === ChartType.Bar && <BarChart data={graphData} />}
 						{type === ChartType.Pie && <PieChart data={graphData} />}
-						{type === ChartType.Line && (
-							<LineChart data={graphData} addClass="h-96" />
-						)}
+						{type === ChartType.Line && <LineChart data={graphData} addClass="h-96" />}
 						{type === ChartType.Bubble && <BubbleChart data={graphData} />}
-						{type === ChartType.PolarArea && (
-							<PolarAreaChart data={graphData} />
-						)}
+						{type === ChartType.PolarArea && <PolarAreaChart data={graphData} />}
 						{type === ChartType.Radar && <RadarChart data={graphData} />}
 						{type === ChartType.Table && <TableChart data={graphData} />}
 					</>
