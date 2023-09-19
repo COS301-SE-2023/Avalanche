@@ -33,9 +33,14 @@ export enum Filters {
     Inputbox = "inputbox",
 }
 
-export enum ComparisonType {
+export enum ComparisonOperator {
     EQUAL = "=",
     LIKE = "LIKE",
     GREATERTHAN = ">",
     LESSTHAN = "<"
 }
+
+export enum LogicalOperator { 
+    and = 'AND',  
+    or = 'OR' 
+};

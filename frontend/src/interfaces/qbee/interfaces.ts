@@ -1,5 +1,5 @@
 import { Node } from "reactflow"
-import { AggregationType, Area, ComparisonOperator, LogicalOperator, ComparisonType, Role,  } from "./enums"
+import { AggregationType, Area, ComparisonOperator, LogicalOperator, Role,  } from "./enums"
 
 // ---- Related to QBee Flow
 export interface NodeData {
@@ -46,7 +46,7 @@ export interface DBData {
     columnType: string,
     typeOfFilter: string,
     filterReturnType: string,
-    comparisonTypes: ComparisonType[],
+    comparisonTypes: ComparisonOperator[],
     filter: boolean,
     table: string
 }
