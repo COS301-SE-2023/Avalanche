@@ -33,33 +33,33 @@ export default function Dashboard() {
         // const monthlyLastYear: ITransactionGraphRequest = { granularity: "month", dateFrom, dateTo, zone: stateGraph.zones.slice(0, 1) };
         // array.push(monthlyLastYear);
 
-        // All transactions, monthly granularity, for the year before
-        dateFrom = `${currentDate.getFullYear() - 2}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
-        dateTo = `${currentDate.getFullYear() - 1}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
-        const monthlyPastYear: ITransactionGraphRequest = { graphName: `Monthly, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: stateGraph.zones.slice(0, 1) };
-        array.push(monthlyPastYear);
+        // // All transactions, monthly granularity, for the year before
+        // dateFrom = `${currentDate.getFullYear() - 2}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
+        // dateTo = `${currentDate.getFullYear() - 1}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
+        // const monthlyPastYear: ITransactionGraphRequest = { graphName: `Monthly, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: stateGraph.zones.slice(0, 1) };
+        // array.push(monthlyPastYear);
 
-        // All transactions, yearly, 5 years
-        dateFrom = `${currentDate.getFullYear() - 5}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
-        dateTo = `${currentDate.getFullYear()}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
-        const yearlyPastFive: ITransactionGraphRequest = { graphName: `Yearly, from ${dateFrom} to ${dateTo}`, granularity: "year", dateFrom, dateTo, zone: stateGraph.zones.slice(0, 1) };
-        array.push(yearlyPastFive);
+        // // All transactions, yearly, 5 years
+        // dateFrom = `${currentDate.getFullYear() - 5}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
+        // dateTo = `${currentDate.getFullYear()}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
+        // const yearlyPastFive: ITransactionGraphRequest = { graphName: `Yearly, from ${dateFrom} to ${dateTo}`, granularity: "year", dateFrom, dateTo, zone: stateGraph.zones.slice(0, 1) };
+        // array.push(yearlyPastFive);
 
-        //  All transactions, weekly, last 3 months
-        let holderDate = new Date();
-        holderDate.getMonth() - 3;
-        dateFrom = `${holderDate.getFullYear()}-${pad(holderDate.getMonth() - 3)}-${pad(holderDate.getDate())}`;
-        dateTo = `${currentDate.getFullYear()}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
-        const weeklyThreeMonths: ITransactionGraphRequest = { graphName: `Weekly, from ${dateFrom} to ${dateTo}`, granularity: "week", dateFrom, dateTo, zone: stateGraph.zones.slice(0, 1) };
-        array.push(weeklyThreeMonths);
+        // //  All transactions, weekly, last 3 months
+        // let holderDate = new Date();
+        // holderDate.getMonth() - 3;
+        // dateFrom = `${holderDate.getFullYear()}-${pad(holderDate.getMonth() - 3)}-${pad(holderDate.getDate())}`;
+        // dateTo = `${currentDate.getFullYear()}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
+        // const weeklyThreeMonths: ITransactionGraphRequest = { graphName: `Weekly, from ${dateFrom} to ${dateTo}`, granularity: "week", dateFrom, dateTo, zone: stateGraph.zones.slice(0, 1) };
+        // array.push(weeklyThreeMonths);
 
-        // All transactions, daily, last 2 weeks
-        holderDate = new Date();
-        holderDate.setDate(holderDate.getDate() - 14);
-        dateFrom = `${holderDate.getFullYear()}-${pad(holderDate.getMonth())}-${pad(holderDate.getDate())}`;
-        dateTo = `${currentDate.getFullYear()}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
-        const dailyTwoWeeks: ITransactionGraphRequest = { graphName: `Daily, from ${dateFrom} to ${dateTo}`, granularity: "day", dateFrom, dateTo, zone: stateGraph.zones.slice(0, 1) };
-        array.push(dailyTwoWeeks);
+        // // All transactions, daily, last 2 weeks
+        // holderDate = new Date();
+        // holderDate.setDate(holderDate.getDate() - 14);
+        // dateFrom = `${holderDate.getFullYear()}-${pad(holderDate.getMonth())}-${pad(holderDate.getDate())}`;
+        // dateTo = `${currentDate.getFullYear()}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
+        // const dailyTwoWeeks: ITransactionGraphRequest = { graphName: `Daily, from ${dateFrom} to ${dateTo}`, granularity: "day", dateFrom, dateTo, zone: stateGraph.zones.slice(0, 1) };
+        // array.push(dailyTwoWeeks);
 
         // array.forEach(data => {
         //     dispatch(getGraphData(data));
@@ -127,7 +127,7 @@ export default function Dashboard() {
 
         <MainContent>
             <div className="flex justify-between items-center">
-                <PageHeader title="Transactions" subtitle="Insights at your fingertips" icon={<ChartBarSquareIcon className="h-16 w-16 text-black dark:text-white" />} />
+                <PageHeader title="Transactions" subtitle="Gain insights into your transactional data" icon={<ChartBarSquareIcon className="h-16 w-16 text-black dark:text-white" />} />
                 <SubmitButton text="Download Report" onClick={() => generatePDF()} />
             </div>
             <DashboardBase state={stateGraph} />

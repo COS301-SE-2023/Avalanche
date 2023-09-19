@@ -110,7 +110,7 @@ export default function RegistrarMarketComparison() {
 
         <MainContent>
             <div className="flex justify-between items-center">
-                <PageHeader title="Registrar Market Comparison" subtitle="Insights at your fingertips" icon={<MapIcon className="h-16 w-16 text-black dark:text-white" />} />
+                <PageHeader title="Registrar Comparison Dashboard" subtitle="Compare top registrars based on their recent performance" icon={<MapIcon className="h-16 w-16 text-black dark:text-white" />} />
                 <SubmitButton text="Download Report" onClick={() => generatePDF()} />
             </div>
             <DashboardBase state={stateGraph} />
