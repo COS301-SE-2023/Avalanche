@@ -22,7 +22,7 @@ export default function GraphsRenderer({ graphs }: any) {
                     <ChartCard
                       title={data.graphName}
                       data={data}
-                      defaultGraph={ChartType.Line}
+                      defaultGraph={ChartType.Bar}
                       key={index}
                     />
                   );

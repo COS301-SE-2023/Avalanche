@@ -76,6 +76,7 @@ export class MovementService {
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
+      console.debug(e);
       return {
         status: 500,
         error: true,
@@ -98,6 +99,7 @@ export class MovementService {
         try {
           queryData = await this.snowflakeService.execute(sqlQuery);
         } catch (e) {
+          console.debug(e);
           return {
             status: 500,
             error: true,
@@ -117,7 +119,7 @@ export class MovementService {
 
         filters = queryData[0]['NETVERTICALMOVEMENTRANKED'].filters;
 
-        const data = { data: { data: graphData, filters: filters } };
+        data = { data: graphData, filters: filters };
 
         await this.redis.set(
           `zacr` + sqlQuery,
@@ -131,7 +133,7 @@ export class MovementService {
 
       graphName = this.verticalRankedGraphName(data.filters);
 
-      filters = JSON.parse(filters);
+      filters = data.filters;
       return {
         status: 'success',
         data: {
@@ -144,6 +146,7 @@ export class MovementService {
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
+      console.debug(e);
       return {
         status: 500,
         error: true,

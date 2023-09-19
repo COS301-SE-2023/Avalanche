@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import avalanche.Core.ResolutionChecker;
 import avalanche.Core.SimilarityChecker;
 import avalanche.DataClasses.Domain;
 import avalanche.Network.HandlerStrategy.Running;
@@ -65,8 +66,18 @@ public class HandleActive extends Running {
         Domain[] hitsArr = new Domain[hits.size()];
         hits.toArray(hitsArr);
         Arrays.sort(hitsArr, Collections.reverseOrder());
+        // Check for resolution only if
+
         int initSize = hits.size();
-        int totalTodo = Math.min(initSize, 500);
+        int totalTodo = Math.min(initSize, 200);
+        try {
+            String resolve = obj.getString("resolve");
+            if (resolve.equalsIgnoreCase("true")) {
+                ResolutionChecker.checkResolution(hitsArr, totalTodo);
+            }
+        } catch (JSONException jsonException) {
+            System.out.println("do not have to resolve");
+        }
         System.out.println("\nFound " + initSize + " matches\nBuilding response\n");
         for (int k = 0; k < totalTodo; k++) {
             resp += "    " + hitsArr[k].toJSON();
