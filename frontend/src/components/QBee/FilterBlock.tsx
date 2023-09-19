@@ -29,7 +29,7 @@ export default function FilterBlock({ data, id }: NodeProps<NodeData>) {
     const dispatch = useDispatch<any>();
 
     const getComparisonTypes = (): ComparisonType[] => {
-        const node: any = stateQBEE.nodes.find((item: Node) => item.id === id);
+        const node: any = stateQBEE.data.find((item: DBData) => item.columnName === data.column);
         if (!node) return [ComparisonType.EQUAL];
         if (!node?.comparisonTypes) return [ComparisonType.EQUAL];
         return node.comparisonTypes;

@@ -8,7 +8,7 @@ type CustomNode = Node<NodeData>;
 
 export default function CustomNode({ data }: NodeProps<NodeData>) {
 
-    return <div className='bg-avalancheBlue p-3 pl-5 rounded'>
+    return <div className='bg-avalancheBlue p-3 rounded'>
         <Handle
             type="target"
             position={Position.Left}
