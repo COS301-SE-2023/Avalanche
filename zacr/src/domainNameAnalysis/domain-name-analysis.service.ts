@@ -337,5 +337,3 @@ export class DomainNameAnalysisService {
     return finalOutput;
   }
 }
-
-

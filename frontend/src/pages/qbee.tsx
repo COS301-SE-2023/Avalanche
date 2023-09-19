@@ -1,12 +1,28 @@
 import { Squares2X2Icon, CheckCircleIcon } from "@heroicons/react/24/solid";
 import Head from "next/head";
 import Link from "next/link";
-import { useCallback, useState, useEffect } from 'react';
-import ReactFlow, { applyNodeChanges, Controls, Background, BackgroundVariant, Panel, ReactFlowProvider, useReactFlow, Node, Edge, applyEdgeChanges, OnNodesChange, addEdge, OnEdgesChange, OnConnect, Connection, } from 'reactflow';
-import 'reactflow/dist/style.css';
-import { useRouter } from 'next/router';
-import Dagre from '@dagrejs/dagre';
-import { v4 as uuidv4 } from 'uuid';
+import { useCallback, useState, useEffect } from "react";
+import ReactFlow, {
+    applyNodeChanges,
+    Controls,
+    Background,
+    BackgroundVariant,
+    Panel,
+    ReactFlowProvider,
+    useReactFlow,
+    Node,
+    Edge,
+    applyEdgeChanges,
+    OnNodesChange,
+    addEdge,
+    OnEdgesChange,
+    OnConnect,
+    Connection,
+} from "reactflow";
+import "reactflow/dist/style.css";
+import { useRouter } from "next/router";
+import Dagre from "@dagrejs/dagre";
+import { v4 as uuidv4 } from "uuid";
 import { randomRange } from "@/utils";
 import { Role as QBeeRole, ComparisonType as QBeeComparisonType } from "@/interfaces/qbee/enums";
 import { DBData } from "@/interfaces/qbee/interfaces";
@@ -23,12 +39,17 @@ import FilterBlock from "@/components/QBee/FilterBlock";
 import dummyData from "@/components/QBee/dummy.json";
 import { Toaster } from "react-hot-toast";
 
-const nodeTypes = { outputNode: OutputNode, selectBlock: SelectBlock, edgeNode: EdgeNode, addNode: AddNode, filterBlock: FilterBlock };
+const nodeTypes = {
+    outputNode: OutputNode,
+    selectBlock: SelectBlock,
+    edgeNode: EdgeNode,
+    addNode: AddNode,
+    filterBlock: FilterBlock,
+};
 
 const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
 
 export default function QBee() {
-
     const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 
     const handleResize = () => {
@@ -36,33 +57,66 @@ export default function QBee() {
     };
 
     useEffect(() => {
-        window.addEventListener('resize', handleResize);
+        window.addEventListener("resize", handleResize);
         return () => {
-            window.removeEventListener('resize', handleResize);
+            window.removeEventListener("resize", handleResize);
         };
     }, []);
 
-    if (screenWidth > 768) return <div><ReactFlowProvider><Toaster /><Flow /></ReactFlowProvider></div>;
-    return <>
-        <Head>
-            <title>🐝</title>
-        </Head>
-        <Link href="/home" className="fixed top-5 left-5 bg-black p-2 rounded-lg cursor-pointer dark:bg-white dark:text-primaryBackground"><Squares2X2Icon className="w-6 h-6" /></Link>
-        <section className="bg-gray-50 dark:bg-primaryBackground h-screen">
-            <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6 md:h-screen flex justify-center items-center h-full">
-                <div className="mx-auto max-w-screen-sm text-center">
-                    <img src="https://astonmartin.sloththe.dev/isawesome/undraw_mobile_encryption_re_yw3o.svg" />
-                    <h1 className="mb-4 text-7xl tracking-tight font-extrabold lg:text-9xl text-avalancheBlue dark:text-avalancheBlue">Whoops</h1>
-                    <p className="mb-4 text-3xl tracking-tight font-bold text-gray-900 md:text-4xl dark:text-white">No mobile devices...</p>
-                    <p className="mb-4 text-lg font-light text-gray-500 dark:text-gray-400">For Q🐝, you need to access this on a tablet or a bigger device such as a desktop PC or laptop.</p>
-                    <Link href="/home" className="inline-flex text-white bg-avalancheBlue hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:focus:ring-primary-900 my-4">Back to Homepage</Link>
-                </div>
+    if (screenWidth > 768)
+        return (
+            <div>
+                <ReactFlowProvider>
+                    <Toaster />
+                    <Flow />
+                </ReactFlowProvider>
             </div>
-        </section>
-    </>
+        );
+    return (
+        <>
+            <Head>
+                <title>🐝</title>
+            </Head>
+            <Link
+                href="/home"
+                className="fixed top-5 left-5 bg-black p-2 rounded-lg cursor-pointer dark:bg-white dark:text-primaryBackground"
+            >
+                <Squares2X2Icon className="w-6 h-6" />
+            </Link>
+            <section className="bg-gray-50 dark:bg-primaryBackground h-screen">
+                <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6 md:h-screen flex justify-center items-center h-full">
+                    <div className="mx-auto max-w-screen-sm text-center">
+                        <img src="https://astonmartin.sloththe.dev/isawesome/undraw_mobile_encryption_re_yw3o.svg" />
+                        <h1 className="mb-4 text-7xl tracking-tight font-extrabold lg:text-9xl text-avalancheBlue dark:text-avalancheBlue">
+                            Whoops
+                        </h1>
+                        <p className="mb-4 text-3xl tracking-tight font-bold text-gray-900 md:text-4xl dark:text-white">
+                            No mobile devices...
+                        </p>
+                        <p className="mb-4 text-lg font-light text-gray-500 dark:text-gray-400">
+                            For Q🐝, you need to access this on a tablet or a bigger device
+                            such as a desktop PC or laptop.
+                        </p>
+                        <Link
+                            href="/home"
+                            className="inline-flex text-white bg-avalancheBlue hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:focus:ring-primary-900 my-4"
+                        >
+                            Back to Homepage
+                        </Link>
+                    </div>
+                </div>
+            </section>
+        </>
+    );
 }
 
 function Flow() {
+
+    const router = useRouter();
+    const dispatch = useDispatch<any>();
+    dispatch(addData(dummyData as DBData[]));
+    const [selectedPanel, setSelectedPanel] = useState<string>("blocks");
+    const { fitView } = useReactFlow();
 
     /**
      * Holds the initial nodes for the Flow
@@ -75,7 +129,7 @@ function Flow() {
             position: { x: 0, y: 0 },
             style: {
                 width: 2000,
-                height: 500
+                height: 500,
             },
             data: {},
             deletable: false,
@@ -91,8 +145,8 @@ function Flow() {
                 role: QBeeRole.startOfSelect,
                 connectTo: [QBeeRole.selectBlock],
                 handles: {
-                    source: {}
-                }
+                    source: {},
+                },
             },
             draggable: false,
             deletable: false,
@@ -110,8 +164,8 @@ function Flow() {
                 connectTo: [QBeeRole.startOfFilter],
                 handles: {
                     target: {},
-                    source: {}
-                }
+                    source: {},
+                },
             },
             deletable: false,
             draggable: false,
@@ -120,11 +174,11 @@ function Flow() {
             id: "selectAdd",
             position: { x: 1980, y: -20 },
             data: {
-                click: () => addSelectNode()
+                click: () => addSelectNode(),
             },
-            type: 'addNode',
-            extent: 'parent',
-            parentNode: 'SelectGroup',
+            type: "addNode",
+            extent: "parent",
+            parentNode: "SelectGroup",
             deletable: false,
             draggable: false,
         },
@@ -136,7 +190,7 @@ function Flow() {
             position: { x: 2300, y: 0 },
             style: {
                 width: 1000,
-                height: 500
+                height: 500,
             },
             data: {},
             deletable: false,
@@ -153,8 +207,8 @@ function Flow() {
                 connectTo: [QBeeRole.filterBlock],
                 handles: {
                     source: {},
-                    target: {}
-                }
+                    target: {},
+                },
             },
             draggable: false,
             deletable: false,
@@ -172,8 +226,8 @@ function Flow() {
                 connectTo: [QBeeRole.outputBlock],
                 handles: {
                     target: {},
-                    source: {}
-                }
+                    source: {},
+                },
             },
             deletable: false,
             draggable: false,
@@ -182,11 +236,11 @@ function Flow() {
             id: "filterAdd",
             position: { x: 980, y: -20 },
             data: {
-                click: () => addFilterNode()
+                click: () => addFilterNode(),
             },
-            type: 'addNode',
-            extent: 'parent',
-            parentNode: 'FilterGroup',
+            type: "addNode",
+            extent: "parent",
+            parentNode: "FilterGroup",
             deletable: false,
             draggable: false,
         },
@@ -198,7 +252,7 @@ function Flow() {
             position: { x: 3600, y: 0 },
             style: {
                 width: 1000,
-                height: 500
+                height: 500,
             },
             data: {},
             deletable: false,
@@ -214,8 +268,8 @@ function Flow() {
                 role: QBeeRole.startOfOutput,
                 connectTo: [],
                 handles: {
-                    target: {}
-                }
+                    target: {},
+                },
             },
             draggable: false,
             deletable: false,
@@ -238,8 +292,15 @@ function Flow() {
             source: QBeeRole.endOfFilter,
             target: QBeeRole.startOfOutput,
             deletable: false,
-        }
+        },
     ];
+
+    const [nodes, setNodes] = useState<Node[]>(initialNodes);
+    const [edges, setEdges] = useState<Edge[]>(initialEdges);
+
+    /**
+     * Adds a select node to the select subflow
+     */
 
     /**
      * Adds a select node to the select subflow
@@ -286,46 +347,6 @@ function Flow() {
     }
 
     /**
-     * Adds a filter node to the filter subflow
-     */
-    const addFilterNode = (): void => {
-        setNodes((nds) => nds.concat({
-            id: `${QBeeRole.filterBlock}-${uuidv4()}`,
-            type: QBeeRole.filterBlock,
-            extent: 'parent',
-            parentNode: 'FilterGroup',
-            data: {
-                label: "",
-                column: "",
-                typeOfColumn: "",
-                help: "",
-                aggregationType: "",
-                renamedColumn: "",
-                comparisonType: QBeeComparisonType.EQUAL,
-                connectTo: [QBeeRole.filterBlock, QBeeRole.endOfFilter],
-                update: updateNode
-            },
-            position: { x: randomRange(350, 750), y: randomRange(150, 350) },
-        }));
-    }
-
-    const quickConnect = (from: string, to: string): void => {
-        setEdges((edgs: Edge[]) => edgs.concat({
-            id: `${from}-${to}-${uuidv4()}`,
-            source: from,
-            target: to,
-        }));
-    }
-
-    const router = useRouter();
-    const dispatch = useDispatch<any>();
-    dispatch(addData(dummyData as DBData[]));
-    const [nodes, setNodes] = useState<Node[]>(initialNodes);
-    const [edges, setEdges] = useState<Edge[]>(initialEdges);
-    const [selectedPanel, setSelectedPanel] = useState<string>("blocks");
-    const { fitView } = useReactFlow();
-
-    /**
      * I use this for when I have to render that side block with the options
      */
     useEffect(() => {
@@ -335,6 +356,60 @@ function Flow() {
         if (node?.type === "outputNode") setSelectedPanel(node.type);
         if (node === null || node === undefined) setSelectedPanel("blocks");
     }, [nodes]);
+
+    // Runs when Nodes are added/removed/updated/changed
+    // const onNodesChange: OnNodesChange = useCallback(
+    //     (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
+    //     [setNodes]
+    // );
+
+    /**
+     * Adds a filter node to the filter subflow
+     */
+    const addFilterNode = (): void => {
+        setNodes((nds) =>
+            nds.concat({
+                id: `${QBeeRole.filterBlock}-${uuidv4()}`,
+                type: QBeeRole.filterBlock,
+                extent: "parent",
+                parentNode: "FilterGroup",
+                data: {
+                    label: "",
+                    column: "",
+                    typeOfColumn: "",
+                    help: "",
+                    aggregationType: "",
+                    renamedColumn: "",
+                    connectTo: [QBeeRole.filterBlock, QBeeRole.endOfFilter],
+                },
+                position: { x: randomRange(350, 750), y: randomRange(150, 350) },
+            })
+        );
+    };
+
+    const quickConnect = (from: string, to: string): void => {
+        setEdges((edgs: Edge[]) =>
+            edgs.concat({
+                id: `${from}-${to}-${uuidv4()}`,
+                source: from,
+                target: to,
+            })
+        );
+    };
+
+    /**
+     * I use this for when I have to render that side block with the options
+     */
+    useEffect(() => {
+        const node = nodes.find((item) => item.selected);
+        if (node?.id === "SelectGroup") setSelectedPanel(node.id);
+        if (node?.id === "FilterGroup") setSelectedPanel(node.id);
+        if (node?.type === "outputNode") setSelectedPanel(node.type);
+        if (node === null || node === undefined) setSelectedPanel("blocks");
+
+        //Also update the nodes in slice
+        dispatch(setNodes(nodes));
+    }, [dispatch, nodes]);
 
     // Runs when Nodes are added/removed/updated/changed
     const onNodesChange: OnNodesChange = useCallback(
@@ -356,10 +431,10 @@ function Flow() {
 
     /**
      * Used for the layouting nicely of elements, but this is scuffed with the subflow, so it is disabled for now
-     * @param nodes 
-     * @param edges 
-     * @param options 
-     * @returns 
+     * @param nodes
+     * @param edges
+     * @param options
+     * @returns
      */
     const getLayoutedElements = (nodes: Node[], edges: Edge[], options: any) => {
         g.setGraph({ rankdir: options.direction });
@@ -392,54 +467,95 @@ function Flow() {
         [nodes, edges]
     );
 
-    return <>
-        <Head>
-            <title>QBee</title>
-        </Head>
-        <div className="bg-gray-100 dark:bg-secondaryBackground h-screen w-screen">
-            <ReactFlowProvider>
-                <ReactFlow
-                    nodes={nodes}
-                    edges={edges}
-                    fitView
-                    defaultEdgeOptions={{ animated: true, zIndex: 1 }}
-                    onNodesChange={onNodesChange}
-                    onEdgesChange={onEdgesChange}
-                    onConnect={onConnect}
-                    proOptions={{
-                        hideAttribution: true
-                    }}
-                    nodeTypes={nodeTypes}
-                    defaultViewport={{ x: 0, y: 0, zoom: 0.1 }}
-                >
-                    <Controls />
-                    <Background color="#ccc" variant={BackgroundVariant.Dots} />
-                    {selectedPanel === "SelectGroup" && <Panel position="top-right" style={{}} className="bg-black rounded p-4 h-fit">
-                        <h4 className="text-white underline text-xl mb-2">Select Area</h4>
-                        <p className="text-white mb-2 max-w-xs">This is the select area. Anything that you need to select shows up in this area.</p>
-                        <SubmitButton
-                            text="Add a Select Block"
-                            className="w-full"
-                            onClick={() => addSelectNode()} />
-                    </Panel>}
-                    {selectedPanel === "FilterGroup" && <Panel position="top-right" style={{}} className="bg-black rounded p-4 h-fit">
-                        <h4 className="text-white underline text-xl mb-2">Filter Area</h4>
-                        <p className="text-white mb-2 max-w-xs">This is the filter area. Anything that you need to filter shows up in this area.</p>
-                        <SubmitButton
-                            text="Add a Filter Block"
-                            className="w-full"
-                            onClick={() => addFilterNode()} />
-                    </Panel>}
-                    <Panel position="top-left" className="flex gap-2 flex-col">
-                        <div className="bg-black p-2 rounded-lg cursor-pointer" onClick={() => router.push("/home")}>
-                            <Squares2X2Icon className="w-4=6 h-6" />
-                        </div>
-                        <div className="bg-success-background p-2 rounded-lg cursor-pointer" onClick={() => SuccessToast({ text: "Successfully saved 🐝 Or have you 👀" })}>
-                            <CheckCircleIcon className="w-4=6 h-6" />
-                        </div>
-                    </Panel>
-                </ReactFlow>
-            </ReactFlowProvider>
-        </div>
-    </>
+    /**
+     * Used to update the edges in the slice
+     */
+    useEffect(() => {
+        dispatch(setEdges(edges));
+    }, [edges, dispatch]);
+
+    return (
+        <>
+            <Head>
+                <title>QBee</title>
+            </Head>
+            <div className="bg-gray-100 dark:bg-secondaryBackground h-screen w-screen">
+                <ReactFlowProvider>
+                    <ReactFlow
+                        nodes={nodes}
+                        edges={edges}
+                        fitView
+                        defaultEdgeOptions={{ animated: true, zIndex: 1 }}
+                        onNodesChange={onNodesChange}
+                        onEdgesChange={onEdgesChange}
+                        onConnect={onConnect}
+                        proOptions={{
+                            hideAttribution: true,
+                        }}
+                        nodeTypes={nodeTypes}
+                        defaultViewport={{ x: 0, y: 0, zoom: 0.1 }}
+                    >
+                        <Controls />
+                        <Background color="#ccc" variant={BackgroundVariant.Dots} />
+                        {selectedPanel === "SelectGroup" && (
+                            <Panel
+                                position="top-right"
+                                style={{}}
+                                className="bg-black rounded p-4 h-fit"
+                            >
+                                <h4 className="text-white underline text-xl mb-2">
+                                    Select Area
+                                </h4>
+                                <p className="text-white mb-2 max-w-xs">
+                                    This is the select area. Anything that you need to select
+                                    shows up in this area.
+                                </p>
+                                <SubmitButton
+                                    text="Add a Select Block"
+                                    className="w-full"
+                                    onClick={() => addSelectNode()}
+                                />
+                            </Panel>
+                        )}
+                        {selectedPanel === "FilterGroup" && (
+                            <Panel
+                                position="top-right"
+                                style={{}}
+                                className="bg-black rounded p-4 h-fit"
+                            >
+                                <h4 className="text-white underline text-xl mb-2">
+                                    Filter Area
+                                </h4>
+                                <p className="text-white mb-2 max-w-xs">
+                                    This is the filter area. Anything that you need to filter
+                                    shows up in this area.
+                                </p>
+                                <SubmitButton
+                                    text="Add a Filter Block"
+                                    className="w-full"
+                                    onClick={() => addFilterNode()}
+                                />
+                            </Panel>
+                        )}
+                        <Panel position="top-left" className="flex gap-2 flex-col">
+                            <div
+                                className="bg-black p-2 rounded-lg cursor-pointer"
+                                onClick={() => router.push("/home")}
+                            >
+                                <Squares2X2Icon className="w-4=6 h-6" />
+                            </div>
+                            <div
+                                className="bg-success-background p-2 rounded-lg cursor-pointer"
+                                onClick={() =>
+                                    SuccessToast({ text: "Successfully saved 🐝 Or have you 👀" })
+                                }
+                            >
+                                <CheckCircleIcon className="w-4=6 h-6" />
+                            </div>
+                        </Panel>
+                    </ReactFlow>
+                </ReactFlowProvider>
+            </div>
+        </>
+    );
 }

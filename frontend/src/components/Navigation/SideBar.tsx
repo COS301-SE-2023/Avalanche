@@ -107,8 +107,10 @@ export default function Sidebar() {
     useEffect(() => {
         if (initialSelectedDataSource.current !== stateGraph.selectedDataSource) {
             initialSelectedDataSource.current = stateGraph.selectedDataSource;
+            dispatch(getEndpoints());
         }
-    }, [stateGraph.selectedDataSource]);
+        
+    }, [dispatch, stateGraph.selectedDataSource]);
 
     /**
      * Handles dark and light mode toggles
