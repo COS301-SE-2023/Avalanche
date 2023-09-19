@@ -27,19 +27,19 @@ export default function Dashboard() {
         const currentDate = new Date();
 
         // All transactions, monthly granularity, for the last year
-        let dateFrom = `${currentDate.getFullYear() - 1}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
+        let dateFrom = `${currentDate.getFullYear() - 1}-${pad(currentDate.getMonth())}-${pad(1)}`;
         let dateTo = `${currentDate.getFullYear()}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
         const monthlyLastYear: ITransactionGraphRequest = { granularity: "month", dateFrom, dateTo, zone: stateGraph.zones.slice(0, 1) };
         array.push(monthlyLastYear);
 
         // All transactions, monthly granularity, for the year before
-        dateFrom = `${currentDate.getFullYear() - 2}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
+        dateFrom = `${currentDate.getFullYear() - 2}-${pad(currentDate.getMonth())}-${pad(1)}`;
         dateTo = `${currentDate.getFullYear() - 1}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
         const monthlyPastYear: ITransactionGraphRequest = { graphName: `Monthly, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: stateGraph.zones.slice(0, 1) };
         array.push(monthlyPastYear);
 
         // All transactions, yearly, 5 years
-        dateFrom = `${currentDate.getFullYear() - 5}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
+        dateFrom = `${currentDate.getFullYear() - 5}-${pad(currentDate.getMonth())}-${pad(1)}`;
         dateTo = `${currentDate.getFullYear()}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
         const yearlyPastFive: ITransactionGraphRequest = { graphName: `Yearly, from ${dateFrom} to ${dateTo}`, granularity: "year", dateFrom, dateTo, zone: stateGraph.zones.slice(0, 1) };
         array.push(yearlyPastFive);
