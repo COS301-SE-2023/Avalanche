@@ -77,7 +77,7 @@ function Flow() {
             type: "group",
             position: { x: 0, y: 0 },
             style: {
-                width: 1000,
+                width: 2000,
                 height: 500
             },
             data: {},
@@ -105,7 +105,7 @@ function Flow() {
             id: "selectEnd",
             extent: "parent",
             parentNode: "SelectGroup",
-            position: { x: 930, y: 50 },
+            position: { x: 1930, y: 50 },
             type: "edgeNode",
             data: {
                 label: "End of Select",
@@ -121,7 +121,7 @@ function Flow() {
         },
         {
             id: "selectAdd",
-            position: { x: 980, y: -20 },
+            position: { x: 1980, y: -20 },
             data: {
                 click: () => addSelectNode()
             },
@@ -136,7 +136,7 @@ function Flow() {
         {
             id: "FilterGroup",
             type: "group",
-            position: { x: 1300, y: 0 },
+            position: { x: 2300, y: 0 },
             style: {
                 width: 1000,
                 height: 500
@@ -224,7 +224,8 @@ function Flow() {
                 help: "",
                 aggregationType: "",
                 renamedColumn: "",
-                connectTo: [QBeeRole.selectBlock, QBeeRole.endOfSelect]
+                connectTo: [QBeeRole.selectBlock, QBeeRole.endOfSelect],
+                quickConnect: quickConnect
             },
             position: { x: randomRange(350, 750), y: randomRange(150, 350) },
             zIndex: 2
@@ -250,6 +251,14 @@ function Flow() {
                 connectTo: [QBeeRole.filterBlock, QBeeRole.endOfFilter]
             },
             position: { x: randomRange(350, 750), y: randomRange(150, 350) },
+        }));
+    }
+
+    const quickConnect = (from: string, to: string) => {
+        setEdges((edgs: Edge[]) => edgs.concat({
+            id: `${from}-${to}-${uuidv4()}`,
+            source: from,
+            target: to,
         }));
     }
 
