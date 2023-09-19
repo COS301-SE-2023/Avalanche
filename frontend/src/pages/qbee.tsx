@@ -30,17 +30,13 @@ const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
 export default function QBee() {
 
     const [screenWidth, setScreenWidth] = useState(window.innerWidth);
-    const router = useRouter()
 
     const handleResize = () => {
         setScreenWidth(window.innerWidth);
     };
 
     useEffect(() => {
-        // Add event listener to update dimensions on window resize
         window.addEventListener('resize', handleResize);
-
-        // Cleanup by removing event listener on component unmount
         return () => {
             window.removeEventListener('resize', handleResize);
         };
@@ -83,7 +79,7 @@ function Flow() {
             },
             data: {},
             deletable: false,
-            draggable: false,
+            draggable: true,
         },
         {
             id: "selectStart",
@@ -173,7 +169,7 @@ function Flow() {
             data: {
                 label: "End of Filter",
                 role: QBeeRole.endOfFilter,
-                connectTo: [],
+                connectTo: [QBeeRole.outputBlock],
                 handles: {
                     target: {},
                     source: {}
@@ -195,6 +191,36 @@ function Flow() {
             draggable: false,
         },
         // ---- End of Filter Area
+        // ---- Start of Output
+        {
+            id: "OutputGroup",
+            type: "group",
+            position: { x: 3600, y: 0 },
+            style: {
+                width: 1000,
+                height: 500
+            },
+            data: {},
+            deletable: false,
+            draggable: true,
+        },
+        {
+            id: "outputStart",
+            extent: "parent",
+            parentNode: "OutputGroup",
+            position: { x: -75, y: 50 },
+            data: {
+                label: "In for the Output",
+                role: QBeeRole.startOfOutput,
+                connectTo: [],
+                handles: {
+                    target: {}
+                }
+            },
+            draggable: false,
+            deletable: false,
+            type: "edgeNode",
+        },
     ];
 
     /**
@@ -205,6 +231,12 @@ function Flow() {
             id: "selectToFilter",
             source: QBeeRole.endOfSelect,
             target: QBeeRole.startOfFilter,
+            deletable: false,
+        },
+        {
+            id: "filterToOutput",
+            source: QBeeRole.endOfFilter,
+            target: QBeeRole.startOfOutput,
             deletable: false,
         }
     ];
@@ -369,11 +401,11 @@ function Flow() {
                             className="w-full"
                             onClick={() => addSelectNode()} />
                     </Panel>}
-                    {selectedPanel === "SelectGroup" && <Panel position="top-right" style={{}} className="bg-black rounded p-4 h-fit">
+                    {selectedPanel === "FilterGroup" && <Panel position="top-right" style={{}} className="bg-black rounded p-4 h-fit">
                         <h4 className="text-white underline text-xl mb-2">Filter Area</h4>
                         <p className="text-white mb-2 max-w-xs">This is the filter area. Anything that you need to filter shows up in this area.</p>
                         <SubmitButton
-                            text="Add a Select Block"
+                            text="Add a Filter Block"
                             className="w-full"
                             onClick={() => addFilterNode()} />
                     </Panel>}

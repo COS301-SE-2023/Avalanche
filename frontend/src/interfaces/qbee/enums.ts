@@ -6,7 +6,9 @@ export enum Role {
     endOfFilter = "filterEnd",
     orBlock = "orBlock",
     andBlock = "andBlock",
-    filterBlock = "filterBlock"
+    filterBlock = "filterBlock",
+    outputBlock = "outputBlock",
+    startOfOutput = "outputStart"
 }
 
 export enum Area {
