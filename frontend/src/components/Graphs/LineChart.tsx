@@ -18,12 +18,30 @@ export function LineChart({ data, height }: IChart) {
 
   const makeOptions = (jsonData: JsonDataEntry[]) => {
     let allOptions = convertData(jsonData, "line", theme);
+    let colourToUse = chartColours;
+    let fillValue=undefined;
+    if (allOptions.options.yaxis.title.text == " Movement") {
+      colourToUse = ['#FF0000'] as any[];
+      fillValue={
+        type: "gradient",
+        gradient: {
+          type: 'vertical',
+          //shadeIntensity: 0,
+          //opacityFrom: 0.8,
+          //opacityTo: 0.8,
+          gradientToColors:['#008000'],
+          stops: [(Math.max(...allOptions.series[0].data)/(Math.max(...allOptions.series[0].data)-Math.min(...allOptions.series[0].data)))*100,0],
+    
+        }
+      }
+    }
     Object.assign(allOptions.options, {
       dataLabels: {
         enabled: false,
         colors: undefined, // This will use the series color for each data label
       },
-      colors: chartColours,
+      fill:fillValue,
+      colors: colourToUse,
       stroke: {
         show: true,
         curve: "smooth",
