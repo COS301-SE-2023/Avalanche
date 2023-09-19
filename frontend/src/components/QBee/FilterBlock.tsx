@@ -37,6 +37,10 @@ export default function FilterBlock({ data, id }: NodeProps<NodeData>) {
         return node.comparisonTypes;
     }
 
+    const createFilters = () => {
+
+    }
+
     return <div className='bg-avalancheBlue rounded'>
         <div>
             <Handle

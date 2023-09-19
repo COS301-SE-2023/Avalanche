@@ -28,7 +28,8 @@ import { Role as QBeeRole, ComparisonType as QBeeComparisonType } from "@/interf
 import { DBData } from "@/interfaces/qbee/interfaces";
 import { SubmitButton, SuccessToast } from "@/components/Util";
 import { useDispatch } from "react-redux";
-import { addData } from "@/store/Slices/qbeeSlice";
+import { addData, setNodes, setEdges } from "@/store/Slices/qbeeSlice";
+import { copy } from "copy-anything";
 
 import OutputNode from "@/components/QBee/OutputNode";
 import SelectBlock from "@/components/QBee/SelectNode";
@@ -355,13 +356,8 @@ function Flow() {
         if (node?.id === "FilterGroup") setSelectedPanel(node.id);
         if (node?.type === "outputNode") setSelectedPanel(node.type);
         if (node === null || node === undefined) setSelectedPanel("blocks");
+        // dispatch(setNodes(copy(nodes, { nonenumerable: true })));
     }, [nodes]);
-
-    // Runs when Nodes are added/removed/updated/changed
-    // const onNodesChange: OnNodesChange = useCallback(
-    //     (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
-    //     [setNodes]
-    // );
 
     /**
      * Adds a filter node to the filter subflow
@@ -384,6 +380,7 @@ function Flow() {
                 },
                 position: { x: randomRange(350, 750), y: randomRange(150, 350) },
             })
+
         );
     };
 
@@ -398,18 +395,11 @@ function Flow() {
     };
 
     /**
-     * I use this for when I have to render that side block with the options
+     * Used to update the edges in the slice
      */
     useEffect(() => {
-        const node = nodes.find((item) => item.selected);
-        if (node?.id === "SelectGroup") setSelectedPanel(node.id);
-        if (node?.id === "FilterGroup") setSelectedPanel(node.id);
-        if (node?.type === "outputNode") setSelectedPanel(node.type);
-        if (node === null || node === undefined) setSelectedPanel("blocks");
-
-        //Also update the nodes in slice
-        dispatch(setNodes(nodes));
-    }, [dispatch, nodes]);
+        // dispatch(setEdges(edges));
+    }, [edges, dispatch]);
 
     // Runs when Nodes are added/removed/updated/changed
     const onNodesChange: OnNodesChange = useCallback(
@@ -466,13 +456,6 @@ function Flow() {
         },
         [nodes, edges]
     );
-
-    /**
-     * Used to update the edges in the slice
-     */
-    useEffect(() => {
-        dispatch(setEdges(edges));
-    }, [edges, dispatch]);
 
     return (
         <>
