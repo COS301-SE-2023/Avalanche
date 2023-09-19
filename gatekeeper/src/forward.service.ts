@@ -23,7 +23,8 @@ export class ForwardService {
 
       return response;
     } catch (error) {
-      console.log('Error data:', error.response?.data);
+      console.log(error,"Error in gk")
+      console.log('Error data:', error.message);
       throw error; // Throw the entire error object
     }
   }

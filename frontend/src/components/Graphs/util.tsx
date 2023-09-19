@@ -32,9 +32,9 @@ type ConvertedData = {
       };
     };
     yaxis: {
+      forceNiceScale: boolean;
       title: {
         text: string;
-        forceNiceScale: boolean;
         style: {
           color: string;
         };
@@ -100,7 +100,7 @@ export function convertData(
   //Set theme colour
 
   if (theme === "dark") {
-    themeColours.labelColour = "#FFFFFF";
+    themeColours.labelColour = "#000000";
   } else {
     themeColours.labelColour = "#000000";
   }
@@ -199,6 +199,7 @@ function convertWithMultipleSeries(jsonData: JsonDataEntry[], type: string): Con
   if(type != 'radar'){
     annotationsToUse = {
       yaxis: [
+        
         {
           y: 0,
           borderColor: "#000000", // Black color
@@ -230,9 +231,10 @@ function convertWithMultipleSeries(jsonData: JsonDataEntry[], type: string): Con
         },
       },
       yaxis: {
+        
+        forceNiceScale: true,
         title: {
           text: yAxisLabel,
-          forceNiceScale: true,
           style: {
             color: themeColours.labelColour,
           },
@@ -349,9 +351,9 @@ function convertWithSingleSeries(jsonData: JsonDataEntry[], type: string): Conve
         },
       },
       yaxis: {
+        forceNiceScale: true,
         title: {
           text: yAxisLabel,
-          forceNiceScale: true,
           style: {
             color: themeColours.labelColour,
           },
