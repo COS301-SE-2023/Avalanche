@@ -27,7 +27,7 @@ export function LineChart({ data, height }: IChart) {
       hover: {
         size: 7, // Adjust the size for hover state as per your preference
       },
-    } as any;
+    };
     if (allOptions.options.yaxis.title.text == " Movement" && allOptions.series.length==1) {
       colourToUse = ['#FF0000'] as any[];
       fillValue={
@@ -43,35 +43,8 @@ export function LineChart({ data, height }: IChart) {
         }
       };
       let discreteValues=[] as any;
-      for (let index = 0; index < allOptions.series[0].data.length; index++) {
-        if(allOptions.series[0].data[index]<0){
-          discreteValues.push({
-            seriesIndex:index,
-            size: 5, // Adjust the size as per your preference
-            shape: "circle", // This will make the markers circular
-            strokeWidth: 0,
-            hover: {
-              size: 7, // Adjust the size for hover state as per your preference
-            },
-            fillColor: '#FF0000',
-          },);
-        }else{
-          discreteValues.push({
-            seriesIndex:index,
-            size: 5, // Adjust the size as per your preference
-            shape: "circle", // This will make the markers circular
-            strokeWidth: 0,
-            hover: {
-              size: 7, // Adjust the size for hover state as per your preference
-            },
-            fillColor: '#008000',
-          },);
-        }
-        
-      }
-      markerValue={
-        discrete:discreteValues
-      };
+      
+      markerValue=undefined
     }
     Object.assign(allOptions.options, {
       dataLabels: {
