@@ -57,17 +57,18 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
 		if (filters.length === 0) dispatch(getFilters({}));
 	}, []);
 
-	const [type, setType] = useState<ChartType>(defaultGraph);
-	const [filterDropdown, setFilterDropdown] = useState<boolean>(false);
-	const [graphData, setGraphData] = useState<any>(data.data);
-	const [title, setGraphTitle] = useState<any>(data.graphName);
-	const [warehouse, setWarehouse] = useState<string>(data.warehouse);
-	const [gType, setGType] = useState<string>(data.graphType);
-	const [filtersApplied, setFiltersApplied] = useState<any>(data.filters);
-	console.log(filtersApplied)
-	const [loading, setLoading] = useState<boolean>(false);
-	const [error, setError] = useState<boolean>(false);
-	const [errorMessage, setErrorMessage] = useState<string>("");
+  const [type, setType] = useState<ChartType>(defaultGraph);
+  const [filterDropdown, setFilterDropdown] = useState<boolean>(false);
+  const [graphData, setGraphData] = useState<any>(data.data);
+  const [title, setGraphTitle] = useState<any>(data.graphName);
+  const [warehouse, setWarehouse] = useState<string>(data.warehouse);
+  const [gType, setGType] = useState<string>(data.graphType);
+
+  const [filtersApplied, setFiltersApplied] = useState<any>(data.filters);
+
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
 	const [request, setRequest] = useState<any>({});
 	const [showFilterTooltip, setShowFilterTooltip] = useState<boolean>(false);
