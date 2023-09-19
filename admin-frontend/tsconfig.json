@@ -28,7 +28,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-  ],
+, "src/components/Util/Composite/ZeusTab.jsx", "src/components/Util/Composite/HeraTab.jsx"  ],
   "exclude": [
     "node_modules"
   ]

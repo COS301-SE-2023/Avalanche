@@ -7,9 +7,15 @@
         },
         "rank": {
             "type": "string",
-            "enum": ["top5", "top10", "top20", "bottom10", "bottom20", "bottom5"]
+            "enum": ["top5", "top10", "top20", "bottom10", "bottom20", "bottom5",""]
         },
         "zone": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "registrar": {
             "type": "array",
             "items": {
                 "type": "string"

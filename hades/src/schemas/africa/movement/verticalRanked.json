@@ -1,0 +1,34 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "graphName" : {
+            "type" : "string"
+        },
+        "rank": {
+            "type": "string",
+            "enum": ["top5", "top10", "top20", "bottom10", "bottom5", "bottom20",""]
+        },
+        "registrar": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "zone": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "dateFrom": {
+            "type": "string",
+            "format": "date"
+        },
+        "dateTo": {
+            "type": "string",
+            "format": "date"
+        }
+    },
+    "additionalProperties": false
+}

@@ -1,17 +1,18 @@
-import { setAnimateManagerState, clearCurrentOpenState, clearZoomData } from '@/store/Slices/modalManagerSlice';
+import { setAnimateManagerState, clearCurrentOpenState } from '@/store/Slices/modalManagerSlice';
 import { useDispatch } from 'react-redux';
-
-interface IModalWrapper {
-    children: any,
-    title: string,
-    large?: boolean
-}
-
 import { Fragment, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/solid';
+import { setCookie } from 'cookies-next';
+interface IModalWrapper {
+    children: any,
+    title: string,
+    large?: boolean,
+    cookieToSet?: any
+}
 
-export default function ModalWrapper({ children, title, large }: IModalWrapper) {
+
+export default function ModalWrapper({ children, title, large, cookieToSet }: IModalWrapper) {
     const [open, setOpen] = useState(true)
     const dispatch = useDispatch();
     const cancelButtonRef = useRef(null)
@@ -20,6 +21,9 @@ export default function ModalWrapper({ children, title, large }: IModalWrapper) 
         dispatch(clearCurrentOpenState());
         dispatch(setAnimateManagerState(false));
         document.body.style.overflow = "visible";
+        if (cookieToSet) {
+            setCookie(cookieToSet.name, cookieToSet.data);
+        }
     }
 
     return (
@@ -49,7 +53,7 @@ export default function ModalWrapper({ children, title, large }: IModalWrapper) 
                             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                         >
                             <Dialog.Panel className={`relative transform overflow-hidden bg-white text-left shadow-xl transition-all duration-100 sm:my-8 ${!large ? "sm:w-full sm:max-w-lg rounded-lg" : "h-full w-full"}`}>
-                                <div className={`bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4 dark:bg-secondaryBackground ${large ? "h-full w-full" : ""}`}>
+                                <div className={`bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4 dark:bg-dark-secondaryBackground ${large ? "h-full w-full" : ""}`}>
                                     <div className={large ? "h-full" : ""}>
                                         <div className='flex justify-between flex-row gap-4 items-center'>
                                             <Dialog.Title as="h3" className="text-xl font-semibold leading-6 text-gray-900 dark:text-white">

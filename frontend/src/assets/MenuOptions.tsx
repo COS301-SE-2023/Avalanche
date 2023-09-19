@@ -1,4 +1,4 @@
-import { HomeIcon, DocumentIcon, HeartIcon, ArchiveBoxIcon, DocumentMagnifyingGlassIcon, TvIcon, ChartBarIcon, StarIcon, EyeIcon, MapIcon, BoltIcon, ClipboardIcon, ChartBarSquareIcon, Squares2X2Icon } from '@heroicons/react/24/solid';
+import { HomeIcon, DocumentIcon, HeartIcon, ArchiveBoxIcon, DocumentMagnifyingGlassIcon, TvIcon, ChartBarIcon, StarIcon, EyeIcon, MapIcon, BoltIcon, ClipboardIcon, ChartBarSquareIcon, Squares2X2Icon, UsersIcon } from '@heroicons/react/24/solid';
 
 interface IMenuItem {
     text: string,
@@ -22,12 +22,12 @@ const NotDropdown: IMenu = {
             page: "watch",
             role: ""
         },
-        {
-            text: "QBee",
-            icon: <Squares2X2Icon className={holder} />,
-            page: "qbee",
-            role: ""
-        },
+        // {
+        //     text: "QBee",
+        //     icon: <Squares2X2Icon className={holder} />,
+        //     page: "qbee",
+        //     role: ""
+        // },
     ]
 }
 
@@ -45,14 +45,14 @@ const MenuOptions: IMenu = {
             icon: <TvIcon className={holder} />,
             page: "registrar",
             role: "",
-            endpoint: "transactions"
+            endpoint: "registrar"
         },
         {
             text: "Registrar Market Comparison",
             icon: <MapIcon className={holder} />,
             page: "registrarMarketComparison",
             role: "",
-            endpoint: "transaction-ranking"
+            endpoint: "transactions-ranking"
         },
         {
             text: "Movement",
@@ -88,6 +88,13 @@ const MenuOptions: IMenu = {
             page: "domainNameAnalysis",
             role: "",
             endpoint: "domainNameAnalysis/count"
+        },
+        {
+            text: "Classification",
+            icon: <UsersIcon className={holder} />,
+            page: "classification",
+            role: "",
+            endpoint: "domainNameAnalysis/classification"
         }
     ]
 }
@@ -115,7 +122,7 @@ const dataSourceDescriptors: IDataSourceItem[] = [
 const dataSourceName: IDataSourceItem[] = [
     {
         code: "zacr",
-        value: "ZACR"
+        value: "ZARC"
     },
     {
         code: "africa",

@@ -20,12 +20,16 @@ public class HandleActiveTest {
                 HandleActive hp = new HandleActive();
                 String response = hp.getResponse(
                                 "{\r\n" + //
-                                                "  \"domain\": \"esser\",\r\n" + //
+                                                "  \"domain\": \"esser\",\r\n" +
+                                                "  \"resolve\":\"true\",\r\n" + //
                                                 "  \"types\" : [{\"type\" : \"Levenshtein\", \"threshold\": 1},{\"type\" : \"Soundex\", \"threshold\": 1}]\r\n"
                                                 + //
                                                 "}",
                                 0);
                 assertTrue(response.contains("{  \"status\":\"success\",  \"data\":["));
+
+                System.out.println(response);
+
         }
 
         @Test

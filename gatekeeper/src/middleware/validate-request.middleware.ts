@@ -11,11 +11,9 @@ export class ValidateRequestMiddleware implements NestMiddleware {
   constructor(private readonly httpService: HttpService) { }
 
   async use(req: Request, res: Response, next: NextFunction) {
-    console.log(req.originalUrl);
 
     // Replace with the actual URL of the hades instance, appending the endpoint URL
     const hadesUrl = `${process.env.HADES ? `http://hades:3997` : "http://localhost:3997"}${req.originalUrl}`;
-    console.log(hadesUrl);
 
     try {
       const response = await this.httpService.get(hadesUrl).toPromise();

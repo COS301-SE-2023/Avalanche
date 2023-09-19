@@ -4,7 +4,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { lastValueFrom } from 'rxjs';
 import { SnowflakeService } from '../snowflake/snowflake.service';
 import { GraphFormatService } from '../graph-format/graph-format.service';
-import { DataInterface } from '../interfaces/interfaces';
+import { DataInterface, NewDataInterface } from '../interfaces/interfaces';
 
 @Injectable()
 export class DomainNameAnalysisService {
@@ -25,8 +25,8 @@ export class DomainNameAnalysisService {
       const sqlQuery = `call domainNameAnalysis('${filters}')`;
 
       const dataR = await this.redis.get(`ryce` + sqlQuery);
-      let data: DataInterface;
-      let formattedData = '';
+      let data: NewDataInterface;
+      let formattedData;
 
       if (!dataR) {
         let queryData;
@@ -44,20 +44,28 @@ export class DomainNameAnalysisService {
         dataO.data = queryData[0]['DOMAINNAMEANALYSIS'];
         delete dataO.filters;
         const response = this.httpService.post(
-          'http://zanet.cloud:4005/domainNameAnalysis/list',
+          'http://DomainAnalysis:4101/domainNameAnalysis/list',
           dataO,
         );
         const responseData = await lastValueFrom(response);
 
-        formattedData =
-          await this.graphFormattingService.formatDomainNameAnalysis(
-            JSON.stringify(responseData.data),
-          );
-
-        data = {
-          chartData: JSON.parse(formattedData),
-          jsonData: responseData.data,
+        formattedData = {
+          datasets: [{ label: 'Label1' }],
         };
+
+        const jsonData: any[] = responseData.data.data;
+        jsonData.forEach((item) => {
+          delete item.domains;
+        });
+
+        jsonData.unshift({ xAxis: 'word', yAxis: 'frequency' });
+
+        const graphData = {
+          chartData: formattedData,
+          jsonData: jsonData,
+        };
+
+        data = { data: graphData, filters: {} };
 
         await this.redis.set(
           `ryce` + sqlQuery,
@@ -80,7 +88,8 @@ export class DomainNameAnalysisService {
             '(s)',
           warehouse: 'ryce',
           graphType: 'domainNameAnalysis/count',
-          data: data,
+          data: data.data,
+          filters: data.filters,
         },
         timestamp: new Date().toISOString(),
       };
@@ -96,15 +105,13 @@ export class DomainNameAnalysisService {
 
   async domainLength(filters: string, graphName: string): Promise<any> {
     try {
-      graphName = this.domainLengthGraphName(filters);
-
       filters = JSON.stringify(filters);
 
       const sqlQuery = `CALL SKUNKWORKS_DB.public.domainLengthAnalysis('${filters}')`;
 
       const dataR = await this.redis.get(`ryce` + sqlQuery);
-      let data: DataInterface;
-      let formattedData = '';
+      let data: NewDataInterface;
+      let formattedData;
 
       if (!dataR) {
         let queryData;
@@ -122,14 +129,19 @@ export class DomainNameAnalysisService {
         // const analyzedData = await this.statisticalAnalysisService.analyze(
         //   queryData,
         // );
-        formattedData =
-          await this.graphFormattingService.formatDomainLengthAnalysis(
-            JSON.stringify(queryData),
-          );
-        data = {
-          chartData: JSON.parse(formattedData),
-          jsonData: JSON.parse(queryData[0]['DOMAINLENGTHANALYSIS']),
+        formattedData = {
+          datasets: [{ label: 'Label1' }],
         };
+
+        const graphData = {
+          chartData: formattedData,
+          jsonData: queryData[0]['DOMAINLENGTHANALYSIS'].data,
+        };
+
+        filters = queryData[0]['DOMAINLENGTHANALYSIS'].filters;
+
+        data = { data: graphData, filters: filters };
+
         await this.redis.set(
           `ryce` + sqlQuery,
           JSON.stringify(data),
@@ -140,17 +152,21 @@ export class DomainNameAnalysisService {
         data = JSON.parse(dataR);
       }
 
+      graphName = this.domainLengthGraphName(data.filters);
+
       return {
         status: 'success',
         data: {
           graphName: graphName,
           warehouse: 'ryce',
           graphType: 'domainNameAnalysis/length',
-          data: data,
+          data: data.data,
+          filters: data.filters,
         },
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
+      console.log(e);
       return {
         status: 500,
         error: true,
@@ -176,19 +192,13 @@ export class DomainNameAnalysisService {
     }
 
     let zone = filters['zone'];
-    if (zone) {
-      if (zone.length > 0) {
-        const zoneArr = [];
-        for (const r of zone) {
-          zoneArr.push(r);
-        }
-        zone = zoneArr.join(', ');
-      }
-      zone = ' for ' + zone;
+    if (zone?.length > 0) {
+      zone = ' (' + zone.join(',') + ')';
     } else {
-      zone = ' for all zones';
+      zone = ' (all zones)';
     }
 
+    /*
     let dateFrom;
     if (filters['dateFrom'] === undefined) {
       dateFrom = new Date();
@@ -223,33 +233,9 @@ export class DomainNameAnalysisService {
       dateTo =
         day + ' ' + this.getMonth(monthNum - 1) + ' ' + dateTo.getUTCFullYear();
     }
+    */
 
-    return (
-      'Length of newly created domains from ' +
-      dateFrom +
-      ' to ' +
-      dateTo +
-      registrar +
-      zone
-    );
-  }
-
-  getMonth(num: number): string {
-    const monthNames = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
-    ];
-    return monthNames[num];
+    return 'Length of newly created domains ' + registrar + zone;
   }
 
   // normaliseData(data: string): string {

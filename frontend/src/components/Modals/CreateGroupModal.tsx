@@ -3,7 +3,7 @@ import { SubmitButton, ErrorToast, InputLabel, Input, SuccessToast } from '../Ut
 import { ModalWrapper } from './ModalOptions';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearCurrentOpenState } from '@/store/Slices/modalManagerSlice';
-import { userState, getUserGroups } from '@/store/Slices/userSlice';
+import { userState, getUserGroups, clearLoading, clearError } from '@/store/Slices/userSlice';
 import { createOrganisationGroup } from '@/store/Slices/userSlice';
 import { ICreateUserGroupRequest } from '@/interfaces/requests';
 
@@ -19,9 +19,10 @@ export default function CreateGroupModal({ }: ICreateGroupModal) {
     useEffect(() => {
         if (stateUser.createGroupSuccess) {
             SuccessToast({ text: `Group with the name ${name} has been successfully created` });
+            dispatch(getUserGroups({}));
             dispatch(clearCurrentOpenState())
         }
-    }, [stateUser.user.userGroups])
+    }, [stateUser.user.userGroups,])
 
     /**
      * Boolean for if something is loading in the component.
@@ -37,6 +38,15 @@ export default function CreateGroupModal({ }: ICreateGroupModal) {
      * These two variables are for error checking.
      */
     const [nameError, setNameError] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (!stateUser.createGroupSuccess && stateUser.requests.error) {
+            ErrorToast({ text: stateUser.requests.error });
+            dispatch(clearError());
+            dispatch(clearLoading());
+            setLoading(false);
+        }
+    }, [stateUser.createGroupSuccess, stateUser.requests.error])
 
     /**
      * This function handles the form submit.
@@ -56,12 +66,12 @@ export default function CreateGroupModal({ }: ICreateGroupModal) {
             ErrorToast({ text: error });
             return;
         };
+
         setLoading(true);
 
         const data: ICreateUserGroupRequest = {
             name,
             permission: 2,
-            description: ""
         }
 
         dispatch(createOrganisationGroup(data));

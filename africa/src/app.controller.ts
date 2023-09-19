@@ -21,9 +21,7 @@ export class AppController {
 
   @MessagePattern({ cmd: 'transactions' })
   async transactions(data: any) {
-    console.log('Transactions: ', data);
     const result = await this.transactionsService.transactions(data.filters,data.graphName);
-    console.log('Transactions result: ', result);
     if (result.error) {
       throw new RpcException({
         status: result.status,
@@ -37,7 +35,6 @@ export class AppController {
 
   @MessagePattern({ cmd: 'transactions-ranking' })
   async transactionsRanking(data: any) {
-    console.log('Transactions: ', data);
     const result = await this.transactionsService.transactionsRanking(data.filters,data.graphName);
     if (result.error) {
       throw new RpcException({
@@ -92,6 +89,20 @@ export class AppController {
     return result;
   }
 
+  @MessagePattern({ cmd: 'domainNameAnalysis/classification' })
+  async domainNameAnalysisClassification(data: any) {
+    const result = await this.domainNameAnalysisService.classification(data);
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
+
   @MessagePattern({ cmd: 'domainNameAnalysis/length' })
   async domainNameAnalysisLength(data: any) {
     const result = await this.domainNameAnalysisService.domainLength(data.filters, data.graphName);
@@ -113,6 +124,23 @@ export class AppController {
       data.graphName,
     );
 
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
+
+  @MessagePattern({ cmd: 'movement/verticalRanked' })
+  async nettVerticalMovementRanked(data: any) {
+    const result = await this.movementService.nettVeriticalRanked(
+      data.filters,
+      data.graphName,
+    );
     if (result.error) {
       throw new RpcException({
         status: result.status,
@@ -169,3 +197,4 @@ export class AppController {
     return result;
   }
 }
+

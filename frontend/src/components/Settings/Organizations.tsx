@@ -25,18 +25,10 @@ export default function OrganizationSettings({ }: IOrganizationSettings) {
     /**
      * When the component loads, it must fetch the latest organisation object and the latest user groups
      */
-    // useEffect(() => {
-    //     dispatch(getLatestOrganisation({}));
-    //     dispatch(getUserGroups({}))
-    // }, [])
-
-    /**
-     * For debugging
-     */
-    // useEffect(() => {
-    //     console.log('changed')
-    //     console.log(modalState.currentOpen)
-    // }, [modalState.currentOpen])
+    useEffect(() => {
+        dispatch(getLatestOrganisation({}));
+        dispatch(getUserGroups({}))
+    }, [])
 
     /**
      * This state variable holds the current active user group tab.

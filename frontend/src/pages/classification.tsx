@@ -1,0 +1,100 @@
+import Sidebar from "@/components/Navigation/SideBar"
+import PageHeader from "@/components/Util/PageHeader"
+import { EyeIcon } from "@heroicons/react/24/solid"
+import Head from "next/head"
+import { useDispatch, useSelector } from "react-redux";
+import { graphState, getDomainNameAnalysisClassificationData, clearGraphData } from "@/store/Slices/graphSlice"
+import { useEffect } from "react";
+import { selectModalManagerState } from "@/store/Slices/modalManagerSlice"
+import GraphZoomModal from "@/components/Modals/GraphZoomModal"
+import IDomainNameAnalysisGraphRequest from "@/interfaces/requests/DomainNameAnalysis"
+import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas";
+import { SubmitButton, MainContent, DashboardBase } from "@/components/Util"
+
+export default function Classification() {
+
+    const dispatch = useDispatch<any>();
+    const stateGraph = useSelector(graphState);
+    const modalState = useSelector(selectModalManagerState);
+
+    const captureCanvasElements = async () => {
+        const canvasElements = Array.from(document.querySelectorAll('.graphChart'));
+        const canvasImages = [];
+
+        for (const canvas of canvasElements) {
+            try {
+                const dataUrl = await html2canvas(canvas as any, {
+                    allowTaint: true,
+                    useCORS: true,
+                }).then((canvas) => canvas.toDataURL('image/png'));
+
+                canvasImages.push(dataUrl);
+            } catch (error) {
+                console.error('Error capturing canvas:', error);
+            }
+        }
+
+        return canvasImages;
+    };
+
+    const generatePDF = async () => {
+        const canvasImages = await captureCanvasElements();
+
+        const pdf = new jsPDF("l", "mm", "a1");
+
+        var width = pdf.internal.pageSize.getWidth();
+        var height = pdf.internal.pageSize.getHeight();
+
+        canvasImages.forEach((imageDataUrl) => {
+            pdf.addImage(imageDataUrl, 'PNG', 0, 0, width, height);
+            pdf.addPage();
+        });
+
+        pdf.save('report.pdf');
+    };
+
+    function loadData() {
+        const arrayDomainNameAnalysisShare: IDomainNameAnalysisGraphRequest[] = [];
+
+        const ageAnalysisAverageTop5: IDomainNameAnalysisGraphRequest = { granularity: 'week', num: 1 };
+        arrayDomainNameAnalysisShare.push(ageAnalysisAverageTop5);
+
+        arrayDomainNameAnalysisShare.forEach(data => {
+            dispatch(getDomainNameAnalysisClassificationData(data));
+        })
+    }
+
+    useEffect(() => {
+        if (stateGraph.cleared) {
+            loadData();
+        };
+    }, [stateGraph.cleared])
+
+    useEffect(() => {
+        dispatch(clearGraphData());
+    }, [])
+
+    useEffect(() => {
+        dispatch(clearGraphData());
+    }, [stateGraph.selectedDataSource])
+
+
+    return (<>
+        <Head>
+            <title>Classification</title>
+        </Head>
+        <Sidebar />
+
+        <MainContent>
+            <div className="flex justify-between items-center">
+                <PageHeader title="Classification" subtitle="Insights at your fingertips" icon={<EyeIcon className="h-16 w-16 text-black dark:text-white" />} />
+                <SubmitButton text="Download Report" onClick={() => generatePDF()} />
+            </div>
+            <DashboardBase state={stateGraph} />
+        </MainContent>
+        {
+            modalState.currentOpen === "GRAPH.Modal" && <GraphZoomModal />
+        }
+    </>)
+}

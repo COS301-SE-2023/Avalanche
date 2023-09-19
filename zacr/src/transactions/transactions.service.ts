@@ -2,10 +2,9 @@ import { Inject, Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
 import { JwtService } from '@nestjs/jwt';
 import { SnowflakeService } from '../snowflake/snowflake.service';
-import { DataFormatService } from '../data-format/data-format.service';
 import { AnalysisService } from '../analysis/analysis.service';
 import { GraphFormatService } from '../graph-format/graph-format.service';
-import { DataInterface } from '../interfaces/interfaces';
+import { NewDataInterface, formatDate } from '../interfaces/interfaces';
 
 @Injectable()
 export class TransactionService {
@@ -13,24 +12,19 @@ export class TransactionService {
     private jwtService: JwtService,
     @Inject('REDIS') private readonly redis: Redis,
     private readonly snowflakeService: SnowflakeService,
-    private readonly statisticalAnalysisService: AnalysisService,
-    private readonly graphFormattingService: GraphFormatService,
   ) {}
 
-  async transactions(filters: string, graphName: string): Promise<any> {
+  async transactions(filters: any, graphName: string): Promise<any> {
     try {
-      graphName = this.transactionsGraphName(filters, false);
-
       filters = JSON.stringify(filters);
 
       const sqlQuery = `call transactionsByRegistrar('${filters}')`;
 
       const dataR = await this.redis.get(`zacr` + sqlQuery);
-      let data: DataInterface;
-      let formattedData = '';
+      let data: NewDataInterface;
+      let formattedData;
       if (!dataR) {
         let queryData;
-
         try {
           queryData = await this.snowflakeService.execute(sqlQuery);
         } catch (e) {
@@ -42,13 +36,19 @@ export class TransactionService {
           };
         }
 
-        formattedData = await this.graphFormattingService.formatTransactions(
-          JSON.stringify(queryData),
-        );
-        data = {
-          chartData: JSON.parse(formattedData),
-          jsonData: JSON.parse(queryData[0]['TRANSACTIONSBYREGISTRAR']),
+        formattedData = {
+          datasets: [{ label: 'Label1' }, { label: 'Label2' }],
         };
+
+        const graphData = {
+          chartData: formattedData,
+          jsonData: queryData[0]['TRANSACTIONSBYREGISTRAR'].data,
+        };
+
+        filters = queryData[0]['TRANSACTIONSBYREGISTRAR'].filters;
+
+        data = { data: graphData, filters: filters };
+
         await this.redis.set(
           `zacr` + sqlQuery,
           JSON.stringify(data),
@@ -59,17 +59,21 @@ export class TransactionService {
         data = JSON.parse(dataR);
       }
 
+      graphName = this.transactionsGraphName(data.filters, false);
+
       return {
         status: 'success',
         data: {
           graphName: graphName,
-          data: data,
           warehouse: 'zacr',
           graphType: 'transactions',
+          data: data.data,
+          filters: data.filters,
         },
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
+      console.debug(e);
       return {
         status: 500,
         error: true,
@@ -80,19 +84,15 @@ export class TransactionService {
   }
 
   async transactionsRanking(filters: any, graphName: string): Promise<any> {
-    console.log('zacr/transactionRanking');
     try {
-      graphName = this.transactionsGraphName(filters, true);
-
       const filterObj = JSON.parse(JSON.stringify(filters));
-      filterObj.isRanking = true;
       filters = JSON.stringify(filterObj);
 
       const sqlQuery = `call transactionsByRegistrar('${filters}')`;
 
       const dataR = await this.redis.get(`zacr` + sqlQuery);
-      let data: DataInterface;
-      let formattedData = '';
+      let data: NewDataInterface;
+      let formattedData;
       if (!dataR) {
         let queryData;
         try {
@@ -105,15 +105,18 @@ export class TransactionService {
             timestamp: new Date().toISOString(),
           };
         }
-        formattedData =
-          await this.graphFormattingService.formatTransactionsRanking(
-            JSON.stringify(queryData),
-          );
-
-        data = {
-          chartData: JSON.parse(formattedData),
-          jsonData: JSON.parse(queryData[0]['TRANSACTIONSBYREGISTRAR']),
+        formattedData = {
+          datasets: [{ label: 'Label1' }, { label: 'Label2' }],
         };
+
+        const graphData = {
+          chartData: formattedData,
+          jsonData: queryData[0]['TRANSACTIONSBYREGISTRAR'].data,
+        };
+
+        filters = queryData[0]['TRANSACTIONSBYREGISTRAR'].filters;
+
+        data = { data: graphData, filters: filters };
 
         await this.redis.set(
           `zacr` + sqlQuery,
@@ -124,17 +127,22 @@ export class TransactionService {
       } else {
         data = JSON.parse(dataR);
       }
+
+      graphName = this.transactionsGraphName(data.filters, true);
+
       return {
         status: 'success',
         data: {
           graphName: graphName,
-          data: data,
           warehouse: 'zacr',
           graphType: 'transactions-ranking',
+          data: data.data,
+          filters: data.filters,
         },
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
+      console.debug(e);
       return {
         status: 500,
         error: true,
@@ -145,62 +153,46 @@ export class TransactionService {
   }
 
   transactionsGraphName(filters: any, perReg: boolean): string {
-    let dateFrom;
-    if (filters['dateFrom'] === undefined) {
-      dateFrom = new Date();
-      dateFrom.setFullYear(dateFrom.getUTCFullYear() - 1);
-      dateFrom = dateFrom.getFullYear() + '-01-01';
-    } else {
-      dateFrom = new Date(filters['dateFrom']);
-      let month = dateFrom.getUTCMonth() + 1;
-      month = month < 10 ? '0' + month : month;
-      let day = dateFrom.getUTCDate();
-      day = day < 10 ? '0' + day : day;
-      dateFrom = dateFrom.getUTCFullYear() + '-' + month + '-' + day;
-    }
+    let dateFrom = filters['dateFrom'];
+    dateFrom = formatDate(dateFrom);
 
-    let dateTo;
-    if (filters['dateTo'] === undefined) {
-      dateTo = new Date();
-      dateTo.setFullYear(dateTo.getUTCFullYear() - 1);
-      dateTo = dateTo.getFullYear() + '-12-31';
-    } else {
-      dateTo = new Date(filters['dateTo']);
-      let month = dateTo.getUTCMonth() + 1;
-      month = month < 10 ? '0' + month : month;
-      let day = dateTo.getUTCDate();
-      day = day < 10 ? '0' + day : day;
-      dateTo = dateTo.getUTCFullYear() + '-' + month + '-' + day;
-    }
+    let dateTo = filters['dateTo'];
+    dateTo = formatDate(dateTo);
 
-    let granularity = 'Monthly';
+    let granularity = 'Monthly ';
     const gCheck = filters['granularity'];
 
     if (gCheck == 'year') {
-      granularity = 'Yearly';
+      granularity = 'Yearly ';
     } else if (gCheck == 'week') {
-      granularity = 'Weekly';
+      granularity = 'Weekly ';
     } else if (gCheck == 'day') {
-      granularity = 'Daily';
+      granularity = 'Daily ';
     }
 
     let zone = filters['zone'];
-    if (zone) {
-      zone = ' for ' + zone;
+    if (zone?.length > 0) {
+      zone = ' (' + zone.join(',') + ')';
     } else {
-      zone = ' for all zones in registry';
+      zone = ' (all zones)';
     }
 
     let reg = '';
-    let trans = ' Transactions ';
+    let trans = 'Transactions ';
     if (perReg) {
       reg = 'per registrar ';
       if (filters['transactions']?.length > 0) {
-        trans = ' ' + filters['transactions'].join(', ') + ' ';
+        trans = '';
+        for (let i = 0; i < filters['transactions']?.length - 1; i++) {
+          trans += filters['transactions'][i] + ', ';
+        }
+        trans +=
+          filters['transactions'][filters['transactions']?.length - 1] + ' ';
       }
     }
+
     return (
-      granularity + trans + reg + ' from ' + dateFrom + ' to ' + dateTo + zone
+      granularity + trans + reg + 'from ' + dateFrom + ' to ' + dateTo + zone
     );
   }
 }

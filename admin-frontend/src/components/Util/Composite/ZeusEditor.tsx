@@ -50,7 +50,7 @@ export default function ZeusEditor() {
         return stateZeus.zeus.filters.map((item: IFilterData, index: number) => {
 
             if (item.opened) {
-                return <li className={item.selected ? "inline-block p-2 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 text-blue-600 hover:text-blue-600 dark:text-blue-500 dark:hover:text-blue-400 border-blue-600 dark:border-blue-500":" inline-block p-2 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 text-gray-500 hover:text-gray-600 dark:text-gray-400 border-gray-100 hover:border-gray-300 dark:border-gray-700 dark:hover:text-gray-300"} role="presentation">
+                return <li key={index} className={item.selected ? "inline-block p-2 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 text-blue-600 hover:text-blue-600 dark:text-blue-500 dark:hover:text-blue-400 border-blue-600 dark:border-blue-500":" inline-block p-2 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 text-gray-500 hover:text-gray-600 dark:text-gray-400 border-gray-100 hover:border-gray-300 dark:border-gray-700 dark:hover:text-gray-300"} role="presentation">
                     <button onClick={() => selectTab(item.name.replaceAll(" ", "-"))} className="pr-1" >{item.name.replaceAll("-", " ")}</button>
                     <button onClick={() => closeTab(item.name.replaceAll(" ", "-"))} type="button" className="text-white hover:bg-blue-800 focus:ring-3 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-1.5 text-center inline-flex items-center  dark:hover:bg-thirdBackground dark:focus:ring-blue-800">
                         <svg className="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 10">
@@ -67,7 +67,7 @@ export default function ZeusEditor() {
     const makeTabContent = () => {
         return stateZeus.zeus.filters.map((item: IFilterData, index: number) => {
             if (item.opened) {
-                return <div className={item.selected ? ' p-4 rounded-lg bg-gray-50 dark:bg-primaryBackground overflow-x-scroll overflow-y-scoll max-h-[calc(100vh-11rem)]':'hidden p-4 rounded-lg bg-gray-50 dark:bg-primaryBackground overflow-x-scroll overflow-y-scoll max-h-[calc(100vh-11rem)]'} id={item.name.replaceAll(" ", "-") + ""} role="tabpanel">
+                return <div key={index} className={item.selected ? ' p-4 rounded-lg bg-gray-50 dark:bg-primaryBackground overflow-x-hidden overflow-y-scoll max-h-[calc(100vh-11rem)]':'hidden p-4 rounded-lg bg-gray-50 dark:bg-primaryBackground overflow-x-scroll overflow-y-scoll max-h-[calc(100vh-11rem)]'} id={item.name.replaceAll(" ", "-") + ""} role="tabpanel">
                     <ZeusTab filterData={item}></ZeusTab> 
                 </div>
             } else return null;

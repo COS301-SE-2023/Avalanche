@@ -3,17 +3,15 @@ import { Injectable } from '@nestjs/common';
 import { lastValueFrom } from 'rxjs';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import * as whois from 'node-whois';
-
+import * as nodemailer from 'nodemailer';
 @Injectable()
 export class DomainWatchService {
   constructor(private httpService: HttpService) { }
 
   async sendData(data: any): Promise<any> {
-    console.log(data);
-    console.log("elo");
     try {
       const response = this.httpService.post(
-        'http://zanet.cloud:4100/domainWatch/active',
+        'http://DomainWatch:4100/domainWatch/active',
         data,
       );
       const responseData = await lastValueFrom(response);
@@ -30,15 +28,55 @@ export class DomainWatchService {
       .post('http://gateway:4000/user-management/getDomainWatchPassive')
       .toPromise();
     const userInfo = userData.data.watched;
+    const emailInfo = userData.data.emailData;
     const africaData = await this.httpService
       .post('http://gateway:4000/africa/domainWatchPassive')
       .toPromise();
     const africaInfo = africaData.data.queryData[0]['DOMAINWATCHPASSIVE'];
-    const check = { watched: userInfo, 'recently-created': africaInfo };
+    const zarcData = await this.httpService
+      .post('http://gateway:4000/zacr/domainWatchPassive')
+      .toPromise();
+    const zarcInfo = zarcData.data.queryData[0]['DOMAINWATCHPASSIVE'];
+    const info = zarcInfo + africaInfo;
+    const check = { watched: userInfo, 'recently-created': info };
     const response = await this.httpService
       .post('http://DomainWatch:4100/domainWatch/passive', check)
       .toPromise();
-    return JSON.stringify(response.data);
+      const transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 587,
+        secure: false,
+        auth: {
+          user: 'theskunkworks301@gmail.com',
+        pass: 'snlfvyltleqsmmxg',
+        }
+      });
+  
+      // Loop through each alert in the response
+      for (const alert of response.data.alerts) {
+        // Find the corresponding emailInfo for each person
+        const personEmailInfos = emailInfo.filter(info => info.person === alert.person);
+  
+        // If a matching emailInfo is found, send the email
+        for (const personEmailInfo of personEmailInfos) {
+          const { email, person } = personEmailInfo;
+          const domains = alert.domains;
+  
+          // Create email body
+          let emailBody = `Hello ${person},\n\nHere are your domains:\n`;
+          for (const domain of domains) {
+            emailBody += `- ${domain}\n`;
+          }
+  
+          // Send the email
+          await transporter.sendMail({
+            from: 'Avalanche Analytics',
+            to: email,
+            subject: `Domain Alert for ${person}`,
+            text: emailBody
+          });
+        }
+      }
   }
 
   @Cron(CronExpression.EVERY_DAY_AT_7AM)

@@ -12,6 +12,10 @@ export class RyceService {
     return this.client.send({ cmd: 'transactions' }, data).toPromise();
   }
 
+  async registrar(data: any) {
+    return this.client.send({ cmd: 'transactions' }, data).toPromise();
+  }
+
   async transactionsRanking(data: any) {
     return this.client.send({ cmd: 'transactions-ranking' }, data).toPromise();
   }
@@ -34,6 +38,10 @@ export class RyceService {
 
   async movementVertical(data: any) {
     return this.client.send({ cmd: 'movement/vertical' }, data).toPromise();
+  }
+  
+  async movementVerticalRanked(data: any) {
+    return this.client.send({ cmd: 'movement/verticalRanked' }, data).toPromise();
   }
 
   async domainWatchPassive(data: any) {

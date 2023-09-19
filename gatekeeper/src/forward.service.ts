@@ -14,8 +14,6 @@ export class ForwardService {
       body.token = headers.authorization;
     }
     try {
-      console.log(url);
-      console.log(body);
       const response = await this.httpService.request({
         method: method as Method,
         url: `${process.env.GATEWAY ? `http://gateway:4000` : "http://localhost:4000"}${url}`,
@@ -25,7 +23,8 @@ export class ForwardService {
 
       return response;
     } catch (error) {
-      console.log('Error data:', error.response?.data);
+      console.log(error,"Error in gk")
+      console.log('Error data:', error.message);
       throw error; // Throw the entire error object
     }
   }

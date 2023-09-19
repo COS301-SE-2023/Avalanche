@@ -22,7 +22,6 @@ let AppController = exports.AppController = class AppController {
     getSchemaByUrl(params) {
         const url = "/" + params.url + params[0];
         const schema = this.schemaService.getSchemaByUrl(url);
-        console.log(schema);
         if (!schema) {
             throw new common_1.NotFoundException(`Schema not found for URL ${url}`);
         }

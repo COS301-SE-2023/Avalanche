@@ -1,12 +1,28 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
+import { query } from 'express';
+import Redis from 'ioredis';
 import { SnowflakeService } from '../snowflake/snowflake.service';
 
 @Injectable()
 export class RegistrarNameService {
-  constructor(private readonly snowflakeService: SnowflakeService) {}
+  constructor(
+    @Inject('REDIS') private readonly redis: Redis,
+    private readonly snowflakeService: SnowflakeService,
+  ) {}
 
   async registrarName(json: any): Promise<any> {
-    const sqlQuery = `SELECT distinct(drr."Trading Name")
+    const name: any = await this.redis.get(`zacrRegistrarCode` + json['code']);
+
+    if (name) {
+      return {
+        status: 'success',
+        data: {
+          name: name,
+        },
+        timestamp: new Date().toISOString(),
+      };
+    }
+    const sqlQuery = `SELECT distinct(drr."Name")
       FROM DATA_WAREHOUSE.REGISTRY."Dim Registry Registrar" drr
       where drr."Code" = '${json['code']}';`;
 
@@ -21,11 +37,15 @@ export class RegistrarNameService {
         timestamp: new Date().toISOString(),
       };
     }
+    await this.redis.set(
+      `zacrRegistrarCode` + json['code'],
+      queryData[0]['Name'],
+    );
 
     return {
       status: 'success',
       data: {
-        name: queryData,
+        name: queryData[0]['Name'],
       },
       timestamp: new Date().toISOString(),
     };

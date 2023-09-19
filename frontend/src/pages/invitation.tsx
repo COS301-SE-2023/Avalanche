@@ -25,7 +25,7 @@ export default function Invitation() {
 
     const check = async () => {
         try {
-            await ky.post(`http://localho.st:4000/user-management/addUserToUserGroupWithKey`, {
+            await ky.post(`${process.env.NEXT_PUBLIC_API}/user-management/addUserToUserGroupWithKey`, {
                 json: { key: `${key}` },
                 headers: {
                     "Authorization": `Bearer ${jwt}`

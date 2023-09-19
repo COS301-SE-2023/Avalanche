@@ -18,10 +18,11 @@ interface IDropdown {
     id?: string,
     text?: string,
     absolute?: boolean,
-    placement?: string
+    placement?: string,
+    className?: string
 }
 
-export default function BetterDropdown({ items, option, set, id, text, absolute, placement }: IDropdown) {
+export default function BetterDropdown({ items, option, set, id, text, absolute, placement, className }: IDropdown) {
 
     const getName = (o: string) => {
         return items.find((item: IItem) => item.value === o)?.name;
@@ -32,7 +33,7 @@ export default function BetterDropdown({ items, option, set, id, text, absolute,
     return (
         <Menu as="div" className="relative inline-block text-left w-full" id={id}>
             <div>
-                <Menu.Button className="bg-gray-50 border-2 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-thirdBackground dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 border-gray-300 dark:border-thirdBackground flex justify-between" onClick={() => setOpen(!open)}>
+                <Menu.Button className={"bg-gray-50 border-2 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-thirdBackground dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 border-gray-300 dark:border-thirdBackground flex justify-between " + className} onClick={() => setOpen(!open)}>
                     {option ? getName(option) : text && text || "Options"}
                     <ChevronDownIcon className={`transition duration-75 -mr-1 h-5 w-5 text-gray-400 ${open && placement === "above" ? "" : "rotate-180"}`} aria-hidden="true" />
                 </Menu.Button>
@@ -47,7 +48,7 @@ export default function BetterDropdown({ items, option, set, id, text, absolute,
                 leaveFrom="transform opacity-100 scale-100"
                 leaveTo="transform opacity-0 scale-95"
             >
-                <Menu.Items className={`${absolute && 'absolute'} ${placement === "below" ? "origin-top-right" : placement === "above" ? "origin-top-bottom bottom-12" : "origin-top-right"} right-0 z-20 mt-2 w-full rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none transition-height dark:bg-thirdBackground`}>
+                <Menu.Items className={`${absolute && 'absolute'} ${placement === "below" ? "origin-top-right" : placement === "above" ? "origin-top-bottom bottom-12 mb-2" : "origin-top-right"} right-0 z-20 mt-2 w-full rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none transition-height dark:bg-thirdBackground`}>
                     <div className="py-1">
                         {
                             items.map((item: any, index: number) => (

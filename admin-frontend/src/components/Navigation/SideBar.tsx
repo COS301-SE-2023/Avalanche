@@ -10,7 +10,6 @@ import { getCookie, deleteCookie } from "cookies-next";
 import LoadingPage from "../Util/Loading";
 import ky from "ky";
 import { ErrorToast, SubmitButton, SuccessToast } from "../Util";
-import CreateDashboardModal from "../Modals/CreateDashboardModal";
 import { Transition } from '@headlessui/react'
 import { v4 as uuidv4 } from 'uuid';
 import md5 from 'md5';
@@ -93,6 +92,7 @@ export default function Sidebar() {
                             <ul className="space-y-2">
                                 <SideBarItem text="Home" icon={<HomeIcon className="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />} page="home" />
                                 <SideBarItem text="Zeus" icon={<BoltIcon className="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />} page="zeus" />
+                                <SideBarItem text="Hera" icon={<BoltIcon className="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />} page="hera" />
                             </ul>
                             {/* bottom list */}
                             <ul className="pt-4 mt-4 space-y-2 font-medium border-t border-gray-700 dark:border-gray-700 flex flex-col gap-2">
