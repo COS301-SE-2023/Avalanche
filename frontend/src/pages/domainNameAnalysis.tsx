@@ -3,7 +3,7 @@ import PageHeader from "@/components/Util/PageHeader"
 import { EyeIcon } from "@heroicons/react/24/solid"
 import Head from "next/head"
 import { useDispatch, useSelector } from "react-redux";
-import { graphState, getDomainNameAnalysisData, clearGraphData } from "@/store/Slices/graphSlice"
+import { graphState, getDomainNameAnalysisData, clearGraphData, getDashboardGraphs } from "@/store/Slices/graphSlice"
 import { useEffect } from "react";
 import { selectModalManagerState } from "@/store/Slices/modalManagerSlice"
 import GraphZoomModal from "@/components/Modals/GraphZoomModal"
@@ -55,23 +55,24 @@ export default function DomainNameAnalysis() {
     };
 
     function loadData() {
-        const arrayDomainNameAnalysisShare: IDomainNameAnalysisGraphRequest[] = [];
+        dispatch(getDashboardGraphs('domainNameAnalysis/count'));
+        // const arrayDomainNameAnalysisShare: IDomainNameAnalysisGraphRequest[] = [];
 
-        const ageAnalysisAverageTop5: IDomainNameAnalysisGraphRequest = { granularity: 'week', num: 5, minimumAppearances: 150 };
-        arrayDomainNameAnalysisShare.push(ageAnalysisAverageTop5);
+        // const ageAnalysisAverageTop5: IDomainNameAnalysisGraphRequest = { granularity: 'week', num: 5, minimumAppearances: 150 };
+        // arrayDomainNameAnalysisShare.push(ageAnalysisAverageTop5);
 
-        const ageAnalysisTop5: IDomainNameAnalysisGraphRequest = { granularity: 'week', num: 1, minimumAppearances: 30 };
-        arrayDomainNameAnalysisShare.push(ageAnalysisTop5);
+        // const ageAnalysisTop5: IDomainNameAnalysisGraphRequest = { granularity: 'week', num: 1, minimumAppearances: 30 };
+        // arrayDomainNameAnalysisShare.push(ageAnalysisTop5);
 
-        const marketShareTop20: IDomainNameAnalysisGraphRequest = { granularity: 'week', num: 2, minimumAppearances: 50 };
-        arrayDomainNameAnalysisShare.push(marketShareTop20);
+        // const marketShareTop20: IDomainNameAnalysisGraphRequest = { granularity: 'week', num: 2, minimumAppearances: 50 };
+        // arrayDomainNameAnalysisShare.push(marketShareTop20);
 
-        const ageAnalysisTop10: IDomainNameAnalysisGraphRequest = { granularity: 'week', num: 15, minimumAppearances: 150 };
-        arrayDomainNameAnalysisShare.push(ageAnalysisTop10);
+        // const ageAnalysisTop10: IDomainNameAnalysisGraphRequest = { granularity: 'week', num: 15, minimumAppearances: 150 };
+        // arrayDomainNameAnalysisShare.push(ageAnalysisTop10);
 
-        arrayDomainNameAnalysisShare.forEach(data => {
-            dispatch(getDomainNameAnalysisData(data));
-        })
+        // arrayDomainNameAnalysisShare.forEach(data => {
+        //     dispatch(getDomainNameAnalysisData(data));
+        // })
     }
 
     useEffect(() => {
@@ -97,7 +98,7 @@ export default function DomainNameAnalysis() {
 
         <MainContent>
             <div className="flex justify-between items-center">
-                <PageHeader title="Domain Name Analysis" subtitle="Insights at your fingertips" icon={<EyeIcon className="h-16 w-16 text-black dark:text-white" />} />
+                <PageHeader title="Domain Name Analysis" subtitle="Identifying trending keywords or themes" icon={<EyeIcon className="h-16 w-16 text-black dark:text-white" />} />
                 <SubmitButton text="Download Report" onClick={() => generatePDF()} />
             </div>
             <DashboardBase state={stateGraph} />

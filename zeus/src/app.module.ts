@@ -7,6 +7,7 @@ import { Endpoint } from './entity/endpoint.entity';
 import { Filter } from './entity/filter.entity';
 import { Graph } from './entity/graph.entity';
 import { RedisProvider } from './redis.provider';
+import { Dashboard } from './entity/frontendDashboard.entity';
 
 @Module({
   imports: [
@@ -21,12 +22,12 @@ import { RedisProvider } from './redis.provider';
         password: configService.get('POSTGRES_PASSWORD'),
         database: configService.get('POSTGRES_DB'),
         schema: configService.get('POSTGRES_SCHEMA'),
-        entities: [Endpoint, Filter, Graph], // We change entities to an array that includes the User entity. 
+        entities: [Endpoint, Filter, Graph, Dashboard], // We change entities to an array that includes the User entity. 
         synchronize: true,
       }),
       inject: [ConfigService],
     }),
-    TypeOrmModule.forFeature([Endpoint, Filter, Graph]),
+    TypeOrmModule.forFeature([Endpoint, Filter, Graph, Dashboard]),
   ],
   controllers: [AppController],
   providers: [AppService,RedisProvider],
