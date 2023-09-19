@@ -36,6 +36,9 @@ import SelectBlock from "@/components/QBee/SelectNode";
 import EdgeNode from "@/components/QBee/EdgeNode";
 import AddNode from "@/components/QBee/AddNode";
 import FilterBlock from "@/components/QBee/FilterBlock";
+import DDAddNode from "@/components/QBee/DDAddNode";
+import OrBlock from "@/components/QBee/OrBlock";
+import AndBlock from "@/components/QBee/AndBlock";
 
 import dummyData from "@/components/QBee/dummy.json";
 import { Toaster } from "react-hot-toast";
@@ -46,6 +49,9 @@ const nodeTypes = {
     edgeNode: EdgeNode,
     addNode: AddNode,
     filterBlock: FilterBlock,
+    ddAddNode: DDAddNode,
+    orBlock: OrBlock,
+    andBlock: AndBlock
 };
 
 const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
@@ -110,8 +116,6 @@ export default function QBee() {
         </>
     );
 }
-
-import { generateDefaultValue } from "@/components/Graphs/Filters/util";
 
 function Flow() {
 
@@ -236,12 +240,14 @@ function Flow() {
             draggable: false,
         },
         {
-            id: "filterAdd",
-            position: { x: 1980, y: -20 },
+            id: "ddAddNode",
+            position: { x: 1875, y: -20 },
             data: {
                 click: () => addFilterNode(),
+                clickAnd: () => addAndNode(),
+                clickOr: () => addOrNode()
             },
-            type: "addNode",
+            type: "ddAddNode",
             extent: "parent",
             parentNode: "FilterGroup",
             deletable: false,
@@ -300,7 +306,6 @@ function Flow() {
 
     const [nodes, setNodes] = useState<Node[]>(initialNodes);
     const [edges, setEdges] = useState<Edge[]>(initialEdges);
-    const [aNodes, setANodes] = useState<any[]>([]);
 
     /**
      * Adds a select node to the select subflow
@@ -342,8 +347,46 @@ function Flow() {
                     comparisonType: "",
                     typeOfFilter: "",
                     selectedValues: "",
-                    connectTo: [QBeeRole.filterBlock, QBeeRole.endOfFilter],
+                    connectTo: [QBeeRole.endOfFilter, QBeeRole.andBlock, QBeeRole.orBlock],
                     update: updateNode
+                },
+                position: { x: randomRange(350, 750), y: randomRange(150, 350) },
+            })
+        );
+    };
+
+    /**
+     * Adds a filter node to the filter subflow
+     */
+    const addAndNode = (): void => {
+        setNodes((nds) =>
+            nds.concat({
+                id: `${QBeeRole.andBlock}-${uuidv4()}`,
+                type: QBeeRole.andBlock,
+                extent: "parent",
+                parentNode: "FilterGroup",
+                data: {
+                    role: QBeeRole.andBlock,
+                    connectTo: [QBeeRole.filterBlock, QBeeRole.orBlock],
+                },
+                position: { x: randomRange(350, 750), y: randomRange(150, 350) },
+            })
+        );
+    };
+
+    /**
+     * Adds a filter node to the filter subflow
+     */
+    const addOrNode = (): void => {
+        setNodes((nds) =>
+            nds.concat({
+                id: `${QBeeRole.orBlock}-${uuidv4()}`,
+                type: QBeeRole.orBlock,
+                extent: "parent",
+                parentNode: "FilterGroup",
+                data: {
+                    role: QBeeRole.orBlock,
+                    connectTo: [QBeeRole.filterBlock, QBeeRole.orBlock],
                 },
                 position: { x: randomRange(350, 750), y: randomRange(150, 350) },
             })
