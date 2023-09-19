@@ -20,7 +20,15 @@ export function LineChart({ data, height }: IChart) {
     let allOptions = convertData(jsonData, "line", theme);
     let colourToUse = chartColours;
     let fillValue=undefined;
-    if (allOptions.options.yaxis.title.text == " Movement") {
+    let markerValue={
+      size: 5, // Adjust the size as per your preference
+      shape: "circle", // This will make the markers circular
+      strokeWidth: 0,
+      hover: {
+        size: 7, // Adjust the size for hover state as per your preference
+      },
+    } as any;
+    if (allOptions.options.yaxis.title.text == " Movement" && allOptions.series.length==1) {
       colourToUse = ['#FF0000'] as any[];
       fillValue={
         type: "gradient",
@@ -33,7 +41,35 @@ export function LineChart({ data, height }: IChart) {
           stops: [(Math.max(...allOptions.series[0].data)/(Math.max(...allOptions.series[0].data)-Math.min(...allOptions.series[0].data)))*100,0],
     
         }
+      };
+      let discreteValues=[] as any;
+      for (let index = 0; index < allOptions.series[0].data.length; index++) {
+        if(allOptions.series[0].data[index]<0){
+          discreteValues.push({
+            size: 5, // Adjust the size as per your preference
+            shape: "circle", // This will make the markers circular
+            strokeWidth: 0,
+            hover: {
+              size: 7, // Adjust the size for hover state as per your preference
+            },
+            fillColor: '#FF0000',
+          },);
+        }else{
+          discreteValues.push({
+            size: 5, // Adjust the size as per your preference
+            shape: "circle", // This will make the markers circular
+            strokeWidth: 0,
+            hover: {
+              size: 7, // Adjust the size for hover state as per your preference
+            },
+            fillColor: '#008000',
+          },);
+        }
+        
       }
+      markerValue={
+        discrete:discreteValues
+      };
     }
     Object.assign(allOptions.options, {
       dataLabels: {
@@ -92,14 +128,7 @@ export function LineChart({ data, height }: IChart) {
           fontFamily: "Arial", // Font family for the tooltip
         },
       },
-      markers: {
-        size: 5, // Adjust the size as per your preference
-        shape: "circle", // This will make the markers circular
-        strokeWidth: 0,
-        hover: {
-          size: 7, // Adjust the size for hover state as per your preference
-        },
-      },
+      markers: markerValue,
       animations: {
         enabled: true,
         easing: "easeinout",
