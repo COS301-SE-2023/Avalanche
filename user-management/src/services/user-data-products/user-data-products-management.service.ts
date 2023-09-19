@@ -776,7 +776,7 @@ export class UserDataProductMangementService {
             const result ={
                 dashboardGraphs : graphs
             };
-            await this.redis.set(dataSource + " " + endpointV + " " + userProduct.tou, JSON.stringify(result));
+            await this.redis.set(dataSource + " " + endpointV + " " + userProduct.tou, JSON.stringify(result),  'EX', 24 * 60 * 60);
 
             return { "status": "success", "message": result };
         }else{
