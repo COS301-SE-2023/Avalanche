@@ -90,7 +90,7 @@ export default function DomainLength() {
 
         <MainContent>
             <div className="flex justify-between items-center">
-                <PageHeader title="Domain Name Analysis Length" subtitle="Insights at your fingertips" icon={<ClipboardIcon className="h-16 w-16 text-black dark:text-white" />} />
+                <PageHeader title="Domain Name Analysis Length" subtitle="View the average length of all your domains under your roof" icon={<ClipboardIcon className="h-16 w-16 text-black dark:text-white" />} />
                 <SubmitButton text="Download Report" onClick={() => generatePDF()} />
             </div>
             <DashboardBase state={stateGraph} />

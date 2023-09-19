@@ -95,7 +95,7 @@ export default function MarketShare() {
 
         <MainContent>
             <div className="flex justify-between items-center">
-                <PageHeader title="Market Share" subtitle="Insights at your fingertips" icon={<ChartBarIcon className="h-16 w-16 text-black dark:text-white" />} />
+                <PageHeader title="Market Share" subtitle="See who you are competing against" icon={<ChartBarIcon className="h-16 w-16 text-black dark:text-white" />} />
                 <SubmitButton text="Download Report" onClick={() => generatePDF()} />
             </div>
             <DashboardBase state={stateGraph} />

@@ -127,7 +127,7 @@ export default function Registrar() {
 
         <MainContent>
             <div className="flex justify-between items-center">
-                <PageHeader title="Registrar" subtitle="Insights at your fingertips" icon={<TvIcon className="h-16 w-16 text-black dark:text-white" />} />
+                <PageHeader title="Registrar" subtitle="View transaction data specific per registrar" icon={<TvIcon className="h-16 w-16 text-black dark:text-white" />} />
                 <SubmitButton text="Download Report" onClick={() => generatePDF()} />
             </div>
             <DashboardBase state={stateGraph} />

@@ -254,7 +254,7 @@ export default function Settings() {
 
         <MainContent>
             <div className="flex justify-between items-center">
-                <PageHeader title="Domain Watch" subtitle="Watch your Domains" icon={<MagnifyingGlassCircleIcon className="h-16 w-16 text-black dark:text-white" />} />
+                <PageHeader title="Domain Watch" subtitle="Uncover domain names similar to yours to protect your brand" icon={<MagnifyingGlassCircleIcon className="h-16 w-16 text-black dark:text-white" />} />
             </div>
             <div className="p-4">
                 <form className="space-y-4 md:space-y-6 mb-4" onSubmit={(e) => formSubmit(e)}>

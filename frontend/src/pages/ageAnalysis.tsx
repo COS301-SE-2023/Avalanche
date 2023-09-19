@@ -98,7 +98,7 @@ export default function AgeAnalysis() {
 
         <MainContent>
             <div className="flex justify-between items-center">
-                <PageHeader title="Registrar Age Analysis" subtitle="Insights at your fingertips" icon={<HeartIcon className="h-16 w-16 text-black dark:text-white" />} />
+                <PageHeader title="Registrar Age Analysis" subtitle="See the average age of domains" icon={<HeartIcon className="h-16 w-16 text-black dark:text-white" />} />
                 <SubmitButton text="Download Report" onClick={() => generatePDF()} />
             </div>
             <DashboardBase state={stateGraph} />
