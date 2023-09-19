@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { clearCurrentOpenState, setAnimateManagerState } from '@/store/Slices/modalManagerSlice';
 import { userState } from '@/store/Slices/userSlice';
 import { Transition } from '@headlessui/react';
+import introJs from 'intro.js';
+import 'intro.js/introjs.css';
 
 interface ICreateGroupModal {
     state: any,
@@ -16,8 +18,24 @@ export default function GraphCreateModal({ state, add }: ICreateGroupModal) {
     const dispatch = useDispatch<any>();
     const stateUser = useSelector(userState);
 
-    useEffect(() => {
+    const introJS = introJs()
+    const startTut = () => {
+        introJS.setOptions({
+            steps: [
+                {
+                    element: document.getElementsByClassName("bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4 dark:bg-dark-secondaryBackground ")[0] as HTMLElement,
+                    intro: 'add graph here',
+                },
+                {
+                    element: document.getElementById("endpointDropdown") as HTMLElement,
+                    intro: "fancy shit"
+                }
+                ]
+        }).start();
+    }
 
+    useEffect(() => {
+        startTut();
     }, [])
 
     // These two variables are the fields from the form. 

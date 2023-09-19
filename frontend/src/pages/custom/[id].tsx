@@ -164,30 +164,30 @@ export default function CreateCustomDashboard() {
 
     }
 
+    const introJS = introJs();
     const startTut = () => {
-        introJs().setOptions({
+        introJS.setOptions({
             steps: [
-            {
-              element: document.querySelector('.card-demo') as HTMLElement,
-              intro: 'Tooltip has position right',
-              position: 'right'
-            },
-            {
-              element: document.querySelector('.card-demo-link')as HTMLElement,
-              intro: 'Tooltip has position left',
-              position: 'left'
-            },
-            {
-              element: document.querySelector('.card-demo-text')as HTMLElement,
-              intro: 'Tooltip has position bottom',
-              position: 'bottom'
-            },
-            {
-              element: document.querySelector('.card-demo')as HTMLElement,
-              intro: 'Tooltip has position top',
-              position: 'top'
-            }]
-          }).start();
+                {
+                    intro: 'Welcome to the custom dashboard tutorial',
+                    title: "Custom dashboard tutorial"
+                },
+                {
+                    element: document.getElementsByClassName('w-4 h-4 right-0 top-0 hover:cursor-pointer hover:text-avalancheBlue duration-75 hover:scale-125')[0] as HTMLElement,
+                    intro: 'Here you can change the name of your dashboard',
+                },
+                {
+                    element: document.getElementsByClassName("flex gap-5 w-full lg:w-max")[0] as HTMLElement,
+                    intro: 'add a graph here',
+                }
+                ]
+        }).start();
+    }
+
+    const getElement = (name: string): HTMLElement => {
+        const element = document.getElementsByClassName(name)[0] as HTMLElement
+        alert(element)
+        return element
     }
 
     return (<>
@@ -198,21 +198,6 @@ export default function CreateCustomDashboard() {
         <Toaster />
 
         <MainContent>
-            <div data-title="Welcome!" data-intro="Hello World! 👋" className="card-demo">
-                <div className="card shadow--md">
-                    <div className="card__image" data-intro="Intro.js can highlight on elements">
-                        a
-                    </div>
-                    <div className="card__body" data-title="Farewell!" data-intro="And this is the last step!">
-                        <h4>Quaco Lighthouse</h4>
-                        <small>
-                            The Quaco Head Lighthouse is a well maintained lighthouse close to St.
-                            Martins. It is a short, beautiful walk to the lighthouse along the
-                            seashore.
-                        </small>
-                    </div>
-                </div>
-            </div>
             <div className="flex justify-between items-center flex-col lg:flex-row">
                 <div className="flex flex-row gap-2 items-center">
                     <CpuChipIcon className="h-16 w-16 text-black dark:text-white" />
@@ -248,6 +233,7 @@ export default function CreateCustomDashboard() {
                     }} />}
                     <SubmitButton text="Add a Graph" onClick={() => {
                         dispatch(setCurrentOpenState("GRAPH.AddGraph"))
+                        introJS.exit(true)
                     }} />
                 </div>
             </div>
