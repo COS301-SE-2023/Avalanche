@@ -30,7 +30,7 @@ export default function SelectBlock({ data, id }: NodeProps<NodeData>) {
         return type.columnType;
     }
 
-    return <div className='bg-avalancheBlue rounded'>
+    return <div className='bg-avalancheBlue rounded border-2 border-white shadow'>
         <div>
             <Handle
                 type="target"
