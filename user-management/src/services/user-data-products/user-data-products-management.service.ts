@@ -726,4 +726,58 @@ export class UserDataProductMangementService {
         };
     }
 
+    async getDashboards(token: string, endpointV: string, dataSource: string) {
+        try {
+            const userPayload = await this.redis.get(token);
+            if (!userPayload) {
+                return {
+                    status: 400, error: true, message: 'Invalid token.',
+                    timestamp: new Date().toISOString()
+                };
+            }
+            const { email: userEmail } = JSON.parse(userPayload);
+            const user = await this.userRepository.findOne({
+                where: { email: userEmail }, relations: ['userGroups', 'organisation', 'dashboards'],
+                select: ['id', 'email', 'firstName', 'lastName', 'organisationId', 'products', 'userGroups', 'organisation', 'dashboards']
+            });
+            if (!user) {
+                return {
+                    status: 400, error: true, message: 'User does not exist.',
+                    timestamp: new Date().toISOString()
+                };
+            }
+
+            // Initialize an array to store the final result
+            const result = [];
+            let g = dataSource;
+            if(g == 'zarc'){
+                g = 'zacr'
+            }
+            
+            const userProduct = user.products.find(product => product.dataSource === dataSource);
+            const endpoint = await this.endpointRepository.findOne({
+                where: { endpoint: g }, // Match the endpoint with the dataSource
+                relations: ['dashboards']
+            });
+            const dashboards = endpoint.dashboards.find(dashboard => dashboard.name == endpointV && dashboard.user == userProduct.tou);
+            if(!dashboards){
+                return {
+                    status: 403, error: true, message: 'Unauthorised.',
+                    timestamp: new Date().toISOString()
+                };  
+            }
+            const graphs = dashboards.graphs;
+            result.push({
+                dashboardGraphs : graphs
+            });
+
+            return { "status": "success", "message": result };
+        } catch (error) {
+            return {
+                status: 500, error: true, message: 'Unexpected error.',
+                timestamp: new Date().toISOString()
+            };
+        }
+    }
+
 }

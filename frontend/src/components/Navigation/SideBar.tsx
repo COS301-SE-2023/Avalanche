@@ -3,7 +3,7 @@ import SideBarItem from "./SidebarItem"
 import Link from "next/link"
 import { useState, useEffect, useRef } from "react";
 import { useTheme } from "next-themes";
-import { Cog6ToothIcon, Bars4Icon, ArrowLeftOnRectangleIcon, PencilIcon, HomeIcon, ChevronDownIcon, ChartPieIcon } from "@heroicons/react/24/solid";
+import { Cog6ToothIcon, Bars4Icon, ArrowLeftOnRectangleIcon, PencilIcon, HomeIcon, ChevronDownIcon, ChartPieIcon, QuestionMarkCircleIcon } from "@heroicons/react/24/solid";
 import { clearCurrentOpenState, selectModalManagerState, setCurrentOpenState } from "@/store/Slices/modalManagerSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { userState, logout } from "@/store/Slices/userSlice";
@@ -265,6 +265,9 @@ export default function Sidebar() {
                             <div className="flex justify-center items-center gap-2">
                                 <Link href="/settings" data-tooltip-target="tooltip-settings" className="inline-flex justify-center p-2 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-600">
                                     <Cog6ToothIcon className="w-6 h-6" />
+                                </Link>
+                                <Link href="/help" data-tooltip-target="tooltip-settings" className="inline-flex justify-center p-2 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                    <QuestionMarkCircleIcon className="w-6 h-6" />
                                 </Link>
                                 {/* <button type="button" className="inline-flex justify-center p-2 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-600" onClick={() => toggleDarkMode()}>
                                     {theme === "dark" ? <SunIcon className="w-6 h-6" /> : <MoonIcon className="w-6 h-6" />}
