@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { AppState } from "../store";
 import { HYDRATE } from "next-redux-wrapper";
 import { DBData } from "@/interfaces/qbee/interfaces";
+import { Node, Edge } from 'reactflow';
 
 interface ITable {
     column: string
@@ -10,7 +11,9 @@ interface IInitState {
     data: DBData[],
     tables: string[],
     columns: string[],
-    edited: boolean
+    edited: boolean,
+    nodes: Node[],
+    edges: Edge[],
 }
 
 const InitState: IInitState = {
@@ -18,6 +21,8 @@ const InitState: IInitState = {
     tables: [],
     columns: [],
     edited: false,
+    nodes: [],  // Initial value for nodes
+    edges: [],
 }
 
 export const qbeeSlice = createSlice({
@@ -42,15 +47,15 @@ export const qbeeSlice = createSlice({
             state.tables = [];
             state.columns = [];
         },
-        filterableData(state, action) {
-
-        },
-        addToFilterable(state, action) {
-
-        },
         setEdited(state, action) {
             state.edited = action.payload;
-        }
+        },
+        setNodes(state, action) {
+            state.nodes = action.payload;
+        },
+        setEdges(state, action) {
+            state.edges = action.payload;
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(HYDRATE, (state, action) => {
@@ -62,6 +67,6 @@ export const qbeeSlice = createSlice({
     }
 })
 
-export const { addData, selectTable, clear, addToFilterable, setEdited } = qbeeSlice.actions;
+export const { addData, selectTable, clear, addToFilterable, setEdited, setNodes, setEdges} = qbeeSlice.actions;
 export const qbeeState = (state: AppState) => state.qbee;
 export default qbeeSlice.reducer;
