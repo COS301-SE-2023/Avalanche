@@ -387,7 +387,7 @@ export class AppController {
 
   @MessagePattern({ cmd: 'getDashboards' })
   async getDashboards(data: any) {
-    const result = await this.userDataProductManService.getDashboards(data.token, data.endpoint, data.dataSource);
+    const result = await this.userDataProductManService.getDashboards(data.token, data.endpointV, data.dataSource);
     if (result.error) {
       throw new RpcException({
         status: result.status,

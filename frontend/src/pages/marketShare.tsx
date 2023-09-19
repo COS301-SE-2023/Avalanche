@@ -3,7 +3,7 @@ import PageHeader from "@/components/Util/PageHeader"
 import { ChartBarIcon } from "@heroicons/react/24/solid"
 import Head from "next/head"
 import { useDispatch, useSelector } from "react-redux";
-import { graphState, getMarketShareData, clearGraphData } from "@/store/Slices/graphSlice"
+import { graphState, getMarketShareData, clearGraphData, getDashboardGraphs } from "@/store/Slices/graphSlice"
 import { useEffect } from "react";
 import { selectModalManagerState } from "@/store/Slices/modalManagerSlice"
 import GraphZoomModal from "@/components/Modals/GraphZoomModal"
@@ -56,21 +56,22 @@ export default function MarketShare() {
     };
 
     function loadData() {
-        const arrayMarketShare: IMarketShareGraphRequest[] = [];
-        const currentDate = new Date();
+        dispatch(getDashboardGraphs('marketShare'));
+        // const arrayMarketShare: IMarketShareGraphRequest[] = [];
+        // const currentDate = new Date();
 
-        const marketShareTop5: IMarketShareGraphRequest = { rank: 'top5', registrar: ['Individual'] };
-        arrayMarketShare.push(marketShareTop5);
+        // const marketShareTop5: IMarketShareGraphRequest = { rank: 'top5', registrar: ['Individual'] };
+        // arrayMarketShare.push(marketShareTop5);
 
-        const marketShareTop10: IMarketShareGraphRequest = { rank: 'top10' };
-        arrayMarketShare.push(marketShareTop10);
+        // const marketShareTop10: IMarketShareGraphRequest = { rank: 'top10' };
+        // arrayMarketShare.push(marketShareTop10);
 
-        const marketShareTop20: IMarketShareGraphRequest = { rank: 'top20' };
-        arrayMarketShare.push(marketShareTop20);
+        // const marketShareTop20: IMarketShareGraphRequest = { rank: 'top20' };
+        // arrayMarketShare.push(marketShareTop20);
 
-        arrayMarketShare.forEach(data => {
-            dispatch(getMarketShareData(data));
-        })
+        // arrayMarketShare.forEach(data => {
+        //     dispatch(getMarketShareData(data));
+        // })
     }
 
     useEffect(() => {

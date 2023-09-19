@@ -3,7 +3,7 @@ import PageHeader from "@/components/Util/PageHeader"
 import { MapIcon } from "@heroicons/react/24/solid"
 import Head from "next/head"
 import { useDispatch, useSelector } from "react-redux";
-import { graphState, getGraphDataRanking, clearGraphData } from "@/store/Slices/graphSlice"
+import { graphState, getGraphDataRanking, clearGraphData, getDashboardGraphs } from "@/store/Slices/graphSlice"
 import { useEffect } from "react";
 import { ITransactionGraphRequest } from "@/interfaces/requests";
 import { selectModalManagerState } from "@/store/Slices/modalManagerSlice"
@@ -59,31 +59,32 @@ export default function RegistrarMarketComparison() {
     };
 
     function loadData() {
-        const arrayRanking: ITransactionGraphRequest[] = [];
-        const currentDate = new Date();
+        dispatch(getDashboardGraphs('transactions-ranking'));
+        // const arrayRanking: ITransactionGraphRequest[] = [];
+        // const currentDate = new Date();
 
-        // All transactions, monthly granularity, for the last year
-        let dateFrom = `${currentDate.getFullYear() - 1}-01-01`;
-        let dateTo = `${currentDate.getFullYear() - 1}-12-31`;
+        // // All transactions, monthly granularity, for the last year
+        // let dateFrom = `${currentDate.getFullYear() - 1}-01-01`;
+        // let dateTo = `${currentDate.getFullYear() - 1}-12-31`;
 
-        const monthlyLastYearCreateRanking: ITransactionGraphRequest = { graphName: `Monthly create ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: stateGraph.zones.slice(0, 1), transactions: ["create"] };
-        arrayRanking.push(monthlyLastYearCreateRanking);
+        // const monthlyLastYearCreateRanking: ITransactionGraphRequest = { graphName: `Monthly create ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: stateGraph.zones.slice(0, 1), transactions: ["create"] };
+        // arrayRanking.push(monthlyLastYearCreateRanking);
 
-        //  All transactions, weekly, last 3 months
-        let holderDate = new Date();
-        holderDate.getMonth() - 3;
-        dateFrom = `${holderDate.getFullYear()}-${pad(holderDate.getMonth() - 3)}-01`;
-        dateTo = `${currentDate.getFullYear()}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
+        // //  All transactions, weekly, last 3 months
+        // let holderDate = new Date();
+        // holderDate.getMonth() - 3;
+        // dateFrom = `${holderDate.getFullYear()}-${pad(holderDate.getMonth() - 3)}-01`;
+        // dateTo = `${currentDate.getFullYear()}-${pad(currentDate.getMonth())}-${pad(currentDate.getDate())}`;
 
-        const monthlyThreeMonthsCreateRanking: ITransactionGraphRequest = { graphName: `Monthly create ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, transactions: ["create"] };
-        arrayRanking.push(monthlyThreeMonthsCreateRanking);
+        // const monthlyThreeMonthsCreateRanking: ITransactionGraphRequest = { graphName: `Monthly create ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, transactions: ["create"] };
+        // arrayRanking.push(monthlyThreeMonthsCreateRanking);
 
-        const monthlyThreeMonthsRenewRanking: ITransactionGraphRequest = { graphName: `Monthly renew ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, transactions: ["renew"] };
-        arrayRanking.push(monthlyThreeMonthsRenewRanking);
+        // const monthlyThreeMonthsRenewRanking: ITransactionGraphRequest = { graphName: `Monthly renew ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, transactions: ["renew"] };
+        // arrayRanking.push(monthlyThreeMonthsRenewRanking);
 
-        arrayRanking.forEach(data => {
-            dispatch(getGraphDataRanking(data));
-        })
+        // arrayRanking.forEach(data => {
+        //     dispatch(getGraphDataRanking(data));
+        // })
 
     }
 

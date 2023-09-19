@@ -748,10 +748,13 @@ export class UserDataProductMangementService {
             }
 
             // Initialize an array to store the final result
-            const result = [];
             let g = dataSource;
             if(g == 'zarc'){
                 g = 'zacr'
+            }
+
+            if(dataSource == 'zacr'){
+                dataSource = 'zarc'
             }
             
             const userProduct = user.products.find(product => product.dataSource === dataSource);
@@ -767,9 +770,9 @@ export class UserDataProductMangementService {
                 };  
             }
             const graphs = dashboards.graphs;
-            result.push({
+            const result ={
                 dashboardGraphs : graphs
-            });
+            };
 
             return { "status": "success", "message": result };
         } catch (error) {
