@@ -14,7 +14,7 @@ export default function CustomNode({ data }: NodeProps<NodeData>) {
     ]
 
     const renderHandle = () => {
-        return handles.map((item: string, index: number) => <Handle type="target" position={Position.Left} id={item} style={{ backgroundColor: "#121212", top: 10 + (index * 15), width: "10px", borderRadius: "0px", height: "10px" }} />)
+        return handles.map((item: string, index: number) => <Handle key={index} type="target" position={Position.Left} id={item} style={{ backgroundColor: "#121212", top: 10 + (index * 15), width: "10px", borderRadius: "0px", height: "10px" }} />)
     }
 
     return <div className='bg-avalancheBlue p-3 pl-5 rounded'>
@@ -42,7 +42,7 @@ export default function CustomNode({ data }: NodeProps<NodeData>) {
                     <tbody>
                         <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                             <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                Apple MacBook Pro 17"
+                                Apple MacBook Pro 17&quot;
                             </th>
                             <td className="px-6 py-4">
                                 Silver
