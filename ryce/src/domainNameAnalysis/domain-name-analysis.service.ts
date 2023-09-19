@@ -25,8 +25,8 @@ export class DomainNameAnalysisService {
       const sqlQuery = `call domainNameAnalysis('${filters}')`;
 
       const dataR = await this.redis.get(`ryce` + sqlQuery);
-      let data: DataInterface;
-      let formattedData = '';
+      let data: NewDataInterface;
+      let formattedData;
 
       if (!dataR) {
         let queryData;
@@ -49,15 +49,23 @@ export class DomainNameAnalysisService {
         );
         const responseData = await lastValueFrom(response);
 
-        formattedData =
-          await this.graphFormattingService.formatDomainNameAnalysis(
-            JSON.stringify(responseData.data),
-          );
-
-        data = {
-          chartData: JSON.parse(formattedData),
-          jsonData: responseData.data,
+        formattedData = {
+          datasets: [{ label: 'Label1' }],
         };
+
+        const jsonData: any[] = responseData.data.data;
+        jsonData.forEach((item) => {
+          delete item.domains;
+        });
+
+        jsonData.unshift({ xAxis: 'word', yAxis: 'frequency' });
+
+        const graphData = {
+          chartData: formattedData,
+          jsonData: jsonData,
+        };
+
+        data = { data: graphData, filters: {} };
 
         await this.redis.set(
           `ryce` + sqlQuery,
@@ -80,7 +88,8 @@ export class DomainNameAnalysisService {
             '(s)',
           warehouse: 'ryce',
           graphType: 'domainNameAnalysis/count',
-          data: data,
+          data: data.data,
+          filters: data.filters,
         },
         timestamp: new Date().toISOString(),
       };

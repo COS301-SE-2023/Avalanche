@@ -24,8 +24,8 @@ export class DomainNameAnalysisService {
 
       const sqlQuery = `call domainNameAnalysis('${filters}')`;
       const dataR = await this.redis.get(`zacr` + sqlQuery);
-      let data: DataInterface;
-      let formattedData = '';
+      let data: NewDataInterface;
+      let formattedData;
 
       if (!dataR) {
         let queryData;
@@ -47,15 +47,25 @@ export class DomainNameAnalysisService {
           dataO,
         );
         const responseData = await lastValueFrom(response);
-        formattedData =
-          await this.graphFormattingService.formatDomainNameAnalysis(
-            JSON.stringify(responseData.data),
-          );
 
-        data = {
-          chartData: JSON.parse(formattedData),
-          jsonData: responseData.data.data,
+        formattedData = {
+          datasets: [{ label: 'Label1' }],
         };
+
+        const jsonData: any[] = responseData.data.data;
+        jsonData.forEach((item) => {
+          delete item.domains;
+        });
+
+        jsonData.unshift({ xAxis: 'word', yAxis: 'frequency' });
+
+        const graphData = {
+          chartData: formattedData,
+          jsonData: jsonData,
+        };
+
+        data = { data: graphData, filters: {} };
+
         await this.redis.set(
           `zacr` + sqlQuery,
           JSON.stringify(data),
@@ -75,7 +85,8 @@ export class DomainNameAnalysisService {
             ' ' +
             granularity +
             '(s)',
-          data: data,
+          data: data.data,
+          filters: data.filters,
           warehouse: 'zacr',
           graphType: 'domainNameAnalysis/count',
         },
@@ -102,8 +113,8 @@ export class DomainNameAnalysisService {
       const sqlQuery = `call domainNameAnalysis('${filters}')`;
 
       const dataR = await this.redis.get(`zacr` + sqlQuery + ` classification`);
-      let data: DataInterface;
-      let formattedData = '';
+      let data: NewDataInterface;
+      let formattedData;
       if (!dataR) {
         let queryData;
         try {
@@ -126,11 +137,10 @@ export class DomainNameAnalysisService {
         const formattedResponseData = {
           data: this.formatClassification(responseData.data.data),
         };
-        formattedData =
-          await this.graphFormattingService.formatDomainNameAnalysisClassification(
-            JSON.stringify(formattedResponseData),
-          );
-        data = {
+        formattedData = {
+          datasets: [{ label: 'Label1' }],
+        };
+        const graphData = {
           chartData: JSON.parse(formattedData),
           jsonData: formattedResponseData.data,
         };

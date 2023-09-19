@@ -63,10 +63,9 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
   const [title, setGraphTitle] = useState<any>(data.graphName);
   const [warehouse, setWarehouse] = useState<string>(data.warehouse);
   const [gType, setGType] = useState<string>(data.graphType);
-  console.log('data.filters');
-  console.log(data.filters)
+
   const [filtersApplied, setFiltersApplied] = useState<any>(data.filters);
-  console.log(filtersApplied)
+
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
