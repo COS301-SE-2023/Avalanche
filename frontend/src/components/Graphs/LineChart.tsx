@@ -27,7 +27,7 @@ export function LineChart({ data, height }: IChart) {
       hover: {
         size: 7, // Adjust the size for hover state as per your preference
       },
-    };
+    } as any;
     if (allOptions.options.yaxis.title.text == " Movement" && allOptions.series.length==1) {
       colourToUse = ['#FF0000'] as any[];
       fillValue={
@@ -44,7 +44,7 @@ export function LineChart({ data, height }: IChart) {
       };
       let discreteValues=[] as any;
       
-      markerValue=undefined
+      markerValue=undefined;
     }
     Object.assign(allOptions.options, {
       dataLabels: {
