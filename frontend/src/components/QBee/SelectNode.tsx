@@ -1,11 +1,12 @@
 import { NodeProps, Handle, Position, Connection } from 'reactflow';
-import { SelectBlock } from '@/interfaces/qbee/interfaces';
+import { DBData, SelectBlock } from '@/interfaces/qbee/interfaces';
 import { Role as QBeeRole } from "@/interfaces/qbee/enums";
 import { useDispatch, useSelector } from 'react-redux';
-import { qbeeState, selectTable } from '@/store/Slices/qbeeSlice';
-import { BetterDropdown, InputLabel } from '../Util';
+import { qbeeState } from '@/store/Slices/qbeeSlice';
+import { BetterDropdown, Input, InputLabel } from '../Util';
 import { useState } from 'react';
 import { ArrowLongRightIcon } from '@heroicons/react/24/solid';
+import { AggregationType } from '@/interfaces/qbee/enums';
 
 interface NodeData {
     label: string,
@@ -15,15 +16,20 @@ interface NodeData {
     aggregationType: string,
     renamedColumn: string,
     connectTo: QBeeRole[],
-    quickConnect?: any
+    quickConnect?: any,
+    update: any
 };
 
 export default function SelectBlock({ data, id }: NodeProps<NodeData>) {
 
     const stateQBEE = useSelector(qbeeState);
-    const dispatch = useDispatch<any>();
-    const [selectedTable, setSelectedTable] = useState<string>("");
-    const [selectedColumn, setSelectedColumn] = useState<string>("");
+
+    const getType = () => {
+        const type = stateQBEE.data.find((item: DBData) => item.columnName === data.column);
+        if (!type) return;
+        console.log(type.columnType);
+        return type.columnType;
+    }
 
     return <div className='bg-avalancheBlue rounded'>
         <div>
@@ -52,41 +58,62 @@ export default function SelectBlock({ data, id }: NodeProps<NodeData>) {
                 }}
             />
             <div className='p-2'>
-                <h6 className='text-xl mb-4'>{selectedTable ? selectedColumn ? `${selectedTable} | ${selectedColumn}` : `${selectedTable}` : "Select a Table"}</h6>
+                <h6 className='text-xl mb-4'>Select a Column</h6>
                 <div className='mb-2'>
-                    <InputLabel htmlFor='table' text="Select a table" className='text-white' />
-                    <BetterDropdown
-                        id="table"
-                        items={stateQBEE.tables.map((item: string) => {
-                            return { name: item, value: item };
-                        })}
-                        option={selectedTable}
-                        set={(option: string) => {
-                            setSelectedTable(option);
-                            setSelectedColumn("");
-                            dispatch(selectTable(option));
-                        }}
-                        placement='below'
-                        absolute={true}
-                        text='Select a table'
-                    />
-                </div>
-                {selectedTable && <div className='mb-2'>
                     <InputLabel htmlFor='column' text="Select a column" className='text-white' />
                     <BetterDropdown
                         id='column'
-                        items={stateQBEE.columns.map((item: string) => {
-                            return { name: item, value: item };
+                        items={stateQBEE.data.map((item: DBData) => {
+                            return { name: item.columnName, value: item.columnName };
                         })}
-                        option={selectedColumn}
+                        option={data.column}
                         placement='below'
                         absolute={true}
                         set={(option: string) => {
-                            setSelectedColumn(option);
+                            data.update(id, { column: option });
+
+                            // Getting column type
+                            const type = stateQBEE.data.find((item: DBData) => item.columnName === option);
+                            if (!type) return;
+
+                            data.update(id, { typeOfColumn: type.columnType });
+
                         }}
                         text='Select a column'
                     />
+                </div>
+                {getType() === "number" && <div className='mb-2'>
+                    <InputLabel htmlFor='aggregation' text="Select an Aggregation" className='text-white' />
+                    <BetterDropdown
+                        id='column'
+                        items={[
+                            { name: AggregationType.SUM, value: AggregationType.SUM },
+                            { name: AggregationType.COUNT, value: AggregationType.COUNT },
+                            { name: AggregationType.AVG, value: AggregationType.AVG },
+                            { name: AggregationType.MIN, value: AggregationType.MIN },
+                            { name: AggregationType.MAX, value: AggregationType.MAX }
+                        ]}
+                        option={data.aggregationType}
+                        placement='below'
+                        absolute={true}
+                        set={(option: string) => {
+                            data.update(id, { aggregationType: option });
+                        }}
+                        text='Select an aggregation type'
+                    />
                 </div>}
+                <div className='mb-2'>
+                    <InputLabel htmlFor='name' text="Rename your column" className='text-white' />
+                    <Input
+                        placeholder={data.column}
+                        type="text"
+                        name="name"
+                        required={false}
+                        id={`name-${id}`}
+                        value={data.renamedColumn}
+                        onChange={(event: React.FormEvent<HTMLInputElement>) => data.update(id, { renamedColumn: event.currentTarget.value })}
+                    />
+                </div>
             </div>
         </div>
         {data.quickConnect && <div className='absolute bg-avalancheBlue rounded-full -right-2 -top-2 flex items-center justify-center p-1 cursor-pointer' onClick={() => data.quickConnect(id, "selectEnd")}>

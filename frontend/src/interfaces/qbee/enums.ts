@@ -17,7 +17,25 @@ export enum Area {
     output = "Output"
 }
 
-export enum AggregationType {sum = 'SUM', count ='COUNT', avg = 'AVG', min = 'MIN', max = 'MAX'}
-  
-export enum LogicalOperator { and = 'AND', or = 'OR'};
-export enum ComparisonOperator {'=' = '=' , '<' = '<' , '>' = '>' , '<=' = '<=' , '>=' = '>=' , 'LIKE' = 'LIKE'} // Add more comparison operators as needed
+export enum AggregationType {
+    SUM = "SUM",
+    COUNT = "COUNT",
+    AVG = "AVG",
+    MIN = "MIN",
+    MAX = "MAX"
+}
+
+export enum Filters {
+    DateRange = "DateRange",
+    Checkbox = "checkbox",
+    Radiobox = "radiobox",
+    Togglebox = "togglebox",
+    Inputbox = "inputbox",
+}
+
+export enum ComparisonType {
+    EQUAL = "=",
+    LIKE = "LIKE",
+    GREATERTHAN = ">",
+    LESSTHAN = "<"
+}
