@@ -28,7 +28,7 @@ import { Role as QBeeRole, ComparisonType as QBeeComparisonType } from "@/interf
 import { DBData } from "@/interfaces/qbee/interfaces";
 import { SubmitButton, SuccessToast } from "@/components/Util";
 import { useDispatch } from "react-redux";
-import { addData, setNodes, setEdges } from "@/store/Slices/qbeeSlice";
+import { addData, setNodes as QBeeSetNodes, setEdges as QBeeSetEdges } from "@/store/Slices/qbeeSlice";
 import { copy } from "copy-anything";
 
 import OutputNode from "@/components/QBee/OutputNode";
@@ -111,6 +111,8 @@ export default function QBee() {
     );
 }
 
+import { generateDefaultValue } from "@/components/Graphs/Filters/util";
+
 function Flow() {
 
     const router = useRouter();
@@ -190,8 +192,8 @@ function Flow() {
             type: "group",
             position: { x: 2300, y: 0 },
             style: {
-                width: 1000,
-                height: 500,
+                width: 2000,
+                height: 1000,
             },
             data: {},
             deletable: false,
@@ -219,7 +221,7 @@ function Flow() {
             id: "filterEnd",
             extent: "parent",
             parentNode: "FilterGroup",
-            position: { x: 930, y: 50 },
+            position: { x: 1930, y: 50 },
             type: "edgeNode",
             data: {
                 label: "End of Filter",
@@ -235,7 +237,7 @@ function Flow() {
         },
         {
             id: "filterAdd",
-            position: { x: 980, y: -20 },
+            position: { x: 1980, y: -20 },
             data: {
                 click: () => addFilterNode(),
             },
@@ -250,7 +252,7 @@ function Flow() {
         {
             id: "OutputGroup",
             type: "group",
-            position: { x: 3600, y: 0 },
+            position: { x: 4600, y: 0 },
             style: {
                 width: 1000,
                 height: 500,
@@ -298,10 +300,7 @@ function Flow() {
 
     const [nodes, setNodes] = useState<Node[]>(initialNodes);
     const [edges, setEdges] = useState<Edge[]>(initialEdges);
-
-    /**
-     * Adds a select node to the select subflow
-     */
+    const [aNodes, setANodes] = useState<any[]>([]);
 
     /**
      * Adds a select node to the select subflow
@@ -326,6 +325,30 @@ function Flow() {
             zIndex: 2
         }));
     }
+
+    /**
+     * Adds a filter node to the filter subflow
+     */
+    const addFilterNode = (): void => {
+        setNodes((nds) =>
+            nds.concat({
+                id: `${QBeeRole.filterBlock}-${uuidv4()}`,
+                type: QBeeRole.filterBlock,
+                extent: "parent",
+                parentNode: "FilterGroup",
+                data: {
+                    column: "",
+                    typeOfColumn: "",
+                    comparisonType: "",
+                    typeOfFilter: "",
+                    selectedValues: "",
+                    connectTo: [QBeeRole.filterBlock, QBeeRole.endOfFilter],
+                    update: updateNode
+                },
+                position: { x: randomRange(350, 750), y: randomRange(150, 350) },
+            })
+        );
+    };
 
     /**
      * Update a node
@@ -356,33 +379,9 @@ function Flow() {
         if (node?.id === "FilterGroup") setSelectedPanel(node.id);
         if (node?.type === "outputNode") setSelectedPanel(node.type);
         if (node === null || node === undefined) setSelectedPanel("blocks");
-        // dispatch(setNodes(copy(nodes, { nonenumerable: true })));
+        console.log(copy(nodes));
+        dispatch(QBeeSetNodes(copy(nodes)));
     }, [nodes]);
-
-    /**
-     * Adds a filter node to the filter subflow
-     */
-    const addFilterNode = (): void => {
-        setNodes((nds) =>
-            nds.concat({
-                id: `${QBeeRole.filterBlock}-${uuidv4()}`,
-                type: QBeeRole.filterBlock,
-                extent: "parent",
-                parentNode: "FilterGroup",
-                data: {
-                    label: "",
-                    column: "",
-                    typeOfColumn: "",
-                    help: "",
-                    aggregationType: "",
-                    renamedColumn: "",
-                    connectTo: [QBeeRole.filterBlock, QBeeRole.endOfFilter],
-                },
-                position: { x: randomRange(350, 750), y: randomRange(150, 350) },
-            })
-
-        );
-    };
 
     const quickConnect = (from: string, to: string): void => {
         setEdges((edgs: Edge[]) =>
@@ -398,7 +397,7 @@ function Flow() {
      * Used to update the edges in the slice
      */
     useEffect(() => {
-        // dispatch(setEdges(edges));
+        dispatch(QBeeSetEdges(copy(edges)));
     }, [edges, dispatch]);
 
     // Runs when Nodes are added/removed/updated/changed

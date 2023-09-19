@@ -27,7 +27,6 @@ export default function SelectBlock({ data, id }: NodeProps<NodeData>) {
     const getType = () => {
         const type = stateQBEE.data.find((item: DBData) => item.columnName === data.column);
         if (!type) return;
-        console.log(type.columnType);
         return type.columnType;
     }
 
