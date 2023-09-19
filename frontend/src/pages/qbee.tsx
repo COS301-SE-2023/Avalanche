@@ -1,4 +1,4 @@
-import { Squares2X2Icon, DocumentCheckIcon, CheckIcon, CheckCircleIcon } from "@heroicons/react/24/solid";
+import { Squares2X2Icon, CheckCircleIcon } from "@heroicons/react/24/solid";
 import Head from "next/head";
 import Link from "next/link";
 import { useCallback, useState, useEffect } from 'react';
@@ -11,8 +11,8 @@ import { randomRange } from "@/utils";
 import { Role as QBeeRole } from "@/interfaces/qbee/enums";
 import { DBData } from "@/interfaces/qbee/interfaces";
 import { SubmitButton, SuccessToast } from "@/components/Util";
-import { useDispatch, useSelector } from "react-redux";
-import { addData, qbeeState } from "@/store/Slices/qbeeSlice";
+import { useDispatch } from "react-redux";
+import { addData } from "@/store/Slices/qbeeSlice";
 
 import OutputNode from "@/components/QBee/OutputNode";
 import SelectBlock from "@/components/QBee/SelectNode";
