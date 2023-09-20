@@ -9,8 +9,8 @@ interface IInitState {
     tables: string[],
     columns: string[],
     edited: boolean,
-    nodes: any,
-    edges: any,
+    nodes: string[],
+    edges: string[],
 }
 
 const InitState: IInitState = {
@@ -18,7 +18,7 @@ const InitState: IInitState = {
     tables: [],
     columns: [],
     edited: false,
-    nodes: [],  // Initial value for nodes
+    nodes: [],
     edges: [],
 }
 
@@ -42,8 +42,7 @@ export const qbeeSlice = createSlice({
             state.edited = action.payload;
         },
         setNodes(state, action) {
-            console.log("boi");
-            // state.nodes = action.payload;
+            state.nodes = action.payload;
         },
         setEdges(state, action) {
             state.edges = action.payload;
@@ -56,30 +55,8 @@ export const qbeeSlice = createSlice({
                 ...action,
             };
         })
-        // builder.addCase(setNodes.fulfilled, (state, action) => {
-        //     state.nodes = action.payload as any;
-        // })
-        // builder.addCase(setEdges.fulfilled, (state, action) => {
-        //     state.edges = action.payload as any;
-        // })
     }
 })
-
-// export const setNodes = createAsyncThunk("QBEE.SetNodes", async (data, { rejectWithValue }) => {
-//     try {
-//         return data;
-//     } catch (e) {
-//         if (e instanceof Error) return rejectWithValue(e.message);
-//     }
-// })
-
-// export const setEdges = createAsyncThunk("QBee.SetEdges", async (data, { rejectWithValue }) => {
-//     try {
-//         return data;
-//     } catch (e) {
-//         if (e instanceof Error) return rejectWithValue(e.message);
-//     }
-// })
 
 export const { addData, clear, setEdited, setNodes, setEdges } = qbeeSlice.actions;
 export const qbeeState = (state: AppState) => state.qbee;

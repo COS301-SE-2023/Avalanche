@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { Node, NodeProps, Handle, Position } from 'reactflow';
+import { Node, NodeProps, Handle, Position , Connection } from 'reactflow';
 import {TableChart} from '../Graphs'
 
 type NodeData = {
