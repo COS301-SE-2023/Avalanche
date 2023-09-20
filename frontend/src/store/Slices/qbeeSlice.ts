@@ -65,7 +65,7 @@ export const qbeeSlice = createSlice({
             SuccessToast({ text: "We're working on it 👀" })
         })
         builder.addCase(getData.rejected, (state, action) => {
-            ErrorToast({ text: "We're gave up 👀"})
+            ErrorToast({ text: "🛑 We're gave up 🛑"})
         })
     }
 })

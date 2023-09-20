@@ -424,8 +424,7 @@ function Flow() {
     if (node?.id === "SelectGroup") setSelectedPanel(node.id);
     if (node?.id === "FilterGroup") setSelectedPanel(node.id);
     if (node?.type === "outputNode") setSelectedPanel(node.type);
-    if (node === null || node === undefined) setSelectedPanel("blocks");
-    convertToQuery();
+    if (node === null || node === undefined) setSelectedPanel("blocks")
     dispatch(QBeeSetNodes(copy(nodes)));
   }, [nodes]);
 
@@ -580,7 +579,7 @@ function Flow() {
         case Role.filterBlock:
           const thisFilter = {
             column: currentNode.data.column,
-            operator: currentNode.data.selectedComparison,
+            operator: currentNode.data.comparisonType,
             value: currentNode.data.selectedValues,
             aggregation: currentNode.data.aggregationType,
             aggregated:
@@ -670,8 +669,7 @@ function Flow() {
                   Select Area
                 </h4>
                 <p className="text-white mb-2 max-w-xs">
-                  This is the select area. Anything that you need to select
-                  shows up in this area.
+                  This is the select area. Add any columns you want in your final table in this area.
                 </p>
                 <SubmitButton
                   text="Add a Select Block"
@@ -690,8 +688,8 @@ function Flow() {
                   Filter Area
                 </h4>
                 <p className="text-white mb-2 max-w-xs">
-                  This is the filter area. Anything that you need to filter
-                  shows up in this area.
+                  Add your necessary filters here.
+                Only the rows that can successfully pass through all the &quot;gates&quot; needed to get from &quot;Start Of Filters&quot; to &quot;End Of Filters&quot; will show up in your final table.
                 </p>
                 <div className="space-y-4">
                   <SubmitButton
@@ -722,6 +720,7 @@ function Flow() {
               <div
                 className="bg-success-background p-2 rounded-lg cursor-pointer"
                 onClick={() =>{
+                  convertToQuery();
                   dispatch(getData(query))
                   SuccessToast({ text: "Successfully saved 🐝 Or have you 👀" })
                 }

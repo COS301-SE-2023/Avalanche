@@ -5,7 +5,7 @@
         "typeOfFilter": "inputbox",
         "filterReturnType": "number",
         "comparisonTypes": ["=", "<", ">"],
-        "filter": true,
+        "filter": false,
         "table": "Fact Sales"
     },
     {
