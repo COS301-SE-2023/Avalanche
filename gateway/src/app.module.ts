@@ -18,6 +18,8 @@ import { AfricaController } from './africa/africa.controller';
 import { AfricaService } from './africa/africa.service';
 import { ScheduleModule } from '@nestjs/schedule';
 import { MetricsController } from './metrics.controller';
+import { QbeeController } from './qbee/qbee.controller';
+import { QbeeService } from './qbee/qbee.service';
 
 @Module({
   imports: [
@@ -56,11 +58,19 @@ import { MetricsController } from './metrics.controller';
           port: 4005,
         },
       },
+      {
+        name: 'QBEE_SERVICE',
+        transport: Transport.TCP,
+        options: {
+          host: process.env.AFRICA_HOST || 'localhost',
+          port: 4102,
+        },
+      },
     ]),
     ConfigModule.forRoot({ isGlobal: true }),
   ],
-  controllers: [MetricsController,UserManagementController, ZacrController, RyceController, AfricaController, DomainWatchController],
-  providers: [UserManagementService, ZacrService, RyceService, AfricaService, RedisProvider, DomainWatchService],
+  controllers: [MetricsController,UserManagementController, ZacrController, RyceController, AfricaController, DomainWatchController, QbeeController],
+  providers: [UserManagementService, ZacrService, RyceService, AfricaService, RedisProvider, DomainWatchService, QbeeService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
