@@ -67,7 +67,7 @@ export default function CreateCustomDashboard() {
                     steps: [
                         {
                             element: saveButton,
-                            intro: "Hewwo"
+                            intro: "Don't forget to save the dashboard! There you have it, easy as pie"
                         }
                     ]
                 })
@@ -189,16 +189,16 @@ export default function CreateCustomDashboard() {
         introJS.setOptions({
             steps: [
                 {
-                    intro: 'Welcome to the custom dashboard tutorial',
-                    title: "Custom dashboard tutorial"
+                    intro: 'Welcome! This tutorial will walk you through making you own Custom Dashboard!',
+                    title: "Custom Dashboard Tutorial"
                 },
                 {
                     element: document.getElementsByClassName('w-4 h-4 right-0 top-0 hover:cursor-pointer hover:text-avalancheBlue duration-75 hover:scale-125')[0] as HTMLElement,
-                    intro: 'Here you can change the name of your dashboard',
+                    intro: 'Here you can choose the name you want for your Dashboard.',
                 },
                 {
                     element: document.getElementsByClassName("flex gap-5 w-full lg:w-max")[0] as HTMLElement,
-                    intro: 'add a graph here',
+                    intro: 'This button allows you to add graphs to your Dashboard.',
                 }
             ]
         }).start();
