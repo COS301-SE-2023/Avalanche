@@ -34,7 +34,7 @@ export class QueryBuilderService {
     }
     
     // Validate user access against the schema
-    const hasAccess = this.schemaService.validateUserAccess(permissionsForDataSource[0].tou, schemaDetail);  // Assuming permission has the required info
+    const hasAccess = this.schemaService.validateUserAccess(permissionsForDataSource[0].tou, query, schemaDetail);  // Assuming permission has the required info
     
     if (!hasAccess) {
       return {

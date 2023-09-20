@@ -45,4 +45,26 @@ export class QbeeController {
       throw error;
     }
   }
+
+  @Post('getSchema')
+  @HttpCode(200)
+  async getSchema(@Body() data: any) {
+    const end = httpRequestDurationMicrosecondsQBEE.startTimer();
+    const pattern = { cmd: 'getSchema' };
+    const payload = data;
+    try {
+      const result = await lastValueFrom(this.client.send(pattern, payload));
+      httpRequestsTotalQBEE.inc({ method: 'POST', route: 'getSchema', code: 200 });
+      end({ method: 'POST', route: 'getSchema', code: 200 });
+      return result;
+    } catch (error) {
+      const rpcError = error
+      httpRequestsTotalQBEE.inc({ method: 'POST', route: 'getSchema', code: rpcError.status });
+      end({ method: 'POST', route: 'getSchema', code: rpcError.status });
+      if (typeof rpcError === 'object') {
+        throw new HttpException(rpcError.message || 'An unexpected error occurred', rpcError.status || 500);
+      }
+      throw error;
+    }
+  }
 }

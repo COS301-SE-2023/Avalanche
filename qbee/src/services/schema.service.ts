@@ -5,7 +5,12 @@ import * as path from 'path';
 interface ComparisonTypes {
   tou?: string;
   filterValues?: (number | string)[];
-  aggretate?: boolean;
+  filter? : boolean,
+}
+
+interface AggregateTypes {
+  tou?: string;
+  aggregate?: boolean;
 }
 
 interface ColumnDetail {
@@ -14,7 +19,9 @@ interface ColumnDetail {
   typeOfFilter: string;
   filterReturnType: string;
   comparisonTypes?: string[];
-  filter: boolean | ComparisonTypes[];
+  filter: ComparisonTypes[];
+  aggregation: AggregateTypes[]; 
+  view: string[];
   table: string;
 }
 
@@ -63,32 +70,114 @@ export class SchemaService {
     return this.schemas[url] || null;
   }
 
-  validateUserAccess(userPermissions: any, schema: SchemaDetail): boolean {
-    for (const tableDetail of schema.tables) {
-      for (const columnDetail of tableDetail.columns) {
-        if (Array.isArray(columnDetail.filter)) {
-          for (const filter of columnDetail.filter) {
-            const userPermission = userPermissions.find(
-              (perm) => perm.tou === filter.tou
-            );
-
-            if (userPermission) {
-              // If filter values exist, check if they match with user permission values
-              if (filter.filterValues && filter.filterValues.length > 0) {
-                const allowedValues = userPermission.values || [];
-                if (
-                  !filter.filterValues.some((value) => allowedValues.includes(value))
-                ) {
-                  return false;
-                }
-              }
-            } else {
-              return false;
-            }
-          }
+  validateUserAccess(tou: string, query: any, schema: SchemaDetail): boolean {
+    // Check if user has access to selected columns and can apply filters and aggregation
+    for (const selectedColumn of query.selectedColumns) {
+      const schemaColumn = schema.tables[0].columns.find(
+        (col) => col.columnName === selectedColumn.columnName
+      );
+  
+      if (!schemaColumn) {
+        return false; // Column not found in schema
+      }
+  
+      // Check if user has access to view this column
+      if (!schemaColumn.view.includes(tou)) {
+        return false; // User is not allowed to view this column
+      }
+  
+      // Check if user is allowed to aggregate this column if an aggregation is specified
+      if (selectedColumn.aggregation) {
+        const aggregationPermission = schemaColumn.aggregation.find(
+          (agg) => agg.tou === tou && agg.aggregate === true
+        );
+        if (!aggregationPermission) {
+          return false; // User is not allowed to aggregate this column
         }
       }
     }
-    return true;
+  
+    // Check if user can apply the filters
+    for (const filterGroup of query.filters) {
+      for (const condition of filterGroup.conditions) {
+        const schemaColumn = schema.tables[0].columns.find(
+          (col) => col.columnName === condition.column
+        );
+  
+        if (!schemaColumn) {
+          return false; // Column not found in schema
+        }
+  
+        // Check if user is allowed to filter this column
+        const filterPermission = schemaColumn.filter.find(
+          (filt) => filt.tou === tou && filt.filter === true
+        );
+        if (!filterPermission) {
+          return false; // User is not allowed to filter this column
+        }
+
+        const filterValues = schemaColumn.filter.find((filt) => filt.filterValues)
+        if(filterValues){
+          let check = false;
+          for(const filters of filterValues.filterValues){
+            if(filters == condition.value){
+              check = true;
+            }
+          }
+
+          if(check == false){
+            return false;
+          }
+        }
+  
+        // Check if the operator is allowed for this column
+        if (!schemaColumn.comparisonTypes.includes(condition.operator)) {
+          return false; // Operator is not allowed for this column
+        }
+      }
+    }
+  
+    return true; // User has access to everything specified in the query
   }
+
+  transformSchemaForUser(tou: string, schema: SchemaDetail): any[] {
+    const transformedColumns = [];
+  
+    for (const tableDetail of schema.tables) {
+      for (const columnDetail of tableDetail.columns) {
+        // Initialize an object to hold the transformed column details
+        const transformedColumn: any = {
+          columnName: columnDetail.columnName,
+          columnType: columnDetail.columnType,
+          typeOfFilter: columnDetail.typeOfFilter,
+          filterReturnType: columnDetail.filterReturnType,
+          comparisonTypes: columnDetail.comparisonTypes,
+          table: columnDetail.table,
+        };
+  
+        // Check if user is allowed to view this column
+        if (columnDetail.view.includes(tou)) {
+          // Check if user is allowed to filter this column
+          const filterPermission = columnDetail.filter.find((filter) => filter.tou === tou);
+          if (filterPermission) {
+            transformedColumn.filter = filterPermission.filter;
+            
+            // Add filter values if they exist for this user
+            if (filterPermission.filterValues) {
+              transformedColumn.filterValue = filterPermission.filterValues;
+            }
+          } else {
+            transformedColumn.filter = false;
+          }
+  
+          // Add this transformed column to the array
+          transformedColumns.push(transformedColumn);
+        }
+      }
+    }
+  
+    return transformedColumns;
+  }
+  
+  
 }

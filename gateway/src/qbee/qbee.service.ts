@@ -18,4 +18,8 @@ export class QbeeService {
     return response;
 
   }
+
+  async getSchema(data: any){
+    return this.client.send({ cmd: 'getSchema' }, data).toPromise();
+  }
 }
