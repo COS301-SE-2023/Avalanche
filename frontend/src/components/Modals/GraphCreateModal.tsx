@@ -17,18 +17,15 @@ export default function GraphCreateModal({ state, add }: ICreateGroupModal) {
 
     const dispatch = useDispatch<any>();
     const stateUser = useSelector(userState);
-
+    var tutorialRunning = true
     const introJS = introJs()
     const startTut = () => {
+        tutorialRunning = true;
         introJS.setOptions({
             steps: [
                 {
                     element: document.getElementsByClassName("bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4 dark:bg-dark-secondaryBackground ")[0] as HTMLElement,
-                    intro: 'add graph here',
-                },
-                {
-                    element: document.getElementById("endpointDropdown") as HTMLElement,
-                    intro: "fancy shit"
+                    intro: 'This popup can be used to specify which graph you would like',
                 }
                 ]
         }).start();
@@ -98,10 +95,10 @@ export default function GraphCreateModal({ state, add }: ICreateGroupModal) {
      */
     return (
         <ModalWrapper title="Add a Graph">
-            <form className="space-y-6 duration-75" onSubmit={(event) => formSubmit(event)}>
+            <form className="space-y-6 duration-75" onSubmit={(event) => formSubmit(event)} >
                 <div>
                     <InputLabel htmlFor='endpointDropdown' text='Warehouses' />
-                    <Dropdown id='endpointDropdown' items={state.filters.map((item: any) => item.endpoint)} option={endpoint} set={setEndpoint} text="Select a warehouse" />
+                    <Dropdown id='endpointDropdown' items={state.filters.map((item: any) => item.endpoint)} option={endpoint} set={setEndpoint} text="Select a warehouse"/>
                 </div>
 
                 <Transition
