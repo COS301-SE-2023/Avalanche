@@ -8,6 +8,7 @@ import { DomainNameAnalysisService } from './domainNameAnalysis/domain-name-anal
 import { MovementService } from './movement/movement.service';
 import { DomainWatchService } from './domainWatch/domain-watch-analysis.service';
 import { RegistrarNameService } from './registrarName/registrarName.service';
+import { QBeeService } from './qbee/qbee.service';
 @Controller('zacr')
 export class AppController {
   constructor(private readonly transactionsService: TransactionService, 
@@ -16,7 +17,8 @@ export class AppController {
     private readonly domainNameAnalysisService : DomainNameAnalysisService,
     private readonly movementService: MovementService,
     private readonly domainWatchService : DomainWatchService,
-    private readonly registrarNameService: RegistrarNameService) {}
+    private readonly registrarNameService: RegistrarNameService,
+    private readonly qbeeService: QBeeService) {}
 
   @MessagePattern({ cmd: 'transactions' })
   async transactions(data: any) {
@@ -144,6 +146,23 @@ export class AppController {
       data.graphName,
     );
 
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
+
+  @MessagePattern({ cmd: 'qbee' })
+  async qBee(data: any) {
+    const result = await this.qbeeService.executeQuery(
+      data.sqlQuery,
+      data.schemaName,
+    );
     if (result.error) {
       throw new RpcException({
         status: result.status,

@@ -17,6 +17,7 @@ import { HttpModule } from '@nestjs/axios';
 import { DomainWatchService } from './domainWatch/domain-watch-analysis.service';
 import { RegistrarNameService } from './registrarName/registrarName.service';
 import { MovementService } from './movement/movement.service';
+import { QBeeService } from './qbee/qbee.service';
 
 @Module({
   imports: [
@@ -78,8 +79,9 @@ import { MovementService } from './movement/movement.service';
     SnowflakeService,
     DomainWatchService,
     MovementService,
-    RegistrarNameService
+    RegistrarNameService,
+    QBeeService
   ],
-  exports: [TransactionService, MarketShareService, MovementService, AgeService, DomainNameAnalysisService, AnalysisService, GraphFormatService, SnowflakeService, DomainWatchService, RegistrarNameService],
+  exports: [TransactionService, MarketShareService, MovementService, AgeService, DomainNameAnalysisService, AnalysisService, GraphFormatService, SnowflakeService, DomainWatchService, RegistrarNameService, QBeeService],
 })
 export class AppModule { }

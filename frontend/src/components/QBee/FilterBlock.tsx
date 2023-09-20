@@ -37,7 +37,7 @@ export default function FilterBlock({ data, id }: NodeProps<NodeData>) {
 
     const getColumns = () => {
         return stateQBEE.nodes.filter((item: Node) => {
-            if (stateQBEE.data.find((n: DBData) => n.columnName === item.data.column)?.filter)
+            if (stateQBEE.data.find((n: DBData) => n.filter === true))
                 return item.type === QBeeRole.selectBlock;
         });
     }
@@ -78,8 +78,8 @@ export default function FilterBlock({ data, id }: NodeProps<NodeData>) {
                     {getColumns().length === 0 ? <p>🛑 You have no columns added to the select field. Please add one to continue.</p> : <>
                         <div>
                             <BetterDropdown
-                                items={getColumns().map((item: Node) => {
-                                    return { name: item.data.column, value: item.data.column }
+                                items={stateQBEE.data.map((item: DBData) => {
+                                    return { name: item.columnName, value: item.columnName };
                                 })}
                                 option={data.column}
                                 set={(option: any) => {

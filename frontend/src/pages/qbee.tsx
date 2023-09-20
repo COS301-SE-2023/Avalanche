@@ -424,8 +424,7 @@ function Flow() {
     if (node?.id === "SelectGroup") setSelectedPanel(node.id);
     if (node?.id === "FilterGroup") setSelectedPanel(node.id);
     if (node?.type === "outputNode") setSelectedPanel(node.type);
-    if (node === null || node === undefined) setSelectedPanel("blocks");
-    convertToQuery();
+    if (node === null || node === undefined) setSelectedPanel("blocks")
     dispatch(QBeeSetNodes(copy(nodes)));
   }, [nodes]);
 
@@ -722,6 +721,7 @@ function Flow() {
               <div
                 className="bg-success-background p-2 rounded-lg cursor-pointer"
                 onClick={() =>{
+                  convertToQuery();
                   dispatch(getData(query))
                   SuccessToast({ text: "Successfully saved 🐝 Or have you 👀" })
                 }
