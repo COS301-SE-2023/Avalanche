@@ -157,8 +157,9 @@ export class SchemaService {
   
         // Check if user is allowed to view this column
         if (columnDetail.view.includes(tou)) {
+          transformedColumn.view = true;
           // Check if user is allowed to filter this column
-          const filterPermission = columnDetail.filter.find((filter) => filter.tou === tou);
+          const filterPermission = columnDetail.filter.find((filter) => filter.tou === tou && filter.filter === true);
           if (filterPermission) {
             transformedColumn.filter = filterPermission.filter;
             
@@ -172,6 +173,18 @@ export class SchemaService {
   
           // Add this transformed column to the array
           transformedColumns.push(transformedColumn);
+        }else{
+          transformedColumn.view = true;
+          const filterPermission = columnDetail.filter.find((filter) => filter.tou === tou && filter.filter === true);
+          if (filterPermission) {
+            transformedColumn.filter = filterPermission.filter;
+            
+            // Add filter values if they exist for this user
+            if (filterPermission.filterValues) {
+              transformedColumn.filterValue = filterPermission.filterValues;
+            }
+            transformedColumns.push(transformedColumn);
+          } 
         }
       }
     }

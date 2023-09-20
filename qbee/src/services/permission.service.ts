@@ -30,6 +30,7 @@ export class PermissionsService {
       };
     }
 
-    const newSchema = await this.schemaService.transformSchemaForUser(permissionsForDataSource, schemaDetail);
+    const newSchema = await this.schemaService.transformSchemaForUser(permissionsForDataSource[0].tou, schemaDetail);
+    return {status : "success", message: newSchema};
   }
 }
