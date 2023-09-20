@@ -61,6 +61,27 @@ export class UserManagementController {
         throw error;
       }
     }  
+
+    @Post('getDashboards')
+    async getDashboards(@Body() data: any) {
+      const end = httpRequestDurationMicroseconds.startTimer();
+      const pattern = { cmd: 'getDashboards' };
+      const payload = data;
+      try {
+        const result = await lastValueFrom(this.client.send(pattern, payload));
+        httpRequestsTotal.inc({ method: 'POST', route: 'getDashboards', code: 200 });
+        end({ method: 'POST', route: 'getDashboards', code: 200 });
+        return result;
+      } catch (error) {
+        const rpcError = error
+        httpRequestsTotal.inc({ method: 'POST', route: 'getDashboards', code: rpcError.status });
+        end({ method: 'POST', route: 'getDashboards', code: rpcError.status });
+        if (typeof rpcError === 'object') {
+          throw new HttpException(rpcError.message || 'An unexpected error occurred', rpcError.status || 500);
+        }
+        throw error;
+      }
+    }  
   @Post('register')
   async register(@Body() data: any) {
     const end = httpRequestDurationMicroseconds.startTimer();

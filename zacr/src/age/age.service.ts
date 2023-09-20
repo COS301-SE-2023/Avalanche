@@ -6,7 +6,11 @@ import { DataFormatService } from '../data-format/data-format.service';
 import { AnalysisService } from '../analysis/analysis.service';
 import { GraphFormatService } from '../graph-format/graph-format.service';
 import { json } from 'stream/consumers';
-import { DataInterface, NewDataInterface } from '../interfaces/interfaces';
+import {
+  ChartType,
+  DataInterface,
+  NewDataInterface,
+} from '../interfaces/interfaces';
 import { RegistrarNameService } from '../registrarName/registrarName.service';
 
 @Injectable()
@@ -127,6 +131,9 @@ export class AgeService {
           graphName: graphName,
           data: data.data,
           filters: data.filters,
+          chartType: data.filters?.average
+            ? ChartType.PolarArea
+            : ChartType.Bubble,
           warehouse: 'zacr',
           graphType: 'age',
         },

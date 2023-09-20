@@ -36,6 +36,11 @@ export class AppController {
     return this.appService.addGraph(data);
   }
 
+  @Post('addDashboard')
+  addDashboard(@Body() data: any): Object {
+    return this.appService.addDashboard(data);
+  }
+
   @Post('editPersephone')
   editPersephone(@Body() data: any): Object {
     return this.appService.editPersephone(data);

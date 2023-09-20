@@ -50,7 +50,7 @@ export function BarChart({ data, height }: IChart) {
     let allOptions = convertData(jsonData, "bar", theme);
     let colourToUse = chartColours;
     let annotationToUse = {};
-    if (allOptions.options.yaxis.title.text == "Movement") {
+    if (allOptions.options.yaxis.title.text == " Movement") {
       colourToUse = [
         ({ value }: any): string => {
           if (value >= 0) {

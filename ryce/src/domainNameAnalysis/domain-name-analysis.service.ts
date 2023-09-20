@@ -4,7 +4,11 @@ import { Injectable, Inject } from '@nestjs/common';
 import { lastValueFrom } from 'rxjs';
 import { SnowflakeService } from '../snowflake/snowflake.service';
 import { GraphFormatService } from '../graph-format/graph-format.service';
-import { DataInterface, NewDataInterface } from '../interfaces/interfaces';
+import {
+  ChartType,
+  DataInterface,
+  NewDataInterface,
+} from 'src/interfaces/interfaces';
 
 @Injectable()
 export class DomainNameAnalysisService {
@@ -13,7 +17,7 @@ export class DomainNameAnalysisService {
     @Inject('REDIS') private readonly redis: Redis,
     private readonly snowflakeService: SnowflakeService,
     private readonly graphFormattingService: GraphFormatService,
-  ) { }
+  ) {}
 
   async sendData(dataO: any): Promise<any> {
     try {
@@ -25,9 +29,8 @@ export class DomainNameAnalysisService {
       const sqlQuery = `call domainNameAnalysis('${filters}')`;
 
       const dataR = await this.redis.get(`ryce` + sqlQuery);
-      let data: DataInterface;
-      let formattedData = '';
-
+      let data: NewDataInterface;
+      let formattedData;
       if (!dataR) {
         let queryData;
         try {
@@ -40,25 +43,29 @@ export class DomainNameAnalysisService {
             timestamp: new Date().toISOString(),
           };
         }
-
         dataO.data = queryData[0]['DOMAINNAMEANALYSIS'];
         delete dataO.filters;
         const response = this.httpService.post(
-          'http://DomainAnalysis:4005/domainNameAnalysis/list',
+          'http://DomainAnalysis:4101/domainNameAnalysis/count',
           dataO,
         );
         const responseData = await lastValueFrom(response);
-
-        formattedData =
-          await this.graphFormattingService.formatDomainNameAnalysis(
-            JSON.stringify(responseData.data),
-          );
-
-        data = {
-          chartData: JSON.parse(formattedData),
-          jsonData: responseData.data,
+        formattedData = {
+          datasets: [{ label: 'Label1' }],
         };
 
+        const jsonData: any[] = responseData.data.data;
+        jsonData.forEach((item) => {
+          delete item.domains;
+        });
+        jsonData.unshift({ xAxis: 'word', yAxis: 'frequency' });
+
+        const graphData = {
+          chartData: formattedData,
+          jsonData: jsonData,
+        };
+
+        data = { data: graphData, filters: {} };
         await this.redis.set(
           `ryce` + sqlQuery,
           JSON.stringify(data),
@@ -68,7 +75,6 @@ export class DomainNameAnalysisService {
       } else {
         data = JSON.parse(dataR);
       }
-
       return {
         status: 'success',
         data: {
@@ -78,9 +84,93 @@ export class DomainNameAnalysisService {
             ' ' +
             granularity +
             '(s)',
+          data: data.data,
+          filters: data.filters,
+          chartType: ChartType.Bubble,
           warehouse: 'ryce',
           graphType: 'domainNameAnalysis/count',
+        },
+        timestamp: new Date().toISOString(),
+      };
+    } catch (e) {
+      return {
+        status: 500,
+        error: true,
+        message: `${e.message}`,
+        timestamp: new Date().toISOString(),
+      };
+    }
+  }
+
+  async classification(dataO: any): Promise<any> {
+    try {
+      const filters = JSON.stringify(dataO.filters);
+
+      const num = dataO.filters.num;
+      const granularity = dataO.filters.granularity;
+
+      const sqlQuery = `call domainNameAnalysis('${filters}')`;
+
+      const dataR = await this.redis.get(`ryce` + sqlQuery + ` classification`);
+      let data: NewDataInterface;
+      let formattedData;
+      if (!dataR) {
+        let queryData;
+        try {
+          queryData = await this.snowflakeService.execute(sqlQuery);
+        } catch (e) {
+          return {
+            status: 500,
+            error: true,
+            message: 'Data Warehouse Error',
+            timestamp: new Date().toISOString(),
+          };
+        }
+        dataO.data = queryData[0]['DOMAINNAMEANALYSIS'];
+        delete dataO.filters;
+        const response = this.httpService.post(
+          'http://DomainAnalysis:4101/domainNameAnalysis/classify',
+          dataO,
+        );
+        const responseData = await lastValueFrom(response);
+        formattedData = {
+          datasets: [{ label: 'Label1' }],
+        };
+
+        const jsonData: any[] = responseData.data.data;
+        jsonData.forEach((item) => {
+          delete item.domains;
+        });
+        jsonData.unshift({ xAxis: 'word', yAxis: 'frequency' });
+
+        const graphData = {
+          chartData: formattedData,
+          jsonData: jsonData,
+        };
+
+        data = { data: graphData, filters: {} };
+        await this.redis.set(
+          `ryce` + sqlQuery + ` classification`,
+          JSON.stringify(data),
+          'EX',
+          24 * 60 * 60,
+        );
+      } else {
+        data = JSON.parse(dataR);
+      }
+      return {
+        status: 'success',
+        data: {
+          graphName:
+            'Most common categories in newly created domains in the last ' +
+            num +
+            ' ' +
+            granularity +
+            '(s)',
           data: data,
+          chartType: ChartType.Bubble,
+          warehouse: 'ryce',
+          graphType: 'domainNameAnalysis/classification',
         },
         timestamp: new Date().toISOString(),
       };
@@ -153,6 +243,7 @@ export class DomainNameAnalysisService {
           graphType: 'domainNameAnalysis/length',
           data: data.data,
           filters: data.filters,
+          chartType: ChartType.Line,
         },
         timestamp: new Date().toISOString(),
       };
@@ -229,36 +320,61 @@ export class DomainNameAnalysisService {
     return 'Length of newly created domains ' + registrar + zone;
   }
 
-  // normaliseData(data: string): string {
-  //   const dataArr = JSON.parse(data)['data'];
-  //   const minFrequency = Math.min(...dataArr.map((item) => item.frequency));
-  //   const maxFrequency = Math.max(...dataArr.map((item) => item.frequency));
+  formatClassification(inputData: any) {
+    const outputData = {};
 
-  //   const newMin = 10;
-  //   const newMax = 60;
+    // Step 2: Loop through the input array
+    for (const entry of inputData) {
+      const { domain, classification } = entry;
 
-  //   // Normalize each frequency, scaling it to be within [newMin, newMax]
-  //   const normalizedData = dataArr.map((item) => ({
-  //     ...item,
-  //     normalisedFrequency: this.normalize(
-  //       item.frequency,
-  //       minFrequency,
-  //       maxFrequency,
-  //       newMin,
-  //       newMax,
-  //     ),
-  //   }));
+      // Step 3: Update the count and domains for each classification
+      if (!outputData[classification]) {
+        outputData[classification] = {
+          category: classification,
+          count: 0,
+        };
+      }
 
-  //   return JSON.stringify(normalizedData);
-  // }
+      outputData[classification].count += 1;
+    }
 
-  // normalize(
-  //   value: number,
-  //   min: number,
-  //   max: number,
-  //   newMin: number,
-  //   newMax: number,
-  // ): number {
-  //   return ((value - min) / (max - min)) * (newMax - newMin) + newMin;
-  // }
+    // Step 4: Convert the object to an array
+    const finalOutput = Object.values(outputData);
+
+    return finalOutput;
+  }
+  /*
+  normaliseData(data: string): string {
+    const dataArr = JSON.parse(data)['data'];
+    const minFrequency = Math.min(...dataArr.map((item) => item.frequency));
+    const maxFrequency = Math.max(...dataArr.map((item) => item.frequency));
+
+    const newMin = 10;
+    const newMax = 60;
+
+    // Normalize each frequency, scaling it to be within [newMin, newMax]
+    const normalizedData = dataArr.map((item) => ({
+      ...item,
+      normalisedFrequency: this.normalize(
+        item.frequency,
+        minFrequency,
+        maxFrequency,
+        newMin,
+        newMax,
+      ),
+    }));
+
+    return JSON.stringify(normalizedData);
+  }
+
+  normalize(
+    value: number,
+    min: number,
+    max: number,
+    newMin: number,
+    newMax: number,
+  ): number {
+    return ((value - min) / (max - min)) * (newMax - newMin) + newMin;
+  }
+  */
 }

@@ -3,7 +3,7 @@ import Redis from 'ioredis';
 import { JwtService } from '@nestjs/jwt';
 import { SnowflakeService } from '../snowflake/snowflake.service';
 import { RegistrarNameService } from '../registrarName/registrarName.service';
-import { NewDataInterface } from '../interfaces/interfaces';
+import { ChartType, NewDataInterface } from '../interfaces/interfaces';
 
 @Injectable()
 export class MarketShareService {
@@ -143,6 +143,7 @@ export class MarketShareService {
           graphType: 'marketShare',
           data: data.data,
           filters: data.filters,
+          chartType: ChartType.PolarArea,
         },
         timestamp: new Date().toISOString(),
       };

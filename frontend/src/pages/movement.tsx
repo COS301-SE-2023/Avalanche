@@ -3,7 +3,7 @@ import PageHeader from "@/components/Util/PageHeader";
 import { BoltIcon } from "@heroicons/react/24/solid";
 import Head from "next/head";
 import { useDispatch, useSelector } from "react-redux";
-import { graphState, getMovementVerticalData, clearGraphData, getMovementVerticalRankedData } from "@/store/Slices/graphSlice";
+import { graphState, getMovementVerticalData, clearGraphData, getMovementVerticalRankedData, getDashboardGraphs } from "@/store/Slices/graphSlice";
 import { useEffect } from "react";
 import { selectModalManagerState } from "@/store/Slices/modalManagerSlice";
 import GraphZoomModal from "@/components/Modals/GraphZoomModal";
@@ -56,19 +56,20 @@ export default function Movement() {
     };
 
     function loadData() {
-        const arrayMovementVerticalShare: IMovementGraphRequest[] = [];
+        dispatch(getDashboardGraphs('movement/vertical'));
+        //const arrayMovementVerticalShare: IMovementGraphRequest[] = [];
 
         // const arrayMovementVerticalRanked : IMovementGraphRankedRequest[] = [];
 
-        const movementVertical: IMovementGraphRequest = { zone: stateGraph.zones.slice(0, 1), };
-        arrayMovementVerticalShare.push(movementVertical);
+        // const movementVertical: IMovementGraphRequest = { zone: stateGraph.zones.slice(0, 1), };
+        // arrayMovementVerticalShare.push(movementVertical);
 
-        const movementVerticalRanked: IMovementGraphRankedRequest = { zone: stateGraph.zones.slice(0, 1), };
+        // const movementVerticalRanked: IMovementGraphRankedRequest = { zone: stateGraph.zones.slice(0, 1), };
         // arrayMovementVerticalRanked.push(movementVerticalRanked);
 
-        arrayMovementVerticalShare.forEach(data => {
-            dispatch(getMovementVerticalData(data));
-        })
+        // arrayMovementVerticalShare.forEach(data => {
+        //     dispatch(getMovementVerticalData(data));
+        // })
 
         // arrayMovementVerticalRanked.forEach(data => {
         //     dispatch(getMovementVerticalRankedData(data));

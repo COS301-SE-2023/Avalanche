@@ -384,6 +384,20 @@ export class AppController {
 
     return result;
   }
+
+  @MessagePattern({ cmd: 'getDashboards' })
+  async getDashboards(data: any) {
+    const result = await this.userDataProductManService.getDashboards(data.token, data.endpointV, data.dataSource);
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
   @MessagePattern({ cmd: 'getDomainWatchPassiveUser' })
   async getDomainWatchPassiveUser(data: any) {
     const result = await this.userDataProductManService.getDomainWatchPassiveUser(data.token);

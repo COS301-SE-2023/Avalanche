@@ -10,8 +10,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { clearCurrentOpenState, setCurrentOpenState, setData, setZoomData } from "@/store/Slices/modalManagerSlice";
 import { CheckboxFilter, DatePickerFilter, NestedCheckbox, RadioboxFilter, ToggleFilter } from "./Filters";
 import { Disclosure } from '@headlessui/react'
-import { ErrorToast, SubmitButton } from "../Util";
-import ky from "ky";
+import { ErrorToast, SubmitButton, ChartCardError } from "../Util";
+import ky, { HTTPError } from "ky";
 import { getCookie } from "cookies-next";
 import { getFilters, graphState } from "@/store/Slices/graphSlice";
 // import { renderFilters, filterGraphs, generateDefaultValue } from "./Filters/utils";
@@ -43,6 +43,8 @@ export default function CustomChartCard({ title, data, defaultGraph, state, id, 
     const [request, setRequest] = useState<any>({});
 
     const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<boolean>(false);
+    const [errorMessage, setErrorMessage] = useState<string>("");
 
     const addRequestObject = (key: string, value: any) => {
         if (!request[key]) {
@@ -107,7 +109,9 @@ export default function CustomChartCard({ title, data, defaultGraph, state, id, 
         if (data.endpointName) {
             const d = data.endpointName.split("/");
             setWarehouse(d[0]);
-            setGType(d[1]);
+            d.splice(0,1)
+            setGType(d.join('/'));
+
         } else {
             setWarehouse(data.warehouse);
             setGType(data.type);
@@ -127,8 +131,15 @@ export default function CustomChartCard({ title, data, defaultGraph, state, id, 
             const d = res as any;
             setGraphData(d.data.data);
             setLoading(false);
+            setError(false);
+            setErrorMessage("");
         } catch (e) {
             if (e instanceof Error) return ErrorToast({ text: e.message })
+            let error = e as HTTPError;
+            const newError = await error.response.json();
+            setError(true);
+            setLoading(false);
+            setErrorMessage(newError.message);
         }
 
     }
@@ -338,14 +349,15 @@ export default function CustomChartCard({ title, data, defaultGraph, state, id, 
                     </Menu>
                 </div>
             </div>
+            {error && !loading && <ChartCardError error={errorMessage} />}
             {!loading ? <div>
-                {graphData && graphData?.chartData?.labels && graphData?.chartData?.datasets && type === ChartType.Bar && <BarChart data={graphData} />}
-                {graphData && graphData?.chartData?.labels && graphData?.chartData?.datasets && type === ChartType.Pie && <PieChart data={graphData} />}
-                {graphData && graphData?.chartData?.labels && graphData?.chartData?.datasets && type === ChartType.Line && <LineChart data={graphData} addClass="h-96" />}
-                {graphData && graphData?.chartData?.labels && graphData?.chartData?.datasets && type === ChartType.Bubble && <BubbleChart data={graphData} />}
-                {graphData && graphData?.chartData?.labels && graphData?.chartData?.datasets && type === ChartType.PolarArea && <PolarAreaChart data={graphData} />}
-                {graphData && graphData?.chartData?.labels && graphData?.chartData?.datasets && type === ChartType.Radar && <RadarChart data={graphData} />}
-                {graphData && graphData?.jsonData && graphData?.jsonData && type === ChartType.Table && <TableChart data={graphData} />}
+                {graphData && graphData.jsonData && type === ChartType.Bar && <BarChart data={graphData} />}
+                {graphData && graphData.jsonData && type === ChartType.Pie && <PieChart data={graphData} />}
+                {graphData && graphData.jsonData && type === ChartType.Line && <LineChart data={graphData} addClass="h-96" />}
+                {graphData && graphData.jsonData && type === ChartType.Bubble && <BubbleChart data={graphData} />}
+                {graphData && graphData.jsonData && type === ChartType.PolarArea && <PolarAreaChart data={graphData} />}
+                {graphData && graphData.jsonData && type === ChartType.Radar && <RadarChart data={graphData} />}
+                {graphData && graphData?.jsonData && type === ChartType.Table && <TableChart data={graphData} />}
             </div> : <div role="status" className="flex justify-between h-64 w-full bg-gray-300 rounded-lg animate-customPulse dark:bg-gray-700 p-6" />}
         </div >
     </>)
