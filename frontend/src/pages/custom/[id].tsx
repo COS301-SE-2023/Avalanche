@@ -56,6 +56,25 @@ export default function CreateCustomDashboard() {
         setNewDash(false);
     }, [id])
 
+    useEffect(() => {
+        if(document.getElementsByClassName("grid gap-4 mb-4 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2")[0]){
+            const saveButton = document.getElementsByClassName("flex gap-5 w-full lg:w-max")[0] as HTMLElement
+            console.log(saveButton)
+            if(saveButton){
+                introJS.exit(true)
+                introJS.setOptions({
+                    steps: [
+                        {
+                            element: saveButton,
+                            intro: "Hewwo"
+                        }
+                    ]
+                })
+                introJS.start()
+            }
+        }
+    })
+
     const updateGraph = (graphName: string, endpoint: string, requestObject: any) => {
 
         let temp = [...graphs] as any[];
@@ -180,13 +199,14 @@ export default function CreateCustomDashboard() {
                     element: document.getElementsByClassName("flex gap-5 w-full lg:w-max")[0] as HTMLElement,
                     intro: 'add a graph here',
                 }
-                ]
+            ]
         }).start();
+        
     }
 
     const getElement = (name: string): HTMLElement => {
         const element = document.getElementsByClassName(name)[0] as HTMLElement
-        alert(element)
+        console.log(element)
         return element
     }
 
@@ -202,7 +222,7 @@ export default function CreateCustomDashboard() {
                 <div className="flex flex-row gap-2 items-center">
                     <CpuChipIcon className="h-16 w-16 text-black dark:text-white" />
                     <SubmitButton text="Start tutorial" className="flex-auto" onClick={() => {
-                        startTut()
+                        startTut();
                     }} />
                     <div>
                         {!editName && <h1 className="text-3xl text-gray-900 dark:text-white font-bold flex gap-2"><span>{name ? name : "Custom Dashboard"}</span> <PencilIcon className="w-4 h-4 right-0 top-0 hover:cursor-pointer hover:text-avalancheBlue duration-75 hover:scale-125" onClick={() => setEditName(true)} /></h1>}
@@ -230,7 +250,7 @@ export default function CreateCustomDashboard() {
                     }} />}
                     {graphs.length > 0 && newDash && <SubmitButton text="Create Dashboard" className="flex-auto" onClick={() => {
                         createDashboard();
-                    }} />}
+                    }}/>}
                     <SubmitButton text="Add a Graph" onClick={() => {
                         dispatch(setCurrentOpenState("GRAPH.AddGraph"))
                         introJS.exit(true)
