@@ -669,8 +669,7 @@ function Flow() {
                   Select Area
                 </h4>
                 <p className="text-white mb-2 max-w-xs">
-                  This is the select area. Anything that you need to select
-                  shows up in this area.
+                  This is the select area. Add any columns you want in your final table in this area.
                 </p>
                 <SubmitButton
                   text="Add a Select Block"
@@ -689,8 +688,8 @@ function Flow() {
                   Filter Area
                 </h4>
                 <p className="text-white mb-2 max-w-xs">
-                  This is the filter area. Anything that you need to filter
-                  shows up in this area.
+                  Add your necessary filters here.
+                Only the rows that can successfully pass through all the &quot;gates&quot; needed to get from &quot;Start Of Filters&quot; to &quot;End Of Filters&quot; will show up in your final table.
                 </p>
                 <div className="space-y-4">
                   <SubmitButton

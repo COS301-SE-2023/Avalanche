@@ -15,12 +15,26 @@
                         "<",
                         ">"
                     ],
-                    "table": "Fact Sales",
-                    "filter": true
+                    "filter": [
+                        {
+                            "tou": "registry",
+                            "filter": true
+                        }
+                    ],
+                    "aggregation": [
+                        {
+                            "tou": "registry",
+                            "aggretate": false
+                        }
+                    ],
+                    "view": [
+                        "registry"
+                    ],
+                    "table": "Fact Sales"
                 },
                 {
                     "columnName": "Nett. Amount",
-                    "columnType": "number",
+                    "columnType": "string",
                     "typeOfFilter": "inputbox",
                     "filterReturnType": "number",
                     "comparisonTypes": [
@@ -28,7 +42,21 @@
                         "<",
                         ">"
                     ],
-                    "filter": true,
+                    "filter": [
+                        {
+                            "tou": "registry",
+                            "filter": true
+                        }
+                    ],
+                    "aggregation": [
+                        {
+                            "tou": "registry",
+                            "aggretate": false
+                        }
+                    ],
+                    "view": [
+                        "registry"
+                    ],
                     "table": "Fact Sales"
                 },
                 {
@@ -41,7 +69,30 @@
                         "<",
                         ">"
                     ],
-                    "filter": true,
+                    "filter": [
+                        {
+                            "tou": "registry",
+                            "filter": true
+                        },
+                        {
+                            "tou": "registrar",
+                            "filter": true
+                        }
+                    ],
+                    "aggregation": [
+                        {
+                            "tou": "registry",
+                            "aggretate": false
+                        },
+                        {
+                            "tou": "registrar",
+                            "aggretate": false
+                        }
+                    ],
+                    "view": [
+                        "registry",
+                        "registrar"
+                    ],
                     "table": "Fact Sales"
                 },
                 {
@@ -49,14 +100,39 @@
                     "columnType": "string",
                     "typeOfFilter": "checkbox",
                     "filterReturnType": "string[]",
-                    "filterValues": [
-                        "ZACR"
-                    ],
                     "comparisonTypes": [
-                        "=",
-                        "LIKE"
+                        "="
                     ],
-                    "filter": true,
+                    "filter": [
+                        {
+                            "tou": "registry",
+                            "filter": true,
+                            "filterValues": [
+                                "ZACR"
+                            ]
+                        },
+                        {
+                            "tou": "registrar",
+                            "filter": true,
+                            "filterValues": [
+                                "ZACR"
+                            ]
+                        }
+                    ],
+                    "aggregation": [
+                        {
+                            "tou": "registry",
+                            "aggregate": false
+                        },
+                        {
+                            "tou": "registrar",
+                            "aggregate": false
+                        }
+                    ],
+                    "view": [
+                        "registry",
+                        "registrar"
+                    ],
                     "table": "Fact Sales"
                 }
             ]
@@ -71,7 +147,30 @@
                     "columnType": "date",
                     "typeOfFilter": "date-picker",
                     "filterReturnType": "date",
-                    "filter": true,
+                    "filter": [
+                        {
+                            "tou": "registry",
+                            "filter": true
+                        },
+                        {
+                            "tou": "registrar",
+                            "filter": true
+                        }
+                    ],
+                    "aggregation": [
+                        {
+                            "tou": "registry",
+                            "aggregate": false
+                        },
+                        {
+                            "tou": "registrar",
+                            "aggregate": false
+                        }
+                    ],
+                    "view": [
+                        "registry",
+                        "registrar"
+                    ],
                     "table": "Dim Date"
                 },
                 {
@@ -84,7 +183,30 @@
                         "<",
                         ">"
                     ],
-                    "filter": true,
+                    "filter": [
+                        {
+                            "tou": "registry",
+                            "filter": true
+                        },
+                        {
+                            "tou": "registrar",
+                            "filter": true
+                        }
+                    ],
+                    "aggregation": [
+                        {
+                            "tou": "registry",
+                            "aggregate": false
+                        },
+                        {
+                            "tou": "registrar",
+                            "aggregate": false
+                        }
+                    ],
+                    "view": [
+                        "registry",
+                        "registrar"
+                    ],
                     "table": "Dim Date"
                 },
                 {
@@ -102,10 +224,50 @@
                         "Sunday"
                     ],
                     "comparisonTypes": [
-                        "=",
-                        "LIKE"
+                        "="
                     ],
-                    "filter": true,
+                    "filter": [
+                        {
+                            "tou": "registry",
+                            "filter": true,
+                            "filterValues": [
+                                "Monday",
+                                "Tuesday",
+                                "Wednesday",
+                                "Thursday",
+                                "Friday",
+                                "Saturday",
+                                "Sunday"
+                            ]
+                        },
+                        {
+                            "tou": "registrar",
+                            "filter": true,
+                            "filterValues": [
+                                "Monday",
+                                "Tuesday",
+                                "Wednesday",
+                                "Thursday",
+                                "Friday",
+                                "Saturday",
+                                "Sunday"
+                            ]
+                        }
+                    ],
+                    "aggregation": [
+                        {
+                            "tou": "registry",
+                            "aggregate": false
+                        },
+                        {
+                            "tou": "registrar",
+                            "aggregate": false
+                        }
+                    ],
+                    "view": [
+                        "registry",
+                        "registrar"
+                    ],
                     "table": "Dim Date"
                 },
                 {
@@ -116,7 +278,30 @@
                     "comparisonTypes": [
                         "="
                     ],
-                    "filter": true,
+                    "filter": [
+                        {
+                            "tou": "registry",
+                            "filter": true
+                        },
+                        {
+                            "tou": "registrar",
+                            "filter": true
+                        }
+                    ],
+                    "aggregation": [
+                        {
+                            "tou": "registry",
+                            "aggregate": false
+                        },
+                        {
+                            "tou": "registrar",
+                            "aggregate": false
+                        }
+                    ],
+                    "view": [
+                        "registry",
+                        "registrar"
+                    ],
                     "table": "Dim Date"
                 },
                 {
@@ -129,25 +314,128 @@
                         "<",
                         ">"
                     ],
-                    "filter": true,
+                    "filter": [
+                        {
+                            "tou": "registry",
+                            "filter": true
+                        },
+                        {
+                            "tou": "registrar",
+                            "filter": true
+                        }
+                    ],
+                    "aggregation": [
+                        {
+                            "tou": "registry",
+                            "aggregate": false
+                        },
+                        {
+                            "tou": "registrar",
+                            "aggregate": false
+                        }
+                    ],
+                    "view": [
+                        "registry",
+                        "registrar"
+                    ],
                     "table": "Dim Date"
                 },
                 {
                     "columnName": "Month Year",
                     "columnType": "string",
-                    "filter": false,
+                    "typeOfFilter": "inputbox",
+                    "filterReturnType": "string",
+                    "comparisonTypes": [
+                        "=",
+                        "<",
+                        ">"
+                    ],
+                    "filter": [
+                        {
+                            "tou": "registry",
+                            "filter": true
+                        },
+                        {
+                            "tou": "registrar",
+                            "filter": true
+                        }
+                    ],
+                    "aggregation": [
+                        {
+                            "tou": "registry",
+                            "aggregate": false
+                        },
+                        {
+                            "tou": "registrar",
+                            "aggregate": false
+                        }
+                    ],
+                    "view": [
+                        "registry",
+                        "registrar"
+                    ],
                     "table": "Dim Date"
                 },
                 {
                     "columnName": "Month Name",
                     "columnType": "string",
-                    "typeOfFilter": "inputbox",
+                    "typeOfFilter": "checkbox",
                     "filterReturnType": "string",
                     "comparisonTypes": [
-                        "=",
-                        "LIKE"
+                        "="
                     ],
-                    "filter": true,
+                    "filter": [
+                        {
+                            "tou": "registry",
+                            "filter": true,
+                            "filterValues": [
+                                "January",
+                                "February",
+                                "March",
+                                "April",
+                                "May",
+                                "June",
+                                "July",
+                                "August",
+                                "September",
+                                "October",
+                                "November",
+                                "December"
+                            ]
+                        },
+                        {
+                            "tou": "registrar",
+                            "filter": true,
+                            "filterValues": [
+                                "January",
+                                "February",
+                                "March",
+                                "April",
+                                "May",
+                                "June",
+                                "July",
+                                "August",
+                                "September",
+                                "October",
+                                "November",
+                                "December"
+                            ]
+                        }
+                    ],
+                    "aggregation": [
+                        {
+                            "tou": "registry",
+                            "aggregate": false
+                        },
+                        {
+                            "tou": "registrar",
+                            "aggregate": false
+                        }
+                    ],
+                    "view": [
+                        "registry",
+                        "registrar"
+                    ],
                     "table": "Dim Date"
                 },
                 {
@@ -156,15 +444,31 @@
                     "typeOfFilter": "inputbox",
                     "filterReturnType": "string",
                     "comparisonTypes": [
-                        "=",
-                        "LIKE"
+                        "="
                     ],
-                    "filter": true,
+                    "filter": [
+                        {
+                            "tou": "registry",
+                            "filter": true
+                        },
+                        {
+                            "tou": "registrar",
+                            "filter": true
+                        }
+                    ],
                     "aggregation": [
                         {
-                            "tou": "public",
-                            "aggretate": true
+                            "tou": "registry",
+                            "aggregate": false
+                        },
+                        {
+                            "tou": "registrar",
+                            "aggregate": false
                         }
+                    ],
+                    "view": [
+                        "registry",
+                        "registrar"
                     ],
                     "table": "Dim Date"
                 }
@@ -222,10 +526,112 @@
                         "WEB.ZA_NEW_VT"
                     ],
                     "comparisonTypes": [
-                        "=",
-                        "LIKE"
+                        "="
                     ],
-                    "filter": true,
+                    "filter": [
+                        {
+                            "tou": "registry",
+                            "filter": true,
+                            "filterValues":[
+                                "CO.ZA_ACCRED",
+                                "CO.ZA_CLOSED_REDEEM",
+                                "CO.ZA_GRACE",
+                                "CO.ZA_NEW",
+                                "CO.ZA_RENEW",
+                                "CO.ZA_TRANSFER",
+                                "NET.ZA_CLOSED_REDEEM",
+                                "NET.ZA_GRACE",
+                                "NET.ZA_LANDRUSH",
+                                "NET.ZA_LANDRUSH_PREMIUM",
+                                "NET.ZA_LEGACY_TRANSFER",
+                                "NET.ZA_NEW",
+                                "NET.ZA_PREMIUM",
+                                "NET.ZA_RENEW",
+                                "NET.ZA_SUNRISE",
+                                "NET.ZA_SUNRISE_PREMIUM",
+                                "ORG.ZA_CLOSED_REDEEM",
+                                "ORG.ZA_GRACE",
+                                "ORG.ZA_LANDRUSH",
+                                "ORG.ZA_LANDRUSH_PREMIUM",
+                                "ORG.ZA_LEGACY_TRANSFER",
+                                "ORG.ZA_NEW",
+                                "ORG.ZA_PREMIUM",
+                                "ORG.ZA_RENEW",
+                                "ORG.ZA_SUNRISE",
+                                "ORG.ZA_SUNRISE_PREMIUM",
+                                "WEB.ZA_CLOSED_REDEEM",
+                                "WEB.ZA_GRACE",
+                                "WEB.ZA_LANDRUSH",
+                                "WEB.ZA_LANDRUSH_PREMIUM",
+                                "WEB.ZA_NEW",
+                                "WEB.ZA_NEW_VT",
+                                "WEB.ZA_PREMIUM",
+                                "WEB.ZA_RENEW",
+                                "WEB.ZA_SUNRISE",
+                                "WEB.ZA_SUNRISE_PREMIUM",
+                                "WEB.ZA_TRANSFER"
+                            ]
+                            
+                        },
+                        {
+                            "tou": "registrar",
+                            "filter": true,
+                            "filterValues":[
+                                "CO.ZA_ACCRED",
+                                "CO.ZA_CLOSED_REDEEM",
+                                "CO.ZA_GRACE",
+                                "CO.ZA_NEW",
+                                "CO.ZA_RENEW",
+                                "CO.ZA_TRANSFER",
+                                "NET.ZA_CLOSED_REDEEM",
+                                "NET.ZA_GRACE",
+                                "NET.ZA_LANDRUSH",
+                                "NET.ZA_LANDRUSH_PREMIUM",
+                                "NET.ZA_LEGACY_TRANSFER",
+                                "NET.ZA_NEW",
+                                "NET.ZA_PREMIUM",
+                                "NET.ZA_RENEW",
+                                "NET.ZA_SUNRISE",
+                                "NET.ZA_SUNRISE_PREMIUM",
+                                "ORG.ZA_CLOSED_REDEEM",
+                                "ORG.ZA_GRACE",
+                                "ORG.ZA_LANDRUSH",
+                                "ORG.ZA_LANDRUSH_PREMIUM",
+                                "ORG.ZA_LEGACY_TRANSFER",
+                                "ORG.ZA_NEW",
+                                "ORG.ZA_PREMIUM",
+                                "ORG.ZA_RENEW",
+                                "ORG.ZA_SUNRISE",
+                                "ORG.ZA_SUNRISE_PREMIUM",
+                                "WEB.ZA_CLOSED_REDEEM",
+                                "WEB.ZA_GRACE",
+                                "WEB.ZA_LANDRUSH",
+                                "WEB.ZA_LANDRUSH_PREMIUM",
+                                "WEB.ZA_NEW",
+                                "WEB.ZA_NEW_VT",
+                                "WEB.ZA_PREMIUM",
+                                "WEB.ZA_RENEW",
+                                "WEB.ZA_SUNRISE",
+                                "WEB.ZA_SUNRISE_PREMIUM",
+                                "WEB.ZA_TRANSFER"
+                            ]
+                            
+                        }
+                    ],
+                    "aggregation": [
+                        {
+                            "tou": "registry",
+                            "aggregate": false
+                        },
+                        {
+                            "tou": "registrar",
+                            "aggregate": false
+                        }
+                    ],
+                    "view": [
+                        "registry",
+                        "registrar"
+                    ],
                     "table": "Dim Registry Product"
                 }
             ]
@@ -245,7 +651,30 @@
                         "<",
                         ">"
                     ],
-                    "filter": true,
+                    "filter": [
+                        {
+                            "tou": "registry",
+                            "filter": true
+                        },
+                        {
+                            "tou": "registrar",
+                            "filter": true
+                        }
+                    ],
+                    "aggregation": [
+                        {
+                            "tou": "registry",
+                            "aggregate": false
+                        },
+                        {
+                            "tou": "registrar",
+                            "aggregate": false
+                        }
+                    ],
+                    "view": [
+                        "registry",
+                        "registrar"
+                    ],
                     "table": "Dim Registry Domain"
                 },
                 {
@@ -258,7 +687,30 @@
                         ">",
                         "<"
                     ],
-                    "filter": true,
+                    "filter": [
+                        {
+                            "tou": "registry",
+                            "filter": true
+                        },
+                        {
+                            "tou": "registrar",
+                            "filter": true
+                        }
+                    ],
+                    "aggregation": [
+                        {
+                            "tou": "registry",
+                            "aggregate": false
+                        },
+                        {
+                            "tou": "registrar",
+                            "aggregate": false
+                        }
+                    ],
+                    "view": [
+                        "registry",
+                        "registrar"
+                    ],
                     "table": "Dim Registry Domain"
                 },
                 {
@@ -266,7 +718,30 @@
                     "columnType": "boolean",
                     "typeOfFilter": "togglebox",
                     "filterReturnType": "boolean",
-                    "filter": true,
+                    "filter": [
+                        {
+                            "tou": "registry",
+                            "filter": true
+                        },
+                        {
+                            "tou": "registrar",
+                            "filter": true
+                        }
+                    ],
+                    "aggregation": [
+                        {
+                            "tou": "registry",
+                            "aggregate": false
+                        },
+                        {
+                            "tou": "registrar",
+                            "aggregate": false
+                        }
+                    ],
+                    "view": [
+                        "registry",
+                        "registrar"
+                    ],
                     "table": "Dim Registry Domain"
                 },
                 {
@@ -274,7 +749,21 @@
                     "columnType": "boolean",
                     "typeOfFilter": "togglebox",
                     "filterReturnType": "boolean",
-                    "filter": true,
+                    "filter": [
+                        {
+                            "tou": "registry",
+                            "filter": true
+                        }
+                    ],
+                    "aggregation": [
+                        {
+                            "tou": "registry",
+                            "aggregate": false
+                        }
+                    ],
+                    "view": [
+                        "registry"
+                    ],
                     "table": "Dim Registry Domain"
                 },
                 {
@@ -287,7 +776,30 @@
                         "I",
                         "U"
                     ],
-                    "filter": true,
+                    "filter": [
+                        {
+                            "tou": "registry",
+                            "filter": true
+                        },
+                        {
+                            "tou": "registrar",
+                            "filter": true
+                        }
+                    ],
+                    "aggregation": [
+                        {
+                            "tou": "registry",
+                            "aggregate": false
+                        },
+                        {
+                            "tou": "registrar",
+                            "aggregate": false
+                        }
+                    ],
+                    "view": [
+                        "registry",
+                        "registrar"
+                    ],
                     "table": "Dim Registry Domain"
                 }
             ]
@@ -300,25 +812,80 @@
                 {
                     "columnName": "Code",
                     "columnType": "string",
-                    "typeOfFilter": "inputbox",
+                    "typeOfFilter": "checkbox",
                     "filterReturnType": "string",
                     "comparisonTypes": [
-                        "=",
-                        "LIKE"
+                        "="
                     ],
-                    "filter": true,
+                    "filter": [
+                        {
+                            "tou": "registry",
+                            "filter": true,
+                            "filterValues":[
+                                "afrihost",
+                                "axxess",
+                                "cloud2m",
+                                "diamatrix",
+                                "gridhost",
+                                "hetzner",
+                                "oneapi",
+                                "regdomsa",
+                                "zadns",
+                                "zadomains"
+                            ]                            
+                        },
+                        {
+                            "tou": "registrar",
+                            "filter": true,
+                            "filterValues":[
+                                "Individual",
+                                "All"
+                            ]
+                        }
+                    ],
+                    "aggregation": [
+                        {
+                            "tou": "registry",
+                            "aggregate": false
+                        },
+                        {
+                            "tou": "registrar",
+                            "aggregate": true
+                        }
+                    ],
+                    "view": [
+                        "registry",
+                        "registrar"
+                    ],
                     "table": "Dim Registry Registrar"
                 },
                 {
                     "columnName": "Name",
                     "columnType": "string",
-                    "typeOfFilter": "inputbox",
-                    "filterReturnType": "string",
-                    "comparisonTypes": [
-                        "=",
-                        "LIKE"
+                    "filter": [
+                        {
+                            "tou": "registry",
+                            "filter": false
+                        },
+                        {
+                            "tou": "registrar",
+                            "filter": false
+                        }
                     ],
-                    "filter": true,
+                    "aggregation": [
+                        {
+                            "tou": "registry",
+                            "aggregate": false
+                        },
+                        {
+                            "tou": "registrar",
+                            "aggregate": false
+                        }
+                    ],
+                    "view": [
+                        "registry",
+                        "registrar"
+                    ],
                     "table": "Dim Registry Registrar"
                 },
                 {
@@ -326,23 +893,59 @@
                     "columnType": "string",
                     "typeOfFilter": "inputbox",
                     "filterReturnType": "string",
-                    "comparisonTypes": [
-                        "=",
-                        "LIKE"
+                    "filter": [
+                        {
+                            "tou": "registry",
+                            "filter": false
+                        },
+                        {
+                            "tou": "registrar",
+                            "filter": false
+                        }
                     ],
-                    "filter": true,
+                    "aggregation": [
+                        {
+                            "tou": "registry",
+                            "aggregate": false
+                        },
+                        {
+                            "tou": "registrar",
+                            "aggregate": false
+                        }
+                    ],
+                    "view": [
+                        "registry",
+                        "registrar"
+                    ],
                     "table": "Dim Registry Registrar"
                 },
                 {
                     "columnName": "Trading Name",
                     "columnType": "string",
-                    "typeOfFilter": "inputbox",
-                    "filterReturnType": "string",
-                    "comparisonTypes": [
-                        "=",
-                        "LIKE"
+                    "filter": [
+                        {
+                            "tou": "registry",
+                            "filter": false
+                        },
+                        {
+                            "tou": "registrar",
+                            "filter": false
+                        }
                     ],
-                    "filter": true,
+                    "aggregation": [
+                        {
+                            "tou": "registry",
+                            "aggregate": false
+                        },
+                        {
+                            "tou": "registrar",
+                            "aggregate": false
+                        }
+                    ],
+                    "view": [
+                        "registry",
+                        "registrar"
+                    ],
                     "table": "Dim Registry Registrar"
                 }
             ]
@@ -355,13 +958,35 @@
                 {
                     "columnName": "System",
                     "columnType": "string",
-                    "typeOfFilter": "inputbox",
+                    "typeOfFilter": "checkbox",
                     "filterReturnType": "string",
                     "comparisonTypes": [
-                        "=",
-                        "LIKE"
+                        "="
                     ],
-                    "filter": true,
+                    "filter": [
+                        {
+                            "tou": "registry",
+                            "filter": true,
+                            "filterValues":["oodo_zacr", null, "oodo_zarc"]
+                        },
+                        {
+                            "tou": "registrar",
+                            "filter": false
+                        }
+                    ],
+                    "aggregation": [
+                        {
+                            "tou": "registry",
+                            "aggregate": false
+                        },
+                        {
+                            "tou": "registrar",
+                            "aggregate": false
+                        }
+                    ],
+                    "view": [
+                        "registry"
+                    ],
                     "table": "Dim Sales Detail"
                 },
                 {
@@ -369,16 +994,37 @@
                     "columnType": "string",
                     "typeOfFilter": "checkbox",
                     "filterReturnType": "string[]",
-                    "filterValues": [
-                        "Credit Note",
-                        "Invoice",
-                        null
-                    ],
                     "comparisonTypes": [
-                        "=",
-                        "LIKE"
+                        "="
                     ],
-                    "filter": true,
+                    "filter": [
+                        {
+                            "tou": "registry",
+                            "filter": true,
+                            "filterValues":[
+                                "Credit Note",
+                                "Invoice",
+                                null
+                            ]
+                        },
+                        {
+                            "tou": "registrar",
+                            "filter": false
+                        }
+                    ],
+                    "aggregation": [
+                        {
+                            "tou": "registry",
+                            "aggregate": false
+                        },
+                        {
+                            "tou": "registrar",
+                            "aggregate": false
+                        }
+                    ],
+                    "view": [
+                        "registry"
+                    ],
                     "table": "Dim Sales Detail"
                 },
                 {
@@ -386,14 +1032,36 @@
                     "columnType": "string",
                     "typeOfFilter": "checkbox",
                     "filterReturnType": "string[]",
-                    "filterValues": [
-                        "openerp%",
-                        null
-                    ],
                     "comparisonTypes": [
-                        "LIKE"
+                        "="
                     ],
-                    "filter": true,
+                    "filter": [
+                        {
+                            "tou": "registry",
+                            "filter": true,
+                            "filterValues":[
+                                "openerp%",
+                                null
+                            ]
+                        },
+                        {
+                            "tou": "registrar",
+                            "filter": false
+                        }
+                    ],
+                    "aggregation": [
+                        {
+                            "tou": "registry",
+                            "aggregate": false
+                        },
+                        {
+                            "tou": "registrar",
+                            "aggregate": false
+                        }
+                    ],
+                    "view": [
+                        "registry"
+                    ],
                     "table": "Dim Sales Detail"
                 }
             ]
@@ -417,7 +1085,41 @@
                     "comparisonTypes": [
                         "="
                     ],
-                    "filter": true,
+                    "filter": [
+                        {
+                            "tou": "registry",
+                            "filter": true,
+                            "filterValues":[
+                                "CO.ZA",
+                                "WEB.ZA",
+                                "ORG.ZA",
+                                "NET.ZA"
+                            ]
+                        },
+                        {
+                            "tou": "registrar",
+                            "filter": true,
+                            "filterValues":[
+                                "CO.ZA",
+                                "WEB.ZA",
+                                "ORG.ZA",
+                                "NET.ZA"
+                            ]
+                        }
+                    ],
+                    "aggregation": [
+                        {
+                            "tou": "registry",
+                            "aggregate": false
+                        },
+                        {
+                            "tou": "registrar",
+                            "aggregate": false
+                        }
+                    ],
+                    "view": [
+                        "registry", "registrar"
+                    ],
                     "table": "Dim Registry Zone"
                 },
                 {
@@ -434,7 +1136,41 @@
                     "comparisonTypes": [
                         "="
                     ],
-                    "filter": true,
+                    "filter": [
+                        {
+                            "tou": "registry",
+                            "filter": true,
+                            "filterValues":[
+                                "co.za",
+                                "web.za",
+                                "org.za",
+                                "net.za"
+                            ]
+                        },
+                        {
+                            "tou": "registrar",
+                            "filter": true,
+                            "filterValues":[
+                                "co.za",
+                                "web.za",
+                                "org.za",
+                                "net.za"
+                            ]
+                        }
+                    ],
+                    "aggregation": [
+                        {
+                            "tou": "registry",
+                            "aggregate": false
+                        },
+                        {
+                            "tou": "registrar",
+                            "aggregate": false
+                        }
+                    ],
+                    "view": [
+                        "registry", "registrar"
+                    ],
                     "table": "Dim Registry Zone"
                 },
                 {
@@ -442,13 +1178,38 @@
                     "columnType": "string",
                     "typeOfFilter": "checkbox",
                     "filterReturnType": "string[]",
-                    "filterValues": [
-                        "ZARC"
-                    ],
                     "comparisonTypes": [
                         "="
                     ],
-                    "filter": true,
+                    "filter": [
+                        {
+                            "tou": "registry",
+                            "filter": true,
+                            "filterValues":[
+                                "ZARC"
+                            ]
+                        },
+                        {
+                            "tou": "registrar",
+                            "filter": true,
+                            "filterValues":[
+                                "ZARC"
+                            ]
+                        }
+                    ],
+                    "aggregation": [
+                        {
+                            "tou": "registry",
+                            "aggregate": false
+                        },
+                        {
+                            "tou": "registrar",
+                            "aggregate": false
+                        }
+                    ],
+                    "view": [
+                        "registry", "registrar"
+                    ],
                     "table": "Dim Registry Zone"
                 }
             ]
