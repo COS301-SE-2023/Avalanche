@@ -35,36 +35,41 @@ interface SchemaDetail {
 export class SchemaService {
   private schemas: SchemaDetail[] = [];
 
-  public initializeSchemas() {
+  constructor() {
     const projectRoot = path.resolve(__dirname, '../');
-    const schemasFilePath = path.join(projectRoot, 'src/schemas'); // Adjust path as needed
-    this.loadSchemas(schemasFilePath);
+    console.log(projectRoot);
+    const schemasDir = path.join(projectRoot, 'src/schemas'); // Adjust path as needed
+    console.log(schemasDir);
+    this.loadSchemas(schemasDir, '');
   }
 
-  protected loadSchemas(dir: string) {
+  private loadSchemas(dir: string, prefix: string) {
     fs.readdirSync(dir).forEach((file) => {
-      const filePath = path.join(dir, file);
+      const filePath = path.resolve(dir, file);
       const stats = fs.statSync(filePath);
 
-      if (stats.isFile() && path.extname(file) === '.json') {
-        const fileContent = fs.readFileSync(filePath, 'utf-8');
-        const parsedSchemas: SchemaDetail[] = JSON.parse(fileContent);
-        this.schemas.push(...parsedSchemas); // Merge new schemas into existing array
+      if (stats.isDirectory()) {
+        this.loadSchemas(filePath, `${prefix}/${file}`);
+      } else if (stats.isFile() && path.extname(file) === '.json') {
+        const schema = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+        const url = `${prefix}/${path.basename(file, '.json')}`;
+        this.schemas[url] = schema;
       }
     });
   }
 
-  getSchemaByFact(fact: string): SchemaDetail | null {
-    return this.schemas.find((schema) => schema.fact === fact) || null;
+  getSchemaByUrl(url: string): any {
+    const check = this.schemas[url];
+    return this.schemas[url] || null;
   }
 
-  validateUserAccess(userPermissions: any[], schema: SchemaDetail): boolean {
+  validateUserAccess(userPermissions: any, schema: SchemaDetail): boolean {
     for (const tableDetail of schema.tables) {
       for (const columnDetail of tableDetail.columns) {
         if (Array.isArray(columnDetail.filter)) {
           for (const filter of columnDetail.filter) {
             const userPermission = userPermissions.find(
-              (perm) => perm.tou === filter.tou && perm.dataSource === schema.fact,
+              (perm) => perm.tou === filter.tou
             );
 
             if (userPermission) {
