@@ -26,14 +26,18 @@ import { v4 as uuidv4 } from "uuid";
 import { randomRange } from "@/utils";
 import {
   Role as QBeeRole,
-  ComparisonOperator as QBeeComparisonType,
+  ComparisonType as QBeeComparisonType,
   Role,
   LogicalOperator,
 } from "@/interfaces/qbee/enums";
 import { DBData, FilterCondition, Query } from "@/interfaces/qbee/interfaces";
 import { SubmitButton, SuccessToast } from "@/components/Util";
 import { useDispatch } from "react-redux";
-import { addData, setNodes as QBeeSetNodes, setEdges as QBeeSetEdges } from "@/store/Slices/qbeeSlice";
+import {
+  addData,
+  setNodes as QBeeSetNodes,
+  setEdges as QBeeSetEdges,
+} from "@/store/Slices/qbeeSlice";
 import { copy } from "copy-anything";
 
 import OutputNode from "@/components/QBee/OutputNode";
@@ -49,14 +53,14 @@ import dummyData from "@/components/QBee/dummy.json";
 import { Toaster } from "react-hot-toast";
 
 const nodeTypes = {
-    outputBlock: OutputNode,
-    selectBlock: SelectBlock,
-    edgeNode: EdgeNode,
-    addNode: AddNode,
-    filterBlock: FilterBlock,
-    ddAddNode: DDAddNode,
-    orBlock: OrBlock,
-    andBlock: AndBlock
+  outputBlock: OutputNode,
+  selectBlock: SelectBlock,
+  edgeNode: EdgeNode,
+  addNode: AddNode,
+  filterBlock: FilterBlock,
+  ddAddNode: DDAddNode,
+  orBlock: OrBlock,
+  andBlock: AndBlock,
 };
 
 const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
@@ -131,6 +135,8 @@ function Flow() {
 
   /**
    * Update a node
+   * @id is the id of the node
+   * @data is the data
    */
   const updateNode = (id: string, data: any): void => {
     setNodes((prevElements: Node[]) =>
@@ -149,289 +155,278 @@ function Flow() {
     );
   };
 
-    /**
-     * Holds the initial nodes for the Flow
-     */
-    const initialNodes: Node[] = [
-        // ---- Start of Select Area
-        {
-            id: "SelectGroup",
-            type: "group",
-            position: { x: 0, y: 0 },
-            style: {
-                width: 2000,
-                height: 500,
-            },
-            data: {},
-            deletable: false,
-            draggable: true,
+  /**
+   * Holds the initial nodes for the Flow
+   */
+  const initialNodes: Node[] = [
+    // ---- Start of Select Area
+    {
+      id: "SelectGroup",
+      type: "group",
+      position: { x: 0, y: 0 },
+      style: {
+        width: 2000,
+        height: 500,
+      },
+      data: {},
+      deletable: false,
+      draggable: true,
+    },
+    {
+      id: "selectStart",
+      extent: "parent",
+      parentNode: "SelectGroup",
+      position: { x: -75, y: 50 },
+      data: {
+        label: "Start of Select",
+        role: QBeeRole.startOfSelect,
+        connectTo: [QBeeRole.selectBlock],
+        handles: {
+          source: {},
         },
-        {
-            id: "selectStart",
-            extent: "parent",
-            parentNode: "SelectGroup",
-            position: { x: -75, y: 50 },
-            data: {
-                label: "Start of Select",
-                role: QBeeRole.startOfSelect,
-                connectTo: [QBeeRole.selectBlock],
-                handles: {
-                    source: {},
-                },
-            },
-            draggable: false,
-            deletable: false,
-            type: "edgeNode",
+      },
+      draggable: false,
+      deletable: false,
+      type: "edgeNode",
+    },
+    {
+      id: "selectEnd",
+      extent: "parent",
+      parentNode: "SelectGroup",
+      position: { x: 1930, y: 50 },
+      type: "edgeNode",
+      data: {
+        label: "End of Select",
+        role: QBeeRole.endOfSelect,
+        connectTo: [QBeeRole.startOfFilter],
+        handles: {
+          target: {},
+          source: {},
         },
-        {
-            id: "selectEnd",
-            extent: "parent",
-            parentNode: "SelectGroup",
-            position: { x: 1930, y: 50 },
-            type: "edgeNode",
-            data: {
-                label: "End of Select",
-                role: QBeeRole.endOfSelect,
-                connectTo: [QBeeRole.startOfFilter],
-                handles: {
-                    target: {},
-                    source: {},
-                },
-            },
-            deletable: false,
-            draggable: false,
+      },
+      deletable: false,
+      draggable: false,
+    },
+    {
+      id: "selectAdd",
+      position: { x: 1980, y: -20 },
+      data: {
+        click: () => addSelectNode(),
+      },
+      type: "addNode",
+      extent: "parent",
+      parentNode: "SelectGroup",
+      deletable: false,
+      draggable: false,
+    },
+    // ---- End of Select Area
+    // ---- Start of Filter Area
+    {
+      id: "FilterGroup",
+      type: "group",
+      position: { x: 2300, y: 0 },
+      style: {
+        width: 2000,
+        height: 1000,
+      },
+      data: {},
+      deletable: false,
+      draggable: true,
+    },
+    {
+      id: "filterStart",
+      extent: "parent",
+      parentNode: "FilterGroup",
+      position: { x: -75, y: 50 },
+      data: {
+        label: "Start of Filter",
+        role: QBeeRole.startOfFilter,
+        connectTo: [QBeeRole.filterBlock, QBeeRole.orBlock],
+        handles: {
+          source: {},
+          target: {},
         },
-        {
-            id: "selectAdd",
-            position: { x: 1980, y: -20 },
-            data: {
-                click: () => addSelectNode(),
-            },
-            type: "addNode",
-            extent: "parent",
-            parentNode: "SelectGroup",
-            deletable: false,
-            draggable: false,
+      },
+      draggable: false,
+      deletable: false,
+      type: "edgeNode",
+    },
+    {
+      id: "filterEnd",
+      extent: "parent",
+      parentNode: "FilterGroup",
+      position: { x: 1930, y: 50 },
+      type: "edgeNode",
+      data: {
+        label: "End of Filter",
+        role: QBeeRole.endOfFilter,
+        connectTo: [QBeeRole.outputBlock],
+        handles: {
+          target: {},
+          source: {},
         },
-        // ---- End of Select Area
-        // ---- Start of Filter Area
-        {
-            id: "FilterGroup",
-            type: "group",
-            position: { x: 2300, y: 0 },
-            style: {
-                width: 2000,
-                height: 1000,
-            },
-            data: {},
-            deletable: false,
-            draggable: true,
-        },
-        {
-            id: "filterStart",
-            extent: "parent",
-            parentNode: "FilterGroup",
-            position: { x: -75, y: 50 },
-            data: {
-                label: "Start of Filter",
-                role: QBeeRole.startOfFilter,
-                connectTo: [QBeeRole.filterBlock],
-                handles: {
-                    source: {},
-                    target: {},
-                },
-            },
-            draggable: false,
-            deletable: false,
-            type: "edgeNode",
-        },
-        {
-            id: "filterEnd",
-            extent: "parent",
-            parentNode: "FilterGroup",
-            position: { x: 1930, y: 50 },
-            type: "edgeNode",
-            data: {
-                label: "End of Filter",
-                role: QBeeRole.endOfFilter,
-                connectTo: [QBeeRole.outputBlock],
-                handles: {
-                    target: {},
-                    source: {},
-                },
-            },
-            deletable: false,
-            draggable: false,
-        },
-        {
-            id: "ddAddNode",
-            position: { x: 1875, y: -20 },
-            data: {
-                click: () => addFilterNode(),
-                clickAnd: () => addAndNode(),
-                clickOr: () => addOrNode()
-            },
-            type: "ddAddNode",
-            extent: "parent",
-            parentNode: "FilterGroup",
-            deletable: false,
-            draggable: false,
-        },
-        // ---- End of Filter Area
-        // ---- Start of Output
-        {
-            id: QBeeRole.outputBlock,
-            type: QBeeRole.outputBlock,
-            position: { x: 4600, y: -50 },
-            data: {
-                role: QBeeRole.outputBlock
-            },
-            deletable: false,
-            draggable: true
-        }
-    ];
+      },
+      deletable: false,
+      draggable: false,
+    },
+    {
+      id: "ddAddNode",
+      position: { x: 1875, y: -20 },
+      data: {
+        click: () => addFilterNode(),
+        clickAnd: () => addAndNode(),
+        clickOr: () => addOrNode(),
+      },
+      type: "ddAddNode",
+      extent: "parent",
+      parentNode: "FilterGroup",
+      deletable: false,
+      draggable: false,
+    },
+    // ---- End of Filter Area
+    // ---- Start of Output
+    {
+      id: QBeeRole.outputBlock,
+      type: QBeeRole.outputBlock,
+      position: { x: 4600, y: -50 },
+      data: {
+        role: QBeeRole.outputBlock,
+        jsonData: [{ 0: "colomn One", 1: "column Two" }],
+        update: updateNode,
+      },
+      deletable: false,
+      draggable: true,
+    },
+  ];
 
-    /**
-     * Holds the initial edges for the flow
-     */
-    const initialEdges: Edge[] = [
-        {
-            id: "selectToFilter",
-            source: QBeeRole.endOfSelect,
-            target: QBeeRole.startOfFilter,
-            deletable: false,
-        },
-        {
-            id: "filterToOutput",
-            source: QBeeRole.endOfFilter,
-            target: QBeeRole.outputBlock,
-            deletable: false,
-        },
-    ];
+  /**
+   * Holds the initial edges for the flow
+   */
+  const initialEdges: Edge[] = [
+    {
+      id: "selectToFilter",
+      source: QBeeRole.endOfSelect,
+      target: QBeeRole.startOfFilter,
+      deletable: false,
+    },
+    {
+      id: "filterToOutput",
+      source: QBeeRole.endOfFilter,
+      target: QBeeRole.outputBlock,
+      deletable: false,
+    },
+  ];
 
   const [nodes, setNodes] = useState<Node[]>(initialNodes);
   const [edges, setEdges] = useState<Edge[]>(initialEdges);
 
-    /**
-     * Adds a select node to the select subflow
-     */
-    const addSelectNode = (): void => {
-        setNodes((nds) => nds.concat({
-            id: `${QBeeRole.selectBlock}-${uuidv4()}`,
-            type: QBeeRole.selectBlock,
-            extent: 'parent',
-            parentNode: 'SelectGroup',
-            data: {
-                column: "",
-                typeOfColumn: "",
-                help: "",
-                aggregationType: "",
-                renamedColumn: "",
-                connectTo: [QBeeRole.selectBlock, QBeeRole.endOfSelect],
-                quickConnect: quickConnect,
-                update: updateNode
-            },
-            position: { x: randomRange(350, 750), y: randomRange(150, 350) },
-            zIndex: 2
-        }));
-    }
+  /**
+   * Adds a select node to the select subflow
+   */
+  const addSelectNode = (): void => {
+    setNodes((nds) =>
+      nds.concat({
+        id: `${QBeeRole.selectBlock}-${uuidv4()}`,
+        type: QBeeRole.selectBlock,
+        extent: "parent",
+        parentNode: "SelectGroup",
+        data: {
+          column: "",
+          typeOfColumn: "",
+          help: "",
+          aggregationType: "",
+          renamedColumn: "",
+          connectTo: [QBeeRole.selectBlock, QBeeRole.endOfSelect],
+          role: QBeeRole.selectBlock,
+          quickConnect: quickConnect,
+          update: updateNode,
+        },
+        position: { x: randomRange(350, 750), y: randomRange(150, 350) },
+        zIndex: 2,
+      })
+    );
+  };
 
-    /**
-     * Adds a filter node to the filter subflow
-     */
-    const addFilterNode = (): void => {
-        setNodes((nds) =>
-            nds.concat({
-                id: `${QBeeRole.filterBlock}-${uuidv4()}`,
-                type: QBeeRole.filterBlock,
-                extent: "parent",
-                parentNode: "FilterGroup",
-                data: {
-                    column: "",
-                    typeOfColumn: "",
-                    comparisonType: "",
-                    typeOfFilter: "",
-                    selectedValues: "",
-                    connectTo: [QBeeRole.endOfFilter, QBeeRole.andBlock, QBeeRole.orBlock],
-                    update: updateNode
-                },
-                position: { x: randomRange(350, 750), y: randomRange(150, 350) },
-            })
-        );
-    };
+  /**
+   * Adds a filter node to the filter subflow
+   */
+  const addFilterNode = (): void => {
+    setNodes((nds) =>
+      nds.concat({
+        id: `${QBeeRole.filterBlock}-${uuidv4()}`,
+        type: QBeeRole.filterBlock,
+        extent: "parent",
+        parentNode: "FilterGroup",
+        data: {
+          role: QBeeRole.filterBlock,
+          column: "",
+          typeOfColumn: "",
+          comparisonType: "",
+          typeOfFilter: "",
+          selectedValues: "",
+          connectTo: [
+            QBeeRole.endOfFilter,
+            QBeeRole.andBlock,
+            QBeeRole.orBlock,
+          ],
+          update: updateNode,
+        },
+        position: { x: randomRange(350, 750), y: randomRange(150, 350) },
+      })
+    );
+  };
 
-    /**
-     * Adds a filter node to the filter subflow
-     */
-    const addAndNode = (): void => {
-        setNodes((nds) =>
-            nds.concat({
-                id: `${QBeeRole.andBlock}-${uuidv4()}`,
-                type: QBeeRole.andBlock,
-                extent: "parent",
-                parentNode: "FilterGroup",
-                data: {
-                    role: QBeeRole.andBlock,
-                    connectTo: [QBeeRole.filterBlock, QBeeRole.orBlock],
-                },
-                position: { x: randomRange(350, 750), y: randomRange(150, 350) },
-            })
-        );
-    };
+  /**
+   * Adds a filter node to the filter subflow
+   */
+  const addAndNode = (): void => {
+    setNodes((nds) =>
+      nds.concat({
+        id: `${QBeeRole.andBlock}-${uuidv4()}`,
+        type: QBeeRole.andBlock,
+        extent: "parent",
+        parentNode: "FilterGroup",
+        data: {
+          role: QBeeRole.andBlock,
+          connectTo: [QBeeRole.filterBlock, QBeeRole.orBlock],
+        },
+        position: { x: randomRange(350, 750), y: randomRange(150, 350) },
+      })
+    );
+  };
 
-    /**
-     * Adds a filter node to the filter subflow
-     */
-    const addOrNode = (): void => {
-        setNodes((nds) =>
-            nds.concat({
-                id: `${QBeeRole.orBlock}-${uuidv4()}`,
-                type: QBeeRole.orBlock,
-                extent: "parent",
-                parentNode: "FilterGroup",
-                data: {
-                    role: QBeeRole.orBlock,
-                    connectTo: [QBeeRole.filterBlock, QBeeRole.orBlock],
-                },
-                position: { x: randomRange(350, 750), y: randomRange(150, 350) },
-            })
-        );
-    };
+  /**
+   * Adds a filter node to the filter subflow
+   */
+  const addOrNode = (): void => {
+    setNodes((nds) =>
+      nds.concat({
+        id: `${QBeeRole.orBlock}-${uuidv4()}`,
+        type: QBeeRole.orBlock,
+        extent: "parent",
+        parentNode: "FilterGroup",
+        data: {
+          role: QBeeRole.orBlock,
+          connectTo: [QBeeRole.filterBlock, QBeeRole.orBlock],
+        },
+        position: { x: randomRange(350, 750), y: randomRange(150, 350) },
+      })
+    );
+  };
 
-    /**
-     * Update a node
-     * @id is the id of the node
-     * @data is the data
-     */
-    const updateNode = (id: string, data: any): void => {
-        setNodes((prevElements: Node[]) =>
-            prevElements.map((element) => {
-                if (element.id === id) {
-                    return {
-                        ...element,
-                        data: {
-                            ...element.data,
-                            ...data,
-                        },
-                    };
-                }
-                return element;
-            })
-        );
-    }
-
-    /**
-     * I use this for when I have to render that side block with the options
-     */
-    useEffect(() => {
-        const node = nodes.find(item => item.selected);
-        if (node?.id === "SelectGroup") setSelectedPanel(node.id);
-        if (node?.id === "FilterGroup") setSelectedPanel(node.id);
-        if (node?.type === "outputNode") setSelectedPanel(node.type);
-        if (node === null || node === undefined) setSelectedPanel("blocks");
-        console.log(copy(nodes));
-        dispatch(QBeeSetNodes(copy(nodes)));
-    }, [nodes]);
+  /**
+   * I use this for when I have to render that side block with the options
+   */
+  useEffect(() => {
+    const node = nodes.find((item) => item.selected);
+    if (node?.id === "SelectGroup") setSelectedPanel(node.id);
+    if (node?.id === "FilterGroup") setSelectedPanel(node.id);
+    if (node?.type === "outputNode") setSelectedPanel(node.type);
+    if (node === null || node === undefined) setSelectedPanel("blocks");
+    console.log(copy(nodes));
+    convertToQuery();
+    dispatch(QBeeSetNodes(copy(nodes)));
+  }, [nodes]);
 
   const quickConnect = (from: string, to: string): void => {
     setEdges((edgs: Edge[]) =>
@@ -443,12 +438,12 @@ function Flow() {
     );
   };
 
-    /**
-     * Used to update the edges in the slice
-     */
-    useEffect(() => {
-        dispatch(QBeeSetEdges(copy(edges)));
-    }, [edges, dispatch]);
+  /**
+   * Used to update the edges in the slice
+   */
+  useEffect(() => {
+    dispatch(QBeeSetEdges(copy(edges)));
+  }, [edges, dispatch]);
 
   // Runs when Nodes are added/removed/updated/changed
   const onNodesChange: OnNodesChange = useCallback(
@@ -516,24 +511,25 @@ function Flow() {
       filters: [],
     };
 
+    let endOfSelect = false;
+
     const traverseNodes = (currentNodeId: string): any => {
-      console.log(currentNodeId)
+      console.log(currentNodeId);
       const currentNode = nodes.find((node) => node.id === currentNodeId);
-      console.log(currentNode?.id);
+      console.log("Role");
       console.log(currentNode?.data.role);
 
       if (!currentNode) return;
 
-      const connectedEdgesForSelect = edges.filter(
+      const connectedEdges = edges.filter(
         (edge) => edge.source === currentNodeId
       );
-      console.log('Connected')
-      console.log(connectedEdgesForSelect)
+      console.log("Connected");
+      console.log(connectedEdges);
 
       switch (currentNode.data.role) {
         case Role.startOfSelect:
-          console.log('Here in switch')
-          for (const edge of connectedEdgesForSelect) {
+          for (const edge of connectedEdges) {
             traverseNodes(edge.target);
           }
           break;
@@ -543,18 +539,19 @@ function Flow() {
             aggregation: currentNode.data.aggregationType,
             renamed: currentNode.data.renamedColumn,
           });
-          for (const edge of connectedEdgesForSelect) {
+          for (const edge of connectedEdges) {
             traverseNodes(edge.target);
           }
           break;
-
+        case Role.endOfSelect:
+          endOfSelect = true;
+          break;
         case Role.startOfFilter:
-          for (const edge of connectedEdgesForSelect) {
-            traverseNodes(edge.target);
+          for (const edge of connectedEdges) {
+            return traverseNodes(edge.target);
           }
           break;
         case Role.orBlock:
-        case Role.andBlock:
           const filterCondition: FilterCondition = {
             type:
               currentNode.data.role === Role.andBlock
@@ -562,17 +559,31 @@ function Flow() {
                 : LogicalOperator.or,
             conditions: [],
           };
-          const connectedEdges = edges.filter(
-            (edge) => edge.source === currentNodeId
-          );
           for (const edge of connectedEdges) {
-            const condition = traverseNodes(edge.target);
-            if (condition) filterCondition.conditions?.push(condition);
+            let condition: any = traverseNodes(edge.target);
+            if (condition) {
+              if (condition.length > 1) {
+                condition = {
+                  type: LogicalOperator.and,
+                  conditions: condition,
+                };
+              }
+              filterCondition.conditions?.push(condition);
+            }
           }
           return filterCondition;
 
+        case Role.andBlock:
+          const connectedFilters = [];
+          for (const edge of connectedEdges) {
+            const condition = traverseNodes(edge.target);
+            if (condition) connectedFilters.push(...condition);
+          }
+          return connectedFilters;
+
         case Role.filterBlock:
-          return {
+          console.log("here in filter");
+          const thisFilter = {
             column: currentNode.data.column,
             operator: currentNode.data.selectedComparison,
             value: currentNode.data.selectedValues,
@@ -581,6 +592,13 @@ function Flow() {
               currentNode.data.typeOfColumn === "number" &&
               !!currentNode.data.aggregationType,
           };
+          const connectedFilters2 = [thisFilter];
+          for (const edge of connectedEdges) {
+            const condition = traverseNodes(edge.target);
+            if (condition) connectedFilters2.push(...condition);
+          }
+          console.log(connectedFilters2);
+          return connectedFilters2;
 
         default:
           break;
@@ -598,108 +616,131 @@ function Flow() {
       (node) => node.data.role === Role.startOfFilter
     );
     if (startFilterNode) {
-      const filter = traverseNodes(startFilterNode.id);
-      if (filter) query.filters.push(filter);
+      console.log("start in filter");
+      let filter = traverseNodes(startFilterNode.id);
+      console.log(filter);
+      if (filter) {
+        if (filter.length > 0) {
+          filter = {
+            type: LogicalOperator.and,
+            conditions: filter,
+          };
+        }
+        query.filters.push(filter);
+      }
     }
 
     console.log(query);
+
+    if (endOfSelect) {
+      let input = JSON.parse(JSON.stringify(query.selectedColumns));
+      let result = input.reduce<{ [key: number]: string }>(
+        (acc, curr, index) => {
+          acc[index] = curr.renamed || curr.columnName;
+          return acc;
+        },
+        {}
+      );
+      updateNode(QBeeRole.outputBlock, { jsonData: [result] });
+    }
+
     return query;
   };
 
-    return (
-        <>
-            <Head>
-                <title>QBee</title>
-            </Head>
-            <div className="bg-gray-100 dark:bg-secondaryBackground h-screen w-screen">
-                <ReactFlowProvider>
-                    <ReactFlow
-                        nodes={nodes}
-                        edges={edges}
-                        fitView
-                        defaultEdgeOptions={{ animated: true, zIndex: 1 }}
-                        onNodesChange={onNodesChange}
-                        onEdgesChange={onEdgesChange}
-                        onConnect={onConnect}
-                        proOptions={{
-                            hideAttribution: true,
-                        }}
-                        nodeTypes={nodeTypes}
-                        defaultViewport={{ x: 0, y: 0, zoom: 0.1 }}
-                    >
-                        <Controls />
-                        <Background color="#ccc" variant={BackgroundVariant.Dots} />
-                        {selectedPanel === "SelectGroup" && (
-                            <Panel
-                                position="top-right"
-                                style={{}}
-                                className="bg-black rounded p-4 h-fit"
-                            >
-                                <h4 className="text-white underline text-xl mb-2">
-                                    Select Area
-                                </h4>
-                                <p className="text-white mb-2 max-w-xs">
-                                    This is the select area. Anything that you need to select
-                                    shows up in this area.
-                                </p>
-                                <SubmitButton
-                                    text="Add a Select Block"
-                                    className="w-full"
-                                    onClick={() => addSelectNode()}
-                                />
-                            </Panel>
-                        )}
-                        {selectedPanel === "FilterGroup" && (
-                            <Panel
-                                position="top-right"
-                                style={{}}
-                                className="bg-black rounded p-4 h-fit"
-                            >
-                                <h4 className="text-white underline text-xl mb-2">
-                                    Filter Area
-                                </h4>
-                                <p className="text-white mb-2 max-w-xs">
-                                    This is the filter area. Anything that you need to filter
-                                    shows up in this area.
-                                </p>
-                                <div className="space-y-4">
-                                    <SubmitButton
-                                        text="Add a Filter Block"
-                                        className="w-full"
-                                        onClick={() => addFilterNode()}
-                                    />
-                                    <SubmitButton
-                                        text="Add an AND Block"
-                                        className="w-full"
-                                        onClick={() => addAndNode()}
-                                    />
-                                    <SubmitButton
-                                        text="Add an OR Block"
-                                        className="w-full"
-                                        onClick={() => addOrNode()}
-                                    />
-                                </div>
-                            </Panel>
-                        )}
-                        <Panel position="top-left" className="flex gap-2 flex-col">
-                            <div
-                                className="bg-black p-2 rounded-lg cursor-pointer"
-                                onClick={() => router.push("/home")}
-                            >
-                                <Squares2X2Icon className="w-4=6 h-6" />
-                            </div>
-                            <div
-                                className="bg-success-background p-2 rounded-lg cursor-pointer"
-                                onClick={() =>
-                                    SuccessToast({ text: "Successfully saved 🐝 Or have you 👀" })
-                                }
-                            >
-                                <CheckCircleIcon className="w-4=6 h-6" />
-                            </div>
-                        </Panel>
-                    </ReactFlow>
-                </ReactFlowProvider>
-            </div>
-        </>
-    );
+  return (
+    <>
+      <Head>
+        <title>QBee</title>
+      </Head>
+      <div className="bg-gray-100 dark:bg-secondaryBackground h-screen w-screen">
+        <ReactFlowProvider>
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            fitView
+            defaultEdgeOptions={{ animated: true, zIndex: 1 }}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onConnect={onConnect}
+            proOptions={{
+              hideAttribution: true,
+            }}
+            nodeTypes={nodeTypes}
+            defaultViewport={{ x: 0, y: 0, zoom: 0.1 }}
+          >
+            <Controls />
+            <Background color="#ccc" variant={BackgroundVariant.Dots} />
+            {selectedPanel === "SelectGroup" && (
+              <Panel
+                position="top-right"
+                style={{}}
+                className="bg-black rounded p-4 h-fit"
+              >
+                <h4 className="text-white underline text-xl mb-2">
+                  Select Area
+                </h4>
+                <p className="text-white mb-2 max-w-xs">
+                  This is the select area. Anything that you need to select
+                  shows up in this area.
+                </p>
+                <SubmitButton
+                  text="Add a Select Block"
+                  className="w-full"
+                  onClick={() => addSelectNode()}
+                />
+              </Panel>
+            )}
+            {selectedPanel === "FilterGroup" && (
+              <Panel
+                position="top-right"
+                style={{}}
+                className="bg-black rounded p-4 h-fit"
+              >
+                <h4 className="text-white underline text-xl mb-2">
+                  Filter Area
+                </h4>
+                <p className="text-white mb-2 max-w-xs">
+                  This is the filter area. Anything that you need to filter
+                  shows up in this area.
+                </p>
+                <div className="space-y-4">
+                  <SubmitButton
+                    text="Add a Filter Block"
+                    className="w-full"
+                    onClick={() => addFilterNode()}
+                  />
+                  <SubmitButton
+                    text="Add an AND Block"
+                    className="w-full"
+                    onClick={() => addAndNode()}
+                  />
+                  <SubmitButton
+                    text="Add an OR Block"
+                    className="w-full"
+                    onClick={() => addOrNode()}
+                  />
+                </div>
+              </Panel>
+            )}
+            <Panel position="top-left" className="flex gap-2 flex-col">
+              <div
+                className="bg-black p-2 rounded-lg cursor-pointer"
+                onClick={() => router.push("/home")}
+              >
+                <Squares2X2Icon className="w-4=6 h-6" />
+              </div>
+              <div
+                className="bg-success-background p-2 rounded-lg cursor-pointer"
+                onClick={() =>
+                  SuccessToast({ text: "Successfully saved 🐝 Or have you 👀" })
+                }
+              >
+                <CheckCircleIcon className="w-4=6 h-6" />
+              </div>
+            </Panel>
+          </ReactFlow>
+        </ReactFlowProvider>
+      </div>
+    </>
+  );
 }

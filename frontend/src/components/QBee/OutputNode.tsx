@@ -9,6 +9,7 @@ type NodeData = {
 type CustomNode = Node<NodeData>;
 
 export default function CustomNode({ data }: NodeProps<NodeData>) {
+    console.log('In output node')
     console.log(data)
 
     // const handles = [
@@ -25,6 +26,16 @@ export default function CustomNode({ data }: NodeProps<NodeData>) {
 
     return <div className='h-full w-full'>
         {/* {renderHandle()} */}
+        <Handle
+            type="target"
+            position={Position.Left}
+            isValidConnection={(connection: Connection) => {
+                return true;
+            }}
+        />
+        <span className='text-xl'>Results</span>
+        <div className='h-80 w-full'>
         <TableChart data={newData} qbee={qbee} ></TableChart>
+        </div>
     </div>
 }

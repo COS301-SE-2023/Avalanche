@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 export function TableChart({ data, qbee }: any) {
   console.log('in table ' + qbee)
-  data = data.jsonData;
+  data = JSON.parse(JSON.stringify(data.jsonData));
   let headers: string[];
   if(qbee){
     headers = data.length ? Object.values(data[0]) : [];
