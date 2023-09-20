@@ -444,7 +444,8 @@
                     "typeOfFilter": "inputbox",
                     "filterReturnType": "string",
                     "comparisonTypes": [
-                        "="
+                        "=",
+                        "LIKE"
                     ],
                     "filter": [
                         {
@@ -532,7 +533,7 @@
                         {
                             "tou": "registry",
                             "filter": true,
-                            "filterValues":[
+                            "filterValues": [
                                 "CO.ZA_ACCRED",
                                 "CO.ZA_CLOSED_REDEEM",
                                 "CO.ZA_GRACE",
@@ -571,12 +572,11 @@
                                 "WEB.ZA_SUNRISE_PREMIUM",
                                 "WEB.ZA_TRANSFER"
                             ]
-                            
                         },
                         {
                             "tou": "registrar",
                             "filter": true,
-                            "filterValues":[
+                            "filterValues": [
                                 "CO.ZA_ACCRED",
                                 "CO.ZA_CLOSED_REDEEM",
                                 "CO.ZA_GRACE",
@@ -615,7 +615,6 @@
                                 "WEB.ZA_SUNRISE_PREMIUM",
                                 "WEB.ZA_TRANSFER"
                             ]
-                            
                         }
                     ],
                     "aggregation": [
@@ -821,7 +820,7 @@
                         {
                             "tou": "registry",
                             "filter": true,
-                            "filterValues":[
+                            "filterValues": [
                                 "afrihost",
                                 "axxess",
                                 "cloud2m",
@@ -832,12 +831,12 @@
                                 "regdomsa",
                                 "zadns",
                                 "zadomains"
-                            ]                            
+                            ]
                         },
                         {
                             "tou": "registrar",
                             "filter": true,
-                            "filterValues":[
+                            "filterValues": [
                                 "Individual",
                                 "All"
                             ]
@@ -860,7 +859,7 @@
                     "table": "Dim Registry Registrar"
                 },
                 {
-                    "columnName": "Name",
+                    "columnName": "Registrar Name",
                     "columnType": "string",
                     "filter": [
                         {
@@ -883,8 +882,7 @@
                         }
                     ],
                     "view": [
-                        "registry",
-                        "registrar"
+                        "registry"
                     ],
                     "table": "Dim Registry Registrar"
                 },
@@ -914,8 +912,7 @@
                         }
                     ],
                     "view": [
-                        "registry",
-                        "registrar"
+                        "registry"
                     ],
                     "table": "Dim Registry Registrar"
                 },
@@ -943,8 +940,7 @@
                         }
                     ],
                     "view": [
-                        "registry",
-                        "registrar"
+                        "registry"
                     ],
                     "table": "Dim Registry Registrar"
                 }
@@ -967,7 +963,11 @@
                         {
                             "tou": "registry",
                             "filter": true,
-                            "filterValues":["oodo_zacr", null, "oodo_zarc"]
+                            "filterValues": [
+                                "oodo_zacr",
+                                null,
+                                "oodo_zarc"
+                            ]
                         },
                         {
                             "tou": "registrar",
@@ -1001,7 +1001,7 @@
                         {
                             "tou": "registry",
                             "filter": true,
-                            "filterValues":[
+                            "filterValues": [
                                 "Credit Note",
                                 "Invoice",
                                 null
@@ -1039,7 +1039,7 @@
                         {
                             "tou": "registry",
                             "filter": true,
-                            "filterValues":[
+                            "filterValues": [
                                 "openerp%",
                                 null
                             ]
@@ -1076,12 +1076,6 @@
                     "columnType": "string",
                     "typeOfFilter": "checkbox",
                     "filterReturnType": "string[]",
-                    "filterValues": [
-                        "CO.ZA",
-                        "WEB.ZA",
-                        "ORG.ZA",
-                        "NET.ZA"
-                    ],
                     "comparisonTypes": [
                         "="
                     ],
@@ -1089,7 +1083,7 @@
                         {
                             "tou": "registry",
                             "filter": true,
-                            "filterValues":[
+                            "filterValues": [
                                 "CO.ZA",
                                 "WEB.ZA",
                                 "ORG.ZA",
@@ -1099,7 +1093,7 @@
                         {
                             "tou": "registrar",
                             "filter": true,
-                            "filterValues":[
+                            "filterValues": [
                                 "CO.ZA",
                                 "WEB.ZA",
                                 "ORG.ZA",
@@ -1118,21 +1112,16 @@
                         }
                     ],
                     "view": [
-                        "registry", "registrar"
+                        "registry",
+                        "registrar"
                     ],
                     "table": "Dim Registry Zone"
                 },
                 {
-                    "columnName": "Name",
+                    "columnName": "Zone Name",
                     "columnType": "string",
                     "typeOfFilter": "checkbox",
                     "filterReturnType": "string[]",
-                    "filterValues": [
-                        "co.za",
-                        "web.za",
-                        "org.za",
-                        "net.za"
-                    ],
                     "comparisonTypes": [
                         "="
                     ],
@@ -1140,7 +1129,7 @@
                         {
                             "tou": "registry",
                             "filter": true,
-                            "filterValues":[
+                            "filterValues": [
                                 "co.za",
                                 "web.za",
                                 "org.za",
@@ -1150,7 +1139,7 @@
                         {
                             "tou": "registrar",
                             "filter": true,
-                            "filterValues":[
+                            "filterValues": [
                                 "co.za",
                                 "web.za",
                                 "org.za",
@@ -1169,7 +1158,8 @@
                         }
                     ],
                     "view": [
-                        "registry", "registrar"
+                        "registry",
+                        "registrar"
                     ],
                     "table": "Dim Registry Zone"
                 },
@@ -1185,14 +1175,14 @@
                         {
                             "tou": "registry",
                             "filter": true,
-                            "filterValues":[
+                            "filterValues": [
                                 "ZARC"
                             ]
                         },
                         {
                             "tou": "registrar",
                             "filter": true,
-                            "filterValues":[
+                            "filterValues": [
                                 "ZARC"
                             ]
                         }
@@ -1208,7 +1198,8 @@
                         }
                     ],
                     "view": [
-                        "registry", "registrar"
+                        "registry",
+                        "registrar"
                     ],
                     "table": "Dim Registry Zone"
                 }
