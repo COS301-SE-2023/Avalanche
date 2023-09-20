@@ -635,14 +635,14 @@ function Flow() {
     if (endOfSelect) {
       let input = JSON.parse(JSON.stringify(query.selectedColumns));
       let result = input.reduce<{ [key: number]: string }>(
-        (acc, curr, index) => {
-          acc[index] = curr.renamed || curr.columnName;
-          return acc;
-        },
-        {}
+          (acc, curr, index) => {
+              acc[index] = curr.renamed || curr.columnName;
+              return acc;
+          },
+          {}
       );
       updateNode(QBeeRole.outputBlock, { jsonData: [result] });
-    }
+  }
 
     return query;
   };
