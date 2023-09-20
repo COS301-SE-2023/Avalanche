@@ -14,6 +14,7 @@ import {
 	PieChart,
 	PolarAreaChart,
 	RadarChart,
+	TreeMapChart,
 	TableChart,
 } from "@/components/Graphs";
 import { useState, useEffect } from "react";
@@ -431,7 +432,7 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
 														ChartType.Bar,
 														ChartType.Radar,
 														ChartType.Table,
-														ChartType.Bubble,
+														ChartType.Bubble
 													].includes(item.type);
 												}
 												return true;
@@ -476,6 +477,7 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
 							<PolarAreaChart data={graphData} />
 						)}
 						{type === ChartType.Radar && <RadarChart data={graphData} />}
+						{type === ChartType.TreeMap && <TreeMapChart data={graphData} />}
 						{type === ChartType.Table && <TableChart data={graphData} />}
 					</>
 				)}
