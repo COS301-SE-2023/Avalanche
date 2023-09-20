@@ -36,9 +36,9 @@ export default function FilterBlock({ data, id }: NodeProps<NodeData>) {
     }
 
     const getColumns = () => {
-        return stateQBEE.nodes.filter((item: Node) => {
-            if (stateQBEE.data.find((n: DBData) => n.filter === true))
-                return item.type === QBeeRole.selectBlock;
+        return stateQBEE.data.filter((item:DBData) => {
+            if (item.filter == true)
+                return item;
         });
     }
 
@@ -78,7 +78,7 @@ export default function FilterBlock({ data, id }: NodeProps<NodeData>) {
                     {getColumns().length === 0 ? <p>🛑 You have no columns added to the select field. Please add one to continue.</p> : <>
                         <div>
                             <BetterDropdown
-                                items={stateQBEE.data.map((item: DBData) => {
+                                items={getColumns().map((item: DBData) => {
                                     return { name: item.columnName, value: item.columnName };
                                 })}
                                 option={data.column}
@@ -97,7 +97,7 @@ export default function FilterBlock({ data, id }: NodeProps<NodeData>) {
                                 })}
                                 option={data.comparisonType as string}
                                 set={(option: any) => {
-                                    data.update(id, { comparisonType: option })
+                                    data.update(id, { comparisonType: option, operator: option });
                                 }}
                                 text="Select a Comparison Type"
                                 absolute={true}

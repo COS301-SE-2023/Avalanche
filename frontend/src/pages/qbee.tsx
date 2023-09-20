@@ -579,7 +579,7 @@ function Flow() {
         case Role.filterBlock:
           const thisFilter = {
             column: currentNode.data.column,
-            operator: currentNode.data.selectedComparison,
+            operator: currentNode.data.comparisonType,
             value: currentNode.data.selectedValues,
             aggregation: currentNode.data.aggregationType,
             aggregated:
