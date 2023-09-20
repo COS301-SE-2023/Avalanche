@@ -17,9 +17,11 @@ export class QueryBuilderService {
     //First check permissions
     const user = await this.redis.get(token);
     const userDetails = JSON.parse(user);
+    if(dataSource == 'zacr'){
+      dataSource = 'zarc'
+    }
     const permissionsForDataSource = userDetails.products.filter((product) => product.dataSource === dataSource);
-
-    const schemaUrl = `${dataSource}/${schema}.json`;
+    const schemaUrl = `/${dataSource}/${schema}`;
     const schemaDetail = this.schemaService.getSchemaByUrl(schemaUrl);
     
     if (!schemaDetail) {
@@ -32,7 +34,7 @@ export class QueryBuilderService {
     }
     
     // Validate user access against the schema
-    const hasAccess = this.schemaService.validateUserAccess(permissionsForDataSource.tou, schemaDetail);  // Assuming permission has the required info
+    const hasAccess = this.schemaService.validateUserAccess(permissionsForDataSource[0].tou, schemaDetail);  // Assuming permission has the required info
     
     if (!hasAccess) {
       return {

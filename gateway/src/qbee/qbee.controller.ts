@@ -28,7 +28,7 @@ export class QbeeController {
   @HttpCode(200)
   async transactions(@Body() data: any) {
     const end = httpRequestDurationMicrosecondsQBEE.startTimer();
-    const pattern = { cmd: 'zarc' };
+    const pattern = { cmd: 'qbee' };
     const payload = data;
     try {
       const result = await lastValueFrom(this.client.send(pattern, payload));

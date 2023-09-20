@@ -36,7 +36,7 @@ export class SchemaService {
   private schemas: SchemaDetail[] = [];
 
   constructor() {
-    const projectRoot = path.resolve(__dirname, '../');
+    const projectRoot = path.resolve(__dirname, '../../');
     console.log(projectRoot);
     const schemasDir = path.join(projectRoot, 'src/schemas'); // Adjust path as needed
     console.log(schemasDir);
