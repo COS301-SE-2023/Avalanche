@@ -9,8 +9,6 @@ type NodeData = {
 type CustomNode = Node<NodeData>;
 
 export default function CustomNode({ data }: NodeProps<NodeData>) {
-    console.log('In output node')
-    console.log(data)
 
     // const handles = [
     //     "select", "filter", "group", "choose"

@@ -37,6 +37,7 @@ import {
   addData,
   setNodes as QBeeSetNodes,
   setEdges as QBeeSetEdges,
+  getData
 } from "@/store/Slices/qbeeSlice";
 import { copy } from "copy-anything";
 
@@ -131,6 +132,7 @@ function Flow() {
   const dispatch = useDispatch<any>();
   dispatch(addData(dummyData as DBData[]));
   const [selectedPanel, setSelectedPanel] = useState<string>("blocks");
+  const [query, setQuery] = useState<any>();
   const { fitView } = useReactFlow();
 
   /**
@@ -423,7 +425,6 @@ function Flow() {
     if (node?.id === "FilterGroup") setSelectedPanel(node.id);
     if (node?.type === "outputNode") setSelectedPanel(node.type);
     if (node === null || node === undefined) setSelectedPanel("blocks");
-    console.log(copy(nodes));
     convertToQuery();
     dispatch(QBeeSetNodes(copy(nodes)));
   }, [nodes]);
@@ -514,18 +515,13 @@ function Flow() {
     let endOfSelect = false;
 
     const traverseNodes = (currentNodeId: string): any => {
-      console.log(currentNodeId);
       const currentNode = nodes.find((node) => node.id === currentNodeId);
-      console.log("Role");
-      console.log(currentNode?.data.role);
 
       if (!currentNode) return;
 
       const connectedEdges = edges.filter(
         (edge) => edge.source === currentNodeId
       );
-      console.log("Connected");
-      console.log(connectedEdges);
 
       switch (currentNode.data.role) {
         case Role.startOfSelect:
@@ -582,7 +578,6 @@ function Flow() {
           return connectedFilters;
 
         case Role.filterBlock:
-          console.log("here in filter");
           const thisFilter = {
             column: currentNode.data.column,
             operator: currentNode.data.selectedComparison,
@@ -597,7 +592,6 @@ function Flow() {
             const condition = traverseNodes(edge.target);
             if (condition) connectedFilters2.push(...condition);
           }
-          console.log(connectedFilters2);
           return connectedFilters2;
 
         default:
@@ -609,16 +603,13 @@ function Flow() {
     const startSelectNode = nodes.find(
       (node) => node.data.role === Role.startOfSelect
     );
-    console.log(startSelectNode?.id);
     if (startSelectNode) traverseNodes(startSelectNode.id);
 
     const startFilterNode = nodes.find(
       (node) => node.data.role === Role.startOfFilter
     );
     if (startFilterNode) {
-      console.log("start in filter");
       let filter = traverseNodes(startFilterNode.id);
-      console.log(filter);
       if (filter) {
         if (filter.length > 0) {
           filter = {
@@ -630,8 +621,6 @@ function Flow() {
       }
     }
 
-    console.log(query);
-
     if (endOfSelect) {
       let input = JSON.parse(JSON.stringify(query.selectedColumns));
       let result = input.reduce<{ [key: number]: string }>(
@@ -642,6 +631,7 @@ function Flow() {
           {}
       );
       updateNode(QBeeRole.outputBlock, { jsonData: [result] });
+      setQuery(query);
   }
 
     return query;
@@ -731,8 +721,11 @@ function Flow() {
               </div>
               <div
                 className="bg-success-background p-2 rounded-lg cursor-pointer"
-                onClick={() =>
+                onClick={() =>{
+                  dispatch(getData(query))
                   SuccessToast({ text: "Successfully saved 🐝 Or have you 👀" })
+                }
+                  
                 }
               >
                 <CheckCircleIcon className="w-4=6 h-6" />

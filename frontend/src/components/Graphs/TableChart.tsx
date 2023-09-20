@@ -1,18 +1,14 @@
 import React, { useState } from "react";
 
 export function TableChart({ data, qbee }: any) {
-  console.log('in table ' + qbee)
   data = JSON.parse(JSON.stringify(data.jsonData));
   let headers: string[];
   if(qbee){
     headers = data.length ? Object.values(data[0]) : [];
     data.splice(0,1);
-    console.log('hihihihih')
-    console.log(headers)
   }else{
     data.splice(0,1);
     headers = data.length ? Object.keys(data[0]) : [];
-    console.log(headers)
   }
 
   // State to hold the selected filters
