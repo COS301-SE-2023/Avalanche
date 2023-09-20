@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-css-tags */
 import Sidebar from "@/components/Navigation/SideBar"
 import { PencilIcon, CpuChipIcon, XMarkIcon, CheckIcon } from "@heroicons/react/24/solid"
 import Head from "next/head"
@@ -19,7 +20,7 @@ import { getCookie } from "cookies-next"
 import { updateDashboards } from "@/store/Slices/userSlice";
 import NoFind from "@/components/CustomSVG/NoFind";
 import introJs from 'intro.js';
-import 'intro.js/introjs.css';
+import 'intro.js/themes/introjs-modern.css';
 
 
 export default function CreateCustomDashboard() {
@@ -201,6 +202,8 @@ export default function CreateCustomDashboard() {
                 }
             ]
         }).start();
+
+        
         
     }
 
