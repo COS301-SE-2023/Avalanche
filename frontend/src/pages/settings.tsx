@@ -13,6 +13,9 @@ import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/mod
 import { useDispatch, useSelector } from 'react-redux';
 import GeneralSettings from "@/components/Settings/General";
 import DataProducts from "@/components/Settings/DataProducts";
+import introJs from 'intro.js';
+import 'intro.js/introjs.css';
+//import 'intro.js/themes/introjs-modern.css';
 
 export default function Settings() {
 
@@ -73,6 +76,25 @@ export default function Settings() {
         );
     };
 
+    const introJS = introJs();
+    const startTut = () => {
+        introJS.setOptions({
+            steps: [
+                {
+                    intro: 'Welcome! This tutorial will walk you through integrating with a data product! This means changing your permission level, public is the default level.',
+                    title: "Integrate Data Product Tutorial"
+                },
+                {
+                    element: document.getElementsByClassName("text-white bg-primary-600 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:focus:ring-primary-800 inline-flex items-center justify-center flex-nowrap hover:bg-primary-700 dark:hover:bg-primary-700 ")[2] as HTMLElement,
+                    intro: 'Here you can choose the name you want for your Dashboard.',
+                }
+            ]
+        }).start();
+
+        
+        
+    }
+
     /**
      * Renders out the HTML
      */
@@ -104,6 +126,7 @@ export default function Settings() {
                     </li>
                     <li className="mr-2" onClick={(e) => tabClick(e, "integrations")}>
                         <a href="?tab=integrations" className={tab === "integrations" ? tabOptions.active : tabOptions.inactive}>Data Products</a>
+
                     </li>
                 </ul>
             </div>
@@ -116,6 +139,9 @@ export default function Settings() {
             }
             {tab === "integrations" && <>
                 <DataProducts></DataProducts>
+                <SubmitButton text="Start tutorial" className="flex-auto" onClick={() => {
+                        startTut();
+                    }} />
             </>}
         </MainContent>
 
