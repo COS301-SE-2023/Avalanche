@@ -102,8 +102,22 @@ export class SchemaService {
     }
 
     // Check if user can apply the filters
-    for (const filterGroup of query.filters) {
+    if (!this.checkFilterPermissions(tou, query, schema)) return false;
+
+    return true; // User has access to everything specified in the query
+  }
+
+  checkFilterPermissions(tou, query, schema) {
+    function checkFilterGroup(filterGroup) {
       for (const condition of filterGroup.conditions) {
+        // Check if the condition is itself a nested filter group
+        if (condition.type && condition.conditions) {
+          if (!checkFilterGroup(condition)) {
+            return false;
+          }
+          continue;
+        }
+
         const schemaColumn = schema.tables
           .find((table) =>
             table.columns.some((col) => col.columnName === condition.column),
@@ -154,9 +168,15 @@ export class SchemaService {
           return false; // Operator is not allowed for this column
         }
       }
+      return true;
     }
 
-    return true; // User has access to everything specified in the query
+    for (const filterGroup of query.filters) {
+      if (!checkFilterGroup(filterGroup)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   transformSchemaForUser(tou: string, schema: SchemaDetail): any[] {
