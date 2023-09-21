@@ -27,22 +27,22 @@ describe('UserDataProductMangementService', () => {
     const moduleRef = await Test.createTestingModule({
       providers: [
         UserDataProductMangementService,
-        { provide: getRepositoryToken(User), useClass: Repository },
-        { provide: getRepositoryToken(UserGroup), useClass: Repository },
-        { provide: getRepositoryToken(Organisation), useClass: Repository },
-        { provide: getRepositoryToken(WatchedUser), useClass: Repository },
-        { provide: getRepositoryToken(Endpoint), useClass: Repository },
+        { provide: getRepositoryToken(User,"user"), useClass: Repository },
+        { provide: getRepositoryToken(UserGroup,"user"), useClass: Repository },
+        { provide: getRepositoryToken(Organisation,"user"), useClass: Repository },
+        { provide: getRepositoryToken(WatchedUser,"user"), useClass: Repository },
+        { provide: getRepositoryToken(Endpoint, 'filters'), useClass: Repository },
         { provide: 'REDIS', useValue: { get: jest.fn() } },
         ConfigService
       ],
     }).compile();
 
     service = await moduleRef.get<UserDataProductMangementService>(UserDataProductMangementService);
-    userRepository = await moduleRef.get(getRepositoryToken(User));
-    userGroupRepository = await moduleRef.get(getRepositoryToken(UserGroup));
-    organisationRepository = await moduleRef.get(getRepositoryToken(Organisation));
-    watchedUserRepository = await moduleRef.get(getRepositoryToken(WatchedUser));
-    endpointRepository = await moduleRef.get(getRepositoryToken(Endpoint));
+    userRepository = await moduleRef.get(getRepositoryToken(User,"user"));
+    userGroupRepository = await moduleRef.get(getRepositoryToken(UserGroup,"user"));
+    organisationRepository = await moduleRef.get(getRepositoryToken(Organisation,"user"));
+    watchedUserRepository = await moduleRef.get(getRepositoryToken(WatchedUser,"user"));
+    endpointRepository = await moduleRef.get(getRepositoryToken(Endpoint,"filters"));
     redis = await moduleRef.get('REDIS');
   });
 
@@ -68,7 +68,7 @@ describe('UserDataProductMangementService', () => {
       expect(result).toEqual({
         status: 400,
         error: true,
-        message: 'Please enter a zone that is from the given choices - AFRICA, RyCE, ZACR',
+        message: 'Invalid token.',
         timestamp: expect.any(String)
       });
     });
@@ -92,6 +92,49 @@ describe('UserDataProductMangementService', () => {
       jest.spyOn(redis, 'get').mockResolvedValue(null);
 
       const result = await service.integrateUserWithZARCExternalAPI('invalid_token', 'AFRICA', 'name', 'username', 'password', false);
+      expect(result).toEqual({
+        status: 400,
+        error: true,
+        message: 'Invalid token',
+        timestamp: expect.any(String)
+      });
+    });
+  });
+
+  describe('integrateUserWithAfricaExternalAPI', () => {
+    it('should return error when invalid zone type is given and personal is true', async () => {
+      mockedAxios.post.mockResolvedValue({ data: { token: 'token' } });
+      mockedAxios.get.mockResolvedValue({ data: { epp_username: 'username' } });
+      jest.spyOn(userRepository, 'findOne').mockResolvedValue(new User());
+
+      const result = await service.integrateUserWithAfricaExternalAPI('token', 'INVALID_ZONE', 'name', 'username', 'password', true);
+      expect(result).toEqual({
+        status: 400,
+        error: true,
+        message: 'Invalid token.',
+        timestamp: expect.any(String)
+      });
+    });
+
+    it('should return error when user group does not exist and personal is false', async () => {
+      mockedAxios.post.mockResolvedValue({ data: { token: 'token' } });
+      mockedAxios.get.mockResolvedValue({ data: { epp_username: 'username' } });
+      jest.spyOn(userRepository, 'findOne').mockResolvedValue(new User());
+      jest.spyOn(userGroupRepository, 'findOne').mockResolvedValue(null);
+
+      const result = await service.integrateUserWithAfricaExternalAPI('token', 'AFRICA', 'name', 'username', 'password', false);
+      expect(result).toEqual({
+        status: 400,
+        error: true,
+        message: 'Invalid token',
+        timestamp: expect.any(String)
+      });
+    });
+
+    it('should return error when token is invalid and personal is false', async () => {
+      jest.spyOn(redis, 'get').mockResolvedValue(null);
+
+      const result = await service.integrateUserWithAfricaExternalAPI('invalid_token', 'AFRICA', 'name', 'username', 'password', false);
       expect(result).toEqual({
         status: 400,
         error: true,

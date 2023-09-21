@@ -151,7 +151,7 @@ export class UserOrganisationMangementService {
         await this.organisationRepository.save(organisation);
 
         // Create a new user group for this organisation
-        const products = [{dataSource : "zarc", tou : "public", key : null}, {dataSource : "africa", tou : "public", key : null}, {dataSource : "ryce", tou : "public", key : null}];
+        const products = [{ dataSource: "zarc", tou: "public", key: null }, { dataSource: "africa", tou: "public", key: null }, { dataSource: "ryce", tou: "public", key: null }];
         const userGroup = new UserGroup();
         userGroup.name = `admin-${organisation.name}`;
         userGroup.organisation = organisation;
@@ -167,14 +167,18 @@ export class UserOrganisationMangementService {
 
         delete user.salt;
         delete user.apiKey;
-        for(const products of user.products){
-            delete products.key;
+        if (user.products != null) {
+            for (const products of user.products) {
+                delete products.key;
+            }
         }
         // Update the user's information in Redis
         await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60);
-        for(const products of user.products){
-            delete products.key;
-          }
+        if (user.products != null) {
+            for (const products of user.products) {
+                delete products.key;
+            }
+        }
         return {
             status: 'success', message: user,
             timestamp: new Date().toISOString()
@@ -227,9 +231,11 @@ export class UserOrganisationMangementService {
         userToBeRemoved.userGroups = null;
         await this.userRepository.save(userToBeRemoved);
         await this.redis.set(token, JSON.stringify(userToBeRemoved), 'EX', 24 * 60 * 60);
-        for(const products of userToBeRemoved.products){
-            delete products.key;
-          }
+        if (userToBeRemoved.products != null) {
+            for (const products of userToBeRemoved.products) {
+                delete products.key;
+            }
+        }
         return { status: 'success', message: { text: 'User removed from organisation and user groups', user: userToBeRemoved }, timestamp: new Date().toISOString() };
     }
 
