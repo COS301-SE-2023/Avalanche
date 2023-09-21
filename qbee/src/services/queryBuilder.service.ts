@@ -57,6 +57,6 @@ export class QueryBuilderService {
 
     //Build SQL query
     const SQLquery = this.sqlTranslator.generateSQL(query, schemaDetail);
-    return {sqlQuery :SQLquery};
+    return { sqlQuery: SQLquery };
   }
 }

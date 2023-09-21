@@ -90,15 +90,15 @@ export class SchemaService {
         return false; // User is not allowed to view this column
       }
 
-      // Check if user is allowed to aggregate this column if an aggregation is specified
-      if (selectedColumn.aggregation) {
-        const aggregationPermission = schemaColumn.aggregation.find(
-          (agg) => agg.tou === tou && agg.aggregate === true,
-        );
-        if (!aggregationPermission) {
-          return false; // User is not allowed to aggregate this column
-        }
-      }
+      // // Check if user is allowed to aggregate this column if an aggregation is specified
+      // if (selectedColumn.aggregation) {
+      //   const aggregationPermission = schemaColumn.aggregation.find(
+      //     (agg) => agg.tou === tou && agg.aggregate === true,
+      //   );
+      //   if (!aggregationPermission) {
+      //     return false; // User is not allowed to aggregate this column
+      //   }
+      // }
     }
 
     // Check if user can apply the filters
