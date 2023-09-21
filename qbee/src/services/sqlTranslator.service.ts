@@ -10,7 +10,7 @@ import {
 export class SQLTranslatorService {
   constructor() {}
 
-  generateSQL(payload: JSONQuery): string {
+  generateSQL(payload: JSONQuery, schema: any): string {
     let sql = 'SELECT ';
 
     // Construct SELECT clause
