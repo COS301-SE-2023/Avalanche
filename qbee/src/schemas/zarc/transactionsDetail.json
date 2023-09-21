@@ -147,6 +147,11 @@
                     "columnType": "date",
                     "typeOfFilter": "date-picker",
                     "filterReturnType": "date",
+                    "comparisonTypes": [
+                        "=",
+                        "<",
+                        ">"
+                    ],
                     "filter": [
                         {
                             "tou": "registry",

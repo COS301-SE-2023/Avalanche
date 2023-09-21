@@ -32,12 +32,13 @@ import {
 } from "@/interfaces/qbee/enums";
 import { DBData, FilterCondition, Query } from "@/interfaces/qbee/interfaces";
 import { SubmitButton, SuccessToast } from "@/components/Util";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   addData,
   setNodes as QBeeSetNodes,
   setEdges as QBeeSetEdges,
-  getData
+  getData,
+  qbeeState
 } from "@/store/Slices/qbeeSlice";
 import { copy } from "copy-anything";
 
@@ -51,7 +52,7 @@ import OrBlock from "@/components/QBee/OrBlock";
 import AndBlock from "@/components/QBee/AndBlock";
 
 import dummyData from "@/components/QBee/dummy.json";
-import { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast"
 
 const nodeTypes = {
   outputBlock: OutputNode,
@@ -502,6 +503,13 @@ function Flow() {
   );
 
   /**
+   * Used to check Query
+   */
+  useEffect(() => {
+    dispatch(QBeeSetEdges(copy(edges)));
+  }, [query]);
+
+  /**
    * Function that takes the nodes and edges and constructs the query
    * @returns Constructed Query from nodes and edges
    */
@@ -621,20 +629,26 @@ function Flow() {
     }
 
     if (endOfSelect) {
-      let input = JSON.parse(JSON.stringify(query.selectedColumns));
-      let result = input.reduce<{ [key: number]: string }>(
-          (acc, curr, index) => {
-              acc[index] = curr.renamed || curr.columnName;
-              return acc;
-          },
-          {}
-      );
-      updateNode(QBeeRole.outputBlock, { jsonData: [result] });
+      // let input = JSON.parse(JSON.stringify(query.selectedColumns));
+      // let result = [{}]
+      // updateNode(QBeeRole.outputBlock, { jsonData: [result] });
       setQuery(query);
   }
 
     return query;
   };
+
+  /*
+  Function that makes output data display
+  */
+ const displayOutput = (payload: any) =>{
+  if(!payload){
+    return;
+  }
+  console.log(payload)
+  const data = payload.payload;
+  updateNode(QBeeRole.outputBlock, { jsonData: data });
+ }
 
   return (
     <>
@@ -719,9 +733,9 @@ function Flow() {
               </div>
               <div
                 className="bg-success-background p-2 rounded-lg cursor-pointer"
-                onClick={() =>{
+                onClick={async () =>{
                   convertToQuery();
-                  dispatch(getData(query))
+                  displayOutput(await dispatch(getData(query)));
                   SuccessToast({ text: "Successfully saved 🐝 Or have you 👀" })
                 }
                   

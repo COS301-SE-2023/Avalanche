@@ -14,6 +14,7 @@ interface IInitState {
     edited: boolean,
     nodes: string[],
     edges: string[],
+    returnData: any,
 }
 
 const InitState: IInitState = {
@@ -23,6 +24,7 @@ const InitState: IInitState = {
     edited: false,
     nodes: [],
     edges: [],
+    returnData: '',
 }
 
 export const qbeeSlice = createSlice({
@@ -50,6 +52,9 @@ export const qbeeSlice = createSlice({
         setEdges(state, action) {
             state.edges = action.payload;
         },
+        setReturnData(state, action) {
+            state.returnData = action.payload;
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(HYDRATE, (state, action) => {
@@ -76,6 +81,9 @@ export const qbeeState = (state: AppState) => state.qbee;
 export const getData = createAsyncThunk("QBEE.GetData", async (query: any, { rejectWithValue }) => {
     console.log('Getting data man' + '\n' + JSON.stringify(query))
     console.log(query)
+    if(!query){
+        return;
+    }
     const data = {
         schema: 'transactionsDetail',
         dataSource: 'zacr',
@@ -98,4 +106,5 @@ export const getData = createAsyncThunk("QBEE.GetData", async (query: any, { rej
     }
 })
 
+export const { setReturnData } = qbeeSlice.actions;
 export default qbeeSlice.reducer;

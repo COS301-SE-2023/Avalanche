@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 
 export function TableChart({ data, qbee }: any) {
+  if(!data?.jsonData){
+    return <><div>No data to display</div></>
+  }
   data = JSON.parse(JSON.stringify(data.jsonData));
   let headers: string[];
-  if(qbee){
-    headers = data.length ? Object.values(data[0]) : [];
-    data.splice(0,1);
+  if(qbee && data?.length>1){
+    headers =  Object.keys(data[0]);
+
   }else{
     data.splice(0,1);
     headers = data.length ? Object.keys(data[0]) : [];
