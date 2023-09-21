@@ -49,23 +49,39 @@ import { QBeeService } from './qbee/qbee.service';
     {
       provide: 'SNOWFLAKE_CONNECTION',
       useFactory: () => {
-        const connection = snowflake.createConnection({
-          account: process.env.SNOWFLAKE_ACCOUNT,
-          username: process.env.SNOWFLAKE_USERNAME,
-          password: process.env.SNOWFLAKE_PASSWORD,
-          role: process.env.SNOWFLAKE_ROLE,
-          warehouse: process.env.SNOWFLAKE_WAREHOUSE,
-          database: process.env.SNOWFLAKE_DATABASE,
-          schema: process.env.SNOWFLAKE_SCHEMA,
-        });
-        connection.connect((err) => {
-          if (err) {
-            console.error('Unable to connect: ' + err.message);
-            throw err;
-          } else {
-            console.log('Successfully connected to Snowflake.');
-          }
-        });
+        let connection;
+
+        const reconnect = () => {
+          console.log('Attempting to reconnect...');
+          initConnection();
+        };
+
+        const initConnection = () => {
+          connection = snowflake.createConnection({
+            account: process.env.SNOWFLAKE_ACCOUNT,
+            username: process.env.SNOWFLAKE_USERNAME,
+            password: process.env.SNOWFLAKE_PASSWORD,
+            role: process.env.SNOWFLAKE_ROLE,
+            warehouse: process.env.SNOWFLAKE_WAREHOUSE,
+            database: process.env.SNOWFLAKE_DATABASE,
+            schema: process.env.SNOWFLAKE_SCHEMA,
+          });
+
+          connection.on('error', (err) => {
+            reconnect();
+          });
+
+          connection.connect((err) => {
+            if (err) {
+              reconnect();
+            } else {
+              console.log('Successfully connected to Snowflake.');
+            }
+          });
+        };
+
+        // Initialize the connection for the first time
+        initConnection();
 
         return connection;
       },
