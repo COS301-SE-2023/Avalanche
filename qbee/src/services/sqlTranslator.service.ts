@@ -239,6 +239,6 @@ export class SQLTranslatorService {
 
     checkFilterColumns(filters);
 
-    return `FROM ${baseTableSchema.schema} ${joinStatements.join(' ')}`;
+    return `FROM "${baseTableSchema.fact}" ${joinStatements.join(' ')}`;
   }
 }

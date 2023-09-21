@@ -11,11 +11,11 @@ export class QbeeService {
   ) {}
 
   async zarc(data: any) {
-    const query = await this.client.send({ cmd: 'qbee' }, data).toPromise();
+    const sqlQuery = await this.client.send({ cmd: 'qbee' }, data).toPromise();
     const response = await this.httpService
-      .post('http://gateway:4000/zarc/qbee', query)
+      .post('http://gateway:4000/zacr/qbee', sqlQuery)
       .toPromise();
-    return response;
+    return response.data;
 
   }
 

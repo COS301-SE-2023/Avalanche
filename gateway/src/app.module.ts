@@ -88,6 +88,7 @@ export class AppModule implements NestModule {
         { path: 'user-management/graphFilters', method: RequestMethod.GET },
         { path: 'user-management/getDomainWatchPassive', method: RequestMethod.POST },
         { path: 'africa/domainWatchPassive', method: RequestMethod.POST },
+        { path: 'zacr/qbee', method: RequestMethod.POST },
         { path: 'zacr/domainWatchPassive', method: RequestMethod.POST },
         { path: 'metrics', method: RequestMethod.GET },
       )

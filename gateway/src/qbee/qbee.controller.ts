@@ -3,6 +3,7 @@ import { Body, Controller, HttpCode, HttpException, Inject, Post } from '@nestjs
 import { ClientProxy } from '@nestjs/microservices';
 import { Counter, Histogram, Registry } from 'prom-client';
 import { lastValueFrom } from 'rxjs';
+import { QbeeService } from './qbee.service';
 
 const register = new Registry();
 export const httpRequestDurationMicrosecondsQBEE = new Histogram({
@@ -22,7 +23,8 @@ register.registerMetric(httpRequestsTotalQBEE);
 
 @Controller('qbee')
 export class QbeeController {
-  constructor(@Inject('QBEE_SERVICE') private client: ClientProxy) {}
+  constructor(@Inject('QBEE_SERVICE') private client: ClientProxy,
+  private readonly qbeeService: QbeeService) {}
 
   @Post('zarc')
   @HttpCode(200)
@@ -31,9 +33,10 @@ export class QbeeController {
     const pattern = { cmd: 'qbee' };
     const payload = data;
     try {
-      const result = await lastValueFrom(this.client.send(pattern, payload));
+      const result = await this.qbeeService.zarc(payload);
       httpRequestsTotalQBEE.inc({ method: 'POST', route: 'zarc', code: 200 });
       end({ method: 'POST', route: 'zarc', code: 200 });
+
       return result;
     } catch (error) {
       const rpcError = error

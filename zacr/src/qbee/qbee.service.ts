@@ -7,17 +7,16 @@ import { SnowflakeService } from '../snowflake/snowflake.service';
 export class QBeeService {
   constructor(private readonly snowflakeService: SnowflakeService) {}
 
-  async executeQuery(sqlQuery: string, schemaName: string): Promise<any> {
+  async executeQuery(sqlQuery: string): Promise<any> {
     try {
-      return await this.snowflakeService.execute(sqlQuery);
+      return {status: "success", message: await this.snowflakeService.execute(sqlQuery)};
     } catch (e) {
       console.log(e);
       return {
         status: 500,
         error: true,
         message:
-          'Data Warehouse Error while trying to execute QBee statement for - ' +
-          schemaName,
+          'Data Warehouse Error while trying to execute QBee statement',
         timestamp: new Date().toISOString(),
       };
     }

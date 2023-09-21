@@ -24,6 +24,28 @@ register.registerMetric(httpRequestsTotalZACR);
 export class ZacrController {
   constructor(@Inject('ZACR_SERVICE') private client: ClientProxy) {}
 
+  @Post('qbee')
+  @HttpCode(200)
+  async qbee(@Body() data: any) {
+    const end = httpRequestDurationMicrosecondsZACR.startTimer();
+    const pattern = { cmd: 'qbee' };
+    const payload = data;
+    try {
+      const result = await lastValueFrom(this.client.send(pattern, payload));
+      httpRequestsTotalZACR.inc({ method: 'POST', route: 'qbee', code: 200 });
+      end({ method: 'POST', route: 'qbee', code: 200 });
+      return result;
+    } catch (error) {
+      const rpcError = error
+      httpRequestsTotalZACR.inc({ method: 'POST', route: 'qbee', code: rpcError.status });
+      end({ method: 'POST', route: 'qbee', code: rpcError.status });
+      if (typeof rpcError === 'object') {
+        throw new HttpException(rpcError.message || 'An unexpected error occurred', rpcError.status || 500);
+      }
+      throw error;
+    }
+  }
+
   @Post('transactions')
   @HttpCode(200)
   async transactions(@Body() data: any) {
