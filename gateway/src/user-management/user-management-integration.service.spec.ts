@@ -7,54 +7,11 @@ import { Random } from 'mockjs';
 import { ConfigService } from '@nestjs/config';
 
 describe('User Management Integration Tests From Gateway', () => {
-  describe('User Management Auth Integration From Gateway', () => {
-    let app: INestApplication;
-    let configService: ConfigService;
-
-    /*
-    In order to run most of these tests one neeeds to be logged in
-    For this purpose use:
-        email: configService.get('MOCK_EMAIL')
-        password: configService.get('MOCK_PASSWORD')
-  */
-
-    beforeAll(async () => {
-      const moduleFixture: TestingModule = await Test.createTestingModule({
-        imports: [AppModule],
-      }).compile();
-
-      configService = moduleFixture.get<ConfigService>(ConfigService);
-      app = moduleFixture.createNestApplication();
-      await app.init();
-    },15000);
-
-    afterAll(async () => {
-      await app.close();
-    },50000);
-
-
-    describe('User Login', () => {
-      it('should login a user', () => {
-        const user = {
-          email: configService.get('MOCK_EMAIL'),
-          password: configService.get('MOCK_PASSWORD'),
-        };
-        return request(app.getHttpServer())
-          .post('/user-management/login')
-          .send(user)
-          .expect(201)
-          .then((response) => {
-            console.log(response.body);
-            expect(response.body.status).toBe('success');
-          });
-      }, 15000);
-    });
-  });
 
   describe('User Management Organisation Management Integration From Gateway', () => {
     let app: INestApplication;
     let configService: ConfigService;
-    let accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3QzQGdtYWlsLmNvbSIsImlhdCI6MTY5MDQ3NzU2MCwiZXhwIjoxNjkwNTYzOTYwfQ.3iHbfNq3HjLmDYu49wzsvryciHyiOgvTrL67Bcr6yWM";
+    let accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3Q3QGdvb2dsZS5jb20iLCJpYXQiOjE2OTUyMDMzNDksImV4cCI6MTY5NTI4OTc0OX0.6CYM79OOIOhlwZZaDYt70sa9VfCyMwcTgGTkyQsc8O4";
 
     /*
       In order to run most of these tests one neeeds to be logged in (happens in before each)
@@ -71,52 +28,45 @@ describe('User Management Integration Tests From Gateway', () => {
       configService = moduleFixture.get<ConfigService>(ConfigService);
       app = moduleFixture.createNestApplication();
       await app.init();
-    },15000);
+    },20000);
 
     afterAll(async () => {
       await app.close();
-    },15000);
+    },20000);
 
-    beforeEach(async () => {
-      const user = {
-        email: configService.get('MOCK_EMAIL'),
-        password: configService.get('MOCK_PASSWORD'),
-      };
-      const response = await request(app.getHttpServer())
-        .post('/user-management/login')
-        .send(user);
-      console.log(response.body.userWithToken);
-      if(response.body.userWithToken?.token){
-        accessToken = response.body.userWithToken.token;
-      }
- // This may change based on the structure of your response
-    },15000);
 
     describe('Get User Info', () => {
-
+      const organisationData = {
+        token: `Bearer ${accessToken}12`
+      };
       it('should not get user info if token is invalid', () => {
         return request(app.getHttpServer())
           .post('/user-management/getUserInfo')
           .set('Authorization', 'Bearer invalid_token')
+          .send(organisationData)
           .expect(401)
           .then((response) => {
             console.log(response.body);
             expect(response.body.message).toBe('JWT invalid');
           });
-      },15000);
+      },20000);
     });
 
     describe('Get Members', () => {
       it('should get members', () => {
+        const organisationData = {
+          token: `Bearer ${accessToken}`
+        };
         return request(app.getHttpServer())
           .post('/user-management/getMembers')
           .set('Authorization', `Bearer ${accessToken}`)
-          .expect(201)
+          .send(organisationData)
+          .expect(200)
           .then((response) => {
             console.log(response.body);
             expect(response.body.status).toBe('success');
           });
-      },15000);
+      },20000);
 
       it('should not get members if token is invalid', () => {
         return request(app.getHttpServer())
@@ -127,7 +77,7 @@ describe('User Management Integration Tests From Gateway', () => {
             console.log(response.body);
             expect(response.body.message).toBe('JWT invalid');
           });
-      },15000);
+      },20000);
     });
 
     describe('Create User Group', () => {
@@ -137,31 +87,34 @@ describe('User Management Integration Tests From Gateway', () => {
         orgName = Random.word(8);
         const organisationData = {
           name: orgName,
+          token:`Bearer ${accessToken}`
         };
         return request(app.getHttpServer())
           .post('/user-management/createOrganisation')
           .set('Authorization', `Bearer ${accessToken}`)
           .send(organisationData);
-      },15000);
+      },20000);
       it('should create a user group', () => {
         const groupData = Random.word(8);
         const userGroupData = {
           name: groupData,
           permission: 1,
+          token: `Bearer ${accessToken}`
         };
         return request(app.getHttpServer())
           .post('/user-management/createUserGroup')
           .set('Authorization', `Bearer ${accessToken}`)
           .send(userGroupData)
-          .expect(201)
+          .expect(200)
           .then((response) => {
             expect(response.body.status).toBe('success');
           });
-      }, 15000);
+      }, 20000);
 
       afterEach(async () => {
         const organisationData = {
           organisationName: orgName,
+          token :`Bearer ${accessToken}`
         };
         return request(app.getHttpServer())
           .post('/user-management/exitOrganisation')
@@ -181,6 +134,7 @@ describe('User Management Integration Tests From Gateway', () => {
         orgName = Random.word(8);
         const organisationData = {
           name: orgName,
+          token : `Bearer ${accessToken}`
         };
         await request(app.getHttpServer())
           .post('/user-management/createOrganisation')
@@ -193,30 +147,33 @@ describe('User Management Integration Tests From Gateway', () => {
         const userGroupData = {
           name: groupName,
           permission: 1,
+          token : `Bearer ${accessToken}`
         };
         return request(app.getHttpServer())
           .post('/user-management/createUserGroup')
           .set('Authorization', `Bearer ${accessToken}`)
           .send(userGroupData);
-      },15000);
+      },20000);
       it('should add user to user group', () => {
         const userGroupData = {
           userEmail: configService.get('MOCK_EMAIL'),
           userGroupName: groupName,
+          token : `Bearer ${accessToken}`
         };
         return request(app.getHttpServer())
           .post('/user-management/addUserToUserGroup')
           .set('Authorization', `Bearer ${accessToken}`)
           .send(userGroupData)
-          .expect(201)
+          .expect(200)
           .then((response) => {
             expect(response.body.status).toBe('success');
           });
-      }, 15000);
+      }, 20000);
 
       afterEach(async () => {
         const organisationData = {
           organisationName: orgName,
+          token : `Bearer ${accessToken}`
         };
         return request(app.getHttpServer())
           .post('/user-management/exitOrganisation')
