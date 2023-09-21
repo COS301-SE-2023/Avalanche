@@ -5,7 +5,7 @@ import * as path from 'path';
 interface ComparisonTypes {
   tou?: string;
   filterValues?: (number | string)[];
-  filter? : boolean,
+  filter?: boolean;
 }
 
 interface AggregateTypes {
@@ -20,7 +20,7 @@ interface ColumnDetail {
   filterReturnType: string;
   comparisonTypes?: string[];
   filter: ComparisonTypes[];
-  aggregation: AggregateTypes[]; 
+  aggregation: AggregateTypes[];
   view: string[];
   table: string;
 }
@@ -66,83 +66,102 @@ export class SchemaService {
   }
 
   getSchemaByUrl(url: string): any {
-    const check = this.schemas[url];
+    //const check = this.schemas[url];
     return this.schemas[url] || null;
   }
 
   validateUserAccess(tou: string, query: any, schema: SchemaDetail): boolean {
     // Check if user has access to selected columns and can apply filters and aggregation
     for (const selectedColumn of query.selectedColumns) {
-      const schemaColumn = schema.tables[0].columns.find(
-        (col) => col.columnName === selectedColumn.columnName
-      );
-  
+      const schemaColumn = schema.tables
+        .find((table) =>
+          table.columns.some(
+            (col) => col.columnName === selectedColumn.columnName,
+          ),
+        )
+        ?.columns.find((col) => col.columnName === selectedColumn.columnName);
+
       if (!schemaColumn) {
         return false; // Column not found in schema
       }
-  
+
       // Check if user has access to view this column
       if (!schemaColumn.view.includes(tou)) {
         return false; // User is not allowed to view this column
       }
-  
+
       // Check if user is allowed to aggregate this column if an aggregation is specified
       if (selectedColumn.aggregation) {
         const aggregationPermission = schemaColumn.aggregation.find(
-          (agg) => agg.tou === tou && agg.aggregate === true
+          (agg) => agg.tou === tou && agg.aggregate === true,
         );
         if (!aggregationPermission) {
           return false; // User is not allowed to aggregate this column
         }
       }
     }
-  
+
     // Check if user can apply the filters
     for (const filterGroup of query.filters) {
       for (const condition of filterGroup.conditions) {
-        const schemaColumn = schema.tables[0].columns.find(
-          (col) => col.columnName === condition.column
-        );
-  
+        const schemaColumn = schema.tables
+          .find((table) =>
+            table.columns.some((col) => col.columnName === condition.column),
+          )
+          ?.columns.find((col) => col.columnName === condition.column);
+
         if (!schemaColumn) {
           return false; // Column not found in schema
         }
-  
+
         // Check if user is allowed to filter this column
         const filterPermission = schemaColumn.filter.find(
-          (filt) => filt.tou === tou && filt.filter === true
+          (filt) => filt.tou === tou && filt.filter === true,
         );
         if (!filterPermission) {
           return false; // User is not allowed to filter this column
         }
 
-        const filterValues = schemaColumn.filter.find((filt) => filt.filterValues)
-        if(filterValues){
+        const filterValues = schemaColumn.filter.find(
+          (filt) => filt.filterValues,
+        );
+        if (filterValues) {
           let check = false;
-          for(const filters of filterValues.filterValues){
-            if(filters == condition.value){
-              check = true;
+
+          // If condition.value is a string
+          if (typeof condition.value === 'string') {
+            for (const filters of filterValues.filterValues) {
+              if (filters === condition.value) {
+                check = true;
+                break; // Exit the loop once a match is found
+              }
             }
           }
+          // If condition.value is an array
+          else if (Array.isArray(condition.value)) {
+            check = condition.value.every((val) =>
+              filterValues.filterValues.includes(val),
+            );
+          }
 
-          if(check == false){
+          if (check === false) {
             return false;
           }
         }
-  
+
         // Check if the operator is allowed for this column
         if (!schemaColumn.comparisonTypes.includes(condition.operator)) {
           return false; // Operator is not allowed for this column
         }
       }
     }
-  
+
     return true; // User has access to everything specified in the query
   }
 
   transformSchemaForUser(tou: string, schema: SchemaDetail): any[] {
     const transformedColumns = [];
-  
+
     for (const tableDetail of schema.tables) {
       for (const columnDetail of tableDetail.columns) {
         // Initialize an object to hold the transformed column details
@@ -154,15 +173,17 @@ export class SchemaService {
           comparisonTypes: columnDetail.comparisonTypes,
           table: columnDetail.table,
         };
-  
+
         // Check if user is allowed to view this column
         if (columnDetail.view.includes(tou)) {
           transformedColumn.view = true;
           // Check if user is allowed to filter this column
-          const filterPermission = columnDetail.filter.find((filter) => filter.tou === tou && filter.filter === true);
+          const filterPermission = columnDetail.filter.find(
+            (filter) => filter.tou === tou && filter.filter === true,
+          );
           if (filterPermission) {
             transformedColumn.filter = filterPermission.filter;
-            
+
             // Add filter values if they exist for this user
             if (filterPermission.filterValues) {
               transformedColumn.filterValue = filterPermission.filterValues;
@@ -170,27 +191,27 @@ export class SchemaService {
           } else {
             transformedColumn.filter = false;
           }
-  
+
           // Add this transformed column to the array
           transformedColumns.push(transformedColumn);
-        }else{
+        } else {
           transformedColumn.view = true;
-          const filterPermission = columnDetail.filter.find((filter) => filter.tou === tou && filter.filter === true);
+          const filterPermission = columnDetail.filter.find(
+            (filter) => filter.tou === tou && filter.filter === true,
+          );
           if (filterPermission) {
             transformedColumn.filter = filterPermission.filter;
-            
+
             // Add filter values if they exist for this user
             if (filterPermission.filterValues) {
               transformedColumn.filterValue = filterPermission.filterValues;
             }
             transformedColumns.push(transformedColumn);
-          } 
+          }
         }
       }
     }
-  
+
     return transformedColumns;
   }
-  
-  
 }

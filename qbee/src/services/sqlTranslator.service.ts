@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { JoinSchema, TableSchema } from '../interfaces/TableSchema';
+import { JoinSchema } from '../interfaces/TableSchema';
 import {
   FilterCondition,
   JSONQuery,
@@ -36,11 +36,7 @@ export class SQLTranslatorService {
     // Construct FROM clause (assuming a single table for simplicity)
     sql +=
       '\n' +
-      this.generateJoinSQL(
-        payload.selectedColumns,
-        payload.filters,
-        payload.schema,
-      );
+      this.generateJoinSQL(payload.selectedColumns, payload.filters, schema);
 
     // Construct WHERE clause
     if (payload.filters && payload.filters.length > 0) {
@@ -92,11 +88,27 @@ export class SQLTranslatorService {
         condition.value !== undefined
       ) {
         // Simple condition
-        return `"${condition.column}" ${condition.operator} ${
-          typeof condition.value === 'string'
-            ? `'${condition.value}'`
-            : condition.value
-        }`;
+        if (!Array.isArray(condition.value)) {
+          return `"${condition.column}" ${condition.operator} ${
+            typeof condition.value === 'string'
+              ? `'${condition.value}'`
+              : condition.value
+          }`;
+        } else if (
+          Array.isArray(condition.value) &&
+          condition.value.length > 0
+        ) {
+          const conArr = [];
+          condition.value.forEach((element) => {
+            conArr.push(
+              `"${condition.column}" ${condition.operator} ${
+                typeof element === 'string' ? `'${element}'` : element
+              }`,
+            );
+          });
+
+          return ` ( ${conArr.join(' OR ')}) `;
+        }
       }
       return '';
     });
@@ -140,76 +152,13 @@ export class SQLTranslatorService {
   generateJoinSQL(
     selectedColumns: SelectedColumn[],
     filters: FilterCondition[] = [],
-    schemaName: string,
+    schema: any,
   ): string {
     // TODOOOOO
     // Read the schema from postgres
     // By the specific name
     // Woohooo
-    const schemaContent = JSON.stringify([
-      {
-        schema: 'transaction details',
-        table: 'Fact Sales',
-        columns: ['Line Price', 'Nett. Amount', 'Quantity', 'Registry Code'],
-        joins: [
-          {
-            table: 'Dim Date',
-            from: 'Dim Date Key',
-            to: 'Dim Date Key',
-            columns: [
-              'Date',
-              'Day Of Week',
-              'Day Name',
-              'Is Weekday?',
-              'Month',
-              'Month Year',
-              'Month Name',
-              'Year Name',
-            ],
-          },
-          {
-            table: 'Dim Registry Product',
-            from: 'Dim Product Key',
-            to: 'Dim Product Key',
-            columns: ['Code'],
-          },
-          {
-            table: 'Dim Registry Domain',
-            from: 'Dim Domain Key',
-            to: 'Dim Domain Key',
-            columns: [
-              'Created Date',
-              'Expiry Date',
-              'Exists In Registry?',
-              'Status',
-            ],
-          },
-          {
-            table: 'Dim Registry Registrar',
-            from: 'Dim Registrar Key',
-            to: 'Dim Registrar Key',
-            columns: ['Code', 'Name', 'Company Name', 'Trading Name'],
-          },
-          {
-            table: 'Dim Sales Detail',
-            from: 'Dim Sales Detail Key',
-            to: 'Dim Sales Detail Key',
-            columns: ['System', 'Type', 'Source'],
-          },
-          {
-            table: 'Dim Registry Zone',
-            from: 'Dim Zone Key',
-            to: 'Dim Zone Key',
-            columns: ['Zone', 'Name', 'Operator'],
-          },
-        ],
-      },
-    ]);
-    const schema: TableSchema[] = JSON.parse(schemaContent);
-    const baseTableSchema = schema.find((s) => s.schema === schemaName);
-    if (!baseTableSchema) {
-      throw new Error('No schema found');
-    }
+    const baseTableSchema = schema;
 
     const joinStatements: string[] = [];
 
@@ -218,38 +167,68 @@ export class SQLTranslatorService {
       columnName: string,
       joinSchema: JoinSchema,
     ): boolean => {
-      return joinSchema.columns.includes(columnName);
+      return (
+        joinSchema.columns?.some(
+          (element) => element.columnName === columnName,
+        ) ?? false
+      );
     };
 
     // Check selected columns
     selectedColumns.forEach((selectedColumn) => {
-      if (!baseTableSchema.columns.includes(selectedColumn.columnName)) {
-        baseTableSchema.joins?.forEach((joinSchema) => {
-          if (columnInJoinSchema(selectedColumn.columnName, joinSchema)) {
-            const joinStatement = `JOIN "${joinSchema.table}" ON "${baseTableSchema.table}"."${joinSchema.from}" = "${joinSchema.table}"."${joinSchema.to}"`;
-            if (!joinStatements.includes(joinStatement)) {
-              joinStatements.push(joinStatement);
-            }
+      let columnFound = false; // Flag to indicate if the column is found and joined
+
+      for (const joinSchema of baseTableSchema.tables || []) {
+        if (columnFound) break; // Skip to the next selectedColumn if this one is already found and joined
+
+        const tableJoinedTo = columnInJoinSchema(
+          selectedColumn.columnName,
+          joinSchema,
+        );
+
+        if (tableJoinedTo && joinSchema.table != baseTableSchema.fact) {
+          const joinStatement = `JOIN "${joinSchema.table}" ON "${baseTableSchema.fact}"."${joinSchema.from}" = "${joinSchema.table}"."${joinSchema.to}"`;
+
+          if (!joinStatements.includes(joinStatement)) {
+            joinStatements.push(joinStatement);
           }
-        });
+
+          columnFound = true; // Set the flag to true as the column is found and joined
+        } else if (tableJoinedTo && joinSchema.table == baseTableSchema.fact) {
+          columnFound = true; // Set  the flag to true as the column is found but not joined
+        }
       }
     });
 
     // Check filter columns
     const checkFilterColumns = (filterConditions: FilterCondition[]) => {
       filterConditions.forEach((condition) => {
-        if (
-          condition.column &&
-          !baseTableSchema.columns.includes(condition.column)
-        ) {
-          baseTableSchema.joins?.forEach((joinSchema) => {
-            if (columnInJoinSchema(condition.column, joinSchema)) {
-              const joinStatement = `JOIN "${joinSchema.table}" ON "${baseTableSchema.table}"."${joinSchema.from}" = "${joinSchema.table}"."${joinSchema.to}"`;
-              if (!joinStatements.includes(joinStatement)) {
-                joinStatements.push(joinStatement);
-              }
+        let columnFound = false; // Flag to indicate if the column is found and joined
+        if (!condition.column) {
+          columnFound = true;
+        }
+        for (const joinSchema of baseTableSchema.tables || []) {
+          if (columnFound) break; // Skip to the next selectedColumn if this one is already found and joined
+
+          const tableJoinedTo = columnInJoinSchema(
+            condition.column,
+            joinSchema,
+          );
+
+          if (tableJoinedTo && joinSchema.table != baseTableSchema.fact) {
+            const joinStatement = `JOIN "${joinSchema.table}" ON "${baseTableSchema.fact}"."${joinSchema.from}" = "${joinSchema.table}"."${joinSchema.to}"`;
+
+            if (!joinStatements.includes(joinStatement)) {
+              joinStatements.push(joinStatement);
             }
-          });
+
+            columnFound = true; // Set the flag to true as the column is found and joined
+          } else if (
+            tableJoinedTo &&
+            joinSchema.table == baseTableSchema.fact
+          ) {
+            columnFound = true; // Set the flag to true as the column is found but not joined
+          }
         }
         // Recursively check nested conditions
         if (condition.conditions) {
@@ -260,6 +239,6 @@ export class SQLTranslatorService {
 
     checkFilterColumns(filters);
 
-    return `FROM ${baseTableSchema.table} ${joinStatements.join(' ')}`;
+    return `FROM ${baseTableSchema.schema} ${joinStatements.join(' ')}`;
   }
 }
