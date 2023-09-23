@@ -6,7 +6,7 @@ import { clearCurrentOpenState, setAnimateManagerState } from '@/store/Slices/mo
 import { userState } from '@/store/Slices/userSlice';
 import { Transition } from '@headlessui/react';
 import introJs from 'intro.js';
-import 'intro.js/introjs.css';
+import 'intro.js/themes/introjs-nazanin.css';
 
 interface ICreateGroupModal {
     state: any,
@@ -36,7 +36,7 @@ export default function GraphCreateModal({ state, add }: ICreateGroupModal) {
 
     useEffect(() => {
         startTut();
-    }, [])
+    })
 
     // These two variables are the fields from the form. 
     const [name, setName] = useState<string>("");

@@ -20,32 +20,32 @@ import { useDispatch } from "react-redux";
 import { getEndpoints } from "@/store/Slices/permissionSlice";
 import { getLatestOrganisation, getUserGroups } from "@/store/Slices/userSlice";
 import introJs from 'intro.js';
-import 'intro.js/introjs.css';
+import 'intro.js/themes/introjs-modern.css';
 
 interface IIntegrationLoginModal { }
 
 export default function IntegrationLoginModal({ }: IIntegrationLoginModal) {
 
   var tutorialRunning = true
-    const introJS = introJs()
-    const startTut = () => {
-        tutorialRunning = true;
-        introJS.setOptions({
-            steps: [
-                {
-                    element: document.getElementsByClassName("bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4 dark:bg-dark-secondaryBackground")[0] as HTMLElement,
-                    intro: 'Here, you can choose which warehouse you want the data to come from, as well as the graph type. Go ahead and name your graph too.',
-                },{
-                    element: document.getElementsByClassName("text-white bg-primary-600 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:focus:ring-primary-800 inline-flex items-center justify-center flex-nowrap hover:bg-primary-700 dark:hover:bg-primary-700 w-full")[2] as HTMLElement,
-                    intro: "Once you have selected the warehouse, graph type and given your graph a name, click here to see the magic happen."
-                }
-                ]
-        }).start();
-    }
+  const introJS = introJs()
+  const startTut = () => {
+    tutorialRunning = true;
+    introJS.setOptions({
+      steps: [
+        {
+          element: document.getElementsByClassName("bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4 dark:bg-dark-secondaryBackground")[0] as HTMLElement,
+          intro: 'Here, you can choose which warehouse you want the data to come from, as well as the graph type. Go ahead and name your graph too.',
+        }, {
+          element: document.getElementsByClassName("py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-gray-400 rounded-lg hover:bg-avalancheBlue hover:text-white dark:bg-primaryBackground dark:text-gray-200  dark:hover:text-white dark:hover:bg-gray-700 w-full gap-2 flex justify-center transition duration-75")[0] as HTMLElement,
+          intro: "Once you have selected the warehouse, graph type and given your graph a name, click here to see the magic happen."
+        }
+      ]
+    }).start();
+  }
 
-    useEffect(() => {
-      startTut();
-  }, [])
+  useEffect(() => {
+    startTut();
+  })
 
 
 
