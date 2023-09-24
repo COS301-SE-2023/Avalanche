@@ -153,7 +153,7 @@ export class MovementService {
           graphType: 'movement/verticalRanked',
           data: data.data,
           filters: data.filters,
-          chartType: ChartType.PolarArea,
+          chartType: ChartType.Bar,
         },
         timestamp: new Date().toISOString(),
       };
