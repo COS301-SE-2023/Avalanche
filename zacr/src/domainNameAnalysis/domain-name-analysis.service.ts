@@ -8,7 +8,7 @@ import {
   ChartType,
   DataInterface,
   NewDataInterface,
-} from 'src/interfaces/interfaces';
+} from '../interfaces/interfaces';
 import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()

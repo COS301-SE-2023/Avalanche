@@ -248,7 +248,7 @@ describe('DomainNameAnalysisService', () => {
 
       const graphName = service.domainLengthGraphName(filters);
       expect(graphName).toBe(
-        'Length of newly created domains from 2022-01-01 to 2022-12-31 for test1, test2 for zone1, zone2',
+        'Length of newly created domains for test1, test2 (zone1, zone2)',
       );
     });
 
@@ -259,7 +259,7 @@ describe('DomainNameAnalysisService', () => {
 
       const graphName = service.domainLengthGraphName(filters);
       expect(graphName).toBe(
-        `Length of newly created domains from ${year}-01-01 to ${year}-12-31 across all registrars for all zones`,
+        `Length of newly created domains  across all registrars (all zones)`,
       );
     });
 
