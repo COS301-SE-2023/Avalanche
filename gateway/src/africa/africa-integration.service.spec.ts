@@ -35,7 +35,7 @@ describe('africa Service Integration Tests From Gateway', () => {
     const dateTo = `${currentDate.getFullYear()}-${(currentDate.getMonth()).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;;
     it('should perform transactions for a granularity of a month', () => {
       const data = {
-        zone : ["AFRICA"], dateFrom : dateFrom, dateTo: dateTo, graphName: `Monthly, from ${dateFrom} to ${dateTo}`, granularity: "month"
+        token: `Bearer ${accessToken}`,zone : ["AFRICA"], dateFrom : dateFrom, dateTo: dateTo, graphName: `Monthly, from ${dateFrom} to ${dateTo}`, granularity: "month"
       }; // Replace this with actual data
       
       return request(app.getHttpServer())
@@ -50,7 +50,7 @@ describe('africa Service Integration Tests From Gateway', () => {
 
     it('should perform transactions for a granularity of a year', () => {
       const data = {
-        zone : ["AFRICA"], dateFrom : dateFrom, dateTo: dateTo, graphName: `Yearly, from ${dateFrom} to ${dateTo}`, granularity: "year"
+        token: `Bearer ${accessToken}`,zone : ["AFRICA"], dateFrom : dateFrom, dateTo: dateTo, graphName: `Yearly, from ${dateFrom} to ${dateTo}`, granularity: "year"
       }; // Replace this with actual data
       
       return request(app.getHttpServer())
@@ -70,7 +70,7 @@ describe('africa Service Integration Tests From Gateway', () => {
     const dateTo = `${currentDate.getFullYear()}-${(currentDate.getMonth()).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;;
     it('should perform transactions for a granularity of a month for registrar dnsafric6lc9ke', () => {
       const data = {
-        zone : ["AFRICA"],registrar: ["dnsafric6lc9ke"], dateFrom : dateFrom, dateTo: dateTo, graphName: `Monthly, from ${dateFrom} to ${dateTo}`, granularity: "month"
+        token: `Bearer ${accessToken}`,zone : ["AFRICA"],registrar: ["dnsafric6lc9ke"], dateFrom : dateFrom, dateTo: dateTo, graphName: `Monthly, from ${dateFrom} to ${dateTo}`, granularity: "month"
       }; // Replace this with actual data
       
       return request(app.getHttpServer())
@@ -85,7 +85,7 @@ describe('africa Service Integration Tests From Gateway', () => {
 
     it('should perform transactions for a granularity of a month for registrar tucowsdominc', () => {
       const data = {
-        zone : ["AFRICA"], registrar: ["tucowsdominc"], dateFrom : dateFrom, dateTo: dateTo, graphName: `Monthly, from ${dateFrom} to ${dateTo}`, granularity: "month"
+        token: `Bearer ${accessToken}`, zone : ["AFRICA"], registrar: ["tucowsdominc"], dateFrom : dateFrom, dateTo: dateTo, graphName: `Monthly, from ${dateFrom} to ${dateTo}`, granularity: "month"
       }; // Replace this with actual data
       
       return request(app.getHttpServer())
@@ -100,7 +100,7 @@ describe('africa Service Integration Tests From Gateway', () => {
 
     it('should perform transactions for a granularity of a year for registrar dnsafric6lc9ke', () => {
       const data = {
-        zone : ["AFRICA"], dateFrom : dateFrom, dateTo: dateTo, graphName: `Yearly, from ${dateFrom} to ${dateTo}`, granularity: "year"
+        token: `Bearer ${accessToken}`, zone : ["AFRICA"], dateFrom : dateFrom, dateTo: dateTo, graphName: `Yearly, from ${dateFrom} to ${dateTo}`, granularity: "year"
       }; // Replace this with actual data
       
       return request(app.getHttpServer())
@@ -119,7 +119,7 @@ describe('africa Service Integration Tests From Gateway', () => {
     const dateFrom = `${currentDate.getFullYear()-1}-${(currentDate.getMonth()).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
     const dateTo = `${currentDate.getFullYear()}-${(currentDate.getMonth()).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;;
     it('should perform transactions ranking for renew', () => {
-      const data = { graphName: `Monthly renew ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: ['AFRICA'], registrar: ["dnsafric6lc9ke", "registrygate", "namecheap4ch"], transactions: ["renew"] } ;
+      const data = { token: `Bearer ${accessToken}`, graphName: `Monthly renew ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: ['AFRICA'], registrar: ["dnsafric6lc9ke", "registrygate", "namecheap4ch"], transactions: ["renew"] } ;
       
       return request(app.getHttpServer())
         .post('/africa/transactions-ranking')
@@ -132,7 +132,7 @@ describe('africa Service Integration Tests From Gateway', () => {
     }, 100000);
 
     it('should perform transactions ranking for create', () => {
-      const data = { graphName: `Monthly renew ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: ['AFRICA'], registrar: ["dnsafric6lc9ke", "registrygate", "namecheap4ch"], transactions: ["create"] } ;
+      const data = { token: `Bearer ${accessToken}`, graphName: `Monthly renew ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: ['AFRICA'], registrar: ["dnsafric6lc9ke", "registrygate", "namecheap4ch"], transactions: ["create"] } ;
       
       return request(app.getHttpServer())
         .post('/africa/transactions-ranking')
@@ -145,7 +145,7 @@ describe('africa Service Integration Tests From Gateway', () => {
     }, 100000);
 
     it('should perform transactions ranking for transfer', () => {
-      const data = { graphName: `Monthly renew ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: ['AFRICA'], registrar: ["dnsafric6lc9ke", "registrygate", "namecheap4ch"], transactions: ["transfer"] } ;
+      const data = { token: `Bearer ${accessToken}`, graphName: `Monthly renew ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: ['AFRICA'], registrar: ["dnsafric6lc9ke", "registrygate", "namecheap4ch"], transactions: ["transfer"] } ;
       
       return request(app.getHttpServer())
         .post('/africa/transactions-ranking')
@@ -163,7 +163,7 @@ describe('africa Service Integration Tests From Gateway', () => {
     const dateFrom = `${currentDate.getFullYear()-1}-${(currentDate.getMonth()).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
     const dateTo = `${currentDate.getFullYear()}-${(currentDate.getMonth()).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;;
     it('top5', () => {
-      const data = { rank : 'top5' } ;
+      const data = { token: `Bearer ${accessToken}`, rank : 'top5' } ;
       
       return request(app.getHttpServer())
         .post('/africa/marketShare')
@@ -176,7 +176,7 @@ describe('africa Service Integration Tests From Gateway', () => {
     }, 100000);
 
     it('top10', () => {
-      const data = { rank : 'top10' } ;
+      const data = { token: `Bearer ${accessToken}`, rank : 'top10' } ;
       
       return request(app.getHttpServer())
         .post('/africa/marketShare')
@@ -189,7 +189,7 @@ describe('africa Service Integration Tests From Gateway', () => {
     }, 100000);
 
     it('top20', () => {
-      const data = { rank : 'top20' } ;
+      const data = { token: `Bearer ${accessToken}`, rank : 'top20' } ;
       
       return request(app.getHttpServer())
         .post('/africa/marketShare')
@@ -207,7 +207,7 @@ describe('africa Service Integration Tests From Gateway', () => {
     const dateFrom = `${currentDate.getFullYear()-1}-${(currentDate.getMonth()).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
     const dateTo = `${currentDate.getFullYear()}-${(currentDate.getMonth()).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;;
     it('top5 Average Age', () => {
-      const data = { rank: 'top5', average: true, overall: false, zone: ['AFRICA'] } ;
+      const data = { token: `Bearer ${accessToken}`, rank: 'top5', average: true, overall: false, zone: ['AFRICA'] } ;
       
       return request(app.getHttpServer())
         .post('/africa/age')
@@ -220,7 +220,7 @@ describe('africa Service Integration Tests From Gateway', () => {
     }, 100000);
 
     it('top5', () => {
-      const data = { rank: 'top5', average: true, overall: false, zone: ['AFRICA'] } ;
+      const data = { token: `Bearer ${accessToken}`, rank: 'top5', average: true, overall: false, zone: ['AFRICA'] } ;
       
       return request(app.getHttpServer())
         .post('/africa/age')
@@ -233,7 +233,7 @@ describe('africa Service Integration Tests From Gateway', () => {
     }, 100000);
 
     it('top10 Average Age', () => {
-      const data = { rank: 'top5', average: true, overall: false, zone: ['AFRICA'] } ;
+      const data = { token: `Bearer ${accessToken}`, rank: 'top5', average: true, overall: false, zone: ['AFRICA'] } ;
       
       return request(app.getHttpServer())
         .post('/africa/age')
@@ -248,7 +248,7 @@ describe('africa Service Integration Tests From Gateway', () => {
 
   describe('Domain Name Analysis length', () => {
     it('empty data test', () => {
-      const data = {  } ;
+      const data = { token: `Bearer ${accessToken}`,  } ;
       
       return request(app.getHttpServer())
         .post('/africa/domainNameAnalysis/length')
@@ -261,7 +261,7 @@ describe('africa Service Integration Tests From Gateway', () => {
     }, 100000);
 
     it('dateFrom test', () => {
-      const data = { dateFrom: "2022-05-08" } ;
+      const data = { token: `Bearer ${accessToken}`, dateFrom: "2022-05-08" } ;
       
       return request(app.getHttpServer())
         .post('/africa/domainNameAnalysis/length')
@@ -274,7 +274,7 @@ describe('africa Service Integration Tests From Gateway', () => {
     }, 100000);
 
     it('dateFrom test 2', () => {
-      const data = { dateFrom: "2021-05-08" } ;
+      const data = { token: `Bearer ${accessToken}`, dateFrom: "2021-05-08" } ;
       
       return request(app.getHttpServer())
         .post('/africa/domainNameAnalysis/length')
@@ -289,7 +289,7 @@ describe('africa Service Integration Tests From Gateway', () => {
 
   describe('Movement Vertical', () => {
     it('empty data test', () => {
-      const data = { zone: ["AFRICA"] } ;
+      const data = { token: `Bearer ${accessToken}`, zone: ["AFRICA"] } ;
       
       return request(app.getHttpServer())
         .post('/africa/movement/vertical')
@@ -302,7 +302,7 @@ describe('africa Service Integration Tests From Gateway', () => {
     }, 100000);
 
     it('Movement Vertical with three registrars', () => {
-      const data = { zone: ["AFRICA"], registrar: ["dnsafric6lc9ke", "registrygate", "namecheap4ch"] } ;
+      const data = { token: `Bearer ${accessToken}`, zone: ["AFRICA"], registrar: ["dnsafric6lc9ke", "registrygate", "namecheap4ch"] } ;
       
       return request(app.getHttpServer())
         .post('/africa/movement/vertical')
@@ -315,7 +315,7 @@ describe('africa Service Integration Tests From Gateway', () => {
     }, 100000);
 
     it('Movement Vertical with one registrar', () => {
-      const data = { zone: ["AFRICA"], registrar: ["namecheap4ch"] } ;
+      const data = { token: `Bearer ${accessToken}`, zone: ["AFRICA"], registrar: ["namecheap4ch"] } ;
       
       return request(app.getHttpServer())
         .post('/africa/movement/vertical')

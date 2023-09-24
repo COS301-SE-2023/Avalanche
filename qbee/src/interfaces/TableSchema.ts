@@ -9,5 +9,5 @@ export interface JoinSchema {
   table: string;
   from: string;
   to: string;
-  columns: string[];
+  columns: any[];
 }

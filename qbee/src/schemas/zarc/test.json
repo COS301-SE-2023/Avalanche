@@ -1,0 +1,41 @@
+{
+    "schema": "transactionDetails",
+    "fact": "Fact Sales",
+    "tables": [
+        {
+            "table": "Fact Sales",
+            "columns": [
+                {
+                    "columnName": "Line Price",
+                    "columnType": "number",
+                    "typeOfFilter": "inputbox",
+                    "filterReturnType": "number",
+                    "comparisonTypes": [
+                        "=",
+                        "<",
+                        ">"
+                    ],
+                    "filter": [{"tou" : "registrar", "filter" : false},{"tou" : "registry", "filter" : true}],
+                    "aggregation" : [{"tou" : "public", "aggretate" : true}],
+                    "view": ["registrar", "registry"],
+                    "table": "Fact Sales"
+                },
+                {
+                    "columnName": "Nett. Amount",
+                    "columnType": "string",
+                    "typeOfFilter": "checkbox",
+                    "filterReturnType": "number",
+                    "comparisonTypes": [
+                        "=",
+                        "<",
+                        ">"
+                    ],
+                    "filter": [{"tou" : "registrar", "filter" : true, "filterValues" : ["1","2","9"]},{"tou" : "registry", "filter" : true}],
+                    "aggregation" : [{"tou" : "public", "aggretate" : true}],
+                    "view": ["registrar", "registry"],
+                    "table": "Fact Sales"
+                }
+            ]
+        }
+    ]
+}

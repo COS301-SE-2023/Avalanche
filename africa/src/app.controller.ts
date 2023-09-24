@@ -8,6 +8,7 @@ import { DomainNameAnalysisService } from './domainNameAnalysis/domain-name-anal
 import { DomainWatchService } from './domainWatch/domain-watch-analysis.service';
 import { RegistrarNameService } from './registrarName/registrarName.service';
 import { MovementService } from './movement/movement.service';
+import { QBeeService } from './qbee/qbee.service';
 
 @Controller('africa')
 export class AppController {
@@ -17,7 +18,8 @@ export class AppController {
     private readonly domainNameAnalysisService : DomainNameAnalysisService,
     private readonly domainWatchService : DomainWatchService,
     private readonly registrarNameService: RegistrarNameService,
-    private readonly movementService: MovementService) {}
+    private readonly movementService: MovementService,
+    private readonly qbeeService: QBeeService) {}
 
   @MessagePattern({ cmd: 'transactions' })
   async transactions(data: any) {
@@ -140,6 +142,23 @@ export class AppController {
     const result = await this.movementService.nettVeriticalRanked(
       data.filters,
       data.graphName,
+    );
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
+
+  @MessagePattern({ cmd: 'qbee' })
+  async qBee(data: any) {
+    const result = await this.qbeeService.executeQuery(
+      data.sqlQuery,
+      data.schemaName,
     );
     if (result.error) {
       throw new RpcException({

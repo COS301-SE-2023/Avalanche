@@ -14,10 +14,6 @@ interface IDropdown {
     text?: string
 }
 
-const camelCaseRenderer = (value: string) => {
-    return value.replace(/([A-Z])/g, ' $1').replace(/^./, function (str) { return str.toUpperCase(); })
-}
-
 export default function Dropdown({ items, option, set, id, text }: IDropdown) {
     return (
         <Menu as="div" className="relative inline-block text-left w-full" id={id}>

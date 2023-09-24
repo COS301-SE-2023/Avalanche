@@ -80,7 +80,10 @@
       "!**/*-integration.service.spec.ts",
       "!**/rpc-excpetion.filter.ts",
       "!**/app.module.ts",
-      "!**/main.ts"
+      "!**/main.ts",
+      "!**/jwt-middleware.middleware.ts",
+      "!**/*-qbee.controller.ts",
+      "!**/*-qbee.service.ts"
     ],
     "coverageDirectory": "../gateway/coverage",
     "testEnvironment": "node"

@@ -5,7 +5,7 @@
         "typeOfFilter": "inputbox",
         "filterReturnType": "number",
         "comparisonTypes": ["=", "<", ">"],
-        "filter": true,
+        "filter": false,
         "table": "Fact Sales"
     },
     {
@@ -41,6 +41,7 @@
         "columnType": "date",
         "typeOfFilter": "date-picker",
         "filterReturnType": "date",
+        "comparisonTypes": ["=", ">", "<"],
         "filter": true,
         "table": "Dim Date"
     },
