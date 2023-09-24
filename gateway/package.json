@@ -31,6 +31,7 @@
     "axios": "^1.4.0",
     "ioredis": "^5.3.2",
     "mockjs": "^1.1.0",
+    "node-cron": "^3.0.2",
     "nodemailer": "^6.9.5",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0"
@@ -80,9 +81,12 @@
       "!**/*-integration.service.spec.ts",
       "!**/rpc-excpetion.filter.ts",
       "!**/app.module.ts",
-      "!**/main.ts"
+      "!**/main.ts",
+      "!**/jwt-middleware.middleware.ts",
+      "!**/*-qbee.controller.ts",
+      "!**/*-qbee.service.ts"
     ],
-    "coverageDirectory": "../gateway/coverage",
+    "coverageDirectory": "../coverage",
     "testEnvironment": "node"
   }
 }

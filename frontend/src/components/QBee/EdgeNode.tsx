@@ -9,7 +9,6 @@ interface NodeData {
 };
 
 export default function EdgeNode({ data }: NodeProps<NodeData>) {
-
     return <div className='bg-avalancheBlue p-3 rounded'>
         <>
             {data.handles?.source && <Handle

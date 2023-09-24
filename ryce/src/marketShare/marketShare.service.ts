@@ -43,8 +43,7 @@ export class MarketShareService {
         let filtersCount = {};
         if (JSON.parse(filters).zone != undefined) {
           filtersCount = {
-            zone: JSON.parse(filters).zone,
-            registrar: JSON.parse(filters).registrar,
+            zone: queryData[0]['MARKETSHARE'].filters.zone
           };
         }
         filtersCount = JSON.stringify(filtersCount);

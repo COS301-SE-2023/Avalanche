@@ -56,15 +56,15 @@ describe('UserUserGroupMangementService', () => {
             providers: [
                 UserUserGroupMangementService,
                 {
-                    provide: getRepositoryToken(User),
+                    provide: getRepositoryToken(User,"user"),
                     useValue: userRepository,
                 },
                 {
-                    provide: getRepositoryToken(UserGroup),
+                    provide: getRepositoryToken(UserGroup,"user"),
                     useValue: userGroupRepository,
                 },
                 {
-                    provide: getRepositoryToken(Organisation),
+                    provide: getRepositoryToken(Organisation,"user"),
                     useValue: organisationRepository,
                 },
                 {
@@ -76,9 +76,9 @@ describe('UserUserGroupMangementService', () => {
         }).compile();
 
         userOrganisationMangementService = module.get<UserUserGroupMangementService>(UserUserGroupMangementService);
-        mockUserRepository = module.get(getRepositoryToken(User));
-        mockUserGroupRepository = module.get(getRepositoryToken(UserGroup));
-        mockOrganisationRepository = module.get(getRepositoryToken(Organisation));
+        mockUserRepository = module.get(getRepositoryToken(User,"user"));
+        mockUserGroupRepository = module.get(getRepositoryToken(UserGroup,"user"));
+        mockOrganisationRepository = module.get(getRepositoryToken(Organisation,"user"));
         UserUserGroupMangementService.prototype.sendRegistrationEmail = mockSendRegistrationEmail;
         UserUserGroupMangementService.prototype.sendInvitationEmail = mockSendInvitationEmail;
         mockRedis = module.get('REDIS');

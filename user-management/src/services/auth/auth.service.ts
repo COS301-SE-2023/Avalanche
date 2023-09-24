@@ -196,9 +196,11 @@ export class AuthService {
     const { password, salt, ...userWithoutPassword } = user;
     const userWithToken = { ...userWithoutPassword, token: jwtToken, apiCheck : apiCheck };
     await this.redis.set(jwtToken, JSON.stringify(userWithToken), 'EX', 24 * 60 * 60);
-    for(const products of userWithToken.products){
+    if(userWithToken.products != null){
+    for(const products of userWithToken?.products){
       delete products.key;
     }
+  }
     // Send back user's information along with the token as a JSON object
     return {
       status: "success", userWithToken,
@@ -351,9 +353,11 @@ export class AuthService {
     await this.redis.del(tempApi);
     // await this.redis.del(token);
     const userWithToken = { ...user, apiKey: jwtToken };
+    if(userWithToken.products != null){
     for(const products of userWithToken.products){
       delete products.key;
     }
+  }
     // Send back user's information along with the token as a JSON object
     return {
       status: "success", message: userWithToken.apiKey,

@@ -10,7 +10,6 @@ describe('ZACR Service Integration Tests From Gateway', () => {
   let app: INestApplication;
   let configService: ConfigService;
   const accessToken = process.env.JWT_TOKEN_TO_TEST;
-  //console.log(accessToken);
 
 
   beforeAll(async () => {
@@ -34,7 +33,7 @@ describe('ZACR Service Integration Tests From Gateway', () => {
     const dateTo = `${currentDate.getFullYear()}-${(currentDate.getMonth()).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;;
     it('should perform transactions for a granularity of a month', () => {
       const data = {
-        zone : ["CO.ZA"], dateFrom : dateFrom, dateTo: dateTo, graphName: `Monthly, from ${dateFrom} to ${dateTo}`, granularity: "month"
+        zone : ["CO.ZA"], dateFrom : dateFrom, dateTo: dateTo, graphName: `Monthly, from ${dateFrom} to ${dateTo}`, granularity: "month", token : `Bearer ${accessToken}`
       }; // Replace this with actual data
       
       return request(app.getHttpServer())
@@ -42,14 +41,13 @@ describe('ZACR Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          ////console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
 
     it('should perform transactions for a granularity of a year', () => {
       const data = {
-        zone : ["CO.ZA"], dateFrom : dateFrom, dateTo: dateTo, graphName: `Yearly, from ${dateFrom} to ${dateTo}`, granularity: "year"
+          zone : ["CO.ZA"], dateFrom : dateFrom, dateTo: dateTo, graphName: `Yearly, from ${dateFrom} to ${dateTo}`, granularity: "year", token : `Bearer ${accessToken}`
       }; // Replace this with actual data
       
       return request(app.getHttpServer())
@@ -69,7 +67,7 @@ describe('ZACR Service Integration Tests From Gateway', () => {
     const dateTo = `${currentDate.getFullYear()}-${(currentDate.getMonth()).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;;
     it('should perform transactions for a granularity of a month for registrar hetzner', () => {
       const data = {
-        zone : ["CO.ZA"],registrar: ["afrihost"], dateFrom : dateFrom, dateTo: dateTo, graphName: `Monthly, from ${dateFrom} to ${dateTo}`, granularity: "month"
+        zone : ["CO.ZA"],registrar: ["afrihost"], dateFrom : dateFrom, dateTo: dateTo, graphName: `Monthly, from ${dateFrom} to ${dateTo}`, granularity: "month", token : `Bearer ${accessToken}`
       }; // Replace this with actual data
       
       return request(app.getHttpServer())
@@ -84,7 +82,7 @@ describe('ZACR Service Integration Tests From Gateway', () => {
 
     it('should perform transactions for a granularity of a month for registrar diamatrix', () => {
       const data = {
-        zone : ["CO.ZA"], registrar: ["afrihost"], dateFrom : dateFrom, dateTo: dateTo, graphName: `Monthly, from ${dateFrom} to ${dateTo}`, granularity: "month"
+        zone : ["CO.ZA"], registrar: ["afrihost"], dateFrom : dateFrom, dateTo: dateTo, graphName: `Monthly, from ${dateFrom} to ${dateTo}`, granularity: "month", token : `Bearer ${accessToken}`
       }; // Replace this with actual data
       
       return request(app.getHttpServer())
@@ -99,7 +97,7 @@ describe('ZACR Service Integration Tests From Gateway', () => {
 
     it('should perform transactions for a granularity of a year for registrar hetzner', () => {
       const data = {
-        zone : ["CO.ZA"], dateFrom : dateFrom, dateTo: dateTo, graphName: `Yearly, from ${dateFrom} to ${dateTo}`, granularity: "year"
+        token : `Bearer ${accessToken}`,zone : ["CO.ZA"], dateFrom : dateFrom, dateTo: dateTo, graphName: `Yearly, from ${dateFrom} to ${dateTo}`, granularity: "year"
       }; // Replace this with actual data
       
       return request(app.getHttpServer())
@@ -118,33 +116,31 @@ describe('ZACR Service Integration Tests From Gateway', () => {
     const dateFrom = `${currentDate.getFullYear()-1}-${(currentDate.getMonth()).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
     const dateTo = `${currentDate.getFullYear()}-${(currentDate.getMonth()).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;;
     it('should perform transactions ranking for renew', () => {
-      const data = { graphName: `Monthly renew ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: ['CO.ZA'], registrar: ["hetzner", "diamatrix", "afrihost"], transactions: ["renew"] } ;
+      const data = { token : `Bearer ${accessToken}`,graphName: `Monthly renew ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: ['CO.ZA'], registrar: ["hetzner", "diamatrix", "afrihost"], transactions: ["renew"] } ;
       
       return request(app.getHttpServer())
         .post('/zacr/transactions-ranking')
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
 
     it('should perform transactions ranking for create', () => {
-      const data = { graphName: `Monthly renew ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: ['CO.ZA'], registrar: ["hetzner", "diamatrix", "afrihost"], transactions: ["create"] } ;
+      const data = { token : `Bearer ${accessToken}`,graphName: `Monthly renew ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: ['CO.ZA'], registrar: ["hetzner", "diamatrix", "afrihost"], transactions: ["create"] } ;
       
       return request(app.getHttpServer())
         .post('/zacr/transactions-ranking')
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
 
     it('should perform transactions ranking for transfer', () => {
-      const data = { graphName: `Monthly renew ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: ['CO.ZA'], registrar: ["hetzner", "diamatrix", "afrihost"], transactions: ["transfer"] } ;
+      const data = { token : `Bearer ${accessToken}`,graphName: `Monthly renew ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: ['CO.ZA'], registrar: ["hetzner", "diamatrix", "afrihost"], transactions: ["transfer"] } ;
       
       return request(app.getHttpServer())
         .post('/zacr/transactions-ranking')
@@ -162,20 +158,18 @@ describe('ZACR Service Integration Tests From Gateway', () => {
     const dateFrom = `${currentDate.getFullYear()-1}-${(currentDate.getMonth()).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
     const dateTo = `${currentDate.getFullYear()}-${(currentDate.getMonth()).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;;
     it('top5', () => {
-      const data = { rank : 'top5' } ;
-      
+      const data = { token : `Bearer ${accessToken}`,rank : 'top5' } ;
       return request(app.getHttpServer())
         .post('/zacr/marketShare')
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
 
     it('top10', () => {
-      const data = { rank : 'top10' } ;
+      const data = { token : `Bearer ${accessToken}`,rank : 'top10' } ;
       
       return request(app.getHttpServer())
         .post('/zacr/marketShare')
@@ -188,7 +182,7 @@ describe('ZACR Service Integration Tests From Gateway', () => {
     }, 100000);
 
     it('top20', () => {
-      const data = { rank : 'top20' } ;
+      const data = { token : `Bearer ${accessToken}`,rank : 'top20' } ;
       
       return request(app.getHttpServer())
         .post('/zacr/marketShare')
@@ -206,7 +200,7 @@ describe('ZACR Service Integration Tests From Gateway', () => {
     const dateFrom = `${currentDate.getFullYear()-1}-${(currentDate.getMonth()).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
     const dateTo = `${currentDate.getFullYear()}-${(currentDate.getMonth()).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;;
     it('top5 Average Age', () => {
-      const data = { rank: 'top5', average: true, overall: false, zone: ['CO.ZA'] } ;
+      const data = { token : `Bearer ${accessToken}`,rank: 'top5', average: true, overall: false, zone: ['CO.ZA'] } ;
       
       return request(app.getHttpServer())
         .post('/zacr/age')
@@ -219,7 +213,7 @@ describe('ZACR Service Integration Tests From Gateway', () => {
     }, 100000);
 
     it('top5', () => {
-      const data = { rank: 'top5', average: true, overall: false, zone: ['CO.ZA'] } ;
+      const data = { token : `Bearer ${accessToken}`,rank: 'top5', average: true, overall: false, zone: ['CO.ZA'] } ;
       
       return request(app.getHttpServer())
         .post('/zacr/age')
@@ -232,7 +226,7 @@ describe('ZACR Service Integration Tests From Gateway', () => {
     }, 100000);
 
     it('top10 Average Age', () => {
-      const data = { rank: 'top5', average: true, overall: false, zone: ['CO.ZA'] } ;
+      const data = { token : `Bearer ${accessToken}`,rank: 'top5', average: true, overall: false, zone: ['CO.ZA'] } ;
       
       return request(app.getHttpServer())
         .post('/zacr/age')
@@ -247,7 +241,7 @@ describe('ZACR Service Integration Tests From Gateway', () => {
 
   describe('Movement Vertical', () => {
     it('empty data test', () => {
-      const data = {  } ;
+      const data = { token : `Bearer ${accessToken}` } ;
       
       return request(app.getHttpServer())
         .post('/zacr/domainNameAnalysis/length')
@@ -260,7 +254,7 @@ describe('ZACR Service Integration Tests From Gateway', () => {
     }, 100000);
 
     it('dateFrom test', () => {
-      const data = { dateFrom: "2022-05-08" } ;
+      const data = {token : `Bearer ${accessToken}`, dateFrom: "2022-05-08" } ;
       
       return request(app.getHttpServer())
         .post('/zacr/domainNameAnalysis/length')
@@ -273,7 +267,7 @@ describe('ZACR Service Integration Tests From Gateway', () => {
     }, 100000);
 
     it('dateFrom test 2', () => {
-      const data = { dateFrom: "2021-05-08" } ;
+      const data = {token : `Bearer ${accessToken}`, dateFrom: "2021-05-08" } ;
       
       return request(app.getHttpServer())
         .post('/zacr/domainNameAnalysis/length')
@@ -288,7 +282,7 @@ describe('ZACR Service Integration Tests From Gateway', () => {
 
   describe('Movement Vertical', () => {
     it('empty data test', () => {
-      const data = { zone: ["CO.ZA"] } ;
+      const data = {token : `Bearer ${accessToken}`, zone: ["CO.ZA"] } ;
       
       return request(app.getHttpServer())
         .post('/zacr/movement/vertical')
@@ -301,7 +295,7 @@ describe('ZACR Service Integration Tests From Gateway', () => {
     }, 100000);
 
     it('Movement Vertical with three registrars', () => {
-      const data = { zone: ["CO.ZA"], registrar: ["hetzner", "diamatrix", "afrihost"] } ;
+      const data = {token : `Bearer ${accessToken}`, zone: ["CO.ZA"], registrar: ["hetzner", "diamatrix", "afrihost"] } ;
       
       return request(app.getHttpServer())
         .post('/zacr/movement/vertical')
@@ -314,7 +308,7 @@ describe('ZACR Service Integration Tests From Gateway', () => {
     }, 100000);
 
     it('Movement Vertical with one registrar', () => {
-      const data = { zone: ["CO.ZA"], registrar: ["afrihost"] } ;
+      const data = {token : `Bearer ${accessToken}`, zone: ["CO.ZA"], registrar: ["afrihost"] } ;
       
       return request(app.getHttpServer())
         .post('/zacr/movement/vertical')
@@ -329,13 +323,13 @@ describe('ZACR Service Integration Tests From Gateway', () => {
   
   describe('Domain Watch Passive', () => {
     it('should perform domain watch passively', () => {
-      const data = {}; // Replace this with actual data
+      const data = {token : `Bearer ${accessToken}`}; // Replace this with actual data
 
       return request(app.getHttpServer())
         .post('/zacr/domainWatchPassive')
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
-        .expect(201) // Update status code based on your expectation
+        .expect(200) // Update status code based on your expectation
         .then((response) => {
           //console.log(response.body);
         });

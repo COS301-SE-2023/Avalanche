@@ -49,25 +49,39 @@ import { QBeeService } from './qbee/qbee.service';
     {
       provide: 'SNOWFLAKE_CONNECTION',
       useFactory: () => {
-        const connection = snowflake.createConnection({
-          account: process.env.SNOWFLAKE_ACCOUNT,
-          username: process.env.SNOWFLAKE_USERNAME,
-          password: process.env.SNOWFLAKE_PASSWORD,
-          role: process.env.SNOWFLAKE_ROLE,
-          warehouse: process.env.SNOWFLAKE_WAREHOUSE,
-          database: process.env.SNOWFLAKE_DATABASE,
-          schema: process.env.SNOWFLAKE_SCHEMA,
-        });
+        let connection;
 
-        // Try to connect to Snowflake, and check whether the connection was successful.
-        connection.connect((err) => {
-          if (err) {
-            console.error('Unable to connect: ' + err.message);
-            throw err;
-          } else {
-            console.log('Successfully connected to Snowflake.');
-          }
-        });
+        const reconnect = () => {
+          console.log('Attempting to reconnect...');
+          initConnection();
+        };
+
+        const initConnection = () => {
+          connection = snowflake.createConnection({
+            account: process.env.SNOWFLAKE_ACCOUNT,
+            username: process.env.SNOWFLAKE_USERNAME,
+            password: process.env.SNOWFLAKE_PASSWORD,
+            role: process.env.SNOWFLAKE_ROLE,
+            warehouse: process.env.SNOWFLAKE_WAREHOUSE,
+            database: process.env.SNOWFLAKE_DATABASE,
+            schema: process.env.SNOWFLAKE_SCHEMA,
+          });
+
+          connection.on('error', (err) => {
+            reconnect();
+          });
+
+          connection.connect((err) => {
+            if (err) {
+              reconnect();
+            } else {
+              console.log('Successfully connected to Snowflake.');
+            }
+          });
+        };
+
+        // Initialize the connection for the first time
+        initConnection();
 
         return connection;
       },
@@ -76,7 +90,6 @@ import { QBeeService } from './qbee/qbee.service';
     MarketShareService,
     AgeService,
     DomainNameAnalysisService,
-    AnalysisService,
     GraphFormatService,
     SnowflakeService,
     MovementService,
@@ -84,6 +97,6 @@ import { QBeeService } from './qbee/qbee.service';
     DomainWatchService,
     QBeeService
   ],
-  exports: [TransactionService, MarketShareService, AgeService, DomainNameAnalysisService, AnalysisService, GraphFormatService, SnowflakeService, MovementService, RegistrarNameService, DomainWatchService, QBeeService],
+  exports: [TransactionService, MarketShareService, AgeService, DomainNameAnalysisService, GraphFormatService, SnowflakeService, MovementService, RegistrarNameService, DomainWatchService, QBeeService],
 })
 export class AppModule { }

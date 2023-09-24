@@ -78,7 +78,7 @@
       "!**/*-integration.service.spec.ts",
       "!**/app.module.ts"
     ],
-    "coverageDirectory": "../zacr/coverage",
+    "coverageDirectory": "../coverage",
     "testEnvironment": "node"
   }
 }
