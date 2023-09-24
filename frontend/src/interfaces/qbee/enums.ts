@@ -40,6 +40,13 @@ export enum ComparisonType{
     LESSTHAN = "<"
 }
 
+export enum ComparisonOperator{
+    EQUAL = "=",
+    LIKE = "LIKE",
+    GREATERTHAN = ">",
+    LESSTHAN = "<"
+}
+
 export enum LogicalOperator { 
     and = 'AND',  
     or = 'OR' 

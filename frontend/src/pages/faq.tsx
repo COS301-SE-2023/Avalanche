@@ -57,22 +57,3 @@ export default function FAQPage() {
   );
 }
 
-export async function getStaticProps() {
-    try {
-      const filePath = path.join(process.cwd(), "src/assets", "user-manual.json");
-      const fileContents = fs.readFileSync(filePath, "utf8");
-  
-      return {
-        props: {
-          json: fileContents,
-        },
-      };
-    } catch (error) {
-      console.error("Failed to read the json file", error);
-      return {
-        props: {
-          json: {},
-        },
-      };
-    }
-  }
