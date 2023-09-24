@@ -883,7 +883,7 @@ export const getDashboardGraphs = createAsyncThunk("GRAPH.GetDashboardGraphs", a
             dataSource: selectedDataSource
         }
         const response: IDashboardGraphResponse = await ky.post(`${url}/user-management/getDashboards`, {
-            json: object,
+            json: object, timeout: 30000,
             headers: {
                 "Authorization": `Bearer ${jwt}`
             }
