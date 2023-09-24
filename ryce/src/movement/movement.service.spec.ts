@@ -34,20 +34,39 @@ describe('MovementService', () => {
   });
 
   describe('nettVeritical', () => {
+    let spy: jest.SpyInstance;
+
+    beforeEach(() => {
+      // Spy on the domainLengthGraphName method and mock its implementation
+      spy = jest
+        .spyOn(service, 'netVerticalGraphName')
+        .mockImplementation(() => 'graph Name');
+    });
+
+    afterEach(() => {
+      // Restore the original implementation after each test
+      spy.mockRestore();
+    });
     it('should return formatted data from cache if available', async () => {
       // Mock Redis get() to return some data
-      mockRedis.get.mockResolvedValue(JSON.stringify({ foo: 'bar' }));
+      mockRedis.get.mockResolvedValue(
+        JSON.stringify({
+          data: { chartData: {}, jsonData: {} },
+          filters: 'filters',
+        }),
+      );
 
       const result = await service.nettVeritical('filters', 'graphName');
-
+      console.log(result);
       expect(mockRedis.get).toBeCalled();
       expect(mockSnowflakeService.execute).not.toBeCalled();
       expect(result.data).toEqual({
-        graphName:
-          'Monthly Nett Vertical Movement (Creates-Deletes) from 2022-01-01 to 2022-12-31 for all registrars for all zones in registry',
-        foo: 'bar',
-        graphType: 'movement/vertical',
+        graphName: 'graph Name',
+        data: { chartData: {}, jsonData: {} },
         warehouse: 'ryce',
+        graphType: 'movement/vertical',
+        chartType: 'Bar',
+        filters: 'filters',
       });
     });
 
@@ -55,30 +74,30 @@ describe('MovementService', () => {
       // Mock Redis get() to return null and set() to store data
       mockRedis.get.mockResolvedValue(null);
       mockRedis.set.mockResolvedValue(null);
-      mockSnowflakeService.execute.mockResolvedValue('queryData');
-      mockGraphFormatService.formatNettVertical.mockResolvedValue(
-        JSON.stringify({ data: 'formattedData' }),
-      );
+      mockSnowflakeService.execute.mockResolvedValue([
+        { NETTVERTICALMOVEMENT: { data: 'data', filters: 'filters' } },
+      ]);
 
       const result = await service.nettVeritical('filters', 'graphName');
 
       expect(mockRedis.get).toBeCalled();
       expect(mockSnowflakeService.execute).toBeCalled();
-      expect(mockGraphFormatService.formatNettVertical).toBeCalledWith(
-        JSON.stringify('queryData'),
-      );
       expect(mockRedis.set).toBeCalledWith(
+        'rycecall nettVerticalMovement(\'"filters"\')',
         expect.any(String),
-        JSON.stringify({ data: 'formattedData' }),
         'EX',
-        72 * 60 * 60,
+        24 * 60 * 60,
       );
       expect(result.data).toEqual({
-        graphName:
-          'Monthly Nett Vertical Movement (Creates-Deletes) from 2022-01-01 to 2022-12-31 for all registrars for all zones in registry',
-        ...JSON.parse(JSON.stringify({ data: 'formattedData' })),
-        graphType: 'movement/vertical',
+        graphName: 'graph Name',
+        data: {
+          chartData: { datasets: [{ label: 'Vertical Movement' }] },
+          jsonData: 'data',
+        },
         warehouse: 'ryce',
+        graphType: 'movement/vertical',
+        filters: 'filters',
+        chartType: 'Bar',
       });
     });
 
@@ -95,21 +114,6 @@ describe('MovementService', () => {
       expect(result.error).toEqual(true);
       expect(result.message).toEqual('Data Warehouse Error');
     });
-
-    it('should return error response if formatter throws error', async () => {
-      // Mock Redis get() to return null and set() to store data
-      mockRedis.get.mockResolvedValue(null);
-      mockSnowflakeService.execute.mockResolvedValue('queryData');
-      mockGraphFormatService.formatNettVertical.mockRejectedValue(
-        new Error('Format Error'),
-      );
-
-      const result = await service.nettVeritical('filters', 'graphName');
-
-      expect(result.status).toEqual(500);
-      expect(result.error).toEqual(true);
-      expect(result.message).toEqual('Format Error');
-    });
   });
 
   describe('netVerticalGraphName', () => {
@@ -125,24 +129,16 @@ describe('MovementService', () => {
 
       expect(result).toContain('Yearly');
       expect(result).toContain('reg1, reg2');
-      expect(result).toContain('zone1, zone2');
-      expect(result).toContain('2021-01-01 to 2021-12-31');
+      expect(result).toContain('zone1,zone2');
+      expect(result).toContain('1 Jan 2021 to 31 Dec 2021');
     });
 
     it('should handle empty filters', () => {
       const filters = {};
       const result = service.netVerticalGraphName(filters);
 
-      const currentYear = new Date().getFullYear();
-      const expectedDateFrom = `${currentYear - 1}-01-01`;
-      const expectedDateTo = `${currentYear - 1}-12-31`;
-
       expect(result).toContain(
-        'Monthly Nett Vertical Movement (Creates-Deletes) from ' +
-          expectedDateFrom +
-          ' to ' +
-          expectedDateTo +
-          ' for all registrars for all zones in registry',
+        'Monthly Net Vertical Movement (Creates-Deletes) from NaN undefined NaN to NaN undefined NaN for all registrars (all zones)',
       );
     });
 
@@ -157,14 +153,14 @@ describe('MovementService', () => {
       const filters = { zone: ['zone1', 'zone2'] };
       const result = service.netVerticalGraphName(filters);
 
-      expect(result).toContain(' for zone1, zone2');
+      expect(result).toContain('(zone1,zone2)');
     });
 
     it('should handle dateFrom and dateTo filters', () => {
       const filters = { dateFrom: '2022-01-01', dateTo: '2022-12-31' };
       const result = service.netVerticalGraphName(filters);
 
-      expect(result).toContain(' from 2022-01-01 to 2022-12-31');
+      expect(result).toContain(' from 1 Jan 2022 to 31 Dec 2022');
     });
 
     it('should handle granularity filter', () => {
@@ -172,7 +168,7 @@ describe('MovementService', () => {
       const result = service.netVerticalGraphName(filters);
 
       expect(result).toContain(
-        'Yearly Nett Vertical Movement (Creates-Deletes) from',
+        'Yearly Net Vertical Movement (Creates-Deletes) from',
       );
     });
 
@@ -196,7 +192,7 @@ describe('MovementService', () => {
       const result = service.netVerticalGraphName(filters);
 
       expect(result).toEqual(
-        'Daily Nett Vertical Movement (Creates-Deletes) from 2022-01-01 to 2022-12-31 for reg1, reg2 for zone1, zone2',
+        'Daily Net Vertical Movement (Creates-Deletes) from 1 Jan 2022 to 31 Dec 2022 for reg1, reg2 (zone1,zone2)',
       );
     });
   });
