@@ -18,26 +18,29 @@ export default function GraphCreateModal({ state, add }: ICreateGroupModal) {
 
     const dispatch = useDispatch<any>();
     const stateUser = useSelector(userState);
-    var tutorialRunning = true
+    const [hasDisplayed, setHasDisplayed] = useState<boolean>(false)
     const introJS = introJs()
-    const startTut = () => {
-        tutorialRunning = true;
-        introJS.setOptions({
-            steps: [
-                {
-                    element: document.getElementsByClassName("bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4 dark:bg-dark-secondaryBackground ")[0] as HTMLElement,
-                    intro: 'Here, you can choose which warehouse you want the data to come from, as well as the graph type. Go ahead and name your graph too.',
-                },{
-                    element: document.getElementsByClassName("w-full")[8] as HTMLElement,
-                    intro: "Once you have selected the warehouse, graph type and given your graph a name, click here to see the magic happen."
-                }
-                ]
-        }).start();
-    }
 
     useEffect(() => {
-        startTut();
-    })
+        const startTut = () => {
+            introJS.setOptions({
+                steps: [
+                    {
+                        element: document.getElementsByClassName("bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4 dark:bg-dark-secondaryBackground ")[0] as HTMLElement,
+                        intro: 'Here, you can choose which warehouse you want the data to come from, as well as the graph type. Go ahead and name your graph too.',
+                    },{
+                        element: document.getElementsByClassName("w-full")[8] as HTMLElement,
+                        intro: "Once you have selected the warehouse, graph type and given your graph a name, click here to see the magic happen."
+                    }
+                    ]
+            }).start();
+        }
+
+        if(hasDisplayed == false){
+            startTut();
+            setHasDisplayed(true);
+        }
+    }, [hasDisplayed])
 
     // These two variables are the fields from the form. 
     const [name, setName] = useState<string>("");
