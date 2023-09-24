@@ -27,26 +27,38 @@ interface IIntegrationLoginModal { }
 
 export default function IntegrationLoginModal({ }: IIntegrationLoginModal) {
 
-  var tutorialRunning = true
+  const [tutorialPhase, setTutorialPhase] = useState<Number>(0);
+
   const introJS = introJs()
-  const startTut = () => {
-    tutorialRunning = true;
-    introJS.setOptions({
-      steps: [
-        {
-          element: document.getElementsByClassName("bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4 dark:bg-dark-secondaryBackground")[0] as HTMLElement,
-          intro: 'Here, you can choose which warehouse you want the data to come from, as well as the graph type. Go ahead and name your graph too.',
-        }, {
-          element: document.getElementsByClassName("py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-gray-400 rounded-lg hover:bg-avalancheBlue hover:text-white dark:bg-primaryBackground dark:text-gray-200  dark:hover:text-white dark:hover:bg-gray-700 w-full gap-2 flex justify-center transition duration-75")[0] as HTMLElement,
-          intro: "Once you have selected the warehouse, graph type and given your graph a name, click here to see the magic happen."
-        }
-      ]
-    }).start();
-  }
 
   useEffect(() => {
-    startTut();
-  })
+    const startTut = () => {
+      introJS.setOptions({
+        steps: [
+          {
+            element: document.getElementsByClassName("bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4 dark:bg-dark-secondaryBackground")[0] as HTMLElement,
+            intro: 'Here, you can choose which warehouse you want the data to come from, as well as the graph type. Go ahead and name your graph too.',
+          }, {
+            element: document.getElementsByClassName("py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-gray-400 rounded-lg hover:bg-avalancheBlue hover:text-white dark:bg-primaryBackground dark:text-gray-200  dark:hover:text-white dark:hover:bg-gray-700 w-full gap-2 flex justify-center transition duration-75")[0] as HTMLElement,
+            intro: "Once you have selected the warehouse, graph type and given your graph a name, click here to see the magic happen."
+          }
+        ]
+      }).start();
+    }
+    if (tutorialPhase == 0) {
+      startTut();
+    } else if(tutorialPhase == 1){
+      introJS.setOptions({
+        steps: [
+          {
+            element: document.getElementsByClassName("z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 w-full")[0] as HTMLElement,
+            intro: 'Here you can selectm thuimngsyeah',
+          }
+        ]
+      }).start()
+    }
+
+  }, [tutorialPhase])
 
 
 
@@ -177,6 +189,7 @@ export default function IntegrationLoginModal({ }: IIntegrationLoginModal) {
         text={valid ? integration.name : "Select Data Product"}
         onClick={() => {
           setDropdown(!dropdown);
+          setTutorialPhase(tutorialPhase.valueOf() +1);
         }}
         icon={
           dropdown ? (

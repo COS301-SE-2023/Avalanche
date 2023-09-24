@@ -86,7 +86,7 @@ export default function Settings() {
                 },
                 {
                     element: document.getElementsByClassName("text-white bg-primary-600 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:focus:ring-primary-800 inline-flex items-center justify-center flex-nowrap hover:bg-primary-700 dark:hover:bg-primary-700 ")[2] as HTMLElement,
-                    intro: 'Here you can choose the name you want for your Dashboard.',
+                    intro: 'Click here to start the integration process.',
                 }
             ]
         }).start();
