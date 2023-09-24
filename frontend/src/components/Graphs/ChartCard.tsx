@@ -237,7 +237,7 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
 				}`;
 			const res = await ky
 				.post(url, {
-					json: filters,
+					json: filters, timeout : 30000,
 					headers: {
 						Authorization: `Bearer ${jwt}`,
 					},
