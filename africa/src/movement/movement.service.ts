@@ -145,7 +145,6 @@ export class MovementService {
 
       graphName = this.verticalRankedGraphName(data.filters);
 
-      filters = JSON.parse(filters);
       return {
         status: 'success',
         data: {
