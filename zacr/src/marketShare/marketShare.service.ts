@@ -41,10 +41,13 @@ export class MarketShareService {
          * Get the total
          */
         let filtersCount = {};
+        const registrarArr = queryData[0]['MARKETSHARE'].data
+          .filter((item) => item.Registrar !== undefined)
+          .map((item) => item.Registrar as string);
         if (JSON.parse(filters).zone != undefined) {
           filtersCount = {
-            zone: JSON.parse(filters).zone,
-            registrar: JSON.parse(filters).registrar,
+            zone: queryData[0]['MARKETSHARE'].filters.zone,
+            registrar: registrarArr,
           };
         }
         filtersCount = JSON.stringify(filtersCount);
