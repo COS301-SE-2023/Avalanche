@@ -20,7 +20,8 @@ import { getCookie } from "cookies-next"
 import { updateDashboards } from "@/store/Slices/userSlice";
 import NoFind from "@/components/CustomSVG/NoFind";
 import introJs from 'intro.js';
-import 'intro.js/themes/introjs-modern.css';
+import 'intro.js/introjs.css';
+import 'intro.js/themes/introjs-modern.css'
 
 
 export default function CreateCustomDashboard() {

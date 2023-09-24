@@ -6,7 +6,8 @@ import { clearCurrentOpenState, setAnimateManagerState } from '@/store/Slices/mo
 import { userState } from '@/store/Slices/userSlice';
 import { Transition } from '@headlessui/react';
 import introJs from 'intro.js';
-import 'intro.js/themes/introjs-nazanin.css';
+import 'intro.js/introjs.css';
+import 'intro.js/themes/introjs-modern.css'
 
 interface ICreateGroupModal {
     state: any,

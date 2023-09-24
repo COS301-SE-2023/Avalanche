@@ -20,7 +20,8 @@ import { useDispatch } from "react-redux";
 import { getEndpoints } from "@/store/Slices/permissionSlice";
 import { getLatestOrganisation, getUserGroups } from "@/store/Slices/userSlice";
 import introJs from 'intro.js';
-import 'intro.js/themes/introjs-modern.css';
+import 'intro.js/introjs.css';
+import 'intro.js/themes/introjs-modern.css'
 
 interface IIntegrationLoginModal { }
 
