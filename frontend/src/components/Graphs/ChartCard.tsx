@@ -221,11 +221,14 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
 		});
 
 		setFilterDropdown(!filterDropdown);
+		console.log(requestObject);
+		console.log("In filters");
 		fetchGraphData(requestObject);
 	};
 
 	const fetchGraphData = async (filters: any) => {
 		setLoading(true);
+		console.log(filters);
 		try {
 			const jwt = getCookie("jwt");
 			const url = data.endpointName
@@ -240,6 +243,7 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
 					},
 				})
 				.json();
+			console.log(res);	
 			const d = res as any;
 			setGraphData(d.data.data);
 			setGraphTitle(d.data.graphName);
