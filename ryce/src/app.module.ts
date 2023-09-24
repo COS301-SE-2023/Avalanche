@@ -90,7 +90,6 @@ import { QBeeService } from './qbee/qbee.service';
     MarketShareService,
     AgeService,
     DomainNameAnalysisService,
-    AnalysisService,
     GraphFormatService,
     SnowflakeService,
     MovementService,
@@ -98,6 +97,6 @@ import { QBeeService } from './qbee/qbee.service';
     DomainWatchService,
     QBeeService
   ],
-  exports: [TransactionService, MarketShareService, AgeService, DomainNameAnalysisService, AnalysisService, GraphFormatService, SnowflakeService, MovementService, RegistrarNameService, DomainWatchService, QBeeService],
+  exports: [TransactionService, MarketShareService, AgeService, DomainNameAnalysisService, GraphFormatService, SnowflakeService, MovementService, RegistrarNameService, DomainWatchService, QBeeService],
 })
 export class AppModule { }
