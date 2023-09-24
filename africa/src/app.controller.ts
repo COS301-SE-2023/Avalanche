@@ -157,8 +157,7 @@ export class AppController {
   @MessagePattern({ cmd: 'qbee' })
   async qBee(data: any) {
     const result = await this.qbeeService.executeQuery(
-      data.sqlQuery,
-      data.schemaName,
+      data.sqlQuery
     );
     if (result.error) {
       throw new RpcException({
