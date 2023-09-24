@@ -29,20 +29,20 @@ describe('UserDashboardMangementService', () => {
         const moduleRef = await Test.createTestingModule({
             providers: [
                 UserDashboardMangementService,
-                { provide: getRepositoryToken(User), useClass: Repository },
-                { provide: getRepositoryToken(UserGroup), useClass: Repository },
-                { provide: getRepositoryToken(Organisation), useClass: Repository },
-                { provide: getRepositoryToken(Dashboard), useClass: Repository },
+                { provide: getRepositoryToken(User, 'user'), useClass: Repository },
+                { provide: getRepositoryToken(UserGroup, 'user'), useClass: Repository },
+                { provide: getRepositoryToken(Organisation, 'user'), useClass: Repository },
+                { provide: getRepositoryToken(Dashboard, 'user'), useClass: Repository },
                 { provide: 'REDIS', useValue: mockRedisInstance },
                 ConfigService
             ],
         }).compile();
 
         service = await moduleRef.get<UserDashboardMangementService>(UserDashboardMangementService);
-        userRepository = await moduleRef.get(getRepositoryToken(User));
-        userGroupRepository = await moduleRef.get(getRepositoryToken(UserGroup));
-        organisationRepository = await moduleRef.get(getRepositoryToken(Organisation));
-        dashboardRepository = await moduleRef.get(getRepositoryToken(Dashboard));
+        userRepository = await moduleRef.get(getRepositoryToken(User, 'user'));
+        userGroupRepository = await moduleRef.get(getRepositoryToken(UserGroup, 'user'));
+        organisationRepository = await moduleRef.get(getRepositoryToken(Organisation, 'user'));
+        dashboardRepository = await moduleRef.get(getRepositoryToken(Dashboard, 'user'));
         redis = await moduleRef.get('REDIS');
     });
 
