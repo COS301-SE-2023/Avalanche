@@ -40,7 +40,7 @@ export default function GraphCreateModal({ state, add }: ICreateGroupModal) {
             startTut();
             setHasDisplayed(true);
         }
-    }, [hasDisplayed])
+    }, [hasDisplayed, introJS])
 
     // These two variables are the fields from the form. 
     const [name, setName] = useState<string>("");
