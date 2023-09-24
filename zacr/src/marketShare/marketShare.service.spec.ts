@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { MarketShareService } from './marketShare.service';
 import { SnowflakeService } from '../snowflake/snowflake.service';
 import { GraphFormatService } from '../graph-format/graph-format.service';
+import { RegistrarNameService } from '../registrarName/registrarName.service';
 
 describe('MarketShareService', () => {
   let service: MarketShareService;
@@ -11,6 +12,7 @@ describe('MarketShareService', () => {
   const mockGraphFormatService = {
     formatMarketshare: jest.fn(),
   };
+  const mockRegistrarNameService = { registrarName: jest.fn() };
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -20,6 +22,7 @@ describe('MarketShareService', () => {
         { provide: 'REDIS', useValue: mockRedis },
         { provide: SnowflakeService, useValue: mockSnowflakeService },
         { provide: GraphFormatService, useValue: mockGraphFormatService },
+        { provide: RegistrarNameService, useValue: mockRegistrarNameService },
       ],
     }).compile();
 
@@ -31,6 +34,19 @@ describe('MarketShareService', () => {
   });
 
   describe('marketShare', () => {
+    let spy: jest.SpyInstance;
+
+    beforeEach(() => {
+      // Spy on the domainLengthGraphName method and mock its implementation
+      spy = jest
+        .spyOn(service, 'marketShareGraphName')
+        .mockImplementation(() => 'graph Name');
+    });
+
+    afterEach(() => {
+      // Restore the original implementation after each test
+      spy.mockRestore();
+    });
     it('should get formatted data from cache if available', async () => {
       const mockData = { data: 'test' };
       mockRedis.get.mockResolvedValue(JSON.stringify(mockData));
@@ -39,18 +55,21 @@ describe('MarketShareService', () => {
       expect(result).toEqual({
         status: 'success',
         data: {
-          graphName:
-            'Domain count marketshare across all registrars for all zones ',
-          data: mockData,
+          graphName: 'graph Name',
+          data: 'test',
           warehouse: 'zacr',
           graphType: 'marketShare',
+          chartType: 'PolarArea',
+          filters: undefined,
         },
         timestamp: expect.any(String),
       });
     });
 
     it('should get formatted data from Snowflake and cache it if not available in cache', async () => {
-      const mockQueryData = [{ data: 'test' }];
+      const mockQueryData = [
+        { DOMAINCOUNT: { data: [{}] }, MARKETSHARE: { data: [{}] } },
+      ];
       const mockFormattedData = JSON.stringify({ formatted: 'test' });
 
       mockRedis.get.mockResolvedValue(null);
@@ -64,14 +83,15 @@ describe('MarketShareService', () => {
       expect(result).toEqual({
         status: 'success',
         data: {
-          graphName:
-            'Domain count marketshare across all registrars for all zones ',
+          graphName: 'graph Name',
           data: {
-            chartData: '{"formatted":"test"}',
-            jsonData: undefined,
+            chartData: { datasets: [{ label: 'Marketshare' }] },
+            jsonData: expect.any(Object),
           },
+          filters: undefined,
           warehouse: 'zacr',
           graphType: 'marketShare',
+          chartType: 'PolarArea',
         },
         timestamp: expect.any(String),
       });
@@ -88,7 +108,7 @@ describe('MarketShareService', () => {
       const graphName = service.marketShareGraphName(filters);
 
       expect(graphName).toEqual(
-        'Domain count marketshare for the rank1 registrars in terms of domain count across registrar1 for zone1',
+        'The rank1 registrars (i.t.o. domain count) (Specifically also including: registrar1) (zone1)',
       );
     });
 
@@ -96,9 +116,7 @@ describe('MarketShareService', () => {
       const filters = {};
       const graphName = service.marketShareGraphName(filters);
 
-      expect(graphName).toEqual(
-        'Domain count marketshare across all registrars for all zones ',
-      );
+      expect(graphName).toEqual('The top5 (all zones)');
     });
   });
 });

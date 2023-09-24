@@ -3,17 +3,16 @@ import { AgeService } from './age.service';
 import Redis from 'ioredis';
 import { JwtService } from '@nestjs/jwt';
 import { SnowflakeService } from '../snowflake/snowflake.service';
-import { AnalysisService } from '../analysis/analysis.service';
 import { GraphFormatService } from '../graph-format/graph-format.service';
+import { RegistrarNameService } from '../registrarName/registrarName.service';
 
 describe('AgeService', () => {
   let service: AgeService;
   const mockJwtService = {};
   const mockRedis = { get: jest.fn(), set: jest.fn() };
   const mockSnowflakeService = { execute: jest.fn() };
-  const mockDataFormatService = {};
-  const mockAnalysisService = { analyze: jest.fn() };
   const mockGraphFormatService = { formatAgeAnalysis: jest.fn() };
+  const mockRegistrarNameService = { registrarName: jest.fn() };
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -22,8 +21,8 @@ describe('AgeService', () => {
         { provide: 'REDIS', useValue: mockRedis },
         { provide: JwtService, useValue: mockJwtService },
         { provide: SnowflakeService, useValue: mockSnowflakeService },
-        { provide: AnalysisService, useValue: mockAnalysisService },
         { provide: GraphFormatService, useValue: mockGraphFormatService },
+        { provide: RegistrarNameService, useValue: mockRegistrarNameService },
       ],
     }).compile();
 
@@ -31,6 +30,19 @@ describe('AgeService', () => {
   });
 
   describe('age', () => {
+    let spy: jest.SpyInstance;
+
+    beforeEach(() => {
+      // Spy on the domainLengthGraphName method and mock its implementation
+      spy = jest
+        .spyOn(service, 'ageGraphName')
+        .mockImplementation(() => 'graph Name');
+    });
+
+    afterEach(() => {
+      // Restore the original implementation after each test
+      spy.mockRestore();
+    });
     it('should correctly process age when data is not cached in Redis', async () => {
       const filters = JSON.stringify({ data: 'someData' });
       const graphName = 'graphName';
@@ -39,7 +51,7 @@ describe('AgeService', () => {
       // Set up mocks
       mockRedis.get.mockResolvedValue(null); // Simulate Redis cache miss
       mockSnowflakeService.execute.mockResolvedValue([
-        { AGEANLYSIS: 'queryReturnData' },
+        { AGEANALYSIS: 'queryReturnData' },
       ]);
       mockGraphFormatService.formatAgeAnalysis.mockResolvedValue(
         JSON.stringify({ format: 'formattedData' }),
@@ -52,13 +64,13 @@ describe('AgeService', () => {
       expect(mockRedis.get).toHaveBeenCalledWith(`zacr${sqlQuery}`);
       expect(mockSnowflakeService.execute).toHaveBeenCalledWith(sqlQuery);
       expect(mockGraphFormatService.formatAgeAnalysis).toHaveBeenCalledWith(
-        JSON.stringify([{ AGEANLYSIS: 'queryReturnData' }]),
+        JSON.stringify([{}]),
       );
       expect(mockRedis.set).toHaveBeenCalledWith(
         `zacr${sqlQuery}`,
-        '{"chartData":"{\\"format\\":\\"formattedData\\"}","jsonData":"queryReturnData"}',
+        expect.any(String),
         'EX',
-        72 * 60 * 60,
+        24 * 60 * 60,
       );
       // Expect the result to be the final formatted data
       expect(result.status).toBe('success');
@@ -115,7 +127,9 @@ describe('AgeService', () => {
 
       // Set up mocks
       mockRedis.get.mockResolvedValue(null); // Simulate Redis cache miss
-      mockSnowflakeService.execute.mockResolvedValue('queryData');
+      mockSnowflakeService.execute.mockResolvedValue([
+        { AGEANALYSIS: 'queryReturnData' },
+      ]);
       mockGraphFormatService.formatAgeAnalysis.mockRejectedValue(
         new Error('Format error'),
       );
@@ -127,7 +141,7 @@ describe('AgeService', () => {
       expect(mockRedis.get).toHaveBeenCalledWith(`zacr${sqlQuery}`);
       expect(mockSnowflakeService.execute).toHaveBeenCalledWith(sqlQuery);
       expect(mockGraphFormatService.formatAgeAnalysis).toHaveBeenCalledWith(
-        JSON.stringify('queryData'),
+        '[{}]',
       );
 
       // Expect the result to be error

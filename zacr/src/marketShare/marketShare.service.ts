@@ -78,7 +78,7 @@ export class MarketShareService {
 
         const topNRegistrars = queryData[0]['MARKETSHARE'].data;
 
-        const totalTopNRegistrarsCount = topNRegistrars.reduce(
+        const totalTopNRegistrarsCount = topNRegistrars?.reduce(
           (acc, curr) => acc + (curr.NumInRegistry ? curr.NumInRegistry : 0),
           0,
         );

@@ -37,6 +37,7 @@ export class DomainNameAnalysisService {
         try {
           queryData = await this.snowflakeService.execute(sqlQuery);
         } catch (e) {
+          console.log(e);
           return {
             status: 500,
             error: true,
@@ -55,11 +56,11 @@ export class DomainNameAnalysisService {
           datasets: [{ label: 'Label1' }],
         };
 
-        const jsonData: any[] = responseData.data.data;
-        jsonData.forEach((item) => {
+        const jsonData: any[] = responseData.data?.data;
+        jsonData?.forEach((item) => {
           delete item.domains;
         });
-        jsonData.unshift({ xAxis: 'word', yAxis: 'frequency' });
+        jsonData?.unshift({ xAxis: 'word', yAxis: 'frequency' });
 
         const graphData = {
           chartData: formattedData,
@@ -94,6 +95,7 @@ export class DomainNameAnalysisService {
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
+      console.log(e);
       return {
         status: 500,
         error: true,
@@ -121,6 +123,7 @@ export class DomainNameAnalysisService {
         try {
           queryData = await this.snowflakeService.execute(sqlQuery);
         } catch (e) {
+          console.log(e);
           return {
             status: 500,
             error: true,
@@ -177,6 +180,7 @@ export class DomainNameAnalysisService {
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
+      console.log(e);
       return {
         status: 500,
         error: true,
@@ -202,6 +206,7 @@ export class DomainNameAnalysisService {
         try {
           queryData = await this.snowflakeService.execute(sqlQuery);
         } catch (e) {
+          console.log(e);
           return {
             status: 500,
             error: true,
