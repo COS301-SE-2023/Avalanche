@@ -60,6 +60,26 @@ export class DomainWatchController {
       throw error;
     }
   }
+
+  @Post('takePickeeNow')
+  async takePickeeNow(@Body() data: any) {
+    const end = httpRequestDurationMicrosecondsDW.startTimer();
+    try {
+      const result = await this.domainWatchService.takePickeeNow(data);
+      httpRequestsTotalDW.inc({ method: 'POST', route: 'takePickeeNow', code: 200 });
+      end({ method: 'POST', route: 'takePickeeNow', code: 200 });
+      return result;
+    } catch (error) {
+      const rpcError = error
+      httpRequestsTotalDW.inc({ method: 'POST', route: 'takePickeeNow', code: rpcError.status });
+      end({ method: 'POST', route: 'takePickeeNow', code: rpcError.status });
+      if (typeof rpcError === 'object') {
+        throw new HttpException(rpcError.message || 'An unexpected error occurred', rpcError.status || 500);
+      }
+      throw error;
+    }
+  }
+
   @Get('passive')
   async passive() {
     const end = httpRequestDurationMicrosecondsDW.startTimer();

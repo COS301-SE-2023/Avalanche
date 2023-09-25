@@ -21,6 +21,19 @@ export class DomainWatchService {
     }
   }
 
+  async takePickeeNow(data: any): Promise<any> {
+    try {
+      const response = this.httpService.post(
+        'http://DomainWatch:4100/domainWatch/takePickeeNow',
+        data,
+      );
+      const responseData = await lastValueFrom(response);
+      return JSON.stringify(responseData.data);
+    } catch (error) {
+      throw error;
+    }
+  }
+
   @Cron(CronExpression.EVERY_DAY_AT_6AM)
   async passive() {
     console.log('Running every day at midnight');
