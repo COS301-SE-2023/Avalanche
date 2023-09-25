@@ -17,11 +17,11 @@ public class ScreenshotTaker {
     private static WebDriver driver;
 
     public static String takeScreenshot(String domainName) {
-        System.out.println("\tCreating chrome options");
+        System.out.println("Creating chrome options");
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--window-size=1920,1080", "headless");
 
-        System.out.println("\tCreating chrome driver");
+        System.out.println("Creating chrome driver");
         WebDriver driver = new ChromeDriver(options);
 
         System.out.println("Going to " + domainName);
