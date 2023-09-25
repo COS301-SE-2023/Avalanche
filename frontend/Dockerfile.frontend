@@ -61,3 +61,4 @@ ENV PORT 3000
 ENV HOSTNAME nextjs
 
 CMD ["node", "server.js"]
+# CMD ["node", ".next/standalone/server.js"]
