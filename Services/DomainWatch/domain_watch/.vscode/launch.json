@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ScreenshotTaker",
+            "request": "launch",
+            "mainClass": "avalanche.Core.ScreenshotTaker",
+            "projectName": "domain_watch"
+        },
+        {
+            "type": "java",
             "name": "Current File",
             "request": "launch",
             "mainClass": "${file}"
