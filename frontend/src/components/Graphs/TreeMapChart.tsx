@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { json } from "stream/consumers";
 import { chartColours } from "./data";
-import { convertData } from "./util";
+import { convertData, convertForTree } from "./util";
 import { useTheme } from "next-themes";
 
 
@@ -15,16 +15,16 @@ type JsonDataEntry = {
   [key: string]: string | number;
 };
 
-export function LineChart({ data, height }: IChart) {
+export function TreeMapChart({ data, height }: IChart) {
   const { theme, setTheme } = useTheme();
 
   const makeOptions = (jsonData: JsonDataEntry[]) => {
-    let allOptions = convertData(jsonData, "line", theme);
+    let allOptions = convertForTree(jsonData);
 
     //Set basic style
     let styleOptions={
       dataLabels: {
-        enabled: false,
+        enabled: true,
         colors: undefined, // This will use the series color for each data label
       },
       stroke: {
@@ -34,23 +34,25 @@ export function LineChart({ data, height }: IChart) {
         colors: undefined,
         dashArray: 0,
       },
-      noData: {
-        text: "We're sorry, we couldn't find any results...\r\nPlease try another set of filters",
-        align: 'center',
-        verticalAlign: 'middle',
-        offsetX: 0,
-        offsetY: -5,
-        style: {
-          color: undefined,
-          fontSize: '18px',
-          fontFamily: undefined
+      plotOptions: {
+        treemap: {
+          colorScale: {
+            ranges: [
+              {
+                from: Math.min(...allOptions.series[0].data.map(o=>o.y)),
+                to: Math.max(...allOptions.series[0].data.map(o=>o.y)),
+                color: chartColours[0]
+              }
+            ]
+          }
         }
       },
       chart: {
+        
         zoom: {
-          enabled: true,
-          type: "xy",
-          autoScaleYaxis: false,
+          enabled: false,
+          type: "y",
+          autoScaleYaxis: true,
           zoomedArea: {
             fill: {
               color: "#90CAF9",
@@ -67,7 +69,7 @@ export function LineChart({ data, height }: IChart) {
         height: 100, // or any other fixed height
         width: "100%",
         toolbar: {
-          show: true,
+          show: false,
           tools: {
             download: false, // Display the download icon
             selection: true, // Display the selection icon
@@ -101,56 +103,20 @@ export function LineChart({ data, height }: IChart) {
           speed: 350,
         },
       },
+    
     } as any;
 
-    //conditional style for Movement graph
-    if (allOptions.options.yaxis.title.text == " Movement" && allOptions.series && allOptions.series.length == 1) {
-      styleOptions.colors = ["#FF0000"] as string[];
-      styleOptions.fill = {
-        type: "gradient",
-        gradient: {
-          type: 'vertical',
-          gradientToColors: ['#008000'],
-          stops: [(Math.max(...allOptions.series[0].data) / (Math.max(...allOptions.series[0].data) - Math.min(...allOptions.series[0].data))) * 100, 0],
-        }
-      };
-      styleOptions.tooltip.marker={
-        show: false,
-      };
-      let discreteMarkers=[];
-      for (let index = 0; index < allOptions.series[0].data.length; index++) {
-        let markerColour= "#008000";
-        if(allOptions.series[0].data[index]<=0){
-          markerColour="#FF0000";
-        }
-        discreteMarkers.push({
-          seriesIndex:0,
-          dataPointIndex: index,
-          fillColor: markerColour,
-          strokeColor: markerColour,
-          size: 4, // Adjust the size as per your preference
-        shape: "circle", // This will make the markers circular
-        strokeWidth: 0,
-        hover: {
-          size: 6, // Adjust the size for hover state as per your preference
-        },});
-        
-      }
-      styleOptions.markers = {
-        discrete:discreteMarkers
-      }
-    }else{
-      styleOptions.colors=chartColours;
-      styleOptions.markers={
-        size: 5, // Adjust the size as per your preference
-        shape: "circle", // This will make the markers circular
-        strokeWidth: 0,
-        hover: {
-          size: 7, // Adjust the size for hover state as per your preference
-        },
-      };
-    }
-    
+    styleOptions.colors=chartColours;
+    styleOptions.markers={
+      size: 5, // Adjust the size as per your preference
+      shape: "circle", // This will make the markers circular
+      strokeWidth: 0,
+      hover: {
+        size: 7, // Adjust the size for hover state as per your preference
+      },
+    };
+
+    console.log(allOptions,"all options");
     Object.assign(allOptions.options, styleOptions);
     return allOptions;
   };
@@ -171,7 +137,7 @@ export function LineChart({ data, height }: IChart) {
             <Chart
               options={chartData.options}
               series={chartData.series}
-              type="line"
+              type="treemap"
               height={height}
             />
           )}

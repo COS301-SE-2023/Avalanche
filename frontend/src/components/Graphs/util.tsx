@@ -429,18 +429,20 @@ export function convertForProportion(
 }
 
 export function convertForTree(jsonData: JsonDataEntry[]): TreeConvertedData {
+  console.log("json",jsonData);
   const seriesData: { x: any; y: any }[] = [];
 
-  let xAxisLabel = "";
-  let yAxisLabel = "";
+  let xAxisLabel:any = "";
+  let yAxisLabel:any = "";
 
   if (jsonData.length > 0) {
-    const firstEntryKeys = Object.keys(jsonData[0]);
-    xAxisLabel = firstEntryKeys[0];
-    yAxisLabel = firstEntryKeys[1];
+    xAxisLabel = jsonData[0].xAxis;
+    yAxisLabel = jsonData[0].yAxis;
   }
-
+  
   jsonData.forEach((entry) => {
+    console.log(xAxisLabel,entry[xAxisLabel],typeof entry[xAxisLabel]," <-- x");
+    console.log(yAxisLabel,entry[yAxisLabel],typeof entry[yAxisLabel]," <-- y");
     if (
       (typeof entry[xAxisLabel] == "string" ||
         typeof entry[xAxisLabel] == "number") &&
