@@ -12,6 +12,9 @@ import avalanche.DataClasses.WordFrequency;
 import avalanche.Network.HandlerStartegy.Running;
 
 public class HandleFrequencyCount extends Running {
+
+    private final int MAX_RESULTS = 20;
+
     public String getResponse(String body, long st) {
         // Enter here
         System.out.println("Working on request");
@@ -44,15 +47,22 @@ public class HandleFrequencyCount extends Running {
             e.printStackTrace();
         }
 
+        int maximumResults = MAX_RESULTS;
+        try {
+            maximumResults = obj.getInt("maximumResults");
+        } catch (JSONException e) {
+            System.out.println("No maximum results set. Defaulting to " + maximumResults);
+        }
+
         // Build rest of response here
         if (allWordFrequencies.size() == 0) {
             return "{\"status\":\"failure\",\"server-error\":\""
                     + "0 words were found after processing. You may have set minimumAppearances too low. Otherwise this may be due to an error with the tokeniser"
                     + "\"}";
         }
-        for (int i = 0; i < allWordFrequencies.size(); i++) {
+        for (int i = 0; i < Math.min(allWordFrequencies.size(), maximumResults); i++) {
             resp += "    " + allWordFrequencies.get(i).toJSON();
-            if (i != allWordFrequencies.size() - 1) {
+            if (i != Math.min(allWordFrequencies.size(), maximumResults) - 1) {
                 resp += ",";
             }
         }

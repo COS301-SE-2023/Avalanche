@@ -663,6 +663,7 @@ export class UserDataProductMangementService {
 
             return { "status": "success", "message": result };
         } catch (error) {
+            console.log(error,"Error");
             return {
                 status: 500, error: true, message: 'Unexpected error.',
                 timestamp: new Date().toISOString()
@@ -748,13 +749,18 @@ export class UserDataProductMangementService {
             }
 
             // Initialize an array to store the final result
-            const result = [];
             let g = dataSource;
             if(g == 'zarc'){
                 g = 'zacr'
             }
+
+            if(dataSource == 'zacr'){
+                dataSource = 'zarc'
+            }
             
             const userProduct = user.products.find(product => product.dataSource === dataSource);
+            const check = await this.redis.get(dataSource + " " + endpointV + " " + userProduct.tou)
+            if(check == null){
             const endpoint = await this.endpointRepository.findOne({
                 where: { endpoint: g }, // Match the endpoint with the dataSource
                 relations: ['dashboards']
@@ -767,11 +773,16 @@ export class UserDataProductMangementService {
                 };  
             }
             const graphs = dashboards.graphs;
-            result.push({
+            const result ={
                 dashboardGraphs : graphs
-            });
+            };
+            await this.redis.set(dataSource + " " + endpointV + " " + userProduct.tou, JSON.stringify(result),  'EX', 24 * 60 * 60);
 
             return { "status": "success", "message": result };
+        }else{
+            const result = await this.redis.get(dataSource + " " + endpointV + " " + userProduct.tou);
+            return { "status": "success", "message": JSON.parse(result) };
+        }
         } catch (error) {
             return {
                 status: 500, error: true, message: 'Unexpected error.',

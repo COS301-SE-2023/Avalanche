@@ -79,7 +79,7 @@
       "!**/*-integration.service.spec.ts",
       "!**/app.module.ts"
     ],
-    "coverageDirectory": "../user-management/coverage",
+    "coverageDirectory": "../coverage",
     "testEnvironment": "node"
   }
 }

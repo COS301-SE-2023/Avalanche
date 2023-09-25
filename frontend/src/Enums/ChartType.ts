@@ -5,6 +5,7 @@ export enum ChartType {
     Bubble = "Bubble",
     PolarArea = "PolarArea",
     Radar = "Radar",
+    TreeMap="TreeMap",
     Table = "Table"
 }
 
@@ -32,6 +33,10 @@ export const ChartTypeArray: any[] = [
     {
         name: "Radar",
         type: ChartType.Radar
+    },
+    {
+        name: "TreeMap",
+        type: ChartType.TreeMap
     },
     {
         name: "Table",

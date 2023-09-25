@@ -14,6 +14,7 @@ import {
 	PieChart,
 	PolarAreaChart,
 	RadarChart,
+	TreeMapChart,
 	TableChart,
 } from "@/components/Graphs";
 import { useState, useEffect } from "react";
@@ -221,11 +222,14 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
 		});
 
 		setFilterDropdown(!filterDropdown);
+		console.log(requestObject);
+		console.log("In filters");
 		fetchGraphData(requestObject);
 	};
 
 	const fetchGraphData = async (filters: any) => {
 		setLoading(true);
+		console.log(filters);
 		try {
 			const jwt = getCookie("jwt");
 			const url = data.endpointName
@@ -234,12 +238,13 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
 				}`;
 			const res = await ky
 				.post(url, {
-					json: filters,
+					json: filters, timeout : 30000,
 					headers: {
 						Authorization: `Bearer ${jwt}`,
 					},
 				})
 				.json();
+			console.log(res);	
 			const d = res as any;
 			setGraphData(d.data.data);
 			setGraphTitle(d.data.graphName);
@@ -424,7 +429,7 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
 														ChartType.Bar,
 														ChartType.Radar,
 														ChartType.Table,
-														ChartType.Bubble,
+														ChartType.Bubble
 													].includes(item.type);
 												}
 												return true;
@@ -465,6 +470,7 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
 						{type === ChartType.Bubble && <BubbleChart data={graphData} />}
 						{type === ChartType.PolarArea && <PolarAreaChart data={graphData} />}
 						{type === ChartType.Radar && <RadarChart data={graphData} />}
+						{type === ChartType.TreeMap && <TreeMapChart data={graphData} />}
 						{type === ChartType.Table && <TableChart data={graphData} />}
 					</>
 				)}

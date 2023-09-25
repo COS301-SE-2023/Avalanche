@@ -9,14 +9,16 @@ export class QBeeService {
 
   async executeQuery(sqlQuery: string): Promise<any> {
     try {
-      return {status: "success", message: await this.snowflakeService.execute(sqlQuery)};
+      return {
+        status: 'success',
+        message: await this.snowflakeService.execute(sqlQuery),
+      };
     } catch (e) {
       console.log(e);
       return {
         status: 500,
         error: true,
-        message:
-          'Data Warehouse Error while trying to execute QBee statement',
+        message: 'Data Warehouse Error while trying to execute QBee statement',
         timestamp: new Date().toISOString(),
       };
     }

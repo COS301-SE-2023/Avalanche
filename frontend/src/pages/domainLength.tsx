@@ -3,7 +3,7 @@ import PageHeader from "@/components/Util/PageHeader"
 import { ClipboardIcon } from "@heroicons/react/24/solid"
 import Head from "next/head"
 import { useDispatch, useSelector } from "react-redux";
-import { graphState, getDomainLengthData, clearGraphData } from "@/store/Slices/graphSlice"
+import { graphState, getDomainLengthData, clearGraphData, getDashboardGraphs } from "@/store/Slices/graphSlice"
 import { useEffect } from "react";
 import { selectModalManagerState } from "@/store/Slices/modalManagerSlice"
 import GraphZoomModal from "@/components/Modals/GraphZoomModal"
@@ -55,17 +55,18 @@ export default function DomainLength() {
     };
 
     function loadData() {
-        const arrayDomainNameAnalysisShare: IDomainNameAnalysisGraphRequest[] = [];
+        dispatch(getDashboardGraphs('domainNameAnalysis/length'));
+        // const arrayDomainNameAnalysisShare: IDomainNameAnalysisGraphRequest[] = [];
 
-        const ageAnalysisAverageTop5: IDomainNameAnalysisGraphRequest = {};
-        arrayDomainNameAnalysisShare.push(ageAnalysisAverageTop5);
+        // const ageAnalysisAverageTop5: IDomainNameAnalysisGraphRequest = {};
+        // arrayDomainNameAnalysisShare.push(ageAnalysisAverageTop5);
 
-        const ageAnalysisTop5: IDomainNameAnalysisGraphRequest = { dateFrom: "2022-05-08" };
-        arrayDomainNameAnalysisShare.push(ageAnalysisTop5);
+        // const ageAnalysisTop5: IDomainNameAnalysisGraphRequest = { dateFrom: "2022-05-08" };
+        // arrayDomainNameAnalysisShare.push(ageAnalysisTop5);
 
-        arrayDomainNameAnalysisShare.forEach(data => {
-            dispatch(getDomainLengthData(data));
-        })
+        // arrayDomainNameAnalysisShare.forEach(data => {
+        //     dispatch(getDomainLengthData(data));
+        // })
     }
 
     useEffect(() => {
@@ -90,7 +91,7 @@ export default function DomainLength() {
 
         <MainContent>
             <div className="flex justify-between items-center">
-                <PageHeader title="Domain Name Analysis Length" subtitle="Insights at your fingertips" icon={<ClipboardIcon className="h-16 w-16 text-black dark:text-white" />} />
+                <PageHeader title="Domain Name Analysis Length" subtitle="View the average length of all your domains under your roof" icon={<ClipboardIcon className="h-16 w-16 text-black dark:text-white" />} />
                 <SubmitButton text="Download Report" onClick={() => generatePDF()} />
             </div>
             <DashboardBase state={stateGraph} />
