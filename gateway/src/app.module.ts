@@ -62,14 +62,14 @@ import { QbeeService } from './qbee/qbee.service';
         name: 'QBEE_SERVICE',
         transport: Transport.TCP,
         options: {
-          host: process.env.AFRICA_HOST || 'localhost',
+          host: process.env.QBEE_HOST || 'localhost',
           port: 4102,
         },
       },
     ]),
     ConfigModule.forRoot({ isGlobal: true }),
   ],
-  controllers: [MetricsController,UserManagementController, ZacrController, RyceController, AfricaController, DomainWatchController, QbeeController],
+  controllers: [MetricsController, UserManagementController, ZacrController, RyceController, AfricaController, DomainWatchController, QbeeController],
   providers: [UserManagementService, ZacrService, RyceService, AfricaService, RedisProvider, DomainWatchService, QbeeService],
 })
 export class AppModule implements NestModule {
