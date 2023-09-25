@@ -1,16 +1,20 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AppState } from "../store";
 import { HYDRATE } from "next-redux-wrapper";
 import { DBData } from "@/interfaces/qbee/interfaces";
+import { Node, Edge } from 'reactflow';
+import { getCookie } from "cookies-next";
+import ky, { HTTPError } from "ky";
+import { ErrorToast, SuccessToast } from "@/components/Util";
 
-interface ITable {
-    column: string
-}
 interface IInitState {
     data: DBData[],
     tables: string[],
     columns: string[],
-    edited: boolean
+    edited: boolean,
+    nodes: string[],
+    edges: string[],
+    returnData: any,
 }
 
 const InitState: IInitState = {
@@ -18,6 +22,9 @@ const InitState: IInitState = {
     tables: [],
     columns: [],
     edited: false,
+    nodes: [],
+    edges: [],
+    returnData: '',
 }
 
 export const qbeeSlice = createSlice({
@@ -27,30 +34,27 @@ export const qbeeSlice = createSlice({
         addData(state, action) {
             state.data = action.payload;
 
-            action.payload.filter((item: DBData) => {
-                if (!state.tables.includes(item.table)) state.tables.push(item.table);
+            action.payload.forEach((item: DBData) => {
+                state.columns.push(item.columnName);
             })
-        },
-        selectTable(state, action) {
-            state.data.forEach((item: DBData) => {
-                if (item.table === action.payload) state.columns.push(item.columnName);
-            })
-            state.edited = true;
         },
         clear(state) {
             state.data = [];
             state.tables = [];
             state.columns = [];
         },
-        filterableData(state, action) {
-
-        },
-        addToFilterable(state, action) {
-
-        },
         setEdited(state, action) {
             state.edited = action.payload;
-        }
+        },
+        setNodes(state, action) {
+            state.nodes = action.payload;
+        },
+        setEdges(state, action) {
+            state.edges = action.payload;
+        },
+        setReturnData(state, action) {
+            state.returnData = action.payload;
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(HYDRATE, (state, action) => {
@@ -59,9 +63,48 @@ export const qbeeSlice = createSlice({
                 ...action,
             };
         })
+        builder.addCase(getData.fulfilled, (state, action) => {
+            SuccessToast({ text: "Successfully saved 🐝 No actually this time 👀" })
+        })
+        builder.addCase(getData.pending, (state) => {
+            SuccessToast({ text: "We're working on it 👀" })
+        })
+        builder.addCase(getData.rejected, (state, action) => {
+            ErrorToast({ text: "🛑 We're gave up 🛑"})
+        })
     }
 })
 
-export const { addData, selectTable, clear, addToFilterable, setEdited } = qbeeSlice.actions;
+export const { addData, clear, setEdited, setNodes, setEdges } = qbeeSlice.actions;
 export const qbeeState = (state: AppState) => state.qbee;
+
+export const getData = createAsyncThunk("QBEE.GetData", async (query: any, { rejectWithValue }) => {
+    console.log('Getting data man' + '\n' + JSON.stringify(query))
+    console.log(query)
+    if(!query){
+        return;
+    }
+    const data = {
+        schema: 'transactionsDetail',
+        dataSource: 'zacr',
+        query: query
+    }
+    try {
+
+        const jwt = getCookie("jwt");
+        const res: any = await ky.post(`${process.env.NEXT_PUBLIC_API}/qbee/zarc`, {
+            headers: {
+                "Authorization": `Bearer ${jwt}`
+            },
+            json: data,
+        }).json();
+        return res.message;
+    } catch (e) {
+        let error = e as HTTPError;
+        const newError = await error.response.json();
+        return rejectWithValue(newError.message);
+    }
+})
+
+export const { setReturnData } = qbeeSlice.actions;
 export default qbeeSlice.reducer;

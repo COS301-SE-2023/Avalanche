@@ -16,7 +16,6 @@ export class MovementService {
     private jwtService: JwtService,
     @Inject('REDIS') private readonly redis: Redis,
     private readonly snowflakeService: SnowflakeService,
-    private readonly statisticalAnalysisService: AnalysisService,
     private readonly graphFormattingService: GraphFormatService,
   ) {}
 
@@ -145,7 +144,6 @@ export class MovementService {
 
       graphName = this.verticalRankedGraphName(data.filters);
 
-      filters = JSON.parse(filters);
       return {
         status: 'success',
         data: {
@@ -154,7 +152,7 @@ export class MovementService {
           graphType: 'movement/verticalRanked',
           data: data.data,
           filters: data.filters,
-          chartType: ChartType.PolarArea,
+          chartType: ChartType.Bar,
         },
         timestamp: new Date().toISOString(),
       };

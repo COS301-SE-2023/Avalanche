@@ -37,7 +37,7 @@ describe('AuthService', () => {
         AuthService,
         ConfigService,
         {
-          provide: getRepositoryToken(User),
+          provide: getRepositoryToken(User, 'user'),
           useValue: userRepository,
         },
         {
@@ -53,7 +53,7 @@ describe('AuthService', () => {
 
     authService = module.get<AuthService>(AuthService);
     mockRedis = module.get('REDIS');
-    mockUserRepository = module.get(getRepositoryToken(User));
+    mockUserRepository = module.get(getRepositoryToken(User, 'user'));
   });
 
   it('should be defined', () => {
@@ -109,7 +109,24 @@ describe('AuthService', () => {
 
       expect(mockRedis.get).toHaveBeenCalledWith(email);
       expect(mockRedis.del).toHaveBeenCalledWith(email);
-      expect(mockUserRepository.create).toHaveBeenCalledWith({ email, password: undefined, salt: undefined, firstName: undefined, lastName: undefined });
+      expect(mockUserRepository.create).toHaveBeenCalledWith({
+        email, password: undefined, salt: undefined, firstName: undefined, lastName: undefined, products: [{
+          dataSource: "zarc",
+          key: null,
+          tou: "public",
+        },
+        {
+          dataSource: "africa",
+          key: null,
+          tou: "public",
+        },
+        {
+          dataSource: "ryce",
+          key: null,
+          tou: "public",
+        },
+        ]
+      });
       expect(mockUserRepository.save).toHaveBeenCalledWith(mockUser);
       expect(result.status).toBe('success');
       expect(result.message).toBe('Verification successful.');
@@ -132,30 +149,30 @@ describe('AuthService', () => {
       const email = 'test@test.com';
       const otp = '123456';
       const userPayload = JSON.stringify({ otp });
-  
+
       mockRedis.get.mockResolvedValue(userPayload);
       mockRedis.set.mockResolvedValue('OK');
       jest.spyOn(authService, 'sendOTPEmail').mockResolvedValue();
-  
+
       const result = await authService.resendOTP(email);
-  
+
       expect(mockRedis.get).toHaveBeenCalledWith(email);
       expect(result.status).toBe('success');
       expect(result.message).toBe('Registration successful. Please check your email for the OTP.');
     });
-  
+
     it('should throw an error if resending OTP fails', async () => {
       const email = 'test@test.com';
-  
+
       mockRedis.get.mockResolvedValue(null);
-  
+
       const result = await authService.resendOTP(email);
-  
+
       expect(result.status).toBe(400);
       expect(result.message).toBe('Could not find this email, please regsiter');
     });
   });
-  
+
   describe('login', () => {
     it('should log in a user', async () => {
       const email = 'test@test.com';
@@ -200,7 +217,7 @@ describe('AuthService', () => {
         timestamp: expect.any(String),
       });
     });
-  
+
     it('should return error when user does not exist', async () => {
       mockRedis.get.mockResolvedValue(JSON.stringify({ email: 'test@test.com' }));
       mockUserRepository.findOne.mockResolvedValue(undefined);
@@ -212,7 +229,7 @@ describe('AuthService', () => {
         timestamp: expect.any(String),
       });
     });
-  
+
     it('should return the user info successfully', async () => {
       const mockUser = new User();
       mockUser.id = 1;
@@ -225,7 +242,7 @@ describe('AuthService', () => {
       mockUser.organisationId = 1;
       mockUser.organisation = null;
       mockUser.dashboards = [];
-  
+
       mockRedis.get.mockResolvedValue(JSON.stringify({ email: 'test@test.com' }));
       mockUserRepository.findOne.mockResolvedValue(mockUser);
       mockRedis.set.mockResolvedValue('OK');
@@ -237,7 +254,7 @@ describe('AuthService', () => {
       });
     });
   });
-  
+
   describe('createAPIKey', () => {
     it('should return error when user payload is not retrieved from Redis', async () => {
       mockRedis.get.mockResolvedValue(null);
@@ -249,7 +266,7 @@ describe('AuthService', () => {
         timestamp: expect.any(String),
       });
     });
-  
+
     it('should return error when user does not exist', async () => {
       mockRedis.get.mockResolvedValue(JSON.stringify({ email: 'test@test.com' }));
       mockUserRepository.findOne.mockResolvedValue(undefined);
@@ -261,7 +278,7 @@ describe('AuthService', () => {
         timestamp: expect.any(String),
       });
     });
-  
+
     it('should return error when user already has an API key', async () => {
       const mockUser = new User();
       mockUser.apiKey = 'existingAPIKey';
@@ -275,7 +292,7 @@ describe('AuthService', () => {
         timestamp: expect.any(String),
       });
     });
-  
+
     it('should create a new API key successfully', async () => {
       const mockUser = new User();
       mockUser.apiKey = null;
@@ -291,7 +308,7 @@ describe('AuthService', () => {
       });
     });
   });
-  
+
   describe('checkUserAPIKey', () => {
     it('should return error when user payload is not retrieved from Redis', async () => {
       mockRedis.get.mockResolvedValue(null);
@@ -303,7 +320,7 @@ describe('AuthService', () => {
         timestamp: expect.any(String),
       });
     });
-  
+
     it('should return error when user does not exist', async () => {
       mockRedis.get.mockResolvedValue(JSON.stringify({ email: 'test@test.com' }));
       mockUserRepository.findOne.mockResolvedValue(undefined);
@@ -315,7 +332,7 @@ describe('AuthService', () => {
         timestamp: expect.any(String),
       });
     });
-  
+
     it('should return success status with false message when user does not have an API key', async () => {
       const mockUser = new User();
       mockUser.apiKey = null;
@@ -328,7 +345,7 @@ describe('AuthService', () => {
         timestamp: expect.any(String),
       });
     });
-  
+
     it('should return success status with true message when user has an API key', async () => {
       const mockUser = new User();
       mockUser.apiKey = 'existingAPIKey';
@@ -342,7 +359,7 @@ describe('AuthService', () => {
       });
     });
   });
-  
+
   describe('rerollAPIKey', () => {
     it('should return error when user payload is not retrieved from Redis', async () => {
       mockRedis.get.mockResolvedValue(null);
@@ -354,7 +371,7 @@ describe('AuthService', () => {
         timestamp: expect.any(String),
       });
     });
-  
+
     it('should return error when user does not exist', async () => {
       mockRedis.get.mockResolvedValue(JSON.stringify({ email: 'test@test.com' }));
       mockUserRepository.findOne.mockResolvedValue(undefined);
@@ -366,7 +383,7 @@ describe('AuthService', () => {
         timestamp: expect.any(String),
       });
     });
-  
+
     it('should return error when the user\'s api key matches the token', async () => {
       const token = 'existingAPIKey';
       const mockUser = new User();
@@ -381,7 +398,7 @@ describe('AuthService', () => {
         timestamp: expect.any(String),
       });
     });
-  
+
     it('should return error when user does not have an API key', async () => {
       const mockUser = new User();
       mockUser.apiKey = null;
@@ -395,7 +412,7 @@ describe('AuthService', () => {
         timestamp: expect.any(String),
       });
     });
-  
+
     it('should return success when user\'s api key is rerolled', async () => {
       const token = 'existingAPIKey';
       const mockUser = new User();
@@ -410,5 +427,5 @@ describe('AuthService', () => {
       expect(result.timestamp).toBeDefined();
     });
   });
-  
+
 });

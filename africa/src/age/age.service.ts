@@ -19,7 +19,6 @@ export class AgeService {
     private jwtService: JwtService,
     @Inject('REDIS') private readonly redis: Redis,
     private readonly snowflakeService: SnowflakeService,
-    private readonly statisticalAnalysisService: AnalysisService,
     private readonly graphFormattingService: GraphFormatService,
     private readonly registrarNameServices: RegistrarNameService,
   ) {}
@@ -60,7 +59,7 @@ export class AgeService {
             name = name.data.name;
           }
 
-          if (queryData[0]['AGEANALYSIS'].filters.average) {
+          if (queryData[0]['AGEANALYSIS'].filters?.average) {
             topNRegistrars.forEach((item, index) => {
               if (
                 index != 0 &&
@@ -73,7 +72,7 @@ export class AgeService {
           } else {
             const mapNames = {};
             let regNumber = 1;
-            topNRegistrars.forEach((item, index) => {
+            topNRegistrars?.forEach((item, index) => {
               if (
                 index != 0 &&
                 item.Registrar != name &&
@@ -83,7 +82,7 @@ export class AgeService {
                 mapNames[item.Registrar] = `Registrar ${regNumber++}`;
               }
             });
-            topNRegistrars.forEach((item, index) => {
+            topNRegistrars?.forEach((item, index) => {
               if (
                 index != 0 &&
                 item.Registrar != name &&

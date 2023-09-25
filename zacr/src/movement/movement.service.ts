@@ -145,7 +145,6 @@ export class MovementService {
 
       graphName = this.verticalRankedGraphName(data.filters);
 
-      filters = JSON.parse(filters);
       return {
         status: 'success',
         data: {
@@ -154,11 +153,12 @@ export class MovementService {
           graphType: 'movement/verticalRanked',
           data: data.data,
           filters: data.filters,
-          chartType: ChartType.PolarArea,
+          chartType: ChartType.Bar,
         },
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
+      console.log(e);
       return {
         status: 500,
         error: true,

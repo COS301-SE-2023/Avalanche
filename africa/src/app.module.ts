@@ -17,6 +17,7 @@ import { HttpModule } from '@nestjs/axios';
 import { DomainWatchService } from './domainWatch/domain-watch-analysis.service';
 import { RegistrarNameService } from './registrarName/registrarName.service';
 import { MovementService } from './movement/movement.service';
+import { QBeeService } from './qbee/qbee.service';
 
 @Module({
   imports: [
@@ -48,23 +49,39 @@ import { MovementService } from './movement/movement.service';
     {
       provide: 'SNOWFLAKE_CONNECTION',
       useFactory: () => {
-        const connection = snowflake.createConnection({
-          account: process.env.SNOWFLAKE_ACCOUNT,
-          username: process.env.SNOWFLAKE_USERNAME,
-          password: process.env.SNOWFLAKE_PASSWORD,
-          role: process.env.SNOWFLAKE_ROLE,
-          warehouse: process.env.SNOWFLAKE_WAREHOUSE,
-          database: process.env.SNOWFLAKE_DATABASE,
-          schema: process.env.SNOWFLAKE_SCHEMA,
-        });
-        connection.connect((err) => {
-          if (err) {
-            console.error('Unable to connect: ' + err.message);
-            throw err;
-          } else {
-            console.log('Successfully connected to Snowflake.');
-          }
-        });
+        let connection;
+
+        const reconnect = () => {
+          console.log('Attempting to reconnect...');
+          initConnection();
+        };
+
+        const initConnection = () => {
+          connection = snowflake.createConnection({
+            account: process.env.SNOWFLAKE_ACCOUNT,
+            username: process.env.SNOWFLAKE_USERNAME,
+            password: process.env.SNOWFLAKE_PASSWORD,
+            role: process.env.SNOWFLAKE_ROLE,
+            warehouse: process.env.SNOWFLAKE_WAREHOUSE,
+            database: process.env.SNOWFLAKE_DATABASE,
+            schema: process.env.SNOWFLAKE_SCHEMA,
+          });
+
+          connection.on('error', (err) => {
+            reconnect();
+          });
+
+          connection.connect((err) => {
+            if (err) {
+              reconnect();
+            } else {
+              console.log('Successfully connected to Snowflake.');
+            }
+          });
+        };
+
+        // Initialize the connection for the first time
+        initConnection();
 
         return connection;
       },
@@ -78,8 +95,9 @@ import { MovementService } from './movement/movement.service';
     SnowflakeService,
     DomainWatchService,
     MovementService,
-    RegistrarNameService
+    RegistrarNameService,
+    QBeeService
   ],
-  exports: [TransactionService, MarketShareService, MovementService, AgeService, DomainNameAnalysisService, AnalysisService, GraphFormatService, SnowflakeService, DomainWatchService, RegistrarNameService],
+  exports: [TransactionService, MarketShareService, MovementService, AgeService, DomainNameAnalysisService, AnalysisService, GraphFormatService, SnowflakeService, DomainWatchService, RegistrarNameService, QBeeService],
 })
 export class AppModule { }
