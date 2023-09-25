@@ -23,6 +23,7 @@ import DashboardBase from './DashboardBase';
 import ChartCardError from './ChartCardError';
 import HomeCard from './HomeCard';
 import FilterTooltip from './FilterTooltip';
+import Accordian from './Accordian';
 
 export {
     DangerAlert,
@@ -50,4 +51,5 @@ export {
     ChartCardError,
     HomeCard,
     FilterTooltip,
+    Accordian,
 };

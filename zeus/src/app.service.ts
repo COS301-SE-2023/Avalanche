@@ -5,12 +5,14 @@ import { Endpoint } from './entity/endpoint.entity';
 import { Graph } from './entity/graph.entity';
 import { Filter } from './entity/filter.entity';
 import { Redis } from 'ioredis';
+import { Dashboard } from './entity/frontendDashboard.entity';
 
 @Injectable()
 export class AppService {
   constructor(private readonly entityManager: EntityManager,
     @InjectRepository(Endpoint) private endpointRepository: Repository<Endpoint>,
     @InjectRepository(Graph) private graphRepository: Repository<Graph>,
+    @InjectRepository(Dashboard) private dashboardRepository: Repository<Dashboard>,
     @InjectRepository(Filter) private filterRepository: Repository<Filter>,
     @Inject('REDIS') private readonly redis: Redis
   ) { }
@@ -43,6 +45,15 @@ export class AppService {
             const filterResult = await manager.save(filterEntity);
 
           }
+        }
+
+        for (const dashboard of endpoint.dashboards){
+          const dashboardEntity = new Dashboard();
+          dashboardEntity.name = dashboard.name;
+          dashboardEntity.user = dashboard.user;
+          dashboardEntity.graphs = dashboard.graphs;
+          dashboardEntity.endpoint = endpointResult;
+          const dashboardResult = await manager.save(dashboardEntity);
         }
       }
     });
@@ -114,6 +125,25 @@ export class AppService {
       await this.graphRepository.save(graphEntity);
     }
 
+    return {'status' : 'success'};
+
+  }
+
+  async addDashboard(data: any){
+    const existingData = await this.endpointRepository.findOne({ where : {endpoint : data.endpoint},
+      relations: ['dashboards'],
+    });
+    if (!existingData) {
+      throw new NotFoundException('Data not found');
+    }
+    for(const dashboards of data.dashboardData){
+    const dashboardEntity = new Dashboard();
+    dashboardEntity.name = dashboards.name;
+    dashboardEntity.user = dashboards.user;
+    dashboardEntity.graphs = dashboards.graphs;
+    dashboardEntity.endpoint = existingData;
+    const dashboardResult =await this.dashboardRepository.save(dashboardEntity);
+  }
     return {'status' : 'success'};
 
   }

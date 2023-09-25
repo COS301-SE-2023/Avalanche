@@ -1,8 +1,8 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, AnyAction } from "@reduxjs/toolkit";
 import { AppState } from "../store";
 import { HYDRATE } from "next-redux-wrapper";
 import ky, { HTTPError } from "ky";
-import { ITransactionGraphRequest } from "@/interfaces/requests";
+import { IDashboardGraphRequest, IGraphRequest, ITransactionGraphRequest } from "@/interfaces/requests";
 import { getCookie } from "cookies-next";
 import { chartColours } from "@/components/Graphs/data";
 import IMarketShareGraphRequest from "@/interfaces/requests/MarketShareGraph";
@@ -11,6 +11,7 @@ import IAgeAnalysisGraphRequest from "@/interfaces/requests/AgeAnalysisGraph";
 import IMovementGraphRequest from "@/interfaces/requests/Movement";
 import * as Sentry from "@sentry/nextjs";
 import IMovementGraphRankedRequest from "@/interfaces/requests/MovementRanked";
+import { IDashboardGraphResponse } from "@/interfaces/responses";
 
 const url = `${process.env.NEXT_PUBLIC_API}`;
 
@@ -46,6 +47,52 @@ const initialState: IGraphState = {
     error: "",
     zones: zonesArr["zacr"],
     cleared: false
+}
+
+interface IDateRange {
+    number: number;
+    granularity: 'day' | 'week' | 'month' | 'year';
+}
+
+function calculateDateRange(graphRequest: IGraphRequest): IGraphRequest {
+
+    if (!graphRequest.filters.dateRange) {
+        return graphRequest;
+    } else {
+        let newFilters: {
+            [key: string]: any
+        };
+        const dateRange = graphRequest.filters.dateRange;
+        const currentDate = new Date();  // Today's date
+        const dateFrom = new Date(currentDate);
+
+        switch (dateRange.granularity) {
+            case 'day':
+                dateFrom.setDate(currentDate.getDate() - dateRange.number);
+                break;
+            case 'week':
+                dateFrom.setDate(currentDate.getDate() - (7 * dateRange.number));
+                break;
+            case 'month':
+                dateFrom.setMonth(currentDate.getMonth() - dateRange.number, 1); // Start of the month
+                break;
+            case 'year':
+                dateFrom.setFullYear(currentDate.getFullYear() - dateRange.number, 0, 1); // Start of the year
+                break;
+        }
+
+        // Format date to YYYY-MM-DD format
+        const formatDate = (date: Date): string => {
+            return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+        }
+
+        graphRequest.filters.dateFrom = formatDate(dateFrom);
+        graphRequest.filters.dateTo = formatDate(currentDate);
+        delete(graphRequest.filters.dateRange)
+
+        return graphRequest;
+    }
+
 }
 
 const assignColours = (payload: any) => {
@@ -327,6 +374,34 @@ export const graphSlice = createSlice({
         builder.addCase(getFilters.rejected, (state, action) => {
             state.loading = false;
             state.filters = [];
+            state.error = action.payload as string;
+        })
+        /**
+         * Dynamically load dashboards:
+         */
+        builder.addCase(getDynamicGraphData.fulfilled, (state, action) => {
+            const payload = action.payload as any;
+            assignColours(payload)
+            state.graphs.push(payload.data);
+            state.latestAdd = state.graphs.length - 1;
+            state.loading = false;
+            state.cleared = false;
+        })
+        builder.addCase(getDynamicGraphData.pending, (state) => {
+            state.loading = true;
+        })
+        builder.addCase(getDynamicGraphData.rejected, (state, action) => {
+            state.loading = false;
+            state.cleared = false;
+            state.error = action.payload as string;
+        })
+        builder.addCase(getDashboardGraphs.pending, (state) => {
+            state.loading = true;
+            state.graphs = [];
+        })
+        builder.addCase(getDashboardGraphs.rejected, (state, action) => {
+            state.loading = false;
+            state.cleared = false;
             state.error = action.payload as string;
         })
     }
@@ -789,6 +864,64 @@ export const getFilters = createAsyncThunk("GRAPH.GetFilters", async (object: an
             }
         }).json();
         return res.message;
+    } catch (e) {
+        let error = e as HTTPError;
+        const newError = await error.response.json();
+        Sentry.captureException(newError);
+        return rejectWithValue(newError.message);
+    }
+})
+
+export const getDashboardGraphs = createAsyncThunk("GRAPH.GetDashboardGraphs", async (dashboard: string, { getState, dispatch, rejectWithValue }) => {
+    console.log('Trying to get dashboards')
+    try {
+        const jwt = getCookie("jwt");
+        const state = getState() as { graph: IGraphState }; // Replace 'graph' with the slice name if different
+        const { selectedDataSource } = state.graph;
+        const object: IDashboardGraphRequest = {
+            endpointV: dashboard,
+            dataSource: selectedDataSource
+        }
+        const response: IDashboardGraphResponse = await ky.post(`${url}/user-management/getDashboards`, {
+            json: object, timeout: 30000,
+            headers: {
+                "Authorization": `Bearer ${jwt}`
+            }
+        }).json();
+        console.log(response);
+        const dashboardGraphs = response.message.dashboardGraphs;
+        dashboardGraphs.forEach(data => {
+            console.log('Calling ' + data.endpoint)
+            dispatch(getDynamicGraphData(data));  // Dispatching the action
+        })
+        return response;
+    } catch (e) {
+        let error = e as HTTPError;
+        const newError = await error.response.json();
+        Sentry.captureException(newError);
+        return rejectWithValue(newError.message);
+    }
+})
+
+
+export const getDynamicGraphData = createAsyncThunk("GRAPH.GetDynamicGraphData", async (request: IGraphRequest, { getState, rejectWithValue }) => {
+    console.log('Trying to get graph')
+    try {
+        const jwt = getCookie("jwt");
+        console.log(request);
+        request = calculateDateRange(request);
+        console.log(request);
+        const endpoint = request.endpoint;
+        const filters = request.filters;
+        const response: any = await ky.post(`${url}/${endpoint}`, {
+            json: filters,
+            headers: {
+                "Authorization": `Bearer ${jwt}`
+            }
+        }).json();
+        console.log(response);
+
+        return response;
     } catch (e) {
         let error = e as HTTPError;
         const newError = await error.response.json();

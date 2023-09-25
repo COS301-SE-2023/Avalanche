@@ -3,6 +3,7 @@ import { Body, Controller, HttpCode, HttpException, Inject, Post } from '@nestjs
 import { ClientProxy } from '@nestjs/microservices';
 import { Counter, Histogram, Registry } from 'prom-client';
 import { lastValueFrom } from 'rxjs';
+import * as cron from 'node-cron';
 
 const register = new Registry();
 export const httpRequestDurationMicrosecondsZACR = new Histogram({
@@ -22,7 +23,31 @@ register.registerMetric(httpRequestsTotalZACR);
 
 @Controller('zacr')
 export class ZacrController {
-  constructor(@Inject('ZACR_SERVICE') private client: ClientProxy) {}
+  constructor(@Inject('ZACR_SERVICE') private client: ClientProxy) { }
+  onModuleInit() {
+    this.scheduleClassification();
+  }
+  @Post('qbee')
+  @HttpCode(200)
+  async qbee(@Body() data: any) {
+    const end = httpRequestDurationMicrosecondsZACR.startTimer();
+    const pattern = { cmd: 'qbee' };
+    const payload = data;
+    try {
+      const result = await lastValueFrom(this.client.send(pattern, payload));
+      httpRequestsTotalZACR.inc({ method: 'POST', route: 'qbee', code: 200 });
+      end({ method: 'POST', route: 'qbee', code: 200 });
+      return result;
+    } catch (error) {
+      const rpcError = error
+      httpRequestsTotalZACR.inc({ method: 'POST', route: 'qbee', code: rpcError.status });
+      end({ method: 'POST', route: 'qbee', code: rpcError.status });
+      if (typeof rpcError === 'object') {
+        throw new HttpException(rpcError.message || 'An unexpected error occurred', rpcError.status || 500);
+      }
+      throw error;
+    }
+  }
 
   @Post('transactions')
   @HttpCode(200)
@@ -161,6 +186,7 @@ export class ZacrController {
   async domainNameAnalysisClassification(@Body() data: any) {
     const end = httpRequestDurationMicrosecondsZACR.startTimer();
     const pattern = { cmd: 'domainNameAnalysis/classification' };
+
     const payload = data;
     try {
       const result = await lastValueFrom(this.client.send(pattern, payload));
@@ -176,6 +202,34 @@ export class ZacrController {
       }
       throw error;
     }
+  }
+
+  private async scheduleClassification() {
+    cron.schedule('30 5 * * *', async () => {
+      const dataO = { filters : {num : 1, granularity: "week"}};
+
+      const end = httpRequestDurationMicrosecondsZACR.startTimer();
+      const pattern = { cmd: 'domainNameAnalysis/classification' };
+
+      const payload = dataO;
+      try {
+        const result = await lastValueFrom(this.client.send(pattern, payload));
+        httpRequestsTotalZACR.inc({ method: 'POST', route: 'domainNameAnalysis/classification cron', code: 200 });
+        end({ method: 'POST', route: 'domainNameAnalysis/classification cron', code: 200 });
+        return result;
+      } catch (error) {
+        const rpcError = error
+        httpRequestsTotalZACR.inc({ method: 'POST', route: 'domainNameAnalysis/classification cron', code: rpcError.status });
+        end({ method: 'POST', route: 'domainNameAnalysis/classification cron', code: rpcError.status });
+        if (typeof rpcError === 'object') {
+          throw new HttpException(rpcError.message || 'An unexpected error occurred', rpcError.status || 500);
+        }
+        throw error;
+      }
+    },{
+      scheduled: true,
+      timezone: "Africa/Johannesburg" // Optional, set the time zone
+    });
   }
 
   @Post('domainNameAnalysis/length')

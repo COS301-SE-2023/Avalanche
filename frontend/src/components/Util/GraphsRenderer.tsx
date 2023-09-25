@@ -8,7 +8,20 @@ export default function GraphsRenderer({ graphs }: any) {
         graphs.map((data: any, index: number) => {
           if (data?.data && data?.data.jsonData && data.data.jsonData.length>0) {
             const firstEntryKeys = Object.keys(data.data.jsonData[0]);
-        if (firstEntryKeys.length == 2 && (data.data.jsonData[0].xAxis != 'Date' && data.data.jsonData[0].xAxis != 'Length')) {
+        
+            console.log(data)
+            if(data.chartType){
+
+              return (
+                <ChartCard
+                  title={data.graphName}
+                  data={data}
+                  defaultGraph={data.chartType}
+                  key={index}
+                />
+              );
+            }
+            else if (firstEntryKeys.length == 2 && (data.data.jsonData[0].xAxis != 'Date' && data.data.jsonData[0].xAxis != 'Length' && data.data.jsonData[0].xAxis != 'word')) {
                 return (
                     <ChartCard
                       title={data.graphName}
@@ -22,7 +35,7 @@ export default function GraphsRenderer({ graphs }: any) {
                     <ChartCard
                       title={data.graphName}
                       data={data}
-                      defaultGraph={ChartType.Line}
+                      defaultGraph={ChartType.Bar}
                       key={index}
                     />
                   );

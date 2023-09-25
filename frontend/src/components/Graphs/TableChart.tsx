@@ -1,11 +1,21 @@
 import React, { useState } from "react";
 
-export function TableChart({ data }: any) {
-  data = data.jsonData;
-  const headers = data.length ? Object.keys(data[0]) : [];
-
+export function TableChart({ data, qbee }: any) {
   // State to hold the selected filters
   const [filters, setFilters] = useState<any>({});
+  
+  if(!data?.jsonData){
+    return <><div>No data to display</div></>
+  }
+  data = JSON.parse(JSON.stringify(data.jsonData));
+  let headers: string[];
+  if(qbee && data?.length>1){
+    headers =  Object.keys(data[0]);
+
+  }else{
+    data.splice(0,1);
+    headers = data.length ? Object.keys(data[0]) : [];
+  }
 
   // Function to handle filter change
   const handleFilterChange = (colIndex: number, value: string) => {

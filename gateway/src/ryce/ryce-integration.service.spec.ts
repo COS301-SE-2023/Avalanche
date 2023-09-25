@@ -35,7 +35,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
     const dateTo = `${currentDate.getFullYear()}-${(currentDate.getMonth()).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;;
     it('should perform transactions for a granularity of a month', () => {
       const data = {
-        zone : ["WIEN"], dateFrom : dateFrom, dateTo: dateTo, graphName: `Monthly, from ${dateFrom} to ${dateTo}`, granularity: "month"
+        token: `Bearer ${accessToken}`,zone : ["WIEN"], dateFrom : dateFrom, dateTo: dateTo, graphName: `Monthly, from ${dateFrom} to ${dateTo}`, granularity: "month"
       }; 
       
       return request(app.getHttpServer())
@@ -50,7 +50,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
 
     it('should perform transactions for a granularity of a year', () => {
       const data = {
-        zone : ["WIEN"], dateFrom : dateFrom, dateTo: dateTo, graphName: `Yearly, from ${dateFrom} to ${dateTo}`, granularity: "year"
+        token: `Bearer ${accessToken}`,zone : ["WIEN"], dateFrom : dateFrom, dateTo: dateTo, graphName: `Yearly, from ${dateFrom} to ${dateTo}`, granularity: "year"
       }; // Replace this with actual data
       
       return request(app.getHttpServer())
@@ -70,7 +70,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
     const dateTo = `${currentDate.getFullYear()}-${(currentDate.getMonth()).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;;
     it('should perform transactions for a granularity of a month for registrar 1und1', () => {
       const data = {
-        zone : ["WIEN"],registrar: ["1und1"], dateFrom : dateFrom, dateTo: dateTo, graphName: `Monthly, from ${dateFrom} to ${dateTo}`, granularity: "month"
+        token: `Bearer ${accessToken}`,zone : ["WIEN"],registrar: ["1und1"], dateFrom : dateFrom, dateTo: dateTo, graphName: `Monthly, from ${dateFrom} to ${dateTo}`, granularity: "month"
       }; // Replace this with actual data
       
       return request(app.getHttpServer())
@@ -85,7 +85,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
 
     it('should perform transactions for a granularity of a month for registrar registrygate', () => {
       const data = {
-        zone : ["WIEN"], registrar: ["registrygate"], dateFrom : dateFrom, dateTo: dateTo, graphName: `Monthly, from ${dateFrom} to ${dateTo}`, granularity: "month"
+        token: `Bearer ${accessToken}`,zone : ["WIEN"], registrar: ["registrygate"], dateFrom : dateFrom, dateTo: dateTo, graphName: `Monthly, from ${dateFrom} to ${dateTo}`, granularity: "month"
       }; // Replace this with actual data
       
       return request(app.getHttpServer())
@@ -100,7 +100,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
 
     it('should perform transactions for a granularity of a year for registrar 1und1', () => {
       const data = {
-        zone : ["WIEN"], dateFrom : dateFrom, dateTo: dateTo, graphName: `Yearly, from ${dateFrom} to ${dateTo}`, granularity: "year"
+        token: `Bearer ${accessToken}`, zone : ["WIEN"], dateFrom : dateFrom, dateTo: dateTo, graphName: `Yearly, from ${dateFrom} to ${dateTo}`, granularity: "year"
       }; // Replace this with actual data
       
       return request(app.getHttpServer())
@@ -119,7 +119,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
     const dateFrom = `${currentDate.getFullYear()-1}-${(currentDate.getMonth()).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
     const dateTo = `${currentDate.getFullYear()}-${(currentDate.getMonth()).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;;
     it('should perform transactions ranking for renew', () => {
-      const data = { graphName: `Monthly renew ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: ['WIEN'], registrar: ["1und1", "registrygate", "internetx"], transactions: ["renew"] } ;
+      const data = { token: `Bearer ${accessToken}`, graphName: `Monthly renew ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: ['WIEN'], registrar: ["1und1", "registrygate", "internetx"], transactions: ["renew"] } ;
       
       return request(app.getHttpServer())
         .post('/ryce/transactions-ranking')
@@ -132,7 +132,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
     }, 100000);
 
     it('should perform transactions ranking for create', () => {
-      const data = { graphName: `Monthly renew ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: ['WIEN'], registrar: ["1und1", "registrygate", "internetx"], transactions: ["create"] } ;
+      const data = { token: `Bearer ${accessToken}`, graphName: `Monthly renew ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: ['WIEN'], registrar: ["1und1", "registrygate", "internetx"], transactions: ["create"] } ;
       
       return request(app.getHttpServer())
         .post('/ryce/transactions-ranking')
@@ -145,7 +145,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
     }, 100000);
 
     it('should perform transactions ranking for transfer', () => {
-      const data = { graphName: `Monthly renew ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: ['WIEN'], registrar: ["1und1", "registrygate", "internetx"], transactions: ["transfer"] } ;
+      const data = { token: `Bearer ${accessToken}`, graphName: `Monthly renew ranking, from ${dateFrom} to ${dateTo}`, granularity: "month", dateFrom, dateTo, zone: ['WIEN'], registrar: ["1und1", "registrygate", "internetx"], transactions: ["transfer"] } ;
       
       return request(app.getHttpServer())
         .post('/ryce/transactions-ranking')
@@ -163,7 +163,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
     const dateFrom = `${currentDate.getFullYear()-1}-${(currentDate.getMonth()).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
     const dateTo = `${currentDate.getFullYear()}-${(currentDate.getMonth()).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;;
     it('top5', () => {
-      const data = { rank : 'top5' } ;
+      const data = { token: `Bearer ${accessToken}`, rank : 'top5' } ;
       
       return request(app.getHttpServer())
         .post('/ryce/marketShare')
@@ -176,7 +176,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
     }, 100000);
 
     it('top10', () => {
-      const data = { rank : 'top10' } ;
+      const data = { token: `Bearer ${accessToken}`, rank : 'top10' } ;
       
       return request(app.getHttpServer())
         .post('/ryce/marketShare')
@@ -189,7 +189,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
     }, 100000);
 
     it('top20', () => {
-      const data = { rank : 'top20' } ;
+      const data = { token: `Bearer ${accessToken}`, rank : 'top20' } ;
       
       return request(app.getHttpServer())
         .post('/ryce/marketShare')
@@ -207,7 +207,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
     const dateFrom = `${currentDate.getFullYear()-1}-${(currentDate.getMonth()).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
     const dateTo = `${currentDate.getFullYear()}-${(currentDate.getMonth()).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;;
     it('top5 Average Age', () => {
-      const data = { rank: 'top5', average: true, overall: false, zone: ['WIEN'] } ;
+      const data = { token: `Bearer ${accessToken}`, rank: 'top5', average: true, overall: false, zone: ['WIEN'] } ;
       
       return request(app.getHttpServer())
         .post('/ryce/age')
@@ -220,7 +220,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
     }, 100000);
 
     it('top5', () => {
-      const data = { rank: 'top5', average: true, overall: false, zone: ['WIEN'] } ;
+      const data = { token: `Bearer ${accessToken}`, rank: 'top5', average: true, overall: false, zone: ['WIEN'] } ;
       
       return request(app.getHttpServer())
         .post('/ryce/age')
@@ -233,7 +233,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
     }, 100000);
 
     it('top10 Average Age', () => {
-      const data = { rank: 'top5', average: true, overall: false, zone: ['WIEN'] } ;
+      const data = { token: `Bearer ${accessToken}`, rank: 'top5', average: true, overall: false, zone: ['WIEN'] } ;
       
       return request(app.getHttpServer())
         .post('/ryce/age')
@@ -248,7 +248,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
 
   describe('Movement Vertical', () => {
     it('empty data test', () => {
-      const data = {  } ;
+      const data = {  token: `Bearer ${accessToken}`, } ;
       
       return request(app.getHttpServer())
         .post('/ryce/domainNameAnalysis/length')
@@ -261,7 +261,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
     }, 100000);
 
     it('dateFrom test', () => {
-      const data = { dateFrom: "2022-05-08" } ;
+      const data = { token: `Bearer ${accessToken}`, dateFrom: "2022-05-08" } ;
       
       return request(app.getHttpServer())
         .post('/ryce/domainNameAnalysis/length')
@@ -274,7 +274,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
     }, 100000);
 
     it('dateFrom test 2', () => {
-      const data = { dateFrom: "2021-05-08" } ;
+      const data = { token: `Bearer ${accessToken}`, dateFrom: "2021-05-08" } ;
       
       return request(app.getHttpServer())
         .post('/ryce/domainNameAnalysis/length')
@@ -289,7 +289,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
 
   describe('Movement Vertical', () => {
     it('empty data test', () => {
-      const data = { zone: ["WIEN"] } ;
+      const data = { token: `Bearer ${accessToken}`, zone: ["WIEN"] } ;
       
       return request(app.getHttpServer())
         .post('/ryce/movement/vertical')
@@ -302,7 +302,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
     }, 100000);
 
     it('Movement Vertical with three registrars', () => {
-      const data = { zone: ["WIEN"], registrar: ["1und1", "registrygate", "internetx"] } ;
+      const data = { token: `Bearer ${accessToken}`, zone: ["WIEN"], registrar: ["1und1", "registrygate", "internetx"] } ;
       
       return request(app.getHttpServer())
         .post('/ryce/movement/vertical')
@@ -315,7 +315,7 @@ describe('RyCE Service Integration Tests From Gateway', () => {
     }, 100000);
 
     it('Movement Vertical with one registrar', () => {
-      const data = { zone: ["WIEN"], registrar: ["internetx"] } ;
+      const data = { token: `Bearer ${accessToken}`, zone: ["WIEN"], registrar: ["internetx"] } ;
       
       return request(app.getHttpServer())
         .post('/ryce/movement/vertical')

@@ -2,10 +2,8 @@ import { Inject, Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
 import { JwtService } from '@nestjs/jwt';
 import { SnowflakeService } from '../snowflake/snowflake.service';
-import { GraphFormatService } from '../graph-format/graph-format.service';
 import { RegistrarNameService } from '../registrarName/registrarName.service';
-import { DataInterface, NewDataInterface } from '../interfaces/interfaces';
-import { query } from 'express';
+import { ChartType, NewDataInterface } from '../interfaces/interfaces';
 
 @Injectable()
 export class MarketShareService {
@@ -13,7 +11,6 @@ export class MarketShareService {
     private jwtService: JwtService,
     @Inject('REDIS') private readonly redis: Redis,
     private readonly snowflakeService: SnowflakeService,
-    private readonly graphFormattingService: GraphFormatService,
     private readonly registrarNameServices: RegistrarNameService,
   ) {}
 
@@ -46,8 +43,7 @@ export class MarketShareService {
         let filtersCount = {};
         if (JSON.parse(filters).zone != undefined) {
           filtersCount = {
-            zone: JSON.parse(filters).zone,
-            registrar: JSON.parse(filters).registrar,
+            zone: queryData[0]['MARKETSHARE'].filters.zone
           };
         }
         filtersCount = JSON.stringify(filtersCount);
@@ -65,7 +61,7 @@ export class MarketShareService {
               24 * 60 * 60,
             );
           } catch (e) {
-            console.log(e);
+            console.debug(e);
             return {
               status: 500,
               error: true,
@@ -146,6 +142,7 @@ export class MarketShareService {
           graphType: 'marketShare',
           data: data.data,
           filters: data.filters,
+          chartType: ChartType.PolarArea,
         },
         timestamp: new Date().toISOString(),
       };

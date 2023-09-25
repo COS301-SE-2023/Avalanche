@@ -47,4 +47,8 @@ export class RyceService {
   async domainWatchPassive(data: any) {
     return this.client.send({ cmd: 'domainWatchPassive' }, data).toPromise();
   }
+
+  async qbee(data: any) {
+    return this.client.send({ cmd: 'qbee' }, data).toPromise();
+  }
 }

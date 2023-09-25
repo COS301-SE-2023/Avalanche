@@ -326,8 +326,10 @@ export class UserUserGroupMangementService {
         delete user.salt;
         delete user.apiKey;
         await this.redis.set(token, JSON.stringify(user), 'EX', 24 * 60 * 60);
-        for (const products of user.products) {
-            delete products.key;
+        if (user.products != null) {
+            for (const products of user.products) {
+                delete products.key;
+            }
         }
         return {
             status: 'success', message: user,
@@ -398,8 +400,11 @@ export class UserUserGroupMangementService {
         // Save the changes
         await this.userRepository.save(userToBeRemoved);
         await this.userGroupRepository.save(userGroup);
-        for (const products of userGroup.products) {
-            delete products.key;
+        if (userGroup.products != null) {
+
+            for (const products of userGroup.products) {
+                delete products.key;
+            }
         }
         return {
             status: 'success', message: userGroup,
@@ -472,8 +477,10 @@ export class UserUserGroupMangementService {
 
         await this.redis.set(token, JSON.stringify(userB), 'EX', 24 * 60 * 60);
         await this.redis.del(key);
-        for (const products of userB.products) {
-            delete products.key;
+        if (userB?.products != null) {
+            for (const products of userB.products) {
+                delete products.key;
+            }
         }
         return {
             status: 'success', message: userB,

@@ -18,6 +18,7 @@ export function LineChart({ data, height }: IChart) {
 
   const makeOptions = (jsonData: JsonDataEntry[]) => {
     let allOptions = convertData(jsonData, "line", theme);
+    
     Object.assign(allOptions.options, {
       dataLabels: {
         enabled: false,

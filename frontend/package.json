@@ -12,6 +12,7 @@
     "cypress open": "cypress open"
   },
   "dependencies": {
+    "@dagrejs/dagre": "^1.0.4",
     "@emotion/core": "^11.0.0",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
@@ -28,6 +29,7 @@
     "axios": "^1.4.0",
     "chart.js": "^4.2.1",
     "cookies-next": "^2.1.2",
+    "copy-anything": "^3.0.5",
     "eslint": "8.39.0",
     "eslint-config-next": "13.3.1",
     "flowbite": "^1.6.5",
@@ -44,6 +46,7 @@
     "react-chartjs-2": "^5.2.0",
     "react-dom": "18.2.0",
     "react-hot-toast": "^2.4.0",
+    "react-markdown": "^8.0.7",
     "react-redux": "^8.0.5",
     "reactflow": "^11.7.0",
     "redux-logger": "^3.0.6",

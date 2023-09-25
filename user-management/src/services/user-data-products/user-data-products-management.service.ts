@@ -663,6 +663,7 @@ export class UserDataProductMangementService {
 
             return { "status": "success", "message": result };
         } catch (error) {
+            console.log(error,"Error");
             return {
                 status: 500, error: true, message: 'Unexpected error.',
                 timestamp: new Date().toISOString()
@@ -724,6 +725,70 @@ export class UserDataProductMangementService {
             message: 'Filtered endpoints fetched successfully.',
             timestamp: new Date().toISOString()
         };
+    }
+
+    async getDashboards(token: string, endpointV: string, dataSource: string) {
+        try {
+            const userPayload = await this.redis.get(token);
+            if (!userPayload) {
+                return {
+                    status: 400, error: true, message: 'Invalid token.',
+                    timestamp: new Date().toISOString()
+                };
+            }
+            const { email: userEmail } = JSON.parse(userPayload);
+            const user = await this.userRepository.findOne({
+                where: { email: userEmail }, relations: ['userGroups', 'organisation', 'dashboards'],
+                select: ['id', 'email', 'firstName', 'lastName', 'organisationId', 'products', 'userGroups', 'organisation', 'dashboards']
+            });
+            if (!user) {
+                return {
+                    status: 400, error: true, message: 'User does not exist.',
+                    timestamp: new Date().toISOString()
+                };
+            }
+
+            // Initialize an array to store the final result
+            let g = dataSource;
+            if(g == 'zarc'){
+                g = 'zacr'
+            }
+
+            if(dataSource == 'zacr'){
+                dataSource = 'zarc'
+            }
+            
+            const userProduct = user.products.find(product => product.dataSource === dataSource);
+            const check = await this.redis.get(dataSource + " " + endpointV + " " + userProduct.tou)
+            if(check == null){
+            const endpoint = await this.endpointRepository.findOne({
+                where: { endpoint: g }, // Match the endpoint with the dataSource
+                relations: ['dashboards']
+            });
+            const dashboards = endpoint.dashboards.find(dashboard => dashboard.name == endpointV && dashboard.user == userProduct.tou);
+            if(!dashboards){
+                return {
+                    status: 403, error: true, message: 'Unauthorised.',
+                    timestamp: new Date().toISOString()
+                };  
+            }
+            const graphs = dashboards.graphs;
+            const result ={
+                dashboardGraphs : graphs
+            };
+            await this.redis.set(dataSource + " " + endpointV + " " + userProduct.tou, JSON.stringify(result),  'EX', 24 * 60 * 60);
+
+            return { "status": "success", "message": result };
+        }else{
+            const result = await this.redis.get(dataSource + " " + endpointV + " " + userProduct.tou);
+            return { "status": "success", "message": JSON.parse(result) };
+        }
+        } catch (error) {
+            return {
+                status: 500, error: true, message: 'Unexpected error.',
+                timestamp: new Date().toISOString()
+            };
+        }
     }
 
 }

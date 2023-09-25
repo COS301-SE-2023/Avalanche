@@ -3,7 +3,7 @@ import PageHeader from "@/components/Util/PageHeader"
 import { HeartIcon } from "@heroicons/react/24/solid"
 import Head from "next/head"
 import { useDispatch, useSelector } from "react-redux";
-import { graphState, getAgeAnalysisData, clearGraphData } from "@/store/Slices/graphSlice"
+import { graphState, getAgeAnalysisData, clearGraphData, getDashboardGraphs } from "@/store/Slices/graphSlice"
 import { useEffect } from "react";
 import { selectModalManagerState } from "@/store/Slices/modalManagerSlice"
 import GraphZoomModal from "@/components/Modals/GraphZoomModal"
@@ -20,23 +20,25 @@ export default function AgeAnalysis() {
 
     function loadData() {
 
-        const arrayAgeAnalysisShare: IAgeAnalysisGraphRequest[] = [];
+        dispatch(getDashboardGraphs('age'));
 
-        const ageAnalysisAverageTop5: IAgeAnalysisGraphRequest = { rank: 'top5', average: true, overall: false, zone: stateGraph.zones.slice(0, 1) };
-        arrayAgeAnalysisShare.push(ageAnalysisAverageTop5);
+        // const arrayAgeAnalysisShare: IAgeAnalysisGraphRequest[] = [];
 
-        const ageAnalysisTop5: IAgeAnalysisGraphRequest = { rank: 'top5', overall: false, average: false, zone: stateGraph.zones.slice(0, 1) };
-        arrayAgeAnalysisShare.push(ageAnalysisTop5);
+        // const ageAnalysisAverageTop5: IAgeAnalysisGraphRequest = { rank: 'top5', average: true, overall: false, zone: stateGraph.zones.slice(0, 1) };
+        // arrayAgeAnalysisShare.push(ageAnalysisAverageTop5);
 
-        const marketShareTop20: IAgeAnalysisGraphRequest = { rank: 'top20', overall: false, average: true, zone: stateGraph.zones.slice(0, 1) };
-        arrayAgeAnalysisShare.push(marketShareTop20);
+        // const ageAnalysisTop5: IAgeAnalysisGraphRequest = { rank: 'top5', overall: false, average: false, zone: stateGraph.zones.slice(0, 1) };
+        // arrayAgeAnalysisShare.push(ageAnalysisTop5);
 
-        const ageAnalysisTop10: IAgeAnalysisGraphRequest = { rank: 'top10', overall: false, average: true, zone: stateGraph.zones.slice(0, 1) };
-        arrayAgeAnalysisShare.push(ageAnalysisTop10);
+        // const marketShareTop20: IAgeAnalysisGraphRequest = { rank: 'top20', overall: false, average: true, zone: stateGraph.zones.slice(0, 1) };
+        // arrayAgeAnalysisShare.push(marketShareTop20);
 
-        arrayAgeAnalysisShare.forEach(data => {
-            dispatch(getAgeAnalysisData(data));
-        })
+        // const ageAnalysisTop10: IAgeAnalysisGraphRequest = { rank: 'top10', overall: false, average: true, zone: stateGraph.zones.slice(0, 1) };
+        // arrayAgeAnalysisShare.push(ageAnalysisTop10);
+
+        // arrayAgeAnalysisShare.forEach(data => {
+        //     dispatch(getAgeAnalysisData(data));
+        // })
 
     }
 
@@ -98,7 +100,7 @@ export default function AgeAnalysis() {
 
         <MainContent>
             <div className="flex justify-between items-center">
-                <PageHeader title="Registrar Age Analysis" subtitle="Insights at your fingertips" icon={<HeartIcon className="h-16 w-16 text-black dark:text-white" />} />
+                <PageHeader title="Registrar Age Analysis" subtitle="See the average age of domains" icon={<HeartIcon className="h-16 w-16 text-black dark:text-white" />} />
                 <SubmitButton text="Download Report" onClick={() => generatePDF()} />
             </div>
             <DashboardBase state={stateGraph} />
