@@ -526,8 +526,8 @@ function Flow() {
   }, [query]);
 
   useEffect(() => {
-    if (qbee.schema) dispatch(getSchema({}));
-  }, [])
+    if (qbee.schema) dispatch(getSchema(qbee.schema));
+  }, [qbee.schema])
 
   /**
    * Function that takes the nodes and edges and constructs the query
@@ -774,7 +774,7 @@ function Flow() {
                 items={[{ name: "Transactions Detail", value: "transactionsDetail" }, { name: "Movement Details", value: "movementDetails" }]}
                 set={(value: string) => {
                   // console.log(value);
-                  dispatch(setSchema(value))
+                  dispatch(setSchema(value));
                   setNodes(initialNodes);
                   setEdges(initialEdges);
                 }}

@@ -563,6 +563,16 @@
                 {
                     "columnName": "Registrar Name",
                     "columnType": "string",
+                    "filter": [
+                        {
+                            "tou": "registry",
+                            "filter": false
+                        },
+                        {
+                            "tou": "registrar",
+                            "filter": false
+                        }
+                    ],
                     "aggregation": [
                         {
                             "tou": "registry",
@@ -581,6 +591,16 @@
                 {
                     "columnName": "Company Name",
                     "columnType": "string",
+                    "filter": [
+                        {
+                            "tou": "registry",
+                            "filter": false
+                        },
+                        {
+                            "tou": "registrar",
+                            "filter": false
+                        }
+                    ],
                     "aggregation": [
                         {
                             "tou": "registry",
@@ -599,6 +619,16 @@
                 {
                     "columnName": "Trading Name",
                     "columnType": "string",
+                    "filter": [
+                        {
+                            "tou": "registry",
+                            "filter": false
+                        },
+                        {
+                            "tou": "registrar",
+                            "filter": false
+                        }
+                    ],
                     "aggregation": [
                         {
                             "tou": "registry",
