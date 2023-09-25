@@ -104,6 +104,7 @@ export const qbeeSlice = createSlice({
         builder.addCase(getSchema.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload as string;
+            ErrorToast({ text: `There was an error getting the schema for ${state.schema}. Please select another Data Type.` })
         })
         builder.addCase(getSchema.pending, (state) => {
             state.loading = true;
@@ -112,8 +113,7 @@ export const qbeeSlice = createSlice({
     }
 })
 
-export const getSchema = createAsyncThunk("QBEE.GetSchema", async (query: any, { rejectWithValue, getState }) => {
-    const state = getState() as IInitState;
+export const getSchema = createAsyncThunk("QBEE.GetSchema", async (schema: string, { rejectWithValue, getState }) => {
     try {
         const jwt = getCookie("jwt");
         const res: any = await ky.post(`${process.env.NEXT_PUBLIC_API}/qbee/getSchema`, {
@@ -121,7 +121,7 @@ export const getSchema = createAsyncThunk("QBEE.GetSchema", async (query: any, {
                 "Authorization": `Bearer ${jwt}`
             },
             json: {
-                schema: state.schema,
+                schema: schema,
                 dataSource: "zacr"
             },
         }).json();
