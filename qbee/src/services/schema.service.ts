@@ -60,6 +60,8 @@ export class SchemaService {
       } else if (stats.isFile() && path.extname(file) === '.json') {
         const schema = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
         const url = `${prefix}/${path.basename(file, '.json')}`;
+        console.log(url);
+        console.log(this.schemas);
         this.schemas[url] = schema;
       }
     });
@@ -231,7 +233,6 @@ export class SchemaService {
         }
       }
     }
-
     return transformedColumns;
   }
 }

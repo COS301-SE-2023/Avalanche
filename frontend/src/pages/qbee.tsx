@@ -31,14 +31,16 @@ import {
   LogicalOperator,
 } from "@/interfaces/qbee/enums";
 import { DBData, FilterCondition, Query } from "@/interfaces/qbee/interfaces";
-import { SubmitButton, SuccessToast } from "@/components/Util";
+import { BetterDropdown, ErrorToast, SubmitButton, SuccessToast } from "@/components/Util";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addData,
   setNodes as QBeeSetNodes,
   setEdges as QBeeSetEdges,
   getData,
-  qbeeState
+  qbeeState,
+  getSchema,
+  setSchema
 } from "@/store/Slices/qbeeSlice";
 import { copy } from "copy-anything";
 
@@ -53,6 +55,7 @@ import AndBlock from "@/components/QBee/AndBlock";
 
 import dummyData from "@/components/QBee/dummy.json";
 import { Toaster } from "react-hot-toast"
+import LoadingPage from "@/components/Util/Loading";
 
 const nodeTypes = {
   outputBlock: OutputNode,
@@ -69,6 +72,8 @@ const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
 
 export default function QBee() {
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  const router = useRouter();
+  const qbee = useSelector(qbeeState);
 
   const handleResize = () => {
     setScreenWidth(window.innerWidth);
@@ -131,10 +136,12 @@ export default function QBee() {
 function Flow() {
   const router = useRouter();
   const dispatch = useDispatch<any>();
-  dispatch(addData(dummyData as DBData[]));
+  // dispatch(addData(dummyData as DBData[]));
+  // dispatch(getSchema({}));
   const [selectedPanel, setSelectedPanel] = useState<string>("blocks");
   const [query, setQuery] = useState<any>();
   const { fitView } = useReactFlow();
+  const qbee = useSelector(qbeeState);
 
   /**
    * Update a node
@@ -429,6 +436,11 @@ function Flow() {
     dispatch(QBeeSetNodes(copy(nodes)));
   }, [nodes]);
 
+  /**
+   * Quick connect to end
+   * @param from 
+   * @param to 
+   */
   const quickConnect = (from: string, to: string): void => {
     setEdges((edgs: Edge[]) =>
       edgs.concat({
@@ -508,6 +520,10 @@ function Flow() {
   useEffect(() => {
     dispatch(QBeeSetEdges(copy(edges)));
   }, [query]);
+
+  useEffect(() => {
+    if (qbee.schema) dispatch(getSchema({}));
+  }, [])
 
   /**
    * Function that takes the nodes and edges and constructs the query
@@ -633,7 +649,7 @@ function Flow() {
       // let result = [{}]
       // updateNode(QBeeRole.outputBlock, { jsonData: [result] });
       setQuery(query);
-  }
+    }
 
     return query;
   };
@@ -641,14 +657,40 @@ function Flow() {
   /*
   Function that makes output data display
   */
- const displayOutput = (payload: any) =>{
-  if(!payload){
-    return;
+  // const displayOutput = (payload: any) => {
+  //   if (!payload) {
+  //     return;
+  //   }
+  //   console.log(payload)
+  //   const data = payload.payload;
+  //   updateNode(QBeeRole.outputBlock, { jsonData: data });
+  // }
+
+  // useEffect(() => {
+  //   if (qbee.outputData.length !== 0) {
+  //     console.log("here", qbee.outputData);
+  //     displayOutput(qbee.outputData);
+  //   }
+  // }, [qbee.outputData])
+
+  if (qbee.loading) {
+    return (
+      <div className="bg-gray-100 dark:bg-secondaryBackground h-screen w-screen relative">
+        <div
+          className="absolute top-5 left-5 bg-black p-2 rounded-lg cursor-pointer"
+          onClick={() => router.push("/home")}
+        >
+          <Squares2X2Icon className="w-4=6 h-6" />
+        </div>
+        <div className=" w-full h-full flex items-center justify-center">
+          <div role="status">
+            <svg aria-hidden="true" className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor" /><path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill" /></svg>
+            <span className="sr-only">Loading...</span>
+          </div>
+        </div>
+      </div>
+    )
   }
-  console.log(payload)
-  const data = payload.payload;
-  updateNode(QBeeRole.outputBlock, { jsonData: data });
- }
 
   return (
     <>
@@ -703,7 +745,7 @@ function Flow() {
                 </h4>
                 <p className="text-white mb-2 max-w-xs">
                   Add your necessary filters here.
-                Only the rows that can successfully pass through all the &quot;gates&quot; needed to get from &quot;Start Of Filters&quot; to &quot;End Of Filters&quot; will show up in your final table.
+                  Only the rows that can successfully pass through all the &quot;gates&quot; needed to get from &quot;Start Of Filters&quot; to &quot;End Of Filters&quot; will show up in your final table.
                 </p>
                 <div className="space-y-4">
                   <SubmitButton
@@ -726,23 +768,34 @@ function Flow() {
             )}
             <Panel position="top-left" className="flex gap-2 flex-col">
               <div
-                className="bg-black p-2 rounded-lg cursor-pointer"
+                className="bg-black p-2 rounded-lg cursor-pointer w-min"
                 onClick={() => router.push("/home")}
               >
                 <Squares2X2Icon className="w-4=6 h-6" />
               </div>
               <div
-                className="bg-success-background p-2 rounded-lg cursor-pointer"
-                onClick={async () =>{
-                  convertToQuery();
-                  displayOutput(await dispatch(getData(query)));
-                  SuccessToast({ text: "Successfully saved 🐝 Or have you 👀" })
-                }
-                  
-                }
+                className={`${qbee.loading ? "bg-gray-500" : "bg-success-background"} p-2 rounded-lg cursor-pointer w-min`}
+                onClick={() => {
+                  if (!qbee.schema) {
+                    return ErrorToast({ text: "You need to select a schema" })
+                  }
+                  dispatch(getData(convertToQuery()));
+                  SuccessToast({ text: "Sent request in..." })
+                }}
               >
-                <CheckCircleIcon className="w-4=6 h-6" />
+                <CheckCircleIcon className="w-6 h-6" />
               </div>
+              <BetterDropdown
+                items={[{ name: "Transactions Detail", value: "transactionsDetail" }, { name: "Movement Details", value: "movementDetails" }]}
+                set={(value: string) => {
+                  // console.log(value);
+                  dispatch(setSchema(value))
+                  setNodes(initialNodes);
+                  setEdges(initialEdges);
+                }}
+                option={qbee.schema}
+                text="Type of Data"
+                absolute={true} />
             </Panel>
           </ReactFlow>
         </ReactFlowProvider>
