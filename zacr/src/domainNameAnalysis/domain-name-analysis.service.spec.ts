@@ -34,7 +34,7 @@ describe('DomainNameAnalysisService', () => {
 
   describe('sendData', () => {
     it('should return formatted data from Redis if it exists', async () => {
-      const mockData = JSON.stringify({ test: 'data' });
+      const mockData = JSON.stringify({ data: 'data', filters: 'filters' });
       const filters = { num: 10, granularity: 'month' };
       const mockQuery = `call domainNameAnalysis('${JSON.stringify(filters)}')`;
 
@@ -51,8 +51,10 @@ describe('DomainNameAnalysisService', () => {
         data: {
           graphName:
             'Most common sub words in newly created domains in the last 10 month(s)',
-          data: { test: 'data' },
+          data: 'data',
           warehouse: 'zacr',
+          filters: 'filters',
+          chartType: 'Bubble',
           graphType: 'domainNameAnalysis/count',
         },
         timestamp: expect.any(String),
@@ -69,28 +71,34 @@ describe('DomainNameAnalysisService', () => {
       mockGraphFormatService.formatDomainNameAnalysis.mockResolvedValue(
         JSON.stringify({ formattedData: 'formattedData' }),
       );
-      mockHttpService.post.mockReturnValue(of({ data: 'responseData' }));
+      mockHttpService.post.mockReturnValue(of({ data: { data: [] } }));
 
       const result = await service.sendData({ filters });
+      const data = {
+        data: {
+          chartData: { datasets: [{ label: 'Label1' }] },
+          jsonData: [{ xAxis: 'word', yAxis: 'frequency' }],
+        },
+        filters: {},
+      };
 
       expect(mockSnowflakeService.execute).toHaveBeenCalledWith(mockQuery);
       expect(mockHttpService.post).toHaveBeenCalled();
       expect(mockRedis.set).toHaveBeenCalledWith(
         `zacr` + mockQuery,
-        '{"data":{"chartData":"{\\"formattedData\\":\\"formattedData\\"}","jsonData":"responseData"}}',
+        JSON.stringify(data),
         'EX',
-        72 * 60 * 60,
+        24 * 60 * 60,
       );
       expect(result).toEqual({
         status: 'success',
         data: {
           graphName:
             'Most common sub words in newly created domains in the last 10 month(s)',
-          data: {
-            chartData: '{"formattedData":"formattedData"}',
-            jsonData: 'responseData',
-          },
+          data: data.data,
+          filters: {},
           warehouse: 'zacr',
+          chartType: 'Bubble',
           graphType: 'domainNameAnalysis/count',
         },
         timestamp: expect.any(String),
@@ -110,30 +118,6 @@ describe('DomainNameAnalysisService', () => {
         status: 500,
         error: true,
         message: 'Data Warehouse Error',
-        timestamp: expect.any(String),
-      });
-    });
-
-    it('should return error if format throws an error', async () => {
-      const filters = { num: 10, granularity: 'month' };
-
-      mockRedis.get.mockResolvedValue(null);
-
-      mockGraphFormatService.formatDomainNameAnalysis.mockRejectedValue(
-        new Error('Format Error'),
-      );
-
-      const mockData = { DOMAINNAMEANALYSIS: 'test' };
-      mockSnowflakeService.execute.mockResolvedValue([mockData]);
-
-      mockHttpService.post.mockReturnValue(of({ data: 'responseData' }));
-
-      const result = await service.sendData({ filters });
-
-      expect(result).toEqual({
-        status: 500,
-        error: true,
-        message: 'Format Error',
         timestamp: expect.any(String),
       });
     });
@@ -158,6 +142,19 @@ describe('DomainNameAnalysisService', () => {
   });
 
   describe('domain length', () => {
+    let spy: jest.SpyInstance;
+
+    beforeEach(() => {
+      // Spy on the domainLengthGraphName method and mock its implementation
+      spy = jest
+        .spyOn(service, 'domainLengthGraphName')
+        .mockImplementation(() => 'graph Name');
+    });
+
+    afterEach(() => {
+      // Restore the original implementation after each test
+      spy.mockRestore();
+    });
     it('should return formatted data from domainLength', async () => {
       const mockData = JSON.stringify({ test: 'data' });
       const filters = JSON.stringify({ registrar: [], zone: [] });
@@ -173,7 +170,9 @@ describe('DomainNameAnalysisService', () => {
         status: 'success',
         data: {
           graphName: expect.any(String),
-          test: 'data',
+          data: undefined,
+          filters: undefined,
+          chartType: 'Line',
           warehouse: 'zacr',
           graphType: 'domainNameAnalysis/length',
         },
@@ -221,7 +220,9 @@ describe('DomainNameAnalysisService', () => {
       const filters = JSON.stringify({ registrar: [], zone: [] });
 
       mockRedis.get.mockResolvedValue(null);
-      mockSnowflakeService.execute.mockResolvedValue('results');
+      mockSnowflakeService.execute.mockResolvedValue([
+        { DOMAINLENGTHANALYSIS: { data: 'data', filters: 'filters' } },
+      ]);
       mockRedis.set.mockImplementation(() => {
         throw new Error('Redis Error');
       });
@@ -248,7 +249,7 @@ describe('DomainNameAnalysisService', () => {
 
       const graphName = service.domainLengthGraphName(filters);
       expect(graphName).toBe(
-        'Length of newly created domains from 2022-01-01 to 2022-12-31 for test1, test2 for zone1, zone2',
+        'Length of newly created domains  for test1, test2 (zone1,zone2)',
       );
     });
 
@@ -259,7 +260,7 @@ describe('DomainNameAnalysisService', () => {
 
       const graphName = service.domainLengthGraphName(filters);
       expect(graphName).toBe(
-        `Length of newly created domains from ${year}-01-01 to ${year}-12-31 across all registrars for all zones`,
+        `Length of newly created domains  across all registrars (all zones)`,
       );
     });
 
@@ -270,7 +271,7 @@ describe('DomainNameAnalysisService', () => {
 
       const graphName = service.domainLengthGraphName(filters);
       expect(graphName).toBe(
-        `Length of newly created domains from ${year}-01-01 to ${year}-12-31 for test1 for all zones`,
+        `Length of newly created domains  for test1 (all zones)`,
       );
     });
 
@@ -287,7 +288,7 @@ describe('DomainNameAnalysisService', () => {
 
       const graphName = service.domainLengthGraphName(filters);
       expect(graphName).toBe(
-        `Length of newly created domains from ${filters.dateFrom} to ${filters.dateTo} for test1, test2, test3 for zone1, zone2, zone3`,
+        `Length of newly created domains  for test1, test2, test3 (zone1,zone2,zone3)`,
       );
     });
 
@@ -299,7 +300,7 @@ describe('DomainNameAnalysisService', () => {
 
       const graphName = service.domainLengthGraphName(filters);
       expect(graphName).toBe(
-        'Length of newly created domains from 2022-01-01 to 2022-02-28 across all registrars for all zones',
+        'Length of newly created domains  across all registrars (all zones)',
       );
     });
   });

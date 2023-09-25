@@ -32,9 +32,9 @@ type ConvertedData = {
       };
     };
     yaxis: {
+      forceNiceScale: boolean;
       title: {
         text: string;
-        forceNiceScale: boolean;
         style: {
           color: string;
         };
@@ -92,6 +92,10 @@ type TreeConvertedData = {
   options: {};
 };
 
+const camelCaseRenderer = (value: string) => {
+  return value.replace(/([A-Z])/g, ' $1').replace(/^./, function (str) { return str.toUpperCase(); })
+}
+
 export function convertData(
   jsonData: JsonDataEntry[],
   type: string,
@@ -100,7 +104,7 @@ export function convertData(
   //Set theme colour
 
   if (theme === "dark") {
-    themeColours.labelColour = "#FFFFFF";
+    themeColours.labelColour = "#000000";
   } else {
     themeColours.labelColour = "#000000";
   }
@@ -199,6 +203,7 @@ function convertWithMultipleSeries(jsonData: JsonDataEntry[], type: string): Con
   if(type != 'radar'){
     annotationsToUse = {
       yaxis: [
+        
         {
           y: 0,
           borderColor: "#000000", // Black color
@@ -215,7 +220,7 @@ function convertWithMultipleSeries(jsonData: JsonDataEntry[], type: string): Con
       xaxis: {
         categories: Array.from(xAxisSet),
         title: {
-          text: xAxisLabel,
+          text: camelCaseRenderer(xAxisLabel),
           style: {
             color: themeColours.labelColour,
           },
@@ -230,9 +235,10 @@ function convertWithMultipleSeries(jsonData: JsonDataEntry[], type: string): Con
         },
       },
       yaxis: {
+        
+        forceNiceScale: true,
         title: {
-          text: yAxisLabel,
-          forceNiceScale: true,
+          text: camelCaseRenderer(yAxisLabel),
           style: {
             color: themeColours.labelColour,
           },
@@ -334,7 +340,7 @@ function convertWithSingleSeries(jsonData: JsonDataEntry[], type: string): Conve
       xaxis: {
         categories: Array.from(xAxisSet),
         title: {
-          text: xAxisLabel,
+          text: camelCaseRenderer(xAxisLabel),
           style: {
             color: themeColours.labelColour,
           },
@@ -349,9 +355,9 @@ function convertWithSingleSeries(jsonData: JsonDataEntry[], type: string): Conve
         },
       },
       yaxis: {
+        forceNiceScale: true,
         title: {
-          text: yAxisLabel,
-          forceNiceScale: true,
+          text: camelCaseRenderer(yAxisLabel),
           style: {
             color: themeColours.labelColour,
           },
@@ -423,18 +429,20 @@ export function convertForProportion(
 }
 
 export function convertForTree(jsonData: JsonDataEntry[]): TreeConvertedData {
+  console.log("json",jsonData);
   const seriesData: { x: any; y: any }[] = [];
 
-  let xAxisLabel = "";
-  let yAxisLabel = "";
+  let xAxisLabel:any = "";
+  let yAxisLabel:any = "";
 
   if (jsonData.length > 0) {
-    const firstEntryKeys = Object.keys(jsonData[0]);
-    xAxisLabel = firstEntryKeys[0];
-    yAxisLabel = firstEntryKeys[1];
+    xAxisLabel = jsonData[0].xAxis;
+    yAxisLabel = jsonData[0].yAxis;
   }
-
+  
   jsonData.forEach((entry) => {
+    console.log(xAxisLabel,entry[xAxisLabel],typeof entry[xAxisLabel]," <-- x");
+    console.log(yAxisLabel,entry[yAxisLabel],typeof entry[yAxisLabel]," <-- y");
     if (
       (typeof entry[xAxisLabel] == "string" ||
         typeof entry[xAxisLabel] == "number") &&

@@ -6,7 +6,11 @@ import { DataFormatService } from '../data-format/data-format.service';
 import { AnalysisService } from '../analysis/analysis.service';
 import { GraphFormatService } from '../graph-format/graph-format.service';
 import { json } from 'stream/consumers';
-import { DataInterface, NewDataInterface } from '../interfaces/interfaces';
+import {
+  ChartType,
+  DataInterface,
+  NewDataInterface,
+} from '../interfaces/interfaces';
 import { RegistrarNameService } from '../registrarName/registrarName.service';
 
 @Injectable()
@@ -15,7 +19,6 @@ export class AgeService {
     private jwtService: JwtService,
     @Inject('REDIS') private readonly redis: Redis,
     private readonly snowflakeService: SnowflakeService,
-    private readonly statisticalAnalysisService: AnalysisService,
     private readonly graphFormattingService: GraphFormatService,
     private readonly registrarNameServices: RegistrarNameService,
   ) {}
@@ -56,7 +59,7 @@ export class AgeService {
             name = name.data.name;
           }
 
-          if (queryData[0]['AGEANALYSIS'].filters.average) {
+          if (queryData[0]['AGEANALYSIS'].filters?.average) {
             topNRegistrars.forEach((item, index) => {
               if (
                 index != 0 &&
@@ -69,7 +72,7 @@ export class AgeService {
           } else {
             const mapNames = {};
             let regNumber = 1;
-            topNRegistrars.forEach((item, index) => {
+            topNRegistrars?.forEach((item, index) => {
               if (
                 index != 0 &&
                 item.Registrar != name &&
@@ -79,7 +82,7 @@ export class AgeService {
                 mapNames[item.Registrar] = `Registrar ${regNumber++}`;
               }
             });
-            topNRegistrars.forEach((item, index) => {
+            topNRegistrars?.forEach((item, index) => {
               if (
                 index != 0 &&
                 item.Registrar != name &&
@@ -127,6 +130,9 @@ export class AgeService {
           graphName: graphName,
           data: data.data,
           filters: data.filters,
+          chartType: data.filters?.average
+            ? ChartType.PolarArea
+            : ChartType.Bubble,
           warehouse: 'zacr',
           graphType: 'age',
         },

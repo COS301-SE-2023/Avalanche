@@ -8,6 +8,7 @@ import { DomainWatchService } from './domainWatch/domain-watch-analysis.service'
 import { MovementService } from './movement/movement.service';
 import { RegistrarNameService } from './registrarName/registrarName.service';
 import { RpcException } from '@nestjs/microservices';
+import { QBeeService } from './qbee/qbee.service';
 
 describe('AppController', () => {
   let appController: AppController;
@@ -18,6 +19,7 @@ describe('AppController', () => {
   let mockDomainWatchService;
   let mockMovementService;
   let mockRegistrarNameService;
+  let mockQBeeService;
 
   beforeEach(async () => {
     mockTransactionService = {
@@ -33,6 +35,7 @@ describe('AppController', () => {
     mockMovementService = { nettVeritical: jest.fn() };
     mockDomainWatchService = { passive: jest.fn(), loadDomains: jest.fn() };
     mockRegistrarNameService = { registrarName: jest.fn() };
+    mockQBeeService = { executeQuery: jest.fn() };
     const app: TestingModule = await Test.createTestingModule({
       controllers: [AppController],
       providers: [
@@ -54,6 +57,11 @@ describe('AppController', () => {
         {
           provide: RegistrarNameService,
           useValue: mockRegistrarNameService,
+        },
+
+        {
+          provide: QBeeService,
+          useValue: mockQBeeService,
         },
       ],
     }).compile();

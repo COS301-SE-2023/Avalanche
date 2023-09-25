@@ -4,7 +4,11 @@ import { JwtService } from '@nestjs/jwt';
 import { SnowflakeService } from '../snowflake/snowflake.service';
 import { AnalysisService } from '../analysis/analysis.service';
 import { GraphFormatService } from '../graph-format/graph-format.service';
-import { NewDataInterface, formatDate } from '../interfaces/interfaces';
+import {
+  NewDataInterface,
+  formatDate,
+  ChartType,
+} from '../interfaces/interfaces';
 
 @Injectable()
 export class TransactionService {
@@ -69,6 +73,7 @@ export class TransactionService {
           graphType: 'transactions',
           data: data.data,
           filters: data.filters,
+          chartType: ChartType.Line,
         },
         timestamp: new Date().toISOString(),
       };
@@ -138,6 +143,7 @@ export class TransactionService {
           graphType: 'transactions-ranking',
           data: data.data,
           filters: data.filters,
+          chartType: ChartType.Line,
         },
         timestamp: new Date().toISOString(),
       };

@@ -10,7 +10,6 @@ describe('ZACR Service Integration Tests From Gateway', () => {
   let app: INestApplication;
   let configService: ConfigService;
   const accessToken = process.env.JWT_TOKEN_TO_TEST;
-  //console.log(accessToken);
 
 
   beforeAll(async () => {
@@ -42,14 +41,13 @@ describe('ZACR Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          ////console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
 
     it('should perform transactions for a granularity of a year', () => {
       const data = {
-        zone : ["CO.ZA"], dateFrom : dateFrom, dateTo: dateTo, graphName: `Yearly, from ${dateFrom} to ${dateTo}`, granularity: "year", token : `Bearer ${accessToken}`
+          zone : ["CO.ZA"], dateFrom : dateFrom, dateTo: dateTo, graphName: `Yearly, from ${dateFrom} to ${dateTo}`, granularity: "year", token : `Bearer ${accessToken}`
       }; // Replace this with actual data
       
       return request(app.getHttpServer())
@@ -125,7 +123,6 @@ describe('ZACR Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -138,7 +135,6 @@ describe('ZACR Service Integration Tests From Gateway', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);
@@ -163,13 +159,11 @@ describe('ZACR Service Integration Tests From Gateway', () => {
     const dateTo = `${currentDate.getFullYear()}-${(currentDate.getMonth()).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;;
     it('top5', () => {
       const data = { token : `Bearer ${accessToken}`,rank : 'top5' } ;
-      
       return request(app.getHttpServer())
         .post('/zacr/marketShare')
         .set('Authorization', `Bearer ${accessToken}`)
         .send(data)
         .then((response) => {
-          //console.log(response.body);
           expect(response.body.status).toBe('success');
         });
     }, 100000);

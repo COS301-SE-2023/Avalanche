@@ -4,7 +4,11 @@ import { Injectable, Inject } from '@nestjs/common';
 import { lastValueFrom } from 'rxjs';
 import { SnowflakeService } from '../snowflake/snowflake.service';
 import { GraphFormatService } from '../graph-format/graph-format.service';
-import { DataInterface, NewDataInterface } from 'src/interfaces/interfaces';
+import {
+  ChartType,
+  DataInterface,
+  NewDataInterface,
+} from '../interfaces/interfaces';
 import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
@@ -19,19 +23,21 @@ export class DomainNameAnalysisService {
   async sendData(dataO: any): Promise<any> {
     try {
       const filters = JSON.stringify(dataO.filters);
+
       const num = dataO.filters.num;
       const granularity = dataO.filters.granularity;
 
       const sqlQuery = `call domainNameAnalysis('${filters}')`;
+
       const dataR = await this.redis.get(`zacr` + sqlQuery);
       let data: NewDataInterface;
       let formattedData;
-
       if (!dataR) {
         let queryData;
         try {
           queryData = await this.snowflakeService.execute(sqlQuery);
         } catch (e) {
+          console.log(e);
           return {
             status: 500,
             error: true,
@@ -39,7 +45,6 @@ export class DomainNameAnalysisService {
             timestamp: new Date().toISOString(),
           };
         }
-
         dataO.data = queryData[0]['DOMAINNAMEANALYSIS'];
         delete dataO.filters;
         const response = this.httpService.post(
@@ -47,17 +52,15 @@ export class DomainNameAnalysisService {
           dataO,
         );
         const responseData = await lastValueFrom(response);
-
         formattedData = {
           datasets: [{ label: 'Label1' }],
         };
 
-        const jsonData: any[] = responseData.data.data;
-        jsonData.forEach((item) => {
+        const jsonData: any[] = responseData.data?.data;
+        jsonData?.forEach((item) => {
           delete item.domains;
         });
-
-        jsonData.unshift({ xAxis: 'word', yAxis: 'frequency' });
+        jsonData?.unshift({ xAxis: 'word', yAxis: 'frequency' });
 
         const graphData = {
           chartData: formattedData,
@@ -65,7 +68,6 @@ export class DomainNameAnalysisService {
         };
 
         data = { data: graphData, filters: {} };
-
         await this.redis.set(
           `zacr` + sqlQuery,
           JSON.stringify(data),
@@ -75,7 +77,6 @@ export class DomainNameAnalysisService {
       } else {
         data = JSON.parse(dataR);
       }
-
       return {
         status: 'success',
         data: {
@@ -87,12 +88,14 @@ export class DomainNameAnalysisService {
             '(s)',
           data: data.data,
           filters: data.filters,
+          chartType: ChartType.TreeMap,
           warehouse: 'zacr',
           graphType: 'domainNameAnalysis/count',
         },
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
+      console.log(e);
       return {
         status: 500,
         error: true,
@@ -120,6 +123,7 @@ export class DomainNameAnalysisService {
         try {
           queryData = await this.snowflakeService.execute(sqlQuery);
         } catch (e) {
+          console.log(e);
           return {
             status: 500,
             error: true,
@@ -134,16 +138,22 @@ export class DomainNameAnalysisService {
           dataO,
         );
         const responseData = await lastValueFrom(response);
-        const formattedResponseData = {
-          data: this.formatClassification(responseData.data.data),
-        };
         formattedData = {
           datasets: [{ label: 'Label1' }],
         };
+
+        const jsonData: any[] = responseData.data.data;
+        jsonData.forEach((item) => {
+          delete item.domains;
+        });
+        jsonData.unshift({ xAxis: 'word', yAxis: 'frequency' });
+
         const graphData = {
-          chartData: JSON.parse(formattedData),
-          jsonData: formattedResponseData.data,
+          chartData: formattedData,
+          jsonData: jsonData,
         };
+
+        data = { data: graphData, filters: {} };
         await this.redis.set(
           `zacr` + sqlQuery + ` classification`,
           JSON.stringify(data),
@@ -163,12 +173,14 @@ export class DomainNameAnalysisService {
             granularity +
             '(s)',
           data: data,
+          chartType: ChartType.Bubble,
           warehouse: 'zacr',
           graphType: 'domainNameAnalysis/classification',
         },
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
+      console.log(e);
       return {
         status: 500,
         error: true,
@@ -194,6 +206,7 @@ export class DomainNameAnalysisService {
         try {
           queryData = await this.snowflakeService.execute(sqlQuery);
         } catch (e) {
+          console.log(e);
           return {
             status: 500,
             error: true,
@@ -237,6 +250,7 @@ export class DomainNameAnalysisService {
           graphType: 'domainNameAnalysis/length',
           data: data.data,
           filters: data.filters,
+          chartType: ChartType.Line,
         },
         timestamp: new Date().toISOString(),
       };
@@ -336,4 +350,38 @@ export class DomainNameAnalysisService {
 
     return finalOutput;
   }
+  /*
+  normaliseData(data: string): string {
+    const dataArr = JSON.parse(data)['data'];
+    const minFrequency = Math.min(...dataArr.map((item) => item.frequency));
+    const maxFrequency = Math.max(...dataArr.map((item) => item.frequency));
+
+    const newMin = 10;
+    const newMax = 60;
+
+    // Normalize each frequency, scaling it to be within [newMin, newMax]
+    const normalizedData = dataArr.map((item) => ({
+      ...item,
+      normalisedFrequency: this.normalize(
+        item.frequency,
+        minFrequency,
+        maxFrequency,
+        newMin,
+        newMax,
+      ),
+    }));
+
+    return JSON.stringify(normalizedData);
+  }
+
+  normalize(
+    value: number,
+    min: number,
+    max: number,
+    newMin: number,
+    newMax: number,
+  ): number {
+    return ((value - min) / (max - min)) * (newMax - newMin) + newMin;
+  }
+  */
 }

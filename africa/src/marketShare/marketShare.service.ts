@@ -3,7 +3,7 @@ import Redis from 'ioredis';
 import { JwtService } from '@nestjs/jwt';
 import { SnowflakeService } from '../snowflake/snowflake.service';
 import { RegistrarNameService } from '../registrarName/registrarName.service';
-import { NewDataInterface } from '../interfaces/interfaces';
+import { ChartType, NewDataInterface } from '../interfaces/interfaces';
 
 @Injectable()
 export class MarketShareService {
@@ -43,8 +43,7 @@ export class MarketShareService {
         let filtersCount = {};
         if (JSON.parse(filters).zone != undefined) {
           filtersCount = {
-            zone: JSON.parse(filters).zone,
-            registrar: JSON.parse(filters).registrar,
+            zone: queryData[0]['MARKETSHARE'].filters.zone
           };
         }
         filtersCount = JSON.stringify(filtersCount);
@@ -143,6 +142,7 @@ export class MarketShareService {
           graphType: 'marketShare',
           data: data.data,
           filters: data.filters,
+          chartType: ChartType.PolarArea,
         },
         timestamp: new Date().toISOString(),
       };

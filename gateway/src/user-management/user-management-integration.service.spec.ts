@@ -11,7 +11,7 @@ describe('User Management Integration Tests From Gateway', () => {
   describe('User Management Organisation Management Integration From Gateway', () => {
     let app: INestApplication;
     let configService: ConfigService;
-    let accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3Q3QGdvb2dsZS5jb20iLCJpYXQiOjE2OTUyMDMzNDksImV4cCI6MTY5NTI4OTc0OX0.6CYM79OOIOhlwZZaDYt70sa9VfCyMwcTgGTkyQsc8O4";
+    let accessToken = process.env.JWT_TOKEN_TO_TEST;
 
     /*
       In order to run most of these tests one neeeds to be logged in (happens in before each)
@@ -46,7 +46,6 @@ describe('User Management Integration Tests From Gateway', () => {
           .send(organisationData)
           .expect(401)
           .then((response) => {
-            console.log(response.body);
             expect(response.body.message).toBe('JWT invalid');
           });
       },20000);
@@ -63,7 +62,6 @@ describe('User Management Integration Tests From Gateway', () => {
           .send(organisationData)
           .expect(200)
           .then((response) => {
-            console.log(response.body);
             expect(response.body.status).toBe('success');
           });
       },20000);
@@ -74,7 +72,6 @@ describe('User Management Integration Tests From Gateway', () => {
           .set('Authorization', 'Bearer invalid_token')
           .expect(401)
           .then((response) => {
-            console.log(response.body);
             expect(response.body.message).toBe('JWT invalid');
           });
       },20000);

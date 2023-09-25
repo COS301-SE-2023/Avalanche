@@ -2,14 +2,12 @@ package avalanche.Network;
 
 import avalanche.Network.HandlerStrategy.Closed;
 import avalanche.Network.HandlerStrategy.HandlerStrategy;
-import avalanche.Network.HandlerStrategy.RunningStrategies.HandleActive;
-import avalanche.Network.HandlerStrategy.RunningStrategies.HandleListZones;
-import avalanche.Network.HandlerStrategy.RunningStrategies.HandleLoadDomains;
-import avalanche.Network.HandlerStrategy.RunningStrategies.HandlePassive;
+import avalanche.Network.HandlerStrategy.RunningStrategies.*;
 
 public enum HandlerStrategyClassEnum {
     COUNT("active", new HandleActive()),
     CLASSIFY("passive", new HandlePassive()),
+    SCREENSHOT("takePickeeNow", new HandleScreenshot()),
     LOADDOMAINS("loadDomains", new HandleLoadDomains()),
     LISTDOMAINS("listZones", new HandleListZones());
 

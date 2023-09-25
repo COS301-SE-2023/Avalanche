@@ -86,7 +86,7 @@
       "!**/*-qbee.controller.ts",
       "!**/*-qbee.service.ts"
     ],
-    "coverageDirectory": "../gateway/coverage",
+    "coverageDirectory": "../coverage",
     "testEnvironment": "node"
   }
 }

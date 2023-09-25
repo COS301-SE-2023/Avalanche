@@ -31,3 +31,13 @@ export function formatDate(input: string): string {
 
   return `${day} ${monthNames[monthIndex]} ${year}`;
 }
+
+export enum ChartType {
+  Pie = 'Pie',
+  Line = 'Line',
+  Bar = 'Bar',
+  Bubble = 'Bubble',
+  PolarArea = 'PolarArea',
+  Radar = 'Radar',
+  TreeMap='TreeMap'
+}

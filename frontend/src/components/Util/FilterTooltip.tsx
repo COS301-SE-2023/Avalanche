@@ -14,8 +14,8 @@ const formatDate = (dateStr: string): string => {
 const formatArray = (arr: string[]): string => {
 	if (arr.length === 0) return 'all';
 	if (arr.length === 1) return arr[0];
-	const lastValue = arr.pop();
-	return `${arr.join(', ')} and ${lastValue}`;
+	console.log(arr);
+	return `${arr.join(', ')}`;
 };
 
 const camelCaseRenderer = (value: string) => {

@@ -64,6 +64,7 @@ export default function CustomChartCard({ title, data, defaultGraph, state, id, 
         }
     }
 
+
     const renderFilters = () => {
 
         return filterGraphs()?.filters?.map((element: any, index: number) => (
@@ -109,26 +110,27 @@ export default function CustomChartCard({ title, data, defaultGraph, state, id, 
         if (data.endpointName) {
             const d = data.endpointName.split("/");
             setWarehouse(d[0]);
-            setGType(d[1]);
+            d.splice(0,1)
+            setGType(d.join('/'));
+
         } else {
             setWarehouse(data.warehouse);
             setGType(data.type);
         }
         try {
-            if(data.filters){
+            if (Object.keys(filters).length === 0 && filters.constructor === Object) {
                 filters = data.filters
             }
             const jwt = getCookie("jwt");
             const url = data.endpointName ? `${process.env.NEXT_PUBLIC_API}/${data.endpointName}` : `${process.env.NEXT_PUBLIC_API}/${warehouse || data.warehouse}/${gType || data.type}`;
             const res = await ky.post(url, {
-                json: filters,
+                json: filters, timeout: 30000,
                 headers: {
                     "Authorization": `Bearer ${jwt}`
                 }
             }).json();
             const d = res as any;
             setGraphData(d.data.data);
-            console.log(graphData)
             setLoading(false);
             setError(false);
             setErrorMessage("");
@@ -198,8 +200,7 @@ export default function CustomChartCard({ title, data, defaultGraph, state, id, 
         keys.forEach((key, index) => {
             requestObject[key] = request[key].value;
         });
-
-        setFilterDropdown(!filterDropdown)
+        setFilterDropdown(!filterDropdown);
         updateGraph(data.graphName, data.endpointName, requestObject);
         fetchGraphData(requestObject);
     }
