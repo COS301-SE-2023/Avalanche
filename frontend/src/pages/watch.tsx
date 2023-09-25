@@ -246,11 +246,11 @@ export default function Settings() {
 
     const getTakePickeeNow = async (domain: string) => {
         try {
-            const dataForDomain = {domainName : domain}
+            const domainName = domain;
             const res = await ky.post(`${process.env.NEXT_PUBLIC_API}/domain-watch/takePickeeNow`, {
                 json: {
-                    dataForDomain
-                },
+                    domainName
+                }, timeout: false,
                 headers: {
                     "Authorization": `Bearer ${getCookie("jwt")}`
                 }
