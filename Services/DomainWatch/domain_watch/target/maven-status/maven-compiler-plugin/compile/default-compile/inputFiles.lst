@@ -1,20 +1,23 @@
-C:\Users\gteuw\Desktop\UNI\Year3\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\DistanceCalculators\SoundexCalculator.java
-C:\Users\gteuw\Desktop\UNI\Year3\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\DataClasses\Domain.java
-C:\Users\gteuw\Desktop\UNI\Year3\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\DistanceCalculators\LevenshteinDistanceCalculator.java
-C:\Users\gteuw\Desktop\UNI\Year3\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\main.java
-C:\Users\gteuw\Desktop\UNI\Year3\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\Network\HandlerStrategy\RunningStrategies\HandlePassive.java
-C:\Users\gteuw\Desktop\UNI\Year3\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\Settings\DomainWatchSettings.java
-C:\Users\gteuw\Desktop\UNI\Year3\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\Core\SimilarityChecker.java
-C:\Users\gteuw\Desktop\UNI\Year3\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\Network\HandlerStrategy\Closed.java
-C:\Users\gteuw\Desktop\UNI\Year3\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\Network\HandlerStrategy\RunningStrategies\HandleListZones.java
-C:\Users\gteuw\Desktop\UNI\Year3\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\Utility\DomainTokeniser.java
-C:\Users\gteuw\Desktop\UNI\Year3\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\Network\HandlerStrategy\RunningStrategies\HandleActive.java
-C:\Users\gteuw\Desktop\UNI\Year3\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\Network\HandlerStrategyClassEnum.java
-C:\Users\gteuw\Desktop\UNI\Year3\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\Network\HandlerStrategy\RunningStrategies\HandleLoadDomains.java
-C:\Users\gteuw\Desktop\UNI\Year3\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\Network\HandlerStrategy\Initialising.java
-C:\Users\gteuw\Desktop\UNI\Year3\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\Threads\LevenshteinThread.java
-C:\Users\gteuw\Desktop\UNI\Year3\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\Network\ServiceHttpHandler.java
-C:\Users\gteuw\Desktop\UNI\Year3\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\Threads\SoundexThread.java
-C:\Users\gteuw\Desktop\UNI\Year3\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\Network\HandlerStrategy\HandlerStrategy.java
-C:\Users\gteuw\Desktop\UNI\Year3\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\Network\ServiceHttpServer.java
-C:\Users\gteuw\Desktop\UNI\Year3\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\Network\HandlerStrategy\Running.java
+C:\Users\User\OneDrive\Documents\University of Pretoria\Year 3\Semester 1\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\DataClasses\Domain.java
+C:\Users\User\OneDrive\Documents\University of Pretoria\Year 3\Semester 1\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\Network\HandlerStrategy\RunningStrategies\HandleLoadDomains.java
+C:\Users\User\OneDrive\Documents\University of Pretoria\Year 3\Semester 1\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\Utility\DomainTokeniser.java
+C:\Users\User\OneDrive\Documents\University of Pretoria\Year 3\Semester 1\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\Network\HandlerStrategy\RunningStrategies\HandleListZones.java
+C:\Users\User\OneDrive\Documents\University of Pretoria\Year 3\Semester 1\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\Network\HandlerStrategy\RunningStrategies\HandleScreenshot.java
+C:\Users\User\OneDrive\Documents\University of Pretoria\Year 3\Semester 1\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\Threads\LevenshteinThread.java
+C:\Users\User\OneDrive\Documents\University of Pretoria\Year 3\Semester 1\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\DistanceCalculators\SoundexCalculator.java
+C:\Users\User\OneDrive\Documents\University of Pretoria\Year 3\Semester 1\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\Network\HandlerStrategyClassEnum.java
+C:\Users\User\OneDrive\Documents\University of Pretoria\Year 3\Semester 1\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\Network\ServiceHttpServer.java
+C:\Users\User\OneDrive\Documents\University of Pretoria\Year 3\Semester 1\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\Core\SimilarityChecker.java
+C:\Users\User\OneDrive\Documents\University of Pretoria\Year 3\Semester 1\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\Network\HandlerStrategy\RunningStrategies\HandlePassive.java
+C:\Users\User\OneDrive\Documents\University of Pretoria\Year 3\Semester 1\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\Network\HandlerStrategy\Closed.java
+C:\Users\User\OneDrive\Documents\University of Pretoria\Year 3\Semester 1\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\Network\HandlerStrategy\HandlerStrategy.java
+C:\Users\User\OneDrive\Documents\University of Pretoria\Year 3\Semester 1\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\DistanceCalculators\LevenshteinDistanceCalculator.java
+C:\Users\User\OneDrive\Documents\University of Pretoria\Year 3\Semester 1\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\Network\HandlerStrategy\Initialising.java
+C:\Users\User\OneDrive\Documents\University of Pretoria\Year 3\Semester 1\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\main.java
+C:\Users\User\OneDrive\Documents\University of Pretoria\Year 3\Semester 1\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\Core\ResolutionChecker.java
+C:\Users\User\OneDrive\Documents\University of Pretoria\Year 3\Semester 1\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\Core\ScreenshotTaker.java
+C:\Users\User\OneDrive\Documents\University of Pretoria\Year 3\Semester 1\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\Network\ServiceHttpHandler.java
+C:\Users\User\OneDrive\Documents\University of Pretoria\Year 3\Semester 1\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\Network\HandlerStrategy\RunningStrategies\HandleActive.java
+C:\Users\User\OneDrive\Documents\University of Pretoria\Year 3\Semester 1\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\Threads\SoundexThread.java
+C:\Users\User\OneDrive\Documents\University of Pretoria\Year 3\Semester 1\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\Network\HandlerStrategy\Running.java
+C:\Users\User\OneDrive\Documents\University of Pretoria\Year 3\Semester 1\COS301\Avalanche\Avalanche\Services\DomainWatch\domain_watch\src\main\java\avalanche\Settings\DomainWatchSettings.java

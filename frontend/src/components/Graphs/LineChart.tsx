@@ -6,6 +6,8 @@ import { chartColours } from "./data";
 import { convertData } from "./util";
 import { useTheme } from "next-themes";
 
+
+
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 
@@ -18,24 +20,36 @@ export function LineChart({ data, height }: IChart) {
 
   const makeOptions = (jsonData: JsonDataEntry[]) => {
     let allOptions = convertData(jsonData, "line", theme);
-    
-    Object.assign(allOptions.options, {
+
+    //Set basic style
+    let styleOptions={
       dataLabels: {
         enabled: false,
         colors: undefined, // This will use the series color for each data label
       },
-      colors: chartColours,
       stroke: {
         show: true,
-        curve: "smooth",
+        curve: "monotoneCubic",
         lineCap: "butt",
         colors: undefined,
         dashArray: 0,
       },
+      noData: {
+        text: "We're sorry, we couldn't find any results...\r\nPlease try another set of filters",
+        align: 'center',
+        verticalAlign: 'middle',
+        offsetX: 0,
+        offsetY: -5,
+        style: {
+          color: undefined,
+          fontSize: '18px',
+          fontFamily: undefined
+        }
+      },
       chart: {
         zoom: {
           enabled: true,
-          type: "x",
+          type: "xy",
           autoScaleYaxis: false,
           zoomedArea: {
             fill: {
@@ -52,7 +66,6 @@ export function LineChart({ data, height }: IChart) {
         id: "basic-line",
         height: 100, // or any other fixed height
         width: "100%",
-        type: "area",
         toolbar: {
           show: true,
           tools: {
@@ -75,14 +88,6 @@ export function LineChart({ data, height }: IChart) {
           fontFamily: "Arial", // Font family for the tooltip
         },
       },
-      markers: {
-        size: 5, // Adjust the size as per your preference
-        shape: "circle", // This will make the markers circular
-        strokeWidth: 0,
-        hover: {
-          size: 7, // Adjust the size for hover state as per your preference
-        },
-      },
       animations: {
         enabled: true,
         easing: "easeinout",
@@ -96,7 +101,57 @@ export function LineChart({ data, height }: IChart) {
           speed: 350,
         },
       },
-    });
+    } as any;
+
+    //conditional style for Movement graph
+    if (allOptions.options.yaxis.title.text == " Movement" && allOptions.series && allOptions.series.length == 1) {
+      styleOptions.colors = ["#FF0000"] as string[];
+      styleOptions.fill = {
+        type: "gradient",
+        gradient: {
+          type: 'vertical',
+          gradientToColors: ['#008000'],
+          stops: [(Math.max(...allOptions.series[0].data) / (Math.max(...allOptions.series[0].data) - Math.min(...allOptions.series[0].data))) * 100, 0],
+        }
+      };
+      styleOptions.tooltip.marker={
+        show: false,
+      };
+      let discreteMarkers=[];
+      for (let index = 0; index < allOptions.series[0].data.length; index++) {
+        let markerColour= "#008000";
+        if(allOptions.series[0].data[index]<=0){
+          markerColour="#FF0000";
+        }
+        discreteMarkers.push({
+          seriesIndex:0,
+          dataPointIndex: index,
+          fillColor: markerColour,
+          strokeColor: markerColour,
+          size: 4, // Adjust the size as per your preference
+        shape: "circle", // This will make the markers circular
+        strokeWidth: 0,
+        hover: {
+          size: 6, // Adjust the size for hover state as per your preference
+        },});
+        
+      }
+      styleOptions.markers = {
+        discrete:discreteMarkers
+      }
+    }else{
+      styleOptions.colors=chartColours;
+      styleOptions.markers={
+        size: 5, // Adjust the size as per your preference
+        shape: "circle", // This will make the markers circular
+        strokeWidth: 0,
+        hover: {
+          size: 7, // Adjust the size for hover state as per your preference
+        },
+      };
+    }
+    
+    Object.assign(allOptions.options, styleOptions);
     return allOptions;
   };
 
