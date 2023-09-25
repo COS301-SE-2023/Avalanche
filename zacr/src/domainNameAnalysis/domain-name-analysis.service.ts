@@ -88,7 +88,7 @@ export class DomainNameAnalysisService {
             '(s)',
           data: data.data,
           filters: data.filters,
-          chartType: ChartType.Bubble,
+          chartType: ChartType.TreeMap,
           warehouse: 'zacr',
           graphType: 'domainNameAnalysis/count',
         },
