@@ -334,6 +334,7 @@ function Flow() {
    * Adds a select node to the select subflow
    */
   const addSelectNode = (): void => {
+    if (!qbee.schema) return ErrorToast({ text: "You need to select a Data Type" });
     setNodes((nds) =>
       nds.concat({
         id: `${QBeeRole.selectBlock}-${uuidv4()}`,
@@ -361,6 +362,7 @@ function Flow() {
    * Adds a filter node to the filter subflow
    */
   const addFilterNode = (): void => {
+    if (!qbee.schema) return ErrorToast({ text: "You need to select a Data Type" });
     setNodes((nds) =>
       nds.concat({
         id: `${QBeeRole.filterBlock}-${uuidv4()}`,
@@ -390,6 +392,7 @@ function Flow() {
    * Adds a filter node to the filter subflow
    */
   const addAndNode = (): void => {
+    if (!qbee.schema) return ErrorToast({ text: "You need to select a Data Type" });
     setNodes((nds) =>
       nds.concat({
         id: `${QBeeRole.andBlock}-${uuidv4()}`,
@@ -409,6 +412,7 @@ function Flow() {
    * Adds a filter node to the filter subflow
    */
   const addOrNode = (): void => {
+    if (!qbee.schema) return ErrorToast({ text: "You need to select a Data Type" });
     setNodes((nds) =>
       nds.concat({
         id: `${QBeeRole.orBlock}-${uuidv4()}`,
@@ -653,25 +657,6 @@ function Flow() {
 
     return query;
   };
-
-  /*
-  Function that makes output data display
-  */
-  // const displayOutput = (payload: any) => {
-  //   if (!payload) {
-  //     return;
-  //   }
-  //   console.log(payload)
-  //   const data = payload.payload;
-  //   updateNode(QBeeRole.outputBlock, { jsonData: data });
-  // }
-
-  // useEffect(() => {
-  //   if (qbee.outputData.length !== 0) {
-  //     console.log("here", qbee.outputData);
-  //     displayOutput(qbee.outputData);
-  //   }
-  // }, [qbee.outputData])
 
   if (qbee.loading) {
     return (

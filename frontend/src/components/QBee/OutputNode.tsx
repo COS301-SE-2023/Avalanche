@@ -3,6 +3,7 @@ import { Node, NodeProps, Handle, Position, Connection } from 'reactflow';
 import { TableChart } from '../Graphs'
 import { useSelector } from 'react-redux';
 import { qbeeState } from '@/store/Slices/qbeeSlice';
+import { WarningAlert } from '../Util';
 
 type NodeData = {
     jsonData: any
@@ -37,8 +38,8 @@ export default function CustomNode({ data }: NodeProps<NodeData>) {
             }}
         />
         <span className='text-xl'>Results</span>
-        <div className='h-full w-full'>
+        {newData.jsonData.length !== 0 ? <div className='h-full w-full'>
             <TableChart data={newData} qbee={qbee} ></TableChart>
-        </div>
+        </div> : <WarningAlert title='No Data!' text='Fill out the Select and Filter flows and save to get some data.' />}
     </div>
 }
