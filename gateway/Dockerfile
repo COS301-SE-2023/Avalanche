@@ -19,10 +19,8 @@ FROM node:20
 USER root
 WORKDIR /home/node
 
-RUN curl -LO https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-RUN apt-get install -y ./google-chrome-stable_current_amd64.deb
-RUN rm google-chrome-stable_current_amd64.deb 
-
+RUN apt-get update && apt-get install -y --no-install-recommends
+RUN apt-get install chromium -y
 # ENV NODE_ENV production
 
 COPY --from=builder --chown=node:node /home/node/package*.json ./
