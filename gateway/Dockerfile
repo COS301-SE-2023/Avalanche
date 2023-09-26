@@ -1,4 +1,4 @@
-FROM node:20-alpine as builder
+FROM node:20-buster as builder
 
 ENV NODE_ENV build
 
@@ -14,7 +14,7 @@ RUN yarn build
 
 # ---
 
-FROM node:20-alpine
+FROM node:20-buster
 
 RUN apt-get update && apt-get install -y \ \ && \ apt-get clean && \ rm -rf /var/lib/apt/lists/*
 
