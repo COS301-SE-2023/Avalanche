@@ -86,8 +86,8 @@ jobs:
           source: "frontend,gateway,user-management,zacr,africa,ryce,Services,hades,zeus,admin-frontend,gatekeeper,qbee"
           target: ./
 
-      # SSH Into Server
-      - name: 🔒 Upload to server
+      # Running Docker Compose
+      - name: 🐋 Composing
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.SSH_HOST }}
