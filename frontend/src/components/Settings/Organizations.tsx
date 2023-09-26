@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
-import { AlternativeButton, DeleteButton, ErrorToast, SubmitButton, SuccessToast, TableIconButton, WarningAlert } from "../Util";
+import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
+import { getLatestOrganisation, getUserGroups, setAddUserGroupSuccess, setCreateGroupSuccess, userState } from "@/store/Slices/userSlice";
 import { TrashIcon } from '@heroicons/react/24/solid';
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from 'react-redux';
 import NoFind from '../CustomSVG/NoFind';
 import { ConfirmModal, CreateGroupModal, OrgnizationCreateModal } from '../Modals';
-import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
-import { clearError, getLatestOrganisation, userState, getUserGroups, setCreateGroupSuccess, setAddUserGroupSuccess } from "@/store/Slices/userSlice";
-import { useDispatch, useSelector } from 'react-redux';
 import AddUserToGroup from "../Modals/AddUserToGroup";
+import { AlternativeButton, DeleteButton, SubmitButton, TableIconButton, WarningAlert } from "../Util";
 
 function classNames(...classes: any[]) {
     return classes.filter(Boolean).join(' ')

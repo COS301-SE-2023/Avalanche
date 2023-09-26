@@ -1,19 +1,17 @@
-import Image from 'next/image'
-import Link from 'next/link';
-import Head from 'next/head'
-import { useState, useEffect } from 'react';
-import React from 'react';
-import { SubmitButton, DangerAlert, Input, InputLabel, Anchor, ErrorToast } from '@/components/Util';
-import lightBanner from '../assets/images/light-banner.png';
-import darkBanner from '../assets/images/dark-banner.png';
-import { Toaster } from 'react-hot-toast';
-import { useDispatch, useSelector } from 'react-redux';
-import { userState, login, clearError, clearLoading } from '@/store/Slices/userSlice';
-import { ILoginRequest } from '@/interfaces/requests';
-import { useRouter } from 'next/router';
+import { DangerAlert, ErrorToast, Input, InputLabel, SubmitButton } from '@/components/Util';
 import LoadingPage from '@/components/Util/Loading';
+import { ILoginRequest } from '@/interfaces/requests';
+import { clearError, clearLoading, login, userState } from '@/store/Slices/userSlice';
 import { getCookie } from 'cookies-next';
 import { useTheme } from "next-themes";
+import Head from 'next/head';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
+import { Toaster } from 'react-hot-toast';
+import { useDispatch, useSelector } from 'react-redux';
+import darkBanner from '../assets/images/dark-banner.png';
 
 export default function Home() {
   const { theme, setTheme } = useTheme();

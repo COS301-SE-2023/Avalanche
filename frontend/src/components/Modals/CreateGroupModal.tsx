@@ -1,11 +1,10 @@
-import { useState, useEffect } from 'react';
-import { SubmitButton, ErrorToast, InputLabel, Input, SuccessToast } from '../Util';
-import { ModalWrapper } from './ModalOptions';
-import { useDispatch, useSelector } from 'react-redux';
-import { clearCurrentOpenState } from '@/store/Slices/modalManagerSlice';
-import { userState, getUserGroups, clearLoading, clearError } from '@/store/Slices/userSlice';
-import { createOrganisationGroup } from '@/store/Slices/userSlice';
 import { ICreateUserGroupRequest } from '@/interfaces/requests';
+import { clearCurrentOpenState } from '@/store/Slices/modalManagerSlice';
+import { clearError, clearLoading, createOrganisationGroup, getUserGroups, userState } from '@/store/Slices/userSlice';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { ErrorToast, Input, InputLabel, SubmitButton, SuccessToast } from '../Util';
+import { ModalWrapper } from './ModalOptions';
 
 interface ICreateGroupModal {
 

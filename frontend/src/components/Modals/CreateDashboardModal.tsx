@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import { SubmitButton, InputLabel, Input } from '../Util';
-import { ModalWrapper } from './ModalOptions';
-import { useDispatch } from 'react-redux';
 import { clearCurrentOpenState } from '@/store/Slices/modalManagerSlice';
-import { v4 as uuidv4 } from 'uuid';
 import { useRouter } from "next/router";
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { v4 as uuidv4 } from 'uuid';
+import { Input, InputLabel, SubmitButton } from '../Util';
+import { ModalWrapper } from './ModalOptions';
 
 interface ICreateDashboardModal {
 

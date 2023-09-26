@@ -1,14 +1,13 @@
-import { ModalWrapper } from './ModalOptions';
-import { useState } from 'react';
-import { BarChart, BubbleChart, LineChart, PieChart, PolarAreaChart, RadarChart, TableChart, TreeMapChart } from "@/components/Graphs";
-import { selectModalManagerState, setZoomData } from '@/store/Slices/modalManagerSlice';
-import { useDispatch, useSelector } from 'react-redux';
 import { ChartType } from '@/Enums';
-import { ErrorToast } from '../Util';
-import ky, { HTTPError } from 'ky';
+import { BarChart, BubbleChart, LineChart, PieChart, PolarAreaChart, RadarChart, TableChart, TreeMapChart } from "@/components/Graphs";
+import { selectModalManagerState } from '@/store/Slices/modalManagerSlice';
+import { updateDashboards, userState } from "@/store/Slices/userSlice";
 import { getCookie } from 'cookies-next';
-import { userState, updateDashboards } from "@/store/Slices/userSlice"
-import { useEffect } from "react";
+import ky, { HTTPError } from 'ky';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { ErrorToast } from '../Util';
+import { ModalWrapper } from './ModalOptions';
 
 interface IGraphZoomModal {
     custom?: boolean

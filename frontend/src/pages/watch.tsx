@@ -1,19 +1,19 @@
-import Sidebar from "@/components/Navigation/SideBar"
-import Head from "next/head";
-import { MagnifyingGlassCircleIcon, QuestionMarkCircleIcon, ChevronUpDownIcon, ChevronUpIcon } from '@heroicons/react/24/solid';
-import { useEffect, useState } from "react";
-import PageHeader from "@/components/Util/PageHeader";
-import { SubmitButton, WarningAlert, ErrorToast, InputLabel, Input, AlternativeButton, Anchor, MainContent, Toggle } from "@/components/Util";
-import { Toaster } from 'react-hot-toast';
-import { domainWatchState, getDomainWatch, updateChanging } from "@/store/Slices/domainWatchSlice";
-import { IDomainWatchRequest } from "@/interfaces/requests";
-import { useDispatch, useSelector } from 'react-redux';
-import { IDomainWatchType } from "@/interfaces/requests/DomainWatch";
-import ky, { HTTPError } from "ky";
-import { getCookie } from "cookies-next";
-import WHOISModal from "@/components/Modals/WHOISModal";
-import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
 import PickeeModal from "@/components/Modals/PickeeModal";
+import WHOISModal from "@/components/Modals/WHOISModal";
+import Sidebar from "@/components/Navigation/SideBar";
+import { AlternativeButton, Anchor, ErrorToast, Input, InputLabel, MainContent, SubmitButton, Toggle, WarningAlert } from "@/components/Util";
+import PageHeader from "@/components/Util/PageHeader";
+import { IDomainWatchRequest } from "@/interfaces/requests";
+import { IDomainWatchType } from "@/interfaces/requests/DomainWatch";
+import { domainWatchState, getDomainWatch, updateChanging } from "@/store/Slices/domainWatchSlice";
+import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
+import { ChevronUpDownIcon, ChevronUpIcon, MagnifyingGlassCircleIcon, QuestionMarkCircleIcon } from '@heroicons/react/24/solid';
+import { getCookie } from "cookies-next";
+import ky, { HTTPError } from "ky";
+import Head from "next/head";
+import { useEffect, useState } from "react";
+import { Toaster } from 'react-hot-toast';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function Settings() {
 
@@ -267,31 +267,6 @@ export default function Settings() {
      * Handles the picture taking
      * @param domain 
      */
-    const getTakePickeeNow = async (domain: string) => {
-        setPickeeLoading(true);
-        try {
-            const domainName = domain;
-            const res = await ky.post(`${process.env.NEXT_PUBLIC_API}/domain-watch/takePickeeNow`, {
-                json: {
-                    domainName
-                }, timeout: false,
-                headers: {
-                    "Authorization": `Bearer ${getCookie("jwt")}`
-                }
-            }).json();
-            setPickeeLoading(false);
-            const data = res as any;
-            setPickee(data.data);
-            dispatch(setCurrentOpenState("WATCH.TAKEPICKEENOW"));
-        } catch (e) {
-            setPickeeLoading(false);
-            let error = e as HTTPError;
-            if (error.name === 'HTTPError') {
-                const errorJson = await error.response.json();
-                return ErrorToast({ text: errorJson.message });
-            }
-        }
-    }
 
     /**
      * Renders out the HTML
@@ -463,11 +438,6 @@ export default function Settings() {
                                         </div>
                                     </th>
 
-                                    <th scope="col" className="px-6 py-3 cursor-pointer w-52">
-                                        <div className="flex gap-2 items-center">
-                                            Get Domain Screenshot
-                                        </div>
-                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -492,9 +462,6 @@ export default function Settings() {
                                             <td className="px-6 py-4 dark:text-white text-gray-900">
                                                 <SubmitButton loading={whoisLoading} disabled={whoisLoading} text="WHOIS Search" onClick={() => getWhoIS(`${item.domainName}.${item.zone.toLowerCase()}`)} />
                                             </td>
-                                            <td className="px-6 py-4 dark:text-white text-gray-900">
-                                                <SubmitButton loading={pickeeLoading} disabled={pickeeLoading} text="Take a picture of the domain " onClick={() => getTakePickeeNow(`${item.domainName}.${item.zone.toLowerCase()}`)} />
-                                            </td>
                                         </tr>
                                     })
                                 }
@@ -506,6 +473,5 @@ export default function Settings() {
             </div >
         </MainContent>
         {modalState.currentOpen === "WATCH.WHOIS" && <WHOISModal data={whois} />}
-        {modalState.currentOpen === "WATCH.TAKEPICKEENOW" && <PickeeModal data={pickee} />}
     </>
 }

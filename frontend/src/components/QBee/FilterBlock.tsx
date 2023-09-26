@@ -1,12 +1,12 @@
-import { NodeProps, Handle, Position, Connection, Node } from 'reactflow';
-import { Role as QBeeRole, ComparisonType, Filters as QBFilters } from "@/interfaces/qbee/enums";
-import { useDispatch, useSelector } from 'react-redux';
+import { ComparisonType, Role as QBeeRole } from "@/interfaces/qbee/enums";
+import { DBData } from '@/interfaces/qbee/interfaces';
 import { qbeeState } from '@/store/Slices/qbeeSlice';
 import { ArrowLongRightIcon } from '@heroicons/react/24/solid';
+import { useDispatch, useSelector } from 'react-redux';
+import { Connection, Handle, NodeProps, Position } from 'reactflow';
+import { CheckboxFilter, DatePickerFilter, InputBox, RadioboxFilter, ToggleFilter } from '../Graphs/Filters';
+import { camelCaseRenderer, generateDefaultValue } from '../Graphs/Filters/util';
 import { BetterDropdown } from '../Util';
-import { DBData } from '@/interfaces/qbee/interfaces';
-import { CheckboxFilter, DatePickerFilter, NestedCheckbox, RadioboxFilter, ToggleFilter, InputBox } from '../Graphs/Filters';
-import { generateDefaultValue, camelCaseRenderer } from '../Graphs/Filters/util';
 
 interface NodeData {
     label: string,
@@ -36,7 +36,7 @@ export default function FilterBlock({ data, id }: NodeProps<NodeData>) {
     }
 
     const getColumns = () => {
-        return stateQBEE.data.filter((item:DBData) => {
+        return stateQBEE.data.filter((item: DBData) => {
             if (item.filter == true)
                 return item;
         });

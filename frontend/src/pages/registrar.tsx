@@ -1,16 +1,15 @@
-import Sidebar from "@/components/Navigation/SideBar"
-import PageHeader from "@/components/Util/PageHeader"
-import { TvIcon } from "@heroicons/react/24/solid"
-import Head from "next/head"
-import { useDispatch, useSelector } from "react-redux";
-import { graphState, getGraphData, clearGraphData, getDashboardGraphs } from "@/store/Slices/graphSlice"
-import { useEffect } from "react";
-import { ITransactionGraphRequest } from "@/interfaces/requests";
-import { selectModalManagerState } from "@/store/Slices/modalManagerSlice"
-import GraphZoomModal from "@/components/Modals/GraphZoomModal"
+import GraphZoomModal from "@/components/Modals/GraphZoomModal";
+import Sidebar from "@/components/Navigation/SideBar";
+import { DashboardBase, MainContent, SubmitButton } from "@/components/Util";
+import PageHeader from "@/components/Util/PageHeader";
+import { clearGraphData, getDashboardGraphs, graphState } from "@/store/Slices/graphSlice";
+import { selectModalManagerState } from "@/store/Slices/modalManagerSlice";
+import { TvIcon } from "@heroicons/react/24/solid";
 import html2canvas from "html2canvas";
-import { SubmitButton, MainContent, DashboardBase } from "@/components/Util"
-import jsPDF from "jspdf"
+import jsPDF from "jspdf";
+import Head from "next/head";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Registrar() {
 

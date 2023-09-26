@@ -1,7 +1,6 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { AppState } from "../store";
+import { createSlice } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
-import ky from "ky";
+import { AppState } from "../store";
 
 const url = `${process.env.NEXT_PUBLIC_API}/user-management`;
 

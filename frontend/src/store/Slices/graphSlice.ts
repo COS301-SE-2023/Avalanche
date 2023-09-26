@@ -1,17 +1,17 @@
-import { createSlice, createAsyncThunk, AnyAction } from "@reduxjs/toolkit";
-import { AppState } from "../store";
-import { HYDRATE } from "next-redux-wrapper";
-import ky, { HTTPError } from "ky";
-import { IDashboardGraphRequest, IGraphRequest, ITransactionGraphRequest } from "@/interfaces/requests";
-import { getCookie } from "cookies-next";
 import { chartColours } from "@/components/Graphs/data";
-import IMarketShareGraphRequest from "@/interfaces/requests/MarketShareGraph";
-import IDomainNameAnalysisGraphRequest from "@/interfaces/requests/DomainNameAnalysis";
+import { IDashboardGraphRequest, IGraphRequest, ITransactionGraphRequest } from "@/interfaces/requests";
 import IAgeAnalysisGraphRequest from "@/interfaces/requests/AgeAnalysisGraph";
+import IDomainNameAnalysisGraphRequest from "@/interfaces/requests/DomainNameAnalysis";
+import IMarketShareGraphRequest from "@/interfaces/requests/MarketShareGraph";
 import IMovementGraphRequest from "@/interfaces/requests/Movement";
-import * as Sentry from "@sentry/nextjs";
 import IMovementGraphRankedRequest from "@/interfaces/requests/MovementRanked";
 import { IDashboardGraphResponse } from "@/interfaces/responses";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import * as Sentry from "@sentry/nextjs";
+import { getCookie } from "cookies-next";
+import ky, { HTTPError } from "ky";
+import { HYDRATE } from "next-redux-wrapper";
+import { AppState } from "../store";
 
 const url = `${process.env.NEXT_PUBLIC_API}`;
 
@@ -88,7 +88,7 @@ function calculateDateRange(graphRequest: IGraphRequest): IGraphRequest {
 
         graphRequest.filters.dateFrom = formatDate(dateFrom);
         graphRequest.filters.dateTo = formatDate(currentDate);
-        delete(graphRequest.filters.dateRange)
+        delete (graphRequest.filters.dateRange)
 
         return graphRequest;
     }

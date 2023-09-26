@@ -1,8 +1,8 @@
+import LoadingPage from '@/components/Util/Loading';
+import { getCookie } from 'cookies-next';
+import ky from 'ky';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
-import { getCookie } from 'cookies-next';
-import LoadingPage from '@/components/Util/Loading';
-import ky from 'ky';
 
 export default function Invitation() {
     const searchParams = useSearchParams();

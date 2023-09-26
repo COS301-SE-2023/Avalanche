@@ -1,5 +1,5 @@
-import { NodeProps } from 'reactflow';
 import { PlusIcon } from '@heroicons/react/24/solid';
+import { NodeProps } from 'reactflow';
 
 interface NodeData {
     click: any,

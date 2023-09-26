@@ -1,5 +1,5 @@
-import { Node, NodeProps, Handle, Position, Connection } from 'reactflow';
 import { Role as QBeeRole } from "@/interfaces/qbee/enums";
+import { Connection, Handle, NodeProps, Position } from 'reactflow';
 
 interface NodeData {
     role: QBeeRole,
@@ -28,7 +28,7 @@ export default function OrBlock({ data }: NodeProps<NodeData>) {
         <Handle
             type="target"
             position={Position.Left}
-            isValidConnection={(connection) => {
+            isValidConnection={(connection: Connection) => {
                 if (!data.connectTo.includes(connection?.target as string)) return false;
                 return true;
             }}

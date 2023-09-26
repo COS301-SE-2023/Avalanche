@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
-import { SubmitButton, ErrorToast, InputLabel, Input, Dropdown } from '../Util';
-import { ModalWrapper } from './ModalOptions';
-import { useDispatch, useSelector } from 'react-redux';
 import { clearCurrentOpenState, setAnimateManagerState } from '@/store/Slices/modalManagerSlice';
 import { userState } from '@/store/Slices/userSlice';
 import { Transition } from '@headlessui/react';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Dropdown, ErrorToast, Input, InputLabel, SubmitButton } from '../Util';
+import { ModalWrapper } from './ModalOptions';
 
 interface ICreateGroupModal {
     state: any,

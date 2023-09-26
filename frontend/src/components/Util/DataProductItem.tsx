@@ -1,5 +1,5 @@
-import React from 'react'; // Make sure React is imported if you're using JSX.
 import { IIntergrationLoginData as IData } from "@/interfaces";
+import React from 'react'; // Make sure React is imported if you're using JSX.
 
 interface IListItemProps {
   name: string;
@@ -11,11 +11,11 @@ interface IListItemProps {
 }
 
 export default function DataProductItem({
-  name, 
-  endpoint, 
-  image, 
-  setIntegration, 
-  setValid, 
+  name,
+  endpoint,
+  image,
+  setIntegration,
+  setValid,
   setDropdown
 }: IListItemProps) {
   return (

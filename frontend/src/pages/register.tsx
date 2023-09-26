@@ -1,13 +1,13 @@
-import Head from 'next/head'
-import { Anchor, Input, InputLabel, ErrorToast, SubmitButton, SuccessToast, WarningAlert, DangerAlert, SuccessAlert } from '@/components/Util'
-import { useState, useEffect, } from 'react';
+import { Anchor, ErrorToast, Input, InputLabel, SubmitButton, SuccessAlert, SuccessToast, WarningAlert } from '@/components/Util';
+import { IOTPVerifyRequest, IRegisterRequest } from '@/interfaces/requests';
+import { otpVerify, register, resetRequest, userState } from '@/store/Slices/userSlice';
+import { Transition } from '@headlessui/react';
+import { CheckCircleIcon, HashtagIcon, IdentificationIcon } from "@heroicons/react/24/solid";
+import Head from 'next/head';
 import Image from 'next/image';
+import { useEffect, useState, } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
-import { userState, register, resetRequest, otpVerify } from '@/store/Slices/userSlice';
-import { IRegisterRequest, IOTPVerifyRequest } from '@/interfaces/requests';
-import { CheckCircleIcon, HashtagIcon, IdentificationIcon, EnvelopeIcon } from "@heroicons/react/24/solid"
-import { Transition } from '@headlessui/react';
 import darkBanner from '../assets/images/dark-banner.png';
 
 export default function Register() {

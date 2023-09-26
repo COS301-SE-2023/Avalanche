@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
-import { Input, InputLabel, SubmitButton, ErrorToast } from '../Util';
-import { ModalWrapper } from './ModalOptions';
-import { userState, createOrganisation } from '@/store/Slices/userSlice';
-import { useDispatch, useSelector } from 'react-redux';
 import { ICreateOrganisationRequest } from '@/interfaces/requests';
 import { clearCurrentOpenState } from '@/store/Slices/modalManagerSlice';
+import { createOrganisation, userState } from '@/store/Slices/userSlice';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { ErrorToast, Input, InputLabel, SubmitButton } from '../Util';
+import { ModalWrapper } from './ModalOptions';
 
 interface IOrgnizationCreateModal {
 

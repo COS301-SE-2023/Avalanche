@@ -1,9 +1,8 @@
-import Sidebar from "@/components/Navigation/SideBar"
+import Sidebar from "@/components/Navigation/SideBar";
 import { HomeCard, MainContent } from "@/components/Util";
-import PageHeader from "@/components/Util/PageHeader"
+import PageHeader from "@/components/Util/PageHeader";
 import { HomeIcon } from "@heroicons/react/24/solid";
-import Head from "next/head"
-import Link from "next/link"
+import Head from "next/head";
 
 interface Card {
     url: string,
@@ -93,8 +92,8 @@ const links: Card[] = [
     }
 ];
 
-import { permissionState, getEndpoints, IPermission } from "@/store/Slices/permissionSlice";
-import { graphState, selectDataSource } from "@/store/Slices/graphSlice";
+import { graphState } from "@/store/Slices/graphSlice";
+import { permissionState } from "@/store/Slices/permissionSlice";
 import { useSelector } from "react-redux";
 
 export default function Home() {

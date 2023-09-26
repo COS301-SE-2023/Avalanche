@@ -7,7 +7,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "next lint --fix",
     "cypress": "cypress run --browser chrome --config video=false",
     "cypress open": "cypress open"
   },
@@ -32,6 +32,7 @@
     "copy-anything": "^3.0.5",
     "eslint": "8.39.0",
     "eslint-config-next": "13.3.1",
+    "eslint-plugin-unused-imports": "^3.0.0",
     "flowbite": "^1.6.5",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",

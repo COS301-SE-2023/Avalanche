@@ -1,7 +1,6 @@
 import { IChart } from "@/interfaces";
-import React, { useEffect, useState } from "react";
-import dynamic from 'next/dynamic'
-import { json } from "stream/consumers";
+import { useEffect, useState } from "react";
+import dynamic from 'next/dynamic';
 import { chartColours } from "./data";
 import { convertData } from "./util";
 import { useTheme } from "next-themes";
@@ -108,23 +107,23 @@ export function BubbleChart({ data, height }: IChart) {
   const { theme, setTheme } = useTheme();
 
   const makeOptions = (jsonData: JsonDataEntry[]) => {
-    
+
     let allOptions = convertData(jsonData, "bubble", theme);
     Object.assign(allOptions.options, {
 
       dataLabels: {
         enabled: false,
         colors: undefined,  // This will use the series color for each data label
-       
+
       },
-      colors:chartColours,
+      colors: chartColours,
       stroke: {
         show: true,
         curve: 'smooth',
         lineCap: 'butt',
         colors: undefined,
-        dashArray: 0, 
-    },
+        dashArray: 0,
+      },
       chart: {
         zoom: {
           enabled: true,
@@ -144,8 +143,8 @@ export function BubbleChart({ data, height }: IChart) {
         },
         id: "basic-line",
         height: 100, // or any other fixed height
-    width: '100%',
-    type: 'area',
+        width: '100%',
+        type: 'area',
         toolbar: {
           show: true,
           tools: {
@@ -173,14 +172,14 @@ export function BubbleChart({ data, height }: IChart) {
         easing: 'easeinout',
         speed: 900,
         animateGradually: {
-            enabled: true,
-            delay: 300
+          enabled: true,
+          delay: 300
         },
         dynamicAnimation: {
-            enabled: true,
-            speed: 350
+          enabled: true,
+          speed: 350
         }
-    }
+      }
 
     });
     return allOptions;
@@ -192,8 +191,8 @@ export function BubbleChart({ data, height }: IChart) {
     // Update the chart data to reflect the new colors
     setChartData(makeOptions(data.jsonData));
 
-  }, [theme]); 
-  
+  }, [theme]);
+
   return (
     <div className="line">
       <div className="row max-h-screen">

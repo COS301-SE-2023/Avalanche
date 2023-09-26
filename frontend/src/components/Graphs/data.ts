@@ -11,7 +11,7 @@ export const chartColours: string[] = [
     "#607D8B",  // Blue Grey
     "#FFEB3B",  // Yellow
     "#8BC34A"  // Light Green
-    
+
 ];
 
 export const borderColours = [

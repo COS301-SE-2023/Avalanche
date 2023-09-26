@@ -1,9 +1,8 @@
 import { IChart } from "@/interfaces";
-import React, { useState } from "react";
-import dynamic from 'next/dynamic'
-import { json } from "stream/consumers";
+import dynamic from 'next/dynamic';
+import { useState } from "react";
 import { chartColours } from "./data";
-import {  convertForProportion} from "./util";
+import { convertForProportion } from "./util";
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
@@ -114,16 +113,16 @@ export function PieChart({ data, height }: IChart) {
       dataLabels: {
         enabled: false,
         colors: undefined,  // This will use the series color for each data label
-       
+
       },
-      colors:chartColours,
+      colors: chartColours,
       stroke: {
         show: true,
         curve: 'smooth',
         lineCap: 'butt',
         colors: undefined,
-        dashArray: 0, 
-    },
+        dashArray: 0,
+      },
       chart: {
         zoom: {
           enabled: true,
@@ -143,8 +142,8 @@ export function PieChart({ data, height }: IChart) {
         },
         id: "basic-line",
         height: 100, // or any other fixed height
-    width: '100%',
-    type: 'area',
+        width: '100%',
+        type: 'area',
         toolbar: {
           show: true,
           tools: {
@@ -181,14 +180,14 @@ export function PieChart({ data, height }: IChart) {
         easing: 'easeinout',
         speed: 900,
         animateGradually: {
-            enabled: true,
-            delay: 300
+          enabled: true,
+          delay: 300
         },
         dynamicAnimation: {
-            enabled: true,
-            speed: 350
+          enabled: true,
+          speed: 350
         }
-    }
+      }
 
     });
     return allOptions;

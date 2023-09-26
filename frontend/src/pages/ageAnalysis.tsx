@@ -1,16 +1,15 @@
-import Sidebar from "@/components/Navigation/SideBar"
-import PageHeader from "@/components/Util/PageHeader"
-import { HeartIcon } from "@heroicons/react/24/solid"
-import Head from "next/head"
-import { useDispatch, useSelector } from "react-redux";
-import { graphState, getAgeAnalysisData, clearGraphData, getDashboardGraphs } from "@/store/Slices/graphSlice"
+import GraphZoomModal from "@/components/Modals/GraphZoomModal";
+import Sidebar from "@/components/Navigation/SideBar";
+import { DashboardBase, MainContent, SubmitButton } from "@/components/Util";
+import PageHeader from "@/components/Util/PageHeader";
+import { clearGraphData, getDashboardGraphs, graphState } from "@/store/Slices/graphSlice";
+import { selectModalManagerState } from "@/store/Slices/modalManagerSlice";
+import { HeartIcon } from "@heroicons/react/24/solid";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import Head from "next/head";
 import { useEffect } from "react";
-import { selectModalManagerState } from "@/store/Slices/modalManagerSlice"
-import GraphZoomModal from "@/components/Modals/GraphZoomModal"
-import IAgeAnalysisGraphRequest from "@/interfaces/requests/AgeAnalysisGraph"
-import jsPDF from "jspdf"
-import html2canvas from "html2canvas"
-import { SubmitButton, MainContent, DashboardBase } from "@/components/Util"
+import { useDispatch, useSelector } from "react-redux";
 
 export default function AgeAnalysis() {
 

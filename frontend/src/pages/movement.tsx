@@ -3,15 +3,13 @@ import PageHeader from "@/components/Util/PageHeader";
 import { BoltIcon } from "@heroicons/react/24/solid";
 import Head from "next/head";
 import { useDispatch, useSelector } from "react-redux";
-import { graphState, getMovementVerticalData, clearGraphData, getMovementVerticalRankedData, getDashboardGraphs } from "@/store/Slices/graphSlice";
+import { graphState, clearGraphData, getDashboardGraphs } from "@/store/Slices/graphSlice";
 import { useEffect } from "react";
 import { selectModalManagerState } from "@/store/Slices/modalManagerSlice";
 import GraphZoomModal from "@/components/Modals/GraphZoomModal";
-import IMovementGraphRequest from "@/interfaces/requests/Movement";
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
 import { DashboardBase, MainContent, SubmitButton } from "@/components/Util";
-import IMovementGraphRankedRequest from "@/interfaces/requests/MovementRanked";
 
 export default function Movement() {
 

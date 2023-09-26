@@ -1,10 +1,8 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { AppState } from "../store";
-import { HYDRATE } from "next-redux-wrapper";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getCookie } from "cookies-next";
 import ky from "ky";
-import { ErrorToast } from "@/components/Util";
-import { useDispatch } from "react-redux";
+import { HYDRATE } from "next-redux-wrapper";
+import { AppState } from "../store";
 
 const url = `${process.env.NEXT_PUBLIC_API}`;
 

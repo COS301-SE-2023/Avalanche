@@ -1,10 +1,10 @@
-import fs from 'fs';
-import path from 'path';
 import Sidebar from "@/components/Navigation/SideBar";
-import Head from "next/head";
 import { MainContent } from "@/components/Util";
 import PageHeader from "@/components/Util/PageHeader";
 import { QuestionMarkCircleIcon } from "@heroicons/react/24/solid";
+import fs from 'fs';
+import Head from "next/head";
+import path from 'path';
 import ReactMarkdown from 'react-markdown';
 
 export default function HelpPage({ markdown }: any) {
