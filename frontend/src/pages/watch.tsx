@@ -267,31 +267,6 @@ export default function Settings() {
      * Handles the picture taking
      * @param domain 
      */
-    const getTakePickeeNow = async (domain: string) => {
-        setPickeeLoading(true);
-        try {
-            const domainName = domain;
-            const res = await ky.post(`${process.env.NEXT_PUBLIC_API}/domain-watch/takePickeeNow`, {
-                json: {
-                    domainName
-                }, timeout: false,
-                headers: {
-                    "Authorization": `Bearer ${getCookie("jwt")}`
-                }
-            }).json();
-            setPickeeLoading(false);
-            const data = res as any;
-            setPickee(data.data);
-            dispatch(setCurrentOpenState("WATCH.TAKEPICKEENOW"));
-        } catch (e) {
-            setPickeeLoading(false);
-            let error = e as HTTPError;
-            if (error.name === 'HTTPError') {
-                const errorJson = await error.response.json();
-                return ErrorToast({ text: errorJson.message });
-            }
-        }
-    }
 
     /**
      * Renders out the HTML
@@ -463,11 +438,6 @@ export default function Settings() {
                                         </div>
                                     </th>
 
-                                    <th scope="col" className="px-6 py-3 cursor-pointer w-52">
-                                        <div className="flex gap-2 items-center">
-                                            Get Domain Screenshot
-                                        </div>
-                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -492,9 +462,6 @@ export default function Settings() {
                                             <td className="px-6 py-4 dark:text-white text-gray-900">
                                                 <SubmitButton loading={whoisLoading} disabled={whoisLoading} text="WHOIS Search" onClick={() => getWhoIS(`${item.domainName}.${item.zone.toLowerCase()}`)} />
                                             </td>
-                                            <td className="px-6 py-4 dark:text-white text-gray-900">
-                                                <SubmitButton loading={pickeeLoading} disabled={pickeeLoading} text="Take a picture of the domain " onClick={() => getTakePickeeNow(`${item.domainName}.${item.zone.toLowerCase()}`)} />
-                                            </td>
                                         </tr>
                                     })
                                 }
@@ -506,6 +473,5 @@ export default function Settings() {
             </div >
         </MainContent>
         {modalState.currentOpen === "WATCH.WHOIS" && <WHOISModal data={whois} />}
-        {modalState.currentOpen === "WATCH.TAKEPICKEENOW" && <PickeeModal data={pickee} />}
     </>
 }

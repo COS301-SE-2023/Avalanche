@@ -24,26 +24,12 @@ export class DomainWatchService {
 
   async takePickeeNow(data: any): Promise<any> {
     try {
-      // Launch a new browser instance
-      const browser = await puppeteer.launch({
-        executablePath: '/usr/bin/google-chrome',
-      });
-
-      // Create a new page
-      const page = await browser.newPage();
-
-      // Navigate to the domain
-      await page.goto(`https://${data.domainName}`);
-
-      // Take the screenshot and get it as a buffer
-      const screenshotBuffer = await page.screenshot();
-
-      // Convert the buffer to a Base64 string
-      const screenshotBase64 = screenshotBuffer.toString('base64');
-
-      // Close the browser
-      await browser.close();
-      return { "data": screenshotBase64 };
+      const response = this.httpService.post(
+        'http://DomainWatch:4100/domainWatch/takePickeeNow',
+        data,
+      );
+      const responseData = await lastValueFrom(response);
+      return JSON.stringify(responseData.data);
     } catch (error) {
       throw error;
     }
