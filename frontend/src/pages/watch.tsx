@@ -239,6 +239,7 @@ export default function Settings() {
      * @param domain 
      */
     const getWhoIS = async (domain: string) => {
+        setWhoisLoading(true);
         try {
             const res = await ky.post(`${process.env.NEXT_PUBLIC_API}/domain-watch/whoisyou`, {
                 json: {
@@ -251,7 +252,9 @@ export default function Settings() {
             const data = res as any;
             setWhois(data.data);
             dispatch(setCurrentOpenState("WATCH.WHOIS"));
+            setWhoisLoading(false);
         } catch (e) {
+            setWhoisLoading(false);
             let error = e as HTTPError;
             if (error.name === 'HTTPError') {
                 const errorJson = await error.response.json();
@@ -265,6 +268,7 @@ export default function Settings() {
      * @param domain 
      */
     const getTakePickeeNow = async (domain: string) => {
+        setPickeeLoading(true);
         try {
             const domainName = domain;
             const res = await ky.post(`${process.env.NEXT_PUBLIC_API}/domain-watch/takePickeeNow`, {
@@ -275,10 +279,12 @@ export default function Settings() {
                     "Authorization": `Bearer ${getCookie("jwt")}`
                 }
             }).json();
+            setPickeeLoading(false);
             const data = res as any;
             setPickee(data.data);
             dispatch(setCurrentOpenState("WATCH.TAKEPICKEENOW"));
         } catch (e) {
+            setPickeeLoading(false);
             let error = e as HTTPError;
             if (error.name === 'HTTPError') {
                 const errorJson = await error.response.json();
