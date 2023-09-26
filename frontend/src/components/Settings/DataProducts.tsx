@@ -1,4 +1,4 @@
-import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
+import { clearCurrentOpenState, selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
 import { getLatestOrganisation, getUserGroups, userState } from "@/store/Slices/userSlice";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
@@ -26,7 +26,11 @@ export default function DataProducts({ }: IDataProducts) {
         dispatch(getUserGroups({}))
     }, [])
 
-
+    useEffect(() => {
+        if (stateUser.dataProducts) {
+            dispatch(clearCurrentOpenState());
+        }
+    }, [stateUser])
 
     const makeUIBasedOnProducts = () => {
         if (!stateUser.user.products || stateUser.user.products.length == 0) {
@@ -71,7 +75,6 @@ export default function DataProducts({ }: IDataProducts) {
     return <>
         <div className="flex justify-between  items-start gap-10 mb-4">
             {makeUIBasedOnProducts()}
-
         </div>
     </>
 }
