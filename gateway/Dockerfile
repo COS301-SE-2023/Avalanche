@@ -1,4 +1,4 @@
-FROM node:20-buster as builder
+FROM node:20 as builder
 
 ENV NODE_ENV build
 
@@ -14,9 +14,11 @@ RUN yarn build
 
 # ---
 
-FROM node:20-buster
+FROM node:20
 
-RUN apk add --no-cache chromium
+RUN curl -LO https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+RUN apt-get install -y ./google-chrome-stable_current_amd64.deb
+RUN rm google-chrome-stable_current_amd64.deb 
 
 # ENV NODE_ENV production
 
