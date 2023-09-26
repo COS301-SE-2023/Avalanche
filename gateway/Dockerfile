@@ -16,6 +16,9 @@ RUN yarn build
 
 FROM node:20
 
+RUN echo “deb http://cdn-fastly.deb.debian.org/debian 26 stable main” > /etc/apt/sources.list
+RUN echo “deb http://cdn-fastly.deb.debian.org/debian-security 11 stable/updates main” > /etc/apt/sources.list
+
 RUN curl -LO https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 RUN apt-get install -y ./google-chrome-stable_current_amd64.deb
 RUN rm google-chrome-stable_current_amd64.deb 
