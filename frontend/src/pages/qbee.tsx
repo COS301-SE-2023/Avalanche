@@ -773,7 +773,6 @@ function Flow() {
               <BetterDropdown
                 items={[{ name: "Transactions Detail", value: "transactionsDetail" }, { name: "Movement Details", value: "movementDetails" }]}
                 set={(value: string) => {
-                  // console.log(value);
                   dispatch(setSchema(value));
                   setNodes(initialNodes);
                   setEdges(initialEdges);

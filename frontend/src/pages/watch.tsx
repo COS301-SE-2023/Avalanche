@@ -3,7 +3,7 @@ import Head from "next/head";
 import { MagnifyingGlassCircleIcon, QuestionMarkCircleIcon, ChevronUpDownIcon, ChevronUpIcon } from '@heroicons/react/24/solid';
 import { useEffect, useState } from "react";
 import PageHeader from "@/components/Util/PageHeader";
-import { SubmitButton, WarningAlert, ErrorToast, InputLabel, Input, AlternativeButton, Anchor, MainContent } from "@/components/Util";
+import { SubmitButton, WarningAlert, ErrorToast, InputLabel, Input, AlternativeButton, Anchor, MainContent, Toggle } from "@/components/Util";
 import { Toaster } from 'react-hot-toast';
 import { domainWatchState, getDomainWatch, updateChanging } from "@/store/Slices/domainWatchSlice";
 import { IDomainWatchRequest } from "@/interfaces/requests";
@@ -28,13 +28,16 @@ export default function Settings() {
 
     const [data, setData] = useState<any>({
         domain: "",
-        types: []
+        types: [],
+        resolve: "false"
     });
     const [activeHelp, setActiveHelp] = useState<string[]>([]);
     const [sorting, setSorting] = useState<string>("");
     const [sortingType, setSortingType] = useState<string>("asc");
     const [whois, setWhois] = useState<string>("");
     const [pickee, setPickee] = useState<string>("");
+    const [pickeeLoading, setPickeeLoading] = useState<boolean>(false);
+    const [whoisLoading, setWhoisLoading] = useState<boolean>(false);
 
     /**
      * This function watched the watchState for the variable to change.
@@ -111,7 +114,8 @@ export default function Settings() {
 
         dispatch(getDomainWatch({
             domain: data.domain,
-            types: data.types
+            types: data.types,
+            // resolve: data.resolve
         } as IDomainWatchRequest))
 
     }
@@ -183,10 +187,18 @@ export default function Settings() {
         }
     }
 
+    /**
+     * Returns the indicator string
+     * @param value 
+     * @returns 
+     */
     const getIndicator = (value: number) => {
         return `bg-indicator-${Math.floor((value / 10) + 1)}`;
     }
 
+    /**
+     * This useEffect helps us sort the functions
+     */
     useEffect(() => {
         if (!sorting) {
             dispatch(updateChanging(watchState.data));
@@ -222,7 +234,12 @@ export default function Settings() {
         }
     }, [sorting, sortingType]);
 
+    /**
+     * 
+     * @param domain 
+     */
     const getWhoIS = async (domain: string) => {
+        setWhoisLoading(true);
         try {
             const res = await ky.post(`${process.env.NEXT_PUBLIC_API}/domain-watch/whoisyou`, {
                 json: {
@@ -235,7 +252,9 @@ export default function Settings() {
             const data = res as any;
             setWhois(data.data);
             dispatch(setCurrentOpenState("WATCH.WHOIS"));
+            setWhoisLoading(false);
         } catch (e) {
+            setWhoisLoading(false);
             let error = e as HTTPError;
             if (error.name === 'HTTPError') {
                 const errorJson = await error.response.json();
@@ -244,7 +263,12 @@ export default function Settings() {
         }
     }
 
+    /**
+     * Handles the picture taking
+     * @param domain 
+     */
     const getTakePickeeNow = async (domain: string) => {
+        setPickeeLoading(true);
         try {
             const domainName = domain;
             const res = await ky.post(`${process.env.NEXT_PUBLIC_API}/domain-watch/takePickeeNow`, {
@@ -255,10 +279,12 @@ export default function Settings() {
                     "Authorization": `Bearer ${getCookie("jwt")}`
                 }
             }).json();
+            setPickeeLoading(false);
             const data = res as any;
             setPickee(data.data);
             dispatch(setCurrentOpenState("WATCH.TAKEPICKEENOW"));
         } catch (e) {
+            setPickeeLoading(false);
             let error = e as HTTPError;
             if (error.name === 'HTTPError') {
                 const errorJson = await error.response.json();
@@ -342,6 +368,8 @@ export default function Settings() {
                             </div>}
                         </div>
                     </div> : <WarningAlert title="Missing domain." text="You need to provide the domain name before you can continue" />}
+
+                    {data.domain.length > 0 && <Toggle name="resolveToggle" id="resolveToggle" label="Do you want the domain to resolve?" onChange={(changed: boolean) => update("resolve", changed ? "true" : "false")} value={data.resolve === "true" ? true : false} />}
 
                     {/* Buttons */}
                     <div className="flex gap-2">
@@ -462,10 +490,10 @@ export default function Settings() {
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 dark:text-white text-gray-900">
-                                                <SubmitButton text="WHOIS Search" onClick={() => getWhoIS(`${item.domainName}.${item.zone.toLowerCase()}`)} />
+                                                <SubmitButton loading={whoisLoading} disabled={whoisLoading} text="WHOIS Search" onClick={() => getWhoIS(`${item.domainName}.${item.zone.toLowerCase()}`)} />
                                             </td>
                                             <td className="px-6 py-4 dark:text-white text-gray-900">
-                                                <SubmitButton text="Take a picture of the domain " onClick={() => getTakePickeeNow(`${item.domainName}.${item.zone.toLowerCase()}`)} />
+                                                <SubmitButton loading={pickeeLoading} disabled={pickeeLoading} text="Take a picture of the domain " onClick={() => getTakePickeeNow(`${item.domainName}.${item.zone.toLowerCase()}`)} />
                                             </td>
                                         </tr>
                                     })
