@@ -115,7 +115,7 @@ export default function Settings() {
         dispatch(getDomainWatch({
             domain: data.domain,
             types: data.types,
-            // resolve: data.resolve
+            resolve: data.resolve
         } as IDomainWatchRequest))
 
     }
@@ -453,15 +453,18 @@ export default function Settings() {
                                     !watchState.loading && watchState.changingData.map((item: any, index: number) => {
                                         return <tr className={getColour(item.similarity) + " duration-75 ease-in-out"} key={index}>
                                             <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                {item.resolves === "Resolves" ? (
-                                                    <span style={{ height: '10px', width: '10px', backgroundColor: 'green', borderRadius: '50%', display: 'inline-block', marginLeft: '10px' }}></span>
-                                                ) : (
-                                                    item.resolves === "DoesNotResolve" && (
-                                                        <span style={{ height: '10px', width: '10px', backgroundColor: 'grey', borderRadius: '50%', display: 'inline-block', marginLeft: '10px' }}></span>
+                                                {item?.resolves ? (
+                                                    item.resolves === "Resolves" ? (
+                                                        <span style={{ height: '10px', width: '10px', backgroundColor: 'green', borderRadius: '50%', display: 'inline-block', marginLeft: '10px' }}></span>
+                                                    ) : (
+                                                        item.resolves === "DoesNotResolve" && (
+                                                            <span style={{ height: '10px', width: '10px', backgroundColor: 'lightgrey', borderRadius: '50%', display: 'inline-block', marginLeft: '10px' }}></span>
+                                                        )
                                                     )
+                                                ) : (
+                                                    <span></span>
                                                 )}
                                             </th>
-
                                             <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                 {item.domainName}
                                             </th>
