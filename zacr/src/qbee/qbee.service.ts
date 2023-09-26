@@ -9,9 +9,10 @@ export class QBeeService {
 
   async executeQuery(sqlQuery: string): Promise<any> {
     try {
+      const data = await this.snowflakeService.execute(sqlQuery)
       return {
         status: 'success',
-        message: await this.snowflakeService.execute(sqlQuery),
+        message: data,
       };
     } catch (e) {
       console.log(e);
