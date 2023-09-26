@@ -4,6 +4,7 @@ import { lastValueFrom } from 'rxjs';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import * as whois from 'node-whois';
 import * as nodemailer from 'nodemailer';
+import puppeteer from 'puppeteer';
 @Injectable()
 export class DomainWatchService {
   constructor(private httpService: HttpService) { }
@@ -23,12 +24,24 @@ export class DomainWatchService {
 
   async takePickeeNow(data: any): Promise<any> {
     try {
-      const response = this.httpService.post(
-        'http://DomainWatch:4100/domainWatch/takePickeeNow',
-        data,
-      );
-      const responseData = await lastValueFrom(response);
-      return JSON.stringify(responseData.data);
+      // Launch a new browser instance
+    const browser = await puppeteer.launch();
+
+    // Create a new page
+    const page = await browser.newPage();
+
+    // Navigate to the domain
+    await page.goto(`https://${data.domainName}`);
+
+    // Take the screenshot and get it as a buffer
+    const screenshotBuffer = await page.screenshot();
+
+    // Convert the buffer to a Base64 string
+    const screenshotBase64 = screenshotBuffer.toString('base64');
+
+    // Close the browser
+    await browser.close();
+    return {"data": screenshotBase64};
     } catch (error) {
       throw error;
     }

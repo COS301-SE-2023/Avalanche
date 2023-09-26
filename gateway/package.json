@@ -33,6 +33,7 @@
     "mockjs": "^1.1.0",
     "node-cron": "^3.0.2",
     "nodemailer": "^6.9.5",
+    "puppeteer": "^21.3.4",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0"
   },
