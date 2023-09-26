@@ -36,6 +36,8 @@ export default function Settings() {
     const [sortingType, setSortingType] = useState<string>("asc");
     const [whois, setWhois] = useState<string>("");
     const [pickee, setPickee] = useState<string>("");
+    const [pickeeLoading, setPickeeLoading] = useState<boolean>(false);
+    const [whoisLoading, setWhoisLoading] = useState<boolean>(false);
 
     /**
      * This function watched the watchState for the variable to change.
@@ -112,7 +114,8 @@ export default function Settings() {
 
         dispatch(getDomainWatch({
             domain: data.domain,
-            types: data.types
+            types: data.types,
+            // resolve: data.resolve
         } as IDomainWatchRequest))
 
     }
@@ -184,10 +187,18 @@ export default function Settings() {
         }
     }
 
+    /**
+     * Returns the indicator string
+     * @param value 
+     * @returns 
+     */
     const getIndicator = (value: number) => {
         return `bg-indicator-${Math.floor((value / 10) + 1)}`;
     }
 
+    /**
+     * This useEffect helps us sort the functions
+     */
     useEffect(() => {
         if (!sorting) {
             dispatch(updateChanging(watchState.data));
@@ -223,6 +234,10 @@ export default function Settings() {
         }
     }, [sorting, sortingType]);
 
+    /**
+     * 
+     * @param domain 
+     */
     const getWhoIS = async (domain: string) => {
         try {
             const res = await ky.post(`${process.env.NEXT_PUBLIC_API}/domain-watch/whoisyou`, {
@@ -245,6 +260,10 @@ export default function Settings() {
         }
     }
 
+    /**
+     * Handles the picture taking
+     * @param domain 
+     */
     const getTakePickeeNow = async (domain: string) => {
         try {
             const domainName = domain;
@@ -342,8 +361,9 @@ export default function Settings() {
                                 }} disabled={watchState.loading} />
                             </div>}
                         </div>
-                        <Toggle name="resolveToggle" id="resolveToggle" label="Do you want the domain to resolve?" onChange={(changed: boolean) => update("resolve", changed ? "true" : "false")} value={data.resolve === "true" ? true : false} />
                     </div> : <WarningAlert title="Missing domain." text="You need to provide the domain name before you can continue" />}
+
+                    {data.domain.length > 0 && <Toggle name="resolveToggle" id="resolveToggle" label="Do you want the domain to resolve?" onChange={(changed: boolean) => update("resolve", changed ? "true" : "false")} value={data.resolve === "true" ? true : false} />}
 
                     {/* Buttons */}
                     <div className="flex gap-2">
@@ -464,10 +484,10 @@ export default function Settings() {
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 dark:text-white text-gray-900">
-                                                <SubmitButton text="WHOIS Search" onClick={() => getWhoIS(`${item.domainName}.${item.zone.toLowerCase()}`)} />
+                                                <SubmitButton loading={whoisLoading} disabled={whoisLoading} text="WHOIS Search" onClick={() => getWhoIS(`${item.domainName}.${item.zone.toLowerCase()}`)} />
                                             </td>
                                             <td className="px-6 py-4 dark:text-white text-gray-900">
-                                                <SubmitButton text="Take a picture of the domain " onClick={() => getTakePickeeNow(`${item.domainName}.${item.zone.toLowerCase()}`)} />
+                                                <SubmitButton loading={pickeeLoading} disabled={pickeeLoading} text="Take a picture of the domain " onClick={() => getTakePickeeNow(`${item.domainName}.${item.zone.toLowerCase()}`)} />
                                             </td>
                                         </tr>
                                     })

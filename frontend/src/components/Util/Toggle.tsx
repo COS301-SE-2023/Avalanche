@@ -2,10 +2,10 @@ import { Switch } from '@headlessui/react'
 
 interface IToggle {
     name: string,
+    id: string
     onChange: any,
     value: boolean,
     label: string,
-    id?: string
 }
 
 export default function Toggle({ name, onChange, value, label, id }: IToggle) {
