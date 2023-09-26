@@ -124,7 +124,7 @@ export default function CustomChartCard({ title, data, defaultGraph, state, id, 
             const jwt = getCookie("jwt");
             const url = data.endpointName ? `${process.env.NEXT_PUBLIC_API}/${data.endpointName}` : `${process.env.NEXT_PUBLIC_API}/${warehouse || data.warehouse}/${gType || data.type}`;
             const res = await ky.post(url, {
-                json: filters, timeout: 30000,
+                json: filters, timeout: 100000,
                 headers: {
                     "Authorization": `Bearer ${jwt}`
                 }

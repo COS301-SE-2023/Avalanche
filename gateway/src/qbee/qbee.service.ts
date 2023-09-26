@@ -13,7 +13,7 @@ export class QbeeService {
   async zarc(data: any) {
     const sqlQuery = await this.client.send({ cmd: 'qbee' }, data).toPromise();
     const response = await this.httpService
-      .post('http://localhost:4000/zacr/qbee', sqlQuery)
+      .post('http://gateway:4000/zacr/qbee', sqlQuery)
       .toPromise();
     return response.data;
 

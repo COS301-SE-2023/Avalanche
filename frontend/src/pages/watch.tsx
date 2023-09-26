@@ -13,6 +13,7 @@ import ky, { HTTPError } from "ky";
 import { getCookie } from "cookies-next";
 import WHOISModal from "@/components/Modals/WHOISModal";
 import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
+import PickeeModal from "@/components/Modals/PickeeModal";
 
 export default function Settings() {
 
@@ -33,6 +34,7 @@ export default function Settings() {
     const [sorting, setSorting] = useState<string>("");
     const [sortingType, setSortingType] = useState<string>("asc");
     const [whois, setWhois] = useState<string>("");
+    const [pickee, setPickee] = useState<string>("");
 
     /**
      * This function watched the watchState for the variable to change.
@@ -242,6 +244,29 @@ export default function Settings() {
         }
     }
 
+    const getTakePickeeNow = async (domain: string) => {
+        try {
+            const domainName = domain;
+            const res = await ky.post(`${process.env.NEXT_PUBLIC_API}/domain-watch/takePickeeNow`, {
+                json: {
+                    domainName
+                }, timeout: false,
+                headers: {
+                    "Authorization": `Bearer ${getCookie("jwt")}`
+                }
+            }).json();
+            const data = res as any;
+            setPickee(data.data);
+            dispatch(setCurrentOpenState("WATCH.TAKEPICKEENOW"));
+        } catch (e) {
+            let error = e as HTTPError;
+            if (error.name === 'HTTPError') {
+                const errorJson = await error.response.json();
+                return ErrorToast({ text: errorJson.message });
+            }
+        }
+    }
+
     /**
      * Renders out the HTML
      */
@@ -409,6 +434,12 @@ export default function Settings() {
                                             WhoIS Search
                                         </div>
                                     </th>
+
+                                    <th scope="col" className="px-6 py-3 cursor-pointer w-52">
+                                        <div className="flex gap-2 items-center">
+                                            Get Domain Screenshot
+                                        </div>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -433,6 +464,9 @@ export default function Settings() {
                                             <td className="px-6 py-4 dark:text-white text-gray-900">
                                                 <SubmitButton text="WHOIS Search" onClick={() => getWhoIS(`${item.domainName}.${item.zone.toLowerCase()}`)} />
                                             </td>
+                                            <td className="px-6 py-4 dark:text-white text-gray-900">
+                                                <SubmitButton text="Take a picture of the domain " onClick={() => getTakePickeeNow(`${item.domainName}.${item.zone.toLowerCase()}`)} />
+                                            </td>
                                         </tr>
                                     })
                                 }
@@ -444,5 +478,6 @@ export default function Settings() {
             </div >
         </MainContent>
         {modalState.currentOpen === "WATCH.WHOIS" && <WHOISModal data={whois} />}
+        {modalState.currentOpen === "WATCH.TAKEPICKEENOW" && <PickeeModal data={pickee} />}
     </>
 }

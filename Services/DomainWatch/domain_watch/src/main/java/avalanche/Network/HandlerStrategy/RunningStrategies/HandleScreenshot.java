@@ -20,12 +20,14 @@ public class HandleScreenshot extends Running {
         System.out.println("Working on domain watch screenshot request");
 
         // Setup
+        System.out.println("Setup response");
         SimilarityChecker similarityChecker = new SimilarityChecker();
         String resp = "{\"status\":\"success\",\"data\":{";
         ConcurrentLinkedQueue<Domain> recentlyCreated = new ConcurrentLinkedQueue<>();
         HashMap<String, ConcurrentLinkedQueue<Domain>> notification = new HashMap<>();
 
         // Validate Request
+        System.out.println("Validate Request");
         String validation = validateRequest(body);
         if (!validation.equals("")) {
             return validation;
@@ -33,15 +35,19 @@ public class HandleScreenshot extends Running {
         JSONObject request = new JSONObject(body);
 
         // Process request
+        System.out.println("Process Request");
         String domainName = request.getString("domainName");
 
         resp += "\"pickee\":\"" + ScreenshotTaker.takeScreenshot(domainName) + "\"";
 
+        System.out.println("Finish Response");
         if (st == 0) {
             resp += "}}";
         } else {
             resp += "},\"searchTime(ms)\":" + (System.currentTimeMillis() - st) + "}";
         }
+
+        System.out.println("Return");
         return resp;
     }
 
