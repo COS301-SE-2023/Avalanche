@@ -21,6 +21,9 @@
                 },
                 "required": ["type", "threshold"]
             }
+        },
+        "resolve": {
+            "type" : "string"
         }
     },
     "additionalProperties": false,
