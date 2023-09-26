@@ -25,23 +25,25 @@ export class DomainWatchService {
   async takePickeeNow(data: any): Promise<any> {
     try {
       // Launch a new browser instance
-    const browser = await puppeteer.launch();
+      const browser = await puppeteer.launch({
+        executablePath: '/usr/bin/google-chrome',
+      });
 
-    // Create a new page
-    const page = await browser.newPage();
+      // Create a new page
+      const page = await browser.newPage();
 
-    // Navigate to the domain
-    await page.goto(`https://${data.domainName}`);
+      // Navigate to the domain
+      await page.goto(`https://${data.domainName}`);
 
-    // Take the screenshot and get it as a buffer
-    const screenshotBuffer = await page.screenshot();
+      // Take the screenshot and get it as a buffer
+      const screenshotBuffer = await page.screenshot();
 
-    // Convert the buffer to a Base64 string
-    const screenshotBase64 = screenshotBuffer.toString('base64');
+      // Convert the buffer to a Base64 string
+      const screenshotBase64 = screenshotBuffer.toString('base64');
 
-    // Close the browser
-    await browser.close();
-    return {"data": screenshotBase64};
+      // Close the browser
+      await browser.close();
+      return { "data": screenshotBase64 };
     } catch (error) {
       throw error;
     }
@@ -68,41 +70,41 @@ export class DomainWatchService {
     const response = await this.httpService
       .post('http://DomainWatch:4100/domainWatch/passive', check)
       .toPromise();
-      const transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 587,
-        secure: false,
-        auth: {
-          user: 'theskunkworks301@gmail.com',
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: 'theskunkworks301@gmail.com',
         pass: 'snlfvyltleqsmmxg',
-        }
-      });
-  
-      // Loop through each alert in the response
-      for (const alert of response.data.alerts) {
-        // Find the corresponding emailInfo for each person
-        const personEmailInfos = emailInfo.filter(info => info.person === alert.person);
-  
-        // If a matching emailInfo is found, send the email
-        for (const personEmailInfo of personEmailInfos) {
-          const { email, person } = personEmailInfo;
-          const domains = alert.domains;
-  
-          // Create email body
-          let emailBody = `Hello ${person},\n\nHere are your domains:\n`;
-          for (const domain of domains) {
-            emailBody += `- ${domain}\n`;
-          }
-  
-          // Send the email
-          await transporter.sendMail({
-            from: 'Avalanche Analytics',
-            to: email,
-            subject: `Domain Alert for ${person}`,
-            text: emailBody
-          });
-        }
       }
+    });
+
+    // Loop through each alert in the response
+    for (const alert of response.data.alerts) {
+      // Find the corresponding emailInfo for each person
+      const personEmailInfos = emailInfo.filter(info => info.person === alert.person);
+
+      // If a matching emailInfo is found, send the email
+      for (const personEmailInfo of personEmailInfos) {
+        const { email, person } = personEmailInfo;
+        const domains = alert.domains;
+
+        // Create email body
+        let emailBody = `Hello ${person},\n\nHere are your domains:\n`;
+        for (const domain of domains) {
+          emailBody += `- ${domain}\n`;
+        }
+
+        // Send the email
+        await transporter.sendMail({
+          from: 'Avalanche Analytics',
+          to: email,
+          subject: `Domain Alert for ${person}`,
+          text: emailBody
+        });
+      }
+    }
   }
 
   @Cron(CronExpression.EVERY_DAY_AT_7AM)
