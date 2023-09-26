@@ -1,10 +1,9 @@
 import { IChart } from "@/interfaces";
-import React, { useState, useEffect } from "react";
+import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
-import { json } from "stream/consumers";
+import { useEffect, useState } from "react";
 import { chartColours } from "./data";
 import { convertData } from "./util";
-import { useTheme } from "next-themes";
 
 
 
@@ -22,7 +21,7 @@ export function LineChart({ data, height }: IChart) {
     let allOptions = convertData(jsonData, "line", theme);
 
     //Set basic style
-    let styleOptions={
+    let styleOptions = {
       dataLabels: {
         enabled: false,
         colors: undefined, // This will use the series color for each data label
@@ -114,34 +113,35 @@ export function LineChart({ data, height }: IChart) {
           stops: [(Math.max(...allOptions.series[0].data) / (Math.max(...allOptions.series[0].data) - Math.min(...allOptions.series[0].data))) * 100, 0],
         }
       };
-      styleOptions.tooltip.marker={
+      styleOptions.tooltip.marker = {
         show: false,
       };
-      let discreteMarkers=[];
+      let discreteMarkers = [];
       for (let index = 0; index < allOptions.series[0].data.length; index++) {
-        let markerColour= "#008000";
-        if(allOptions.series[0].data[index]<=0){
-          markerColour="#FF0000";
+        let markerColour = "#008000";
+        if (allOptions.series[0].data[index] <= 0) {
+          markerColour = "#FF0000";
         }
         discreteMarkers.push({
-          seriesIndex:0,
+          seriesIndex: 0,
           dataPointIndex: index,
           fillColor: markerColour,
           strokeColor: markerColour,
           size: 4, // Adjust the size as per your preference
-        shape: "circle", // This will make the markers circular
-        strokeWidth: 0,
-        hover: {
-          size: 6, // Adjust the size for hover state as per your preference
-        },});
-        
+          shape: "circle", // This will make the markers circular
+          strokeWidth: 0,
+          hover: {
+            size: 6, // Adjust the size for hover state as per your preference
+          },
+        });
+
       }
       styleOptions.markers = {
-        discrete:discreteMarkers
+        discrete: discreteMarkers
       }
-    }else{
-      styleOptions.colors=chartColours;
-      styleOptions.markers={
+    } else {
+      styleOptions.colors = chartColours;
+      styleOptions.markers = {
         size: 5, // Adjust the size as per your preference
         shape: "circle", // This will make the markers circular
         strokeWidth: 0,
@@ -150,7 +150,7 @@ export function LineChart({ data, height }: IChart) {
         },
       };
     }
-    
+
     Object.assign(allOptions.options, styleOptions);
     return allOptions;
   };

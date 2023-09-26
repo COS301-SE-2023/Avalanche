@@ -1,11 +1,11 @@
-import { getCookie } from "cookies-next";
-import { Anchor, ErrorToast, Input, SubmitButton, SuccessToast, WarningAlert } from "../Util"
-import ky, { HTTPError } from "ky";
-import { useDispatch } from "react-redux";
 import { updateAPI } from "@/store/Slices/userSlice";
-import { useState, useEffect } from 'react';
+import { ClipboardIcon, QuestionMarkCircleIcon } from "@heroicons/react/24/solid";
+import { getCookie } from "cookies-next";
+import ky, { HTTPError } from "ky";
+import { useEffect, useState } from 'react';
+import { useDispatch } from "react-redux";
 import { v4 as uuidv4 } from 'uuid';
-import { QuestionMarkCircleIcon, ClipboardIcon } from "@heroicons/react/24/solid";
+import { Anchor, ErrorToast, SubmitButton, SuccessToast, WarningAlert } from "../Util";
 
 interface IGeneralSettings {
     user: any

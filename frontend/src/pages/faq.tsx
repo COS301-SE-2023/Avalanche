@@ -1,18 +1,16 @@
-import React, { useState } from "react";
+import qAndAs from "@/assets/faq";
 import Sidebar from "@/components/Navigation/SideBar";
-import Head from "next/head";
-import { MainContent, Accordian} from "@/components/Util";
+import { Accordian, MainContent } from "@/components/Util";
 import PageHeader from "@/components/Util/PageHeader";
 import { QuestionMarkCircleIcon } from "@heroicons/react/24/solid";
-import  qAndAs  from "@/assets/faq"
-import path from "path";
-import fs from "fs";
+import Head from "next/head";
+import { useState } from "react";
 
 
 interface IqAndA {
   question: string,
   answer: string[],
-  image?: string 
+  image?: string
 }
 
 export default function FAQPage() {
@@ -44,8 +42,8 @@ export default function FAQPage() {
               question={item.question}
               answer={item.answer}
               image={item.image}
-              finalQ = {index == json.length-1? true: false}
-              firstQ = {index == 0? true: false}
+              finalQ={index == json.length - 1 ? true : false}
+              firstQ={index == 0 ? true : false}
               sectionId={`section${index}`}
               toggleSection={toggleSection}
               activeSection={activeSection}

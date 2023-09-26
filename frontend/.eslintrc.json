@@ -1,5 +1,8 @@
 {
   "extends": [
     "next/core-web-vitals"
+  ],
+  "plugins": [
+    "unused-imports"
   ]
 }

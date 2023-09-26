@@ -1,5 +1,5 @@
-import WarningAlert from "./WarningAlert";
 import ChartError from "../CustomSVG/ChartError";
+import WarningAlert from "./WarningAlert";
 
 export default function ChartCardError({ error }: any) {
     return <div className="flex items-center flex-col gap-2">

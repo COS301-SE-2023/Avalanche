@@ -1,7 +1,6 @@
 import { IChart } from "@/interfaces";
 import React, { useEffect, useState } from "react";
 import dynamic from 'next/dynamic'
-import { json } from "stream/consumers";
 import { chartColours } from "./data";
 import { convertData } from "./util";
 import { useTheme } from "next-themes";

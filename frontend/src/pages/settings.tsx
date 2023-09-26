@@ -1,18 +1,18 @@
-import Sidebar from "@/components/Navigation/SideBar"
-import Head from "next/head";
-import { Cog6ToothIcon } from "@heroicons/react/24/solid";
-import { useEffect, useState } from "react";
-import { useRouter } from 'next/router';
-import PageHeader from "@/components/Util/PageHeader";
 import { IntegrationLoginModal } from "@/components/Modals";
-import { SubmitButton, WarningAlert, MainContent } from "@/components/Util";
-import { Toaster } from 'react-hot-toast';
-import OrganizationSettings from "@/components/Settings/Organizations";
-import { userState } from "@/store/Slices/userSlice";
-import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import GeneralSettings from "@/components/Settings/General";
+import Sidebar from "@/components/Navigation/SideBar";
 import DataProducts from "@/components/Settings/DataProducts";
+import GeneralSettings from "@/components/Settings/General";
+import OrganizationSettings from "@/components/Settings/Organizations";
+import { MainContent } from "@/components/Util";
+import PageHeader from "@/components/Util/PageHeader";
+import { selectModalManagerState } from '@/store/Slices/modalManagerSlice';
+import { userState } from "@/store/Slices/userSlice";
+import { Cog6ToothIcon } from "@heroicons/react/24/solid";
+import Head from "next/head";
+import { useRouter } from 'next/router';
+import { useEffect, useState } from "react";
+import { Toaster } from 'react-hot-toast';
+import { useSelector } from 'react-redux';
 
 export default function Settings() {
 

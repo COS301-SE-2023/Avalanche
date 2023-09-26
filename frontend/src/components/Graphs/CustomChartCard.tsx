@@ -1,20 +1,17 @@
-import { ChartBarIcon, FunnelIcon, MagnifyingGlassPlusIcon, ChevronDownIcon, ArrowDownTrayIcon } from "@heroicons/react/24/solid";
-import { BarChart, BubbleChart, LineChart, PieChart, PolarAreaChart, RadarChart, TableChart } from "@/components/Graphs";
-import { useState, useEffect } from 'react';
 import { ChartType, ChartTypeArray } from "@/Enums";
-import { ChartCardButton } from "./ChartCardHeader";
-import { Fragment } from 'react'
-import { Menu, Transition } from '@headlessui/react'
-import "animate.css";
-import { useDispatch, useSelector } from "react-redux";
-import { clearCurrentOpenState, setCurrentOpenState, setData, setZoomData } from "@/store/Slices/modalManagerSlice";
-import { CheckboxFilter, DatePickerFilter, NestedCheckbox, RadioboxFilter, ToggleFilter } from "./Filters";
-import { Disclosure } from '@headlessui/react'
-import { ErrorToast, SubmitButton, ChartCardError } from "../Util";
-import ky, { HTTPError } from "ky";
-import { getCookie } from "cookies-next";
+import { BarChart, BubbleChart, LineChart, PieChart, PolarAreaChart, RadarChart, TableChart } from "@/components/Graphs";
 import { getFilters, graphState } from "@/store/Slices/graphSlice";
-// import { renderFilters, filterGraphs, generateDefaultValue } from "./Filters/utils";
+import { clearCurrentOpenState, setCurrentOpenState, setData, setZoomData } from "@/store/Slices/modalManagerSlice";
+import { Disclosure, Menu, Transition } from '@headlessui/react';
+import { ArrowDownTrayIcon, ChartBarIcon, ChevronDownIcon, FunnelIcon, MagnifyingGlassPlusIcon } from "@heroicons/react/24/solid";
+import "animate.css";
+import { getCookie } from "cookies-next";
+import ky, { HTTPError } from "ky";
+import { Fragment, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { ChartCardError, ErrorToast, SubmitButton } from "../Util";
+import { ChartCardButton } from "./ChartCardHeader";
+import { CheckboxFilter, DatePickerFilter, NestedCheckbox, RadioboxFilter, ToggleFilter } from "./Filters";
 
 interface IChartCard {
     title: string,
@@ -110,7 +107,7 @@ export default function CustomChartCard({ title, data, defaultGraph, state, id, 
         if (data.endpointName) {
             const d = data.endpointName.split("/");
             setWarehouse(d[0]);
-            d.splice(0,1)
+            d.splice(0, 1)
             setGType(d.join('/'));
 
         } else {

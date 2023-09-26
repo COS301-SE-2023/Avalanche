@@ -1,11 +1,11 @@
-import '@/styles/globals.css'
-import type { AppProps } from 'next/app'
-import { ThemeProvider } from 'next-themes'
-import { wrapper } from '../store/store';
+import '@/styles/globals.css';
+import 'animate.css';
+import { ThemeProvider } from 'next-themes';
+import type { AppProps } from 'next/app';
 import { Provider, } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-import 'animate.css';
 import '../assets/global.scss';
+import { wrapper } from '../store/store';
 
 function App({ Component, ...rest }: AppProps) {
   const { store, props } = wrapper.useWrappedStore(rest);

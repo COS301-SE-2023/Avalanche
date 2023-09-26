@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { DeleteButton, SubmitButton, ErrorToast } from '../Util';
+import { DeleteButton, ErrorToast, SubmitButton } from '../Util';
 import { ModalWrapper } from './ModalOptions';
 
 // Redux Stuff
-import { setAnimateManagerState, clearCurrentOpenState } from '@/store/Slices/modalManagerSlice';
+import { clearCurrentOpenState, setAnimateManagerState } from '@/store/Slices/modalManagerSlice';
 import { useDispatch } from 'react-redux';
 
 interface IConfirmModal {

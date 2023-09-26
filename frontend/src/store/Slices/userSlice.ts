@@ -1,11 +1,11 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { AppState } from "../store";
-import { HYDRATE } from "next-redux-wrapper";
+import { IDataProduct, IOrganisation, ISettings, IUserGroups } from "@/interfaces/interfaces";
+import { ICreateOrganisationRequest, ICreateUserGroupRequest, ILoginRequest, IOTPVerifyRequest, IRegisterRequest } from "@/interfaces/requests";
+import { ICreateOrgnisationResponse, ICreateUserGroupResponse, ILoginResponse, IOTPVerifyResponse, IRegisterResponse } from "@/interfaces/responses";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { deleteCookie, getCookie, setCookie } from 'cookies-next';
 import ky, { HTTPError } from "ky";
-import { ILoginRequest, IOTPVerifyRequest, IRegisterRequest, ICreateOrganisationRequest, ICreateUserGroupRequest } from "@/interfaces/requests";
-import { IOTPVerifyResponse, IRegisterResponse, ILoginResponse, ICreateOrgnisationResponse, ICreateUserGroupResponse } from "@/interfaces/responses";
-import { setCookie, getCookie, deleteCookie } from 'cookies-next';
-import { ISettings, IOrganisation, IDataProduct, IUserGroups } from "@/interfaces/interfaces";
+import { HYDRATE } from "next-redux-wrapper";
+import { AppState } from "../store";
 
 const url = `${process.env.NEXT_PUBLIC_API}/user-management`;
 

@@ -1,8 +1,7 @@
-import { useCallback } from 'react';
-import { Node, NodeProps, Handle, Position, Connection } from 'reactflow';
-import { TableChart } from '../Graphs'
-import { useSelector } from 'react-redux';
 import { qbeeState } from '@/store/Slices/qbeeSlice';
+import { useSelector } from 'react-redux';
+import { Connection, Handle, Node, NodeProps, Position } from 'reactflow';
+import { TableChart } from '../Graphs';
 import { WarningAlert } from '../Util';
 
 type NodeData = {

@@ -1,15 +1,11 @@
 import { IChart } from "@/interfaces";
-import React, { useState, useEffect } from "react";
-import dynamic from "next/dynamic";
-import { json } from "stream/consumers";
-import { chartColours } from "./data";
-import { convertData, convertForTree } from "./util";
 import { useTheme } from "next-themes";
-
-
+import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
+import { chartColours } from "./data";
+import { convertForTree } from "./util";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
-
 
 type JsonDataEntry = {
   [key: string]: string | number;
@@ -22,7 +18,7 @@ export function TreeMapChart({ data, height }: IChart) {
     let allOptions = convertForTree(jsonData);
 
     //Set basic style
-    let styleOptions={
+    let styleOptions = {
       dataLabels: {
         enabled: true,
         colors: undefined, // This will use the series color for each data label
@@ -39,8 +35,8 @@ export function TreeMapChart({ data, height }: IChart) {
           colorScale: {
             ranges: [
               {
-                from: Math.min(...allOptions.series[0].data.map(o=>o.y)),
-                to: Math.max(...allOptions.series[0].data.map(o=>o.y)),
+                from: Math.min(...allOptions.series[0].data.map(o => o.y)),
+                to: Math.max(...allOptions.series[0].data.map(o => o.y)),
                 color: chartColours[0]
               }
             ]
@@ -48,7 +44,7 @@ export function TreeMapChart({ data, height }: IChart) {
         }
       },
       chart: {
-        
+
         zoom: {
           enabled: false,
           type: "y",
@@ -103,11 +99,11 @@ export function TreeMapChart({ data, height }: IChart) {
           speed: 350,
         },
       },
-    
+
     } as any;
 
-    styleOptions.colors=chartColours;
-    styleOptions.markers={
+    styleOptions.colors = chartColours;
+    styleOptions.markers = {
       size: 5, // Adjust the size as per your preference
       shape: "circle", // This will make the markers circular
       strokeWidth: 0,
@@ -116,7 +112,7 @@ export function TreeMapChart({ data, height }: IChart) {
       },
     };
 
-    console.log(allOptions,"all options");
+    console.log(allOptions, "all options");
     Object.assign(allOptions.options, styleOptions);
     return allOptions;
   };

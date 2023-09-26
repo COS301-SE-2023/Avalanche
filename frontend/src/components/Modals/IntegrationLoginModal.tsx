@@ -1,24 +1,24 @@
 import { IIntergrationLoginData as IData } from "@/interfaces";
-import {
-  Input,
-  InputLabel,
-  SubmitButton,
-  AlternativeButton,
-  ErrorToast,
-  SuccessToast,
-  DataProductItem as ListItem,
-  DoubleToggle,
-  Dropdown
-} from "../Util";
-import React, { useEffect, useState } from "react";
-import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
-import "animate.css";
-import { ModalWrapper } from "./ModalOptions";
-import ky, { HTTPError } from "ky";
-import { getCookie } from "cookies-next";
-import { useDispatch } from "react-redux";
 import { getEndpoints } from "@/store/Slices/permissionSlice";
 import { getLatestOrganisation, getUserGroups } from "@/store/Slices/userSlice";
+import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
+import "animate.css";
+import { getCookie } from "cookies-next";
+import ky, { HTTPError } from "ky";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import {
+  AlternativeButton,
+  DoubleToggle,
+  Dropdown,
+  ErrorToast,
+  Input,
+  InputLabel,
+  DataProductItem as ListItem,
+  SubmitButton,
+  SuccessToast
+} from "../Util";
+import { ModalWrapper } from "./ModalOptions";
 
 interface IIntegrationLoginModal { }
 

@@ -1,19 +1,19 @@
-import Sidebar from "@/components/Navigation/SideBar"
-import Head from "next/head";
-import { MagnifyingGlassCircleIcon, QuestionMarkCircleIcon, ChevronUpDownIcon, ChevronUpIcon } from '@heroicons/react/24/solid';
-import { useEffect, useState } from "react";
-import PageHeader from "@/components/Util/PageHeader";
-import { SubmitButton, WarningAlert, ErrorToast, InputLabel, Input, AlternativeButton, Anchor, MainContent, Toggle } from "@/components/Util";
-import { Toaster } from 'react-hot-toast';
-import { domainWatchState, getDomainWatch, updateChanging } from "@/store/Slices/domainWatchSlice";
-import { IDomainWatchRequest } from "@/interfaces/requests";
-import { useDispatch, useSelector } from 'react-redux';
-import { IDomainWatchType } from "@/interfaces/requests/DomainWatch";
-import ky, { HTTPError } from "ky";
-import { getCookie } from "cookies-next";
-import WHOISModal from "@/components/Modals/WHOISModal";
-import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
 import PickeeModal from "@/components/Modals/PickeeModal";
+import WHOISModal from "@/components/Modals/WHOISModal";
+import Sidebar from "@/components/Navigation/SideBar";
+import { AlternativeButton, Anchor, ErrorToast, Input, InputLabel, MainContent, SubmitButton, Toggle, WarningAlert } from "@/components/Util";
+import PageHeader from "@/components/Util/PageHeader";
+import { IDomainWatchRequest } from "@/interfaces/requests";
+import { IDomainWatchType } from "@/interfaces/requests/DomainWatch";
+import { domainWatchState, getDomainWatch, updateChanging } from "@/store/Slices/domainWatchSlice";
+import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
+import { ChevronUpDownIcon, ChevronUpIcon, MagnifyingGlassCircleIcon, QuestionMarkCircleIcon } from '@heroicons/react/24/solid';
+import { getCookie } from "cookies-next";
+import ky, { HTTPError } from "ky";
+import Head from "next/head";
+import { useEffect, useState } from "react";
+import { Toaster } from 'react-hot-toast';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function Settings() {
 

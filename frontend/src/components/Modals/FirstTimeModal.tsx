@@ -1,8 +1,6 @@
+import { useRouter } from 'next/router';
 import { Anchor, DeleteButton, SubmitButton } from '../Util';
 import { ModalWrapper } from './ModalOptions';
-import { useRouter } from 'next/router';
-import { setCookie } from 'cookies-next';
-import Link from 'next/link';
 
 interface IFirstTimeModal {
     close: any

@@ -1,12 +1,10 @@
-import { NodeProps, Handle, Position, Connection } from 'reactflow';
-import { DBData, SelectBlock } from '@/interfaces/qbee/interfaces';
-import { Role as QBeeRole } from "@/interfaces/qbee/enums";
-import { useDispatch, useSelector } from 'react-redux';
+import { AggregationType, Role as QBeeRole } from "@/interfaces/qbee/enums";
+import { DBData } from '@/interfaces/qbee/interfaces';
 import { qbeeState } from '@/store/Slices/qbeeSlice';
-import { BetterDropdown, Input, InputLabel } from '../Util';
-import { useState } from 'react';
 import { ArrowLongRightIcon } from '@heroicons/react/24/solid';
-import { AggregationType } from '@/interfaces/qbee/enums';
+import { useSelector } from 'react-redux';
+import { Connection, Handle, NodeProps, Position } from 'reactflow';
+import { BetterDropdown, Input, InputLabel } from '../Util';
 
 interface NodeData {
     label: string,

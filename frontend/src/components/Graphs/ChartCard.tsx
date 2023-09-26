@@ -1,12 +1,4 @@
-import {
-	ChartBarIcon,
-	FunnelIcon,
-	MagnifyingGlassPlusIcon,
-	ChevronDownIcon,
-	DocumentIcon,
-	ShareIcon,
-	ArrowDownTrayIcon,
-} from "@heroicons/react/24/solid";
+import { ChartType, ChartTypeArray } from "@/Enums";
 import {
 	BarChart,
 	BubbleChart,
@@ -14,21 +6,30 @@ import {
 	PieChart,
 	PolarAreaChart,
 	RadarChart,
-	TreeMapChart,
 	TableChart,
+	TreeMapChart,
 } from "@/components/Graphs";
-import { useState, useEffect } from "react";
-import { ChartType, ChartTypeArray } from "@/Enums";
-import { ChartCardButton } from "./ChartCardHeader";
-import { Fragment } from "react";
-import { Menu, Transition } from "@headlessui/react";
-import "animate.css";
-import { useDispatch, useSelector } from "react-redux";
+import { getFilters, graphState } from "@/store/Slices/graphSlice";
 import {
+	clearCurrentOpenState,
 	setCurrentOpenState,
 	setData,
-	clearCurrentOpenState,
 } from "@/store/Slices/modalManagerSlice";
+import { Disclosure, Menu, Transition } from "@headlessui/react";
+import {
+	ArrowDownTrayIcon,
+	ChartBarIcon,
+	ChevronDownIcon,
+	FunnelIcon,
+	MagnifyingGlassPlusIcon
+} from "@heroicons/react/24/solid";
+import "animate.css";
+import { getCookie } from "cookies-next";
+import ky, { HTTPError } from "ky";
+import { Fragment, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { ChartCardError, FilterTooltip, SubmitButton } from "../Util";
+import { ChartCardButton } from "./ChartCardHeader";
 import {
 	CheckboxFilter,
 	DatePickerFilter,
@@ -36,11 +37,6 @@ import {
 	RadioboxFilter,
 	ToggleFilter,
 } from "./Filters";
-import { Disclosure } from "@headlessui/react";
-import { ChartCardError, ErrorToast, SubmitButton, FilterTooltip } from "../Util";
-import { getFilters, graphState } from "@/store/Slices/graphSlice";
-import { getCookie } from "cookies-next";
-import ky, { HTTPError } from "ky";
 
 interface IChartCard {
 	title: string;
@@ -238,13 +234,13 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
 				}`;
 			const res = await ky
 				.post(url, {
-					json: filters, timeout : 100000,
+					json: filters, timeout: 100000,
 					headers: {
 						Authorization: `Bearer ${jwt}`,
 					},
 				})
 				.json();
-			console.log(res);	
+			console.log(res);
 			const d = res as any;
 			setGraphData(d.data.data);
 			setGraphTitle(d.data.graphName);
