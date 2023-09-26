@@ -169,7 +169,7 @@ export class DomainNameAnalysisService {
             ' ' +
             granularity +
             '(s)',
-          data: data,
+          data: data.data,
           chartType: ChartType.Bubble,
           warehouse: 'africa',
           graphType: 'domainNameAnalysis/classification',
