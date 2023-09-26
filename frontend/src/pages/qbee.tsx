@@ -764,7 +764,10 @@ function Flow() {
                   if (!qbee.schema) {
                     return ErrorToast({ text: "You need to select a schema" })
                   }
-                  dispatch(getData(convertToQuery()));
+                  dispatch(getData({
+                    query: convertToQuery(),
+                    schema: qbee.schema
+                  }));
                   SuccessToast({ text: "Sent request in..." })
                 }}
               >
