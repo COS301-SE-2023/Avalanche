@@ -271,6 +271,16 @@ export class AuthService {
     user.apiKey = jwtToken;
     await this.userRepository.save(user);
     delete user.apiKey;
+    for(const products of user.products){
+      products.key = null;
+      products.tou = 'public';
+    }
+    for(const userGroups of user.userGroups){
+      for(const products of userGroups.products){
+          products.key = null;
+          products.tou = 'public';
+      }
+    }
     await this.redis.set(jwtToken, JSON.stringify(user));
     const userWithToken = { ...user, apiKey: jwtToken };
     // Send back user's information along with the token as a JSON object
@@ -349,6 +359,16 @@ export class AuthService {
     await this.userRepository.save(user);
     delete user.apiKey;
     delete user.salt;
+    for(const products of user.products){
+      products.key = null;
+      products.tou = 'public';
+    }
+    for(const userGroups of user.userGroups){
+      for(const products of userGroups.products){
+          products.key = null;
+          products.tou = 'public';
+      }
+    }
     await this.redis.set(jwtToken, JSON.stringify(user));
     await this.redis.del(tempApi);
     // await this.redis.del(token);
