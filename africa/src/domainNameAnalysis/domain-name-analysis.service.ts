@@ -103,6 +103,7 @@ export class DomainNameAnalysisService {
   }
 
   async classification(dataO: any): Promise<any> {
+    console.log('In classification');
     try {
       const filters = JSON.stringify(dataO.filters);
 
@@ -121,6 +122,7 @@ export class DomainNameAnalysisService {
         try {
           queryData = await this.snowflakeService.execute(sqlQuery);
         } catch (e) {
+          console.log(e);
           return {
             status: 500,
             error: true,
@@ -131,7 +133,7 @@ export class DomainNameAnalysisService {
         dataO.data = queryData[0]['DOMAINNAMEANALYSIS'];
         delete dataO.filters;
         const response = this.httpService.post(
-          'http://DomainAnalysis:4101/domainNameAnalysis/classify',
+          'http://skunkworks.dns.net.za:4101/domainNameAnalysis/classify',
           dataO,
         );
         const responseData = await lastValueFrom(response);
@@ -140,19 +142,17 @@ export class DomainNameAnalysisService {
         };
 
         const jsonData: any[] = responseData.data.data;
-        jsonData.forEach((item) => {
-          delete item.domains;
-        });
-        jsonData.unshift({ xAxis: 'word', yAxis: 'frequency' });
+        const newJsonData: any = this.formatClassification(jsonData);
+        newJsonData.unshift({ xAxis: 'category', yAxis: 'count' });
 
         const graphData = {
           chartData: formattedData,
-          jsonData: jsonData,
+          jsonData: newJsonData,
         };
 
         data = { data: graphData, filters: {} };
         await this.redis.set(
-          `africa` + sqlQuery + ` classification`,
+          `zacr` + sqlQuery + ` classification`,
           JSON.stringify(data),
           'EX',
           24 * 60 * 60,
@@ -171,12 +171,13 @@ export class DomainNameAnalysisService {
             '(s)',
           data: data,
           chartType: ChartType.Bubble,
-          warehouse: 'africa',
+          warehouse: 'zacr',
           graphType: 'domainNameAnalysis/classification',
         },
         timestamp: new Date().toISOString(),
       };
     } catch (e) {
+      console.log(e);
       return {
         status: 500,
         error: true,
