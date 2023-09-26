@@ -296,6 +296,8 @@ describe('AuthService', () => {
     it('should create a new API key successfully', async () => {
       const mockUser = new User();
       mockUser.apiKey = null;
+      mockUser.products = [{dataSource : "test",key: "registrar",tou: "registrar"}];
+      mockUser.userGroups = [];
       mockRedis.get.mockResolvedValue(JSON.stringify({ email: 'test@test.com' }));
       mockUserRepository.findOne.mockResolvedValue(mockUser);
       mockRedis.set.mockResolvedValue('OK');
@@ -417,6 +419,8 @@ describe('AuthService', () => {
       const token = 'existingAPIKey';
       const mockUser = new User();
       mockUser.apiKey = token;
+      mockUser.products = [{dataSource : "test",key: "registrar",tou: "registrar"}];
+      mockUser.userGroups = [];
       mockRedis.get.mockResolvedValue(JSON.stringify({ email: 'test@test.com' }));
       mockUserRepository.findOne.mockResolvedValue(mockUser);
       mockRedis.set.mockResolvedValue('OK');

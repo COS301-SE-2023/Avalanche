@@ -271,12 +271,12 @@ export class AuthService {
     user.apiKey = jwtToken;
     await this.userRepository.save(user);
     delete user.apiKey;
-    for(const products of user.products){
+    for(const products of user?.products){
       products.key = null;
       products.tou = 'public';
     }
-    for(const userGroups of user.userGroups){
-      for(const products of userGroups.products){
+    for(const userGroups of user?.userGroups){
+      for(const products of userGroups?.products){
           products.key = null;
           products.tou = 'public';
       }
@@ -359,12 +359,12 @@ export class AuthService {
     await this.userRepository.save(user);
     delete user.apiKey;
     delete user.salt;
-    for(const products of user.products){
+    for(const products of user?.products){
       products.key = null;
       products.tou = 'public';
     }
-    for(const userGroups of user.userGroups){
-      for(const products of userGroups.products){
+    for(const userGroups of user?.userGroups){
+      for(const products of userGroups?.products){
           products.key = null;
           products.tou = 'public';
       }
