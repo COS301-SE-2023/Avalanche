@@ -115,7 +115,7 @@ export default function Settings() {
         dispatch(getDomainWatch({
             domain: data.domain,
             types: data.types,
-            // resolve: data.resolve
+            resolve: data.resolve
         } as IDomainWatchRequest))
 
     }
