@@ -3,7 +3,7 @@ import Head from "next/head";
 import { MagnifyingGlassCircleIcon, QuestionMarkCircleIcon, ChevronUpDownIcon, ChevronUpIcon } from '@heroicons/react/24/solid';
 import { useEffect, useState } from "react";
 import PageHeader from "@/components/Util/PageHeader";
-import { SubmitButton, WarningAlert, ErrorToast, InputLabel, Input, AlternativeButton, Anchor, MainContent } from "@/components/Util";
+import { SubmitButton, WarningAlert, ErrorToast, InputLabel, Input, AlternativeButton, Anchor, MainContent, Toggle } from "@/components/Util";
 import { Toaster } from 'react-hot-toast';
 import { domainWatchState, getDomainWatch, updateChanging } from "@/store/Slices/domainWatchSlice";
 import { IDomainWatchRequest } from "@/interfaces/requests";
@@ -28,7 +28,8 @@ export default function Settings() {
 
     const [data, setData] = useState<any>({
         domain: "",
-        types: []
+        types: [],
+        resolve: "false"
     });
     const [activeHelp, setActiveHelp] = useState<string[]>([]);
     const [sorting, setSorting] = useState<string>("");
@@ -341,6 +342,7 @@ export default function Settings() {
                                 }} disabled={watchState.loading} />
                             </div>}
                         </div>
+                        <Toggle name="resolveToggle" id="resolveToggle" label="Do you want the domain to resolve?" onChange={(changed: boolean) => update("resolve", changed ? "true" : "false")} value={data.resolve === "true" ? true : false} />
                     </div> : <WarningAlert title="Missing domain." text="You need to provide the domain name before you can continue" />}
 
                     {/* Buttons */}
