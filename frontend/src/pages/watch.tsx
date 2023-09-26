@@ -408,6 +408,14 @@ export default function Settings() {
                             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-primaryBackground dark:text-gray-300">
                                 <tr>
                                     <th scope="col" className="px-6 py-3 cursor-pointer w-100" onClick={() => {
+                                        sorting !== "zone" && setSorting("resolve");
+                                        sortingType === "asc" ? setSortingType("desc") : setSortingType("asc");
+                                    }}>
+                                        <div className="flex gap-2 items-center">
+                                            Resolve {sorting === "resolve" ? <ChevronUpIcon className={sortingType === "asc" ? "h-4 w-4" : "rotate-180 h-w w-4"} /> : <ChevronUpDownIcon className="h-4 w-4" />}
+                                        </div>
+                                    </th>
+                                    <th scope="col" className="px-6 py-3 cursor-pointer w-100" onClick={() => {
                                         sorting !== "domainName" && setSorting("domainName");
                                         sortingType === "asc" ? setSortingType("desc") : setSortingType("asc");
                                     }}>
@@ -444,6 +452,19 @@ export default function Settings() {
                                 {
                                     !watchState.loading && watchState.changingData.map((item: any, index: number) => {
                                         return <tr className={getColour(item.similarity) + " duration-75 ease-in-out"} key={index}>
+                                            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                {item?.resolves ? (
+                                                    item.resolves === "Resolves" ? (
+                                                        <span style={{ height: '10px', width: '10px', backgroundColor: 'green', borderRadius: '50%', display: 'inline-block', marginLeft: '10px' }}></span>
+                                                    ) : (
+                                                        item.resolves === "DoesNotResolve" && (
+                                                            <span style={{ height: '10px', width: '10px', backgroundColor: 'lightgrey', borderRadius: '50%', display: 'inline-block', marginLeft: '10px' }}></span>
+                                                        )
+                                                    )
+                                                ) : (
+                                                    <span></span>
+                                                )}
+                                            </th>
                                             <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                 {item.domainName}
                                             </th>
