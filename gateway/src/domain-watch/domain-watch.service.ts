@@ -70,41 +70,41 @@ export class DomainWatchService {
     const response = await this.httpService
       .post('http://DomainWatch:4100/domainWatch/passive', check)
       .toPromise();
-      const transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 587,
-        secure: false,
-        auth: {
-          user: 'theskunkworks301@gmail.com',
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: 'theskunkworks301@gmail.com',
         pass: process.env.GOOGLE_PASSWORD,
-        }
-      });
-  
-      // Loop through each alert in the response
-      for (const alert of response.data.alerts) {
-        // Find the corresponding emailInfo for each person
-        const personEmailInfos = emailInfo.filter(info => info.person === alert.person);
-  
-        // If a matching emailInfo is found, send the email
-        for (const personEmailInfo of personEmailInfos) {
-          const { email, person } = personEmailInfo;
-          const domains = alert.domains;
-  
-          // Create email body
-          let emailBody = `Hello ${person},\n\nHere are your domains:\n`;
-          for (const domain of domains) {
-            emailBody += `- ${domain}\n`;
-          }
-  
-          // Send the email
-          await transporter.sendMail({
-            from: 'Avalanche Analytics',
-            to: email,
-            subject: `Domain Alert for ${person}`,
-            text: emailBody
-          });
-        }
       }
+    });
+
+    // Loop through each alert in the response
+    for (const alert of response.data.alerts) {
+      // Find the corresponding emailInfo for each person
+      const personEmailInfos = emailInfo.filter(info => info.person === alert.person);
+
+      // If a matching emailInfo is found, send the email
+      for (const personEmailInfo of personEmailInfos) {
+        const { email, person } = personEmailInfo;
+        const domains = alert.domains;
+
+        // Create email body
+        let emailBody = `Hello ${person},\n\nHere are your domains:\n`;
+        for (const domain of domains) {
+          emailBody += `- ${domain}\n`;
+        }
+
+        // Send the email
+        await transporter.sendMail({
+          from: 'Avalanche Analytics',
+          to: email,
+          subject: `Domain Alert for ${person}`,
+          text: emailBody
+        });
+      }
+    }
   }
 
   @Cron(CronExpression.EVERY_DAY_AT_7AM)

@@ -134,12 +134,12 @@ export const getSchema = createAsyncThunk("QBEE.GetSchema", async (schema: strin
 })
 
 export const getData = createAsyncThunk("QBEE.GetData", async (query: any, { rejectWithValue, getState }) => {
-    const state = getState() as IInitState;
+    const { schema } = getState() as IInitState;
     if (!query) {
         rejectWithValue("No query provided.");
     }
     const data = {
-        schema: state.schema,
+        schema: schema,
         dataSource: 'zacr',
         query: query
     }
