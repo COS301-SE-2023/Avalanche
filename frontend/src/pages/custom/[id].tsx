@@ -16,7 +16,7 @@ import { userState } from "@/store/Slices/userSlice"
 import { Toaster } from "react-hot-toast"
 import { useRouter } from "next/router"
 import ky, { HTTPError } from "ky"
-import { getCookie, setCookie, hasCookie, deleteCookie } from "cookies-next"
+import { getCookie } from "cookies-next"
 import { updateDashboards } from "@/store/Slices/userSlice";
 import NoFind from "@/components/CustomSVG/NoFind";
 import introJs from 'intro.js';
@@ -37,8 +37,6 @@ export default function CreateCustomDashboard() {
     const [editName, setEditName] = useState<boolean>(false);
 
     const [graphs, setGraphs] = useState<any>([]);
-
-    // const [cookies, setCookie, removeCookie] = useCookies(["startedGraphTutorialA", "startedGraphTutorialB"])
 
     const addToGraphs = (graph: any) => {
         const temp = [...graphs];
@@ -63,34 +61,34 @@ export default function CreateCustomDashboard() {
         setSaved(true);
     }, [id])
 
-    useEffect(() => {
-        if (!hasCookie("customTutorial")) {
-            startTut();
-        }
-    }, []);
+    // useEffect(() => {
+    //     if (!hasCookie("customTutorial")) {
+    //         startTut();
+    //     }
+    // }, []);
 
-    useEffect(() => {
-        if (hasCookie("customSaveGraph") && getCookie("customSaveGraph")) {
-            if (document.getElementsByClassName("grid gap-4 mb-4 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2")[0]) {
-                const saveButton = document.getElementsByClassName("flex gap-5 w-full lg:w-max")[0] as HTMLElement
-                if (saveButton) {
-                    introJS.exit(true)
-                    introJS.setOptions({
-                        steps: [
-                            {
-                                element: saveButton,
-                                intro: "Don't forget to save the dashboard! There you have it, easy as pie"
-                            }
-                        ]
-                    })
-                    introJS.start()
-                    deleteCookie("customSaveGraph");
-                    deleteCookie("customSaveGraph");
-                    setCookie("customTutorial", false);
-                }
-            }
-        }
-    }, [graphs])
+    // useEffect(() => {
+    //     if (hasCookie("customSaveGraph") && getCookie("customSaveGraph")) {
+    //         if (document.getElementsByClassName("grid gap-4 mb-4 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2")[0]) {
+    //             const saveButton = document.getElementsByClassName("flex gap-5 w-full lg:w-max")[0] as HTMLElement
+    //             if (saveButton) {
+    //                 introJS.exit(true)
+    //                 introJS.setOptions({
+    //                     steps: [
+    //                         {
+    //                             element: saveButton,
+    //                             intro: "Don't forget to save the dashboard! There you have it, easy as pie"
+    //                         }
+    //                     ]
+    //                 })
+    //                 introJS.start()
+    //                 deleteCookie("customSaveGraph");
+    //                 deleteCookie("customSaveGraph");
+    //                 setCookie("customTutorial", false);
+    //             }
+    //         }
+    //     }
+    // }, [graphs])
 
     /**
      * Updates a graph
@@ -216,26 +214,26 @@ export default function CreateCustomDashboard() {
         }
     }
 
-    const introJS = introJs();
-    const startTut = () => {
-        introJS.setOptions({
-            steps: [
-                {
-                    intro: 'Welcome! This tutorial will walk you through making you own Custom Dashboard!',
-                    title: "Custom Dashboard Tutorial"
-                },
-                {
-                    element: document.getElementsByClassName('w-4 h-4 right-0 top-0 hover:cursor-pointer hover:text-avalancheBlue duration-75 hover:scale-125')[0] as HTMLElement,
-                    intro: 'Here you can choose the name you want for your Dashboard.',
-                },
-                {
-                    element: document.getElementsByClassName("flex gap-5 w-full lg:w-max")[0] as HTMLElement,
-                    intro: 'This button allows you to add graphs to your Dashboard.',
-                }
-            ]
-        }).start();
-        setCookie("customGraphTutorial", true);
-    }
+    // const introJS = introJs();
+    // const startTut = () => {
+    //     introJS.setOptions({
+    //         steps: [
+    //             {
+    //                 intro: 'Welcome! This tutorial will walk you through making you own Custom Dashboard!',
+    //                 title: "Custom Dashboard Tutorial"
+    //             },
+    //             {
+    //                 element: document.getElementsByClassName('w-4 h-4 right-0 top-0 hover:cursor-pointer hover:text-avalancheBlue duration-75 hover:scale-125')[0] as HTMLElement,
+    //                 intro: 'Here you can choose the name you want for your Dashboard.',
+    //             },
+    //             {
+    //                 element: document.getElementsByClassName("flex gap-5 w-full lg:w-max")[0] as HTMLElement,
+    //                 intro: 'This button allows you to add graphs to your Dashboard.',
+    //             }
+    //         ]
+    //     }).start();
+    //     setCookie("customGraphTutorial", true);
+    // }
 
     return (<>
         <Head>
@@ -279,7 +277,6 @@ export default function CreateCustomDashboard() {
                     }} />}
                     <SubmitButton text="Add a Graph" onClick={() => {
                         dispatch(setCurrentOpenState("GRAPH.AddGraph"))
-                        // introJS.exit(true)
                     }} />
                 </div>
             </div>
