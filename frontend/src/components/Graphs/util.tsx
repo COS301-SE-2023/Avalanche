@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 
 const themeColours = {
   labelColour: "",
@@ -64,12 +63,12 @@ type ConvertedData = {
       fontSize: any;
     };
     annotations?: {
-      yaxis: 
-        {
-          y: number; // replace with the y-value where you want the line
-          borderColor: string; // color of the line
-          
-        }[]
+      yaxis:
+      {
+        y: number; // replace with the y-value where you want the line
+        borderColor: string; // color of the line
+
+      }[]
       ;
     };
   };
@@ -169,8 +168,8 @@ function convertWithMultipleSeries(jsonData: JsonDataEntry[], type: string): Con
   let yMin = Infinity;
   let yMax = -Infinity;
 
-  let xAxisLabel:any = "";
-  let yAxisLabel:any = "";
+  let xAxisLabel: any = "";
+  let yAxisLabel: any = "";
   let seriesLabel: any = "";
 
   if (jsonData.length > 0) {
@@ -179,7 +178,7 @@ function convertWithMultipleSeries(jsonData: JsonDataEntry[], type: string): Con
     seriesLabel = jsonData[0].series;
   }
 
-  jsonData.splice(0,1);
+  jsonData.splice(0, 1);
 
   // Populate the seriesMap and collect unique xAxis and Series values
   jsonData.forEach((entry) => {
@@ -200,14 +199,14 @@ function convertWithMultipleSeries(jsonData: JsonDataEntry[], type: string): Con
   });
 
   var annotationsToUse;
-  if(type != 'radar'){
+  if (type != 'radar') {
     annotationsToUse = {
       yaxis: [
-        
+
         {
           y: 0,
           borderColor: "#000000", // Black color
-          
+
         },
       ],
     }
@@ -235,7 +234,7 @@ function convertWithMultipleSeries(jsonData: JsonDataEntry[], type: string): Con
         },
       },
       yaxis: {
-        
+
         forceNiceScale: true,
         title: {
           text: camelCaseRenderer(yAxisLabel),
@@ -269,7 +268,7 @@ function convertWithMultipleSeries(jsonData: JsonDataEntry[], type: string): Con
           vertical: 2, // Adjust as needed
         },
       },
-      ...(annotationsToUse ? { annotations: annotationsToUse } : {}) 
+      ...(annotationsToUse ? { annotations: annotationsToUse } : {})
     },
   };
 
@@ -301,7 +300,7 @@ function convertWithSingleSeries(jsonData: JsonDataEntry[], type: string): Conve
     yAxisLabel = jsonData[0].yAxis;
   }
 
-  jsonData.splice(0,1);
+  jsonData.splice(0, 1);
   const seriesData: number[] = [];
 
   // Populate the xAxisSet and seriesData
@@ -316,18 +315,18 @@ function convertWithSingleSeries(jsonData: JsonDataEntry[], type: string): Conve
   });
 
   var annotationsToUse;
-  if(type != 'radar'){
+  if (type != 'radar') {
     annotationsToUse = {
       yaxis: [
         {
           y: 0,
           borderColor: "#000000", // Black color
-          
+
         },
       ],
     }
   }
-  
+
   // Initialize the final object
   const convertedData: ConvertedData = {
     series: [
@@ -388,11 +387,11 @@ function convertWithSingleSeries(jsonData: JsonDataEntry[], type: string): Conve
         height: 10,
         fontSize: "12px",
       },
-      ...(annotationsToUse ? { annotations: annotationsToUse } : {}) 
+      ...(annotationsToUse ? { annotations: annotationsToUse } : {})
     },
   };
 
-  
+
 
 
   return convertedData;
@@ -405,15 +404,15 @@ export function convertForProportion(
   const xAxisValues: string[] = [];
   const yAxisValues: number[] = [];
 
-  let xAxisLabel:any = "";
-  let yAxisLabel:any = "";
+  let xAxisLabel: any = "";
+  let yAxisLabel: any = "";
 
   if (jsonData.length > 0) {
     xAxisLabel = jsonData[0].xAxis;
     yAxisLabel = jsonData[0].yAxis;
   }
 
-  jsonData.splice(0,1)
+  jsonData.splice(0, 1)
 
   jsonData.forEach((entry) => {
     xAxisValues.push(entry[xAxisLabel] as string);
@@ -429,18 +428,20 @@ export function convertForProportion(
 }
 
 export function convertForTree(jsonData: JsonDataEntry[]): TreeConvertedData {
+  console.log("json", jsonData);
   const seriesData: { x: any; y: any }[] = [];
 
-  let xAxisLabel = "";
-  let yAxisLabel = "";
+  let xAxisLabel: any = "";
+  let yAxisLabel: any = "";
 
   if (jsonData.length > 0) {
-    const firstEntryKeys = Object.keys(jsonData[0]);
-    xAxisLabel = firstEntryKeys[0];
-    yAxisLabel = firstEntryKeys[1];
+    xAxisLabel = jsonData[0].xAxis;
+    yAxisLabel = jsonData[0].yAxis;
   }
 
   jsonData.forEach((entry) => {
+    console.log(xAxisLabel, entry[xAxisLabel], typeof entry[xAxisLabel], " <-- x");
+    console.log(yAxisLabel, entry[yAxisLabel], typeof entry[yAxisLabel], " <-- y");
     if (
       (typeof entry[xAxisLabel] == "string" ||
         typeof entry[xAxisLabel] == "number") &&

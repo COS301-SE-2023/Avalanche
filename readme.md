@@ -1,5 +1,5 @@
 
-<h1 align="center">Avalanche</h1>
+<h1 align="center">Avalanche Analytics</h1>
 <div align="center">
   <img src="https://github.com/COS301-SE-2023/Avalanche/actions/workflows/tests.yml/badge.svg">
   <img src="https://github.com/COS301-SE-2023/Avalanche/actions/workflows/test.yml/badge.svg">

@@ -511,7 +511,7 @@
             "to": "Dim Registrar Key",
             "columns": [
                 {
-                    "columnName": "Code",
+                    "columnName": "Registrar Code",
                     "columnType": "string",
                     "typeOfFilter": "inputbox",
                     "filterReturnType": "string",
@@ -563,6 +563,16 @@
                 {
                     "columnName": "Registrar Name",
                     "columnType": "string",
+                    "filter": [
+                        {
+                            "tou": "registry",
+                            "filter": false
+                        },
+                        {
+                            "tou": "registrar",
+                            "filter": false
+                        }
+                    ],
                     "aggregation": [
                         {
                             "tou": "registry",
@@ -581,6 +591,16 @@
                 {
                     "columnName": "Company Name",
                     "columnType": "string",
+                    "filter": [
+                        {
+                            "tou": "registry",
+                            "filter": false
+                        },
+                        {
+                            "tou": "registrar",
+                            "filter": false
+                        }
+                    ],
                     "aggregation": [
                         {
                             "tou": "registry",
@@ -599,6 +619,16 @@
                 {
                     "columnName": "Trading Name",
                     "columnType": "string",
+                    "filter": [
+                        {
+                            "tou": "registry",
+                            "filter": false
+                        },
+                        {
+                            "tou": "registrar",
+                            "filter": false
+                        }
+                    ],
                     "aggregation": [
                         {
                             "tou": "registry",

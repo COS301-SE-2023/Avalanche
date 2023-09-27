@@ -1,7 +1,3 @@
-import { useState, useEffect } from 'react';
-import { SubmitButton, ErrorToast, InputLabel, Input, Dropdown } from '../Util';
-import { ModalWrapper } from './ModalOptions';
-import { useDispatch, useSelector } from 'react-redux';
 import { clearCurrentOpenState, setAnimateManagerState } from '@/store/Slices/modalManagerSlice';
 import { userState } from '@/store/Slices/userSlice';
 import { Transition } from '@headlessui/react';
@@ -9,6 +5,10 @@ import introJs from 'intro.js';
 import 'intro.js/introjs.css';
 import 'intro.js/themes/introjs-modern.css';
 import { CookiesProvider, useCookies } from "react-cookie";
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Dropdown, ErrorToast, Input, InputLabel, SubmitButton } from '../Util';
+import { ModalWrapper } from './ModalOptions';
 
 interface ICreateGroupModal {
     state: any,

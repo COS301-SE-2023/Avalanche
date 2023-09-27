@@ -5,5 +5,6 @@ export interface IDomainWatchType {
 
 export default interface IDomainWatchRequest {
     domain: string,
-    types: IDomainWatchType[]
+    types: IDomainWatchType[],
+    resolve: boolean
 }

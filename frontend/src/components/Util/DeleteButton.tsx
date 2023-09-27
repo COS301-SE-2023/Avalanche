@@ -1,5 +1,5 @@
-import { ReactNode } from "react"
 import { IButton } from "@/interfaces"
+import { ReactNode } from "react"
 
 export default function DeleteButton({ text, onClick, loading = false, className = "", icon = null, disabled }: IButton) {
 

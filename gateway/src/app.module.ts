@@ -62,14 +62,14 @@ import { QbeeService } from './qbee/qbee.service';
         name: 'QBEE_SERVICE',
         transport: Transport.TCP,
         options: {
-          host: process.env.AFRICA_HOST || 'localhost',
+          host: process.env.QBEE_HOST || 'localhost',
           port: 4102,
         },
       },
     ]),
     ConfigModule.forRoot({ isGlobal: true }),
   ],
-  controllers: [MetricsController,UserManagementController, ZacrController, RyceController, AfricaController, DomainWatchController, QbeeController],
+  controllers: [MetricsController, UserManagementController, ZacrController, RyceController, AfricaController, DomainWatchController, QbeeController],
   providers: [UserManagementService, ZacrService, RyceService, AfricaService, RedisProvider, DomainWatchService, QbeeService],
 })
 export class AppModule implements NestModule {
@@ -85,6 +85,7 @@ export class AppModule implements NestModule {
         { path: 'domain-watch/passive', method: RequestMethod.GET },
         { path: 'domain-watch/loadDomains', method: RequestMethod.GET },
         { path: 'domain-watch/whoisyou', method: RequestMethod.POST },
+        { path: 'domain-watch/takePickeeNow', method: RequestMethod.POST },
         { path: 'user-management/graphFilters', method: RequestMethod.GET },
         { path: 'user-management/getDomainWatchPassive', method: RequestMethod.POST },
         { path: 'africa/domainWatchPassive', method: RequestMethod.POST },

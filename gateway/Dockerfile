@@ -1,4 +1,4 @@
-FROM node:20-alpine as builder
+FROM node:20 as builder
 
 ENV NODE_ENV build
 
@@ -14,12 +14,13 @@ RUN yarn build
 
 # ---
 
-FROM node:20-alpine
-
-# ENV NODE_ENV production
+FROM node:20
 
 USER node
 WORKDIR /home/node
+
+# We don't need the standalone Chromium
+# ENV NODE_ENV production
 
 COPY --from=builder --chown=node:node /home/node/package*.json ./
 COPY --from=builder --chown=node:node /home/node/tsconfig.json ./tsconfig.json

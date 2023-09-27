@@ -1,6 +1,5 @@
-import { Node, NodeProps, Handle, Position, Connection } from 'reactflow';
-import { Role as QBeeRole } from "@/interfaces/qbee/enums";
 import { PlusIcon } from '@heroicons/react/24/solid';
+import { NodeProps } from 'reactflow';
 
 interface NodeData {
     click: any

@@ -1,18 +1,19 @@
-import Sidebar from "@/components/Navigation/SideBar"
-import Head from "next/head";
-import { MagnifyingGlassCircleIcon, QuestionMarkCircleIcon, ChevronUpDownIcon, ChevronUpIcon } from '@heroicons/react/24/solid';
-import { useEffect, useState } from "react";
-import PageHeader from "@/components/Util/PageHeader";
-import { SubmitButton, WarningAlert, ErrorToast, InputLabel, Input, AlternativeButton, Anchor, MainContent } from "@/components/Util";
-import { Toaster } from 'react-hot-toast';
-import { domainWatchState, getDomainWatch, updateChanging } from "@/store/Slices/domainWatchSlice";
-import { IDomainWatchRequest } from "@/interfaces/requests";
-import { useDispatch, useSelector } from 'react-redux';
-import { IDomainWatchType } from "@/interfaces/requests/DomainWatch";
-import ky, { HTTPError } from "ky";
-import { getCookie } from "cookies-next";
+import PickeeModal from "@/components/Modals/PickeeModal";
 import WHOISModal from "@/components/Modals/WHOISModal";
+import Sidebar from "@/components/Navigation/SideBar";
+import { AlternativeButton, Anchor, ErrorToast, Input, InputLabel, MainContent, SubmitButton, Toggle, WarningAlert } from "@/components/Util";
+import PageHeader from "@/components/Util/PageHeader";
+import { IDomainWatchRequest } from "@/interfaces/requests";
+import { IDomainWatchType } from "@/interfaces/requests/DomainWatch";
+import { domainWatchState, getDomainWatch, updateChanging } from "@/store/Slices/domainWatchSlice";
 import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
+import { ChevronUpDownIcon, ChevronUpIcon, MagnifyingGlassCircleIcon, QuestionMarkCircleIcon } from '@heroicons/react/24/solid';
+import { getCookie } from "cookies-next";
+import ky, { HTTPError } from "ky";
+import Head from "next/head";
+import { useEffect, useState } from "react";
+import { Toaster } from 'react-hot-toast';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function Settings() {
 
@@ -27,12 +28,16 @@ export default function Settings() {
 
     const [data, setData] = useState<any>({
         domain: "",
-        types: []
+        types: [],
+        resolve: "false"
     });
     const [activeHelp, setActiveHelp] = useState<string[]>([]);
     const [sorting, setSorting] = useState<string>("");
     const [sortingType, setSortingType] = useState<string>("asc");
     const [whois, setWhois] = useState<string>("");
+    const [pickee, setPickee] = useState<string>("");
+    const [pickeeLoading, setPickeeLoading] = useState<boolean>(false);
+    const [whoisLoading, setWhoisLoading] = useState<boolean>(false);
 
     /**
      * This function watched the watchState for the variable to change.
@@ -109,7 +114,8 @@ export default function Settings() {
 
         dispatch(getDomainWatch({
             domain: data.domain,
-            types: data.types
+            types: data.types,
+            resolve: data.resolve
         } as IDomainWatchRequest))
 
     }
@@ -181,10 +187,18 @@ export default function Settings() {
         }
     }
 
+    /**
+     * Returns the indicator string
+     * @param value 
+     * @returns 
+     */
     const getIndicator = (value: number) => {
         return `bg-indicator-${Math.floor((value / 10) + 1)}`;
     }
 
+    /**
+     * This useEffect helps us sort the functions
+     */
     useEffect(() => {
         if (!sorting) {
             dispatch(updateChanging(watchState.data));
@@ -220,7 +234,12 @@ export default function Settings() {
         }
     }, [sorting, sortingType]);
 
+    /**
+     * 
+     * @param domain 
+     */
     const getWhoIS = async (domain: string) => {
+        setWhoisLoading(true);
         try {
             const res = await ky.post(`${process.env.NEXT_PUBLIC_API}/domain-watch/whoisyou`, {
                 json: {
@@ -233,7 +252,9 @@ export default function Settings() {
             const data = res as any;
             setWhois(data.data);
             dispatch(setCurrentOpenState("WATCH.WHOIS"));
+            setWhoisLoading(false);
         } catch (e) {
+            setWhoisLoading(false);
             let error = e as HTTPError;
             if (error.name === 'HTTPError') {
                 const errorJson = await error.response.json();
@@ -241,6 +262,11 @@ export default function Settings() {
             }
         }
     }
+
+    /**
+     * Handles the picture taking
+     * @param domain 
+     */
 
     /**
      * Renders out the HTML
@@ -318,6 +344,8 @@ export default function Settings() {
                         </div>
                     </div> : <WarningAlert title="Missing domain." text="You need to provide the domain name before you can continue" />}
 
+                    {data.domain.length > 0 && <Toggle name="resolveToggle" id="resolveToggle" label="Do you want the domain to resolve?" onChange={(changed: boolean) => update("resolve", changed ? "true" : "false")} value={data.resolve === "true" ? true : false} />}
+
                     {/* Buttons */}
                     <div className="flex gap-2">
                         <SubmitButton loading={watchState.loading} disabled={watchState.loading} text="Get the Domains!" onClick={() => { }} />
@@ -380,6 +408,14 @@ export default function Settings() {
                             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-primaryBackground dark:text-gray-300">
                                 <tr>
                                     <th scope="col" className="px-6 py-3 cursor-pointer w-100" onClick={() => {
+                                        sorting !== "zone" && setSorting("resolve");
+                                        sortingType === "asc" ? setSortingType("desc") : setSortingType("asc");
+                                    }}>
+                                        <div className="flex gap-2 items-center">
+                                            Resolve {sorting === "resolve" ? <ChevronUpIcon className={sortingType === "asc" ? "h-4 w-4" : "rotate-180 h-w w-4"} /> : <ChevronUpDownIcon className="h-4 w-4" />}
+                                        </div>
+                                    </th>
+                                    <th scope="col" className="px-6 py-3 cursor-pointer w-100" onClick={() => {
                                         sorting !== "domainName" && setSorting("domainName");
                                         sortingType === "asc" ? setSortingType("desc") : setSortingType("asc");
                                     }}>
@@ -409,12 +445,26 @@ export default function Settings() {
                                             WhoIS Search
                                         </div>
                                     </th>
+
                                 </tr>
                             </thead>
                             <tbody>
                                 {
                                     !watchState.loading && watchState.changingData.map((item: any, index: number) => {
                                         return <tr className={getColour(item.similarity) + " duration-75 ease-in-out"} key={index}>
+                                            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                {item?.resolves ? (
+                                                    item.resolves === "Resolves" ? (
+                                                        <span style={{ height: '10px', width: '10px', backgroundColor: 'green', borderRadius: '50%', display: 'inline-block', marginLeft: '10px' }}></span>
+                                                    ) : (
+                                                        item.resolves === "DoesNotResolve" && (
+                                                            <span style={{ height: '10px', width: '10px', backgroundColor: 'lightgrey', borderRadius: '50%', display: 'inline-block', marginLeft: '10px' }}></span>
+                                                        )
+                                                    )
+                                                ) : (
+                                                    <span></span>
+                                                )}
+                                            </th>
                                             <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                 {item.domainName}
                                             </th>
@@ -431,7 +481,7 @@ export default function Settings() {
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 dark:text-white text-gray-900">
-                                                <SubmitButton text="WHOIS Search" onClick={() => getWhoIS(`${item.domainName}.${item.zone.toLowerCase()}`)} />
+                                                <SubmitButton loading={whoisLoading} disabled={whoisLoading} text="WHOIS Search" onClick={() => getWhoIS(`${item.domainName}.${item.zone.toLowerCase()}`)} />
                                             </td>
                                         </tr>
                                     })

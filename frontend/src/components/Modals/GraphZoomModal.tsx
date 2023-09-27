@@ -1,14 +1,13 @@
-import { ModalWrapper } from './ModalOptions';
-import { useState } from 'react';
-import { BarChart, BubbleChart, LineChart, PieChart, PolarAreaChart, RadarChart, TableChart } from "@/components/Graphs";
-import { selectModalManagerState, setZoomData } from '@/store/Slices/modalManagerSlice';
-import { useDispatch, useSelector } from 'react-redux';
 import { ChartType } from '@/Enums';
-import { ErrorToast } from '../Util';
-import ky, { HTTPError } from 'ky';
+import { BarChart, BubbleChart, LineChart, PieChart, PolarAreaChart, RadarChart, TableChart, TreeMapChart } from "@/components/Graphs";
+import { selectModalManagerState } from '@/store/Slices/modalManagerSlice';
+import { updateDashboards, userState } from "@/store/Slices/userSlice";
 import { getCookie } from 'cookies-next';
-import { userState, updateDashboards } from "@/store/Slices/userSlice"
-import { useEffect } from "react";
+import ky, { HTTPError } from 'ky';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { ErrorToast } from '../Util';
+import { ModalWrapper } from './ModalOptions';
 
 interface IGraphZoomModal {
     custom?: boolean
@@ -91,6 +90,7 @@ export default function GraphZoomModal({ custom }: IGraphZoomModal) {
                     {state.data.type === ChartType.Bubble && data.jsonData && <BubbleChart data={data} height='450%' />}
                     {state.data.type === ChartType.PolarArea && data.jsonData && <PolarAreaChart data={data} height='450%' />}
                     {state.data.type === ChartType.Radar && data.jsonData && <RadarChart data={data} height='450%' />}
+                    {state.data.type === ChartType.TreeMap && data.jsonData && <TreeMapChart data={data} height='450%' />}
                     {state.data.type === ChartType.Table && data.jsonData && <TableChart data={data} />}
                 </div>
                 {custom && <div className="flex flex-col gap-5 flex-auto">

@@ -1,4 +1,4 @@
-import { HomeIcon, DocumentIcon, HeartIcon, ArchiveBoxIcon, DocumentMagnifyingGlassIcon, TvIcon, ChartBarIcon, StarIcon, EyeIcon, MapIcon, BoltIcon, ClipboardIcon, ChartBarSquareIcon, Squares2X2Icon, UsersIcon } from '@heroicons/react/24/solid';
+import { HomeIcon, DocumentIcon, HeartIcon, ArchiveBoxIcon, DocumentMagnifyingGlassIcon, TvIcon, ChartBarIcon, StarIcon, EyeIcon, MapIcon, BoltIcon, ClipboardIcon, ChartBarSquareIcon, Squares2X2Icon, UsersIcon, CubeIcon } from '@heroicons/react/24/solid';
 
 interface IMenuItem {
     text: string,
@@ -95,6 +95,13 @@ const MenuOptions: IMenu = {
             page: "classification",
             role: "",
             endpoint: "domainNameAnalysis/classification"
+        },
+        {
+            text: "QBee",
+            icon: <CubeIcon className={holder} />,
+            page: "qbee",
+            role: "",
+            endpoint: "qbee"
         }
     ]
 }

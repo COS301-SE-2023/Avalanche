@@ -39,4 +39,5 @@ export enum ChartType {
   Bubble = 'Bubble',
   PolarArea = 'PolarArea',
   Radar = 'Radar',
+  TreeMap='TreeMap'
 }

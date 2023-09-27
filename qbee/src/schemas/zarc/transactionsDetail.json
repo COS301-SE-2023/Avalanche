@@ -486,7 +486,7 @@
             "to": "Dim Product Key",
             "columns": [
                 {
-                    "columnName": "Code",
+                    "columnName": "Product Code",
                     "columnType": "string",
                     "typeOfFilter": "checkbox",
                     "filterReturnType": "string[]",
@@ -814,7 +814,7 @@
             "to": "Dim Registrar Key",
             "columns": [
                 {
-                    "columnName": "Code",
+                    "columnName": "Registrar Code",
                     "columnType": "string",
                     "typeOfFilter": "checkbox",
                     "filterReturnType": "string",

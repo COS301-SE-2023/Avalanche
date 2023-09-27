@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { AppState } from "../store";
 import { HYDRATE } from "next-redux-wrapper";
+import { AppState } from "../store";
 
 /**
  * @interface ModalManagerState

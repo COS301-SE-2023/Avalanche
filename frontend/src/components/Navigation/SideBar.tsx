@@ -1,25 +1,25 @@
-import { MenuOptions, NotDropdown } from "@/assets/MenuOptions"
-import SideBarItem from "./SidebarItem"
-import Link from "next/link"
-import { useState, useEffect, useRef } from "react";
-import { useTheme } from "next-themes";
-import { Cog6ToothIcon, Bars4Icon, ArrowLeftOnRectangleIcon, PencilIcon, HomeIcon, ChevronDownIcon, ChartPieIcon, QuestionMarkCircleIcon } from "@heroicons/react/24/solid";
-import { clearCurrentOpenState, selectModalManagerState, setCurrentOpenState } from "@/store/Slices/modalManagerSlice";
-import { useSelector, useDispatch } from "react-redux";
-import { userState, logout } from "@/store/Slices/userSlice";
+import { MenuOptions, NotDropdown } from "@/assets/MenuOptions";
 import { graphState, selectDataSource } from "@/store/Slices/graphSlice";
-import { permissionState, getEndpoints } from "@/store/Slices/permissionSlice";
-import { useRouter } from "next/router";
-import { getCookie, deleteCookie, hasCookie, setCookie } from "cookies-next";
-import LoadingPage from "../Util/Loading";
+import { clearCurrentOpenState, selectModalManagerState, setCurrentOpenState } from "@/store/Slices/modalManagerSlice";
+import { getEndpoints, permissionState } from "@/store/Slices/permissionSlice";
+import { logout, userState } from "@/store/Slices/userSlice";
+import { Transition } from '@headlessui/react';
+import { ArrowLeftOnRectangleIcon, Bars4Icon, ChartPieIcon, ChevronDownIcon, Cog6ToothIcon, HomeIcon, PencilIcon, QuestionMarkCircleIcon } from "@heroicons/react/24/solid";
+import { deleteCookie, getCookie, hasCookie, setCookie } from "cookies-next";
 import ky from "ky";
-import { BetterDropdown, ErrorToast, SubmitButton, SuccessToast } from "../Util";
-import CreateDashboardModal from "../Modals/CreateDashboardModal";
-import { Transition, Popover } from '@headlessui/react'
-import { v4 as uuidv4 } from 'uuid';
 import md5 from 'md5';
-import ErrorAlert from "../Util/ErrorAlert";
+import { useTheme } from "next-themes";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { v4 as uuidv4 } from 'uuid';
 import { FirstTimeModal } from "../Modals";
+import CreateDashboardModal from "../Modals/CreateDashboardModal";
+import { BetterDropdown, ErrorToast, SubmitButton, SuccessToast } from "../Util";
+import ErrorAlert from "../Util/ErrorAlert";
+import LoadingPage from "../Util/Loading";
+import SideBarItem from "./SidebarItem";
 
 export default function Sidebar() {
     const { theme, setTheme } = useTheme();
@@ -109,7 +109,7 @@ export default function Sidebar() {
             initialSelectedDataSource.current = stateGraph.selectedDataSource;
             dispatch(getEndpoints());
         }
-        
+
     }, [dispatch, stateGraph.selectedDataSource]);
 
     /**

@@ -9,14 +9,14 @@ Sentry.init({
 
   beforeSend(event, hint) {
     // Check if it is an exception, and if so, show the report dialog
-    if (event.exception) {
-      Sentry.showReportDialog({
-        eventId: event.event_id,
-        title: "Oops. Looks like something went wrong.",
-        subtitle: "Before we send the error to our skunks, please describe what happened before the error occured.",
-        subtitle2: "This is completly optional."
-      });
-    }
+    // if (event.exception) {
+    //   Sentry.showReportDialog({
+    //     eventId: event.event_id,
+    //     title: "Oops. Looks like something went wrong.",
+    //     subtitle: "Before we send the error to our skunks, please describe what happened before the error occured.",
+    //     subtitle2: "This is completly optional."
+    //   });
+    // }
     return event;
   },
 

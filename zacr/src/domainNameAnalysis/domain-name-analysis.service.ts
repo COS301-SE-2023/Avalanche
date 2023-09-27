@@ -88,7 +88,7 @@ export class DomainNameAnalysisService {
             '(s)',
           data: data.data,
           filters: data.filters,
-          chartType: ChartType.Bubble,
+          chartType: ChartType.TreeMap,
           warehouse: 'zacr',
           graphType: 'domainNameAnalysis/count',
         },
@@ -143,14 +143,12 @@ export class DomainNameAnalysisService {
         };
 
         const jsonData: any[] = responseData.data.data;
-        jsonData.forEach((item) => {
-          delete item.domains;
-        });
-        jsonData.unshift({ xAxis: 'word', yAxis: 'frequency' });
+        const newJsonData: any = this.formatClassification(jsonData);
+        newJsonData.unshift({ xAxis: 'category', yAxis: 'count' });
 
         const graphData = {
           chartData: formattedData,
-          jsonData: jsonData,
+          jsonData: newJsonData,
         };
 
         data = { data: graphData, filters: {} };
@@ -172,7 +170,7 @@ export class DomainNameAnalysisService {
             ' ' +
             granularity +
             '(s)',
-          data: data,
+          data: data.data,
           chartType: ChartType.Bubble,
           warehouse: 'zacr',
           graphType: 'domainNameAnalysis/classification',

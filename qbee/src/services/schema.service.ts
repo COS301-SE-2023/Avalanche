@@ -60,6 +60,8 @@ export class SchemaService {
       } else if (stats.isFile() && path.extname(file) === '.json') {
         const schema = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
         const url = `${prefix}/${path.basename(file, '.json')}`;
+        console.log(url);
+        console.log(this.schemas);
         this.schemas[url] = schema;
       }
     });
@@ -107,7 +109,7 @@ export class SchemaService {
     return true; // User has access to everything specified in the query
   }
 
-  checkFilterPermissions(tou, query, schema) {
+  checkFilterPermissions(tou: string, query: any, schema: SchemaDetail) {
     function checkFilterGroup(filterGroup) {
       for (const condition of filterGroup.conditions) {
         // Check if the condition is itself a nested filter group
@@ -194,11 +196,13 @@ export class SchemaService {
           table: columnDetail.table,
         };
 
+        console.log(columnDetail);
+
         // Check if user is allowed to view this column
         if (columnDetail.view.includes(tou)) {
           transformedColumn.view = true;
           // Check if user is allowed to filter this column
-          const filterPermission = columnDetail.filter.find(
+          const filterPermission = columnDetail.filter?.find(
             (filter) => filter.tou === tou && filter.filter === true,
           );
           if (filterPermission) {
@@ -216,7 +220,7 @@ export class SchemaService {
           transformedColumns.push(transformedColumn);
         } else {
           transformedColumn.view = true;
-          const filterPermission = columnDetail.filter.find(
+          const filterPermission = columnDetail.filter?.find(
             (filter) => filter.tou === tou && filter.filter === true,
           );
           if (filterPermission) {
@@ -231,7 +235,6 @@ export class SchemaService {
         }
       }
     }
-
     return transformedColumns;
   }
 }

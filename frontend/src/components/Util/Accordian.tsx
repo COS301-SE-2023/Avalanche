@@ -1,4 +1,3 @@
-import { ReactNode } from "react";
 import Image from "next/image";
 
 interface IAccordian {
@@ -28,7 +27,7 @@ export default function Accordian({
         <button
           type="button"
           className={`flex items-center justify-between w-full p-5 font-medium text-left text-gray-500 border ${!finalQ ? 'border-b-0' : ''} border-gray-200 ${firstQ ? 'rounded-t-xl' : ''} focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800`}
-        onClick={() => toggleSection(sectionId)}
+          onClick={() => toggleSection(sectionId)}
           aria-expanded={activeSection === sectionId}
           aria-controls={`${sectionId}-content`}
         >

@@ -111,11 +111,11 @@ export default function CreateCustomDashboard() {
         const dataaaaaaaaa = [] as any;
 
         graphs.forEach((g: any) => {
-            const d = g?.endpointName?.split("/");
+            const d: string[] = g?.endpointName?.split("/");
             const warehouse = g?.warehouse || d[0];
-            const type = g?.type || d[1];
+            const type = g?.type || d.join("/");
             const gg = {
-                endpointName: warehouse + "/" + type,
+                endpointName: g?.endpointName,
                 graphName: g?.name || g?.graphName,
                 filters: g?.filters,
                 comments: g?.comments || []
@@ -156,11 +156,11 @@ export default function CreateCustomDashboard() {
         const data = [] as any;
 
         graphs.forEach((g: any) => {
-            const d = g.endpointName?.split("/");
+            const d: string[] = g.endpointName?.split("/");
             const warehouse = g.warehouse || d[0];
-            const type = g.type || d[1];
+            const type = g.type || d.join("/");
             const gg = {
-                endpointName: warehouse + "/" + type,
+                endpointName: warehouse + "/" + g.type,
                 graphName: g.name || g.graphName,
                 filters: g.filters,
             };

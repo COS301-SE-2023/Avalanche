@@ -24,6 +24,7 @@ import ChartCardError from './ChartCardError';
 import HomeCard from './HomeCard';
 import FilterTooltip from './FilterTooltip';
 import Accordian from './Accordian';
+import Toggle from './Toggle';
 
 export {
     DangerAlert,
@@ -52,4 +53,5 @@ export {
     HomeCard,
     FilterTooltip,
     Accordian,
+    Toggle,
 };
