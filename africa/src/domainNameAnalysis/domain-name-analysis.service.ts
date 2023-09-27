@@ -86,7 +86,7 @@ export class DomainNameAnalysisService {
             '(s)',
           data: data.data,
           filters: data.filters,
-          chartType: ChartType.Bubble,
+          chartType: ChartType.TreeMap,
           warehouse: 'africa',
           graphType: 'domainNameAnalysis/count',
         },
@@ -170,7 +170,7 @@ export class DomainNameAnalysisService {
             granularity +
             '(s)',
           data: data.data,
-          chartType: ChartType.Bubble,
+          chartType: ChartType.TreeMap,
           warehouse: 'africa',
           graphType: 'domainNameAnalysis/classification',
         },

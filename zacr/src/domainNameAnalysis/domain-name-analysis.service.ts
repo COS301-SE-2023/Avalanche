@@ -171,7 +171,7 @@ export class DomainNameAnalysisService {
             granularity +
             '(s)',
           data: data.data,
-          chartType: ChartType.Bubble,
+          chartType: ChartType.TreeMap,
           warehouse: 'zacr',
           graphType: 'domainNameAnalysis/classification',
         },
