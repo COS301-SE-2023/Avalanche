@@ -7,6 +7,7 @@
   <img src="https://github.com/COS301-SE-2023/Avalanche/actions/workflows/javaTest.yml/badge.svg">
   <a href="https://codecov.io/github/COS301-SE-2023/Avalanche" > 
  <img src="https://codecov.io/github/COS301-SE-2023/Avalanche/branch/working/graph/badge.svg?token=Q021VJLYQ8"/> 
+ <img src="https://uptime.betterstack.com/status-badges/v1/monitor/uypo.svg"/>
  </a>
 
 </div>
