@@ -77,7 +77,7 @@ export const qbeeSlice = createSlice({
             };
           });
         builder.addCase(getData.fulfilled, (state, action) => {
-            SuccessToast({ text: "Successfully saved 🐝 No actually this time 👀" })
+            SuccessToast({ text: "Successfully saved 🐝 " })
             state.loading = false;
             state.outputData = action.payload;
         })
