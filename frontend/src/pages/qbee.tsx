@@ -420,18 +420,6 @@ function Flow() {
 	};
 
 	/**
-	 * I use this for when I have to render that side block with the options
-	 */
-	useEffect(() => {
-		const node = nodes.find((item) => item.selected);
-		if (node?.id === "SelectGroup") setSelectedPanel(node.id);
-		if (node?.id === "FilterGroup") setSelectedPanel(node.id);
-		if (node?.type === "outputNode") setSelectedPanel(node.type);
-		if (node === null || node === undefined) setSelectedPanel("blocks")
-		dispatch(QBeeSetNodes(copy(nodes)));
-	}, [nodes]);
-
-	/**
 	 * Quick connect to end
 	 * @param from 
 	 * @param to 
