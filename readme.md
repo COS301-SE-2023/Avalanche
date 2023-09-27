@@ -4,6 +4,7 @@
   <img src="https://github.com/COS301-SE-2023/Avalanche/actions/workflows/tests.yml/badge.svg">
   <img src="https://github.com/COS301-SE-2023/Avalanche/actions/workflows/test.yml/badge.svg">
   <img src="https://github.com/COS301-SE-2023/Avalanche/actions/workflows/deployment.yml/badge.svg">
+  <img src="https://github.com/COS301-SE-2023/Avalanche/actions/workflows/javaTest.yml/badge.svg">
   <a href="https://codecov.io/github/COS301-SE-2023/Avalanche" > 
  <img src="https://codecov.io/github/COS301-SE-2023/Avalanche/branch/working/graph/badge.svg?token=Q021VJLYQ8"/> 
  </a>
@@ -12,7 +13,10 @@
 
 COS301 Capstone Project for [Domain Name Services (Pty) Ltd](https://dns.business/).
 
-Avalanche is a data analytics tool with flavor as an information management system that is built around the Snowflake® data warehouse. Avalanche will enhance customers of DNS products and services by providing business analytic information, such as projected growth, enhancing the view of investments and to domain registrars’ customers and non-DNS customers alike.
+Avalanche is a data analytics tool with flavor as an information management system that is built around the Snowflake® data warehouse. Avalanche will enhance customers of DNS products and services by providing business analytic information, such as projected growth, enhancing the view of investments and to domain registrars’ customers and non-DNS customers alike. 
+Avalanche does this through Registry Insights and Domain Name Intelligence. 
+Avalanche also provides branch protection services in the Domain Space through Domain Watch.
+
 
 ## Documentation
 ### Demo 1
