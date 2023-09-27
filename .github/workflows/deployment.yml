@@ -5,11 +5,11 @@ on:
     branches:
       - working
       - stable
-  # workflow_run:
-  #   workflows: ["🖥️ Tests"]
-  #   branches: [working, stable]
-  #   types:
-  #     - completed
+  workflow_run:
+    workflows: ["🖥️ Tests"]
+    branches: [working, stable]
+    types:
+      - completed
 
 permissions:
   contents: read
