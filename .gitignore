@@ -445,3 +445,4 @@ docker-compose.yml.1
 node_modules
 zeus/.env
 gatekeeper/.env
+Services/DomainNameAnalysis/domain_name_analysis/test requests/test.http
