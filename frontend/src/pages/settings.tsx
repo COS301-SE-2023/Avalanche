@@ -15,7 +15,7 @@ import GeneralSettings from "@/components/Settings/General";
 import DataProducts from "@/components/Settings/DataProducts";
 import introJs from 'intro.js';
 import 'intro.js/introjs.css';
-//import 'intro.js/themes/introjs-modern.css';
+import 'intro.js/themes/introjs-modern.css';
 
 export default function Settings() {
 
