@@ -30,8 +30,8 @@ export default function FAQPage() {
       <MainContent>
         <div className="flex justify-between items-center">
           <PageHeader
-            title="FAQ"
-            subtitle="Frequently Asked Questions"
+            title="Help"
+            subtitle="Are you stuck? Get your answers here"
             icon={<QuestionMarkCircleIcon className="h-16 w-16 text-black dark:text-white" />}
           />
         </div>
