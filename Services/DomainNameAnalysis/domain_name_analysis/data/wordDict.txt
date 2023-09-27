@@ -2,7 +2,7 @@ solutions,services
 projects,services
 projects,industrial
 africa,personorplace
-online,tech
+online,technology
 homedecor,creative
 media,media
 auto,automotive
@@ -201,7 +201,7 @@ podcasting,creative
 visualeffects,creative
 conceptart,creative
 mural,creative
-freelance,service
+freelance,services
 creativedirection,creative
 digitalart,creative
 gamedesign,creative
@@ -321,7 +321,7 @@ pupil,education
 mathematics,education
 science,education
 history,education
-physical,health
+physical,healthcare
 professional,services
 tutor,education
 homeschooling,education
@@ -580,7 +580,7 @@ taxpreparation,services
 movers,services
 licensing,services
 auditing,services
-auditor,service
+auditor,services
 recruitment,services
 education,education
 softwaredevelopment,technology
@@ -720,8 +720,8 @@ product,commerce
 commodity,commerce
 tradeshow,commerce
 marketresearch,commerce
-survey,service
-analytics,service
+survey,services
+analytics,services
 pointofsale,commerce
 catalog,commerce
 sku,commerce
@@ -910,7 +910,7 @@ digitalmarketing,technology
 fintech,technology
 e-learning,technology
 telecommunications,technology
-storage,service
+storage,services
 scalability,technology
 loadbalancing,technology
 redundancy,technology
@@ -945,8 +945,8 @@ incubator,technology
 accelerator,technology
 crowdfunding,commerce
 angelinvestor,commerce
-freelancing,service
-contentmanagement,service
+freelancing,services
+contentmanagement,services
 b2b,technology
 b2c,technology
 innovation,technology
@@ -994,7 +994,7 @@ vacation,travel
 vac,travel
 holiday,travel
 adventure,travel
-roadtrip,travelphotography
+roadtrip,travel
 camping,travel
 glamping,travel
 expedition,travel
@@ -1014,7 +1014,7 @@ culturalexchange,travel
 foreigncurrency,travel
 exchangerate,travel
 travelinsurance,travel
-safety,service
+safety,services
 customs,travel
 immigration,travel
 layover,travel
