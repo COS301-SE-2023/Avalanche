@@ -35,7 +35,7 @@ export default function OrBlock({ data }: NodeProps<NodeData>) {
         />
         {/* End of Handles */}
         <div className='p-2 flex items-center justify-center pr-4 pl-4'>
-            <h6 className='text-xl'>Match Any<br></br>(Or)</h6>
+            <h6 className='text-xl'>MATCH ANY<br></br>(OR)</h6>
         </div>
     </div>;
 }

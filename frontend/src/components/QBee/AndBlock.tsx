@@ -35,7 +35,7 @@ export default function AndBlock({ data }: NodeProps<NodeData>) {
         />
         {/* End of Handles */}
         <div className='p-2 flex items-center justify-center pr-4 pl-4'>
-            <h6 className='text-xl'>And</h6>
+            <h6 className='text-xl'>AND</h6>
         </div>
     </div>;
 }

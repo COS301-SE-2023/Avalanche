@@ -9,7 +9,6 @@ import ReactFlow, {
 	BackgroundVariant,
 	Panel,
 	ReactFlowProvider,
-	useReactFlow,
 	Node,
 	Edge,
 	applyEdgeChanges,
@@ -22,7 +21,6 @@ import ReactFlow, {
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { useRouter } from "next/router";
-import Dagre from "@dagrejs/dagre";
 import { v4 as uuidv4 } from "uuid";
 import { randomRange } from "@/utils";
 import {
@@ -645,7 +643,7 @@ function Flow() {
 						fitView
 						defaultEdgeOptions={{ animated: true, zIndex: 1, }}
 						edgeUpdaterRadius={200}
-						connectionRadius = {200}
+						connectionRadius={200}
 						onNodesChange={onNodesChange}
 						onEdgesChange={onEdgesChange}
 						onConnect={onConnect}
