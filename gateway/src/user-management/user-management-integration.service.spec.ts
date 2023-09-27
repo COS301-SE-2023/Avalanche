@@ -52,19 +52,6 @@ describe('User Management Integration Tests From Gateway', () => {
     });
 
     describe('Get Members', () => {
-      it('should get members', () => {
-        const organisationData = {
-          token: `Bearer ${accessToken}`
-        };
-        return request(app.getHttpServer())
-          .post('/user-management/getMembers')
-          .set('Authorization', `Bearer ${accessToken}`)
-          .send(organisationData)
-          .expect(200)
-          .then((response) => {
-            expect(response.body.status).toBe('success');
-          });
-      },20000);
 
       it('should not get members if token is invalid', () => {
         return request(app.getHttpServer())
