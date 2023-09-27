@@ -16,11 +16,13 @@ import DataProducts from "@/components/Settings/DataProducts";
 import introJs from 'intro.js';
 import 'intro.js/introjs.css';
 import 'intro.js/themes/introjs-modern.css';
+import { CookiesProvider, useCookies } from "react-cookie";
 
 export default function Settings() {
 
     const modalState = useSelector(selectModalManagerState);
     const user = useSelector(userState);
+    const [cookies, setCookie, removeCookie] = useCookies(["startedIntegrationLoginA"])
 
     /**
      * This is just calling the NextJS router so we can reference it later on in the code
@@ -90,9 +92,7 @@ export default function Settings() {
                 }
             ]
         }).start();
-
-        
-        
+        setCookie("startedIntegrationLoginA", "Started login tutorial");
     }
 
     /**
