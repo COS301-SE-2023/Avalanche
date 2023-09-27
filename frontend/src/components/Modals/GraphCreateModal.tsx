@@ -3,7 +3,7 @@ import { userState } from '@/store/Slices/userSlice';
 import { Transition } from '@headlessui/react';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Dropdown, ErrorToast, Input, InputLabel, SubmitButton } from '../Util';
+import { BetterDropdown, Dropdown, ErrorToast, Input, InputLabel, SubmitButton } from '../Util';
 import { ModalWrapper } from './ModalOptions';
 
 interface ICreateGroupModal {
