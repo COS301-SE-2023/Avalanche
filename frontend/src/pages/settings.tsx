@@ -7,7 +7,7 @@ import 'intro.js/themes/introjs-modern.css';
 import { CookiesProvider, useCookies } from "react-cookie";
 import GeneralSettings from "@/components/Settings/General";
 import OrganizationSettings from "@/components/Settings/Organizations";
-import { MainContent } from "@/components/Util";
+import { MainContent, SubmitButton } from "@/components/Util";
 import PageHeader from "@/components/Util/PageHeader";
 import { selectModalManagerState } from '@/store/Slices/modalManagerSlice';
 import { userState } from "@/store/Slices/userSlice";
