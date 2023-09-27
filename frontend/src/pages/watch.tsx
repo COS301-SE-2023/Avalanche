@@ -348,7 +348,7 @@ export default function Settings() {
 
                     {/* Buttons */}
                     <div className="flex gap-2">
-                        <SubmitButton loading={watchState.loading} disabled={watchState.loading} text="Get the Domains!" onClick={() => { }} />
+                        <SubmitButton loading={watchState.loading} disabled={watchState.loading} text="Get the Domains" onClick={() => { }} />
                         {!watchState.loading && watchState.data.length > 0 && <AlternativeButton text="Clear Results" onClick={() => { }} />}
                     </div>
                 </form>

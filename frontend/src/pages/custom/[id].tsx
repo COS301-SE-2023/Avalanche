@@ -30,6 +30,7 @@ export default function CreateCustomDashboard() {
     const [name, setName] = useState<string>("");
     const id = router.query.id as string || document.location.pathname.split("/")[2];
     const [newDash, setNewDash] = useState<boolean>(true);
+    const [saved, setSaved] = useState<boolean>(false);
     const [editName, setEditName] = useState<boolean>(false);
 
     const [graphs, setGraphs] = useState<any>([]);
@@ -46,14 +47,24 @@ export default function CreateCustomDashboard() {
         const dash = stateUser.user.dashboards?.find((item: any) => item.dashboardID == id);
         if (!dash) {
             setGraphs([]);
+            setName("");
             setNewDash(true);
+            setSaved(false);
             return;
         };
         setName(dash.name);
         setGraphs([...dash.graphs]);
         setNewDash(false);
+        setSaved(true);
     }, [id])
 
+    /**
+     * Updates a graph
+     * @param graphName 
+     * @param endpoint 
+     * @param requestObject 
+     * @returns 
+     */
     const updateGraph = (graphName: string, endpoint: string, requestObject: any) => {
 
         let temp = [...graphs] as any[];
@@ -70,10 +81,16 @@ export default function CreateCustomDashboard() {
 
     }
 
+    /**
+     * Renders the graphs
+     */
     const renderGraphs = () => {
         return graphs.map((graph: any, index: number) => <CustomChartCard title={graph.name} defaultGraph={ChartType.Line} data={graph} key={index} state={stateGraph} id={id} updateGraph={updateGraph} />);
     }
 
+    /**
+     * Updates dashboard
+     */
     const updateDashboard = async () => {
 
         if (newDash) return ErrorToast({ text: "Something went wrong while creating this dashboard. It seems that it doesn't exist." });
@@ -118,6 +135,9 @@ export default function CreateCustomDashboard() {
 
     }
 
+    /**
+     * Creates a new dashboard
+     */
     const createDashboard = async () => {
         if (!newDash) return ErrorToast({ text: 'Something went wrong while creating this dashboard. It seems that it already exists.' });
 
@@ -151,6 +171,7 @@ export default function CreateCustomDashboard() {
                 }
             }).json() as any;
             dispatch(updateDashboards(res.message));
+            setSaved(true);
             return SuccessToast({ text: "Successfully created dashboard." })
         } catch (e) {
             let error = e as HTTPError;
@@ -159,7 +180,6 @@ export default function CreateCustomDashboard() {
                 return ErrorToast({ text: errorJson.message });
             }
         }
-
     }
 
     return (<>
@@ -190,14 +210,13 @@ export default function CreateCustomDashboard() {
                                 }} />
                             </div>
                         </div>}
-                        <p className="text-lg text-gray-400">{id}</p>
                     </div>
                 </div>
                 <div className="flex gap-5 w-full lg:w-max">
-                    {graphs.length > 0 && !newDash && <SubmitButton text="Update Dashboard" className="flex-auto" onClick={() => {
+                    {graphs.length > 0 && saved && <SubmitButton text="Update Dashboard" className="flex-auto" onClick={() => {
                         updateDashboard();
                     }} />}
-                    {graphs.length > 0 && newDash && <SubmitButton text="Create Dashboard" className="flex-auto" onClick={() => {
+                    {graphs.length > 0 && newDash && !saved && <SubmitButton text="Create Dashboard" className="flex-auto" onClick={() => {
                         createDashboard();
                     }} />}
                     <SubmitButton text="Add a Graph" onClick={() => {
