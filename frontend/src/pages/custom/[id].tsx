@@ -21,7 +21,8 @@ import { updateDashboards } from "@/store/Slices/userSlice";
 import NoFind from "@/components/CustomSVG/NoFind";
 import introJs from 'intro.js';
 import 'intro.js/introjs.css';
-import 'intro.js/themes/introjs-modern.css'
+import 'intro.js/themes/introjs-modern.css';
+import { CookiesProvider, useCookies } from "react-cookie";
 
 
 export default function CreateCustomDashboard() {
@@ -37,6 +38,8 @@ export default function CreateCustomDashboard() {
     const [editName, setEditName] = useState<boolean>(false);
 
     const [graphs, setGraphs] = useState<any>([]);
+
+    const [cookies, setCookie, removeCookie] = useCookies(["startedGraphTutorialA", "startedGraphTutorialB"])
 
     const addToGraphs = (graph: any) => {
         const temp = [...graphs];
@@ -59,20 +62,24 @@ export default function CreateCustomDashboard() {
     }, [id])
 
     useEffect(() => {
-        if(document.getElementsByClassName("grid gap-4 mb-4 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2")[0]){
-            const saveButton = document.getElementsByClassName("flex gap-5 w-full lg:w-max")[0] as HTMLElement
-            console.log(saveButton)
-            if(saveButton){
-                introJS.exit(true)
-                introJS.setOptions({
-                    steps: [
-                        {
-                            element: saveButton,
-                            intro: "Don't forget to save the dashboard! There you have it, easy as pie"
-                        }
-                    ]
-                })
-                introJS.start()
+        console.log(cookies.startedGraphTutorialB)
+        if (cookies.startedGraphTutorialB) {
+            if (document.getElementsByClassName("grid gap-4 mb-4 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2")[0]) {
+                const saveButton = document.getElementsByClassName("flex gap-5 w-full lg:w-max")[0] as HTMLElement
+                console.log(saveButton)
+                if (saveButton) {
+                    introJS.exit(true)
+                    introJS.setOptions({
+                        steps: [
+                            {
+                                element: saveButton,
+                                intro: "Don't forget to save the dashboard! There you have it, easy as pie"
+                            }
+                        ]
+                    })
+                    introJS.start()
+                    removeCookie("startedGraphTutorialB")
+                }
             }
         }
     })
@@ -203,9 +210,7 @@ export default function CreateCustomDashboard() {
                 }
             ]
         }).start();
-
-        
-        
+        setCookie("startedGraphTutorialA", "tutorialStarted");
     }
 
     const getElement = (name: string): HTMLElement => {
@@ -254,7 +259,7 @@ export default function CreateCustomDashboard() {
                     }} />}
                     {graphs.length > 0 && newDash && <SubmitButton text="Create Dashboard" className="flex-auto" onClick={() => {
                         createDashboard();
-                    }}/>}
+                    }} />}
                     <SubmitButton text="Add a Graph" onClick={() => {
                         dispatch(setCurrentOpenState("GRAPH.AddGraph"))
                         introJS.exit(true)
