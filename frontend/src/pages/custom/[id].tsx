@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-css-tags */
 import Sidebar from "@/components/Navigation/SideBar"
 import { PencilIcon, CpuChipIcon, XMarkIcon, CheckIcon } from "@heroicons/react/24/solid"
 import Head from "next/head"
@@ -18,6 +19,10 @@ import ky, { HTTPError } from "ky"
 import { getCookie } from "cookies-next"
 import { updateDashboards } from "@/store/Slices/userSlice";
 import NoFind from "@/components/CustomSVG/NoFind";
+import introJs from 'intro.js';
+import 'intro.js/introjs.css';
+import 'intro.js/themes/introjs-modern.css';
+import { CookiesProvider, useCookies } from "react-cookie";
 
 
 export default function CreateCustomDashboard() {
@@ -33,6 +38,8 @@ export default function CreateCustomDashboard() {
     const [editName, setEditName] = useState<boolean>(false);
 
     const [graphs, setGraphs] = useState<any>([]);
+
+    const [cookies, setCookie, removeCookie] = useCookies(["startedGraphTutorialA", "startedGraphTutorialB"])
 
     const addToGraphs = (graph: any) => {
         const temp = [...graphs];
@@ -53,6 +60,29 @@ export default function CreateCustomDashboard() {
         setGraphs([...dash.graphs]);
         setNewDash(false);
     }, [id])
+
+    useEffect(() => {
+        console.log(cookies.startedGraphTutorialB)
+        if (cookies.startedGraphTutorialB) {
+            if (document.getElementsByClassName("grid gap-4 mb-4 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2")[0]) {
+                const saveButton = document.getElementsByClassName("flex gap-5 w-full lg:w-max")[0] as HTMLElement
+                console.log(saveButton)
+                if (saveButton) {
+                    introJS.exit(true)
+                    introJS.setOptions({
+                        steps: [
+                            {
+                                element: saveButton,
+                                intro: "Don't forget to save the dashboard! There you have it, easy as pie"
+                            }
+                        ]
+                    })
+                    introJS.start()
+                    removeCookie("startedGraphTutorialB")
+                }
+            }
+        }
+    })
 
     const updateGraph = (graphName: string, endpoint: string, requestObject: any) => {
 
@@ -162,6 +192,33 @@ export default function CreateCustomDashboard() {
 
     }
 
+    const introJS = introJs();
+    const startTut = () => {
+        introJS.setOptions({
+            steps: [
+                {
+                    intro: 'Welcome! This tutorial will walk you through making you own Custom Dashboard!',
+                    title: "Custom Dashboard Tutorial"
+                },
+                {
+                    element: document.getElementsByClassName('w-4 h-4 right-0 top-0 hover:cursor-pointer hover:text-avalancheBlue duration-75 hover:scale-125')[0] as HTMLElement,
+                    intro: 'Here you can choose the name you want for your Dashboard.',
+                },
+                {
+                    element: document.getElementsByClassName("flex gap-5 w-full lg:w-max")[0] as HTMLElement,
+                    intro: 'This button allows you to add graphs to your Dashboard.',
+                }
+            ]
+        }).start();
+        setCookie("startedGraphTutorialA", "tutorialStarted");
+    }
+
+    const getElement = (name: string): HTMLElement => {
+        const element = document.getElementsByClassName(name)[0] as HTMLElement
+        console.log(element)
+        return element
+    }
+
     return (<>
         <Head>
             <title>Dashboard</title>
@@ -173,6 +230,9 @@ export default function CreateCustomDashboard() {
             <div className="flex justify-between items-center flex-col lg:flex-row">
                 <div className="flex flex-row gap-2 items-center">
                     <CpuChipIcon className="h-16 w-16 text-black dark:text-white" />
+                    <SubmitButton text="Start tutorial" className="flex-auto" onClick={() => {
+                        startTut();
+                    }} />
                     <div>
                         {!editName && <h1 className="text-3xl text-gray-900 dark:text-white font-bold flex gap-2"><span>{name ? name : "Custom Dashboard"}</span> <PencilIcon className="w-4 h-4 right-0 top-0 hover:cursor-pointer hover:text-avalancheBlue duration-75 hover:scale-125" onClick={() => setEditName(true)} /></h1>}
                         {editName && <div className="flex gap-4">
@@ -202,6 +262,7 @@ export default function CreateCustomDashboard() {
                     }} />}
                     <SubmitButton text="Add a Graph" onClick={() => {
                         dispatch(setCurrentOpenState("GRAPH.AddGraph"))
+                        introJS.exit(true)
                     }} />
                 </div>
             </div>
