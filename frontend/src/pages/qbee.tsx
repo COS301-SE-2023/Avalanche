@@ -343,7 +343,7 @@ function Flow() {
 				},
 				position: { x: randomRange(350, 750), y: randomRange(150, 350) },
 				zIndex: 2,
-				deletable: true,
+				deletable: true
 			})
 		);
 	};
@@ -702,7 +702,7 @@ function Flow() {
 										onClick={() => addAndNode()}
 									/>
 									<SubmitButton
-										text="Add an OR Block"
+										text="Add a MATCH ANY Block"
 										className="w-full"
 										onClick={() => addOrNode()}
 									/>

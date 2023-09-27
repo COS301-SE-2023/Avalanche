@@ -49,5 +49,5 @@ export enum ComparisonOperator{
 
 export enum LogicalOperator { 
     and = 'AND',  
-    or = 'OR' 
+    or = 'MATCH ANY' 
 };
