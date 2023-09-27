@@ -511,7 +511,7 @@
             "to": "Dim Registrar Key",
             "columns": [
                 {
-                    "columnName": "Code",
+                    "columnName": "Registrar Code",
                     "columnType": "string",
                     "typeOfFilter": "inputbox",
                     "filterReturnType": "string",

@@ -152,7 +152,7 @@ export class DomainNameAnalysisService {
 
         data = { data: graphData, filters: {} };
         await this.redis.set(
-          `zacr` + sqlQuery + ` classification`,
+          `africa` + sqlQuery + ` classification`,
           JSON.stringify(data),
           'EX',
           24 * 60 * 60,
@@ -171,7 +171,7 @@ export class DomainNameAnalysisService {
             '(s)',
           data: data.data,
           chartType: ChartType.Bubble,
-          warehouse: 'zacr',
+          warehouse: 'africa',
           graphType: 'domainNameAnalysis/classification',
         },
         timestamp: new Date().toISOString(),

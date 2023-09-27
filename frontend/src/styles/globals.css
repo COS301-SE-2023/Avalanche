@@ -57,3 +57,9 @@ body {
   font-size: calc(12px + (0.5)*1vw);
 
 }
+
+.react-flow .react-flow__handle {
+  width: 12px;
+  height: 17px;
+  border-radius: 5px;
+}
