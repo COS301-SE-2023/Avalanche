@@ -18,6 +18,7 @@ import ReactFlow, {
 	OnEdgesChange,
 	OnConnect,
 	Connection,
+	Handle,
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { useRouter } from "next/router";
@@ -342,6 +343,7 @@ function Flow() {
 				},
 				position: { x: randomRange(350, 750), y: randomRange(150, 350) },
 				zIndex: 2,
+				deletable: true,
 			})
 		);
 	};
@@ -372,6 +374,7 @@ function Flow() {
 					update: updateNode,
 				},
 				position: { x: randomRange(350, 750), y: randomRange(150, 350) },
+				deletable: true
 			})
 		);
 	};
@@ -392,6 +395,7 @@ function Flow() {
 					connectTo: [QBeeRole.filterBlock, QBeeRole.orBlock],
 				},
 				position: { x: randomRange(350, 750), y: randomRange(150, 350) },
+				deletable: true
 			})
 		);
 	};
@@ -412,6 +416,7 @@ function Flow() {
 					connectTo: [QBeeRole.filterBlock, QBeeRole.orBlock],
 				},
 				position: { x: randomRange(350, 750), y: randomRange(150, 350) },
+				deletable: true,
 			})
 		);
 	};
@@ -638,7 +643,9 @@ function Flow() {
 						nodes={nodes}
 						edges={edges}
 						fitView
-						defaultEdgeOptions={{ animated: true, zIndex: 1 }}
+						defaultEdgeOptions={{ animated: true, zIndex: 1, }}
+						edgeUpdaterRadius={200}
+						connectionRadius = {200}
 						onNodesChange={onNodesChange}
 						onEdgesChange={onEdgesChange}
 						onConnect={onConnect}
@@ -647,6 +654,7 @@ function Flow() {
 						}}
 						nodeTypes={nodeTypes}
 						defaultViewport={{ x: 0, y: 0, zoom: 0.1 }}
+						style={{}}
 					>
 						<Controls />
 						<Background color="#ccc" variant={BackgroundVariant.Dots} />
