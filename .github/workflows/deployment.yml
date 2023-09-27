@@ -6,7 +6,7 @@ on:
       - working
       - stable
   workflow_run:
-    workflows: ["🖥️ Tests"]
+    workflows: [🖥️ Tests]
     branches: [working, stable]
     types:
       - completed
