@@ -17,7 +17,7 @@ interface IInitState {
     loading: boolean,
     error: string,
     outputData: any[],
-    schema: string 
+    schema: string
 }
 
 const InitState: IInitState = {
@@ -72,17 +72,16 @@ export const qbeeSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(HYDRATE, (state, action) => {
             return {
-              ...state,
-              ...action,  
+                ...state,
+                ...action,
             };
-          });
+        });
         builder.addCase(getData.fulfilled, (state, action) => {
-            SuccessToast({ text: "Successfully saved 🐝 " })
+            SuccessToast({ text: "Successfully saved 🐝" })
             state.loading = false;
             state.outputData = action.payload;
         })
         builder.addCase(getData.pending, (state) => {
-            SuccessToast({ text: "We're working on it 👀" })
             state.loading = true;
             state.outputData = [];
         })
@@ -93,7 +92,6 @@ export const qbeeSlice = createSlice({
         })
         builder.addCase(getSchema.fulfilled, (state, action) => {
             state.data = action.payload;
-
             action.payload.forEach((item: DBData) => {
                 state.columns.push(item.columnName);
             })

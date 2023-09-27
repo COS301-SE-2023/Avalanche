@@ -4,7 +4,7 @@ import DataProducts from "@/components/Settings/DataProducts";
 import introJs from 'intro.js';
 import 'intro.js/introjs.css';
 import 'intro.js/themes/introjs-modern.css';
-import { CookiesProvider, useCookies } from "react-cookie";
+// import { CookiesProvider, useCookies } from "react-cookie";
 import GeneralSettings from "@/components/Settings/General";
 import OrganizationSettings from "@/components/Settings/Organizations";
 import { MainContent, SubmitButton } from "@/components/Util";
@@ -22,7 +22,7 @@ export default function Settings() {
 
     const modalState = useSelector(selectModalManagerState);
     const user = useSelector(userState);
-    const [cookies, setCookie, removeCookie] = useCookies(["startedIntegrationLoginA"])
+    // const [cookies, setCookie, removeCookie] = useCookies(["startedIntegrationLoginA"])
 
     /**
      * This is just calling the NextJS router so we can reference it later on in the code
@@ -78,22 +78,22 @@ export default function Settings() {
         );
     };
 
-    const introJS = introJs();
-    const startTut = () => {
-        introJS.setOptions({
-            steps: [
-                {
-                    intro: 'Welcome! This tutorial will walk you through integrating with a data product! This means changing your permission level, public is the default level.',
-                    title: "Integrate Data Product Tutorial"
-                },
-                {
-                    element: document.getElementsByClassName("text-white bg-primary-600 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:focus:ring-primary-800 inline-flex items-center justify-center flex-nowrap hover:bg-primary-700 dark:hover:bg-primary-700 ")[2] as HTMLElement,
-                    intro: 'Click here to start the integration process.',
-                }
-            ]
-        }).start();
-        setCookie("startedIntegrationLoginA", "Started login tutorial");
-    }
+    // const introJS = introJs();
+    // const startTut = () => {
+    //     introJS.setOptions({
+    //         steps: [
+    //             {
+    //                 intro: 'Welcome! This tutorial will walk you through integrating with a data product! This means changing your permission level, public is the default level.',
+    //                 title: "Integrate Data Product Tutorial"
+    //             },
+    //             {
+    //                 element: document.getElementsByClassName("text-white bg-primary-600 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:focus:ring-primary-800 inline-flex items-center justify-center flex-nowrap hover:bg-primary-700 dark:hover:bg-primary-700 ")[2] as HTMLElement,
+    //                 intro: 'Click here to start the integration process.',
+    //             }
+    //         ]
+    //     }).start();
+    //     setCookie("startedIntegrationLoginA", "Started login tutorial");
+    // }
 
     /**
      * Renders out the HTML
@@ -139,9 +139,6 @@ export default function Settings() {
             }
             {tab === "integrations" && <>
                 <DataProducts></DataProducts>
-                <SubmitButton text="Start tutorial" className="flex-auto" onClick={() => {
-                        startTut();
-                    }} />
             </>}
         </MainContent>
 

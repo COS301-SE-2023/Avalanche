@@ -4,11 +4,12 @@ import { Transition } from '@headlessui/react';
 import introJs from 'intro.js';
 import 'intro.js/introjs.css';
 import 'intro.js/themes/introjs-modern.css';
-import { CookiesProvider, useCookies } from "react-cookie";
+// import { CookiesProvider, useCookies } from "react-cookie";
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Dropdown, ErrorToast, Input, InputLabel, SubmitButton } from '../Util';
+import { BetterDropdown, Dropdown, ErrorToast, Input, InputLabel, SubmitButton } from '../Util';
 import { ModalWrapper } from './ModalOptions';
+import { getCookie, setCookie, deleteCookie } from 'cookies-next';
 
 interface ICreateGroupModal {
     state: any,
@@ -20,10 +21,10 @@ export default function GraphCreateModal({ state, add }: ICreateGroupModal) {
     const dispatch = useDispatch<any>();
     const stateUser = useSelector(userState);
     const introJS = introJs()
-    const [cookies, setCookie, removeCookie] = useCookies(["startedGraphTutorialA", "startedGraphTutorialB"])
+    // const [cookies, setCookie, removeCookie] = useCookies(["startedGraphTutorialA", "startedGraphTutorialB"])
 
     useEffect(() => {
-        if (cookies.startedGraphTutorialA) {
+        if (getCookie("customGraphTutorial")) {
             const startTut = () => {
                 introJS.setOptions({
                     steps: [
@@ -38,10 +39,10 @@ export default function GraphCreateModal({ state, add }: ICreateGroupModal) {
                 }).start();
             }
             startTut();
-            removeCookie("startedGraphTutorialA")
-            setCookie("startedGraphTutorialB", "Continue with tutorial")
+            deleteCookie("customGraphTutorial")
+            setCookie("customSaveGraph", true);
         }
-    }, [cookies.startedGraphTutorialA, introJS, removeCookie, setCookie])
+    }, [])
 
     // These two variables are the fields from the form. 
     const [name, setName] = useState<string>("");

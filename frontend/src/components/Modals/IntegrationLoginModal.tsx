@@ -4,10 +4,9 @@ import { getLatestOrganisation, getUserGroups } from "@/store/Slices/userSlice";
 import introJs from 'intro.js';
 import 'intro.js/introjs.css';
 import 'intro.js/themes/introjs-modern.css'
-import { CookiesProvider, useCookies } from "react-cookie";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
 import "animate.css";
-import { getCookie } from "cookies-next";
+import { getCookie, hasCookie, setCookie } from "cookies-next";
 import ky, { HTTPError } from "ky";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -27,48 +26,6 @@ import { ModalWrapper } from "./ModalOptions";
 interface IIntegrationLoginModal { }
 
 export default function IntegrationLoginModal({ }: IIntegrationLoginModal) {
-
-  const [tutorialPhase, setTutorialPhase] = useState<Number>(0);
-  const [cookies, setCookie, removeCookie] = useCookies(["startedIntegrationLoginA"])
-
-  const introJS = introJs()
-
-  useEffect(() => {
-    if (cookies.startedIntegrationLoginA) {
-      const startTut = () => {
-        introJS.setOptions({
-          steps: [
-            {
-              element: document.getElementsByClassName("bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4 dark:bg-dark-secondaryBackground")[0] as HTMLElement,
-              intro: 'Here, you will choose the warehouse which you would like to integrate with. You will need to provide your company email and the corresponing password to said email.',
-            },
-            // {
-            //   element: document.getElementsByClassName("py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-gray-400 rounded-lg hover:bg-avalancheBlue hover:text-white dark:bg-primaryBackground dark:text-gray-200  dark:hover:text-white dark:hover:bg-gray-700 w-full gap-2 flex justify-center transition duration-75")[0] as HTMLElement,
-            //   intro: ""
-            // }
-          ]
-        }).start();
-      }
-      if (tutorialPhase == 0) {
-        startTut();
-      } else if (tutorialPhase == 1) {
-        introJS.setOptions({
-          steps: [
-            {
-              element: document.getElementsByClassName("z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 w-full")[0] as HTMLElement,
-              intro: 'Please select which you would like to integrate with.',
-            }
-          ]
-        }).start()
-        removeCookie("startedIntegrationLoginA")
-      }
-    }
-
-  }, [cookies.startedIntegrationLoginA, introJS, removeCookie, tutorialPhase])
-
-
-
-
 
   const dispatch = useDispatch<any>();
 
@@ -93,6 +50,7 @@ export default function IntegrationLoginModal({ }: IIntegrationLoginModal) {
     },
     // add more items here
   ];
+
   /**
    * This state variable holds the integration data.
    */
@@ -195,7 +153,6 @@ export default function IntegrationLoginModal({ }: IIntegrationLoginModal) {
         text={valid ? integration.name : "Select Data Product"}
         onClick={() => {
           setDropdown(!dropdown);
-          setTutorialPhase(tutorialPhase.valueOf() + 1);
         }}
         icon={
           dropdown ? (
