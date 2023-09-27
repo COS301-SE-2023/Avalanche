@@ -1,13 +1,12 @@
 name: 🖥️ Deployment
 
 on:
-  push:
-    branches:
-      - working
-      - stable
+  # push:
+  #   branches:
+  #     - working
+  #     - stable
   workflow_run:
     workflows: ["🖥️ Tests"]
-    branches: [working, stable]
     types:
       - completed
 
