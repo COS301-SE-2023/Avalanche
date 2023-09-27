@@ -724,7 +724,7 @@ function Flow() {
 										query: convertToQuery(),
 										schema: qbee.schema
 									}));
-									SuccessToast({ text: "Sent request in..." })
+									SuccessToast({ text: "Sent Query to server... Please wait 🐝" })
 								}}
 							>
 								<CheckCircleIcon className="w-6 h-6" />
