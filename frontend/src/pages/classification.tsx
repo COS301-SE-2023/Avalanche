@@ -89,7 +89,7 @@ export default function Classification() {
         <MainContent>
             <div className="flex justify-between items-center">
                 <PageHeader title="Classification" subtitle="Insights at your fingertips" icon={<EyeIcon className="h-16 w-16 text-black dark:text-white" />} />
-                <SubmitButton text="Download Report" onClick={() => generatePDF()} />
+                {/* <SubmitButton text="Download Report" onClick={() => generatePDF()} /> */}
             </div>
             <DashboardBase state={stateGraph} />
         </MainContent>

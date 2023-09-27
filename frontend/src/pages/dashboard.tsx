@@ -88,7 +88,7 @@ export default function Dashboard() {
         <MainContent>
             <div className="flex justify-between items-center">
                 <PageHeader title="Transactions" subtitle="Gain insights into your transactional data" icon={<ChartBarSquareIcon className="h-16 w-16 text-black dark:text-white" />} />
-                <SubmitButton text="Download Report" onClick={() => generatePDF()} />
+                {/* <SubmitButton text="Download Report" onClick={() => generatePDF()} /> */}
             </div>
             <DashboardBase state={stateGraph} />
         </MainContent>

@@ -98,7 +98,7 @@ export default function DomainNameAnalysis() {
         <MainContent>
             <div className="flex justify-between items-center">
                 <PageHeader title="Domain Name Analysis" subtitle="Identifying trending keywords or themes" icon={<EyeIcon className="h-16 w-16 text-black dark:text-white" />} />
-                <SubmitButton text="Download Report" onClick={() => generatePDF()} />
+                {/* <SubmitButton text="Download Report" onClick={() => generatePDF()} /> */}
             </div>
             <DashboardBase state={stateGraph} />
         </MainContent>

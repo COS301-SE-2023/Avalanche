@@ -4,24 +4,55 @@
   <img src="https://github.com/COS301-SE-2023/Avalanche/actions/workflows/tests.yml/badge.svg">
   <img src="https://github.com/COS301-SE-2023/Avalanche/actions/workflows/test.yml/badge.svg">
   <img src="https://github.com/COS301-SE-2023/Avalanche/actions/workflows/deployment.yml/badge.svg">
+  <img src="https://github.com/COS301-SE-2023/Avalanche/actions/workflows/javaTest.yml/badge.svg">
   <a href="https://codecov.io/github/COS301-SE-2023/Avalanche" > 
  <img src="https://codecov.io/github/COS301-SE-2023/Avalanche/branch/working/graph/badge.svg?token=Q021VJLYQ8"/> 
+ <img src="https://uptime.betterstack.com/status-badges/v1/monitor/uypo.svg"/>
  </a>
 
 </div>
 
 COS301 Capstone Project for [Domain Name Services (Pty) Ltd](https://dns.business/).
 
-Avalanche is a data analytics tool with flavor as an information management system that is built around the Snowflake® data warehouse. Avalanche will enhance customers of DNS products and services by providing business analytic information, such as projected growth, enhancing the view of investments and to domain registrars’ customers and non-DNS customers alike.
+Avalanche is a data analytics tool with flavor as an information management system that is built around the Snowflake® data warehouse. Avalanche will enhance customers of DNS products and services by providing business analytic information, such as projected growth, enhancing the view of investments and to domain registrars’ customers and non-DNS customers alike. 
+Avalanche does this through Registry Insights and Domain Name Intelligence. 
+Avalanche also provides branch protection services in the Domain Space through Domain Watch.
+
 
 ## Documentation
 ### Demo 1
 [Presentation](https://www.canva.com/design/DAFjZPgvC5U/85tYwSR4TQRrY1IsCMRMnQ/edit?utm_content=DAFjZPgvC5U&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 ### Demo 2
 [Presentation](https://www.canva.com/design/DAFmoXptQFE/Q2WRO4Xh-WqBES16kIqZlQ/edit?utm_content=DAFmoXptQFE&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+### Demo 3
+[Presentation](https://www.canva.com/design/DAFqAarAXDU/VX4V5lgrwdrw-jLqVVZaoA/edit?utm_content=DAFqAarAXDU&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+### Demo 4
+[Presentation](https://www.canva.com/design/DAFvdUk_hzA/MK0AP6ZDBIasFFZCMRkw7A/edit?utm_content=DAFvdUk_hzA&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 ### Project Day
 ### Software Requirements Specification
+[Version 4](https://drive.google.com/file/d/1DG-BmbrTrOIz_Ocy4LRk1nyJB-U3HB_t/view?usp=sharing)
 ### Architecture Document
+[Diagram](https://drive.google.com/file/d/1DC8asn_DAmsRmkL2PPSq94rwneFpnJcI/view?usp=sharing)
+[Document](https://drive.google.com/file/d/1lHhVG2gV1xbwpKDBUw4x66x5ml6uCoqf/view?usp=sharing)
+
+### Deployment Diagram
+[Deployment](https://drive.google.com/file/d/1z7YSZsFszlQoGoMqzKv1W-sFsMQs6hPu/view?usp=sharing)
+
+### Testing Policy
+Including non-functional tests <br>
+[Document](https://drive.google.com/file/d/1gz5s7t90L4FPgcQVAvhROTATHbop0vVp/view?usp=sharing)
+
+### Coding Standards 
+[Document](https://drive.google.com/file/d/1_h3GI03gb5PSfFro5HLJp3HD4jjzRdAb/view?usp=sharing)
+
+### Installation Manual
+[Manual](https://drive.google.com/file/d/1l8FLuKjqoXAyFzKWE7P8_OPi-llG9Qa1/view?usp=sharing)
+
+### User Manual
+[Manual](https://github.com/COS301-SE-2023/Avalanche/blob/working/Docs/user-manual.md)
+
+### Project Board
+[Project Board](https://github.com/orgs/COS301-SE-2023/projects/13)
 
 ## Team Members
 <details><summary>Mark Botros - u21448109</summary><br>

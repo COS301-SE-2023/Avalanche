@@ -1,9 +1,12 @@
 import { IIntergrationLoginData as IData } from "@/interfaces";
 import { getEndpoints } from "@/store/Slices/permissionSlice";
 import { getLatestOrganisation, getUserGroups } from "@/store/Slices/userSlice";
+import introJs from 'intro.js';
+import 'intro.js/introjs.css';
+import 'intro.js/themes/introjs-modern.css'
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
 import "animate.css";
-import { getCookie } from "cookies-next";
+import { getCookie, hasCookie, setCookie } from "cookies-next";
 import ky, { HTTPError } from "ky";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -47,6 +50,7 @@ export default function IntegrationLoginModal({ }: IIntegrationLoginModal) {
     },
     // add more items here
   ];
+
   /**
    * This state variable holds the integration data.
    */
@@ -146,7 +150,7 @@ export default function IntegrationLoginModal({ }: IIntegrationLoginModal) {
     <ModalWrapper title="Add a new Data Product">
       {/* Modal Content */}
       <AlternativeButton
-        text={valid ? integration.name : "Select Date Product"}
+        text={valid ? integration.name : "Select Data Product"}
         onClick={() => {
           setDropdown(!dropdown);
         }}

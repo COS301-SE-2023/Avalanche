@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ErrorToast } from '../Util';
 import { ModalWrapper } from './ModalOptions';
+import md5 from 'md5';
 
 interface IGraphZoomModal {
     custom?: boolean
@@ -54,7 +55,7 @@ export default function GraphZoomModal({ custom }: IGraphZoomModal) {
         const graph = dash?.graphs?.find((item: any) => item.graphName === state.zoomedData?.graphName);
         return graph?.comments?.map((item: any, index: number) => (<div key={index} className="w-full p-4 text-gray-500 bg-white rounded-lg shadow dark:bg-gray-800 dark:text-gray-400" role="alert">
             <div className="flex">
-                <img className="w-8 h-8 rounded-full shadow-lg" src="https://github.com/michaelrosstarr.png" alt="Jese Leos image" />
+                <img className="w-8 h-8 rounded-full shadow-lg" src={`https://www.gravatar.com/avatar/${md5(stateUser.user.email)}`} alt="Jese Leos image" />
                 <div className="ml-3 text-sm font-normal">
                     <span className="mb-1 text-sm font-semibold text-gray-900 dark:text-white">{item.userName}</span>
                     <div className="mb-2 text-sm font-normal">{item.comment}</div>

@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-css-tags */
 import Sidebar from "@/components/Navigation/SideBar"
 import { PencilIcon, CpuChipIcon, XMarkIcon, CheckIcon } from "@heroicons/react/24/solid"
 import Head from "next/head"
@@ -18,7 +19,9 @@ import ky, { HTTPError } from "ky"
 import { getCookie } from "cookies-next"
 import { updateDashboards } from "@/store/Slices/userSlice";
 import NoFind from "@/components/CustomSVG/NoFind";
-
+import introJs from 'intro.js';
+import 'intro.js/introjs.css';
+import 'intro.js/themes/introjs-modern.css';
 
 export default function CreateCustomDashboard() {
     const dispatch = useDispatch<any>();
@@ -30,6 +33,7 @@ export default function CreateCustomDashboard() {
     const [name, setName] = useState<string>("");
     const id = router.query.id as string || document.location.pathname.split("/")[2];
     const [newDash, setNewDash] = useState<boolean>(true);
+    const [saved, setSaved] = useState<boolean>(false);
     const [editName, setEditName] = useState<boolean>(false);
 
     const [graphs, setGraphs] = useState<any>([]);
@@ -46,14 +50,53 @@ export default function CreateCustomDashboard() {
         const dash = stateUser.user.dashboards?.find((item: any) => item.dashboardID == id);
         if (!dash) {
             setGraphs([]);
+            setName("");
             setNewDash(true);
+            setSaved(false);
             return;
         };
         setName(dash.name);
         setGraphs([...dash.graphs]);
         setNewDash(false);
+        setSaved(true);
     }, [id])
 
+    // useEffect(() => {
+    //     if (!hasCookie("customTutorial")) {
+    //         startTut();
+    //     }
+    // }, []);
+
+    // useEffect(() => {
+    //     if (hasCookie("customSaveGraph") && getCookie("customSaveGraph")) {
+    //         if (document.getElementsByClassName("grid gap-4 mb-4 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2")[0]) {
+    //             const saveButton = document.getElementsByClassName("flex gap-5 w-full lg:w-max")[0] as HTMLElement
+    //             if (saveButton) {
+    //                 introJS.exit(true)
+    //                 introJS.setOptions({
+    //                     steps: [
+    //                         {
+    //                             element: saveButton,
+    //                             intro: "Don't forget to save the dashboard! There you have it, easy as pie"
+    //                         }
+    //                     ]
+    //                 })
+    //                 introJS.start()
+    //                 deleteCookie("customSaveGraph");
+    //                 deleteCookie("customSaveGraph");
+    //                 setCookie("customTutorial", false);
+    //             }
+    //         }
+    //     }
+    // }, [graphs])
+
+    /**
+     * Updates a graph
+     * @param graphName 
+     * @param endpoint 
+     * @param requestObject 
+     * @returns 
+     */
     const updateGraph = (graphName: string, endpoint: string, requestObject: any) => {
 
         let temp = [...graphs] as any[];
@@ -70,10 +113,16 @@ export default function CreateCustomDashboard() {
 
     }
 
+    /**
+     * Renders the graphs
+     */
     const renderGraphs = () => {
         return graphs.map((graph: any, index: number) => <CustomChartCard title={graph.name} defaultGraph={ChartType.Line} data={graph} key={index} state={stateGraph} id={id} updateGraph={updateGraph} />);
     }
 
+    /**
+     * Updates dashboard
+     */
     const updateDashboard = async () => {
 
         if (newDash) return ErrorToast({ text: "Something went wrong while creating this dashboard. It seems that it doesn't exist." });
@@ -118,6 +167,9 @@ export default function CreateCustomDashboard() {
 
     }
 
+    /**
+     * Creates a new dashboard
+     */
     const createDashboard = async () => {
         if (!newDash) return ErrorToast({ text: 'Something went wrong while creating this dashboard. It seems that it already exists.' });
 
@@ -151,6 +203,7 @@ export default function CreateCustomDashboard() {
                 }
             }).json() as any;
             dispatch(updateDashboards(res.message));
+            setSaved(true);
             return SuccessToast({ text: "Successfully created dashboard." })
         } catch (e) {
             let error = e as HTTPError;
@@ -159,8 +212,28 @@ export default function CreateCustomDashboard() {
                 return ErrorToast({ text: errorJson.message });
             }
         }
-
     }
+
+    // const introJS = introJs();
+    // const startTut = () => {
+    //     introJS.setOptions({
+    //         steps: [
+    //             {
+    //                 intro: 'Welcome! This tutorial will walk you through making you own Custom Dashboard!',
+    //                 title: "Custom Dashboard Tutorial"
+    //             },
+    //             {
+    //                 element: document.getElementsByClassName('w-4 h-4 right-0 top-0 hover:cursor-pointer hover:text-avalancheBlue duration-75 hover:scale-125')[0] as HTMLElement,
+    //                 intro: 'Here you can choose the name you want for your Dashboard.',
+    //             },
+    //             {
+    //                 element: document.getElementsByClassName("flex gap-5 w-full lg:w-max")[0] as HTMLElement,
+    //                 intro: 'This button allows you to add graphs to your Dashboard.',
+    //             }
+    //         ]
+    //     }).start();
+    //     setCookie("customGraphTutorial", true);
+    // }
 
     return (<>
         <Head>
@@ -173,6 +246,9 @@ export default function CreateCustomDashboard() {
             <div className="flex justify-between items-center flex-col lg:flex-row">
                 <div className="flex flex-row gap-2 items-center">
                     <CpuChipIcon className="h-16 w-16 text-black dark:text-white" />
+                    {/* <SubmitButton text="Start tutorial" className="flex-auto" onClick={() => {
+                        startTut();
+                    }} /> */}
                     <div>
                         {!editName && <h1 className="text-3xl text-gray-900 dark:text-white font-bold flex gap-2"><span>{name ? name : "Custom Dashboard"}</span> <PencilIcon className="w-4 h-4 right-0 top-0 hover:cursor-pointer hover:text-avalancheBlue duration-75 hover:scale-125" onClick={() => setEditName(true)} /></h1>}
                         {editName && <div className="flex gap-4">
@@ -190,14 +266,13 @@ export default function CreateCustomDashboard() {
                                 }} />
                             </div>
                         </div>}
-                        <p className="text-lg text-gray-400">{id}</p>
                     </div>
                 </div>
                 <div className="flex gap-5 w-full lg:w-max">
-                    {graphs.length > 0 && !newDash && <SubmitButton text="Update Dashboard" className="flex-auto" onClick={() => {
+                    {graphs.length > 0 && saved && <SubmitButton text="Update Dashboard" className="flex-auto" onClick={() => {
                         updateDashboard();
                     }} />}
-                    {graphs.length > 0 && newDash && <SubmitButton text="Create Dashboard" className="flex-auto" onClick={() => {
+                    {graphs.length > 0 && newDash && !saved && <SubmitButton text="Create Dashboard" className="flex-auto" onClick={() => {
                         createDashboard();
                     }} />}
                     <SubmitButton text="Add a Graph" onClick={() => {

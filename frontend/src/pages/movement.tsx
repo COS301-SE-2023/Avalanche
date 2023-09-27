@@ -97,7 +97,7 @@ export default function Movement() {
         <MainContent>
             <div className="flex justify-between items-center">
                 <PageHeader title="Nett Movement" subtitle="View the vertical movement of domains in your space" icon={<BoltIcon className="h-16 w-16 text-black dark:text-white" />} />
-                <SubmitButton text="Download Report" onClick={() => generatePDF()} />
+                {/* <SubmitButton text="Download Report" onClick={() => generatePDF()} /> */}
             </div>
             <DashboardBase state={stateGraph} />
         </MainContent>

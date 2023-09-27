@@ -1,10 +1,15 @@
 import { clearCurrentOpenState, setAnimateManagerState } from '@/store/Slices/modalManagerSlice';
 import { userState } from '@/store/Slices/userSlice';
 import { Transition } from '@headlessui/react';
+import introJs from 'intro.js';
+import 'intro.js/introjs.css';
+import 'intro.js/themes/introjs-modern.css';
+// import { CookiesProvider, useCookies } from "react-cookie";
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Dropdown, ErrorToast, Input, InputLabel, SubmitButton } from '../Util';
+import { BetterDropdown, Dropdown, ErrorToast, Input, InputLabel, SubmitButton } from '../Util';
 import { ModalWrapper } from './ModalOptions';
+import { getCookie, setCookie, deleteCookie } from 'cookies-next';
 
 interface ICreateGroupModal {
     state: any,
@@ -15,9 +20,28 @@ export default function GraphCreateModal({ state, add }: ICreateGroupModal) {
 
     const dispatch = useDispatch<any>();
     const stateUser = useSelector(userState);
+    const introJS = introJs()
+    // const [cookies, setCookie, removeCookie] = useCookies(["startedGraphTutorialA", "startedGraphTutorialB"])
 
     useEffect(() => {
-
+        if (getCookie("customGraphTutorial")) {
+            const startTut = () => {
+                introJS.setOptions({
+                    steps: [
+                        {
+                            element: document.getElementsByClassName("bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4 dark:bg-dark-secondaryBackground ")[0] as HTMLElement,
+                            intro: 'Here, you can choose which warehouse you want the data to come from, as well as the graph type. Go ahead and name your graph too.',
+                        }, {
+                            element: document.getElementsByClassName("w-full")[8] as HTMLElement,
+                            intro: "Once you have selected the warehouse, graph type and given your graph a name, click here to see the magic happen."
+                        }
+                    ]
+                }).start();
+            }
+            startTut();
+            deleteCookie("customGraphTutorial")
+            setCookie("customSaveGraph", true);
+        }
     }, [])
 
     // These two variables are the fields from the form. 
@@ -80,7 +104,7 @@ export default function GraphCreateModal({ state, add }: ICreateGroupModal) {
      */
     return (
         <ModalWrapper title="Add a Graph">
-            <form className="space-y-6 duration-75" onSubmit={(event) => formSubmit(event)}>
+            <form className="space-y-6 duration-75" onSubmit={(event) => formSubmit(event)} >
                 <div>
                     <InputLabel htmlFor='endpointDropdown' text='Warehouses' />
                     <Dropdown id='endpointDropdown' items={state.filters.map((item: any) => item.endpoint)} option={endpoint} set={setEndpoint} text="Select a warehouse" />

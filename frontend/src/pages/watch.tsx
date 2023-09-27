@@ -280,7 +280,7 @@ export default function Settings() {
 
         <MainContent>
             <div className="flex justify-between items-center">
-                <PageHeader title="Domain Watch" subtitle="Watch your Domains" icon={<MagnifyingGlassCircleIcon className="h-16 w-16 text-black dark:text-white" />} />
+                <PageHeader title="Domain Watch" subtitle="Uncover domain names similar to yours to protect your brand" icon={<MagnifyingGlassCircleIcon className="h-16 w-16 text-black dark:text-white" />} />
             </div>
             <div className="p-4">
                 <form className="space-y-4 md:space-y-6 mb-4" onSubmit={(e) => formSubmit(e)}>
@@ -348,7 +348,7 @@ export default function Settings() {
 
                     {/* Buttons */}
                     <div className="flex gap-2">
-                        <SubmitButton loading={watchState.loading} disabled={watchState.loading} text="Get the Domains!" onClick={() => { }} />
+                        <SubmitButton loading={watchState.loading} disabled={watchState.loading} text="Get the Domains" onClick={() => { }} />
                         {!watchState.loading && watchState.data.length > 0 && <AlternativeButton text="Clear Results" onClick={() => { }} />}
                     </div>
                 </form>

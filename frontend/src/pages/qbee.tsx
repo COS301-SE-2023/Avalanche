@@ -9,7 +9,6 @@ import ReactFlow, {
 	BackgroundVariant,
 	Panel,
 	ReactFlowProvider,
-	useReactFlow,
 	Node,
 	Edge,
 	applyEdgeChanges,
@@ -22,7 +21,6 @@ import ReactFlow, {
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { useRouter } from "next/router";
-import Dagre from "@dagrejs/dagre";
 import { v4 as uuidv4 } from "uuid";
 import { randomRange } from "@/utils";
 import {
@@ -422,18 +420,6 @@ function Flow() {
 	};
 
 	/**
-	 * I use this for when I have to render that side block with the options
-	 */
-	useEffect(() => {
-		const node = nodes.find((item) => item.selected);
-		if (node?.id === "SelectGroup") setSelectedPanel(node.id);
-		if (node?.id === "FilterGroup") setSelectedPanel(node.id);
-		if (node?.type === "outputNode") setSelectedPanel(node.type);
-		if (node === null || node === undefined) setSelectedPanel("blocks")
-		dispatch(QBeeSetNodes(copy(nodes)));
-	}, [nodes]);
-
-	/**
 	 * Quick connect to end
 	 * @param from 
 	 * @param to 
@@ -645,7 +631,7 @@ function Flow() {
 						fitView
 						defaultEdgeOptions={{ animated: true, zIndex: 1, }}
 						edgeUpdaterRadius={200}
-						connectionRadius = {200}
+						connectionRadius={200}
 						onNodesChange={onNodesChange}
 						onEdgesChange={onEdgesChange}
 						onConnect={onConnect}
@@ -726,7 +712,7 @@ function Flow() {
 										query: convertToQuery(),
 										schema: qbee.schema
 									}));
-									SuccessToast({ text: "Sent request in..." })
+									SuccessToast({ text: "Sent Query to server... Please wait 🐝" })
 								}}
 							>
 								<CheckCircleIcon className="w-6 h-6" />
