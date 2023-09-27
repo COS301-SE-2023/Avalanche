@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -11,64 +10,107 @@ import { RedisProvider } from './redis.provider';
 import { AnalysisService } from './analysis/analysis.service';
 import { GraphFormatService } from './graph-format/graph-format.service';
 import { SnowflakeService } from './snowflake/snowflake.service';
+import { MarketShareService } from './marketShare/marketShare.service';
+import { AgeService } from './age/age.service';
+import { DomainNameAnalysisService } from './domainNameAnalysis/domain-name-analysis.service';
+import { HttpModule } from '@nestjs/axios';
+import { DomainWatchService } from './domainWatch/domain-watch-analysis.service';
+import { MovementService } from './movement/movement.service';
+import { RegistrarNameService } from './registrarName/registrarName.service';
+import { QBeeService } from './qbee/qbee.service';
 
 @Module({
-  imports: [
-    ClientsModule.register([
-      {
-        name: 'ZACR_SERVICE',
-        transport: Transport.TCP,
-        options: {
-          host: 'localhost',
-          port: 4002,
-        },
-      },
-    ]),
-    JwtModule.registerAsync({
-      imports: [ConfigModule], 
-      useFactory: async (configService: ConfigService) => {
-        return {
-          secret: configService.get<string>('JWT_SECRET'), 
-          signOptions: { expiresIn: '24h' },
-        } as JwtModuleOptions;
-      },
-      inject: [ConfigService],
-    }),
-    ConfigModule.forRoot({ isGlobal: true }), 
-  ],
-  controllers: [AppController],
-  providers: [RedisProvider,
+  providers: [
+    RedisProvider,
     {
       provide: 'SNOWFLAKE_CONNECTION',
       useFactory: () => {
-        const connection = snowflake.createConnection({
-          account: process.env.SNOWFLAKE_ACCOUNT,
-          username: process.env.SNOWFLAKE_USERNAME,
-          password: process.env.SNOWFLAKE_PASSWORD,
-          role: process.env.SNOWFLAKE_ROLE,
-          warehouse: process.env.SNOWFLAKE_WAREHOUSE,
-          database: process.env.SNOWFLAKE_DATABASE,
-          schema: process.env.SNOWFLAKE_SCHEMA,
-        });
+        let connection;
 
-        // Try to connect to Snowflake, and check whether the connection was successful.
-        connection.connect((err) => {
-          if (err) {
-            console.error('Unable to connect: ' + err.message);
-            throw err;
-          } else {
-            console.log('Successfully connected to Snowflake.');
-          }
-        });
+        const reconnect = () => {
+          console.log('Attempting to reconnect...');
+          initConnection();
+        };
+
+        const initConnection = () => {
+          connection = snowflake.createConnection({
+            account: process.env.SNOWFLAKE_ACCOUNT,
+            username: process.env.SNOWFLAKE_USERNAME,
+            password: process.env.SNOWFLAKE_PASSWORD,
+            role: process.env.SNOWFLAKE_ROLE,
+            warehouse: process.env.SNOWFLAKE_WAREHOUSE,
+            database: process.env.SNOWFLAKE_DATABASE,
+            schema: process.env.SNOWFLAKE_SCHEMA,
+          });
+
+          connection.on('error', (err) => {
+            reconnect();
+          });
+
+          connection.connect((err) => {
+            if (err) {
+              reconnect();
+            } else {
+              console.log('Successfully connected to Snowflake.');
+            }
+          });
+        };
+
+        // Initialize the connection for the first time
+        initConnection();
 
         return connection;
       },
     },
     TransactionService,
+    MarketShareService,
+    AgeService,
+    DomainNameAnalysisService,
+    DomainWatchService,
     AnalysisService,
     GraphFormatService,
-    SnowflakeService
+    SnowflakeService,
+    MovementService,
+    RegistrarNameService,
+    QBeeService,
   ],
-  exports: [TransactionService,AnalysisService,GraphFormatService,SnowflakeService],
+  exports: [
+    TransactionService,
+    MarketShareService,
+    MovementService,
+    AgeService,
+    DomainNameAnalysisService,
+    AnalysisService,
+    GraphFormatService,
+    SnowflakeService,
+    DomainWatchService,
+    RegistrarNameService,
+    QBeeService,
+  ],
+  imports: [
+    HttpModule,
+    ClientsModule.register([
+      {
+        name: 'ZACR_SERVICE',
+        transport: Transport.TCP,
+        options: {
+          host: process.env.HOST || 'localhost',
+          port: 4002,
+        },
+      },
+    ]),
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => {
+        return {
+          secret: configService.get<string>('JWT_SECRET'),
+          signOptions: { expiresIn: '24h' },
+        } as JwtModuleOptions;
+      },
+      inject: [ConfigService],
+    }),
+    ConfigModule.forRoot({ isGlobal: true }),
+  ],
+  controllers: [AppController],
 })
 export class AppModule {}

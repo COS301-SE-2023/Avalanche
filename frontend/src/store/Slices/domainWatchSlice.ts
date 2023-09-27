@@ -1,9 +1,9 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { AppState } from "../store";
-import { HYDRATE } from "next-redux-wrapper";
-import ky from "ky";
 import { IDomainWatchRequest } from "@/interfaces/requests";
-import { IDomainWatchResponse } from "@/interfaces/responses";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { getCookie } from "cookies-next";
+import ky from "ky";
+import { HYDRATE } from "next-redux-wrapper";
+import { AppState } from "../store";
 
 export const domainWatchSlice = createSlice({
     name: "domainWatch",
@@ -26,6 +26,7 @@ export const domainWatchSlice = createSlice({
                 ...action,
             };
         })
+        // Get Domain Watch
         builder.addCase(getDomainWatch.pending, (state) => {
             state.loading = true;
             state.error = "";
@@ -35,11 +36,9 @@ export const domainWatchSlice = createSlice({
         })
         builder.addCase(getDomainWatch.rejected, (state, action) => {
             const payload = action.payload as any;
-            console.log(payload);
             state.loading = false;
-            // state.error = payload.error;
+            state.error = payload?.error;
         })
-        // Create Organisation
         builder.addCase(getDomainWatch.fulfilled, (state, action) => {
             const payload = action.payload as any;
             state.loading = false;
@@ -51,11 +50,13 @@ export const domainWatchSlice = createSlice({
 
 export const getDomainWatch = createAsyncThunk("DOMAINWATCH.Get", async (object: IDomainWatchRequest, { rejectWithValue }) => {
     try {
-        const response = ky.post("http://localhost:4000/domain-watch/list", {
+        const jwt = getCookie("jwt");
+        const response = ky.post(`${process.env.NEXT_PUBLIC_API}/domain-watch/list`, {
             json: object, timeout: false, headers: {
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
-                "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token"
+                "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
+                "Authorization": `Bearer ${jwt}`
             }
         }).json();
         return response;

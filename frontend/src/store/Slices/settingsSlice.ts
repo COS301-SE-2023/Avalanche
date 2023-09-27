@@ -1,16 +1,15 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { AppState } from "../store";
+import { createSlice } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
-import ky from "ky";
-import { ICreateOrganisationRequest } from "@/interfaces/requests";
-import { ICreateOrgnisationResponse } from "@/interfaces/responses";
+import { AppState } from "../store";
 
-const url = "http://localho.st:4000/user-management";
+const url = `${process.env.NEXT_PUBLIC_API}/user-management`;
 
 export const settingsSlice = createSlice({
     name: "settings",
     initialState: {
+        api: {
 
+        }
     },
     reducers: {
 

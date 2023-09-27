@@ -1,13 +1,12 @@
-import IntegrationLoginModal from "./IntegrationLoginModal";
-import APIKeyCreateModal from "./APIKeyCreateModal";
-import OrgnizationCreateModal from "./OrgnizationCreateModal";
 import ConfirmModal from "./ConfirmModal";
 import CreateGroupModal from "./CreateGroupModal";
+import FirstTimeModal from "./FirstTimeModal";
+import IntegrationLoginModal from "./IntegrationLoginModal";
+import OrgnizationCreateModal from "./OrgnizationCreateModal";
 
 export {
-    IntegrationLoginModal,
-    APIKeyCreateModal,
-    OrgnizationCreateModal,
     ConfirmModal,
-    CreateGroupModal
+    CreateGroupModal,
+    FirstTimeModal, IntegrationLoginModal,
+    OrgnizationCreateModal
 };

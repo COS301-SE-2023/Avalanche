@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
-import { Input, InputLabel, SubmitButton, ErrorToast } from '../Util';
-import { ModalContent, ModalHeader, ModalWrapper } from './ModalOptions';
-import { userState, createOrganisation } from '@/store/Slices/userSlice';
-import { useDispatch, useSelector } from 'react-redux';
 import { ICreateOrganisationRequest } from '@/interfaces/requests';
+import { clearCurrentOpenState } from '@/store/Slices/modalManagerSlice';
+import { createOrganisation, userState } from '@/store/Slices/userSlice';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { ErrorToast, Input, InputLabel, SubmitButton } from '../Util';
+import { ModalWrapper } from './ModalOptions';
 
 interface IOrgnizationCreateModal {
 
@@ -15,8 +16,10 @@ export default function OrgnizationCreateModal({ }: IOrgnizationCreateModal) {
     const stateUser = useSelector(userState);
 
     useEffect(() => {
-
-    }, [stateUser.user.organization])
+        if (stateUser.user.organisation) {
+            dispatch(clearCurrentOpenState());
+        }
+    }, [stateUser.user?.organisation]);
 
     /**
      * this variable is for the length of the name of the organization. It defines the maximum length the name can be.
@@ -42,12 +45,11 @@ export default function OrgnizationCreateModal({ }: IOrgnizationCreateModal) {
         event.preventDefault();
 
         if (!name) {
-            ErrorToast({ text: "Invalid organization name. Please provide a valid one." });
+            return ErrorToast({ text: "Invalid organization name. Please provide a valid one." });
         } else if (name.length > nameLength) {
-            ErrorToast({ text: "Organization name is too long. Please shorten it. " });
+            return ErrorToast({ text: "Organization name is too long. Please shorten it. " });
         } else {
             setLoading(true);
-            ErrorToast({ text: "Nothing is implemented yet. Un-loading in 3 seconds." });
             setTimeout(() => {
                 setLoading(false);
             }, 3000);
@@ -61,21 +63,18 @@ export default function OrgnizationCreateModal({ }: IOrgnizationCreateModal) {
      * This return renders out the HTML for the modal.
      */
     return (
-        <ModalWrapper>
-            <ModalHeader title="Create a new Organization" />
-            <ModalContent>
-                <form className="space-y-6" onSubmit={(event) => formSubmit(event)}>
-                    <div>
-                        <InputLabel htmlFor="name" text="Orgnization Name" />
-                        <Input type="text" name="name" id="name" placeholder="Michael's Domains" required={true} disabled={loading} value={name} onChange={(event: React.FormEvent<HTMLInputElement>) => {
-                            setName(event.currentTarget.value);
-                        }} maxLength={nameLength} />
-                    </div>
-                    <SubmitButton text="Create orgnization" onClick={(event: React.FormEvent<HTMLFormElement>) => {
-                        formSubmit(event);
-                    }} className="w-full" loading={loading} />
-                </form>
-            </ModalContent>
+        <ModalWrapper title="Create a new Organization">
+            <form className="space-y-6" onSubmit={(event) => formSubmit(event)}>
+                <div>
+                    <InputLabel htmlFor="name" text="Orgnization Name" />
+                    <Input type="text" name="name" id="name" placeholder="Michael's Domains" required={true} disabled={loading} value={name} onChange={(event: React.FormEvent<HTMLInputElement>) => {
+                        setName(event.currentTarget.value);
+                    }} maxLength={nameLength} />
+                </div>
+                <SubmitButton text="Create orgnization" onClick={(event: React.FormEvent<HTMLFormElement>) => {
+                    formSubmit(event);
+                }} className="w-full" loading={loading} />
+            </form>
         </ModalWrapper>
     )
 }

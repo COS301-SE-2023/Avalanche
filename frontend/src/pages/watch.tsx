@@ -1,14 +1,19 @@
-import Sidebar from "@/components/Navigation/SideBar"
-import Head from "next/head";
-import { MagnifyingGlassCircleIcon, QuestionMarkCircleIcon, ChevronUpDownIcon, ChevronUpIcon } from '@heroicons/react/24/solid';
-import { useEffect, useState } from "react";
+import PickeeModal from "@/components/Modals/PickeeModal";
+import WHOISModal from "@/components/Modals/WHOISModal";
+import Sidebar from "@/components/Navigation/SideBar";
+import { AlternativeButton, Anchor, ErrorToast, Input, InputLabel, MainContent, SubmitButton, Toggle, WarningAlert } from "@/components/Util";
 import PageHeader from "@/components/Util/PageHeader";
-import { SubmitButton, WarningAlert, ErrorToast, InputLabel, Input, AlternativeButton, Anchor } from "@/components/Util";
-import { Toaster } from 'react-hot-toast';
-import { domainWatchState, getDomainWatch, updateChanging } from "@/store/Slices/domainWatchSlice";
 import { IDomainWatchRequest } from "@/interfaces/requests";
-import { useDispatch, useSelector } from 'react-redux';
 import { IDomainWatchType } from "@/interfaces/requests/DomainWatch";
+import { domainWatchState, getDomainWatch, updateChanging } from "@/store/Slices/domainWatchSlice";
+import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
+import { ChevronUpDownIcon, ChevronUpIcon, MagnifyingGlassCircleIcon, QuestionMarkCircleIcon } from '@heroicons/react/24/solid';
+import { getCookie } from "cookies-next";
+import ky, { HTTPError } from "ky";
+import Head from "next/head";
+import { useEffect, useState } from "react";
+import { Toaster } from 'react-hot-toast';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function Settings() {
 
@@ -18,19 +23,28 @@ export default function Settings() {
     const regex = /^(?!.*[.])(?!.*http:\/\/)(?!.*https:\/\/).*$/gm;
 
     const watchState = useSelector(domainWatchState);
+    const modalState = useSelector(selectModalManagerState);
     const dispatch = useDispatch<any>();
 
     const [data, setData] = useState<any>({
         domain: "",
-        types: []
+        types: [],
+        resolve: "false"
     });
     const [activeHelp, setActiveHelp] = useState<string[]>([]);
     const [sorting, setSorting] = useState<string>("");
     const [sortingType, setSortingType] = useState<string>("asc");
+    const [whois, setWhois] = useState<string>("");
+    const [pickee, setPickee] = useState<string>("");
+    const [pickeeLoading, setPickeeLoading] = useState<boolean>(false);
+    const [whoisLoading, setWhoisLoading] = useState<boolean>(false);
 
+    /**
+     * This function watched the watchState for the variable to change.
+     */
     useEffect(() => {
         if (watchState.error) {
-            ErrorToast({ text: watchState.error });
+            return ErrorToast({ text: watchState.error });
         }
     }, [watchState.error])
 
@@ -84,7 +98,7 @@ export default function Settings() {
         event.preventDefault();
 
         if (!data.domain) {
-            return ErrorToast({ text: "You must have a damain" });
+            return ErrorToast({ text: "You must have a domain" });
         } else if (!regex.test(data.domain)) {
             return ErrorToast({ text: "The format is incorrect. Check that there are no full stops (.), http:// or https:// in the domain that you have entered." });
         } else if (data.types.length === 0) {
@@ -100,7 +114,8 @@ export default function Settings() {
 
         dispatch(getDomainWatch({
             domain: data.domain,
-            types: data.types
+            types: data.types,
+            resolve: data.resolve
         } as IDomainWatchRequest))
 
     }
@@ -172,10 +187,18 @@ export default function Settings() {
         }
     }
 
+    /**
+     * Returns the indicator string
+     * @param value 
+     * @returns 
+     */
     const getIndicator = (value: number) => {
         return `bg-indicator-${Math.floor((value / 10) + 1)}`;
     }
 
+    /**
+     * This useEffect helps us sort the functions
+     */
     useEffect(() => {
         if (!sorting) {
             dispatch(updateChanging(watchState.data));
@@ -209,7 +232,41 @@ export default function Settings() {
                 }
             }
         }
-    }, [sorting, sortingType])
+    }, [sorting, sortingType]);
+
+    /**
+     * 
+     * @param domain 
+     */
+    const getWhoIS = async (domain: string) => {
+        setWhoisLoading(true);
+        try {
+            const res = await ky.post(`${process.env.NEXT_PUBLIC_API}/domain-watch/whoisyou`, {
+                json: {
+                    domain
+                },
+                headers: {
+                    "Authorization": `Bearer ${getCookie("jwt")}`
+                }
+            }).json();
+            const data = res as any;
+            setWhois(data.data);
+            dispatch(setCurrentOpenState("WATCH.WHOIS"));
+            setWhoisLoading(false);
+        } catch (e) {
+            setWhoisLoading(false);
+            let error = e as HTTPError;
+            if (error.name === 'HTTPError') {
+                const errorJson = await error.response.json();
+                return ErrorToast({ text: errorJson.message });
+            }
+        }
+    }
+
+    /**
+     * Handles the picture taking
+     * @param domain 
+     */
 
     /**
      * Renders out the HTML
@@ -221,9 +278,9 @@ export default function Settings() {
         </Head>
         <Sidebar />
 
-        <div className="p-4 sm:ml-64 bg-white dark:bg-secondaryBackground min-h-screen">
+        <MainContent>
             <div className="flex justify-between items-center">
-                <PageHeader title="Domain Watch" subtitle="Watch your Domains" icon={<MagnifyingGlassCircleIcon className="h-16 w-16 text-black dark:text-white" />} />
+                <PageHeader title="Domain Watch" subtitle="Uncover domain names similar to yours to protect your brand" icon={<MagnifyingGlassCircleIcon className="h-16 w-16 text-black dark:text-white" />} />
             </div>
             <div className="p-4">
                 <form className="space-y-4 md:space-y-6 mb-4" onSubmit={(e) => formSubmit(e)}>
@@ -248,7 +305,7 @@ export default function Settings() {
                                     <input id="remember" aria-describedby="remember" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" onClick={() => checkType("Soundex")} disabled={watchState.loading} />
                                 </div>
                                 <h3 className="block text-sm font-medium text-gray-900 dark:text-white">Soundex</h3>
-                                <QuestionMarkCircleIcon className="h-5 w-5 hover:text-avalancheBlue cursor-pointer" onClick={() => onHelpClick("Soundex")} />
+                                <QuestionMarkCircleIcon className="h-5 w-5 text-gray-500 hover:text-avalancheBlue cursor-pointer" onClick={() => onHelpClick("Soundex")} />
                             </div>
                             {helpHelper("Soundex") && <p className="text-sm font-light text-gray-500 dark:text-gray-400 mb-2">
                                 Soundex is a method used to simplify and <span className="font-semibold">standardize the representation of names based on their sound</span>. It assigns a code to each name so that similar-sounding names have the same code. This helps in grouping and matching names with <span className="font-semibold">similar pronunciations, even if they are spelled differently</span>. It&apos;s often used for tasks like searching databases or linking records where the <span className="font-semibold">pronunciation matters more than the exact spelling</span>. <Anchor href="https://en.wikipedia.org/wiki/Soundex" text="Wikipedia" /><br /><br />The higher the percentage, the higher Soundex match you want.
@@ -269,7 +326,7 @@ export default function Settings() {
                                     <input id="remember" aria-describedby="remember" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" onClick={() => checkType("Levenshtein")} disabled={watchState.loading} />
                                 </div>
                                 <h3 className="block text-sm font-medium text-gray-900 dark:text-white">Levenshtein</h3>
-                                <QuestionMarkCircleIcon className="h-5 w-5 hover:text-avalancheBlue cursor-pointer" onClick={() => onHelpClick("Levenshtein")} />
+                                <QuestionMarkCircleIcon className="h-5 w-5 text-gray-500 hover:text-avalancheBlue cursor-pointer" onClick={() => onHelpClick("Levenshtein")} />
                             </div>
 
                             {helpHelper("Levenshtein") && <p className="text-sm font-light text-gray-500 dark:text-gray-400 mb-2">
@@ -287,9 +344,11 @@ export default function Settings() {
                         </div>
                     </div> : <WarningAlert title="Missing domain." text="You need to provide the domain name before you can continue" />}
 
+                    {data.domain.length > 0 && <Toggle name="resolveToggle" id="resolveToggle" label="Do you want the domain to resolve?" onChange={(changed: boolean) => update("resolve", changed ? "true" : "false")} value={data.resolve === "true" ? true : false} />}
+
                     {/* Buttons */}
                     <div className="flex gap-2">
-                        <SubmitButton loading={watchState.loading} disabled={watchState.loading} text="Get the Domains!" onClick={() => { }} />
+                        <SubmitButton loading={watchState.loading} disabled={watchState.loading} text="Get the Domains" onClick={() => { }} />
                         {!watchState.loading && watchState.data.length > 0 && <AlternativeButton text="Clear Results" onClick={() => { }} />}
                     </div>
                 </form>
@@ -349,6 +408,14 @@ export default function Settings() {
                             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-primaryBackground dark:text-gray-300">
                                 <tr>
                                     <th scope="col" className="px-6 py-3 cursor-pointer w-100" onClick={() => {
+                                        sorting !== "zone" && setSorting("resolve");
+                                        sortingType === "asc" ? setSortingType("desc") : setSortingType("asc");
+                                    }}>
+                                        <div className="flex gap-2 items-center">
+                                            Resolve {sorting === "resolve" ? <ChevronUpIcon className={sortingType === "asc" ? "h-4 w-4" : "rotate-180 h-w w-4"} /> : <ChevronUpDownIcon className="h-4 w-4" />}
+                                        </div>
+                                    </th>
+                                    <th scope="col" className="px-6 py-3 cursor-pointer w-100" onClick={() => {
                                         sorting !== "domainName" && setSorting("domainName");
                                         sortingType === "asc" ? setSortingType("desc") : setSortingType("asc");
                                     }}>
@@ -371,7 +438,12 @@ export default function Settings() {
                                         <div className="flex gap-2 items-center">
                                             Similarity {sorting === "similarity" ? <ChevronUpIcon className={sortingType === "asc" ? "h-4 w-4" : "rotate-180 h-w w-4"} /> : <ChevronUpDownIcon className="h-4 w-4" />}
                                         </div>
+                                    </th>
 
+                                    <th scope="col" className="px-6 py-3 cursor-pointer w-52">
+                                        <div className="flex gap-2 items-center">
+                                            WhoIS Search
+                                        </div>
                                     </th>
 
                                 </tr>
@@ -380,6 +452,19 @@ export default function Settings() {
                                 {
                                     !watchState.loading && watchState.changingData.map((item: any, index: number) => {
                                         return <tr className={getColour(item.similarity) + " duration-75 ease-in-out"} key={index}>
+                                            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                {item?.resolves ? (
+                                                    item.resolves === "Resolves" ? (
+                                                        <span style={{ height: '10px', width: '10px', backgroundColor: 'green', borderRadius: '50%', display: 'inline-block', marginLeft: '10px' }}></span>
+                                                    ) : (
+                                                        item.resolves === "DoesNotResolve" && (
+                                                            <span style={{ height: '10px', width: '10px', backgroundColor: 'lightgrey', borderRadius: '50%', display: 'inline-block', marginLeft: '10px' }}></span>
+                                                        )
+                                                    )
+                                                ) : (
+                                                    <span></span>
+                                                )}
+                                            </th>
                                             <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                 {item.domainName}
                                             </th>
@@ -395,6 +480,9 @@ export default function Settings() {
                                                     {item.similarity}
                                                 </span>
                                             </td>
+                                            <td className="px-6 py-4 dark:text-white text-gray-900">
+                                                <SubmitButton loading={whoisLoading} disabled={whoisLoading} text="WHOIS Search" onClick={() => getWhoIS(`${item.domainName}.${item.zone.toLowerCase()}`)} />
+                                            </td>
                                         </tr>
                                     })
                                 }
@@ -404,7 +492,7 @@ export default function Settings() {
 
                 </div>}
             </div >
-        </div>
-
+        </MainContent>
+        {modalState.currentOpen === "WATCH.WHOIS" && <WHOISModal data={whois} />}
     </>
 }

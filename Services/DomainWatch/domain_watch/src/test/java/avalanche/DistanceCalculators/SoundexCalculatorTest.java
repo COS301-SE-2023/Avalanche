@@ -80,6 +80,13 @@ public class SoundexCalculatorTest {
     }
 
     @Test
+    public void selborneAndHello() throws FileNotFoundException, InstantiationException {
+        DomainTokeniser.init();
+        SoundexCalculator calc = new SoundexCalculator();
+        assertEquals(1, calc.calculateSoundexDifference("selborne", "hello"), 0);
+    }
+
+    @Test
     public void eitherStringNullShouldReturn0() throws FileNotFoundException, InstantiationException {
         DomainTokeniser.init();
         SoundexCalculator calc = new SoundexCalculator();

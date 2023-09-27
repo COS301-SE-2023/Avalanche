@@ -71,9 +71,6 @@
     ],
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",
-    "testPathIgnorePatterns": [
-      ".*-integration\\.service\\.spec\\.ts$"
-    ],
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
@@ -82,7 +79,7 @@
       "!**/*-integration.service.spec.ts",
       "!**/app.module.ts"
     ],
-    "coverageDirectory": "../user-management/coverage",
+    "coverageDirectory": "../coverage",
     "testEnvironment": "node"
   }
 }

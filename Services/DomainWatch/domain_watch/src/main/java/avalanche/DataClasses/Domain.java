@@ -1,6 +1,12 @@
 package avalanche.DataClasses;
 
 public class Domain implements Comparable {
+    public enum ResolutionStatus {
+        Resolves,
+        DoesNotResolve,
+        NotChecked
+    }
+
     /**
      * The name of the domain.
      */
@@ -21,6 +27,8 @@ public class Domain implements Comparable {
      */
     private int metrics;
 
+    private ResolutionStatus resolutionStatus;
+
     /**
      * Partially parameterised constructor.
      * <br/>
@@ -36,6 +44,7 @@ public class Domain implements Comparable {
         this.zone = zone;
         this.metrics = 0;
         this.distance = 0;
+        this.resolutionStatus = ResolutionStatus.NotChecked;
     }
 
     /**
@@ -51,6 +60,7 @@ public class Domain implements Comparable {
         this.zone = domain.zone;
         this.metrics = domain.metrics;
         this.distance = domain.distance;
+        this.resolutionStatus = domain.resolutionStatus;
     }
 
     /**
@@ -65,6 +75,10 @@ public class Domain implements Comparable {
      */
     public String getZone() {
         return zone;
+    }
+
+    public String getFullyQualifiedDomainName() {
+        return name + "." + zone.toLowerCase();
     }
 
     /**
@@ -103,6 +117,14 @@ public class Domain implements Comparable {
             metrics++;
         }
 
+    }
+
+    public void setResolves(boolean resolves) {
+        if (resolves) {
+            this.resolutionStatus = ResolutionStatus.Resolves;
+            return;
+        }
+        this.resolutionStatus = ResolutionStatus.DoesNotResolve;
     }
 
     /**
@@ -179,7 +201,7 @@ public class Domain implements Comparable {
      */
     public String toJSON() {
         return "{\"domainName\":\"" + name + "\",\"zone\":\"" + zone + "\",\"similarity\":"
-                + Math.round(getDistance() * 100.0) + "}";
+                + Math.round(getDistance() * 100.0) + ",\"resolves\":\"" + this.resolutionStatus.name() + "\"}";
     }
 
 }

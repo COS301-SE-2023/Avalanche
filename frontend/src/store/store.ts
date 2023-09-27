@@ -1,13 +1,15 @@
-import { configureStore, ThunkAction, Action, combineReducers } from "@reduxjs/toolkit";
-import { modalManagerSlice } from "./Slices/modalManagerSlice";
-import { userSlice } from "./Slices/userSlice";
-import { domainWatchSlice } from "./Slices/domainWatchSlice";
-import { settingsSlice } from "./Slices/settingsSlice";
-import { graphSlice } from "./Slices/graphSlice";
+import { Action, ThunkAction, combineReducers, configureStore } from "@reduxjs/toolkit";
 import { createWrapper } from "next-redux-wrapper";
-import thunk from "redux-thunk";
 import { persistReducer, persistStore } from "redux-persist";
 import createWebStorage from "redux-persist/lib/storage/createWebStorage";
+import thunk from "redux-thunk";
+import { domainWatchSlice } from "./Slices/domainWatchSlice";
+import { graphSlice } from "./Slices/graphSlice";
+import { modalManagerSlice } from "./Slices/modalManagerSlice";
+import { permissionSlice } from "./Slices/permissionSlice";
+import { qbeeSlice } from "./Slices/qbeeSlice";
+import { settingsSlice } from "./Slices/settingsSlice";
+import { userSlice } from "./Slices/userSlice";
 
 const createNoopStorage = () => {
     return {
@@ -31,6 +33,8 @@ const rootReducer = combineReducers({
     [settingsSlice.name]: settingsSlice.reducer,
     [domainWatchSlice.name]: domainWatchSlice.reducer,
     [graphSlice.name]: graphSlice.reducer,
+    [permissionSlice.name]: permissionSlice.reducer,
+    [qbeeSlice.name]: qbeeSlice.reducer,
 });
 
 const makeConfiguredStore = () =>

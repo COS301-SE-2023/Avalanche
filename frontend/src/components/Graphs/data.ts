@@ -1,4 +1,5 @@
 export const chartColours: string[] = [
+    "#2196F3",  // Blue
     "#FFC107",  // Amber
     "#4CAF50",  // Green
     "#3F51B5",   // Indigo
@@ -9,8 +10,8 @@ export const chartColours: string[] = [
     "#FF5722",  // Deep Orange
     "#607D8B",  // Blue Grey
     "#FFEB3B",  // Yellow
-    "#8BC34A",  // Light Green
-    "#2196F3"   // Blue
+    "#8BC34A"  // Light Green
+
 ];
 
 export const borderColours = [

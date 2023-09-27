@@ -2,7 +2,7 @@ FROM eclipse-temurin:8
 
 WORKDIR /domain_watch
 
-EXPOSE 4004
+EXPOSE 4100
 
 # COPY .mvn/ .mvn
 # COPY mvnw pom.xml ./
@@ -11,5 +11,6 @@ EXPOSE 4004
 COPY src ./src
 COPY target ./target
 COPY data ./data
+COPY domainWatch.conf ./domainWatch.conf
 
 CMD ["java","-jar","target/domain_watch-1.0-jar-with-dependencies.jar"]

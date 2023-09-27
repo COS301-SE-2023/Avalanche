@@ -1,3 +1,9 @@
 {
-    "java.configuration.updateBuildConfiguration": "interactive"
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "java.test.config": [
+        {
+            "name": "jmockitConfig"
+        }
+    ],
+    "java.test.defaultConfig": "jmockitConfig"
 }

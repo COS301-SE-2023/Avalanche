@@ -1,23 +1,28 @@
-import Sidebar from "@/components/Navigation/SideBar"
-import Head from "next/head";
-import { Cog6ToothIcon } from "@heroicons/react/24/solid";
-import { useEffect, useState } from "react";
-import { useRouter } from 'next/router';
-import PageHeader from "@/components/Util/PageHeader";
 import { IntegrationLoginModal } from "@/components/Modals";
-import { SubmitButton, WarningAlert } from "@/components/Util";
-import { Toaster } from 'react-hot-toast';
+import Sidebar from "@/components/Navigation/SideBar";
+import DataProducts from "@/components/Settings/DataProducts";
+import introJs from 'intro.js';
+import 'intro.js/introjs.css';
+import 'intro.js/themes/introjs-modern.css';
+// import { CookiesProvider, useCookies } from "react-cookie";
+import GeneralSettings from "@/components/Settings/General";
 import OrganizationSettings from "@/components/Settings/Organizations";
-import API from "@/components/Settings/API";
+import { MainContent, SubmitButton } from "@/components/Util";
+import PageHeader from "@/components/Util/PageHeader";
+import { selectModalManagerState } from '@/store/Slices/modalManagerSlice';
 import { userState } from "@/store/Slices/userSlice";
-import { selectModalManagerState, setCurrentOpenState } from '@/store/Slices/modalManagerSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import { Cog6ToothIcon } from "@heroicons/react/24/solid";
+import Head from "next/head";
+import { useRouter } from 'next/router';
+import { useEffect, useState } from "react";
+import { Toaster } from 'react-hot-toast';
+import { useSelector } from 'react-redux';
 
 export default function Settings() {
 
     const modalState = useSelector(selectModalManagerState);
     const user = useSelector(userState);
-    const dispatch = useDispatch();
+    // const [cookies, setCookie, removeCookie] = useCookies(["startedIntegrationLoginA"])
 
     /**
      * This is just calling the NextJS router so we can reference it later on in the code
@@ -73,6 +78,23 @@ export default function Settings() {
         );
     };
 
+    // const introJS = introJs();
+    // const startTut = () => {
+    //     introJS.setOptions({
+    //         steps: [
+    //             {
+    //                 intro: 'Welcome! This tutorial will walk you through integrating with a data product! This means changing your permission level, public is the default level.',
+    //                 title: "Integrate Data Product Tutorial"
+    //             },
+    //             {
+    //                 element: document.getElementsByClassName("text-white bg-primary-600 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:focus:ring-primary-800 inline-flex items-center justify-center flex-nowrap hover:bg-primary-700 dark:hover:bg-primary-700 ")[2] as HTMLElement,
+    //                 intro: 'Click here to start the integration process.',
+    //             }
+    //         ]
+    //     }).start();
+    //     setCookie("startedIntegrationLoginA", "Started login tutorial");
+    // }
+
     /**
      * Renders out the HTML
      */
@@ -83,7 +105,7 @@ export default function Settings() {
         </Head>
         <Sidebar />
 
-        <div className="p-4 sm:ml-64 bg-white dark:bg-secondaryBackground min-h-screen">
+        <MainContent>
             <div className="flex justify-between items-center">
                 <PageHeader title="Settings" subtitle="Configure your Avalanche" icon={<Cog6ToothIcon className="h-16 w-16 text-black dark:text-white" />} />
                 <div className="flex items-center space-x-4 hidden lg:flex">
@@ -100,31 +122,25 @@ export default function Settings() {
                         <a href="?tab=general" className={tab === "general" ? tabOptions.active : tabOptions.inactive}>General Settings</a>
                     </li>
                     <li className="mr-2" onClick={(e) => tabClick(e, "organizations")}>
-                        <a href="?tab=subusers" className={tab === "organizations" ? tabOptions.active : tabOptions.inactive}>Organizations</a>
+                        <a href="?tab=organizations" className={tab === "organizations" ? tabOptions.active : tabOptions.inactive}>Organizations</a>
                     </li>
                     <li className="mr-2" onClick={(e) => tabClick(e, "integrations")}>
                         <a href="?tab=integrations" className={tab === "integrations" ? tabOptions.active : tabOptions.inactive}>Data Products</a>
-                    </li>
-                    <li className="mr-2" onClick={(e) => tabClick(e, "apikeys")}>
-                        <a href="?tab=apikeys" className={tab === "apikeys" ? tabOptions.active : tabOptions.inactive}>API Keys</a>
+
                     </li>
                 </ul>
             </div>
 
             {tab === "general" && <>
-                <WarningAlert title="Cannot Create!" text="Nothing to see here" />
+                <GeneralSettings user={user} />
             </>}
             {tab === "organizations" &&
-                <OrganizationSettings demo={false} />
+                <OrganizationSettings />
             }
             {tab === "integrations" && <>
-                <div className="flex justify-between items-center gap-10 mb-4">
-                    <WarningAlert title="No Data Products." text="You have not added any Data Products..." />
-                    <SubmitButton text="Add a new Data Product" onClick={() => dispatch(setCurrentOpenState("INTE.CreateIntegration"))} />
-                </div>
+                <DataProducts></DataProducts>
             </>}
-            {tab === "apikeys" && <API demo={false} />}
-        </div>
+        </MainContent>
 
         {/* Models go here */}
         {modalState.currentOpen === "INTE.CreateIntegration" && <IntegrationLoginModal />}

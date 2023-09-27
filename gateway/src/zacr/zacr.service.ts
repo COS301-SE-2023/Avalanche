@@ -11,4 +11,48 @@ export class ZacrService {
   async transactions(data: any) {
     return this.client.send({ cmd: 'transactions' }, data).toPromise();
   }
+
+  async registrar(data: any) {
+    return this.client.send({ cmd: 'transactions' }, data).toPromise();
+  }
+
+  async transactionsRanking(data: any) {
+    return this.client.send({ cmd: 'transactions-ranking' }, data).toPromise();
+  }
+
+  async marketShare(data: any) {
+    return this.client.send({ cmd: 'marketShare' }, data).toPromise();
+  }
+
+  async age(data: any) {
+    return this.client.send({ cmd: 'age' }, data).toPromise();
+  }
+
+  async domainNameAnalysisCount(data: any) {
+    return this.client.send({ cmd: 'domainNameAnalysis/count' }, data).toPromise();
+  }
+
+  async domainNameAnalysisClassification(data: any) {
+    return this.client.send({ cmd: 'domainNameAnalysis/classification' }, data).toPromise();
+  }
+
+  async domainNameAnalysisLength(data: any) {
+    return this.client.send({ cmd: 'domainNameAnalysis/length' }, data).toPromise();
+  }
+
+  async movementVertical(data: any) {
+    return this.client.send({ cmd: 'movement/vertical' }, data).toPromise();
+  }
+
+  async movementVerticalRanked(data: any) {
+    return this.client.send({ cmd: 'movement/verticalRanked' }, data).toPromise();
+  }
+  
+  async domainWatchPassive(data: any){
+    return this.client.send({ cmd: 'domainWatchPassive'}, data).toPromise();
+  }
+
+  async qbee(data: any) {
+    return this.client.send({ cmd: 'qbee' }, data).toPromise();
+  }
 }

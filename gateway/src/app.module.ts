@@ -12,16 +12,25 @@ import { ZacrService } from './zacr/zacr.service';
 import { DomainWatchController } from './domain-watch/domain-watch.controller';
 import { DomainWatchService } from './domain-watch/domain-watch.service';
 import { HttpModule } from '@nestjs/axios';
+import { RyceController } from './ryce/ryce.controller';
+import { RyceService } from './ryce/ryce.service';
+import { AfricaController } from './africa/africa.controller';
+import { AfricaService } from './africa/africa.service';
+import { ScheduleModule } from '@nestjs/schedule';
+import { MetricsController } from './metrics.controller';
+import { QbeeController } from './qbee/qbee.controller';
+import { QbeeService } from './qbee/qbee.service';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     HttpModule,
     ClientsModule.register([
       {
         name: 'USER_MANAGEMENT_SERVICE',
         transport: Transport.TCP,
         options: {
-          host: 'localhost',
+          host: process.env.UM_HOST || 'localhost',
           port: 4001,
         },
       },
@@ -29,15 +38,39 @@ import { HttpModule } from '@nestjs/axios';
         name: 'ZACR_SERVICE',
         transport: Transport.TCP,
         options: {
-          host: 'localhost',
+          host: process.env.ZACR_HOST || 'localhost',
           port: 4002,
+        },
+      },
+      {
+        name: 'RyCE_SERVICE',
+        transport: Transport.TCP,
+        options: {
+          host: process.env.RYCE_HOST || 'localhost',
+          port: 4004,
+        },
+      },
+      {
+        name: 'AFRICA_SERVICE',
+        transport: Transport.TCP,
+        options: {
+          host: process.env.AFRICA_HOST || 'localhost',
+          port: 4005,
+        },
+      },
+      {
+        name: 'QBEE_SERVICE',
+        transport: Transport.TCP,
+        options: {
+          host: process.env.QBEE_HOST || 'localhost',
+          port: 4102,
         },
       },
     ]),
     ConfigModule.forRoot({ isGlobal: true }),
   ],
-  controllers: [UserManagementController, ZacrController, DomainWatchController],
-  providers: [UserManagementService, ZacrService, RedisProvider, DomainWatchService],
+  controllers: [MetricsController, UserManagementController, ZacrController, RyceController, AfricaController, DomainWatchController, QbeeController],
+  providers: [UserManagementService, ZacrService, RyceService, AfricaService, RedisProvider, DomainWatchService, QbeeService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
@@ -48,7 +81,17 @@ export class AppModule implements NestModule {
         { path: 'user-management/verify', method: RequestMethod.POST },
         { path: 'user-management/login', method: RequestMethod.POST },
         { path: 'user-management/resendOTP', method: RequestMethod.POST },
-        { path: 'domain-watch/list', method: RequestMethod.POST }
+        { path: 'domain-watch/list', method: RequestMethod.POST },
+        { path: 'domain-watch/passive', method: RequestMethod.GET },
+        { path: 'domain-watch/loadDomains', method: RequestMethod.GET },
+        { path: 'domain-watch/whoisyou', method: RequestMethod.POST },
+        { path: 'domain-watch/takePickeeNow', method: RequestMethod.POST },
+        { path: 'user-management/graphFilters', method: RequestMethod.GET },
+        { path: 'user-management/getDomainWatchPassive', method: RequestMethod.POST },
+        { path: 'africa/domainWatchPassive', method: RequestMethod.POST },
+        { path: 'zacr/qbee', method: RequestMethod.POST },
+        { path: 'zacr/domainWatchPassive', method: RequestMethod.POST },
+        { path: 'metrics', method: RequestMethod.GET },
       )
       .forRoutes('*');
   }

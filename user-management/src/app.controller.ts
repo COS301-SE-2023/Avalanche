@@ -1,24 +1,35 @@
 /* eslint-disable prettier/prettier */
 import { Controller, HttpException, HttpStatus } from '@nestjs/common';
-import { AuthService } from './services/auth.service';
+import { AuthService } from './services/auth/auth.service';
 import { MessagePattern, RpcException } from '@nestjs/microservices';
-import { UserOrganisationMangementService } from './services/user-organisation-mangement.service';
-import { UserDataProductMangementService } from './services/user-data-products-management.service';
+import { UserOrganisationMangementService } from './services/user-organisation/user-organisation-mangement.service';
+import { UserDataProductMangementService } from './services/user-data-products/user-data-products-management.service';
+import { UserUserGroupMangementService } from './services/user-userGroup/user-userGroup-management.service';
+import { UserDashboardMangementService } from './services/user-dashboard/user-dashboard-management.service';
 
 @Controller('user-management')
 export class AppController {
   constructor(private readonly authService: AuthService,
     private readonly userOrgManService: UserOrganisationMangementService,
-    private readonly userDataProductManService: UserDataProductMangementService) { }
+    private readonly userDataProductManService: UserDataProductMangementService,
+    private readonly userUserGroupManService: UserUserGroupMangementService,
+    private readonly userDashboardManService : UserDashboardMangementService) { }
 
   @MessagePattern({ cmd: 'register' })
   async register(data: any) {
-    console.log("Registering user: ", data);
-    return await this.authService.register(data.email, data.password, data.firstName, data.lastName);
+    const result = await this.authService.register(data.email, data.password, data.firstName, data.lastName);
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
   }
   @MessagePattern({ cmd: 'verify' })
   async verify(data: any) {
-    console.log("Verifying user: ", data);
     const result = await this.authService.verify(data.email, data.otp);
     if (result.error) {
       throw new RpcException({
@@ -32,7 +43,6 @@ export class AppController {
   }
   @MessagePattern({ cmd: 'resendOTP' })
   async resendOTP(data: any) {
-    console.log("Resending OTP: ", data);
     const result = await this.authService.resendOTP(data.email);
     if (result.error) {
       throw new RpcException({
@@ -46,7 +56,6 @@ export class AppController {
   }
   @MessagePattern({ cmd: 'login' })
   async login(data: any) {
-    console.log("Logging in user: ", data);
     const result = await this.authService.login(data.email, data.password);
 
     if (result.error) {
@@ -59,10 +68,104 @@ export class AppController {
 
     return result;
   }
+  @MessagePattern({ cmd: 'createAPIKey' })
+  async createAPIKey(data: any) {
+    const result = await this.authService.createAPIKey(data.token);
+
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
+
+  @MessagePattern({ cmd: 'checkUserAPIKey' })
+  async checkUserAPIKey(data: any) {
+    const result = await this.authService.checkUserAPIKey(data.token);
+
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
+  @MessagePattern({ cmd: 'rerollAPIKey' })
+  async rerollAPIKey(data: any) {
+    const result = await this.authService.rerollAPIKey(data.token);
+
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
+  @MessagePattern({ cmd: 'saveDashboard' })
+  async saveDashboard(data: any) {
+    const result = await this.userDashboardManService.saveDashbaord(data.token, data.dashboardID, data.name, data.graphs);
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
+  @MessagePattern({ cmd: 'editDashboard' })
+  async editDashboard(data: any) {
+    const result = await this.userDashboardManService.editDashbaord(data.token, data.dashboardID, data.name, data.graphs);
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
+  @MessagePattern({ cmd: 'shareDashboards' })
+  async shareDashboards(data: any) {
+    const result = await this.userDashboardManService.shareDashboards(data.token, data.userGroupName, data.dashboardID);
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
+  @MessagePattern({ cmd: 'addCommentToGraph' })
+  async addCommentToGraph(data: any) {
+    const result = await this.userDashboardManService.addCommentToGraph(data.token, data.dashboardID, data.graphName, data.comment);
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
   @MessagePattern({ cmd: 'getUserInfo' })
   async getUserInfo(data: any) {
-    console.log("Get user info: ", data);
-    const result = await this.userOrgManService.getUserInfo(data.token);
+    const result = await this.authService.getUserInfo(data.token);
     if (result.error) {
       throw new RpcException({
         status: result.status,
@@ -75,7 +178,6 @@ export class AppController {
   }
   @MessagePattern({ cmd: 'getMembers' })
   async getMembers(data: any) {
-    console.log("Get user info: ", data);
     const result = await this.userOrgManService.getMembers(data.token);
     if (result.error) {
       throw new RpcException({
@@ -89,7 +191,6 @@ export class AppController {
   }
   @MessagePattern({ cmd: 'createOrganisation' })
   async createOrganisation(data: any) {
-    console.log("Creating organisation: ", data);
     const result = await this.userOrgManService.createOrganisation(data.token, data.name);
     if (result.error) {
       throw new RpcException({
@@ -103,8 +204,7 @@ export class AppController {
   }
   @MessagePattern({ cmd: 'createUserGroup' })
   async createUserGroup(data: any) {
-    console.log("Creating a user group: ", data);
-    const result = await this.userOrgManService.createUserGroup(data.token, data.name, data.permission);
+    const result = await this.userUserGroupManService.createUserGroup(data.token, data.name, data.permission);
     if (result.error) {
       throw new RpcException({
         status: result.status,
@@ -117,8 +217,7 @@ export class AppController {
   }
   @MessagePattern({ cmd: 'addUserToUserGroup' })
   async addUserToUserGroup(data: any) {
-    console.log("Adding a user to a user group: ", data);
-    const result = await this.userOrgManService.addUserToUserGroup(data.token, data.userEmail, data.userGroupName);
+    const result = await this.userUserGroupManService.addUserToUserGroup(data.token, data.userEmail, data.userGroupName);
     if (result.error) {
       throw new RpcException({
         status: result.status,
@@ -131,8 +230,7 @@ export class AppController {
   }
   @MessagePattern({ cmd: 'exitUserGroup' })
   async exitUserGroup(data: any) {
-    console.log("Removing you from the user group: ", data);
-    const result = await this.userOrgManService.exitUserGroup(data.token, data.userGroupName);
+    const result = await this.userUserGroupManService.exitUserGroup(data.token, data.userGroupName);
     if (result.error) {
       throw new RpcException({
         status: result.status,
@@ -145,8 +243,7 @@ export class AppController {
   }
   @MessagePattern({ cmd: 'removeUserFromUserGroup' })
   async removeUserFromUserGroup(data: any) {
-    console.log("Removing a user from a user group: ", data);
-    const result = await this.userOrgManService.removeUserFromUserGroup(data.token, data.userGroupName, data.userEmail);
+    const result = await this.userUserGroupManService.removeUserFromUserGroup(data.token, data.userGroupName, data.userEmail);
     if (result.error) {
       throw new RpcException({
         status: result.status,
@@ -159,7 +256,6 @@ export class AppController {
   }
   @MessagePattern({ cmd: 'exitOrganisation' })
   async exitOrganisation(data: any) {
-    console.log("Removing you from the organisation: ", data);
     const result = await this.userOrgManService.exitOrganisation(data.token, data.organisationName);
     if (result.error) {
       throw new RpcException({
@@ -173,7 +269,6 @@ export class AppController {
   }
   @MessagePattern({ cmd: 'removeUserFromOrganisation' })
   async removeUserFromOrganisation(data: any) {
-    console.log("Removing a user from an organisation: ", data);
     const result = await this.userOrgManService.removeUserFromOrganisation(data.token, data.organisationName, data.userEmail);
     if (result.error) {
       throw new RpcException({
@@ -187,8 +282,7 @@ export class AppController {
   }
   @MessagePattern({ cmd: 'addUserToUserGroupWithKey' })
   async addUserToUserGroupWithKey(data: any) {
-    console.log("Adding a user, with a key, to a user group: ", data);
-    const result = await this.userOrgManService.addUserToUserGroupWithKey(data.token, data.key);
+    const result = await this.userUserGroupManService.addUserToUserGroupWithKey(data.token, data.key);
     if (result.error) {
       throw new RpcException({
         status: result.status,
@@ -199,10 +293,22 @@ export class AppController {
 
     return result;
   }
-  @MessagePattern({ cmd: 'integrateUserWithWExternalAPI' })
-  async integrateUserWithWExternalAPI(data: any) {
-    console.log("Integrating with DNS: ", data);
-    const result = await this.userDataProductManService.integrateUserWithWExternalAPI(data.token, data.type, data.allocateToName, data.username, data.password, data.personal);
+  @MessagePattern({ cmd: 'integrateUserWithAfricaExternalAPI' })
+  async integrateUserWithAfricaExternalAPI(data: any) {
+    const result = await this.userDataProductManService.integrateUserWithAfricaExternalAPI(data.token, data.type, data.allocateToName, data.username, data.password, data.personal);
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
+  @MessagePattern({ cmd: 'integrateUserWithZARCExternalAPI' })
+  async integrateUserWithZARCExternalAPI(data: any) {
+    const result = await this.userDataProductManService.integrateUserWithZARCExternalAPI(data.token, data.type, data.allocateToName, data.username, data.password, data.personal);
     if (result.error) {
       throw new RpcException({
         status: result.status,
@@ -215,8 +321,86 @@ export class AppController {
   }
   @MessagePattern({ cmd: 'integrateWithDataProducts' })
   async integrateWithDataProducts(data: any) {
-    console.log("Integrating with Data product: ", data);
     const result = await this.userDataProductManService.integrateWithDataProducts(data.token, data.type, data.allocateToName, data.personal);
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
+  @MessagePattern({ cmd: 'addDomainWatchPassiveDetails' })
+  async addDomainWatchPassiveDetails(data: any) {
+    const result = await this.userDataProductManService.addDomainWatchPassiveDetails(data.token, data.types, data.domains);
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
+  @MessagePattern({ cmd: 'getDomainWatchPassive' })
+  async getDomainWatchPassive(data: any) {
+    const result = await this.userDataProductManService.getDomainWatchPassive();
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
+  @MessagePattern({ cmd: 'getFilters' })
+  async getFilters(data: any) {
+    const result = await this.userDataProductManService.getFilters(data.token);
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
+  @MessagePattern({ cmd: 'getEndpoints' })
+  async getEndpoints(data: any) {
+    const result = await this.userDataProductManService.getEndpoints(data.token);
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
+
+  @MessagePattern({ cmd: 'getDashboards' })
+  async getDashboards(data: any) {
+    const result = await this.userDataProductManService.getDashboards(data.token, data.endpointV, data.dataSource);
+    if (result.error) {
+      throw new RpcException({
+        status: result.status,
+        message: result.message,
+        timestamp: result.timestamp,
+      });
+    }
+
+    return result;
+  }
+  @MessagePattern({ cmd: 'getDomainWatchPassiveUser' })
+  async getDomainWatchPassiveUser(data: any) {
+    const result = await this.userDataProductManService.getDomainWatchPassiveUser(data.token);
     if (result.error) {
       throw new RpcException({
         status: result.status,

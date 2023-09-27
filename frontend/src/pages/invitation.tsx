@@ -1,8 +1,8 @@
+import LoadingPage from '@/components/Util/Loading';
+import { getCookie } from 'cookies-next';
+import ky from 'ky';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
-import { getCookie } from 'cookies-next';
-import LoadingPage from '@/components/Util/Loading';
-import ky from 'ky';
 
 export default function Invitation() {
     const searchParams = useSearchParams();
@@ -25,7 +25,7 @@ export default function Invitation() {
 
     const check = async () => {
         try {
-            await ky.post(`http://localho.st:4000/user-management/addUserToUserGroupWithKey`, {
+            await ky.post(`${process.env.NEXT_PUBLIC_API}/user-management/addUserToUserGroupWithKey`, {
                 json: { key: `${key}` },
                 headers: {
                     "Authorization": `Bearer ${jwt}`

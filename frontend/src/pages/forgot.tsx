@@ -1,8 +1,8 @@
-import Head from 'next/head'
-import { Anchor, Checkbox, Input, InputLabel, SubmitButton, WarningAlert } from '@/components/Util'
+import { Anchor, Input, InputLabel, SubmitButton } from '@/components/Util';
+import Head from 'next/head';
+import Image from 'next/image';
 import { useState } from 'react';
 import tempLogo from '../assets/logo.png';
-import Image from 'next/image';
 
 interface IRegister {
     email: string,
