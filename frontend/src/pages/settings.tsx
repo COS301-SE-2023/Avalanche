@@ -109,7 +109,6 @@ export default function Settings() {
             <div className="flex justify-between items-center">
                 <PageHeader title="Settings" subtitle="Configure your Avalanche" icon={<Cog6ToothIcon className="h-16 w-16 text-black dark:text-white" />} />
                 <div className="flex items-center space-x-4 hidden lg:flex">
-                    <img className="w-16 h-16 rounded-full" src="https://github.com/michaelrosstarr.png" alt="" />
                     <div className="font-medium dark:text-white text-black">
                         <div>{user.user.firstName} {user.user.lastName}</div>
                     </div>
