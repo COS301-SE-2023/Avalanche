@@ -242,4 +242,38 @@ jobs:
           cd user-management
           yarn test:cov --forceExit             
           
-                       
+      - name: Upload coverage to Codecov (gateway)
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: gateway/coverage/*.info
+          flags: unittests
+          name: codecov-gateway
+          fail_ci_if_error: true       
+
+      - name: Upload coverage to Codecov (zacr)
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: zacr/coverage/*.info
+          flags: unittests
+          name: codecov-gateway
+          fail_ci_if_error: true 
+
+      - name: Upload coverage to Codecov (africa)
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: africa/coverage/*.info
+          flags: unittests
+          name: codecov-gateway
+          fail_ci_if_error: true  
+
+      - name: Upload coverage to Codecov (ryce)
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ryce/coverage/*.info
+          flags: unittests
+          name: codecov-gateway
+          fail_ci_if_error: true                   
