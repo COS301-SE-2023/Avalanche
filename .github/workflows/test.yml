@@ -244,40 +244,36 @@ jobs:
           
       - name: Upload coverage to Codecov (gateway)
         uses: codecov/codecov-action@v2
-        working-directory: gateway
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: coverage/*.info
+          files: gateway\coverage\lcov.info
           flags: unittests
           name: codecov-gateway
           fail_ci_if_error: true       
 
       - name: Upload coverage to Codecov (zacr)
         uses: codecov/codecov-action@v2
-        working-directory: zacr
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: coverage/*.info
+          files: zacr\coverage\lcov.info
           flags: unittests
           name: codecov-gateway
           fail_ci_if_error: true 
 
       - name: Upload coverage to Codecov (africa)
         uses: codecov/codecov-action@v2
-        working-directory: africa
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: coverage/*.info
+          files: africa\coverage\lcov.info
           flags: unittests
           name: codecov-gateway
           fail_ci_if_error: true  
 
       - name: Upload coverage to Codecov (ryce)
         uses: codecov/codecov-action@v2
-        working-directory: ryce
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: coverage/*.info
+          files: ryce\coverage\lcov.info
           flags: unittests
           name: codecov-gateway
           fail_ci_if_error: true                   
