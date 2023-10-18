@@ -212,7 +212,7 @@ export default function GeneralSettings({ user }: IGeneralSettings) {
                 <div className="flex flex-col">
                     {/* API Keys */}
                     <h4 className="text-2xl font-bold text-gray-700 dark:text-white mb-2">API Key</h4>
-                    <div className="flex gap-5 justify-between items-center">
+                    <div className="flex gap-5 justify-between items-center flex-col md:flex-row">
                         {!apiKey ? <WarningAlert title="API Key." text={user.user.apiCheck ? "You already have an API Key" : "You have no API key registered."} className="flex-auto" /> : <div className="relative flex-auto">
                             <input type="text" className="block w-full p-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="dunder mifflin" value={apiKey} />
                             <button className="text-white absolute right-2.5 bottom-2.5 bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm p-2 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800"><ClipboardIcon className="w-4 h-4" onClick={() => {

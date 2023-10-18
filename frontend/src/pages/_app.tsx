@@ -11,10 +11,8 @@ function App({ Component, ...rest }: AppProps) {
   const { store, props } = wrapper.useWrappedStore(rest);
   return <ThemeProvider
     storageKey='theme'
-    enableSystem={false}
-    forcedTheme='light'
-    enableColorScheme={false}
-    themes={['light']}
+    attribute="class"
+    themes={['light', 'dark']}
   >
     <Provider store={store}>
       <PersistGate loading={null} persistor={store.__persistor}>

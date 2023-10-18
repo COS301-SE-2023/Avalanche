@@ -12,19 +12,30 @@ import React, { useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import darkBanner from '../assets/images/dark-banner.png';
+import lightBanner from '../assets/images/light-banner.png';
+import Particles from "react-particles";
+import type { Container, Engine } from "tsparticles-engine";
+import { useCallback } from "react";
+import { loadSlim } from "tsparticles-slim";
+import { loadFull } from "tsparticles";
+import { particlesConfig } from '@/assets/particles';
 
 export default function Home() {
-  const { theme, setTheme } = useTheme();
-  const emailRegex: RegExp = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-  const passwordRegex: RegExp = /"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,24}$"/;
 
+  // Particles
+  const particlesInit = useCallback(async (engine: Engine) => {
+    await loadFull(engine);
+  }, []);
+
+  const particlesLoaded = useCallback(async (container: Container | undefined) => { }, []);
+
+  const { theme, setTheme } = useTheme();
   const dispatch = useDispatch<any>();
   const stateUser = useSelector(userState);
   const router = useRouter();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [alert, setAlert] = useState<boolean>(false);
   const [emailError, setEmailError] = useState<string>("");
   const [passwordError, setPasswordError] = useState<string>("");
 
@@ -60,7 +71,6 @@ export default function Home() {
           break;
         }
       }
-      // ErrorToast({ text: `${stateUser.requests.error}` });
       dispatch(clearError());
     }
 
@@ -86,15 +96,16 @@ export default function Home() {
   } else
     return (
       <>
+        {/* @ts-ignore */}
+        {/* <Particles id="tsparticles" options={particlesConfig} init={particlesInit} loaded={particlesLoaded} /> */}
         <Toaster />
         <Head>
           <title>Avalanche</title>
         </Head>
         <section className="bg-gray-50 dark:bg-dark-background">
           <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-screen lg:py-0">
-            {/* {theme === "dark" ? <Image src={lightBanner} className="w-full sm:max-w-lg mb-2" alt="Logo" /> : <Image src={darkBanner} className="w-full sm:max-w-lg mb-2" alt="Logo" />} */}
-            <Image src={darkBanner} className="w-full sm:max-w-lg mb-2" alt="Logo" />
-            <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-lg xl:p-0 dark:bg-secondaryBackground dark:border-primaryBackground">
+            {theme === "dark" ? <Image src={lightBanner} className="w-full sm:max-w-lg mb-2" alt="Logo" /> : <Image src={darkBanner} className="w-full sm:max-w-lg mb-2" alt="Logo" />}
+            <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-lg xl:p-0 dark:bg-dark-secondaryBackground dark:border-dark-secondaryBackground">
               <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                 <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                   Sign in to your account
