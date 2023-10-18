@@ -7,71 +7,22 @@ import { graphState, clearGraphData, getDashboardGraphs } from "@/store/Slices/g
 import { useEffect } from "react";
 import { selectModalManagerState } from "@/store/Slices/modalManagerSlice";
 import GraphZoomModal from "@/components/Modals/GraphZoomModal";
-import { jsPDF } from "jspdf";
-import html2canvas from "html2canvas";
-import { DashboardBase, MainContent, SubmitButton } from "@/components/Util";
+import { BetterDropdown, DashboardBase, MainContent } from "@/components/Util";
+import { dashboardState, updateColumn } from "@/store/Slices/dashboardSlice";
 
 export default function Movement() {
 
     const dispatch = useDispatch<any>();
     const stateGraph = useSelector(graphState);
     const modalState = useSelector(selectModalManagerState);
+    const dashboard = useSelector(dashboardState);
 
-    const captureCanvasElements = async () => {
-        const canvasElements = Array.from(document.querySelectorAll('.graphChart'));
-        const canvasImages = [];
+    const setColumns = (value: number) => {
+        dispatch(updateColumn(value));
+    }
 
-        for (const canvas of canvasElements) {
-            try {
-                const dataUrl = await html2canvas(canvas as any, {
-                    allowTaint: true,
-                    useCORS: true,
-                }).then((canvas) => canvas.toDataURL('image/png'));
-
-                canvasImages.push(dataUrl);
-            } catch (error) {
-                console.error('Error capturing canvas:', error);
-            }
-        }
-
-        return canvasImages;
-    };
-
-    const generatePDF = async () => {
-        const canvasImages = await captureCanvasElements();
-
-        const pdf = new jsPDF("l", "mm", "a1");
-
-        var width = pdf.internal.pageSize.getWidth();
-        var height = pdf.internal.pageSize.getHeight();
-
-        canvasImages.forEach((imageDataUrl) => {
-            pdf.addImage(imageDataUrl, 'PNG', 0, 0, width, height);
-            pdf.addPage();
-        });
-
-        pdf.save('report.pdf');
-    };
-
-    function loadData() {
+    const loadData = () => {
         dispatch(getDashboardGraphs('movement/vertical'));
-        //const arrayMovementVerticalShare: IMovementGraphRequest[] = [];
-
-        // const arrayMovementVerticalRanked : IMovementGraphRankedRequest[] = [];
-
-        // const movementVertical: IMovementGraphRequest = { zone: stateGraph.zones.slice(0, 1), };
-        // arrayMovementVerticalShare.push(movementVertical);
-
-        // const movementVerticalRanked: IMovementGraphRankedRequest = { zone: stateGraph.zones.slice(0, 1), };
-        // arrayMovementVerticalRanked.push(movementVerticalRanked);
-
-        // arrayMovementVerticalShare.forEach(data => {
-        //     dispatch(getMovementVerticalData(data));
-        // })
-
-        // arrayMovementVerticalRanked.forEach(data => {
-        //     dispatch(getMovementVerticalRankedData(data));
-        // })
     }
 
     useEffect(() => {
@@ -97,7 +48,7 @@ export default function Movement() {
         <MainContent>
             <div className="flex justify-between items-center">
                 <PageHeader title="Nett Movement" subtitle="View the vertical movement of domains in your space" icon={<BoltIcon className="h-16 w-16 text-black dark:text-white" />} />
-                {/* <SubmitButton text="Download Report" onClick={() => generatePDF()} /> */}
+                {stateGraph.graphs.length > 0 && <BetterDropdown items={[{ name: "1 Column", value: 1 }, { name: "2 Columns", value: 2 }]} option={dashboard.columns} set={setColumns} />}
             </div>
             <DashboardBase state={stateGraph} />
         </MainContent>
