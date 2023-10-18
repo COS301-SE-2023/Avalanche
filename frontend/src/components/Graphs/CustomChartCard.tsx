@@ -238,11 +238,11 @@ export default function CustomChartCard({ title, data, defaultGraph, state, id, 
     }
 
     return (<>
-        <div className="block p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-primaryBackground dark:border-primaryBackground w-full animate__animated animate__fadeIn animate__slow">
+        <div className="block p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-primaryBackground dark:border-primaryBackground w-full animate__animated animate__fadeIn animate__slow min-h-screen">
             <div className="flex justify-between mb-5 text-black dark:text-white">
                 <h1 className="p-1.5">{data.graphName || title}</h1>
                 <div className="flex flex-row gap-1">
-                    <div className="relative">
+                    <div>
                         <div className="inline-flex justify-center p-1.5 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-lightHover dark:hover:bg-gray-600" onClick={() => setFilterDropdown(!filterDropdown)}>
                             <FunnelIcon className="w-6 h-6" />
                         </div>

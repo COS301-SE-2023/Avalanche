@@ -222,17 +222,17 @@ export default function CreateCustomDashboard() {
                         </div>}
                     </div>
                 </div>
-                <div className="flex gap-2 w-full items-center justify-end">
-                    {graphs.length > 0 && <BetterDropdown items={[{ name: "1 Column", value: 1 }, { name: "2 Columns", value: 2 }]} option={dashboard.columns} set={changeColumns} />}
+                <div className="flex gap-2 w-full items-center justify-end flex-col md:flex-row">
+                    {graphs.length > 0 && <BetterDropdown items={[{ name: "1 Column", value: 1 }, { name: "2 Columns", value: 2 }]} option={dashboard.columns} set={changeColumns} className="w-full md:w-auto" absolute={true} />}
                     {graphs.length > 0 && saved && <SubmitButton text="Update Dashboard" onClick={() => {
                         updateDashboard();
-                    }} />}
+                    }} className="w-full md:w-auto" />}
                     {graphs.length > 0 && newDash && !saved && <SubmitButton text="Create Dashboard" onClick={() => {
                         createDashboard();
                     }} />}
                     <SubmitButton text="Add a Graph" onClick={() => {
                         dispatch(setCurrentOpenState("GRAPH.AddGraph"))
-                    }} />
+                    }} className="w-full md:w-auto" />
                 </div>
             </div>
             <div className="p-0 pt-4 md:p-4">

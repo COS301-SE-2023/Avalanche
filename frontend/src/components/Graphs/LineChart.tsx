@@ -161,7 +161,7 @@ export function LineChart({ data, height }: IChart) {
 
   return (
     <div className="line">
-      <div className="row max-h-screen">
+      <div className="row min-h-full max-h-screen">
         <div className="mixed-chart max-h-screen">
           {typeof window !== "undefined" && (
             <Chart
