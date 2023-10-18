@@ -10,6 +10,7 @@ import { permissionSlice } from "./Slices/permissionSlice";
 import { qbeeSlice } from "./Slices/qbeeSlice";
 import { settingsSlice } from "./Slices/settingsSlice";
 import { userSlice } from "./Slices/userSlice";
+import { dashboardSlice } from "./Slices/dashboardSlice";
 
 const createNoopStorage = () => {
     return {
@@ -35,6 +36,7 @@ const rootReducer = combineReducers({
     [graphSlice.name]: graphSlice.reducer,
     [permissionSlice.name]: permissionSlice.reducer,
     [qbeeSlice.name]: qbeeSlice.reducer,
+    [dashboardSlice.name]: dashboardSlice.reducer
 });
 
 const makeConfiguredStore = () =>
@@ -54,7 +56,7 @@ export const makeStore = () => {
     } else {
         const persistConfig = {
             key: "nextjs",
-            whitelist: ["modalManager", "user"],
+            whitelist: ["modalManager", "user", "dashboard"],
             storage
         };
         const persistedReducer = persistReducer(persistConfig, rootReducer);

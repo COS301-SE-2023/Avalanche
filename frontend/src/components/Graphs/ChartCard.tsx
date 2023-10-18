@@ -240,7 +240,6 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
 					},
 				})
 				.json();
-			console.log(res);
 			const d = res as any;
 			setGraphData(d.data.data);
 			setGraphTitle(d.data.graphName);

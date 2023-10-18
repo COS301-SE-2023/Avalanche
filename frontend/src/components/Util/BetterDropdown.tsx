@@ -8,7 +8,7 @@ const classNames = (...classes: any) => {
 
 interface IItem {
     name: string,
-    value: string
+    value: string | number
 }
 
 interface IDropdown {
@@ -29,7 +29,7 @@ export default function BetterDropdown({ items, option, set, id, text, absolute,
     }
 
     return (
-        <Menu as="div" className="inline-block text-left w-full" id={id}>
+        <Menu as="div" className="inline-block text-left" id={id}>
             {({ open, close }) => (
                 <>
                     <div>

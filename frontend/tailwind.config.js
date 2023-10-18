@@ -76,5 +76,8 @@ module.exports = {
   },
   plugins: [
     // require("@headlessui/react")
+    require('flowbite/plugin')({
+      charts: true,
+    }),
   ],
 }

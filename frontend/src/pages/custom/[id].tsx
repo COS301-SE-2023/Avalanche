@@ -9,7 +9,7 @@ import { graphState } from "@/store/Slices/graphSlice"
 import { useState, useEffect } from "react";
 import { selectModalManagerState, setCurrentOpenState } from "@/store/Slices/modalManagerSlice"
 import GraphZoomModal from "@/components/Modals/GraphZoomModal"
-import { ErrorToast, Input, SubmitButton, SuccessToast, MainContent } from "@/components/Util"
+import { ErrorToast, Input, SubmitButton, SuccessToast, MainContent, Dropdown, BetterDropdown } from "@/components/Util"
 import GraphCreateModal from "@/components/Modals/GraphCreateModal";
 import { getFilters } from "@/store/Slices/graphSlice"
 import { userState } from "@/store/Slices/userSlice"
@@ -22,12 +22,15 @@ import NoFind from "@/components/CustomSVG/NoFind";
 import introJs from 'intro.js';
 import 'intro.js/introjs.css';
 import 'intro.js/themes/introjs-modern.css';
+import { dashboardState, updateColumn } from "@/store/Slices/dashboardSlice";
 
 export default function CreateCustomDashboard() {
     const dispatch = useDispatch<any>();
     const stateGraph = useSelector(graphState);
     const stateUser = useSelector(userState);
     const modalState = useSelector(selectModalManagerState);
+    const dashboard = useSelector(dashboardState);
+    console.log(dashboard);
     const router = useRouter();
 
     const [name, setName] = useState<string>("");
@@ -61,35 +64,6 @@ export default function CreateCustomDashboard() {
         setSaved(true);
     }, [id])
 
-    // useEffect(() => {
-    //     if (!hasCookie("customTutorial")) {
-    //         startTut();
-    //     }
-    // }, []);
-
-    // useEffect(() => {
-    //     if (hasCookie("customSaveGraph") && getCookie("customSaveGraph")) {
-    //         if (document.getElementsByClassName("grid gap-4 mb-4 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2")[0]) {
-    //             const saveButton = document.getElementsByClassName("flex gap-5 w-full lg:w-max")[0] as HTMLElement
-    //             if (saveButton) {
-    //                 introJS.exit(true)
-    //                 introJS.setOptions({
-    //                     steps: [
-    //                         {
-    //                             element: saveButton,
-    //                             intro: "Don't forget to save the dashboard! There you have it, easy as pie"
-    //                         }
-    //                     ]
-    //                 })
-    //                 introJS.start()
-    //                 deleteCookie("customSaveGraph");
-    //                 deleteCookie("customSaveGraph");
-    //                 setCookie("customTutorial", false);
-    //             }
-    //         }
-    //     }
-    // }, [graphs])
-
     /**
      * Updates a graph
      * @param graphName 
@@ -118,6 +92,10 @@ export default function CreateCustomDashboard() {
      */
     const renderGraphs = () => {
         return graphs.map((graph: any, index: number) => <CustomChartCard title={graph.name} defaultGraph={ChartType.Line} data={graph} key={index} state={stateGraph} id={id} updateGraph={updateGraph} />);
+    }
+
+    const changeColumns = (value: number) => {
+        dispatch(updateColumn(value));
     }
 
     /**
@@ -214,27 +192,6 @@ export default function CreateCustomDashboard() {
         }
     }
 
-    // const introJS = introJs();
-    // const startTut = () => {
-    //     introJS.setOptions({
-    //         steps: [
-    //             {
-    //                 intro: 'Welcome! This tutorial will walk you through making you own Custom Dashboard!',
-    //                 title: "Custom Dashboard Tutorial"
-    //             },
-    //             {
-    //                 element: document.getElementsByClassName('w-4 h-4 right-0 top-0 hover:cursor-pointer hover:text-avalancheBlue duration-75 hover:scale-125')[0] as HTMLElement,
-    //                 intro: 'Here you can choose the name you want for your Dashboard.',
-    //             },
-    //             {
-    //                 element: document.getElementsByClassName("flex gap-5 w-full lg:w-max")[0] as HTMLElement,
-    //                 intro: 'This button allows you to add graphs to your Dashboard.',
-    //             }
-    //         ]
-    //     }).start();
-    //     setCookie("customGraphTutorial", true);
-    // }
-
     return (<>
         <Head>
             <title>Dashboard</title>
@@ -243,12 +200,9 @@ export default function CreateCustomDashboard() {
         <Toaster />
 
         <MainContent>
-            <div className="flex justify-between items-center flex-col lg:flex-row">
+            <div className="flex justify-between items-center flex-col lg:flex-row w-full">
                 <div className="flex flex-row gap-2 items-center">
                     <CpuChipIcon className="h-16 w-16 text-black dark:text-white" />
-                    {/* <SubmitButton text="Start tutorial" className="flex-auto" onClick={() => {
-                        startTut();
-                    }} /> */}
                     <div>
                         {!editName && <h1 className="text-3xl text-gray-900 dark:text-white font-bold flex gap-2"><span>{name ? name : "Custom Dashboard"}</span> <PencilIcon className="w-4 h-4 right-0 top-0 hover:cursor-pointer hover:text-avalancheBlue duration-75 hover:scale-125" onClick={() => setEditName(true)} /></h1>}
                         {editName && <div className="flex gap-4">
@@ -268,11 +222,12 @@ export default function CreateCustomDashboard() {
                         </div>}
                     </div>
                 </div>
-                <div className="flex gap-5 w-full lg:w-max">
-                    {graphs.length > 0 && saved && <SubmitButton text="Update Dashboard" className="flex-auto" onClick={() => {
+                <div className="flex gap-2 w-full items-center justify-end">
+                    {graphs.length > 0 && <BetterDropdown items={[{ name: "1 Column", value: 1 }, { name: "2 Columns", value: 2 }]} option={dashboard.columns} set={changeColumns} />}
+                    {graphs.length > 0 && saved && <SubmitButton text="Update Dashboard" onClick={() => {
                         updateDashboard();
                     }} />}
-                    {graphs.length > 0 && newDash && !saved && <SubmitButton text="Create Dashboard" className="flex-auto" onClick={() => {
+                    {graphs.length > 0 && newDash && !saved && <SubmitButton text="Create Dashboard" onClick={() => {
                         createDashboard();
                     }} />}
                     <SubmitButton text="Add a Graph" onClick={() => {
@@ -285,7 +240,7 @@ export default function CreateCustomDashboard() {
                     <NoFind className="h-48 w-48" />
                     <h3 className="text-3xl font-medium text-gray-700 dark:text-white">No graphs found...</h3>
                     <p className='text-xl text-gray-600 dark:text-gray-400'>No graphs exist yet... Get graphing!</p>
-                </div> : <div className="grid gap-4 mb-4 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2">
+                </div> : <div className={`grid lg:grid-cols-${dashboard.columns} sm:grid-cols-1 md:grid-cols-${dashboard.columns} gap-4 mb-4 grid-rows-2`}>
                     {renderGraphs()}
                 </div>}
             </div>

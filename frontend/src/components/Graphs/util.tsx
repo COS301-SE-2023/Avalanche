@@ -103,7 +103,7 @@ export function convertData(
   //Set theme colour
 
   if (theme === "dark") {
-    themeColours.labelColour = "#000000";
+    themeColours.labelColour = "#fff";
   } else {
     themeColours.labelColour = "#000000";
   }

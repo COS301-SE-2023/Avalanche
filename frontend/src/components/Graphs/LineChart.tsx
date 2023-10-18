@@ -5,10 +5,7 @@ import { useEffect, useState } from "react";
 import { chartColours } from "./data";
 import { convertData } from "./util";
 
-
-
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
-
 
 type JsonDataEntry = {
   [key: string]: string | number;
@@ -24,7 +21,7 @@ export function LineChart({ data, height }: IChart) {
     let styleOptions = {
       dataLabels: {
         enabled: false,
-        colors: undefined, // This will use the series color for each data label
+        // colors: undefined, // This will use the series color for each data label
       },
       stroke: {
         show: true,
@@ -160,7 +157,6 @@ export function LineChart({ data, height }: IChart) {
   useEffect(() => {
     // Update the chart data to reflect the new colors
     setChartData(makeOptions(data.jsonData));
-
   }, [theme]);
 
   return (

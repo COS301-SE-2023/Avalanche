@@ -12,7 +12,9 @@ function App({ Component, ...rest }: AppProps) {
   return <ThemeProvider
     storageKey='theme'
     attribute="class"
-    themes={['light', 'dark']}
+    defaultTheme="light"
+    enableSystem={false}
+    themes={["light", "dark"]}
   >
     <Provider store={store}>
       <PersistGate loading={null} persistor={store.__persistor}>
