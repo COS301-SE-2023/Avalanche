@@ -24,29 +24,30 @@ const camelCaseRenderer = (value: string) => {
 
 export default function FilterTooltip({ filters }: any) {
 	return (
-		<div
-			id="tooltip-light"
-			role="tooltip"
-			className="absolute -top-10 z-20 inline-block px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg shadow-lg whitespace-nowrap"
-		>
-			{Object.entries(filters).map(([key, value]) => {
-				let displayValue: string | ReactNode = "";
-				let displayKey = camelCaseRenderer(key);
-				if (key.includes('date') || key.includes('Date')) {
-					displayValue = formatDate(value as string);
-				} else if (Array.isArray(value)) {
-					displayValue = formatArray(value);
-				} else {
-					displayValue = String(value);
-				}
-				return (<>
-					<div key={key}>
-						<span className="font-bold">{displayKey}:</span> {displayValue}
-					</div>
-				</>
-				);
-			})}
-			<div className="tooltip-arrow" data-popper-arrow></div>
+		<div className='relative'>
+			<div
+				id="tooltip-light"
+				role="tooltip"
+				className="absolute bottom-0 z-20 inline-block px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg shadow-lg whitespace-nowrap"
+			>
+				{Object.entries(filters).map(([key, value]) => {
+					let displayValue: string | ReactNode = "";
+					let displayKey = camelCaseRenderer(key);
+					if (key.includes('date') || key.includes('Date')) {
+						displayValue = formatDate(value as string);
+					} else if (Array.isArray(value)) {
+						displayValue = formatArray(value);
+					} else {
+						displayValue = String(value);
+					}
+					return (<>
+						<div key={key}>
+							<span className="font-bold">{displayKey}:</span> {displayValue}
+						</div>
+					</>
+					);
+				})}
+			</div>
 		</div>
 	);
 };

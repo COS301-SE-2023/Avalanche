@@ -65,15 +65,15 @@ export default function DataProducts({ }: IDataProducts) {
                     }
                 </tbody>
             </table>
-                <div className="content-start">
-                    <SubmitButton text="Add a new Data Product" onClick={() => dispatch(setCurrentOpenState("INTE.CreateIntegration"))} />
+                <div className="content-start w-full md:w-auto">
+                    <SubmitButton text="Add a new Data Product" onClick={() => dispatch(setCurrentOpenState("INTE.CreateIntegration"))} className='w-full md:w-auto' />
                 </div>
             </>
         }
     }
 
     return <>
-        <div className="flex justify-between  items-start gap-10 mb-4">
+        <div className="flex justify-between items-start gap-2 md:gap-10 mb-4 flex-col-reverse md:flex-row">
             {makeUIBasedOnProducts()}
         </div>
     </>

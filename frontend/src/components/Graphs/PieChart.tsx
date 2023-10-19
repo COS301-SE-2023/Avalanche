@@ -103,9 +103,6 @@ type ConvertedData = {
 // };
 
 export function PieChart({ data, height }: IChart) {
-
-
-
   const makeOptions = (jsonData: JsonDataEntry[]) => {
     let allOptions = convertForProportion(jsonData);
     Object.assign(allOptions.options, {
@@ -113,7 +110,6 @@ export function PieChart({ data, height }: IChart) {
       dataLabels: {
         enabled: false,
         colors: undefined,  // This will use the series color for each data label
-
       },
       colors: chartColours,
       stroke: {
