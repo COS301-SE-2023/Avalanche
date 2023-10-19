@@ -312,7 +312,7 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
 			leave="transition-opacity duration-150"
 			leaveFrom="opacity-100"
 			leaveTo="opacity-0"
-			className={dashboard.columns !== 1 ? "hover:scale-105 duration-300 transition-ease" : ""}
+			className={"lg:hover:scale-105 duration-300 transition-ease"}
 			onMouseEnter={() => setHovering(true)}
 			onMouseLeave={() => setHovering(false)}
 		>
@@ -329,7 +329,7 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
 				>
 					<div className="flex justify-between mb-5 text-black dark:text-white">
 						<h1 className="p-1.5 chart-title">{title}</h1>
-						{true && <div className="flex flex-row gap-1">
+						{hovering && <div className="flex flex-row gap-1">
 							<div>
 								<div
 									className="inline-flex justify-center p-1.5 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-lightHover dark:hover:bg-gray-600"
