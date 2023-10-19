@@ -37,7 +37,9 @@ public class HandleClassify extends Running {
         Classifier classifier = new Classifier();
         for (String str : strings) {
             i++;
-            System.out.println(i + "/" + strings.length);
+            if (i % 100 == 0) {
+                System.out.println(i + "/" + strings.length);
+            }
             try {
                 resp += "{\"domain\":\"" + str + "\",\"classification\":\"";
                 resp += classifier.classify(str) + "\"}";

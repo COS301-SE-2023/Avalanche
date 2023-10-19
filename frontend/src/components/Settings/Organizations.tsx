@@ -141,8 +141,8 @@ export default function OrganizationSettings({ }: IOrganizationSettings) {
                 </>
 
             </div>
-            <div className="flex gap-2">
-                <div className="flex gap-5 mb-1 pb-1 w-48 items-start">
+            <div className="flex gap-2 flex-col md:flex-row">
+                <div className="flex gap-5 mb-1 pb-1 w-48 items-start w-full md:w-auto">
                     <ul className="flex text-sm font-medium text-center pr-2 text-gray-500 dark:text-gray-400 flex-col gap-1 w-full">
                         {renderGroups()}
                     </ul>

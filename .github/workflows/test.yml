@@ -240,6 +240,4 @@ jobs:
       - name: Run integration tests for user-management service
         run: |
           cd user-management
-          yarn test:cov --forceExit             
-          
-                       
+          yarn test:cov --forceExit     

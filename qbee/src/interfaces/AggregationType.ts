@@ -1,8 +1,7 @@
 export enum AggregationType {
-    'SUM',
-    'COUNT',
-    'AVG',
-    'MIN',
-    'MAX' // Add more aggregation types as needed
+  SUM = 'SUM',
+  COUNT = 'COUNT',
+  AVG = 'AVG',
+  MIN = 'MIN',
+  MAX = 'MAX', // Add more aggregation types as needed
 }
-

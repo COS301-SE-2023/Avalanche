@@ -1,17 +1,20 @@
 import { ChartType } from "@/Enums";
 import { ChartCard } from "../Graphs";
+import { useSelector } from "react-redux";
+import { dashboardState } from "@/store/Slices/dashboardSlice";
 
 export default function GraphsRenderer({ graphs }: any) {
+
+  const dashboard = useSelector(dashboardState);
+
   return (
-    <div className="grid lg:grid-cols-2 sm:grid-cols-1 md:grid-cols-2 gap-4 mb-4 grid-rows-2">
+    <div className={`grid lg:grid-cols-${dashboard.columns} sm:grid-cols-1 md:grid-cols-1 gap-4 mb-4 grid-rows-2`}>
       {graphs?.length > 0 &&
         graphs.map((data: any, index: number) => {
           if (data?.data && data?.data.jsonData && data.data.jsonData.length > 0) {
             const firstEntryKeys = Object.keys(data.data.jsonData[0]);
 
-            console.log(data)
             if (data.chartType) {
-
               return (
                 <ChartCard
                   title={data.graphName}

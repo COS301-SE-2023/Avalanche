@@ -78,23 +78,6 @@ export default function Settings() {
         );
     };
 
-    // const introJS = introJs();
-    // const startTut = () => {
-    //     introJS.setOptions({
-    //         steps: [
-    //             {
-    //                 intro: 'Welcome! This tutorial will walk you through integrating with a data product! This means changing your permission level, public is the default level.',
-    //                 title: "Integrate Data Product Tutorial"
-    //             },
-    //             {
-    //                 element: document.getElementsByClassName("text-white bg-primary-600 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:focus:ring-primary-800 inline-flex items-center justify-center flex-nowrap hover:bg-primary-700 dark:hover:bg-primary-700 ")[2] as HTMLElement,
-    //                 intro: 'Click here to start the integration process.',
-    //             }
-    //         ]
-    //     }).start();
-    //     setCookie("startedIntegrationLoginA", "Started login tutorial");
-    // }
-
     /**
      * Renders out the HTML
      */
@@ -116,7 +99,7 @@ export default function Settings() {
             </div>
 
             <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700 mb-5 flex justify-between">
-                <ul className="flex lg:flex-wrap sm:flex-nowrap whitespace-nowrap overflow-x-scroll lg:overflow-x-hidden -mb-px">
+                <ul className="flex lg:flex-wrap sm:flex-nowrap whitespace-nowrap overflow-x-scroll lg:overflow-x-hidden -mb-px no-scrollbar">
                     <li className="mr-2" onClick={(e) => tabClick(e, "general")}>
                         <a href="?tab=general" className={tab === "general" ? tabOptions.active : tabOptions.inactive}>General Settings</a>
                     </li>

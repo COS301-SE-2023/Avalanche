@@ -4,7 +4,7 @@ import { clearCurrentOpenState, selectModalManagerState, setCurrentOpenState } f
 import { getEndpoints, permissionState } from "@/store/Slices/permissionSlice";
 import { logout, userState } from "@/store/Slices/userSlice";
 import { Transition } from '@headlessui/react';
-import { ArrowLeftOnRectangleIcon, Bars4Icon, ChartPieIcon, ChevronDownIcon, Cog6ToothIcon, HomeIcon, PencilIcon, QuestionMarkCircleIcon } from "@heroicons/react/24/solid";
+import { ArrowLeftOnRectangleIcon, Bars4Icon, ChartPieIcon, ChevronDownIcon, Cog6ToothIcon, HomeIcon, MoonIcon, PencilIcon, QuestionMarkCircleIcon, SunIcon } from "@heroicons/react/24/solid";
 import { deleteCookie, getCookie, hasCookie, setCookie } from "cookies-next";
 import ky from "ky";
 import md5 from 'md5';
@@ -17,7 +17,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { FirstTimeModal } from "../Modals";
 import CreateDashboardModal from "../Modals/CreateDashboardModal";
 import { BetterDropdown, ErrorToast, SubmitButton, SuccessToast } from "../Util";
-import ErrorAlert from "../Util/ErrorAlert";
 import LoadingPage from "../Util/Loading";
 import SideBarItem from "./SidebarItem";
 
@@ -116,7 +115,7 @@ export default function Sidebar() {
      * Handles dark and light mode toggles
      */
     const toggleDarkMode = (): void => {
-        theme === "dark" ? setTheme('light') : setTheme("dark")
+        theme === "dark" ? setTheme('light') : setTheme('dark');
     }
 
     /**
@@ -133,7 +132,7 @@ export default function Sidebar() {
     } else
         return (
             <>
-                <button className={`fixed top-2 right-2 z-20 inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600 bg-gray-700 animate__animated ${!modalState.currentOpen ? "animate__fadeIn animate__faster" : "hidden animate__fadeOut animate__faster"}`} onClick={() => setMenu(true)}>
+                <button className={`fixed top-2 right-2 z-20 inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600 bg-gray-700 dark:bg-dark-background animate__animated ${!modalState.currentOpen ? "animate__fadeIn animate__faster" : "hidden animate__fadeOut animate__faster"}`} onClick={() => setMenu(true)}>
                     <Bars4Icon className="h-8 w-8" />
                 </button>
                 <div onClick={() => {
@@ -147,7 +146,6 @@ export default function Sidebar() {
                         <div className="flex flex-col overflow-y-auto py-5 px-3 h-full border-r border-gray-200 bg-gray-200 dark:bg-dark-background dark:border-dark-background">
                             {/* top list */}
                             <ul className="space-y-2">
-                                {/* <ErrorAlert title="Beta!" italic={false} text="This dashboard is in beta. You might encounter bugs/issues. If you come across any, don't worry. We have logged it automatically." /> */}
                                 <SideBarItem text="Home" icon={<HomeIcon className="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />} page="home" />
                                 <li>
                                     <span className="flex items-center justify-between p-2 text-gray-900 rounded-lg dark:text-white hover:bg-lightHover dark:hover:bg-gray-700 hover:cursor-pointer" onClick={() => setDF(!df)}>
@@ -269,10 +267,10 @@ export default function Sidebar() {
                                 <Link href="/faq" data-tooltip-target="tooltip-settings" className="inline-flex justify-center p-2 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-600">
                                     <QuestionMarkCircleIcon className="w-6 h-6" />
                                 </Link>
-                                {/* <button type="button" className="inline-flex justify-center p-2 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-600" onClick={() => toggleDarkMode()}>
+                                <button type="button" className="inline-flex justify-center p-2 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-600" onClick={() => toggleDarkMode()}>
                                     {theme === "dark" ? <SunIcon className="w-6 h-6" /> : <MoonIcon className="w-6 h-6" />}
                                     <span className="sr-only">Theme toggle</span>
-                                </button> */}
+                                </button>
                                 <button type="button" className="inline-flex justify-center p-2 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-600" onClick={() => dispatch(logout())}>
                                     <ArrowLeftOnRectangleIcon className="w-6 h-6" />
                                     <span className="sr-only">Logout</span>
