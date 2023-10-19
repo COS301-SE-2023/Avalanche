@@ -48,10 +48,8 @@ export default function DomainLength() {
         <MainContent>
             <div className="flex justify-between items-center">
                 <PageHeader title="Domain Name Analysis Length" subtitle="View the average length of all your domains under your roof" icon={<ClipboardIcon className="h-16 w-16 text-black dark:text-white" />} />
-                <div className="hidden md:visisble">
-                    <div className="hidden md:visisble">
-                        {stateGraph.graphs.length > 0 && <BetterDropdown items={[{ name: "1 Column", value: 1 }, { name: "2 Columns", value: 2 }]} option={dashboard.columns} set={setColumns} absolute={true} />}
-                    </div>
+                <div className="hidden lg:block">
+                    {stateGraph.graphs.length > 0 && <BetterDropdown items={[{ name: "1 Column", value: 1 }, { name: "2 Columns", value: 2 }]} option={dashboard.columns} set={setColumns} absolute={true} />}
                 </div>
             </div>
             <DashboardBase state={stateGraph} />
