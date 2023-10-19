@@ -18,7 +18,7 @@ export class SQLTranslatorService {
     const selectParts: string[] = payload.selectedColumns.map((column) => {
       let part = '"' + column.columnName + '"';
       let orderByPart = '"' + column.columnName + '"';
-      if (column.aggregation) {
+      if (column.aggregation != undefined || column.aggregation != null) {
         part = `${column.aggregation}(${part})`;
         if (!column.renamed) {
           part += ` AS "${column.columnName}"`;
@@ -26,7 +26,7 @@ export class SQLTranslatorService {
       }
       if (column.renamed) {
         part += ` AS "${column.renamed}"`;
-        orderByPart = column.renamed;
+        orderByPart = '"' + column.renamed + '"';
       }
       orderBy.push(orderByPart);
       return part;
