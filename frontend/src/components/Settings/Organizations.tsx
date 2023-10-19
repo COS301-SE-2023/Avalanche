@@ -193,7 +193,6 @@ export default function OrganizationSettings({ }: IOrganizationSettings) {
                                         activeGroupIndex !== -1 && stateUser.userGroups[activeGroupIndex].groupMembers.map((item: any, index: any) => {
                                             return <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900" key={index}>
                                                 <th scope="row" className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-                                                    <img className="w-10 h-10 rounded-full" src="https://github.com/michaelrosstarr.png" alt="Jese image" />
                                                     <div className="pl-3">
                                                         <div className="text-base font-semibold">{item.name}</div>
                                                         <div className="font-normal text-gray-500">{item.email}</div>
