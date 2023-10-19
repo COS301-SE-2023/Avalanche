@@ -1,31 +1,41 @@
 name: 🖥️ Deployment
 
 on:
-  # push:
-  #   branches:
-  #     - working
-  #     - stable
   workflow_run:
     workflows: ["🖥️ Tests"]
     branches: [working, stable]
     types:
       - completed
 
-permissions:
-  contents: read
-
 jobs:
   deploy:
-    # needs: [test_job, test_java]
     runs-on: ubuntu-latest
-
     steps:
       # Checking out the repo
       - name: 🛏️ Setup repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.event.workflow_run.head_branch }}
+          
+      - name: Make envfile
+        uses: SpicyPizza/create-envfile@v1.3
+        with:
+          envkey_NODE_ENV: production
+          envkey_NEXT_PUBLIC_API: "https://api-avalanche.sloththe.dev"
+          envkey_NEXT_PUBLIC_DSN: ${{ secrets.SENTRY_KEY }}
+          directory: frontend
+          file_name: .env.local
+          fail_on_empty: false
 
+      - name: Make admin envfile
+        uses: SpicyPizza/create-envfile@v1.3
+        with:
+          envkey_NODE_ENV: production
+          envkey_NEXT_PUBLIC_ZEUS: "skunkworks.dns.net.za"
+          directory: admin-frontend
+          file_name: .env.local
+          fail_on_empty: false
+      
       # Runs a single command using the runners shell
       - name: 🔐 Install wireguard
         run: sudo apt-get install wireguard
@@ -41,25 +51,6 @@ jobs:
           sed -i -e "s@{{WG_ENDPOINT}}@${{ secrets.WG_ENDPOINT }}@" $GITHUB_WORKSPACE/tunnel.conf
           sudo cp $GITHUB_WORKSPACE/tunnel.conf /etc/wireguard/
 
-      - name: Make envfile
-        uses: SpicyPizza/create-envfile@v1.3
-        with:
-          envkey_NODE_ENV: production
-          envkey_NEXT_PUBLIC_API: "https://api-avalanche.sloththe.dev"
-          envkey_NEXT_PUBLIC_DSN: ${{ secrets.SENTRY_KEY }}
-          directory: frontend
-          file_name: .env.local # optional (default: .env)
-          fail_on_empty: false # optional (default: false)
-
-      - name: Make admin envfile
-        uses: SpicyPizza/create-envfile@v1.3
-        with:
-          envkey_NODE_ENV: production
-          envkey_NEXT_PUBLIC_ZEUS: "skunkworks.dns.net.za"
-          directory: admin-frontend
-          file_name: .env.local # optional (default: .env)
-          fail_on_empty: false # optional (default: false)
-
       # Initilizing the tunnel so we can connect to the server
       - name: 🔐 WG Creating Tunnel
         run: |
@@ -67,15 +58,15 @@ jobs:
           wg-quick up $GITHUB_WORKSPACE/tunnel.conf
 
         # SSH Into Server
-      # - name: 🔒 Removing old files
-      #   uses: appleboy/ssh-action@v1.0.0
-      #   with:
-      #     host: ${{ secrets.SSH_HOST }}
-      #     username: ${{ secrets.SSH_USERNAME }}
-      #     password: ${{ secrets.SSH_PASSWORD }}
-      #     port: ${{ secrets.SSH_PORT }}
-      #     script: |
-      #       rm -r Services frontend gateway user-management zacr africa ryce admin-frontend
+      - name: 🗑️ Removing old files
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            rm -r Services frontend gateway user-management zacr africa ryce admin-frontend
 
       # Uploading files to server via SCP
       - name: ☝️ Upload to server
