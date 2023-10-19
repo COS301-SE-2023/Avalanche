@@ -48,7 +48,9 @@ export default function Movement() {
         <MainContent>
             <div className="flex justify-between items-center">
                 <PageHeader title="Nett Movement" subtitle="View the vertical movement of domains in your space" icon={<BoltIcon className="h-16 w-16 text-black dark:text-white" />} />
-                {stateGraph.graphs.length > 0 && <BetterDropdown items={[{ name: "1 Column", value: 1 }, { name: "2 Columns", value: 2 }]} option={dashboard.columns} set={setColumns} />}
+                <div className="hidden md:visisble">
+                    {stateGraph.graphs.length > 0 && <BetterDropdown items={[{ name: "1 Column", value: 1 }, { name: "2 Columns", value: 2 }]} option={dashboard.columns} set={setColumns} absolute={true} />}
+                </div>
             </div>
             <DashboardBase state={stateGraph} />
         </MainContent>

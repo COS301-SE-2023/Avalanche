@@ -37,6 +37,7 @@ import {
 	RadioboxFilter,
 	ToggleFilter,
 } from "./Filters";
+import { dashboardState } from "@/store/Slices/dashboardSlice";
 
 interface IChartCard {
 	title: string;
@@ -48,6 +49,7 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
 	const dispatch = useDispatch<any>();
 	const stateGraph = useSelector(graphState);
 	const filters = stateGraph.filters;
+	const dashboard = useSelector(dashboardState);
 
 	useEffect(() => {
 		dispatch(clearCurrentOpenState);
@@ -60,6 +62,7 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
 	const [title, setGraphTitle] = useState<any>(data.graphName);
 	const [warehouse, setWarehouse] = useState<string>(data.warehouse);
 	const [gType, setGType] = useState<string>(data.graphType);
+	const [hovering, setHovering] = useState<boolean>(false);
 
 	const [filtersApplied, setFiltersApplied] = useState<any>(data.filters);
 
@@ -218,8 +221,6 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
 		});
 
 		setFilterDropdown(!filterDropdown);
-		console.log(requestObject);
-		console.log("In filters");
 		fetchGraphData(requestObject);
 	};
 
@@ -302,154 +303,176 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
 	};
 
 	return (
-		<>
-			<div className="block p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-dark-background dark:border-dark-background w-full animate__animated animate__fadeIn animate__slow z-10 graphChart max-h-[80vh] md:max-h-[70vh]">
-				<div className="flex justify-between mb-5 text-black dark:text-white">
-					<h1 className="p-1.5 chart-title">{title}</h1>
-					<div className="flex flex-row gap-1">
-						<div>
-							<div
-								className="inline-flex justify-center p-1.5 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-lightHover dark:hover:bg-gray-600"
-								onClick={() => setFilterDropdown(!filterDropdown)}
-								onMouseEnter={() => setShowFilterTooltip(true)}
-								onMouseLeave={() => setShowFilterTooltip(false)}
-							>
-								<FunnelIcon className="w-6 h-6" />
-								{showFilterTooltip && <div className="relative z-20">
-									<FilterTooltip filters={filtersApplied} ></FilterTooltip>
-								</div>}
-							</div>
-							<Transition
-								as={Fragment}
-								enter="transition ease-out duration-100"
-								enterFrom="transform opacity-0 scale-95"
-								enterTo="transform opacity-100 scale-100"
-								leave="transition ease-in duration-75"
-								leaveFrom="transform opacity-100 scale-100"
-								leaveTo="transform opacity-0 scale-95"
-								appear={true}
-								show={filterDropdown}
-							>
-								<div className="relative z-20">
-									<div className="absolute right-0  w-96 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none p-2 dark:bg-gray-700 max-h-72 overflow-y-scroll">
-										<h1 className="text-xl underline font-semibold">Filters</h1>
-										{renderFilters()}
-										<SubmitButton
-											text="Get Results"
-											className="mt-4 w-full"
-											onClick={() => filterSubmit()}
-										/>
+		<Transition
+			show={true}
+			appear={true}
+			enter="transition-opacity duration-500"
+			enterFrom="opacity-0"
+			enterTo="opacity-100"
+			leave="transition-opacity duration-150"
+			leaveFrom="opacity-100"
+			leaveTo="opacity-0"
+			className={dashboard.columns !== 1 ? "hover:scale-105 duration-300 transition-ease" : ""}
+			onMouseEnter={() => setHovering(true)}
+			onMouseLeave={() => setHovering(false)}
+		>
+			<div className="block p-6 bg-white border-2 border-gray-200 rounded-lg shadow dark:bg-dark-background dark:border-dark-background w-full z-10 graphChart h-full hover:dark:border-dark-secondaryBackground">
+				<Transition
+					show={!loading}
+					appear={!loading}
+					enter="transition-opacity duration-500"
+					enterFrom="opacity-0"
+					enterTo="opacity-100"
+					leave="transition-opacity duration-300"
+					leaveFrom="opacity-100"
+					leaveTo="opacity-0"
+				>
+					<div className="flex justify-between mb-5 text-black dark:text-white">
+						<h1 className="p-1.5 chart-title">{title}</h1>
+						{true && <div className="flex flex-row gap-1">
+							<div>
+								<div
+									className="inline-flex justify-center p-1.5 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-lightHover dark:hover:bg-gray-600"
+									onClick={() => setFilterDropdown(!filterDropdown)}
+									onMouseEnter={() => setShowFilterTooltip(true)}
+									onMouseLeave={() => setShowFilterTooltip(false)}
+								>
+									<FunnelIcon className="w-6 h-6" />
+								</div>
+								{/* {showFilterTooltip && <FilterTooltip filters={filtersApplied} />} */}
+								<Transition
+									as={Fragment}
+									enter="transition ease-out duration-100"
+									enterFrom="transform opacity-0 scale-95"
+									enterTo="transform opacity-100 scale-100"
+									leave="transition ease-in duration-75"
+									leaveFrom="transform opacity-100 scale-100"
+									leaveTo="transform opacity-0 scale-95"
+									appear={true}
+									show={filterDropdown}
+								>
+									<div className="relative z-20">
+										<div className="absolute top-2 right-0 w-96 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none p-2 dark:bg-gray-700 max-h-72 overflow-y-scroll">
+											<h1 className="text-xl underline font-semibold">Filters</h1>
+											{renderFilters()}
+											<SubmitButton
+												text="Get Results"
+												className="mt-4 w-full"
+												onClick={() => filterSubmit()}
+											/>
+										</div>
 									</div>
-								</div>
-							</Transition>
-						</div>
-						<ChartCardButton
-							onClick={() => {
-								handleMagnifyModal();
-							}}
-						>
-							<MagnifyingGlassPlusIcon className="w-6 h-6" />
-						</ChartCardButton>
-						<Menu as="div" className="inline-block text-left">
-							<div>
-								<Menu.Button className="inline-flex justify-center p-1.5 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-lightHover dark:hover:bg-gray-600">
-									<ArrowDownTrayIcon className="w-6 h-6" />{" "}
-									{/* Use an appropriate download icon */}
-								</Menu.Button>
-							</div>
-							<Transition
-								as={Fragment}
-								enter="transition ease-out duration-100"
-								enterFrom="transform opacity-0 scale-95"
-								enterTo="transform opacity-100 scale-100"
-								leave="transition ease-in duration-75"
-								leaveFrom="transform opacity-100 scale-100"
-								leaveTo="transform opacity-0 scale-95"
-							>
-								<div className="relative z-20">
-									<Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-700">
-										<div className="py-1">
-											<Menu.Item>
-												<span
-													className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
-													onClick={() => {
-														const csv = convertToCSV(graphData.jsonData);
-														downloadCSV(csv, "data.csv");
-													}}
-												>
-													Download CSV
-												</span>
-											</Menu.Item>
-											<Menu.Item>
-												<span
-													className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
-													onClick={() => {
-														const json = JSON.stringify(graphData.jsonData);
-														downloadJSON(json, "data.json");
-													}}
-												>
-													Download JSON
-												</span>
-											</Menu.Item>
-										</div>
-									</Menu.Items>
-								</div>
-							</Transition>
-						</Menu>
-
-						{/* Change bar type */}
-						<Menu as="div">
-							<div>
-								<Menu.Button className="inline-flex justify-center p-1.5 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-lightHover dark:hover:bg-gray-600">
-									<ChartBarIcon className="w-6 h-6" />
-								</Menu.Button>
+								</Transition>
 							</div>
 
-							<Transition
-								as={Fragment}
-								enter="transition ease-out duration-100"
-								enterFrom="transform opacity-0 scale-95"
-								enterTo="transform opacity-100 scale-100"
-								leave="transition ease-in duration-75"
-								leaveFrom="transform opacity-100 scale-100"
-								leaveTo="transform opacity-0 scale-95"
+							<ChartCardButton
+								onClick={() => {
+									handleMagnifyModal();
+								}}
 							>
-								<div className="relative z-40">
-									<Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-700">
-										<div className="py-1">
-											{ChartTypeArray.filter((item) => {
-												if (graphData?.chartData?.datasets?.length > 1) {
-													return [
-														ChartType.Line,
-														ChartType.Bar,
-														ChartType.Radar,
-														ChartType.Table,
-														ChartType.Bubble
-													].includes(item.type);
-												}
-												return true;
-											}).map((item, index) => {
-												return (
-													<Menu.Item key={index}>
-														<span
-															className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
-															key={index}
-															onClick={() => {
-																setType(item.type);
-															}}
-														>
-															{item.name} Chart
-														</span>
-													</Menu.Item>
-												);
-											})}
-										</div>
-									</Menu.Items>
+								<MagnifyingGlassPlusIcon className="w-6 h-6" />
+							</ChartCardButton>
+							<Menu as="div" className="inline-block text-left">
+								<div>
+									<Menu.Button className="inline-flex justify-center p-1.5 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-lightHover dark:hover:bg-gray-600">
+										<ArrowDownTrayIcon className="w-6 h-6" />{" "}
+										{/* Use an appropriate download icon */}
+									</Menu.Button>
 								</div>
-							</Transition>
-						</Menu>
+								<Transition
+									as={Fragment}
+									enter="transition ease-out duration-100"
+									enterFrom="transform opacity-0 scale-95"
+									enterTo="transform opacity-100 scale-100"
+									leave="transition ease-in duration-75"
+									leaveFrom="transform opacity-100 scale-100"
+									leaveTo="transform opacity-0 scale-95"
+								>
+									<div className="relative z-20">
+										<Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-700">
+											<div className="py-1">
+												<Menu.Item>
+													<span
+														className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
+														onClick={() => {
+															const csv = convertToCSV(graphData.jsonData);
+															downloadCSV(csv, "data.csv");
+														}}
+													>
+														Download CSV
+													</span>
+												</Menu.Item>
+												<Menu.Item>
+													<span
+														className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
+														onClick={() => {
+															const json = JSON.stringify(graphData.jsonData);
+															downloadJSON(json, "data.json");
+														}}
+													>
+														Download JSON
+													</span>
+												</Menu.Item>
+											</div>
+										</Menu.Items>
+									</div>
+								</Transition>
+							</Menu>
+
+							{/* Change bar type */}
+							<Menu as="div">
+								<div>
+									<Menu.Button className="inline-flex justify-center p-1.5 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-lightHover dark:hover:bg-gray-600">
+										<ChartBarIcon className="w-6 h-6" />
+									</Menu.Button>
+								</div>
+
+								<Transition
+									as={Fragment}
+									enter="transition ease-out duration-100"
+									enterFrom="transform opacity-0 scale-95"
+									enterTo="transform opacity-100 scale-100"
+									leave="transition ease-in duration-75"
+									leaveFrom="transform opacity-100 scale-100"
+									leaveTo="transform opacity-0 scale-95"
+								>
+									<div className="relative z-40">
+										<Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-700">
+											<div className="py-1">
+												{ChartTypeArray.filter((item) => {
+													if (graphData?.chartData?.datasets?.length > 1) {
+														return [
+															ChartType.Line,
+															ChartType.Bar,
+															ChartType.Radar,
+															ChartType.Table,
+															ChartType.Bubble
+														].includes(item.type);
+													}
+													return true;
+												}).map((item, index) => {
+													return (
+														<Menu.Item key={index}>
+															<span
+																className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
+																key={index}
+																onClick={() => {
+																	setType(item.type);
+																}}
+															>
+																{item.name} Chart
+															</span>
+														</Menu.Item>
+													);
+												})}
+											</div>
+										</Menu.Items>
+									</div>
+								</Transition>
+							</Menu>
+						</div>}
 					</div>
-				</div>
+				</Transition>
 				{loading && (
 					<div
 						role="status"
@@ -470,6 +493,6 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
 					</>
 				)}
 			</div>
-		</>
+		</Transition>
 	);
 }
