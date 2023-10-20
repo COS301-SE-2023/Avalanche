@@ -333,13 +333,13 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
 							<div>
 								<div
 									className="inline-flex justify-center p-1.5 text-black rounded cursor-pointer dark:text-white dark:hover:text-white hover:text-gray-900 hover:bg-lightHover dark:hover:bg-gray-600"
-									onClick={() => setFilterDropdown(!filterDropdown)}
+									onClick={() => {setFilterDropdown(!filterDropdown); setShowFilterTooltip(false)}}
 									onMouseEnter={() => setShowFilterTooltip(true)}
 									onMouseLeave={() => setShowFilterTooltip(false)}
 								>
 									<FunnelIcon className="w-6 h-6" />
 								</div>
-								{/* {showFilterTooltip && <FilterTooltip filters={filtersApplied} />} */}
+								{showFilterTooltip && filtersApplied && <FilterTooltip filters={filtersApplied} />} 
 								<Transition
 									as={Fragment}
 									enter="transition ease-out duration-100"
