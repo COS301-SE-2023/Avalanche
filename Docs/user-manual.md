@@ -8,6 +8,8 @@
 7. [Domain Watch Passive](#domain-watch-passive)
 8. [API Key](#api-key)
 9. [Custom Dashboards](#custom-dashboards)
+10. [QBee](#qbee)
+11. [Help Page](#help-page)
 
 ## Signing Up
 ### Step 1
@@ -32,31 +34,47 @@ If the OTP is correct, your account has been created successfully, and you will 
 3. Click the sign-in button, if the details are correct, you will be directed to the dashboard.
 
 ## Homepage
-When you log in for the first time, you will be taken to the homepage. This is an example of what a dashboard would look like.
+When you log in for the first time, you will be taken to the homepage. This is an example of what the homepage will look like.
 
-![](https://github.com/COS301-SE-2023/Avalanche/assets/77788584/afcb4263-6c48-4f9f-b77d-f5a2f5589a2a)
+![](https://github.com/COS301-SE-2023/Avalanche/assets/77788584/a94d2a74-83f1-4a68-bc96-375b8333da1c)
 
 Each graph can be interacted with in isolation, and this does not affect the other graphs at all.
 
 ### Graphs
-On a graph, there are 5 items that can be interacted with.
-![](https://github.com/COS301-SE-2023/Avalanche/assets/77788584/4ec5a6c0-fb32-4793-b062-68c10fdc346e)
+On a graph, there are 5 items that can be interacted with, you must hover over the graph to see them.
+![](https://github.com/COS301-SE-2023/Avalanche/assets/77788584/5c66ca77-b783-43cb-be56-96e417f4ef37)
 1. This is simply the graph title
 2. You can filter graphs based on different filters e.g date to
-   ![](https://github.com/COS301-SE-2023/Avalanche/assets/77788584/202b9c38-b16c-412d-882a-c67665c2f62b)
+   ![](https://github.com/COS301-SE-2023/Avalanche/assets/77788584/06ba8d98-009e-4278-bfe8-8a8daef88602)
 3. You can magnify a graph to make the data easier to see.
-   ![](https://github.com/COS301-SE-2023/Avalanche/assets/77788584/ae3cdda5-cc68-4786-a5f4-e34ac722f48c)
+   ![](https://github.com/COS301-SE-2023/Avalanche/assets/77788584/e5203215-c4c6-4785-9d99-9f71f9e6bb1d)
 4. You can change the type of graph you want the data to be shown as. In the image below we are going to show the data as a bar chart instead of a line chart.
+   ![](https://github.com/COS301-SE-2023/Avalanche/assets/77788584/a3c8227b-db39-4ea4-a210-91821fd8cd5f)
+   ![](https://github.com/COS301-SE-2023/Avalanche/assets/77788584/ed99b43e-8612-413d-a203-e24c6154eb20)
 
-   ![](https://github.com/COS301-SE-2023/Avalanche/assets/77788584/37625bb7-a707-4cc2-890b-ed30a8242b20)
-   ![](https://github.com/COS301-SE-2023/Avalanche/assets/77788584/cd0bd6a0-da0c-4066-8fb8-8a964d867fd3)
 5. This is the legend for the data in the graph. You can hide and show certain items by clicking on them. This allows you to refine your data visualization even more.
 
 ## Navbar
-Here is all the different pages you can visit, they will be similar dashboards to that of the homepage except for Domain Watch (this is highlighted later)
+Here is all the different menu option, they will be similar dashboards to that of the transactions except for Domain Watch (this is highlighted later). Your navbar will be smaller as you login the first time, this is a result of you having public user permissions. To upgrade your permissions to a registar press the are you a registrar? button and you will be directed to the permissions page.
 
-![](https://github.com/COS301-SE-2023/Avalanche/assets/77788584/e0190af0-2355-4d17-84e6-bacbd1ebe383)
+![](https://github.com/COS301-SE-2023/Avalanche/assets/77788584/1b450617-842f-43ba-9fc5-21c93fcb068c)
 
+You can change which warehouse data you would like to see, again the navbar will change depending on your permissions per warehouse
+
+![](https://github.com/COS301-SE-2023/Avalanche/assets/77788584/b765626e-a8ac-4e80-a728-4d0e402ffa8b)
+
+
+You can also press the each of the 4 icons on the bottom:
+
+Icon 1 will take you to the settings page
+
+Icone 2 will take you to the help page
+
+Icon 3 will change the theme of the website, we currently have 2 options - light or dark mode
+
+![](https://github.com/COS301-SE-2023/Avalanche/assets/77788584/10fdc28f-2a34-4c60-8544-8400bd179d16)
+
+Icon 4 will sign you out and take you back the login screen
 
 ## Domain Watch
 Domain watch is a feature that allows you to enter a domain and search for other similar domains in the relevant namespace.
@@ -151,14 +169,14 @@ This feature allows registrars and a registry user to sing into DNS's API to int
 1. Press the highlighted product
 ![](https://github.com/COS301-SE-2023/Avalanche/assets/77788584/9c394d02-3047-4e63-a47a-a708ac746565)
 
-2. Choose between the list of registries (for now ZACR is only available)
+2. Choose between the list of registries
 ![](https://github.com/COS301-SE-2023/Avalanche/assets/77788584/46bb474f-0be8-4466-be88-1be72efe9277)
 
 3. Add in your details for the DNS API
 ![](https://github.com/COS301-SE-2023/Avalanche/assets/77788584/997ca785-3483-4256-ae1c-a497ffdabd29)
 
 ## Custom Dashboards
-This feature allows you to create your own custom dashboard, where you can add in your own graphs
+This feature allows you to create your own custom dashboard, where you can add in your own graphs from all the different warehouses. Name, filter, comment and create your own flexible and dynamic dashboard
 
 1. Press the highlighted button
 ![](https://github.com/COS301-SE-2023/Avalanche/assets/77788584/c5ab1199-b5ca-4722-9760-6f6c7a8b2d61)
@@ -169,7 +187,7 @@ This feature allows you to create your own custom dashboard, where you can add i
 3. Add a new graph by pressing the highlighted button
 ![](https://github.com/COS301-SE-2023/Avalanche/assets/77788584/0a3f315b-9ffa-4cdc-8b4e-ae48f490f389)
 
-4. Select the warehousr you would like to see
+4. Select the warehousre you would like to see
 ![](https://github.com/COS301-SE-2023/Avalanche/assets/77788584/af38ea27-4450-4b32-a603-826ddbff500d)
 
 5. Select the type of graph you would like to see
@@ -184,3 +202,30 @@ This feature allows you to create your own custom dashboard, where you can add i
 8. It will appear below the create dashboard button so you can edit that dashboard
 ![](https://github.com/COS301-SE-2023/Avalanche/assets/77788584/44a7bb7a-1943-4b1f-bc09-cc74271043ee)
  
+## QBee
+This is our custom query builder, where you can build queries using a flow chart method of nodes and connections. You can select, group, apply operations such as SUM, COUNT or AVERAGE, give your column a name, filter you data and use AND or MATCH ANY(OR) blocks. Watch as the magic happens and boom your results will appear in the table at the end. You have a choice in which schema you want to use and the flexibility of building your own queries on the fly.
+
+![](https://github.com/COS301-SE-2023/Avalanche/assets/77788584/b3b0b707-6f8c-4f6a-a180-bd3d33f05cc0)
+
+You can select what column you want to see in the table
+
+![](https://github.com/COS301-SE-2023/Avalanche/assets/77788584/3fdd4253-9e28-4b2b-b290-3accc62a48ec)
+
+You can add another block by pressing this green block at the top, this will be the same for filters where you have the choice of MATCH ANY, AND or the plus sign
+
+![](https://github.com/COS301-SE-2023/Avalanche/assets/77788584/07061dba-b9cb-4c97-bc55-a909e55f39fa)
+
+Apply your filters over here and press the green tick button to get your queery!
+
+![](https://github.com/COS301-SE-2023/Avalanche/assets/77788584/95c6c43b-b3d6-40ee-9951-e5503b95d2bb)
+
+And here your results will appear
+
+![](https://github.com/COS301-SE-2023/Avalanche/assets/77788584/7d0f126f-eb45-42cb-8e0d-5aa7003ecbc2)
+
+## Help page
+And if you feel lost don't worry we have a help page, this is where you will find steps telling you how certain parts of the project works in an faq style
+
+![](https://github.com/COS301-SE-2023/Avalanche/assets/77788584/a06899b7-5d18-4b24-b0d7-ca3608fdf8d1)
+
+
