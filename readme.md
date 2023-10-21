@@ -1,3 +1,4 @@
+## Add logo here
 
 <h1 align="center">Avalanche Analytics</h1>
 <div align="center">
@@ -12,14 +13,17 @@
 
 </div>
 
+## Add video ad here
+
 COS301 Capstone Project for [Domain Name Services (Pty) Ltd](https://dns.business/).
 
 Avalanche is a data analytics tool with flavor as an information management system that is built around the Snowflake® data warehouse. Avalanche will enhance customers of DNS products and services by providing business analytic information, such as projected growth, enhancing the view of investments and to domain registrars’ customers and non-DNS customers alike. 
 Avalanche does this through Registry Insights and Domain Name Intelligence. 
 Avalanche also provides branch protection services in the Domain Space through Domain Watch.
+<br>
+[Avalanche](https://avalanche.sloththe.dev/)
 
-
-## Documentation
+## Demos
 ### Demo 1
 [Presentation](https://www.canva.com/design/DAFjZPgvC5U/85tYwSR4TQRrY1IsCMRMnQ/edit?utm_content=DAFjZPgvC5U&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 ### Demo 2
@@ -29,8 +33,12 @@ Avalanche also provides branch protection services in the Domain Space through D
 ### Demo 4
 [Presentation](https://www.canva.com/design/DAFvdUk_hzA/MK0AP6ZDBIasFFZCMRkw7A/edit?utm_content=DAFvdUk_hzA&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 ### Project Day
+[Full Presentation](todo) <br>
+[Summary](todo)
+
+## Documentation
 ### Software Requirements Specification
-[Version 4](https://drive.google.com/file/d/1DG-BmbrTrOIz_Ocy4LRk1nyJB-U3HB_t/view?usp=sharing)
+
 ### Architecture Document
 [Diagram](https://drive.google.com/file/d/1DC8asn_DAmsRmkL2PPSq94rwneFpnJcI/view?usp=sharing)
 [Document](https://drive.google.com/file/d/1lHhVG2gV1xbwpKDBUw4x66x5ml6uCoqf/view?usp=sharing)
@@ -39,8 +47,9 @@ Avalanche also provides branch protection services in the Domain Space through D
 [Deployment](https://drive.google.com/file/d/1z7YSZsFszlQoGoMqzKv1W-sFsMQs6hPu/view?usp=sharing)
 
 ### Testing Policy
-Including non-functional tests <br>
-[Document](https://drive.google.com/file/d/1gz5s7t90L4FPgcQVAvhROTATHbop0vVp/view?usp=sharing)
+Including tests, non-functional tests and reports <br>
+[Document](https://docs.google.com/document/d/1HqwrwJyOYIkzfTxdzF0bmJKEnA_GKM8In2ayeFXjhuI/edit?usp=sharing)
+
 
 ### Coding Standards 
 [Document](https://drive.google.com/file/d/1_h3GI03gb5PSfFro5HLJp3HD4jjzRdAb/view?usp=sharing)
@@ -49,10 +58,15 @@ Including non-functional tests <br>
 [Manual](https://drive.google.com/file/d/1l8FLuKjqoXAyFzKWE7P8_OPi-llG9Qa1/view?usp=sharing)
 
 ### User Manual
-[Manual](https://github.com/COS301-SE-2023/Avalanche/blob/working/Docs/user-manual.md)
 
-### Project Board
+### Project Management Tools
 [Project Board](https://github.com/orgs/COS301-SE-2023/projects/13)
+
+### Research
+
+
+### Participate in the Development
+
 
 ## Team Members
 <details><summary>Mark Botros - u21448109</summary><br>
@@ -85,7 +99,7 @@ I am currently a third-year student at the University of Pretoria, who also tuto
 <p>
 Hey there! I'm Inge, a bit of a data enthusiast, you could say. You see, I have this not-so-secret love affair with databases and data science. It's a bit like a romantic movie, only instead of chocolates and roses, I get excited about Computer Science, Statistics, and Mathematics. Wild, I know! 
 
-I'm also a bit of a people person. I once played the role of a project manager for the COS301 Mini-Project, where I was the ringleader for a group of 13 developers. Imagine that, 13 developers and 1 project manager walk into a bar... but, wait, don’t worry, we didn't break anything. We just wrote some code, solved a few problems, and maybe played a game of pool or two!
+I'm also a bit of a people person. I once played the role of a project manager for the COS301 Mini-Project, where I was the ringleader for a group of 13 developers. Imagine that, 13 developers and 1 project manager walk into a bar... but, wait, don’t worry, we didn't break anything. We just wrote some code, solved a few problems, and maybe had a pizza or two!
 
 So, that's me - Inge, your friendly neighbourhood data nerd. 
 
