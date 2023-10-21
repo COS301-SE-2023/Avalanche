@@ -20,7 +20,7 @@ https://github.com/COS301-SE-2023/Avalanche/assets/91600439/a4736ed4-15b8-4f8e-8
 
 COS301 Capstone Project for [Domain Name Services (Pty) Ltd](https://dns.business/).
 
-Avalanche is a data analytics tool with flavor as an information management system that is built around the Snowflake® data warehouse. Avalanche will enhance customers of DNS products and services by providing business analytic information, such as projected growth, enhancing the view of investments and to domain registrars’ customers and non-DNS customers alike. 
+Avalanche is a data analytics tool with flavour as an information management system that is built around the Snowflake® data warehouse. Avalanche will enhance customers of DNS products and services by providing business analytic information, such as projected growth, enhancing the view of investments and to domain registrars’ customers and non-DNS customers alike. 
 Avalanche does this through Registry Insights and Domain Name Intelligence. 
 Avalanche also provides branch protection services in the Domain Space through Domain Watch.
 <br>
@@ -61,6 +61,7 @@ Including tests, non-functional tests and reports <br>
 [Manual](https://drive.google.com/file/d/1l8FLuKjqoXAyFzKWE7P8_OPi-llG9Qa1/view?usp=sharing)
 
 ### User Manual
+[Manual](https://github.com/COS301-SE-2023/Avalanche/blob/working/Docs/user-manual.md)
 
 ### Project Management Tools
 [Project Board](https://github.com/orgs/COS301-SE-2023/projects/13)
