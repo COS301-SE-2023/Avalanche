@@ -16,8 +16,6 @@
 
 https://github.com/COS301-SE-2023/Avalanche/assets/91600439/a4736ed4-15b8-4f8e-81b7-b154655b9ad4
 
-## Add video ad here
-
 COS301 Capstone Project for [Domain Name Services (Pty) Ltd](https://dns.business/).
 
 Avalanche is a data analytics tool with flavour as an information management system that is built around the Snowflake® data warehouse. Avalanche will enhance customers of DNS products and services by providing business analytic information, such as projected growth, enhancing the view of investments and to domain registrars’ customers and non-DNS customers alike. 
@@ -43,7 +41,7 @@ Avalanche also provides branch protection services in the Domain Space through D
 ### Software Requirements Specification
 
 ### Architecture Document
-[Diagram](https://drive.google.com/file/d/1DC8asn_DAmsRmkL2PPSq94rwneFpnJcI/view?usp=sharing)
+[Diagram](https://drive.google.com/file/d/1DC8asn_DAmsRmkL2PPSq94rwneFpnJcI/view?usp=sharing) <br>
 [Document](https://drive.google.com/file/d/1lHhVG2gV1xbwpKDBUw4x66x5ml6uCoqf/view?usp=sharing)
 
 ### Deployment Diagram
@@ -76,7 +74,10 @@ Including tests, non-functional tests and reports <br>
 <details><summary>Mark Botros - u21448109</summary><br>
 <img align="right" src="https://astonmartin.sloththe.dev/isawesome/mark.png" width=150>
 <p>
-I'm a third-year computer science student who's really into data science, and I've got some hands-on experience with website development, databases, and a bit in AI. I've worked in the industry for a bit, and I believe that computer science can make the world a bit better, one function at a time. I'm a chill and friendly person, always down for connecting with others and sharing cool ideas. And hey, here's a computer science joke: Why do programmers always mix up Christmas and Halloween? Because Oct 31 == Dec 25!
+I'm a third-year computer science student who's really into data science, and I've got some hands-on experience with website development, databases, and a bit of AI. I've worked in the industry for a bit, and I believe that computer science can make the world a bit better, one function at a time. I'm a chill and friendly person, always down for connecting with others and sharing cool ideas. And hey, here's a computer science joke: Why do programmers always mix up Christmas and Halloween? Because Oct 31 == Dec 25!
+</p>
+<p>
+  Email: u21448109@tuks.co.za
 </p>
 <a href="https://github.com/markbr02" target="_blank">
   <img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white"/>
@@ -88,6 +89,9 @@ I'm a third-year computer science student who's really into data science, and I'
 <img align="right" src="https://astonmartin.sloththe.dev/isawesome/sarah-update.png" width=150>
 <p>
 I am currently a third-year student at the University of Pretoria, who also tutors. I have a passion for solving problems and the colour black (a nerdy goth if you must). I love mathematics - originally started out with BSc Applied Mathematics with CS and then decided coding was way more fun, cats and being outside. If I am not on campus, you'll find me listening to music while I study or going hard at the gym. I strive to become better as a CS student and as a person.
+</p>
+<p>
+  Email: u21804312@tuks.co.za
 </p>
 <a href="https://github.com/Enchantress1416" target="_blank">
   <img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white"/>
@@ -108,6 +112,9 @@ I'm also a bit of a people person. I once played the role of a project manager f
 So, that's me - Inge, your friendly neighbourhood data nerd. 
 
 </p>
+<p>
+  Email: u21689432@tuks.co.za
+</p>
 <a href="https://github.com/Inge505" target="_blank">
   <img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white"/>
 </a> 
@@ -118,6 +125,9 @@ So, that's me - Inge, your friendly neighbourhood data nerd. 
 <img align="right" src="https://astonmartin.sloththe.dev/isawesome/profile-picture.png" width=150>
 <p>
 Hey 👋, I am Michael, a 3rd year BIS Multiemedia student. I have a passion for frontend development (and some backend as well), especially using NextJS, Typescript and TailwindCSS. On my off time, I enjoy playing video games and listening to music. If you ever find me by my laptop, most likely I have Spotify open listening to some tunes. I've been trying to come up with jokes about Star Wars but it's difficult. Sometimes they seem a bit too forced.
+</p>
+<p>
+  Email: u20537833@tuks.co.za
 </p>
 <a href="https://github.com/michaelrosstarr" target="_blank">
   <img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white"/>
@@ -134,6 +144,9 @@ Hey 👋, I am Michael, a 3rd year BIS Multiemedia student. I have a passion for
 Howdy! Gilles here, I like cool stuff. Well, computer-cool not popular-cool. I'm into all those things that make all computer nerds say "wow! That's cool!" and sometimes even non-computer nerds think they're impressive. I love going beyond scope and adding the "wow factor". That involves making things like cutom data structure visualisers, adding abount 1000 times more rows to a table than the brief asked for and, the latest buzz around the block, adding AI and machine learning to get awesome resuluts. I've built a neural network that recognises hand written letters and I'm currently learning all about transformers - no not the robots in disguise.
 
 That's me, if you see me around, stop me and I'll tell you all about my latest project.
+</p>
+<p>
+  Email: u21465772@tuks.co.za
 </p>
 <a href="https://github.com/GT-GillesTeuwen" target="_blank">
   <img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white"/>
