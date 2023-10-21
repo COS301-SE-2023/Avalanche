@@ -1,6 +1,7 @@
-## Add logo here
+<div align="center">
+  <img src="https://github.com/COS301-SE-2023/Avalanche/assets/91600439/05884e24-6a17-4359-a176-66b3f3aa4bd6">
+</div>
 
-<h1 align="center">Avalanche Analytics</h1>
 <div align="center">
   <img src="https://github.com/COS301-SE-2023/Avalanche/actions/workflows/tests.yml/badge.svg">
   <img src="https://github.com/COS301-SE-2023/Avalanche/actions/workflows/test.yml/badge.svg">
