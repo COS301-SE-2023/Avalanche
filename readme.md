@@ -14,6 +14,8 @@
 
 </div>
 
+https://github.com/COS301-SE-2023/Avalanche/assets/91600439/a4736ed4-15b8-4f8e-81b7-b154655b9ad4
+
 ## Add video ad here
 
 COS301 Capstone Project for [Domain Name Services (Pty) Ltd](https://dns.business/).
