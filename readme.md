@@ -14,7 +14,7 @@
 
 </div>
 
-https://github.com/COS301-SE-2023/Avalanche/assets/91600439/a4736ed4-15b8-4f8e-81b7-b154655b9ad4
+https://github.com/COS301-SE-2023/Avalanche/assets/77788584/b61bc437-15b1-49ef-a8bb-a6b55d1cbce7
 
 COS301 Capstone Project for [Domain Name Services (Pty) Ltd](https://dns.business/).
 
