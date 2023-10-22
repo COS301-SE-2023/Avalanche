@@ -203,39 +203,45 @@ export default function CustomChartCard({ title, data, defaultGraph, state, id, 
     }
 
     const convertToCSV = (data: any[]) => {
-        const replacer = (key: any, value: null) => value === null ? '' : value;
-        const header = Object.keys(data[0]);
-        const csv = [
-            header.join(','), // column headers
-            ...data.map(row => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join(','))
-        ].join('\r\n');
+		var dataCopy = JSON.parse(JSON.stringify(data))
+		dataCopy.splice(0, 1);
+		const replacer = (key: any, value: null) => (value === null ? "" : value);
+		const header = Object.keys(dataCopy[0]);
+		const csv = [
+			header.join(","), // column headers
+			...dataCopy.map((row: any) =>
+				header
+					.map((fieldName) => JSON.stringify(row[fieldName], replacer))
+					.join(",")
+			),
+		].join("\r\n");
 
-        return csv;
-    }
+		return csv;
+	};
 
-    const downloadCSV = (csv: BlobPart, filename: string) => {
-        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-        link.setAttribute('href', url);
-        link.setAttribute('download', filename);
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
+	const downloadCSV = (csv: BlobPart, filename: string) => {
+		const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+		const link = document.createElement("a");
+		const url = URL.createObjectURL(blob);
+		link.setAttribute("href", url);
+		link.setAttribute("download", filename);
+		link.style.visibility = "hidden";
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
+	};
 
-    const downloadJSON = (json: BlobPart, filename: string) => {
-        const blob = new Blob([json], { type: 'application/json;charset=utf-8;' });
-        const link = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-        link.setAttribute('href', url);
-        link.setAttribute('download', filename);
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
+	const downloadJSON = (json: BlobPart, filename: string) => {
+		const blob = new Blob([json], { type: "application/json;charset=utf-8;" });
+		const link = document.createElement("a");
+		const url = URL.createObjectURL(blob);
+		link.setAttribute("href", url);
+		link.setAttribute("download", filename);
+		link.style.visibility = "hidden";
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
+	};
 
     return (<>
         <div className="block p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-primaryBackground dark:border-primaryBackground w-full animate__animated animate__fadeIn animate__slow min-h-screen">
@@ -296,9 +302,11 @@ export default function CustomChartCard({ title, data, defaultGraph, state, id, 
                                     </Menu.Item>
                                     <Menu.Item>
                                         <span className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer" onClick={() => {
-                                            const json = JSON.stringify(graphData.jsonData);
-                                            downloadJSON(json, 'data.json');
-                                        }}>Download JSON</span>
+															const jsonS = JSON.stringify(graphData.jsonData);
+															const json = JSON.parse(jsonS);
+															json.shift()
+															downloadJSON(JSON.stringify(json), "data.json");
+														}}>Download JSON</span>
                                     </Menu.Item>
                                 </div>
                             </Menu.Items>

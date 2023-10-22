@@ -408,8 +408,10 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
 													<span
 														className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
 														onClick={() => {
-															const json = JSON.stringify(graphData.jsonData);
-															downloadJSON(JSON.stringify(JSON.parse(json).splice(0,1)), "data.json");
+															const jsonS = JSON.stringify(graphData.jsonData);
+															const json = JSON.parse(jsonS);
+															json.shift()
+															downloadJSON(JSON.stringify(json), "data.json");
 														}}
 													>
 														Download JSON
