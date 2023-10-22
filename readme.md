@@ -25,6 +25,7 @@ Avalanche also provides branch protection services in the Domain Space through D
 [Avalanche](https://avalanche.sloththe.dev/)
 
 ## Demos
+[Final Demo Video]()
 ### Demo 1
 [Presentation](https://www.canva.com/design/DAFjZPgvC5U/85tYwSR4TQRrY1IsCMRMnQ/edit?utm_content=DAFjZPgvC5U&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 ### Demo 2
@@ -34,26 +35,26 @@ Avalanche also provides branch protection services in the Domain Space through D
 ### Demo 4
 [Presentation](https://www.canva.com/design/DAFvdUk_hzA/MK0AP6ZDBIasFFZCMRkw7A/edit?utm_content=DAFvdUk_hzA&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 ### Project Day
-[Full Presentation](todo) <br>
-[Summary](todo)
+[Full Presentation](https://www.canva.com/design/DAFxzkJvQhg/mbLas1GuzeQd8PfJqhPJKA/edit?utm_content=DAFxzkJvQhg&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton) <br>
+[Summary](https://www.canva.com/design/DAFxzuoxPdU/Lr8id_qZp_UBsupfQWd5JA/edit?utm_content=DAFxzuoxPdU&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 
 ## Documentation
 ### Software Requirements Specification
+[Document](https://docs.google.com/document/d/1T6jMuvSaW0vergp9dIQ40Ja8kZDQNF00YqoQP0Fu98E/edit?usp=sharing)
 
-### Architecture Document
-[Diagram](https://drive.google.com/file/d/1DC8asn_DAmsRmkL2PPSq94rwneFpnJcI/view?usp=sharing) <br>
-[Document](https://drive.google.com/file/d/1lHhVG2gV1xbwpKDBUw4x66x5ml6uCoqf/view?usp=sharing)
-
-### Deployment Diagram
-[Deployment](https://drive.google.com/file/d/1z7YSZsFszlQoGoMqzKv1W-sFsMQs6hPu/view?usp=sharing)
+### Coding Standards 
+[Document](https://drive.google.com/file/d/1_h3GI03gb5PSfFro5HLJp3HD4jjzRdAb/view?usp=sharing)
 
 ### Testing Policy
 Including tests, non-functional tests and reports <br>
 [Document](https://docs.google.com/document/d/1HqwrwJyOYIkzfTxdzF0bmJKEnA_GKM8In2ayeFXjhuI/edit?usp=sharing)
 
+### Architecture Document
+[Diagram](https://drive.google.com/file/d/1DC8asn_DAmsRmkL2PPSq94rwneFpnJcI/view?usp=sharing) <br>
+[Document](https://docs.google.com/document/d/14GE81Sp-Bx4gTMRsQZWLBD_PzSpHJvh3E15Q1tOQTGo/edit?usp=sharing)
 
-### Coding Standards 
-[Document](https://drive.google.com/file/d/1_h3GI03gb5PSfFro5HLJp3HD4jjzRdAb/view?usp=sharing)
+### Deployment Diagram
+[Deployment](https://drive.google.com/file/d/1z7YSZsFszlQoGoMqzKv1W-sFsMQs6hPu/view?usp=sharing)
 
 ### Installation Manual
 [Manual](https://drive.google.com/file/d/1l8FLuKjqoXAyFzKWE7P8_OPi-llG9Qa1/view?usp=sharing)
@@ -65,7 +66,7 @@ Including tests, non-functional tests and reports <br>
 [Project Board](https://github.com/orgs/COS301-SE-2023/projects/13)
 
 ### Research
-
+[Document](https://docs.google.com/document/d/1zxHR06RCnJ_xnq99stsVK9m1YYAxl1lPS4-KtlXy5vU/edit?usp=sharing)
 
 ### Participate in the Development
 
