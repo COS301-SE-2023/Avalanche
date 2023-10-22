@@ -25,7 +25,7 @@ Avalanche also provides branch protection services in the Domain Space through D
 [Avalanche](https://avalanche.sloththe.dev/)
 
 ## Demos
-[Final Demo Video]()
+[Final Demo Video](https://drive.google.com/file/d/1MbxtKXA7IDFyjuPAyP6RyPkloFQBYFej/view?usp=share_link)
 ### Demo 1
 [Presentation](https://www.canva.com/design/DAFjZPgvC5U/85tYwSR4TQRrY1IsCMRMnQ/edit?utm_content=DAFjZPgvC5U&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 ### Demo 2
@@ -69,7 +69,7 @@ Including tests, non-functional tests and reports <br>
 [Document](https://docs.google.com/document/d/1zxHR06RCnJ_xnq99stsVK9m1YYAxl1lPS4-KtlXy5vU/edit?usp=sharing)
 
 ### Participate in the Development
-
+[Contribute to Avalanche](https://docs.google.com/document/d/1tBPTwA0cc3kRR4PQbDjt85_X3rs5twy64r8HcvEyaf8/edit?usp=share_link)
 
 ## Team Members
 <details><summary>Mark Botros - u21448109</summary><br>
@@ -83,6 +83,9 @@ I'm a third-year computer science student who's really into data science, and I'
 <a href="https://github.com/markbr02" target="_blank">
   <img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white"/>
 </a> 
+<a href='https://www.linkedin.com/in/mark-botros-a11729266/' target="_blank">
+  <img src="https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white"/>
+</a>
 <br><br><br><br><br><br>
 
 </details>
@@ -119,6 +122,9 @@ So, that's me - Inge, your friendly neighbourhood data nerd. 
 <a href="https://github.com/Inge505" target="_blank">
   <img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white"/>
 </a> 
+<a href='https://www.linkedin.com/in/inge-odendaal-967329282/' target="_blank">
+  <img src="https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white"/>
+</a>
 <br><br><br><br><br><br>
 
 </details>
@@ -152,6 +158,9 @@ That's me, if you see me around, stop me and I'll tell you all about my latest p
 <a href="https://github.com/GT-GillesTeuwen" target="_blank">
   <img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white"/>
 </a> 
+<a href="https://www.linkedin.com/in/gilles-teuwen-63b20b271/" target="_blank">
+  <img src="https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white"/>
+</a>
 <br><br><br><br><br><br>
 
 </details>
