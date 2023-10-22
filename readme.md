@@ -1,5 +1,7 @@
+<div align="center">
+  <img src="https://github.com/COS301-SE-2023/Avalanche/assets/91600439/05884e24-6a17-4359-a176-66b3f3aa4bd6">
+</div>
 
-<h1 align="center">Avalanche Analytics</h1>
 <div align="center">
   <img src="https://github.com/COS301-SE-2023/Avalanche/actions/workflows/tests.yml/badge.svg">
   <img src="https://github.com/COS301-SE-2023/Avalanche/actions/workflows/test.yml/badge.svg">
@@ -12,14 +14,18 @@
 
 </div>
 
+https://github.com/COS301-SE-2023/Avalanche/assets/77788584/b61bc437-15b1-49ef-a8bb-a6b55d1cbce7
+
 COS301 Capstone Project for [Domain Name Services (Pty) Ltd](https://dns.business/).
 
-Avalanche is a data analytics tool with flavor as an information management system that is built around the Snowflake® data warehouse. Avalanche will enhance customers of DNS products and services by providing business analytic information, such as projected growth, enhancing the view of investments and to domain registrars’ customers and non-DNS customers alike. 
+Avalanche is a data analytics tool with flavour as an information management system that is built around the Snowflake® data warehouse. Avalanche will enhance customers of DNS products and services by providing business analytic information, such as projected growth, enhancing the view of investments and to domain registrars’ customers and non-DNS customers alike. 
 Avalanche does this through Registry Insights and Domain Name Intelligence. 
 Avalanche also provides branch protection services in the Domain Space through Domain Watch.
+<br>
+[Avalanche](https://avalanche.sloththe.dev/)
 
-
-## Documentation
+## Demos
+[Final Demo Video](https://drive.google.com/file/d/1MbxtKXA7IDFyjuPAyP6RyPkloFQBYFej/view?usp=share_link)
 ### Demo 1
 [Presentation](https://www.canva.com/design/DAFjZPgvC5U/85tYwSR4TQRrY1IsCMRMnQ/edit?utm_content=DAFjZPgvC5U&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 ### Demo 2
@@ -29,21 +35,26 @@ Avalanche also provides branch protection services in the Domain Space through D
 ### Demo 4
 [Presentation](https://www.canva.com/design/DAFvdUk_hzA/MK0AP6ZDBIasFFZCMRkw7A/edit?utm_content=DAFvdUk_hzA&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 ### Project Day
+[Full Presentation](https://www.canva.com/design/DAFxzkJvQhg/mbLas1GuzeQd8PfJqhPJKA/edit?utm_content=DAFxzkJvQhg&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton) <br>
+[Summary](https://www.canva.com/design/DAFxzuoxPdU/Lr8id_qZp_UBsupfQWd5JA/edit?utm_content=DAFxzuoxPdU&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+
+## Documentation
 ### Software Requirements Specification
-[Version 4](https://drive.google.com/file/d/1DG-BmbrTrOIz_Ocy4LRk1nyJB-U3HB_t/view?usp=sharing)
-### Architecture Document
-[Diagram](https://drive.google.com/file/d/1DC8asn_DAmsRmkL2PPSq94rwneFpnJcI/view?usp=sharing)
-[Document](https://drive.google.com/file/d/1lHhVG2gV1xbwpKDBUw4x66x5ml6uCoqf/view?usp=sharing)
-
-### Deployment Diagram
-[Deployment](https://drive.google.com/file/d/1z7YSZsFszlQoGoMqzKv1W-sFsMQs6hPu/view?usp=sharing)
-
-### Testing Policy
-Including non-functional tests <br>
-[Document](https://drive.google.com/file/d/1gz5s7t90L4FPgcQVAvhROTATHbop0vVp/view?usp=sharing)
+[Document](https://docs.google.com/document/d/1T6jMuvSaW0vergp9dIQ40Ja8kZDQNF00YqoQP0Fu98E/edit?usp=sharing)
 
 ### Coding Standards 
 [Document](https://drive.google.com/file/d/1_h3GI03gb5PSfFro5HLJp3HD4jjzRdAb/view?usp=sharing)
+
+### Testing Policy
+Including tests, non-functional tests and reports <br>
+[Document](https://docs.google.com/document/d/1HqwrwJyOYIkzfTxdzF0bmJKEnA_GKM8In2ayeFXjhuI/edit?usp=sharing)
+
+### Architecture Document
+[Diagram](https://drive.google.com/file/d/1DC8asn_DAmsRmkL2PPSq94rwneFpnJcI/view?usp=sharing) <br>
+[Document](https://docs.google.com/document/d/14GE81Sp-Bx4gTMRsQZWLBD_PzSpHJvh3E15Q1tOQTGo/edit?usp=sharing)
+
+### Deployment Diagram
+[Deployment](https://drive.google.com/file/d/1z7YSZsFszlQoGoMqzKv1W-sFsMQs6hPu/view?usp=sharing)
 
 ### Installation Manual
 [Manual](https://drive.google.com/file/d/1l8FLuKjqoXAyFzKWE7P8_OPi-llG9Qa1/view?usp=sharing)
@@ -51,18 +62,30 @@ Including non-functional tests <br>
 ### User Manual
 [Manual](https://github.com/COS301-SE-2023/Avalanche/blob/working/Docs/user-manual.md)
 
-### Project Board
+### Project Management Tools
 [Project Board](https://github.com/orgs/COS301-SE-2023/projects/13)
+
+### Research
+[Document](https://docs.google.com/document/d/1zxHR06RCnJ_xnq99stsVK9m1YYAxl1lPS4-KtlXy5vU/edit?usp=sharing)
+
+### Participate in the Development
+[Contribute to Avalanche](https://docs.google.com/document/d/1tBPTwA0cc3kRR4PQbDjt85_X3rs5twy64r8HcvEyaf8/edit?usp=share_link)
 
 ## Team Members
 <details><summary>Mark Botros - u21448109</summary><br>
 <img align="right" src="https://astonmartin.sloththe.dev/isawesome/mark.png" width=150>
 <p>
-I'm a third-year computer science student who's really into data science, and I've got some hands-on experience with website development, databases, and a bit in AI. I've worked in the industry for a bit, and I believe that computer science can make the world a bit better, one function at a time. I'm a chill and friendly person, always down for connecting with others and sharing cool ideas. And hey, here's a computer science joke: Why do programmers always mix up Christmas and Halloween? Because Oct 31 == Dec 25!
+I'm a third-year computer science student who's really into data science, and I've got some hands-on experience with website development, databases, and a bit of AI. I've worked in the industry for a bit, and I believe that computer science can make the world a bit better, one function at a time. I'm a chill and friendly person, always down for connecting with others and sharing cool ideas. And hey, here's a computer science joke: Why do programmers always mix up Christmas and Halloween? Because Oct 31 == Dec 25!
+</p>
+<p>
+  Email: u21448109@tuks.co.za
 </p>
 <a href="https://github.com/markbr02" target="_blank">
   <img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white"/>
 </a> 
+<a href='https://www.linkedin.com/in/mark-botros-a11729266/' target="_blank">
+  <img src="https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white"/>
+</a>
 <br><br><br><br><br><br>
 
 </details>
@@ -70,6 +93,9 @@ I'm a third-year computer science student who's really into data science, and I'
 <img align="right" src="https://astonmartin.sloththe.dev/isawesome/sarah-update.png" width=150>
 <p>
 I am currently a third-year student at the University of Pretoria, who also tutors. I have a passion for solving problems and the colour black (a nerdy goth if you must). I love mathematics - originally started out with BSc Applied Mathematics with CS and then decided coding was way more fun, cats and being outside. If I am not on campus, you'll find me listening to music while I study or going hard at the gym. I strive to become better as a CS student and as a person.
+</p>
+<p>
+  Email: u21804312@tuks.co.za
 </p>
 <a href="https://github.com/Enchantress1416" target="_blank">
   <img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white"/>
@@ -85,14 +111,20 @@ I am currently a third-year student at the University of Pretoria, who also tuto
 <p>
 Hey there! I'm Inge, a bit of a data enthusiast, you could say. You see, I have this not-so-secret love affair with databases and data science. It's a bit like a romantic movie, only instead of chocolates and roses, I get excited about Computer Science, Statistics, and Mathematics. Wild, I know! 
 
-I'm also a bit of a people person. I once played the role of a project manager for the COS301 Mini-Project, where I was the ringleader for a group of 13 developers. Imagine that, 13 developers and 1 project manager walk into a bar... but, wait, don’t worry, we didn't break anything. We just wrote some code, solved a few problems, and maybe played a game of pool or two!
+I'm also a bit of a people person. I once played the role of a project manager for the COS301 Mini-Project, where I was the ringleader for a group of 13 developers. Imagine that, 13 developers and 1 project manager walk into a bar... but, wait, don’t worry, we didn't break anything. We just wrote some code, solved a few problems, and maybe had a pizza or two!
 
 So, that's me - Inge, your friendly neighbourhood data nerd. 
 
 </p>
+<p>
+  Email: u21689432@tuks.co.za
+</p>
 <a href="https://github.com/Inge505" target="_blank">
   <img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white"/>
 </a> 
+<a href='https://www.linkedin.com/in/inge-odendaal-967329282/' target="_blank">
+  <img src="https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white"/>
+</a>
 <br><br><br><br><br><br>
 
 </details>
@@ -100,6 +132,9 @@ So, that's me - Inge, your friendly neighbourhood data nerd. 
 <img align="right" src="https://astonmartin.sloththe.dev/isawesome/profile-picture.png" width=150>
 <p>
 Hey 👋, I am Michael, a 3rd year BIS Multiemedia student. I have a passion for frontend development (and some backend as well), especially using NextJS, Typescript and TailwindCSS. On my off time, I enjoy playing video games and listening to music. If you ever find me by my laptop, most likely I have Spotify open listening to some tunes. I've been trying to come up with jokes about Star Wars but it's difficult. Sometimes they seem a bit too forced.
+</p>
+<p>
+  Email: u20537833@tuks.co.za
 </p>
 <a href="https://github.com/michaelrosstarr" target="_blank">
   <img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white"/>
@@ -117,9 +152,15 @@ Howdy! Gilles here, I like cool stuff. Well, computer-cool not popular-cool. I'm
 
 That's me, if you see me around, stop me and I'll tell you all about my latest project.
 </p>
+<p>
+  Email: u21465772@tuks.co.za
+</p>
 <a href="https://github.com/GT-GillesTeuwen" target="_blank">
   <img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white"/>
 </a> 
+<a href="https://www.linkedin.com/in/gilles-teuwen-63b20b271/" target="_blank">
+  <img src="https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white"/>
+</a>
 <br><br><br><br><br><br>
 
 </details>

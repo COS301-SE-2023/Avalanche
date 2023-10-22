@@ -204,7 +204,7 @@ export default function CreateCustomDashboard() {
                 <div className="flex flex-row gap-2 items-center">
                     <CpuChipIcon className="h-16 w-16 text-black dark:text-white" />
                     <div>
-                        {!editName && <h1 className="text-3xl text-gray-900 dark:text-white font-bold flex gap-2"><span>{name ? name : "Custom Dashboard"}</span> <PencilIcon className="w-4 h-4 right-0 top-0 hover:cursor-pointer hover:text-avalancheBlue duration-75 hover:scale-125" onClick={() => setEditName(true)} /></h1>}
+                        {!editName && <h1 className="text-3xl text-gray-900 dark:text-white font-bold flex gap-2 flex-nowrap"><span>{name ? name : "Custom Dashboard"}</span> <PencilIcon className="w-4 h-4 right-0 top-0 hover:cursor-pointer hover:text-avalancheBlue duration-75 hover:scale-125" onClick={() => setEditName(true)} /></h1>}
                         {editName && <div className="flex gap-4">
                             <Input placeholder="Custom Dashboard" type="text" name="dashboard-name" id="dashboard-name" value={name} required={false} onChange={(event: React.FormEvent<HTMLInputElement>) => setName(event.currentTarget.value)} />
                             <div className="flex flex-col gap-2">
@@ -222,7 +222,7 @@ export default function CreateCustomDashboard() {
                         </div>}
                     </div>
                 </div>
-                <div className="flex gap-2 w-full items-center justify-end flex-col md:flex-row">
+                <div className="flex gap-2 items-center justify-end flex-col md:flex-row">
                     {graphs.length > 0 && <BetterDropdown items={[{ name: "1 Column", value: 1 }, { name: "2 Columns", value: 2 }]} option={dashboard.columns} set={changeColumns} className="w-full md:w-auto" absolute={true} />}
                     {graphs.length > 0 && saved && <SubmitButton text="Update Dashboard" onClick={() => {
                         updateDashboard();

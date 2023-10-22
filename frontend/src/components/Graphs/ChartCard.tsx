@@ -258,11 +258,13 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
 	};
 
 	const convertToCSV = (data: any[]) => {
+		var dataCopy = JSON.parse(JSON.stringify(data))
+		dataCopy.splice(0, 1);
 		const replacer = (key: any, value: null) => (value === null ? "" : value);
-		const header = Object.keys(data[0]);
+		const header = Object.keys(dataCopy[0]);
 		const csv = [
 			header.join(","), // column headers
-			...data.map((row) =>
+			...dataCopy.map((row: any) =>
 				header
 					.map((fieldName) => JSON.stringify(row[fieldName], replacer))
 					.join(",")
@@ -406,8 +408,10 @@ export default function ChartCard({ data, defaultGraph }: IChartCard) {
 													<span
 														className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
 														onClick={() => {
-															const json = JSON.stringify(graphData.jsonData);
-															downloadJSON(json, "data.json");
+															const jsonS = JSON.stringify(graphData.jsonData);
+															const json = JSON.parse(jsonS);
+															json.shift()
+															downloadJSON(JSON.stringify(json), "data.json");
 														}}
 													>
 														Download JSON
