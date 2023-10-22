@@ -14,7 +14,7 @@
 
 </div>
 
-https://github.com/COS301-SE-2023/Avalanche/assets/91600439/a4736ed4-15b8-4f8e-81b7-b154655b9ad4
+https://github.com/COS301-SE-2023/Avalanche/assets/77788584/b61bc437-15b1-49ef-a8bb-a6b55d1cbce7
 
 COS301 Capstone Project for [Domain Name Services (Pty) Ltd](https://dns.business/).
 
@@ -25,6 +25,7 @@ Avalanche also provides branch protection services in the Domain Space through D
 [Avalanche](https://avalanche.sloththe.dev/)
 
 ## Demos
+[Final Demo Video](https://drive.google.com/file/d/1MbxtKXA7IDFyjuPAyP6RyPkloFQBYFej/view?usp=share_link)
 ### Demo 1
 [Presentation](https://www.canva.com/design/DAFjZPgvC5U/85tYwSR4TQRrY1IsCMRMnQ/edit?utm_content=DAFjZPgvC5U&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 ### Demo 2
@@ -34,26 +35,26 @@ Avalanche also provides branch protection services in the Domain Space through D
 ### Demo 4
 [Presentation](https://www.canva.com/design/DAFvdUk_hzA/MK0AP6ZDBIasFFZCMRkw7A/edit?utm_content=DAFvdUk_hzA&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 ### Project Day
-[Full Presentation](todo) <br>
-[Summary](todo)
+[Full Presentation](https://www.canva.com/design/DAFxzkJvQhg/mbLas1GuzeQd8PfJqhPJKA/edit?utm_content=DAFxzkJvQhg&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton) <br>
+[Summary](https://www.canva.com/design/DAFxzuoxPdU/Lr8id_qZp_UBsupfQWd5JA/edit?utm_content=DAFxzuoxPdU&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 
 ## Documentation
 ### Software Requirements Specification
+[Document](https://docs.google.com/document/d/1T6jMuvSaW0vergp9dIQ40Ja8kZDQNF00YqoQP0Fu98E/edit?usp=sharing)
 
-### Architecture Document
-[Diagram](https://drive.google.com/file/d/1DC8asn_DAmsRmkL2PPSq94rwneFpnJcI/view?usp=sharing) <br>
-[Document](https://drive.google.com/file/d/1lHhVG2gV1xbwpKDBUw4x66x5ml6uCoqf/view?usp=sharing)
-
-### Deployment Diagram
-[Deployment](https://drive.google.com/file/d/1z7YSZsFszlQoGoMqzKv1W-sFsMQs6hPu/view?usp=sharing)
+### Coding Standards 
+[Document](https://drive.google.com/file/d/1_h3GI03gb5PSfFro5HLJp3HD4jjzRdAb/view?usp=sharing)
 
 ### Testing Policy
 Including tests, non-functional tests and reports <br>
 [Document](https://docs.google.com/document/d/1HqwrwJyOYIkzfTxdzF0bmJKEnA_GKM8In2ayeFXjhuI/edit?usp=sharing)
 
+### Architecture Document
+[Diagram](https://drive.google.com/file/d/1DC8asn_DAmsRmkL2PPSq94rwneFpnJcI/view?usp=sharing) <br>
+[Document](https://docs.google.com/document/d/14GE81Sp-Bx4gTMRsQZWLBD_PzSpHJvh3E15Q1tOQTGo/edit?usp=sharing)
 
-### Coding Standards 
-[Document](https://drive.google.com/file/d/1_h3GI03gb5PSfFro5HLJp3HD4jjzRdAb/view?usp=sharing)
+### Deployment Diagram
+[Deployment](https://drive.google.com/file/d/1z7YSZsFszlQoGoMqzKv1W-sFsMQs6hPu/view?usp=sharing)
 
 ### Installation Manual
 [Manual](https://drive.google.com/file/d/1l8FLuKjqoXAyFzKWE7P8_OPi-llG9Qa1/view?usp=sharing)
@@ -65,10 +66,10 @@ Including tests, non-functional tests and reports <br>
 [Project Board](https://github.com/orgs/COS301-SE-2023/projects/13)
 
 ### Research
-
+[Document](https://docs.google.com/document/d/1zxHR06RCnJ_xnq99stsVK9m1YYAxl1lPS4-KtlXy5vU/edit?usp=sharing)
 
 ### Participate in the Development
-
+[Contribute to Avalanche](https://docs.google.com/document/d/1tBPTwA0cc3kRR4PQbDjt85_X3rs5twy64r8HcvEyaf8/edit?usp=share_link)
 
 ## Team Members
 <details><summary>Mark Botros - u21448109</summary><br>
@@ -82,6 +83,9 @@ I'm a third-year computer science student who's really into data science, and I'
 <a href="https://github.com/markbr02" target="_blank">
   <img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white"/>
 </a> 
+<a href='https://www.linkedin.com/in/mark-botros-a11729266/' target="_blank">
+  <img src="https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white"/>
+</a>
 <br><br><br><br><br><br>
 
 </details>
@@ -118,6 +122,9 @@ So, that's me - Inge, your friendly neighbourhood data nerd. 
 <a href="https://github.com/Inge505" target="_blank">
   <img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white"/>
 </a> 
+<a href='https://www.linkedin.com/in/inge-odendaal-967329282/' target="_blank">
+  <img src="https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white"/>
+</a>
 <br><br><br><br><br><br>
 
 </details>
@@ -151,6 +158,9 @@ That's me, if you see me around, stop me and I'll tell you all about my latest p
 <a href="https://github.com/GT-GillesTeuwen" target="_blank">
   <img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white"/>
 </a> 
+<a href="https://www.linkedin.com/in/gilles-teuwen-63b20b271/" target="_blank">
+  <img src="https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white"/>
+</a>
 <br><br><br><br><br><br>
 
 </details>
